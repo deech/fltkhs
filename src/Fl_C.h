@@ -1,10 +1,11 @@
 #ifndef __FLKC__
 #define __FLKC__
 #include "Fl_WindowC.h"
+#include "Fl_ExportMacros.h"
 #ifdef __cplusplus
-extern "C" {
+EXPORT {
 #endif
-  int flkc_run();
+  FL_EXPORT_C(int, flkc_run)();
 #ifdef __cplusplus
 }
 #endif
