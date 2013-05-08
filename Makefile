@@ -31,9 +31,9 @@ make_window_resize: examples/make_window_resize.o
 
 clean:
 	rm -f $(C_OBJS)
-	rm -f $(TARGETS)
 	rm -f $(EXE_OBJS)
 	rm -f $(EXECUTABLEDIR)/*
+	rm -f $(LIBDIR)/*
 
 %.o: %.cpp
 	$(CXXSTATIC) -c $^ -o $@ -lfltk -lfltk_images -lfltk_gl
