@@ -1,5 +1,5 @@
 *.a
 *.o
 .\#*
-examples/*
+executables/*
 lib/*

@@ -2,10 +2,11 @@ CXXSTATIC = g++ -DINTERNAL_LINKAGE -g -Icpp -static
 CXX = g++ -DINTERNAL_LINKAGE -g -Icpp
 CC = gcc -g -Isrc
 LD = $(CXX) -shared
-EXE_OBJS = examples/make_window.o
+EXE_OBJS = examples/make_window.o examples/make_window_fullscreen.o examples/make_window_resize.o examples/make_window_with_width_height.o
 C_OBJS = src/Fl_C.o src/Fl_WindowC.o
-TARGETS = libfltkc.a make_window
+TARGETS = libfltkc.a make_window make_window_with_width_height make_window_resize make_window_fullscreen make_window_hide
 EXAMPLEDIR = ./examples
+EXECUTABLEDIR = ./executables
 LIBDIR = ./lib
 
 all: $(TARGETS)
@@ -13,13 +14,26 @@ all: $(TARGETS)
 libfltkc.a : $(C_OBJS)
 	ar rcs $(LIBDIR)/$@ $^
 
-make_window: $(EXE_OBJS)
-	$(CXX) -o $(EXAMPLEDIR)/$@ $< $(LIBDIR)/libfltkc.a -lfltk_images -lpng -lz -ljpeg -lfltk_gl -lGLU -lfltk -lXext -lXft -lfontconfig -lXinerama -lpthread -ldl -lm  -lX11
+make_window_hide: examples/make_window_hide.o
+	$(CXX) -o $(EXECUTABLEDIR)/$@ $< $(LIBDIR)/libfltkc.a -lfltk_images -lpng -lz -ljpeg -lfltk_gl -lGLU -lfltk -lXext -lXft -lfontconfig -lXinerama -lpthread -ldl -lm  -lX11
+
+make_window_fullscreen: examples/make_window_fullscreen.o
+	$(CXX) -o $(EXECUTABLEDIR)/$@ $< $(LIBDIR)/libfltkc.a -lfltk_images -lpng -lz -ljpeg -lfltk_gl -lGLU -lfltk -lXext -lXft -lfontconfig -lXinerama -lpthread -ldl -lm  -lX11
+
+make_window: examples/make_window.o
+	$(CXX) -o $(EXECUTABLEDIR)/$@ $< $(LIBDIR)/libfltkc.a -lfltk_images -lpng -lz -ljpeg -lfltk_gl -lGLU -lfltk -lXext -lXft -lfontconfig -lXinerama -lpthread -ldl -lm  -lX11
+
+make_window_with_width_height: examples/make_window_with_width_height.o
+	$(CXX) -o $(EXECUTABLEDIR)/$@ $< $(LIBDIR)/libfltkc.a -lfltk_images -lpng -lz -ljpeg -lfltk_gl -lGLU -lfltk -lXext -lXft -lfontconfig -lXinerama -lpthread -ldl -lm  -lX11
+
+make_window_resize: examples/make_window_resize.o
+	$(CXX) -o $(EXECUTABLEDIR)/$@ $< $(LIBDIR)/libfltkc.a -lfltk_images -lpng -lz -ljpeg -lfltk_gl -lGLU -lfltk -lXext -lXft -lfontconfig -lXinerama -lpthread -ldl -lm  -lX11
 
 clean:
 	rm -f $(C_OBJS)
 	rm -f $(TARGETS)
 	rm -f $(EXE_OBJS)
+	rm -f $(EXECUTABLEDIR)/*
 
 %.o: %.cpp
 	$(CXXSTATIC) -c $^ -o $@ -lfltk -lfltk_images -lfltk_gl
