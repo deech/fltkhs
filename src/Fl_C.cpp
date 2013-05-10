@@ -3,4 +3,8 @@
 #include "Fl_ExportMacros.h"
 EXPORT {
   FL_EXPORT_C(int, flkc_run)(){ return Fl::run(); }
+  FL_EXPORT_C(double, flkc_wait_with_args)(double wait) { return Fl::wait(wait); }
+  FL_EXPORT_C(int, flkc_wait)() { return Fl::wait(); }
+  FL_EXPORT_C(int, flkc_check)() { return Fl::check(); }
+  FL_EXPORT_C(int, flkc_ready)() { return Fl::ready(); }
 }
