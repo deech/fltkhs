@@ -1,7 +1,7 @@
 #include <FL/Fl.H>
-#include "Fl_C.h"
 #include "Fl_ExportMacros.h"
 #ifdef __cplusplus
+#include "Fl_C.h"
 EXPORT {
 #endif  
   FL_EXPORT_C(int, flkc_run)(){ return Fl::run(); }

@@ -105,17 +105,13 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Window_set_tooltip)(fl_Window win,const char* text){
     (static_cast<Fl_Window*>(win))->tooltip(text);
   }
-  FL_EXPORT_C(fl_Callback_p,Fl_Window_callback)(fl_Window win){
-    Fl_Callback_p func = (static_cast<Fl_Window*>(win))->callback();
-    Fl_to_C_Callback* wrapper = new Fl_to_C_Callback(func);
-    return ((fl_Callback_p)((void*)(wrapper->runCallback)));
+  FL_EXPORT_C(void,Fl_Window_set_callback_and_user_data)(fl_Window win,fl_Callback cb,void* p){
+    Fl_Window* castedWindow = (static_cast<Fl_Window*>(win));
+    C_to_Fl_Callback* wrapper = new C_to_Fl_Callback(castedWindow, cb, p);
   }
-  FL_EXPORT_C(void,Fl_Window_set_callback_and_user_data)(fl_Window win,fl_Callback* cb,void* p){
-    (static_cast<Fl_Window*>(win))->callback(cb,p);
-  }
-  FL_EXPORT_C(void,Fl_Window_set_callback)(fl_Window win,fl_Callback* cb){
-    C_to_Fl_Callback* wrapper = new C_to_Fl_Callback(cb);
-    (static_cast<Fl_Window*>(win))->callback(wrapper->runCallback);
+  FL_EXPORT_C(void,Fl_Window_set_callback)(fl_Window win,fl_Callback cb){
+    Fl_Window* castedWindow = (static_cast<Fl_Window*>(win));
+    C_to_Fl_Callback* wrapper = new C_to_Fl_Callback(castedWindow, cb);
   }
   FL_EXPORT_C(void*,Fl_Window_user_data)(fl_Window win){
     return (static_cast<Fl_Window*>(win))->user_data();

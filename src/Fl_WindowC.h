@@ -1,7 +1,9 @@
 #ifndef __FL_WINDOW_C__
 #define __FL_WINDOW_C__
 #include "FL/Fl.H"
-#include "FL/Fl_Window.H"
+#include "FL/Fl_Window.H" // always include the FL/*.H headers before local headers
+                          // Fl_Widget is included transitively and needed for
+                          // the callback mechanism included below to work.
 #include "Fl_CallbackC.h"
 #ifdef __cplusplus
 EXPORT {
@@ -42,7 +44,6 @@ EXPORT {
   FL_EXPORT_C(const char*,  Fl_Window_tooltip)(fl_Window win);
   FL_EXPORT_C(void,         Fl_Window_copy_tooltip)(fl_Window win, const char* text);
   FL_EXPORT_C(void,         Fl_Window_set_tooltip)(fl_Window win, const char* text);
-  FL_EXPORT_C(fl_Callback_p,Fl_Window_callback)(fl_Window win);
   FL_EXPORT_C(void,         Fl_Window_set_callback_and_user_data)(fl_Window win, fl_Callback* cb, void* p);
   FL_EXPORT_C(void,         Fl_Window_set_callback)(fl_Window win, fl_Callback* cb);
   FL_EXPORT_C(void*,        Fl_Window_user_data)(fl_Window win);
