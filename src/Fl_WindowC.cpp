@@ -238,7 +238,7 @@ EXPORT {
   }
   FL_EXPORT_C(fl_Window, Fl_Window_New_WithTitle)(int x, int y, const char* title) {
     Fl_Window* window = new Fl_Window(x,y,title);
-    return (fl_Window)window;
+    return (static_cast<fl_Window>(window));
   }
   FL_EXPORT_C(fl_Window, Fl_Window_New)(int x, int y) {
     Fl_Window* window = new Fl_Window(x,y,0);
