@@ -11,7 +11,7 @@ EXPORT {
  */
 class C_to_Fl_Callback {
  private:
-  fl_Callback callback;
+  void (C_to_Fl_Callback::*callback) (void*,void*);
   void* user_data;
   void runCallback(Fl_Widget* w);
   static void intercept(Fl_Widget* w, void* self) {
