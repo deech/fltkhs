@@ -1,5 +1,5 @@
-#ifndef __FL_DEF_H
-#define __FL_DEF_H
+#ifndef __FL_EXPORT_H
+#define __FL_EXPORT_H
 
 #ifdef EXPORT
 #undef EXPORT
@@ -21,4 +21,4 @@
     #define _cdecl
   #endif
 #endif
-#endif /* #ifndef __FL_DEF_H */
+#endif /* #ifndef __FL_EXPORT_H */

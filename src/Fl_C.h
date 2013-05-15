@@ -1,7 +1,9 @@
 #ifndef __FLKC__
 #define __FLKC__
+#include "FL/Fl.H"
 #include "Fl_WindowC.h"
 #include "Fl_ExportMacros.h"
+#include "Fl_Types.h"
 #ifdef __cplusplus
 EXPORT {
 #endif
@@ -13,5 +15,4 @@ EXPORT {
 #ifdef __cplusplus
 }
 #endif
-
 #endif /*__FLKC__ */
