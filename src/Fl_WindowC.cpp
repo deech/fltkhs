@@ -105,11 +105,11 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Window_set_tooltip)(fl_Window win,const char* text){
     (static_cast<Fl_Window*>(win))->tooltip(text);
   }
-  FL_EXPORT_C(void,Fl_Window_set_callback_and_user_data)(fl_Window win,fl_Callback cb,void* p){
+  FL_EXPORT_C(void,Fl_Window_set_callback_and_user_data)(fl_Window win,fl_Callback* cb,void* p){
     Fl_Window* castedWindow = (static_cast<Fl_Window*>(win));
     C_to_Fl_Callback* wrapper = new C_to_Fl_Callback(castedWindow, cb, p);
   }
-  FL_EXPORT_C(void,Fl_Window_set_callback)(fl_Window win,fl_Callback cb){
+  FL_EXPORT_C(void,Fl_Window_set_callback)(fl_Window win,fl_Callback* cb){
     Fl_Window* castedWindow = (static_cast<Fl_Window*>(win));
     C_to_Fl_Callback* wrapper = new C_to_Fl_Callback(castedWindow, cb);
   }
