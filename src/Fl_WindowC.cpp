@@ -60,9 +60,6 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Window_set_label)(fl_Window win,const char* text){
     (static_cast<Fl_Window*>(win))->label(text);
   }
-  // FL_EXPORT_C(void, Fl_Window_set_text_and_type_label)(fl_Window win,Fl_Labeltype a,const char* b){
-  //   (static_cast<Fl_Window*>(win))->label(a,b);
-  // }
   FL_EXPORT_C(Fl_Labeltype,Fl_Window_labeltype)(fl_Window win){
     return (static_cast<Fl_Window*>(win))->labeltype();
   }
@@ -236,6 +233,35 @@ EXPORT {
   FL_EXPORT_C(fl_Gl_Window,Fl_Window_as_gl_window)(fl_Window win){
     return (static_cast<Fl_Window*>(win))->as_gl_window();
   }
+
+  FL_EXPORT_C(void,Fl_Window_begin)(fl_Window win){
+    (static_cast<Fl_Window*>(win))->begin();
+  }
+  FL_EXPORT_C(void,Fl_Window_end)(fl_Window win){
+    (static_cast<Fl_Window*>(win))->end();
+  }
+  FL_EXPORT_C(int,Fl_Window_find)(fl_Window win,fl_Widget w){
+    return (static_cast<Fl_Window*>(win))->find(static_cast<Fl_Widget*>(w));
+  }
+  FL_EXPORT_C(void,Fl_Window_add)(fl_Window win,fl_Widget w){
+    (static_cast<Fl_Window*>(win))->add((static_cast<Fl_Widget*>(w)));
+  }
+  FL_EXPORT_C(void,Fl_Window_insert)(fl_Window win,fl_Widget w,int i){
+    (static_cast<Fl_Window*>(win))->insert(*(static_cast<Fl_Widget*>(w)),i);
+  }
+  FL_EXPORT_C(void,Fl_Window_remove_index)(fl_Window win,int index){
+    (static_cast<Fl_Window*>(win))->remove(index);
+  }
+  FL_EXPORT_C(void,Fl_Window_remove_widget)(fl_Window win,fl_Widget w){
+    (static_cast<Fl_Window*>(win))->remove((static_cast<Fl_Widget*>(w)));
+  }
+  FL_EXPORT_C(void,Fl_Window_clear)(fl_Window win){
+    (static_cast<Fl_Window*>(win))->clear();
+  }
+  FL_EXPORT_C(void,Fl_Window_init_sizes)(fl_Window win){
+    (static_cast<Fl_Window*>(win))->init_sizes();
+  }
+
   FL_EXPORT_C(fl_Window, Fl_Window_New_WithTitle)(int x, int y, const char* title) {
     Fl_Window* window = new Fl_Window(x,y,title);
     return (static_cast<fl_Window>(window));

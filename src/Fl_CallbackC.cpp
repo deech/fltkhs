@@ -18,5 +18,4 @@ Fl_Callback_p C_to_Fl_Callback::getWrappedCallback() {
 }
 void C_to_Fl_Callback::runCallback(Fl_Widget* w) {
   (*callback)((fl_Widget) w, user_data);
-  delete this;
 }

@@ -27,8 +27,7 @@ EXPORT {
   FL_EXPORT_C(void,         Fl_Window_set_selection_color)(fl_Window win, Fl_Color a);
   FL_EXPORT_C(const char*,  Fl_Window_label)(fl_Window win);
   FL_EXPORT_C(void,         Fl_Window_copy_label)(fl_Window win, const char* new_label);
-  FL_EXPORT_C(void, Fl_Window_set_label)(fl_Window win, const char* text);
-  FL_EXPORT_C(void,  Fl_Window_set_text_and_type_label)(fl_Window win, Fl_Labeltype a, const char* b);
+  FL_EXPORT_C(void,         Fl_Window_set_label)(fl_Window win, const char* text);
   FL_EXPORT_C(Fl_Labeltype, Fl_Window_labeltype)(fl_Window win);
   FL_EXPORT_C(void,         Fl_Window_set_labeltype)(fl_Window win, Fl_Labeltype a);
   FL_EXPORT_C(Fl_Color,     Fl_Window_labelcolor)(fl_Window win);
@@ -88,6 +87,16 @@ EXPORT {
   FL_EXPORT_C(fl_Group,     Fl_Window_as_group)(fl_Window win);
   FL_EXPORT_C(fl_Gl_Window, Fl_Window_as_gl_window)(fl_Window win);
 
+  /* Inherited from Fl_Group */
+  FL_EXPORT_C(void,         Fl_Window_begin)(fl_Window win);
+  FL_EXPORT_C(void,         Fl_Window_end)(fl_Window win);
+  FL_EXPORT_C(int,          Fl_Window_find)(fl_Window win, fl_Widget w);
+  FL_EXPORT_C(void,         Fl_Window_add)(fl_Window win, fl_Widget w);
+  FL_EXPORT_C(void,         Fl_Window_insert)(fl_Window win, fl_Widget w, int i);
+  FL_EXPORT_C(void,         Fl_Window_remove_index)(fl_Window win, int index);
+  FL_EXPORT_C(void,         Fl_Window_remove_widget)(fl_Window win, fl_Widget w);
+  FL_EXPORT_C(void,         Fl_Window_clear)(fl_Window win);
+  FL_EXPORT_C(void,         Fl_Window_init_sizes)(fl_Window win);
   /* Fl_Window specific */
   FL_EXPORT_C(unsigned int, Fl_Window_changed)(fl_Window win);
   FL_EXPORT_C(void,         Fl_Window_fullscreen)(fl_Window win);

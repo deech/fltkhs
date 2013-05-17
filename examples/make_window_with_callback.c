@@ -2,8 +2,11 @@
 #include "Fl_C.h"
 #include "Fl_Types.h"
 
-void my_callback(fl_Widget w, void* user_data) {
-  puts("My callback has been called!");
+void my_callback(fl_Window w, void* user_data) {
+  puts("The title of this window is:");
+  puts(Fl_Window_label(w));
+  Fl_Window_hide(w);
+  Fl_Window_destroy(w);
 }
 int main(int argc, char** argv)
 {
