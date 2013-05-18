@@ -18,7 +18,6 @@ class C_to_Fl_Callback {
  public:
   C_to_Fl_Callback(Fl_Widget* invoker, fl_Callback* callback, void* user_data);
   C_to_Fl_Callback(Fl_Widget* invoker, fl_Callback* callback);
-  Fl_Callback_p getWrappedCallback();
 };
 #endif
 

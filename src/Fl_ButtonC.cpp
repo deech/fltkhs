@@ -103,12 +103,12 @@ EXPORT {
     (static_cast<Fl_Button*>(b))->tooltip(text);
   }
   FL_EXPORT_C(void,Fl_Button_set_callback_and_user_data)(fl_Button b,fl_Callback* cb,void* p){
-    Fl_Button* castedWindow = (static_cast<Fl_Button*>(b));
-    C_to_Fl_Callback* wrapper = new C_to_Fl_Callback(castedWindow, cb, p);
+    Fl_Button* castedButton = (static_cast<Fl_Button*>(b));
+    C_to_Fl_Callback* wrapper = new C_to_Fl_Callback(castedButton, cb, p);
   }
   FL_EXPORT_C(void,Fl_Button_set_callback)(fl_Button b,fl_Callback* cb){
-    Fl_Button* castedWindow = (static_cast<Fl_Button*>(b));
-    C_to_Fl_Callback* wrapper = new C_to_Fl_Callback(castedWindow, cb);
+    Fl_Button* castedButton = (static_cast<Fl_Button*>(b));
+    C_to_Fl_Callback* wrapper = new C_to_Fl_Callback(castedButton, cb);
   }
   FL_EXPORT_C(void*,Fl_Button_user_data)(fl_Button b){
     return (static_cast<Fl_Button*>(b))->user_data();
