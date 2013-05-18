@@ -4,6 +4,7 @@
 #ifdef __cplusplus
 #include "FL/Fl.H"
 #include "Fl_WindowC.h"
+#include "Fl_ButtonC.h"
 #include "Fl_Types.h"
 EXPORT {
 #endif
