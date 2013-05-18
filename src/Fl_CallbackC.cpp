@@ -7,8 +7,8 @@ C_to_Fl_Callback::C_to_Fl_Callback(Fl_Widget* invoker, fl_Callback* callback, vo
   this->user_data = user_data;
   invoker->callback(intercept, this);
 }
-C_to_Fl_Callback::C_to_Fl_Callback(Fl_Widget* invoker, fl_Callback* c) {
-  this->callback = c;
+C_to_Fl_Callback::C_to_Fl_Callback(Fl_Widget* invoker, fl_Callback* callback) {
+  this->callback = callback;
   this->user_data = NULL;
   invoker->callback(intercept, this);
 }

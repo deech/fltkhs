@@ -8,11 +8,9 @@ void callback_button1(fl_Button b1, void* user_data) {
 void callback_button2(fl_Button b2, void* user_data) {
   printf("%s %s\n", (char*) Fl_Button_label(b2), "has been clicked");
 }
-
 void callback_button3_with_user_data(fl_Button b3, void* user_data) {
-  printf("%s:%s %s\n", (char*) Fl_Button_label(b3), "Got user data :", (char*)user_data);
+  printf("%s:%s %s\n", (char*) Fl_Button_label(b3), "Got the user data :", (char*)user_data);
 }
-
 int main(int argc, char** argv)
 {
   char* title = "FLTK Button Window";
