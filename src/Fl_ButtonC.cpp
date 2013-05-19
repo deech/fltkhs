@@ -236,6 +236,44 @@ EXPORT {
     Fl_Button* button = new Fl_Button(x,y,w,h,0);
     return (fl_Button)button;
   }
+
+  
+  FL_EXPORT_C(fl_Check_Button, Fl_Check_Button_New_WithLabel)(int x, int y, int w, int h, const char* label) {
+    Fl_Check_Button* button = new Fl_Check_Button(x,y,w,h,label);
+    return (static_cast<fl_Check_Button>(button));
+  }
+  FL_EXPORT_C(fl_Check_Button, Fl_Check_Button_New)(int x, int y, int w, int h) {
+    Fl_Check_Button* button = new Fl_Check_Button(x,y,w,h,0);
+    return (fl_Check_Button)button;
+  }
+
+  
+  FL_EXPORT_C(fl_Radio_Button, Fl_Radio_Button_New_WithLabel)(int x, int y, int w, int h, const char* label) {
+    Fl_Radio_Button* button = new Fl_Radio_Button(x,y,w,h,label);
+    return (static_cast<fl_Radio_Button>(button));
+  }
+  FL_EXPORT_C(fl_Radio_Button, Fl_Radio_Button_New)(int x, int y, int w, int h) {
+    Fl_Radio_Button* button = new Fl_Radio_Button(x,y,w,h,0);
+    return (fl_Radio_Button)button;
+  }
+
+  FL_EXPORT_C(fl_Toggle_Button, Fl_Toggle_Button_New_WithLabel)(int x, int y, int w, int h, const char* label) {
+    Fl_Toggle_Button* button = new Fl_Toggle_Button(x,y,w,h,label);
+    return (static_cast<fl_Toggle_Button>(button));
+  }
+  FL_EXPORT_C(fl_Toggle_Button, Fl_Toggle_Button_New)(int x, int y, int w, int h) {
+    Fl_Toggle_Button* button = new Fl_Toggle_Button(x,y,w,h,0);
+    return (fl_Toggle_Button)button;
+  }
+  
+  FL_EXPORT_C(fl_Light_Button, Fl_Light_Button_New_WithLabel)(int x, int y, int w, int h, const char* label) {
+    Fl_Light_Button* button = new Fl_Light_Button(x,y,w,h,label);
+    return (static_cast<fl_Light_Button>(button));
+  }
+  FL_EXPORT_C(fl_Light_Button, Fl_Light_Button_New)(int x, int y, int w, int h) {
+    Fl_Light_Button* button = new Fl_Light_Button(x,y,w,h,0);
+    return (fl_Light_Button)button;
+  }
   FL_EXPORT_C(int,Fl_Button_value)(fl_Button b,int v){
     return (static_cast<Fl_Button*>(b))->value(v);
   }
