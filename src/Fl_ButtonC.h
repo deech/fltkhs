@@ -4,10 +4,7 @@
 // Fl_Widget is included transitively and needed for
 // the callback mechanism included below to work.
 #include "FL/Fl.H"
-#include "FL/Fl_Radio_Button.H"
 #include "FL/Fl_Light_Button.H"
-#include "FL/Fl_Check_Button.H"
-#include "FL/Fl_Toggle_Button.H"
 #include "Fl_CallbackC.h"
 #ifdef __cplusplus
 EXPORT {
@@ -92,14 +89,6 @@ EXPORT {
   /* Fl_Button specific functions */
   FL_EXPORT_C(fl_Button,    Fl_Button_New_WithLabel)(int x, int y, int w, int h, const char* label);
   FL_EXPORT_C(fl_Button,    Fl_Button_New)(int x, int y, int w, int h);
-  FL_EXPORT_C(fl_Check_Button,    Fl_Check_Button_New_WithLabel)(int x, int y, int w, int h, const char* label);
-  FL_EXPORT_C(fl_Check_Button,    Fl_Check_Button_New)(int x, int y, int w, int h);
-  FL_EXPORT_C(fl_Radio_Button,    Fl_Radio_Button_New_WithLabel)(int x, int y, int w, int h, const char* label);
-  FL_EXPORT_C(fl_Radio_Button,    Fl_Radio_Button_New)(int x, int y, int w, int h);
-  FL_EXPORT_C(fl_Toggle_Button,    Fl_Toggle_Button_New_WithLabel)(int x, int y, int w, int h, const char* label);
-  FL_EXPORT_C(fl_Toggle_Button,    Fl_Toggle_Button_New)(int x, int y, int w, int h);
-  FL_EXPORT_C(fl_Light_Button,    Fl_Light_Button_New_WithLabel)(int x, int y, int w, int h, const char* label);
-  FL_EXPORT_C(fl_Light_Button,    Fl_Light_Button_New)(int x, int y, int w, int h);
   FL_EXPORT_C(int         , Fl_Button_value)(fl_Button b, int v);
   FL_EXPORT_C(int         , Fl_Button_set)(fl_Button b);
   FL_EXPORT_C(int         , Fl_Button_clear)(fl_Button b);

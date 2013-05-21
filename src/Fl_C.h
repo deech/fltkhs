@@ -5,6 +5,11 @@
 #include "FL/Fl.H"
 #include "Fl_WindowC.h"
 #include "Fl_ButtonC.h"
+#include "Fl_Check_ButtonC.h"
+#include "Fl_Radio_ButtonC.h"
+#include "Fl_Light_ButtonC.h"
+#include "Fl_Toggle_ButtonC.h"
+#include "Fl_InputC.h"
 #include "Fl_Types.h"
 EXPORT {
 #endif

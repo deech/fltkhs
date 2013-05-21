@@ -70,10 +70,16 @@ makeArgument className argType argName =
 
 parseArgList = (many (letter <|> char '_' <|> char '*' <|> char '&')) `sepBy` (skipMany1 space) >>= return . filter (/= "")
 
-parseName = (many1 letter) `sepBy` (char '_')
+parseName = (many letter) `sepBy` (char '_')
 
-extractClassName functionName@(x1:x2:x3:xs) | (x1 == "Fl") = x1 ++ "_" ++ x2
-extractClassName _ = ""
+extractClassName' functionName@(x:xs) accum | (x == "Fl") = extractClassName' xs x
+extractClassName' functionName@(x1:x2:xs) accum | (x1 == "") && (x2 /= "") = accum ++ x1 ++ "_"
+extractClassName' functionName@(x1:xs) accum | (x1 == "")  = extractClassName' xs (accum ++ "_")
+extractClassName' functionName@(x:xs) accum | (x /= "") && (isUpper(head x))= extractClassName' xs (accum ++ "_" ++ x)
+extractClassName' functionName@(x:xs) accum = extractClassName' xs accum
+extractClassName' [] accum = accum
+                             
+extractClassName functionName = extractClassName' functionName ""
 
 parseTypeName = do string exportMacro
                    char '('

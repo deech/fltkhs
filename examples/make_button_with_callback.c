@@ -22,10 +22,10 @@ int main(int argc, char** argv)
   fl_Button b3 = (fl_Button)Fl_Button_New_WithLabel(240,20,100,100,"Button 3");
   char* user_data = "User data";
   Fl_Button_set_callback_and_user_data(b3, (fl_Callback*)callback_button3_with_user_data, (void*) user_data);
-  fl_Button check = (fl_Check_Button)Fl_Check_Button_New_WithLabel(20,130,100,100,"Check");
-  fl_Button radio = (fl_Radio_Button)Fl_Radio_Button_New_WithLabel(130,130,100,100,"Radio");
-  fl_Button light = (fl_Light_Button)Fl_Light_Button_New_WithLabel(240,130,100,100,"Light");
-  fl_Button toggle = (fl_Toggle_Button)Fl_Toggle_Button_New_WithLabel(350,130,100,100,"Toggle");
+  fl_Check_Button check = (fl_Check_Button)Fl_Check_Button_New_WithLabel(20,130,100,100,"Check");
+  fl_Radio_Button radio = (fl_Radio_Button)Fl_Radio_Button_New_WithLabel(130,130,100,100,"Radio");
+  fl_Light_Button light = (fl_Light_Button)Fl_Light_Button_New_WithLabel(240,130,100,100,"Light");
+  fl_Toggle_Button toggle = (fl_Toggle_Button)Fl_Toggle_Button_New_WithLabel(350,130,100,100,"Toggle");
   Fl_Window_end(win);
   Fl_Window_show(win);
   return flkc_run();
