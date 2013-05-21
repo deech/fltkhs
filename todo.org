@@ -5,6 +5,13 @@
   Fl_Light_Button.H
   Fl_Button.H
   Fl_Window.H
+  Fl_Input_.H
+  Fl_Input.H
+  Fl_File_Input.H
+  Fl_Float_Input.H
+  Fl_Int_Input.H
+  Fl_Multiline_Input.H
+  Fl_Secret_Input.H
 * Todo  
   filename.H
   Fl_Adjuster.H
@@ -30,10 +37,8 @@
   Fl_File_Browser.H
   Fl_File_Chooser.H
   Fl_File_Icon.H
-  Fl_File_Input.H
   Fl_Fill_Dial.H
   Fl_Fill_Slider.H
-  Fl_Float_Input.H
   Fl_FormsBitmap.H
   Fl_FormsPixmap.H
   Fl_Free.H
@@ -50,9 +55,6 @@
   Fl_Hor_Value_Slider.H
   Fl_Image.H
   Fl_Input_Choice.H
-  Fl_Input_.H
-  Fl_Input.H
-  Fl_Int_Input.H
   Fl_JPEG_Image.H
   Fl_Line_Dial.H
   Fl_Menu_Bar.H
@@ -64,7 +66,6 @@
   fl_message.H
   Fl_Multi_Browser.H
   Fl_Multi_Label.H
-  Fl_Multiline_Input.H
   Fl_Multiline_Output.H
   Fl_Native_File_Chooser.H
   Fl_Nice_Slider.H
@@ -92,7 +93,6 @@
   Fl_Round_Clock.H
   Fl_Scrollbar.H
   Fl_Scroll.H
-  Fl_Secret_Input.H
   Fl_Select_Browser.H
   Fl_Shared_Image.H
   fl_show_colormap.H

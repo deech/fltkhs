@@ -10,6 +10,11 @@
 #include "Fl_Light_ButtonC.h"
 #include "Fl_Toggle_ButtonC.h"
 #include "Fl_InputC.h"
+#include "Fl_File_InputC.h"
+#include "Fl_Float_InputC.h"
+#include "Fl_Int_InputC.h"
+#include "Fl_Multiline_InputC.h"
+#include "Fl_Secret_InputC.h"
 #include "Fl_Types.h"
 EXPORT {
 #endif
