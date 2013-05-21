@@ -236,6 +236,9 @@ EXPORT {
     Fl_Radio_Button* button = new Fl_Radio_Button(x,y,w,h,0);
     return (fl_Radio_Button)button;
   }
+  FL_EXPORT_C(void,Fl_Radio_Button_Destroy)(fl_Radio_Button button){
+    delete (static_cast<Fl_Radio_Button*>(button));
+  }
   FL_EXPORT_C(int,Fl_Radio_Button_value)(fl_Radio_Button b,int v){
     return (static_cast<Fl_Radio_Button*>(b))->value(v);
   }

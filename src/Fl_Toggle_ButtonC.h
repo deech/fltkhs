@@ -87,8 +87,10 @@ EXPORT {
   FL_EXPORT_C(void,         Fl_Toggle_Button_measure_label)(fl_Toggle_Button win, int& ww , int& hh);
 
   /* Fl_Toggle_Button specific functions */
-  FL_EXPORT_C(fl_Toggle_Button,    Fl_Toggle_Button_New_WithLabel)(int x, int y, int w, int h, const char* label);
-  FL_EXPORT_C(fl_Toggle_Button,    Fl_Toggle_Button_New)(int x, int y, int w, int h);
+  FL_EXPORT_C(fl_Toggle_Button, Fl_Toggle_Button_New_WithLabel)(int x, int y, int w, int h, const char* label);
+  FL_EXPORT_C(fl_Toggle_Button, Fl_Toggle_Button_New)(int x, int y, int w, int h);
+  FL_EXPORT_C(void,             Fl_Toggle_Button_Destroy)(fl_Toggle_Button button);
+  
   FL_EXPORT_C(int         , Fl_Toggle_Button_value)(fl_Toggle_Button b, int v);
   FL_EXPORT_C(int         , Fl_Toggle_Button_set)(fl_Toggle_Button b);
   FL_EXPORT_C(int         , Fl_Toggle_Button_clear)(fl_Toggle_Button b);

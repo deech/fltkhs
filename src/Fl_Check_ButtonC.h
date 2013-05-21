@@ -87,8 +87,10 @@ EXPORT {
   FL_EXPORT_C(void,         Fl_Check_Button_measure_label)(fl_Check_Button win, int& ww , int& hh);
 
   /* Fl_Check_Button specific functions */
-  FL_EXPORT_C(fl_Check_Button,    Fl_Check_Button_New_WithLabel)(int x, int y, int w, int h, const char* label);
-  FL_EXPORT_C(fl_Check_Button,    Fl_Check_Button_New)(int x, int y, int w, int h);
+  FL_EXPORT_C(fl_Check_Button, Fl_Check_Button_New_WithLabel)(int x, int y, int w, int h, const char* label);
+  FL_EXPORT_C(fl_Check_Button, Fl_Check_Button_New)(int x, int y, int w, int h);
+  FL_EXPORT_C(void,            Fl_Check_Button_Destroy)(fl_Check_Button button);
+  
   FL_EXPORT_C(int         , Fl_Check_Button_value)(fl_Check_Button b, int v);
   FL_EXPORT_C(int         , Fl_Check_Button_set)(fl_Check_Button b);
   FL_EXPORT_C(int         , Fl_Check_Button_clear)(fl_Check_Button b);

@@ -87,9 +87,11 @@ EXPORT {
   FL_EXPORT_C(void,         Fl_Input_measure_label)(fl_Input input, int& ww , int& hh);
 
   /* Fl_Input specific functions */
-  FL_EXPORT_C(int,          Fl_Input_handle)(fl_Input input, int event);
-  FL_EXPORT_C(fl_Input,     Fl_Input_New_WithLabel)(int x, int y, int w, int h, const char* label); 
-  FL_EXPORT_C(fl_Input,     Fl_Input_New)(int x, int y, int w, int h); 
+  FL_EXPORT_C(int,      Fl_Input_handle)(fl_Input input, int event);
+  FL_EXPORT_C(fl_Input, Fl_Input_New_WithLabel)(int x, int y, int w, int h, const char* label); 
+  FL_EXPORT_C(fl_Input, Fl_Input_New)(int x, int y, int w, int h); 
+  FL_EXPORT_C(void,     Fl_Input_Destroy)(fl_Input input);
+  
   FL_EXPORT_C(void,         Fl_Input_resize)(fl_Input input, int X, int Y, int W, int H);
   FL_EXPORT_C(int,          Fl_Input_set_value)(fl_Input input, const char*);
   FL_EXPORT_C(int,          Fl_Input_set_value_with_length)(fl_Input input, const char* text, int length);

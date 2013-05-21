@@ -241,6 +241,9 @@ EXPORT {
     Fl_Input* input = new Fl_Input(x,y,w,h,0);
     return (fl_Input)input;
   }
+  FL_EXPORT_C(void,Fl_Input_Destroy)(fl_Input input){
+    delete (static_cast<Fl_Input*>(input));
+  }
   FL_EXPORT_C(void,Fl_Input_resize)(fl_Input input,int X,int Y,int W,int H){
     (static_cast<Fl_Input*>(input))->resize(X,Y,W,H);
   }

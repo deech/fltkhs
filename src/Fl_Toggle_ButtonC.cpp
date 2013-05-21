@@ -236,6 +236,9 @@ EXPORT {
     Fl_Toggle_Button* button = new Fl_Toggle_Button(x,y,w,h,0);
     return (fl_Toggle_Button)button;
   }
+  FL_EXPORT_C(void,Fl_Toggle_Button_Destroy)(fl_Toggle_Button button){
+    delete (static_cast<Fl_Toggle_Button*>(button));
+  }
   FL_EXPORT_C(int,Fl_Toggle_Button_value)(fl_Toggle_Button b,int v){
     return (static_cast<Fl_Toggle_Button*>(b))->value(v);
   }

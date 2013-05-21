@@ -236,7 +236,9 @@ EXPORT {
     Fl_Check_Button* button = new Fl_Check_Button(x,y,w,h,0);
     return (fl_Check_Button)button;
   }
-
+  FL_EXPORT_C(void,Fl_Check_Button_Destroy)(fl_Check_Button button){
+    delete (static_cast<Fl_Check_Button*>(button));
+  }
   FL_EXPORT_C(int,Fl_Check_Button_value)(fl_Check_Button b,int v){
     return (static_cast<Fl_Check_Button*>(b))->value(v);
   }

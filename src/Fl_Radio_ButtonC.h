@@ -89,6 +89,8 @@ EXPORT {
   /* Fl_Radio_Button specific functions */
   FL_EXPORT_C(fl_Radio_Button,    Fl_Radio_Button_New_WithLabel)(int x, int y, int w, int h, const char* label);
   FL_EXPORT_C(fl_Radio_Button,    Fl_Radio_Button_New)(int x, int y, int w, int h);
+  FL_EXPORT_C(void,               Fl_Button_Destroy)(fl_Button button);
+
   FL_EXPORT_C(int         , Fl_Radio_Button_value)(fl_Radio_Button b, int v);
   FL_EXPORT_C(int         , Fl_Radio_Button_set)(fl_Radio_Button b);
   FL_EXPORT_C(int         , Fl_Radio_Button_clear)(fl_Radio_Button b);

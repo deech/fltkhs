@@ -235,6 +235,9 @@ EXPORT {
     Fl_Button* button = new Fl_Button(x,y,w,h,0);
     return (fl_Button)button;
   }
+  FL_EXPORT_C(void,Fl_Window_Destroy)(fl_Window win){
+    delete (static_cast<Fl_Window*>(win));
+  }
   FL_EXPORT_C(int,Fl_Button_value)(fl_Button b,int v){
     return (static_cast<Fl_Button*>(b))->value(v);
   }
