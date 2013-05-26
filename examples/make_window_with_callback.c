@@ -13,5 +13,5 @@ int main(int argc, char** argv)
   fl_Window win = (fl_Window)Fl_Window_NewWH_WithTitle(640,480,500,500,"FLTK Window");
   Fl_Window_set_callback(win,(fl_Callback*)my_callback);
   Fl_Window_show(win);
-  return flkc_run();
+  return Fl_run();
 }

@@ -16,7 +16,7 @@ int main(int argc, char** argv)
   char* title = "FLTK Button Window";
   fl_Window win = (fl_Window)Fl_Window_New_WithTitle(500,500,title);
   fl_Button b1 = (fl_Button)Fl_Button_New_WithLabel(20,20,100,100,"Button 1");
-  Fl_Button_set_callback(b1, (fl_Callback*)callback_button1);
+  Fl_Button_set_callback(b1,(fl_Callback*)callback_button1);
   fl_Button b2 = (fl_Button)Fl_Button_New_WithLabel(130,20,100,100,"Button 2");
   Fl_Button_set_callback(b2, (fl_Callback*)callback_button2);
   fl_Button b3 = (fl_Button)Fl_Button_New_WithLabel(240,20,100,100,"Button 3");
@@ -28,5 +28,5 @@ int main(int argc, char** argv)
   fl_Toggle_Button toggle = (fl_Toggle_Button)Fl_Toggle_Button_New_WithLabel(350,130,100,100,"Toggle");
   Fl_Window_end(win);
   Fl_Window_show(win);
-  return flkc_run();
+  return Fl_run();
 }

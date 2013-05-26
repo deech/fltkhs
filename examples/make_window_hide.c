@@ -8,7 +8,7 @@ int main(int argc, char** argv)
   Fl_Window_show_with_args(win, argc, argv);
   Fl_Window_hide(win);
   puts("Should just return. We're showing a window and immediately hiding it.");
-  flkc_run();
+  Fl_run();
   Fl_Window_destroy(win);
   win = NULL;
   if (win == NULL) {  puts("Now we've freed the window object"); }
