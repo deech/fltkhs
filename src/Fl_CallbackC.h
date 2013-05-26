@@ -20,5 +20,4 @@ class C_to_Fl_Callback {
   C_to_Fl_Callback(Fl_Widget* invoker, fl_Callback* callback);
 };
 #endif
-
 #endif /* __FL_CALLBACK_C__ */

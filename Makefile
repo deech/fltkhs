@@ -15,26 +15,26 @@ libfltkc.a : $(C_OBJS)
 	ar rcs $(LIBDIR)/$@ $^
 
 make_window_hide: examples/make_window_hide.o
-	$(CXX) -o $(EXECUTABLEDIR)/$@ $< $(LIBDIR)/libfltkc.a -lfltk_images -lpng -lz -ljpeg -lfltk_gl -lGLU -lfltk -lXext -lXft -lfontconfig -lXinerama -lpthread -ldl -lm  -lX11
+	$(CXX) -o $(EXECUTABLEDIR)/$@ $< $(LIBDIR)/libfltkc.a -lfltk_images -lpng -lz -ljpeg -lfltk_gl -lGLU -lGL -lfltk -lXext -lXft -lfontconfig -lXinerama -lpthread -ldl -lm  -lX11
 
 make_window_fullscreen: examples/make_window_fullscreen.o
-	$(CXX) -o $(EXECUTABLEDIR)/$@ $< $(LIBDIR)/libfltkc.a -lfltk_images -lpng -lz -ljpeg -lfltk_gl -lGLU -lfltk -lXext -lXft -lfontconfig -lXinerama -lpthread -ldl -lm  -lX11
+	$(CXX) -o $(EXECUTABLEDIR)/$@ $< $(LIBDIR)/libfltkc.a -lfltk_images -lpng -lz -ljpeg -lfltk_gl -lGLU -lGL -lfltk -lXext -lXft -lfontconfig -lXinerama -lpthread -ldl -lm  -lX11
 
 make_window: examples/make_window.o
-	$(CXX) -o $(EXECUTABLEDIR)/$@ $< $(LIBDIR)/libfltkc.a -lfltk_images -lpng -lz -ljpeg -lfltk_gl -lGLU -lfltk -lXext -lXft -lfontconfig -lXinerama -lpthread -ldl -lm  -lX11
+	$(CXX) -o $(EXECUTABLEDIR)/$@ $< $(LIBDIR)/libfltkc.a -lfltk_images -lpng -lz -ljpeg -lfltk_gl -lGLU -lGL -lfltk -lXext -lXft -lfontconfig -lXinerama -lpthread -ldl -lm  -lX11
 
 make_window_with_width_height: examples/make_window_with_width_height.o
-	$(CXX) -o $(EXECUTABLEDIR)/$@ $< $(LIBDIR)/libfltkc.a -lfltk_images -lpng -lz -ljpeg -lfltk_gl -lGLU -lfltk -lXext -lXft -lfontconfig -lXinerama -lpthread -ldl -lm  -lX11
+	$(CXX) -o $(EXECUTABLEDIR)/$@ $< $(LIBDIR)/libfltkc.a -lfltk_images -lpng -lz -ljpeg -lfltk_gl -lGLU -lGL -lfltk -lXext -lXft -lfontconfig -lXinerama -lpthread -ldl -lm  -lX11
 
 make_window_resize: examples/make_window_resize.o
-	$(CXX) -o $(EXECUTABLEDIR)/$@ $< $(LIBDIR)/libfltkc.a -lfltk_images -lpng -lz -ljpeg -lfltk_gl -lGLU -lfltk -lXext -lXft -lfontconfig -lXinerama -lpthread -ldl -lm  -lX11
+	$(CXX) -o $(EXECUTABLEDIR)/$@ $< $(LIBDIR)/libfltkc.a -lfltk_images -lpng -lz -ljpeg -lfltk_gl -lGLU -lGL -lfltk -lXext -lXft -lfontconfig -lXinerama -lpthread -ldl -lm  -lX11
 make_window_with_callback: examples/make_window_with_callback.o
-	$(CXX) -o $(EXECUTABLEDIR)/$@ $< $(LIBDIR)/libfltkc.a -lfltk_images -lpng -lz -ljpeg -lfltk_gl -lGLU -lfltk -lXext -lXft -lfontconfig -lXinerama -lpthread -ldl -lm  -lX11
+	$(CXX) -o $(EXECUTABLEDIR)/$@ $< $(LIBDIR)/libfltkc.a -lfltk_images -lpng -lz -ljpeg -lfltk_gl -lGLU -lGL -lfltk -lXext -lXft -lfontconfig -lXinerama -lpthread -ldl -lm  -lX11
 
 make_button_with_callback: examples/make_button_with_callback.o
-	$(CXX) -o $(EXECUTABLEDIR)/$@ $< $(LIBDIR)/libfltkc.a -lfltk_images -lpng -lz -ljpeg -lfltk_gl -lGLU -lfltk -lXext -lXft -lfontconfig -lXinerama -lpthread -ldl -lm  -lX11
+	$(CXX) -o $(EXECUTABLEDIR)/$@ $< $(LIBDIR)/libfltkc.a -lfltk_images -lpng -lz -ljpeg -lfltk_gl -lGLU -lGL -lfltk -lXext -lXft -lfontconfig -lXinerama -lpthread -ldl -lm  -lX11
 make_input: examples/make_input.o
-	$(CXX) -o $(EXECUTABLEDIR)/$@ $< $(LIBDIR)/libfltkc.a -lfltk_images -lpng -lz -ljpeg -lfltk_gl -lGLU -lfltk -lXext -lXft -lfontconfig -lXinerama -lpthread -ldl -lm  -lX11
+	$(CXX) -o $(EXECUTABLEDIR)/$@ $< $(LIBDIR)/libfltkc.a -lfltk_images -lpng -lz -ljpeg -lfltk_gl -lGLU -lGL -lfltk -lXext -lXft -lfontconfig -lXinerama -lpthread -ldl -lm  -lX11
 clean:
 	rm -f $(C_OBJS)
 	rm -f $(EXE_OBJS)

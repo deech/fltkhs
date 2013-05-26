@@ -48,38 +48,38 @@ EXPORT {
   typedef int  (*fl_Event_Dispatch)(int event, fl_Window *w);
 
   FL_EXPORT_C(int, Fl_run)();
-  /* FL_EXPORT_C(double, Fl_wait_with_args)(double wait); */
+  FL_EXPORT_C(double, Fl_wait_with_args)(double wait);
   FL_EXPORT_C(int, Fl_check)();
   FL_EXPORT_C(int, Fl_ready)();
   FL_EXPORT_C(int, Fl_wait)();
 
-  /* FL_EXPORT_C(int, Fl_add_awake_handler_)(fl_Awake_Handler handler, void* user_data); */
-  /* FL_EXPORT_C(int, Fl_get_awake_handler_)(fl_Awake_Handler handler, void* user_data); */
-  /* FL_EXPORT_C(double, Fl_version)(); */
-  /* FL_EXPORT_C(int, Fl_arg)(int argc, char **argv, int* i); */
-  /* FL_EXPORT_C(int, Fl_args)(int argc, char **argv, int* i); */
-  /* FL_EXPORT_C(int, Fl_args_with_handler)(int argc,char **argv,int* i,fl_Args_Handler cb); */
-  /* FL_EXPORT_C(void, args)(int argc, char **argv); */
-  /* FL_EXPORT_C(void, Fl_display)(const char* text); */
-  /* FL_EXPORT_C(int, Fl_visual)(int mode); */
-  /* FL_EXPORT_C(int, Fl_gl_visual)(int mode); */
-  /* FL_EXPORT_C(int, Fl_gl_visual_with_alist)(int mode, int *alist); */
-  /* FL_EXPORT_C(void, Fl_own_colormap)(); */
-  /* FL_EXPORT_C(void, Fl_get_system_colors)(); */
-  /* FL_EXPORT_C(void, Fl_foreground)(uchar r, uchar g, uchar b); */
-  /* FL_EXPORT_C(void, Fl_background)(uchar r, uchar g, uchar b); */
-  /* FL_EXPORT_C(void, Fl_Fl_background2)(uchar r, uchar g, uchar b); */
+  FL_EXPORT_C(int, Fl_add_awake_handler_)(fl_Awake_Handler handler, void* user_data);
+  FL_EXPORT_C(int, Fl_get_awake_handler_)(fl_Awake_Handler handler, void* user_data);
+  FL_EXPORT_C(double, Fl_version)();
+  FL_EXPORT_C(int, Fl_arg)(int argc, char **argv, int* i);
+  FL_EXPORT_C(int, Fl_args)(int argc, char **argv, int* i);
+  FL_EXPORT_C(int, Fl_args_with_handler)(int argc,char **argv,int* i,fl_Args_Handler cb);
+  FL_EXPORT_C(void, args)(int argc, char **argv);
+  FL_EXPORT_C(void, Fl_display)(const char* text);
+  FL_EXPORT_C(int, Fl_visual)(int mode);
+  FL_EXPORT_C(int, Fl_gl_visual)(int mode);
+  FL_EXPORT_C(int, Fl_gl_visual_with_alist)(int mode, int *alist);
+  FL_EXPORT_C(void, Fl_own_colormap)();
+  FL_EXPORT_C(void, Fl_get_system_colors)();
+  FL_EXPORT_C(void, Fl_foreground)(uchar r, uchar g, uchar b);
+  FL_EXPORT_C(void, Fl_background)(uchar r, uchar g, uchar b);
+  FL_EXPORT_C(void, Fl_Fl_background2)(uchar r, uchar g, uchar b);
 
-  /* FL_EXPORT_C(const char*       ,Fl_scheme)(); */
-  /* FL_EXPORT_C(int               ,Fl_set_scheme)(const char* text); */
-  /* FL_EXPORT_C(int               ,Fl_reload_scheme)(); */
-  /* FL_EXPORT_C(int               ,Fl_scrollbar_size)(); */
-  /* FL_EXPORT_C(void              ,Fl_set_scrollbar_size)(int W); */
-  /* FL_EXPORT_C(int               ,Fl_wait)(); */
-  /* FL_EXPORT_C(double            ,Fl_set_wait)(double time); */
-  /* FL_EXPORT_C(fl_Widget*        ,Fl_readqueue)(); */
-  /* FL_EXPORT_C(void              ,Fl_add_timeout)(double t,fl_Timeout_Handler handler); */
-  /* FL_EXPORT_C(void              ,Fl_add_timeout_with_userdata)(double t,fl_Timeout_Handler handler, void* userdata); */
+  FL_EXPORT_C(const char*       ,Fl_scheme)();
+  FL_EXPORT_C(int               ,Fl_set_scheme)(const char* text);
+  FL_EXPORT_C(int               ,Fl_reload_scheme)();
+  FL_EXPORT_C(int               ,Fl_scrollbar_size)();
+  FL_EXPORT_C(void              ,Fl_set_scrollbar_size)(int W);
+  FL_EXPORT_C(int               ,Fl_wait)();
+  FL_EXPORT_C(double            ,Fl_set_wait)(double time);
+  FL_EXPORT_C(fl_Widget*        ,Fl_readqueue)();
+  FL_EXPORT_C(void              ,Fl_add_timeout)(double t,fl_Timeout_Handler handler);
+  FL_EXPORT_C(void              ,Fl_add_timeout_with_userdata)(double t,fl_Timeout_Handler handler, void* userdata);
 /*   FL_EXPORT_C(void              ,Fl_repeat_timeout)(double t,fl_Timeout_Handler handler); */
 /*   FL_EXPORT_C(void              ,Fl_repeat_timeout_with_userdata)(double t,fl_Timeout_Handler handler,void* userdata);  */
 /*   FL_EXPORT_C(int               ,Fl_has_timeout)(fl_Timeout_Handler handler); */
