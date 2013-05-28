@@ -2,6 +2,15 @@
 #include "Fl_ExportMacros.h"
 #ifdef __cplusplus
 #include "Fl_C.h"
+  class C_to_Fl_Event_Dispatch {
+  public:
+    static fl_Event_Dispatch* cb;
+    static int intercept(int event, Fl_Window* window) {
+      fl_Window w = (fl_Window)window;
+      (*cb)(event, w);
+    }
+  };
+  fl_Event_Dispatch* C_to_Fl_Event_Dispatch::cb = 0;
 EXPORT {
 #endif
   FL_EXPORT_C(int, Fl_run)(){ return Fl::run(); }
@@ -131,14 +140,17 @@ EXPORT {
   FL_EXPORT_C(void,Fl_flush)( ){
     Fl::flush();
   }
-  FL_EXPORT_C(fl_Window*,Fl_modal)(){
-    return (fl_Window*)Fl::modal();
+  FL_EXPORT_C(fl_Window,Fl_next_window)(fl_Window window){
+    return (fl_Window)Fl::next_window((static_cast<Fl_Window*>(window)));
   }
-  FL_EXPORT_C(fl_Window*,Fl_grab)( ){
-    return (fl_Window*)Fl::grab();
+  FL_EXPORT_C(fl_Window,Fl_modal)(){
+    return (fl_Window)Fl::modal();
   }
-  FL_EXPORT_C(fl_Window*,Fl_first_window)(){
-    (fl_Window*)Fl::first_window();
+  FL_EXPORT_C(fl_Window,Fl_grab)( ){
+    return (fl_Window)Fl::grab();
+  }
+  FL_EXPORT_C(fl_Window,Fl_first_window)(){
+    (fl_Window)Fl::first_window();
   }
   FL_EXPORT_C(void,Fl_set_first_window)(fl_Window window){
     Fl::first_window((static_cast<Fl_Window*>(window)));
@@ -257,12 +269,13 @@ EXPORT {
   FL_EXPORT_C(void,Fl_remove_handler)(fl_Event_Handler h){
     Fl::remove_handler(h);
   }
-  // FL_EXPORT_C(void,Fl_event_set_dispatch)(fl_Event_Dispatch d){
-  //   Fl::event_dispatch(d)
-  // }
-  // FL_EXPORT_C(Fl_Event_Dispatch,Fl_event_dispatch)( ){
-  //   return Fl::event_dispatch();
-  // }
+  FL_EXPORT_C(void,Fl_event_set_dispatch)(fl_Event_Dispatch* d){
+    C_to_Fl_Event_Dispatch::cb = d;
+    Fl::event_dispatch(C_to_Fl_Event_Dispatch::intercept);
+  }
+  FL_EXPORT_C(fl_Event_Dispatch,Fl_event_dispatch)( ){
+    return *C_to_Fl_Event_Dispatch::cb;
+  }
   FL_EXPORT_C(void,Fl_copy)(const char* stuff,int len){
     Fl::copy(stuff,len,0);
   }

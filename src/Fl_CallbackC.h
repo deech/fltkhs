@@ -4,7 +4,10 @@
 #ifdef __cplusplus
 #include "Fl_ExportMacros.h"
 #include "Fl_Types.h"
-/**
+#include <FL/Fl.H>
+#include "FL/Fl_Window.H"
+#include <FL/Fl_Widget.H>
+#/**
    Pass a C callback function to an Fl_Window
 */
 class C_to_Fl_Callback {
