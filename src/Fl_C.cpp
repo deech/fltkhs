@@ -11,6 +11,26 @@
     }
   };
   fl_Event_Dispatch* C_to_Fl_Event_Dispatch::cb = 0;
+  class C_to_Fl_Label_Draw_F {
+  public:
+    static fl_Label_Draw_F* cb;
+    static void intercept(const Fl_Label* label, int x, int y, int w, int h, Fl_Align align) {
+      fl_Label* l = (fl_Label*)label;
+      (*cb)(l, x, y, w, h, align);
+    }
+  };
+  fl_Label_Draw_F* C_to_Fl_Label_Draw_F::cb = 0;
+  class C_to_Fl_Label_Measure_F {
+  public:
+    static fl_Label_Measure_F* cb;
+    static void intercept(const Fl_Label* label, int& width, int& height) {
+      fl_Label* l = (fl_Label*)label;
+      int* w = &width;
+      int* h = &height;
+      (*cb)(l, w, h);
+    }
+  };
+  fl_Label_Measure_F* C_to_Fl_Label_Measure_F::cb = 0;
 EXPORT {
 #endif
   FL_EXPORT_C(int, Fl_run)(){ return Fl::run(); }
@@ -311,6 +331,101 @@ EXPORT {
   }
   FL_EXPORT_C(int,Fl_h)( ){
     return Fl::h();
+  }
+  FL_EXPORT_C(int,Fl_screen_count)( ){
+    return Fl::screen_count();
+  }
+  FL_EXPORT_C(void,Fl_screen_xywh_with_mx_my)(int* X,int* Y,int* W,int* H,int mx,int my){
+    Fl::screen_xywh(*X,*Y,*W,*H,mx,my);
+  }
+  FL_EXPORT_C(void,Fl_screen_xywh_with_n)(int* X,int* Y,int* W,int* H,int n){
+    Fl::screen_xywh(*X,*Y,*W,*H,n);
+  }
+  FL_EXPORT_C(void,Fl_screen_xywh_with_n_mx_my_mh)(int* X,int* Y,int* W,int* H,int mx,int my,int mw,int mh){
+    Fl::screen_xywh(*X,*Y,*W,*H,mx,my,mw,mh);
+  }
+  FL_EXPORT_C(void,Fl_screen_dpi)(float* h,float* v){
+    Fl::screen_dpi(*h,*v);
+  }
+  FL_EXPORT_C(void,Fl_screen_dpi_with_n)(float* h,float* v,int n){
+    Fl::screen_dpi(*h,*v,n);
+  }
+  FL_EXPORT_C(void,Fl_screen_work_area_with_mx_my)(int* X,int* Y,int* W,int* H,int mx,int my){
+    Fl::screen_work_area(*X,*Y,*W,*H,mx,my);
+  }
+  FL_EXPORT_C(void,Fl_screen_work_area_with_n)(int* X,int* Y,int* W,int* H,int n){
+    Fl::screen_work_area(*X,*Y,*W,*H,n);
+  }
+  FL_EXPORT_C(void,Fl_screen_work_area)(int* X,int* Y,int* W,int* H){
+    Fl::screen_work_area(*X,*Y,*W,*H);
+  }
+  FL_EXPORT_C(void,Fl_set_color_rgb)(Fl_Color color,uchar r,uchar g,uchar b){
+    Fl::set_color(color,r,g,b);
+  }
+  FL_EXPORT_C(void,Fl_set_color)(Fl_Color i,unsigned c){
+    Fl::set_color(i,c);
+  }
+  FL_EXPORT_C(unsigned,Fl_get_color)(Fl_Color i){
+    return Fl::get_color(i);
+  }
+  FL_EXPORT_C(void,Fl_get_color_rgb)(Fl_Color i,uchar *red,uchar *green,uchar *blue){
+    Fl::get_color(i,*red,*green,*blue);
+  }
+  FL_EXPORT_C(void,Fl_free_color)(Fl_Color i){
+    Fl::free_color(i);
+  }
+  FL_EXPORT_C(void,Fl_free_color_with_overlay)(Fl_Color i,int overlay){
+    Fl::free_color(i,overlay);
+  }
+  FL_EXPORT_C(const char*,Fl_get_font)(Fl_Font font){
+    return Fl::get_font(font);
+  }
+  FL_EXPORT_C(const char*,Fl_get_font_name)(Fl_Font font){
+    return Fl::get_font_name(font);
+  }
+  FL_EXPORT_C(const char*,Fl_get_font_name_with_attributes)(Fl_Font font,int* attributes){
+    return Fl::get_font_name(font,attributes);
+  }
+  FL_EXPORT_C(int,Fl_get_font_sizes)(Fl_Font font,int** sizep){
+    return Fl::get_font_sizes(font,*sizep);
+  }
+  FL_EXPORT_C(void,Fl_set_font_by_string)(Fl_Font font,const char* text){
+    Fl::set_font(font,text);
+  }
+  FL_EXPORT_C(void,Fl_set_font_by_font)(Fl_Font to,Fl_Font from){
+    Fl::set_font(to,from);
+  }
+  FL_EXPORT_C(void,Fl_set_labeltype)(Fl_Labeltype labeltype,fl_Label_Draw_F* label_draw_f,fl_Label_Measure_F* label_measure_f){
+    C_to_Fl_Label_Draw_F::cb = label_draw_f;
+    C_to_Fl_Label_Measure_F::cb = label_measure_f;
+    Fl::set_labeltype(labeltype,C_to_Fl_Label_Draw_F::intercept,C_to_Fl_Label_Measure_F::intercept);
+  }
+  // FL_EXPORT_C(void,Fl_set_labeltype_by_labeltype)(Fl_Labeltype to ,Fl_Labeltype from){
+  //   Fl::set_labeltype(to,from);
+  // }
+  FL_EXPORT_C(fl_Box_Draw_F*,Fl_get_boxtype)(Fl_Boxtype boxtype){
+    return Fl::get_boxtype(boxtype);
+  }
+  FL_EXPORT_C(void,Fl_set_boxtype)(Fl_Boxtype boxtype,fl_Box_Draw_F* box_draw_f,uchar offsetX,uchar offsetY,uchar offsetW,uchar offsetH){
+    Fl::set_boxtype(boxtype,box_draw_f,offsetX,offsetY,offsetW,offsetH);
+  }
+  FL_EXPORT_C(void,Fl_set_boxtype_by_boxtype)(Fl_Boxtype to,Fl_Boxtype from){
+    Fl::set_boxtype(to,from);
+  }
+  FL_EXPORT_C(int,Fl_box_dx)(Fl_Boxtype boxtype){
+    return Fl::box_dx(boxtype);
+  }
+  FL_EXPORT_C(int,Fl_box_dy)(Fl_Boxtype boxtype){
+    return Fl::box_dy(boxtype);
+  }
+  FL_EXPORT_C(int,Fl_box_dw)(Fl_Boxtype boxtype){
+    return Fl::box_dw(boxtype);
+  }
+  FL_EXPORT_C(int,Fl_box_dh)(Fl_Boxtype boxtype){
+    return Fl::box_dh(boxtype);
+  }
+  FL_EXPORT_C(int,Fl_draw_box_active)( ){
+    return Fl::draw_box_active();
   }
 #ifdef __cplusplus
 }

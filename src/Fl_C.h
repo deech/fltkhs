@@ -29,8 +29,8 @@ EXPORT {
     OPTION_SHOW_TOOLTIPS,
     OPTION_LAST
   } Fl_Option;
-  typedef void (fl_Label_Draw_F)(fl_Label *label, int x, int y, int w, int h, Fl_Align align);
-  typedef void (fl_Label_Measure_F)(fl_Label *label, int *width, int *height);
+  typedef void (fl_Label_Draw_F)(const fl_Label *label, int x, int y, int w, int h, Fl_Align align);
+  typedef void (fl_Label_Measure_F)(const fl_Label *label, int *width, int *height);
   typedef void (fl_Box_Draw_F)(int x, int y, int w, int h, Fl_Color color);
   typedef void (*fl_Timeout_Handler)(void *data);
   typedef void (*fl_Awake_Handler)(void *data);
@@ -163,37 +163,38 @@ EXPORT {
   FL_EXPORT_C(int       ,Fl_y)();
   FL_EXPORT_C(int       ,Fl_w)();
   FL_EXPORT_C(int       ,Fl_h)();
-/*   FL_EXPORT_C(int               ,Fl_screen_count)(); */
-/*   FL_EXPORT_C(void              ,Fl_screen_xywh)(int &X,int &Y,int &W,int &H); */
-/*   FL_EXPORT_C(void              ,Fl_screen_xywh)(int &X,int &Y,int &W,int &H,int mx,int my); */
-/*   FL_EXPORT_C(void              ,Fl_screen_xywh)(int &X,int &Y,int &W,int &H,int n); */
-/*   FL_EXPORT_C(void              ,Fl_screen_xywh)(int &X,int &Y,int &W,int &H,int mx,int my,int mw,int mh); */
-/*   FL_EXPORT_C(void              ,Fl_screen_dpi)(float &h,float &v); */
-/*   FL_EXPORT_C(void              ,Fl_screen_dpi_with_n)(float &h,float &v,int n); */
-/*   FL_EXPORT_C(void              ,Fl_screen_work_area_with_mx_my)(int &X,int &Y,int &W,int &H,int mx,int my); */
-/*   FL_EXPORT_C(void              ,Fl_screen_work_area_with_n)(int &X,int &Y,int &W,int &H,int n); */
-/*   FL_EXPORT_C(void              ,Fl_screen_work_area)(int &X,int &Y,int &W,int &H); */
-/*   FL_EXPORT_C(void              ,Fl_set_color_rgb)(Fl_Color,uchar,uchar,uchar); */
-/*   FL_EXPORT_C(void              ,Fl_set_color)(Fl_Color i,unsigned c); */
-/*   FL_EXPORT_C(unsigned          ,Fl_get_color)(Fl_Color i); */
-/*   FL_EXPORT_C(void              ,Fl_get_color_rgb)(Fl_Color i,uchar &red,uchar &green,uchar &blue); */
-/*   FL_EXPORT_C(void              ,Fl_free_color)(Fl_Color i); */
-/*   FL_EXPORT_C(void              ,Fl_free_color_with_overlay)(Fl_Color i,int overlay); */
-/*   FL_EXPORT_C(const char*       ,Fl_get_font)(Fl_Font); */
-/*   FL_EXPORT_C(const char*       ,Fl_get_font_name)(Fl_Font); */
-/*   FL_EXPORT_C(const char*       ,Fl_get_font_name_with_attributes)(Fl_Font,int* attributes); */
-/*   FL_EXPORT_C(int               ,Fl_get_font_sizes)(Fl_Font,int*& sizep); */
-/*   FL_EXPORT_C(void              ,Fl_set_font_by_string)(Fl_Font,const char*); */
-/*   FL_EXPORT_C(void              ,Fl_set_font_by_font)(Fl_Font,Fl_Font); */
-/*   FL_EXPORT_C(void              ,Fl_set_labeltype)(Fl_Labeltype,Fl_Label_Draw_F*,Fl_Label_Measure_F*); */
-/*   FL_EXPORT_C(void              ,Fl_set_labeltype)(Fl_Labeltype,Fl_Labeltype from); */
-/*   FL_EXPORT_C(void              ,Fl_set_boxtype)(Fl_Boxtype,Fl_Box_Draw_F*,uchar,uchar,uchar,uchar); */
-/*   FL_EXPORT_C(void              ,Fl_set_boxtype)(Fl_Boxtype,Fl_Boxtype from); */
-/*   FL_EXPORT_C(int               ,Fl_box_dx)(Fl_Boxtype); */
-/*   FL_EXPORT_C(int               ,Fl_box_dy)(Fl_Boxtype); */
-/*   FL_EXPORT_C(int               ,Fl_box_dw)(Fl_Boxtype); */
-/*   FL_EXPORT_C(int               ,Fl_box_dh)(Fl_Boxtype); */
-/*   FL_EXPORT_C(int               ,Fl_draw_box_active)(); */
+  FL_EXPORT_C(int               ,Fl_screen_count)();
+  FL_EXPORT_C(void              ,Fl_screen_xywh)(int* X,int* Y,int* W,int* H);
+  FL_EXPORT_C(void              ,Fl_screen_xywh_with_mx_my)(int* X,int* Y,int* W,int* H,int mx,int my);
+  FL_EXPORT_C(void              ,Fl_screen_xywh_with_n)(int* X,int* Y,int* W,int* H,int n);
+  FL_EXPORT_C(void              ,Fl_screen_xywh_with_n_mx_my)(int* X,int* Y,int* W,int* H,int mx,int my,int mw,int mh);
+  FL_EXPORT_C(void              ,Fl_screen_dpi)(float* h,float* v);
+  FL_EXPORT_C(void              ,Fl_screen_dpi_with_n)(float* h,float* v,int n);
+  FL_EXPORT_C(void              ,Fl_screen_work_area_with_mx_my)(int* X,int* Y,int* W,int* H,int mx,int my);
+  FL_EXPORT_C(void              ,Fl_screen_work_area_with_n)(int* X,int* Y,int* W,int* H,int n);
+  FL_EXPORT_C(void              ,Fl_screen_work_area)(int* X,int* Y,int* W,int* H);
+  FL_EXPORT_C(void              ,Fl_set_color_rgb)(Fl_Color color,uchar r,uchar g,uchar b);
+  FL_EXPORT_C(void              ,Fl_set_color)(Fl_Color i,unsigned c);
+  FL_EXPORT_C(unsigned          ,Fl_get_color)(Fl_Color i);
+  FL_EXPORT_C(void              ,Fl_get_color_rgb)(Fl_Color i,uchar *red,uchar *green,uchar *blue);
+  FL_EXPORT_C(void              ,Fl_free_color)(Fl_Color i);
+  FL_EXPORT_C(void              ,Fl_free_color_with_overlay)(Fl_Color i,int overlay);
+  FL_EXPORT_C(const char*       ,Fl_get_font)(Fl_Font font);
+  FL_EXPORT_C(const char*       ,Fl_get_font_name)(Fl_Font font);
+  FL_EXPORT_C(const char*       ,Fl_get_font_name_with_attributes)(Fl_Font font,int* attributes);
+  FL_EXPORT_C(int               ,Fl_get_font_sizes)(Fl_Font font,int** sizep);
+  FL_EXPORT_C(void              ,Fl_set_font_by_string)(Fl_Font font,const char*);
+  FL_EXPORT_C(void              ,Fl_set_font_by_font)(Fl_Font to,Fl_Font from);
+  FL_EXPORT_C(void              ,Fl_set_labeltype)(Fl_Labeltype labeltype,fl_Label_Draw_F* label_draw_f,fl_Label_Measure_F* label_measure_f);
+  /* FL_EXPORT_C(void              ,Fl_set_labeltype_by_labeltype)(Fl_Labeltype to,Fl_Labeltype from); */
+  FL_EXPORT_C(fl_Box_Draw_F*    ,Fl_get_boxtype)(Fl_Boxtype boxtype);
+  FL_EXPORT_C(void              ,Fl_set_boxtype)(Fl_Boxtype boxtype,fl_Box_Draw_F* box_draw_f,uchar offsetX,uchar offsetY,uchar offsetW,uchar offsetH);
+  FL_EXPORT_C(void              ,Fl_set_boxtype_by_boxtype)(Fl_Boxtype to,Fl_Boxtype from);
+  FL_EXPORT_C(int               ,Fl_box_dx)(Fl_Boxtype boxtype);
+  FL_EXPORT_C(int               ,Fl_box_dy)(Fl_Boxtype boxtype);
+  FL_EXPORT_C(int               ,Fl_box_dw)(Fl_Boxtype boxtype);
+  FL_EXPORT_C(int               ,Fl_box_dh)(Fl_Boxtype boxtype);
+  FL_EXPORT_C(int               ,Fl_draw_box_active)();
 /*   FL_EXPORT_C(void              ,Fl_set_abort)(fl_Abort_Handler f); */
 /*   FL_EXPORT_C(void              ,Fl_default_atclose)(Fl_Window*,void*); */
 /*   FL_EXPORT_C(void              ,Fl_set_atclose)(fl_Atclose_Handler f); */
