@@ -45,7 +45,7 @@ EXPORT {
   typedef int  (*fl_Args_Handler)(int argc, char** argv, int** i);
 #endif
   typedef void (*fl_Atclose_Handler)(fl_Window *window, void *data);
-  typedef int  (*fl_Event_Dispatch)(int event, fl_Window *w);
+  //  typedef int  (*fl_Event_Dispatch)(int event, fl_Window *w);
 
   FL_EXPORT_C(int, Fl_run)();
   FL_EXPORT_C(double, Fl_wait_with_args)(double wait);
@@ -70,98 +70,99 @@ EXPORT {
   FL_EXPORT_C(void, Fl_background)(uchar r, uchar g, uchar b);
   FL_EXPORT_C(void, Fl_Fl_background2)(uchar r, uchar g, uchar b);
 
-  FL_EXPORT_C(const char*       ,Fl_scheme)();
-  FL_EXPORT_C(int               ,Fl_set_scheme)(const char* text);
-  FL_EXPORT_C(int               ,Fl_reload_scheme)();
-  FL_EXPORT_C(int               ,Fl_scrollbar_size)();
-  FL_EXPORT_C(void              ,Fl_set_scrollbar_size)(int W);
-  FL_EXPORT_C(int               ,Fl_wait)();
-  FL_EXPORT_C(double            ,Fl_set_wait)(double time);
-  FL_EXPORT_C(fl_Widget*        ,Fl_readqueue)();
-  FL_EXPORT_C(void              ,Fl_add_timeout)(double t,fl_Timeout_Handler handler);
-  FL_EXPORT_C(void              ,Fl_add_timeout_with_userdata)(double t,fl_Timeout_Handler handler, void* userdata);
-/*   FL_EXPORT_C(void              ,Fl_repeat_timeout)(double t,fl_Timeout_Handler handler); */
-/*   FL_EXPORT_C(void              ,Fl_repeat_timeout_with_userdata)(double t,fl_Timeout_Handler handler,void* userdata);  */
-/*   FL_EXPORT_C(int               ,Fl_has_timeout)(fl_Timeout_Handler handler); */
-/*   FL_EXPORT_C(int               ,Fl_has_timeout_with_userdata)(fl_Timeout_Handler handler, void* userdata); */
-/*   FL_EXPORT_C(void              ,Fl_remove_timeout)(fl_Timeout_Handler handler); */
-/*   FL_EXPORT_C(void              ,Fl_remove_timeout_with_userdata)(fl_Timeout_Handler handler,void* userdata); */
-/*   FL_EXPORT_C(void              ,Fl_add_check)(fl_Timeout_Handler handler) */
-/*   FL_EXPORT_C(void              ,Fl_add_check_with_userdata)(fl_Timeout_Handler handler,void* userdata);  */
-/*   FL_EXPORT_C(int               ,Fl_has_check)(fl_Timeout_Handler handler); */
-/*   FL_EXPORT_C(int               ,Fl_has_check_with_userdata)(fl_Timeout_Handler handler, void* userdata); */
-/*   FL_EXPORT_C(void              ,Fl_remove_check)(fl_Timeout_Handler handler); */
-/*   FL_EXPORT_C(void              ,Fl_remove_check_with_userdata)(fl_Timeout_Handler handler,void* userdata);  */
-/*   FL_EXPORT_C(void              ,Fl_add_fd_with_when)(int fd,int when,fl_FD_Handler cb); */
-/*   FL_EXPORT_C(void              ,Fl_add_fd_with_when_userdata)(int fd,int when,fl_FD_Handler cb,void* userdata);  */
-/*   FL_EXPORT_C(void              ,Fl_add_fd)(int fd,fl_FD_Handler cb); */
-/*   FL_EXPORT_C(void              ,Fl_add_fd_with_userdata)(int fd,fl_FD_Handler cb,void* userdata);  */
-/*   FL_EXPORT_C(void              ,Fl_remove_fd)(int,int when); */
-/*   FL_EXPORT_C(void              ,Fl_remove_fd)(int); */
-/*   FL_EXPORT_C(void              ,Fl_add_idle)(fl_Idle_Handler cb,void* data = 0); */
-/*   FL_EXPORT_C(int               ,Fl_has_idle)(fl_Idle_Handler cb); */
-/*   FL_EXPORT_C(int               ,Fl_has_idle_with_userdata)(fl_Idle_Handler cb, void* userdata); */
-/*   FL_EXPORT_C(void              ,Fl_remove_idle)(fl_Idle_Handler cb); */
-/*   FL_EXPORT_C(void              ,Fl_remove_idle_with_userdata)(fl_Idle_Handler cb,void* data);  */
-/*   FL_EXPORT_C(int               ,Fl_damage)(); */
-/*   FL_EXPORT_C(void              ,Fl_redraw)(); */
-/*   FL_EXPORT_C(void              ,Fl_flush)(); */
-/*   FL_EXPORT_C(Fl_Window*        ,Fl_first_window)(); */
-/*   FL_EXPORT_C(void              ,Fl_first_window)(Fl_Window*); */
-/*   FL_EXPORT_C(Fl_Window*        ,Fl_next_window)(const Fl_Window*); */
-/*   FL_EXPORT_C(Fl_Window*        ,Fl_modal)(); */
-/*   FL_EXPORT_C(Fl_Window*        ,Fl_grab)(); */
-/*   FL_EXPORT_C(void              ,Fl_grab)(Fl_Window*); */
-/*   FL_EXPORT_C(int               ,Fl_event)(); */
-/*   FL_EXPORT_C(int               ,Fl_event_x)(); */
-/*   FL_EXPORT_C(int               ,Fl_event_y)(); */
-/*   FL_EXPORT_C(int               ,Fl_event_x_root)(); */
-/*   FL_EXPORT_C(int               ,Fl_event_y_root)(); */
-/*   FL_EXPORT_C(int               ,Fl_event_dx)(); */
-/*   FL_EXPORT_C(int               ,Fl_event_dy)(); */
-/*   FL_EXPORT_C(void              ,Fl_get_mouse)(int &,int &); */
-/*   FL_EXPORT_C(int               ,Fl_event_clicks)(); */
-/*   FL_EXPORT_C(void              ,Fl_event_clicks)(int i); */
-/*   FL_EXPORT_C(int               ,Fl_event_is_click)(); */
-/*   FL_EXPORT_C(void              ,Fl_event_is_click)(int i); */
-/*   FL_EXPORT_C(int               ,Fl_event_button)(); */
-/*   FL_EXPORT_C(int               ,Fl_event_state)(); */
-/*   FL_EXPORT_C(int               ,Fl_event_state)(int i); */
-/*   FL_EXPORT_C(int               ,Fl_event_key)(); */
-/*   FL_EXPORT_C(int               ,Fl_event_original_key)(); */
-/*   FL_EXPORT_C(int               ,Fl_event_key)(int key); */
-/*   FL_EXPORT_C(int               ,Fl_get_key)(int key); */
-/*   FL_EXPORT_C(const char*       ,Fl_event_text)(); */
-/*   FL_EXPORT_C(int               ,Fl_event_length)(); */
-/*   FL_EXPORT_C(int               ,Fl_compose)(int &del); */
-/*   FL_EXPORT_C(void              ,Fl_compose_reset)(); */
-/*   FL_EXPORT_C(int               ,Fl_event_inside)(int,int,int,int); */
-/*   FL_EXPORT_C(int               ,Fl_event_inside)(const Fl_Widget*); */
-/*   FL_EXPORT_C(int               ,Fl_test_shortcut)(Fl_Shortcut); */
-/*   FL_EXPORT_C(int               ,Fl_handle)(int,Fl_Window*); */
-/*   FL_EXPORT_C(int               ,Fl_handle_)(int,Fl_Window*); */
-/*   FL_EXPORT_C(Fl_Widget*        ,Fl_belowmouse)(); */
-/*   FL_EXPORT_C(void              ,Fl_belowmouse)(Fl_Widget*); */
-/*   FL_EXPORT_C(Fl_Widget*        ,Fl_pushed)(); */
-/*   FL_EXPORT_C(void              ,Fl_pushed)(); */
-/*   FL_EXPORT_C(Fl_Widget*        ,Fl_focus)(); */
-/*   FL_EXPORT_C(void              ,Fl_focus)(Fl_Widget*); */
-/*   FL_EXPORT_C(void              ,Fl_add_handler)(fl_Event_Handler h); */
-/*   FL_EXPORT_C(void              ,Fl_remove_handler)(fl_Event_Handler h); */
-/*   FL_EXPORT_C(void              ,Fl_event_dispatch)(Fl_Event_Dispatch d); */
-/*   FL_EXPORT_C(Fl_Event_Dispatch ,Fl_event_dispatch)(); */
-/*   FL_EXPORT_C(void              ,Fl_copy)(const char* stuff,int len); */
-/*   FL_EXPORT_C(void              ,Fl_copy_with_destination)(const char* stuff,int len,int destination); */
-/*   FL_EXPORT_C(void              ,Fl_paste)(Fl_Widget &receiver,int source /\*=0*\/); */
-/*   FL_EXPORT_C(int               ,Fl_dnd)(); */
-/*   FL_EXPORT_C(Fl_Widget*        ,Fl_selection_owner)(); */
-/*   FL_EXPORT_C(void              ,Fl_selection_owner)(Fl_Widget*); */
-/*   FL_EXPORT_C(void              ,Fl_selection)(Fl_Widget &owner,const char*,int len); */
-/*   FL_EXPORT_C(void              ,Fl_paste)(Fl_Widget &receiver); */
-/*   FL_EXPORT_C(int               ,Fl_x)(); */
-/*   FL_EXPORT_C(int               ,Fl_y)(); */
-/*   FL_EXPORT_C(int               ,Fl_w)(); */
-/*   FL_EXPORT_C(int               ,Fl_h)(); */
+  FL_EXPORT_C(const char*,Fl_scheme)();
+  FL_EXPORT_C(int        ,Fl_set_scheme)(const char* text);
+  FL_EXPORT_C(int        ,Fl_reload_scheme)();
+  FL_EXPORT_C(int        ,Fl_scrollbar_size)();
+  FL_EXPORT_C(void       ,Fl_set_scrollbar_size)(int W);
+  FL_EXPORT_C(int        ,Fl_wait)();
+  FL_EXPORT_C(double     ,Fl_set_wait)(double time);
+  FL_EXPORT_C(fl_Widget* ,Fl_readqueue)();
+  FL_EXPORT_C(void       ,Fl_add_timeout)(double t,fl_Timeout_Handler handler);
+  FL_EXPORT_C(void       ,Fl_add_timeout_with_userdata)(double t,fl_Timeout_Handler handler, void* userdata);
+  FL_EXPORT_C(void       ,Fl_repeat_timeout)(double t,fl_Timeout_Handler handler);
+  FL_EXPORT_C(void       ,Fl_repeat_timeout_with_userdata)(double t,fl_Timeout_Handler handler,void* userdata);
+  FL_EXPORT_C(int        ,Fl_has_timeout)(fl_Timeout_Handler handler);
+  FL_EXPORT_C(int        ,Fl_has_timeout_with_userdata)(fl_Timeout_Handler handler, void* userdata);
+  FL_EXPORT_C(void       ,Fl_remove_timeout)(fl_Timeout_Handler handler);
+  FL_EXPORT_C(void       ,Fl_remove_timeout_with_userdata)(fl_Timeout_Handler handler,void* userdata);
+  FL_EXPORT_C(void       ,Fl_add_check)(fl_Timeout_Handler handler);
+  FL_EXPORT_C(void       ,Fl_add_check_with_userdata)(fl_Timeout_Handler handler,void* userdata);
+  FL_EXPORT_C(int        ,Fl_has_check)(fl_Timeout_Handler handler);
+  FL_EXPORT_C(int        ,Fl_has_check_with_userdata)(fl_Timeout_Handler handler, void* userdata);
+  FL_EXPORT_C(void       ,Fl_remove_check)(fl_Timeout_Handler handler);
+  FL_EXPORT_C(void       ,Fl_remove_check_with_userdata)(fl_Timeout_Handler handler,void* userdata);
+  FL_EXPORT_C(void       ,Fl_add_fd_with_when)(int fd,int when,fl_FD_Handler cb);
+  FL_EXPORT_C(void       ,Fl_add_fd_with_when_userdata)(int fd,int when,fl_FD_Handler cb,void* userdata);
+  FL_EXPORT_C(void       ,Fl_add_fd)(int fd,fl_FD_Handler cb);
+  FL_EXPORT_C(void       ,Fl_add_fd_with_userdata)(int fd,fl_FD_Handler cb,void* userdata);
+  FL_EXPORT_C(void       ,Fl_remove_fd_with_when)(int fd_handle,int when);
+  FL_EXPORT_C(void       ,Fl_remove_fd)(int fd_handle);
+  FL_EXPORT_C(void       ,Fl_add_idle)(fl_Idle_Handler cb);
+  FL_EXPORT_C(void       ,Fl_add_idle_with_userdata)(fl_Idle_Handler cb,void* userdata);
+  FL_EXPORT_C(int        ,Fl_has_idle)(fl_Idle_Handler cb);
+  FL_EXPORT_C(int        ,Fl_has_idle_with_userdata)(fl_Idle_Handler cb, void* userdata);
+  FL_EXPORT_C(void       ,Fl_remove_idle)(fl_Idle_Handler cb);
+  FL_EXPORT_C(void       ,Fl_remove_idle_with_userdata)(fl_Idle_Handler cb,void* data);
+  FL_EXPORT_C(int        ,Fl_damage)();
+  FL_EXPORT_C(void       ,Fl_redraw)();
+  FL_EXPORT_C(void       ,Fl_flush)();
+  FL_EXPORT_C(fl_Window* ,Fl_first_window)();
+  FL_EXPORT_C(void       ,Fl_set_first_window)(fl_Window window);
+  FL_EXPORT_C(fl_Window* ,Fl_next_window)(fl_Window window);
+  FL_EXPORT_C(fl_Window* ,Fl_modal)();
+  FL_EXPORT_C(fl_Window* ,Fl_grab)();
+  FL_EXPORT_C(void              ,Fl_set_grab)(fl_Window window);
+  FL_EXPORT_C(int               ,Fl_event)();
+  FL_EXPORT_C(int               ,Fl_event_x)();
+  FL_EXPORT_C(int               ,Fl_event_y)();
+  FL_EXPORT_C(int               ,Fl_event_x_root)();
+  FL_EXPORT_C(int               ,Fl_event_y_root)();
+  FL_EXPORT_C(int               ,Fl_event_dx)();
+  FL_EXPORT_C(int               ,Fl_event_dy)();
+  FL_EXPORT_C(void              ,Fl_get_mouse)(int* x, int* y);
+  FL_EXPORT_C(int               ,Fl_event_clicks)();
+  FL_EXPORT_C(void              ,Fl_event_set_clicks)(int i);
+  FL_EXPORT_C(int               ,Fl_event_is_click)();
+  FL_EXPORT_C(void              ,Fl_event_set_is_click)(int i);
+  FL_EXPORT_C(int               ,Fl_event_button)();
+  FL_EXPORT_C(int               ,Fl_event_state)();
+  FL_EXPORT_C(int               ,Fl_event_set_state)(int i);
+  FL_EXPORT_C(int               ,Fl_event_key)();
+  FL_EXPORT_C(int               ,Fl_event_original_key)();
+  FL_EXPORT_C(int               ,Fl_set_event_key)(int key);
+  FL_EXPORT_C(int               ,Fl_get_key)(int key);
+  FL_EXPORT_C(const char*       ,Fl_event_text)();
+  FL_EXPORT_C(int               ,Fl_event_length)();
+  FL_EXPORT_C(int               ,Fl_compose)(int* del);
+  FL_EXPORT_C(void              ,Fl_compose_reset)();
+  FL_EXPORT_C(int               ,Fl_event_inside_region)(int X,int Y,int W,int H);
+  FL_EXPORT_C(int               ,Fl_event_inside_widget)(fl_Widget widget);
+  FL_EXPORT_C(int               ,Fl_test_shortcut)(Fl_Shortcut shortcut);
+  FL_EXPORT_C(int               ,Fl_handle)(int event,fl_Window window);
+  FL_EXPORT_C(int               ,Fl_handle_)(int event,fl_Window window);
+  FL_EXPORT_C(fl_Widget        ,Fl_belowmouse)();
+  FL_EXPORT_C(void              ,Fl_set_belowmouse)(fl_Widget widget);
+  FL_EXPORT_C(fl_Widget        ,Fl_pushed)();
+  FL_EXPORT_C(void              ,Fl_set_pushed)();
+  FL_EXPORT_C(fl_Widget        ,Fl_focus)();
+  FL_EXPORT_C(void              ,Fl_set_focus)(fl_Widget widget);
+  FL_EXPORT_C(void              ,Fl_add_handler)(fl_Event_Handler h);
+  FL_EXPORT_C(void              ,Fl_remove_handler)(fl_Event_Handler h);
+  //  FL_EXPORT_C(void              ,Fl_event_set_dispatch)(fl_Event_Dispatch d);
+  //  FL_EXPORT_C(fl_Event_Dispatch ,Fl_event_dispatch)();
+  FL_EXPORT_C(void              ,Fl_copy)(const char* stuff,int len);
+  FL_EXPORT_C(void              ,Fl_copy_with_destination)(const char* stuff,int len,int destination);
+  FL_EXPORT_C(void              ,Fl_paste_with_source)(fl_Widget receiver,int source);
+  FL_EXPORT_C(int               ,Fl_dnd)();
+  FL_EXPORT_C(fl_Widget        ,Fl_selection_owner)();
+  FL_EXPORT_C(void              ,Fl_set_selection_owner)(fl_Widget widget);
+  FL_EXPORT_C(void              ,Fl_selection)(fl_Widget owner,const char* text,int len);
+  FL_EXPORT_C(void              ,Fl_paste)(fl_Widget receiver);
+  FL_EXPORT_C(int               ,Fl_x)();
+  FL_EXPORT_C(int               ,Fl_y)();
+  FL_EXPORT_C(int               ,Fl_w)();
+  FL_EXPORT_C(int               ,Fl_h)();
 /*   FL_EXPORT_C(int               ,Fl_screen_count)(); */
 /*   FL_EXPORT_C(void              ,Fl_screen_xywh)(int &X,int &Y,int &W,int &H); */
 /*   FL_EXPORT_C(void              ,Fl_screen_xywh)(int &X,int &Y,int &W,int &H,int mx,int my); */

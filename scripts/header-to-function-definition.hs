@@ -35,8 +35,8 @@ getSelfArgument args = case filter (\arg -> case (argumentType arg) of
                                               (Self _) -> True
                                               _ -> False)
                                    args of
-                         (x:xs) -> argumentName x
-                         [] -> error "No self argument found"
+                         (x:xs) -> Just(argumentName x)
+                         [] -> Nothing
 
 outputDefaultImplementation (fn,args) =
     let header = exportMacro ++ "(" ++ ppArgument "," (argument fn) ++ ")"
@@ -48,11 +48,15 @@ outputDefaultImplementation (fn,args) =
                      ""
                  else
                      "return"
-        body = case (argumentType . argument $ fn) of
-                 Normal t -> "{" ++ "\n" ++ "  " ++
+        body = case ((argumentType . argument $ fn), getSelfArgument args) of
+                 (Normal t, Just self) -> "{" ++ "\n" ++ "  " ++
                              return ++ " " ++ "(static_cast<" ++ className fn ++ "*>" ++
-                             "(" ++ getSelfArgument args ++ ")" ++ ")" ++ "->" ++ (realName fn) ++ "(" ++ intercalate "," (map castIfNecessary (tail args)) ++ ");" ++ "\n" ++
+                             "(" ++ self ++ ")" ++ ")" ++ "->" ++ (realName fn) ++ "(" ++ intercalate "," (map castIfNecessary (tail args)) ++ ");" ++ "\n" ++
                               "}"
+                 (Normal t, Nothing) ->  "{" ++ "\n" ++ "  " ++
+                             return ++ " " ++ className fn ++ "::" ++ (realName fn) ++ "(" ++ intercalate "," (map castIfNecessary args) ++ ");" ++ "\n" ++
+                              "}"
+
                  _ -> "dunno"
     in
       header ++ body
@@ -78,7 +82,7 @@ extractClassName' functionName@(x1:xs) accum | (x1 == "")  = extractClassName' x
 extractClassName' functionName@(x:xs) accum | (x /= "") && (isUpper(head x))= extractClassName' xs (accum ++ "_" ++ x)
 extractClassName' functionName@(x:xs) accum = extractClassName' xs accum
 extractClassName' [] accum = accum
-                             
+
 extractClassName functionName = extractClassName' functionName ""
 
 parseTypeName = do string exportMacro
