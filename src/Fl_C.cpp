@@ -31,6 +31,26 @@
     }
   };
   fl_Label_Measure_F* C_to_Fl_Label_Measure_F::cb = 0;
+  class C_to_Fl_Abort_Handler {
+  public:
+    static fl_Abort_Handler* cb;
+    static void intercept(const char* format, ...) {
+      va_list argp;
+      va_start(argp, format);
+      (*cb)(format, argp);
+      va_end(argp);
+    }
+  };
+  fl_Abort_Handler* C_to_Fl_Abort_Handler::cb = 0;
+  class C_to_Fl_Atclose_Handler {
+  public:
+    static fl_Atclose_Handler* cb;
+    static void intercept(Fl_Window* window, void* data){
+      fl_Window w = (fl_Window)window;
+      (*cb)(w,data);
+    }
+  };
+  fl_Atclose_Handler* C_to_Fl_Atclose_Handler::cb = 0;
 EXPORT {
 #endif
   FL_EXPORT_C(int, Fl_run)(){ return Fl::run(); }
@@ -426,6 +446,85 @@ EXPORT {
   }
   FL_EXPORT_C(int,Fl_draw_box_active)( ){
     return Fl::draw_box_active();
+  }
+  FL_EXPORT_C(int,Fl_event_shift)( ){
+    return Fl::event_shift();
+  }
+  FL_EXPORT_C(int,Fl_event_ctrl)( ){
+    return Fl::event_ctrl();
+  }
+  FL_EXPORT_C(int,Fl_event_command)( ){
+    return Fl::event_command();
+  }
+  FL_EXPORT_C(int,Fl_event_alt)( ){
+    return Fl::event_alt();
+  }
+  FL_EXPORT_C(int,Fl_event_buttons)( ){
+    return Fl::event_buttons();
+  }
+  FL_EXPORT_C(int,Fl_event_button1)( ){
+    return Fl::event_button1();
+  }
+  FL_EXPORT_C(int,Fl_event_button2)( ){
+    return Fl::event_button2();
+  }
+  FL_EXPORT_C(int,Fl_event_button3)( ){
+    return Fl::event_button3();
+  }
+  FL_EXPORT_C(void,Fl_set_idle)(fl_Old_Idle_Handler cb){
+    Fl::set_idle(cb);
+  }
+  FL_EXPORT_C(void,Fl_release)( ){
+    Fl::release();
+  }
+  FL_EXPORT_C(void,Fl_set_visible_focus)(int v){
+    Fl::visible_focus(v);
+  }
+  FL_EXPORT_C(int,Fl_visible_focus)( ){
+    return Fl::visible_focus();
+  }
+  FL_EXPORT_C(void,Fl_set_dnd_text_ops)(int v){
+    Fl::dnd_text_ops(v);
+  }
+  FL_EXPORT_C(int,Fl_dnd_text_ops)( ){
+    return Fl::dnd_text_ops();
+  }
+  FL_EXPORT_C(int,Fl_lock)( ){
+    return Fl::lock();
+  }
+  FL_EXPORT_C(void,Fl_unlock)( ){
+    Fl::unlock();
+  }
+  FL_EXPORT_C(void,Fl_awake)(){
+    Fl::awake((void*)0);
+  }
+  FL_EXPORT_C(void,Fl_awake_with_message)(void* message){
+    Fl::awake(message);
+  }
+  FL_EXPORT_C(int,Fl_awake_with_cb)(fl_Awake_Handler cb){
+    return Fl::awake(cb,0);
+  }
+  FL_EXPORT_C(int,Fl_awake_with_cb_message)(fl_Awake_Handler cb, void* message){
+    return Fl::awake(cb, message);
+  }
+  FL_EXPORT_C(void*,Fl_thread_message)( ){
+    return Fl::thread_message();
+  }
+  FL_EXPORT_C(void,Fl_clear_widget_pointer)(fl_Widget w){
+    Fl::clear_widget_pointer((static_cast<Fl_Widget*>(w)));
+  }
+  FL_EXPORT_C(void,Fl_do_widget_deletion)( ){
+    Fl::do_widget_deletion();
+  }
+  FL_EXPORT_C(void,Fl_watch_widget_pointer)(fl_Widget w){
+    Fl_Widget& ref = *(static_cast<Fl_Widget*>(w));
+    Fl_Widget* refPtr = &ref;
+    Fl::watch_widget_pointer(refPtr);
+  }
+  FL_EXPORT_C(void,Fl_release_widget_pointer)(fl_Widget w){
+    Fl_Widget& ref = *(static_cast<Fl_Widget*>(w));
+    Fl_Widget* refPtr = &ref;
+    Fl::release_widget_pointer(refPtr);
   }
 #ifdef __cplusplus
 }

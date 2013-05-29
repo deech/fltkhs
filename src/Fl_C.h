@@ -1,5 +1,6 @@
 #ifndef __FLC__
 #define __FLC__
+#include <stdarg.h>
 #include "Fl_ExportMacros.h"
 #include "Fl_Types.h"
 #include "Fl_EnumerationsC.h"
@@ -38,13 +39,13 @@ EXPORT {
   typedef void (*fl_Old_Idle_Handler)();
   typedef void (*fl_FD_Handler)(FL_SOCKET fd, void *data);
   typedef int  (*fl_Event_Handler)(int event);
-  typedef void (*fl_Abort_Handler)(const char *format,...);
+  typedef void (*fl_Abort_Handler)(const char *format, va_list argp);
 #ifdef __cplusplus
   typedef int  (*fl_Args_Handler)(int argc, char** argv, int& i);
 #else
   typedef int  (*fl_Args_Handler)(int argc, char** argv, int** i);
 #endif
-  typedef void (*fl_Atclose_Handler)(fl_Window *window, void *data);
+  typedef void (*fl_Atclose_Handler)(fl_Window window, void *data);
   typedef int  (*fl_Event_Dispatch)(int event, fl_Window w);
 
   FL_EXPORT_C(int, Fl_run)();
@@ -195,39 +196,35 @@ EXPORT {
   FL_EXPORT_C(int               ,Fl_box_dw)(Fl_Boxtype boxtype);
   FL_EXPORT_C(int               ,Fl_box_dh)(Fl_Boxtype boxtype);
   FL_EXPORT_C(int               ,Fl_draw_box_active)();
-/*   FL_EXPORT_C(void              ,Fl_set_abort)(fl_Abort_Handler f); */
-/*   FL_EXPORT_C(void              ,Fl_default_atclose)(Fl_Window*,void*); */
-/*   FL_EXPORT_C(void              ,Fl_set_atclose)(fl_Atclose_Handler f); */
-/*   FL_EXPORT_C(int               ,Fl_event_shift)(); */
-/*   FL_EXPORT_C(int               ,Fl_event_ctrl)(); */
-/*   FL_EXPORT_C(int               ,Fl_event_command)(); */
-/*   FL_EXPORT_C(int               ,Fl_event_alt)(); */
-/*   FL_EXPORT_C(int               ,Fl_event_buttons)(); */
-/*   FL_EXPORT_C(int               ,Fl_event_button1)(); */
-/*   FL_EXPORT_C(int               ,Fl_event_button2)(); */
-/*   FL_EXPORT_C(int               ,Fl_event_button3)(); */
-/*   FL_EXPORT_C(void              ,Fl_set_idle)(Fl_Old_Idle_Handler cb); */
-/*   FL_EXPORT_C(void              ,Fl_grab)(Fl_Window& win); */
-/*   FL_EXPORT_C(void              ,Fl_release)(); */
-/*   FL_EXPORT_C(void              ,Fl_visible_focus)(int v); */
-/*   FL_EXPORT_C(int               ,Fl_visible_focus)(); */
-/*   FL_EXPORT_C(void              ,Fl_dnd_text_ops)(int v); */
-/*   FL_EXPORT_C(int               ,Fl_dnd_text_ops)(); */
-/*   FL_EXPORT_C(int               ,Fl_lock)(); */
-/*   FL_EXPORT_C(void              ,Fl_unlock)(); */
-/*   FL_EXPORT_C(int               ,Fl_awake)(fl_Awake_Handler cb); */
-/*   FL_EXPORT_C(int               ,Fl_awake_with_message)(fl_Awake_Handler cb); */
-/*   FL_EXPORT_C(void*             ,Fl_thread_message)(); */
-/*   FL_EXPORT_C(void              ,Fl_delete_widget)(Fl_Widget *w); */
-/*   FL_EXPORT_C(void              ,Fl_do_widget_deletion)(); */
-/*   FL_EXPORT_C(void              ,Fl_watch_widget_pointer)(Fl_Widget *&w); */
-/*   FL_EXPORT_C(void              ,Fl_release_widget_pointer)(Fl_Widget *&w); */
-/*   FL_EXPORT_C(void              ,Fl_Fl_clear_widget_pointer)(Fl_Widget const *w); */
-
-/* #ifdef FLTK_HAVE_CAIRO */
-/*   /\** \defgroup group_cairo Cairo support functions and classes  */
-/*       @{  */
-/*   *\/ */
+  FL_EXPORT_C(void              ,Fl_set_abort)(fl_Abort_Handler f);
+  FL_EXPORT_C(void              ,Fl_default_atclose)(fl_Window* window,void* data);
+  FL_EXPORT_C(void              ,Fl_set_atclose)(fl_Atclose_Handler f);
+  FL_EXPORT_C(int               ,Fl_event_shift)();
+  FL_EXPORT_C(int               ,Fl_event_ctrl)();
+  FL_EXPORT_C(int               ,Fl_event_command)();
+  FL_EXPORT_C(int               ,Fl_event_alt)();
+  FL_EXPORT_C(int               ,Fl_event_buttons)();
+  FL_EXPORT_C(int               ,Fl_event_button1)();
+  FL_EXPORT_C(int               ,Fl_event_button2)();
+  FL_EXPORT_C(int               ,Fl_event_button3)();
+  FL_EXPORT_C(void              ,Fl_set_idle)(fl_Old_Idle_Handler cb);
+  FL_EXPORT_C(void              ,Fl_release)();
+  FL_EXPORT_C(void              ,Fl_set_visible_focus)(int v);
+  FL_EXPORT_C(int               ,Fl_visible_focus)();
+  FL_EXPORT_C(void              ,Fl_dnd_set_text_ops)(int v);
+  FL_EXPORT_C(int               ,Fl_dnd_text_ops)();
+  FL_EXPORT_C(int               ,Fl_lock)();
+  FL_EXPORT_C(void              ,Fl_unlock)();
+  FL_EXPORT_C(void              ,Fl_awake)();
+  FL_EXPORT_C(void              ,Fl_awake_with_message)(void* message);
+  FL_EXPORT_C(int               ,Fl_awake_with_cb)(fl_Awake_Handler cb);
+  FL_EXPORT_C(int               ,Fl_awake_with_cb_message)(fl_Awake_Handler cb, void* message);
+  FL_EXPORT_C(void*             ,Fl_thread_message)();
+  FL_EXPORT_C(void              ,Fl_delete_widget)(fl_Widget w);
+  FL_EXPORT_C(void              ,Fl_do_widget_deletion)();
+  FL_EXPORT_C(void              ,Fl_watch_widget_pointer)(fl_Widget w);
+  FL_EXPORT_C(void              ,Fl_release_widget_pointer)(fl_Widget w);
+  FL_EXPORT_C(void              ,Fl_Fl_clear_widget_pointer)(fl_Widget w);
 #ifdef __cplusplus
 }
 #endif
