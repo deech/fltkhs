@@ -90,7 +90,7 @@ EXPORT {
   FL_EXPORT_C(Fl_Image*, Fl_Tree_Prefs_openicon)(fl_Tree_Prefs tree_prefs);
   FL_EXPORT_C(void, Fl_Tree_Prefs_set_openicon)(fl_Tree_Prefs tree_prefs, Fl_Image *val);
   FL_EXPORT_C(Fl_Image*, Fl_Tree_Prefs_closeicon)(fl_Tree_Prefs tree_prefs);
-  FL_EXPORT_C(void, Fl_Tree_Prefs_set_closeicon)(fl_Tree_Prefs tree_prefs, Fl_Image *val);
+  FL_EXPORT_C(void, Fl_Tree_Prefs_set_closeicon)(fl_Tree_Prefs tree_prefs, Fl_Image* val);
   FL_EXPORT_C(Fl_Image*, Fl_Tree_Prefs_usericon)(fl_Tree_Prefs tree_prefs);
   FL_EXPORT_C(void, Fl_Tree_Prefs_set_usericon)(fl_Tree_Prefs tree_prefs, Fl_Image *val);
   FL_EXPORT_C(char, Fl_Tree_Prefs_showcollapse)(fl_Tree_Prefs tree_prefs);

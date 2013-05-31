@@ -4,6 +4,7 @@ import Text.Parsec
 import Data.List
 import System.Environment
 import Data.Char
+import Text.Printf
 
 data ArgumentType = Normal String | Self String deriving Show
 data Argument = Argument {
@@ -49,14 +50,21 @@ outputDefaultImplementation (fn,args) =
                  else
                      "return"
         body = case ((argumentType . argument $ fn), getSelfArgument args) of
-                 (Normal t, Just self) -> "{" ++ "\n" ++ "  " ++
-                             return ++ " " ++ "(static_cast<" ++ className fn ++ "*>" ++
-                             "(" ++ self ++ ")" ++ ")" ++ "->" ++ (realName fn) ++ "(" ++ intercalate "," (map castIfNecessary (tail args)) ++ ");" ++ "\n" ++
-                              "}"
-                 (Normal t, Nothing) ->  "{" ++ "\n" ++ "  " ++
-                             return ++ " " ++ className fn ++ "::" ++ (realName fn) ++ "(" ++ intercalate "," (map castIfNecessary args) ++ ");" ++ "\n" ++
-                              "}"
-
+                 (Normal t, Just self) -> (printf "{\n return (static_cast<%s>(%s))->%s(%s);\n}"
+                                                   (className fn)
+                                                   self
+                                                   (realName fn)
+                                                   (intercalate "," (map castIfNecessary (tail args))))
+                 (Normal t, Nothing) ->  (printf "{\n return %s::%s(%s);\n}"
+                                                   (className fn)
+                                                   (realName fn)
+                                                   (intercalate "," (map castIfNecessary args)))
+                 (Self t, Just self) -> (printf "{\n return (%s)(static_cast<%s>(%s))->%s(%s);\n}"
+                                                t   
+                                                (className fn)
+                                                self
+                                                (realName fn)
+                                                (intercalate "," (map castIfNecessary (tail args))))
                  _ -> "dunno"
     in
       header ++ body

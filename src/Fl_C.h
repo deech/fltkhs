@@ -22,6 +22,7 @@
 #include "Fl_Secret_InputC.h"
 #include "Fl_Value_InputC.h"
 #include "Fl_Tree_PrefsC.h"
+#include "Fl_Tree_ItemC.h"
 EXPORT {
 #endif
   typedef enum {

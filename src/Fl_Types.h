@@ -38,7 +38,6 @@ EXPORT {
   typedef void* fl_Device;
   typedef void* fl_Dial;
   typedef void* fl_Double_Window;
-  typedef void* fl_draw;
   typedef void* fl_Export;
   typedef void* fl_File_Browser;
   typedef void* fl_File_Chooser;

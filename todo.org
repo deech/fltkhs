@@ -15,6 +15,8 @@
   [[/home/deech/CPlusPlus/fltk-1.3/FL/Fl_Value_Input.H][Fl_Value_Input.H]]
   [[/home/deech/CPlusPlus/fltk-1.3/FL/Fl_Valuator.H][Fl_Valuator.H]]
   [[/home/deech/CPlusPlus/fltk-1.3/FL/Fl.H][Fl.H]]
+  [[/home/deech/CPlusPlus/fltk-1.3/FL/Fl_Tree_Prefs.H][Fl_Tree_Prefs.H]]
+  [[/home/deech/CPlusPlus/fltk-1.3/FL/Fl_Tree_Item.H][Fl_Tree_Item.H]]
 * Todo  
   filename.H
   [[/home/deech/CPlusPlus/fltk-1.3/FL/Fl_Adjuster.H][Fl_Adjuster.H]]
@@ -118,8 +120,6 @@
   [[/home/deech/CPlusPlus/fltk-1.3/FL/Fl_Tooltip.H][Fl_Tooltip.H]]
   [[/home/deech/CPlusPlus/fltk-1.3/FL/Fl_Tree.H][Fl_Tree.H]]
   [[/home/deech/CPlusPlus/fltk-1.3/FL/Fl_Tree_Item_Array.H][Fl_Tree_Item_Array.H]]
-  [[/home/deech/CPlusPlus/fltk-1.3/FL/Fl_Tree_Item.H][Fl_Tree_Item.H]]
-  [[/home/deech/CPlusPlus/fltk-1.3/FL/Fl_Tree_Prefs.H][Fl_Tree_Prefs.H]]
   [[/home/deech/CPlusPlus/fltk-1.3/FL/fl_types.h][fl_types.h]]
   [[/home/deech/CPlusPlus/fltk-1.3/FL/fl_utf8.h][fl_utf8.h]]
   [[/home/deech/CPlusPlus/fltk-1.3/FL/Fl_Value_Output.H][Fl_Value_Output.H]]
