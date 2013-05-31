@@ -7,6 +7,9 @@ EXPORT {
     Fl_Tree_Prefs* prefs = new Fl_Tree_Prefs();
     return (fl_Tree_Prefs)prefs;
   }
+  FL_EXPORT_C(fl_Tree_Prefs, Fl_Tree_Prefs_Destroy)(fl_Tree_Prefs tree_prefs){
+    delete (static_cast<Fl_Tree_Prefs*>(tree_prefs));
+  }
   FL_EXPORT_C(Fl_Font,Fl_Tree_Prefs_item_labelfont)(fl_Tree_Prefs tree_prefs){
     return (static_cast<Fl_Tree_Prefs*>(tree_prefs))->item_labelfont();
   }
@@ -189,7 +192,7 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Tree_Prefs_set_item_draw_mode)(fl_Tree_Prefs tree_prefs,Fl_Tree_Item_Draw_Mode val){
     (static_cast<Fl_Tree_Prefs*>(tree_prefs))->item_draw_mode(val);
   }
-#endif  
+#endif
 #ifdef __cplusplus
 }
 #endif

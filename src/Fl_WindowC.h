@@ -96,7 +96,16 @@ EXPORT {
   FL_EXPORT_C(void,         Fl_Window_remove_index)(fl_Window win, int index);
   FL_EXPORT_C(void,         Fl_Window_remove_widget)(fl_Window win, fl_Widget w);
   FL_EXPORT_C(void,         Fl_Window_clear)(fl_Window win);
+  FL_EXPORT_C(void,         Fl_Window_set_resizable_by_reference)(fl_Window win,fl_Widget o);
+  FL_EXPORT_C(void,         Fl_Window_set_resizable)(fl_Window win,fl_Widget o);
+  FL_EXPORT_C(fl_Widget,    Fl_Window_resizable)(fl_Window win);
+  FL_EXPORT_C(void,         Fl_Window_add_resizable)(fl_Window win,fl_Widget o);
   FL_EXPORT_C(void,         Fl_Window_init_sizes)(fl_Window win);
+  FL_EXPORT_C(void,         Fl_Window_set_clip_children)(fl_Window win,int c);
+  FL_EXPORT_C(unsigned int, Fl_Window_clip_children)(fl_Window win);
+  FL_EXPORT_C(void,         Fl_Window_focus)(fl_Window win,fl_Widget W);
+  FL_EXPORT_C(fl_Widget,    Fl_Window__ddfdesign_kludge)(fl_Window win);
+  /* FL_EXPORT_C(void,         Fl_Window_forms_end)(fl_Window win); */
   /* Fl_Window specific */
   FL_EXPORT_C(unsigned int, Fl_Window_changed)(fl_Window win);
   FL_EXPORT_C(void,         Fl_Window_fullscreen)(fl_Window win);

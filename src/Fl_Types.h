@@ -14,6 +14,7 @@
 #ifdef __cplusplus
 EXPORT {
 #endif
+  typedef void* ID;
   typedef void* fl_Window;
   typedef void* fl_Group;
   typedef unsigned int Fl_Color;

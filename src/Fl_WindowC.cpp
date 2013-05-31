@@ -258,10 +258,36 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Window_clear)(fl_Window win){
     (static_cast<Fl_Window*>(win))->clear();
   }
+  FL_EXPORT_C(void,Fl_Window_set_resizable_by_reference)(fl_Window win,fl_Widget o){
+    (static_cast<Fl_Window*>(win))->resizable((static_cast<Fl_Widget*>(o)));
+  }
+  FL_EXPORT_C(void,Fl_Window_set_resizable)(fl_Window win,fl_Widget o){
+    (static_cast<Fl_Window*>(win))->resizable((static_cast<Fl_Widget*>(o)));
+  }
+  FL_EXPORT_C(fl_Widget,Fl_Window_resizable)(fl_Window win){
+    return (static_cast<Fl_Window*>(win))->resizable();
+  }
+  FL_EXPORT_C(void,Fl_Window_add_resizable)(fl_Window win,fl_Widget o){
+    return (static_cast<Fl_Window*>(win))->add_resizable(*(static_cast<Fl_Widget*>(o)));
+  }
   FL_EXPORT_C(void,Fl_Window_init_sizes)(fl_Window win){
     (static_cast<Fl_Window*>(win))->init_sizes();
   }
-
+  FL_EXPORT_C(void,Fl_Window_set_clip_children)(fl_Window win,int c){
+    return (static_cast<Fl_Window*>(win))->clip_children(c);
+  }
+  FL_EXPORT_C(unsigned int,Fl_Window_clip_children)(fl_Window win){
+    return (static_cast<Fl_Window*>(win))->clip_children();
+  }
+  FL_EXPORT_C(void,Fl_Window_focus)(fl_Window win, fl_Widget W){
+    return (static_cast<Fl_Window*>(win))->focus((static_cast<Fl_Widget*>(W)));
+  }
+  FL_EXPORT_C(fl_Widget,Fl_Window__ddfdesign_kludge)(fl_Window win){
+    return (static_cast<Fl_Window*>(win))->_ddfdesign_kludge();
+  }
+  // FL_EXPORT_C(void,Fl_Window_forms_end)(fl_Window win){
+  //   return (static_cast<Fl_Window*>(win))->forms_end();
+  // }
   FL_EXPORT_C(fl_Window, Fl_Window_New_WithTitle)(int x, int y, const char* title) {
     Fl_Window* window = new Fl_Window(x,y,title);
     return (static_cast<fl_Window>(window));
