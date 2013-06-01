@@ -9,18 +9,6 @@
 #ifdef __cplusplus
 EXPORT {
 #endif
-#ifdef INTERNAL_LINKAGE
-  typedef enum {
-  FL_TREE_REASON_NONE=0,
-    FL_TREE_REASON_SELECTED,
-    FL_TREE_REASON_DESELECTED,
-#if FLTK_ABI_VERSION >= 10302
-    FL_TREE_REASON_RESELECTED,
-#endif /*FLTK_ABI_VERSION*/
-    FL_TREE_REASON_OPENED,
-    FL_TREE_REASON_CLOSED
-    } Fl_Tree_Reason;
-#endif
   /* Inherited from Fl_Widget */
   FL_EXPORT_C(fl_Group,     Fl_Tree_parent)(fl_Tree tree);
   FL_EXPORT_C(void,         Fl_Tree_set_parent)(fl_Tree tree, fl_Group grp);
@@ -45,10 +33,10 @@ EXPORT {
   FL_EXPORT_C(void,         Fl_Tree_set_labeltype)(fl_Tree tree, Fl_Labeltype a);
   FL_EXPORT_C(Fl_Color,     Fl_Tree_labelcolor)(fl_Tree tree);
   FL_EXPORT_C(void,         Fl_Tree_set_labelcolor)(fl_Tree tree, Fl_Color c);
-  FL_EXPORT_C(Fl_Font,      Fl_Tree_labelfont)(fl_Tree tree);
-  FL_EXPORT_C(void,         Fl_Tree_set_labelfont)(fl_Tree tree, Fl_Font c);
-  FL_EXPORT_C(Fl_Fontsize,  Fl_Tree_labelsize)(fl_Tree tree);
-  FL_EXPORT_C(void,         Fl_Tree_set_labelsize)(fl_Tree tree, Fl_Fontsize pix);
+  FL_EXPORT_C(Fl_Font,      Fl_Tree_item_labelfont)(fl_Tree tree);
+  FL_EXPORT_C(void,         Fl_Tree_set_item_labelfont)(fl_Tree tree, Fl_Font c);
+  FL_EXPORT_C(Fl_Fontsize,  Fl_Tree_item_labelsize)(fl_Tree tree);
+  FL_EXPORT_C(void,         Fl_Tree_set_item_labelsize)(fl_Tree tree, Fl_Fontsize pix);
   FL_EXPORT_C(fl_Image,     Fl_Tree_image)(fl_Tree tree);
   FL_EXPORT_C(void,         Fl_Tree_set_image)(fl_Tree tree, fl_Image pix);
   FL_EXPORT_C(fl_Image,     Fl_Tree_deimage)(fl_Tree tree);
@@ -100,129 +88,149 @@ EXPORT {
   FL_EXPORT_C(fl_Group,     Fl_Tree_as_group)(fl_Tree tree);
   FL_EXPORT_C(fl_Gl_Window, Fl_Tree_as_gl_window)(fl_Tree tree);
 
-  
-  int handle(int e);
-  void draw();
-  void show_self();
-  void root_label(const char *new_label);
-  Fl_Tree_Item* root();
-  Fl_Tree_Item *add(const char *path);
-  Fl_Tree_Item* add(Fl_Tree_Item *item, const char *name);
-  Fl_Tree_Item *insert_above(Fl_Tree_Item *above, const char *name);
-  Fl_Tree_Item* insert(Fl_Tree_Item *item, const char *name, int pos);
-  int remove(Fl_Tree_Item *item);
-  void clear();
-  void clear_children(Fl_Tree_Item *item);
-  Fl_Tree_Item *find_item(const char *path);
-  const Fl_Tree_Item *find_item(const char *path) const;
-  int item_pathname(char *pathname, int pathnamelen, const Fl_Tree_Item *item) const;
-  const Fl_Tree_Item *find_clicked() const;
-  Fl_Tree_Item *item_clicked();
-  Fl_Tree_Item *first();
-  Fl_Tree_Item *first_visible();
-  Fl_Tree_Item *next(Fl_Tree_Item *item=0);
-  Fl_Tree_Item *prev(Fl_Tree_Item *item=0);
-  Fl_Tree_Item *last();
-  Fl_Tree_Item *last_visible();
-  Fl_Tree_Item *first_selected_item();
-  Fl_Tree_Item *next_selected_item(Fl_Tree_Item *item=0);
-  int open(Fl_Tree_Item *item, int docallback=1);
-  int open(const char *path, int docallback=1);
-  void open_toggle(Fl_Tree_Item *item, int docallback=1);
-  int close(Fl_Tree_Item *item, int docallback=1);
-  int close(const char *path, int docallback=1);
-  int is_open(Fl_Tree_Item *item) const;
-  int is_open(const char *path) const;
-  int is_close(Fl_Tree_Item *item) const;
-  int is_close(const char *path) const;
-  int select(Fl_Tree_Item *item, int docallback=1);
-  int select(const char *path, int docallback=1);
-  void select_toggle(Fl_Tree_Item *item, int docallback=1);
-  int deselect(Fl_Tree_Item *item, int docallback=1);
-  int deselect(const char *path, int docallback=1);
-  int deselect_all(Fl_Tree_Item *item=0, int docallback=1);
-  int select_only(Fl_Tree_Item *selitem, int docallback=1);
-  int select_all(Fl_Tree_Item *item=0, int docallback=1);
-  void set_item_focus(Fl_Tree_Item *item);
-  Fl_Tree_Item *get_item_focus() const;
-  int is_selected(Fl_Tree_Item *item) const;
-  int is_selected(const char *path);
-  Fl_Font     item_labelfont() const;
-  void        item_labelfont(Fl_Font val);
-  Fl_Fontsize item_labelsize() const;
-  void        item_labelsize(Fl_Fontsize val);
-  Fl_Color    item_labelfgcolor(void) const;
-  void        item_labelfgcolor(Fl_Color val);
-  Fl_Color    item_labelbgcolor(void) const;
-  void        item_labelbgcolor(Fl_Color val);
-  Fl_Color connectorcolor() const;
-  void connectorcolor(Fl_Color val);
-  int marginleft() const;
-  void marginleft(int val);
-  int margintop() const;
-  void margintop(int val);
-#if FLTK_ABI_VERSION >= 10302
-  int marginbottom() const;
-  void marginbottom(int val);
-#endif /*FLTK_ABI_VERSION*/
-  int linespacing() const;
-  void linespacing(int val);
-  int openchild_marginbottom() const;
-  void openchild_marginbottom(int val);
-  int usericonmarginleft() const;
-  void usericonmarginleft(int val);
-  int labelmarginleft() const;
-  void labelmarginleft(int val);
-#if FLTK_ABI_VERSION >= 10302
-  int widgetmarginleft() const;
-  void widgetmarginleft(int val);
-#endif /*FLTK_ABI_VERSION*/
-  int connectorwidth() const;
-  void connectorwidth(int val);
-  Fl_Image* usericon() const;
-  void usericon(Fl_Image *val);
-  Fl_Image* openicon() const;
-  void openicon(Fl_Image *val);
-  Fl_Image* closeicon() const;
-  void closeicon(Fl_Image *val);
-  int showcollapse() const;
-  void showcollapse(int val);
-  int showroot() const;
-  void showroot(int val);
-  Fl_Tree_Connector connectorstyle() const;
-  void connectorstyle(Fl_Tree_Connector val);
-  Fl_Tree_Sort sortorder() const;
-  void sortorder(Fl_Tree_Sort val);
-  Fl_Boxtype selectbox() const;
-  void selectbox(Fl_Boxtype val);
-  Fl_Tree_Select selectmode() const;
-  void selectmode(Fl_Tree_Select val);
-#if FLTK_ABI_VERSION >= 10302
-  Fl_Tree_Item_Reselect_Mode item_reselect_mode() const;
-  void item_reselect_mode(Fl_Tree_Item_Reselect_Mode mode);
-  Fl_Tree_Item_Draw_Mode item_draw_mode() const;
-  void item_draw_mode(Fl_Tree_Item_Draw_Mode mode);
-  void item_draw_mode(int mode);
-#endif /*FLTK_ABI_VERSION*/
-  int displayed(Fl_Tree_Item *item);
-  void show_item(Fl_Tree_Item *item, int yoff);
-  void show_item(Fl_Tree_Item *item);
-  void show_item_top(Fl_Tree_Item *item);
-  void show_item_middle(Fl_Tree_Item *item);
-  void show_item_bottom(Fl_Tree_Item *item);
-  void display(Fl_Tree_Item *item);
-  int  vposition() const;
-  void vposition(int pos);
 
-  int is_scrollbar(Fl_Widget *w);
-  int scrollbar_size() const;
-  void scrollbar_size(int size);
-  int is_vscroll_visible() const;
-  void callback_item(Fl_Tree_Item* item);
-  Fl_Tree_Item* callback_item();
-  void callback_reason(Fl_Tree_Reason reason);
-  Fl_Tree_Reason callback_reason() const;
-  void load(class Fl_Preferences&);
+  FL_EXPORT_C(fl_Tree,    Fl_Tree_New_WithLabel)(int x, int y, int w, int h, const char* label);
+  FL_EXPORT_C(fl_Tree   , Fl_Tree_New)(int x, int y, int w, int h);
+  FL_EXPORT_C(void,Fl_Tree_Destroy)(fl_Tree tree);
+  FL_EXPORT_C(int, Fl_Tree_handle)(fl_Tree tree,int e);
+  FL_EXPORT_C(void, Fl_Tree_draw)(fl_Tree tree);
+  FL_EXPORT_C(void, Fl_Tree_show_self)(fl_Tree tree);
+  FL_EXPORT_C(void, Fl_Tree_root_label)(fl_Tree tree,const char *new_label);
+  FL_EXPORT_C(fl_Tree_Item, Fl_Tree_root)(fl_Tree tree);
+  FL_EXPORT_C(fl_Tree_Item, Fl_Tree_add_with_path)(fl_Tree tree,const char *path);
+  FL_EXPORT_C(fl_Tree_Item, Fl_Tree_add)(fl_Tree tree,fl_Tree_Item item, const char *name);
+  FL_EXPORT_C(fl_Tree_Item, Fl_Tree_insert_above)(fl_Tree tree,fl_Tree_Item above, const char *name);
+  FL_EXPORT_C(fl_Tree_Item, Fl_Tree_insert)(fl_Tree tree,fl_Tree_Item item, const char *name, int pos);
+  FL_EXPORT_C(int, Fl_Tree_remove)(fl_Tree tree,fl_Tree_Item item);
+  FL_EXPORT_C(void, Fl_Tree_clear)(fl_Tree tree);
+  FL_EXPORT_C(void, Fl_Tree_clear_children)(fl_Tree tree,fl_Tree_Item item);
+  FL_EXPORT_C(fl_Tree_Item, Fl_Tree_find_item)(fl_Tree tree,const char *path);
+  FL_EXPORT_C(fl_Tree_Item, find_item)(fl_Tree tree,const char *path);
+  FL_EXPORT_C(int, Fl_Tree_item_pathname)(fl_Tree tree,char *pathname, int pathnamelen, const fl_Tree_Item item);
+  FL_EXPORT_C(fl_Tree_Item, find_clicked)(fl_Tree tree);
+  FL_EXPORT_C(fl_Tree_Item, Fl_Tree_item_clicked)(fl_Tree tree);
+  FL_EXPORT_C(fl_Tree_Item, Fl_Tree_first)(fl_Tree tree);
+  FL_EXPORT_C(fl_Tree_Item, Fl_Tree_first_visible)(fl_Tree tree);
+  FL_EXPORT_C(fl_Tree_Item, Fl_Tree_next)(fl_Tree tree);
+  FL_EXPORT_C(fl_Tree_Item, Fl_Tree_next_with_item)(fl_Tree tree,fl_Tree_Item item);
+  FL_EXPORT_C(fl_Tree_Item, Fl_Tree_prev)(fl_Tree tree);
+  FL_EXPORT_C(fl_Tree_Item, Fl_Tree_prev_with_item)(fl_Tree tree,fl_Tree_Item item);
+  FL_EXPORT_C(fl_Tree_Item, Fl_Tree_last)(fl_Tree tree);
+  FL_EXPORT_C(fl_Tree_Item, Fl_Tree_last_visible)(fl_Tree tree);
+  FL_EXPORT_C(fl_Tree_Item, Fl_Tree_first_selected_item)(fl_Tree tree);
+  FL_EXPORT_C(fl_Tree_Item, Fl_Tree_next_selected_item)(fl_Tree tree);
+  FL_EXPORT_C(fl_Tree_Item, Fl_Tree_next_selected_item_with_item)(fl_Tree tree,fl_Tree_Item item);
+  FL_EXPORT_C(int, Fl_Tree_open_with_item)(fl_Tree tree,fl_Tree_Item item);
+  FL_EXPORT_C(int, Fl_Tree_open_with_item_docallback)(fl_Tree tree,fl_Tree_Item item, int docallback);
+  FL_EXPORT_C(int, Fl_Tree_open_with_path)(fl_Tree tree,const char *path);
+  FL_EXPORT_C(int, Fl_Tree_open_with_path_docallback)(fl_Tree tree,fl_Tree_Item item, int docallback);
+  FL_EXPORT_C(void, Fl_Tree_open_toggle)(fl_Tree tree,fl_Tree_Item item);
+  FL_EXPORT_C(void, Fl_Tree_open_toggle_with_docallback)(fl_Tree tree,fl_Tree_Item item, int docallback);
+  FL_EXPORT_C(int, Fl_Tree_close_with_item)(fl_Tree tree,fl_Tree_Item item);
+  FL_EXPORT_C(int, Fl_Tree_close_with_item_docallback)(fl_Tree tree,fl_Tree_Item item, int docallback);
+  FL_EXPORT_C(int, Fl_Tree_close_with_path)(fl_Tree tree,const char *path);
+  FL_EXPORT_C(int, Fl_Tree_close_with_path_docallback)(fl_Tree tree,fl_Tree_Item item, int docallback);
+  FL_EXPORT_C(int, Fl_Tree_is_open_with_item)(fl_Tree tree,fl_Tree_Item item);
+  FL_EXPORT_C(int, Fl_Tree_is_open_with_path)(fl_Tree tree,const char *path);
+  FL_EXPORT_C(int, Fl_Tree_is_close_with_item)(fl_Tree tree,fl_Tree_Item item);
+  FL_EXPORT_C(int, Fl_Tree_is_close_with_path)(fl_Tree tree,const char *path);
+  FL_EXPORT_C(int, Fl_Tree_select_with_item)(fl_Tree tree,fl_Tree_Item item);
+  FL_EXPORT_C(int, Fl_Tree_select_with_item_docallback)(fl_Tree tree,fl_Tree_Item item, int docallback);
+  FL_EXPORT_C(int, Fl_Tree_select_with_path)(fl_Tree tree,const char *path);
+  FL_EXPORT_C(int, Fl_Tree_select_with_path_docallback)(fl_Tree tree,fl_Tree_Item item, int docallback);
+  FL_EXPORT_C(void, Fl_Tree_select_toggle)(fl_Tree tree,fl_Tree_Item item);
+  FL_EXPORT_C(void, Fl_Tree_select_toggle_with_docallback)(fl_Tree tree,fl_Tree_Item item, int docallback);
+  FL_EXPORT_C(int, Fl_Tree_deselect_with_item)(fl_Tree tree,fl_Tree_Item item);
+  FL_EXPORT_C(int, Fl_Tree_deselect_with_item_docallback)(fl_Tree tree,fl_Tree_Item item, int docallback);
+  FL_EXPORT_C(int, Fl_Tree_deselect_with_path)(fl_Tree tree,const char *path);
+  FL_EXPORT_C(int, Fl_Tree_deselect_with_path_docallback)(fl_Tree tree,fl_Tree_Item item, int docallback);
+  FL_EXPORT_C(int, Fl_Tree_deselect_all_with_item)(fl_Tree tree,fl_Tree_Item item);
+  FL_EXPORT_C(int, Fl_Tree_deselect_all_with_docallback)(fl_Tree tree,int docallback);
+  FL_EXPORT_C(int, Fl_Tree_deselect_all_with_item_docallback)(fl_Tree tree,fl_Tree_Item item, int docallback);
+  FL_EXPORT_C(void, Fl_Tree_select_only)(fl_Tree tree,fl_Tree_Item item);
+  FL_EXPORT_C(void, Fl_Tree_select_only_with_docallback)(fl_Tree tree,fl_Tree_Item item, int docallback);
+  FL_EXPORT_C(void, Fl_Tree_select_all)(fl_Tree tree,fl_Tree_Item item);
+  FL_EXPORT_C(void, Fl_Tree_select_all_with_docallback)(fl_Tree tree,fl_Tree_Item item, int docallback);
+  FL_EXPORT_C(void, Fl_Tree_set_item_focus)(fl_Tree tree,fl_Tree_Item item);
+  FL_EXPORT_C(fl_Tree_Item, Fl_Tree_get_item_focus)(fl_Tree tree);
+  FL_EXPORT_C(int, Fl_Tree_is_selected_with_item)(fl_Tree tree,fl_Tree_Item item);
+  FL_EXPORT_C(int, Fl_Tree_is_selected_with_path)(fl_Tree tree,const char *path);
+  FL_EXPORT_C(Fl_Font    , Fl_Tree_item_labelfont)(fl_Tree tree);
+  FL_EXPORT_C(void       , Fl_Tree_item_set_labelfont)(fl_Tree tree,Fl_Font val);
+  FL_EXPORT_C(Fl_Fontsize, Fl_Tree_item_labelsize)(fl_Tree tree);
+  FL_EXPORT_C(void       , Fl_Tree_item_set_labelsize)(fl_Tree tree,Fl_Fontsize val);
+  FL_EXPORT_C(Fl_Color   , Fl_Tree_item_labelfgcolor)(fl_Tree tree);
+  FL_EXPORT_C(void       , Fl_Tree_set_item_labelfgcolor)(fl_Tree tree,Fl_Color val);
+  FL_EXPORT_C(Fl_Color   , Fl_Tree_item_labelbgcolor)(fl_Tree tree);
+  FL_EXPORT_C(void       , Fl_Tree_set_item_labelbgcolor)(fl_Tree tree,Fl_Color val);
+  FL_EXPORT_C(Fl_Color, Fl_Tree_connectorcolor)(fl_Tree tree);
+  FL_EXPORT_C(void, Fl_Tree_set_connectorcolor)(fl_Tree tree,Fl_Color val);
+  FL_EXPORT_C(int, Fl_Tree_marginleft)(fl_Tree tree);
+  FL_EXPORT_C(void, Fl_Tree_set_marginleft)(fl_Tree tree,int val);
+  FL_EXPORT_C(int, Fl_Tree_margintop)(fl_Tree tree);
+  FL_EXPORT_C(void, Fl_Tree_set_margintop)(fl_Tree tree,int val);
+#if FLTK_ABI_VERSION >= 10302
+  FL_EXPORT_C(int, Fl_Tree_marginbottom)(fl_Tree tree);
+  FL_EXPORT_C(void, Fl_Tree_set_marginbottom)(fl_Tree tree,int val);
+#endif /*FLTK_ABI_VERSION*/
+  FL_EXPORT_C(int, Fl_Tree_linespacing)(fl_Tree tree);
+  FL_EXPORT_C(void, Fl_Tree_set_linespacing)(fl_Tree tree,int val);
+  FL_EXPORT_C(int, Fl_Tree_openchild_marginbottom)(fl_Tree tree);
+  FL_EXPORT_C(void, Fl_Tree_set_openchild_marginbottom)(fl_Tree tree,int val);
+  FL_EXPORT_C(int, Fl_Tree_usericonmarginleft)(fl_Tree tree);
+  FL_EXPORT_C(void, Fl_Tree_set_usericonmarginleft)(fl_Tree tree,int val);
+  FL_EXPORT_C(int, Fl_Tree_labelmarginleft)(fl_Tree tree);
+  FL_EXPORT_C(void, Fl_Tree_set_labelmarginleft)(fl_Tree tree,int val);
+#if FLTK_ABI_VERSION >= 10302
+  FL_EXPORT_C(int, Fl_Tree_widgetmarginleft)(fl_Tree tree);
+  FL_EXPORT_C(void, Fl_Tree_set_widgetmarginleft)(fl_Tree tree,int val);
+#endif /*FLTK_ABI_VERSION*/
+  FL_EXPORT_C(int, Fl_Tree_connectorwidth)(fl_Tree tree);
+  FL_EXPORT_C(void, Fl_Tree_set_connectorwidth)(fl_Tree tree,int val);
+  FL_EXPORT_C(fl_Image, Fl_Tree_usericon)(fl_Tree tree);
+  FL_EXPORT_C(void, Fl_Tree_set_usericon)(fl_Tree tree,Fl_Image *val);
+  FL_EXPORT_C(fl_Image, Fl_Tree_openicon)(fl_Tree tree);
+  FL_EXPORT_C(void, Fl_Tree_set_openicon)(fl_Tree tree,Fl_Image *val);
+  FL_EXPORT_C(fl_Image, Fl_Tree_closeicon)(fl_Tree tree);
+  FL_EXPORT_C(void, Fl_Tree_set_closeicon)(fl_Tree tree,Fl_Image *val);
+  FL_EXPORT_C(int, Fl_Tree_showcollapse)(fl_Tree tree);
+  FL_EXPORT_C(void, Fl_Tree_set_showcollapse)(fl_Tree tree,int val);
+  FL_EXPORT_C(int, Fl_Tree_showroot)(fl_Tree tree);
+  FL_EXPORT_C(void, Fl_Tree_set_showroot)(fl_Tree tree,int val);
+  FL_EXPORT_C(Fl_Tree_Connector, Fl_Tree_connectorstyle)(fl_Tree tree);
+  FL_EXPORT_C(void, Fl_Tree_set_connectorstyle)(fl_Tree tree,Fl_Tree_Connector val);
+  FL_EXPORT_C(Fl_Tree_Sort, Fl_Tree_sortorder)(fl_Tree tree);
+  FL_EXPORT_C(void, Fl_Tree_set_sortorder)(fl_Tree tree,Fl_Tree_Sort val);
+  FL_EXPORT_C(Fl_Boxtype, Fl_Tree_selectbox)(fl_Tree tree);
+  FL_EXPORT_C(void, Fl_Tree_set_selectbox)(fl_Tree tree,Fl_Boxtype val);
+  FL_EXPORT_C(Fl_Tree_Select, Fl_Tree_selectmode)(fl_Tree tree);
+  FL_EXPORT_C(void, Fl_Tree_set_selectmode)(fl_Tree tree,Fl_Tree_Select val);
+#if FLTK_ABI_VERSION >= 10302
+  FL_EXPORT_C(Fl_Tree_Item_Reselect_Mode, Fl_Tree_item_reselect_mode)(fl_Tree tree);
+  FL_EXPORT_C(void, Fl_Tree_set_item_reselect_mode)(fl_Tree tree,Fl_Tree_Item_Reselect_Mode mode);
+  FL_EXPORT_C(Fl_Tree_Item_Draw_Mode, Fl_Tree_item_draw_mode)(fl_Tree tree);
+  FL_EXPORT_C(void, Fl_Tree_set_item_draw_mode)(fl_Tree tree,Fl_Tree_Item_Draw_Mode mode);
+  FL_EXPORT_C(void, Fl_Tree_set_item_draw_mode)(fl_Tree tree,int mode);
+#endif /*FLTK_ABI_VERSION*/
+  FL_EXPORT_C(int, Fl_Tree_displayed)(fl_Tree tree,fl_Tree_Item item);
+  FL_EXPORT_C(void, Fl_Tree_show_item_with_yoff)(fl_Tree tree,fl_Tree_Item item, int yoff);
+  FL_EXPORT_C(void, Fl_Tree_show_item)(fl_Tree tree,fl_Tree_Item item);
+  FL_EXPORT_C(void, Fl_Tree_show_item_top)(fl_Tree tree,fl_Tree_Item item);
+  FL_EXPORT_C(void, Fl_Tree_show_item_middle)(fl_Tree tree,fl_Tree_Item item);
+  FL_EXPORT_C(void, Fl_Tree_show_item_bottom)(fl_Tree tree,fl_Tree_Item item);
+  FL_EXPORT_C(void, Fl_Tree_display)(fl_Tree tree,fl_Tree_Item item);
+  FL_EXPORT_C(int , Fl_Tree_vposition)(fl_Tree tree);
+  FL_EXPORT_C(void, Fl_Tree_set_vposition)(fl_Tree tree,int pos);
+
+  FL_EXPORT_C(int, Fl_Tree_Fl_Tree_is_scrollbar)(fl_Tree tree,Fl_Widget *w);
+  FL_EXPORT_C(int, Fl_Tree_scrollbar_size)(fl_Tree tree);
+  FL_EXPORT_C(void, Fl_Tree_set_scrollbar_size)(fl_Tree tree,int size);
+  FL_EXPORT_C(int, Fl_Tree_is_vscroll_visible)(fl_Tree tree);
+  FL_EXPORT_C(void, Fl_Tree_set_callback_item)(fl_Tree tree,Fl_Tree_Item* item);
+  FL_EXPORT_C(fl_Tree_Item, Fl_Tree_callback_item)(fl_Tree tree);
+  FL_EXPORT_C(void, Fl_Tree_set_callback_reason)(fl_Tree tree,Fl_Tree_Reason reason);
+  FL_EXPORT_C(Fl_Tree_Reason, Fl_Tree_callback_reason)(fl_Tree tree);
+  FL_EXPORT_C(void, Fl_Tree_load)(fl_Tree tree,fl_Preferences preferences);
 #ifdef __cplusplus
 }
 #endif

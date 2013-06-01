@@ -14,6 +14,18 @@
 #ifdef __cplusplus
 EXPORT {
 #endif
+#ifndef INTERNAL_LINKAGE
+  typedef enum {
+  FL_TREE_REASON_NONE=0,
+    FL_TREE_REASON_SELECTED,
+    FL_TREE_REASON_DESELECTED,
+#if FLTK_ABI_VERSION >= 10302
+    FL_TREE_REASON_RESELECTED,
+#endif /*FLTK_ABI_VERSION*/
+    FL_TREE_REASON_OPENED,
+    FL_TREE_REASON_CLOSED
+    } Fl_Tree_Reason;
+#endif
   typedef void* ID;
   typedef void* fl_Window;
   typedef void* fl_Group;

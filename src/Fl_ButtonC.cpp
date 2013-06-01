@@ -1,5 +1,4 @@
 #include "Fl_ButtonC.h"
-
 #ifdef __cplusplus
 EXPORT {
 #endif
