@@ -606,6 +606,9 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Tree_load)(fl_Tree tree,fl_Preferences preferences){
     (static_cast<Fl_Tree*>(tree))->load(*(static_cast<Fl_Preferences*>(preferences)));
   }
+  FL_EXPORT_C(int, Fl_Tree_is_scrollbar)(fl_Tree tree,fl_Widget w){
+    return (static_cast<Fl_Tree*>(tree))->is_scrollbar((static_cast<Fl_Widget*>(w)));
+  }
   FL_EXPORT_C(int,Fl_Tree_scrollbar_size)(fl_Tree tree){
     return (static_cast<Fl_Tree*>(tree))->scrollbar_size();
   }

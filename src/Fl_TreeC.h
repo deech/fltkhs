@@ -222,7 +222,7 @@ EXPORT {
   FL_EXPORT_C(int , Fl_Tree_vposition)(fl_Tree tree);
   FL_EXPORT_C(void, Fl_Tree_set_vposition)(fl_Tree tree,int pos);
 
-  FL_EXPORT_C(int, Fl_Tree_Fl_Tree_is_scrollbar)(fl_Tree tree,Fl_Widget *w);
+  FL_EXPORT_C(int, Fl_Tree_is_scrollbar)(fl_Tree tree,fl_Widget w);
   FL_EXPORT_C(int, Fl_Tree_scrollbar_size)(fl_Tree tree);
   FL_EXPORT_C(void, Fl_Tree_set_scrollbar_size)(fl_Tree tree,int size);
   FL_EXPORT_C(int, Fl_Tree_is_vscroll_visible)(fl_Tree tree);

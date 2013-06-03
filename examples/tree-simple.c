@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include "Fl_C.h"
+#include "Fl_EnumerationsC.h"
 #include "Fl_Types.h"
 
 void TreeCallback(fl_Widget w, void* data){
@@ -10,17 +11,17 @@ void TreeCallback(fl_Widget w, void* data){
     case FL_TREE_REASON_SELECTED: {
       char pathname[256];
       Fl_Tree_item_pathname(tree,pathname, sizeof(pathname), item);
-      printf("TreeCallback: Item selected='%s', Full pathname='%s'\n", Fl_Tree_Item_label(item), pathname);
+      printf("TreeCallback: Item selected='%s', Full pathname='%s'\n", (const char*)(Fl_Tree_Item_label(item)), pathname);
       break;
     }
     case FL_TREE_REASON_DESELECTED:
-      printf("TreeCallback: Item '%s' deselected\n", Fl_Tree_Item_label(item));
+      printf("TreeCallback: Item '%s' deselected\n", (const char*)(Fl_Tree_Item_label(item)));
       break;
     case FL_TREE_REASON_OPENED:
-      printf("TreeCallback: Item '%s' opened\n", Fl_Tree_Item_label(item));
+      printf("TreeCallback: Item '%s' opened\n", (const char*)(Fl_Tree_Item_label(item)));
       break;
     case FL_TREE_REASON_CLOSED:
-      printf("TreeCallback: Item '%s' closed\n", Fl_Tree_Item_label(item));
+      printf("TreeCallback: Item '%s' closed\n", (const char*)(Fl_Tree_Item_label(item)));
     default:
       break;
   }
