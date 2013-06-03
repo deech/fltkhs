@@ -28,7 +28,7 @@ void TreeCallback(fl_Widget w, void* data){
 }
 int main(int argc, char** argv) {
   Fl_set_scheme("gtk+");
-  fl_Window window = (fl_Window)Fl_Window_New_WithTitle(250,400,"Simple Tree");
+  fl_Window window = (fl_Window)Fl_Window_New_WithLabel(250,400,"Simple Tree");
   Fl_Window_begin(window);
   fl_Tree tree = (fl_Tree)Fl_Tree_New(10,10,Fl_Window_w(window)-20,Fl_Window_h(window)-20);
   Fl_Tree_showroot(tree,0);

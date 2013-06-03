@@ -9,16 +9,6 @@
 #ifdef __cplusplus
 EXPORT {
 #endif
-  typedef enum {
-    CONTEXT_NONEC       = 0,
-    CONTEXT_STARTPAGEC  = 0x01,
-    CONTEXT_ENDPAGEC    = 0x02,
-    CONTEXT_ROW_HEADERC = 0x04,
-    CONTEXT_COL_HEADERC = 0x08,
-    CONTEXT_CELLC       = 0x10,
-    CONTEXT_TABLEC      = 0x20,
-    CONTEXT_RC_RESIZEC  = 0x40
-  }TableContextC ;
   /* Inherited from Fl_Widget */
   FL_EXPORT_C(fl_Group,     Fl_Table_parent)(fl_Table table);
   FL_EXPORT_C(void,         Fl_Table_set_parent)(fl_Table table, fl_Group grp);
@@ -115,21 +105,19 @@ EXPORT {
   FL_EXPORT_C(fl_Widget,    Fl_Table__ddfdesign_kludge)(fl_Table table);
 
   /* Fl_Table specific functions */
-  struct fl_Table_draw_cell_default_args{
-    int R;
-    int C;
-    int X;
-    int Y;
+  class Fl_DerivedTable : public Fl_Table {
+    fl_Table_Virtual_Funcs* overriddenFuncs;
+  public:
+    void draw_cell(TableContext tableContext, int R, int C, int X, int Y, int W, int H);
+    void clear();
+    void rows(int val);
+    void cols(int val);
+    Fl_DerivedTable(int X, int Y, int W, int H, const char *l, fl_Table_Virtual_Funcs* funcs);
+    Fl_DerivedTable(int X, int Y, int W, int H, fl_Table_Virtual_Funcs* funcs);
   };
-  typedef struct {
-    void (*fl_Table_draw_cell)(TableContextC context,int R, int C, int X, int Y, int W, int H);
-    void (*fl_Table_clear)();
-    void (*fl_Table_rows)(int val);
-    void (*fl_Table_cols)(int val);
-  } fl_Table_Virtual_Funcs;
   FL_EXPORT_C(fl_Table_Virtual_Funcs*, Fl_Table_default_virtual_funcs)();
-  FL_EXPORT_C(fl_Table, Fl_Table_New_WithLabel)(int X, int Y, int W, int H, const char *l, fl_Table_Virtual_Funcs funcs);
-  FL_EXPORT_C(fl_Table, Fl_Table_New)(int X, int Y, int W, int H, fl_Table_Virtual_Funcs);
+  FL_EXPORT_C(fl_Table, Fl_Table_New_WithLabel)(int X, int Y, int W, int H, const char *l, fl_Table_Virtual_Funcs* funcs);
+  FL_EXPORT_C(fl_Table, Fl_Table_New)(int X, int Y, int W, int H, fl_Table_Virtual_Funcs* funcs);
   FL_EXPORT_C(void, Fl_Table_Destroy)(fl_Table table);
   FL_EXPORT_C(void, Fl_Table_set_table_box)(fl_Table table,Fl_Boxtype val);
   FL_EXPORT_C(Fl_Boxtype, Fl_Table_table_box)(fl_Table table);

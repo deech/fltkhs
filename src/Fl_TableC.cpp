@@ -1,52 +1,43 @@
 #include "Fl_TableC.h"
 #ifdef __cplusplus
-class Fl_DerivedTable : public Fl_Table {
-  fl_Table_Virtual_Funcs* overriddenFuncs;
-public:
-  Fl_DerivedTable(int X, int Y, int W, int H, const char *l, fl_Table_Virtual_Funcs* funcs) : Fl_Table(X,Y,W,H,l){
+Fl_DerivedTable::Fl_DerivedTable(int X, int Y, int W, int H, const char *l, fl_Table_Virtual_Funcs* funcs) : Fl_Table(X,Y,W,H,l){
     overriddenFuncs = funcs;
   }
-  Fl_DerivedTable(int X, int Y, int W, int H, fl_Table_Virtual_Funcs* funcs):Fl_Table(X,Y,W,0){
+Fl_DerivedTable::Fl_DerivedTable(int X, int Y, int W, int H, fl_Table_Virtual_Funcs* funcs):Fl_Table(X,Y,W,0){
     overriddenFuncs = funcs;
   }
-  ~Fl_DerivedTable();
-  void draw_cell(TableContext tableContext, int R, int C, int X, int Y, int W, int H){
-    TableContextC c = (TableContextC)-1;
-    switch(tableContext){
-    case Fl_Table::CONTEXT_NONE:      {c = CONTEXT_NONEC;      break;}
-    case Fl_Table::CONTEXT_STARTPAGE: {c = CONTEXT_STARTPAGEC; break;}
-    case Fl_Table::CONTEXT_ENDPAGE:   {c = CONTEXT_ENDPAGEC;   break;}
-    case Fl_Table::CONTEXT_ROW_HEADER:{c = CONTEXT_ROW_HEADERC;break;}
-    case Fl_Table::CONTEXT_COL_HEADER:{c = CONTEXT_COL_HEADERC;break;}
-    case Fl_Table::CONTEXT_CELL:      {c = CONTEXT_CELLC;      break;}
-    case Fl_Table::CONTEXT_TABLE:     {c = CONTEXT_TABLEC;     break;}
-    case Fl_Table::CONTEXT_RC_RESIZE: {c = CONTEXT_RC_RESIZEC; break;}
-    default:                          {c = TableContextC(-1);  break;}
-    }
-    this->overriddenFuncs->fl_Table_draw_cell(c,R,C,X,Y,W,H);
+
+void Fl_DerivedTable::draw_cell(TableContext tableContext, int R, int C, int X, int Y, int W, int H){
+  TableContextC c = (TableContextC)-1;
+  switch(tableContext){
+  case Fl_Table::CONTEXT_NONE:      {c = CONTEXT_NONEC;      break;}
+  case Fl_Table::CONTEXT_STARTPAGE: {c = CONTEXT_STARTPAGEC; break;}
+  case Fl_Table::CONTEXT_ENDPAGE:   {c = CONTEXT_ENDPAGEC;   break;}
+  case Fl_Table::CONTEXT_ROW_HEADER:{c = CONTEXT_ROW_HEADERC;break;}
+  case Fl_Table::CONTEXT_COL_HEADER:{c = CONTEXT_COL_HEADERC;break;}
+  case Fl_Table::CONTEXT_CELL:      {c = CONTEXT_CELLC;      break;}
+  case Fl_Table::CONTEXT_TABLE:     {c = CONTEXT_TABLEC;     break;}
+  case Fl_Table::CONTEXT_RC_RESIZE: {c = CONTEXT_RC_RESIZEC; break;}
+  default:                          {c = TableContextC(-1);  break;}
   }
-  void clear(){
-    if (this->overriddenFuncs->fl_Table_clear != NULL) {
-      this->overriddenFuncs->fl_Table_clear();
-    }
-    else {
-      Fl_Table::clear(); 
-    }
+  this->overriddenFuncs->fl_Table_draw_cell(c,R,C,X,Y,W,H);
+}
+void Fl_DerivedTable::clear(){
+  if (this->overriddenFuncs->fl_Table_clear != NULL) {
+    this->overriddenFuncs->fl_Table_clear();
   }
-  void rows(int val){
-    this->overriddenFuncs->fl_Table_rows(val);
+  else {
+    Fl_Table::clear();
   }
-  void cols(int val){
-    this->overriddenFuncs->fl_Table_cols(val);
-  }
-};
+}
+void Fl_DerivedTable::rows(int val){
+  this->overriddenFuncs->fl_Table_rows(val);
+}
+void Fl_DerivedTable::cols(int val){
+  this->overriddenFuncs->fl_Table_cols(val);
+}
 EXPORT {
 #endif
-  FL_EXPORT_C(fl_Table_Virtual_Funcs*, Fl_Table_default_virtual_funcs)(){
-    fl_Table_Virtual_Funcs ref = {NULL,NULL,NULL,NULL};
-    fl_Table_Virtual_Funcs* ptr = &ref;
-    return ptr;
-  }
   FL_EXPORT_C(fl_Group,Fl_Table_parent)(fl_Table table){
     return (static_cast<Fl_Table*>(table))->parent();
   }
@@ -296,6 +287,22 @@ EXPORT {
     return (static_cast<Fl_Table*>(table))->_ddfdesign_kludge();
   }
 
+  FL_EXPORT_C(fl_Table_Virtual_Funcs*, Fl_Table_default_virtual_funcs)(){
+    fl_Table_Virtual_Funcs ref = {NULL,NULL,NULL,NULL};
+    fl_Table_Virtual_Funcs* ptr = &ref;
+    return ptr;
+  }
+  FL_EXPORT_C(fl_Table, Fl_Table_New_WithLabel)(int X, int Y, int W, int H, const char *l, fl_Table_Virtual_Funcs* funcs){
+    Fl_DerivedTable* table = new Fl_DerivedTable(X,Y,W,H,l,funcs);
+    return (fl_Table)table;
+  }
+  FL_EXPORT_C(fl_Table, Fl_Table_New)(int X, int Y, int W, int H, fl_Table_Virtual_Funcs* funcs){
+    Fl_DerivedTable* table = new Fl_DerivedTable(X,Y,W,H,funcs);
+    return (fl_Table)table;
+  }
+  FL_EXPORT_C(void, Fl_Table_Destroy)(fl_Table table){
+    delete (static_cast<Fl_Table*>(table));
+  }
   FL_EXPORT_C(void,Fl_Table_set_table_box)(fl_Table table,Fl_Boxtype val){
     return (static_cast<Fl_Table*>(table))->table_box(val);
   }

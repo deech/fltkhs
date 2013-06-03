@@ -5,7 +5,7 @@
 int main(int argc, char** argv)
 {
   char* title = "FLTK Tree Window";
-  fl_Window win = (fl_Window)Fl_Window_New_WithTitle(500,500,title);
+  fl_Window win = (fl_Window)Fl_Window_New_WithLabel(500,500,title);
   Fl_Window_begin(win);
   fl_Tree tree = (fl_Tree)Fl_Tree_New_WithLabel(50,50,200,200,"Tree");
   Fl_Tree_root_label(tree, "Root Label With Items");

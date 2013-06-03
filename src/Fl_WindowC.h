@@ -111,7 +111,7 @@ EXPORT {
   FL_EXPORT_C(void,         Fl_Window_fullscreen)(fl_Window win);
   FL_EXPORT_C(void,         Fl_Window_fullscreen_off)(fl_Window win);
   FL_EXPORT_C(void,         Fl_Window_fullscreen_off_with_resize)(fl_Window win,int X,int Y,int W,int H);
-  FL_EXPORT_C(fl_Window,    Fl_Window_New_WithTitle)(int x, int y, const char* title);
+  FL_EXPORT_C(fl_Window,    Fl_Window_New_WithLabel)(int x, int y, const char* title);
   FL_EXPORT_C(fl_Window,    Fl_Window_New)(int x, int y);
   FL_EXPORT_C(fl_Window,    Fl_Window_NewWH_WithTitle)(int x, int y, int w, int h, const char* title);
   FL_EXPORT_C(fl_Window,    Fl_Window_NewWH)(int x, int y, int w, int h);
