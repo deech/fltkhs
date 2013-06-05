@@ -91,11 +91,11 @@ EXPORT {
   }
   FL_EXPORT_C(void,Fl_Tree_set_callback_and_user_data)(fl_Tree tree,fl_Callback* cb,void* p){
     Fl_Tree* castedButton = (static_cast<Fl_Tree*>(tree));
-    C_to_Fl_Callback* wrapper = new C_to_Fl_Callback(castedButton, cb, p);
+    new C_to_Fl_Callback(castedButton, cb, p);
   }
   FL_EXPORT_C(void,Fl_Tree_set_callback)(fl_Tree tree,fl_Callback* cb){
     Fl_Tree* castedButton = (static_cast<Fl_Tree*>(tree));
-    C_to_Fl_Callback* wrapper = new C_to_Fl_Callback(castedButton, cb);
+    new C_to_Fl_Callback(castedButton, cb);
   }
   FL_EXPORT_C(void*,Fl_Tree_user_data)(fl_Tree tree){
     return (static_cast<Fl_Tree*>(tree))->user_data();
@@ -215,7 +215,7 @@ EXPORT {
     (static_cast<Fl_Tree*>(tree))->measure_label(ww,hh);
   }
   FL_EXPORT_C(int,Fl_Tree_handle)(fl_Tree tree,int e){
-    (static_cast<Fl_Tree*>(tree))->handle(e);
+    return (static_cast<Fl_Tree*>(tree))->handle(e);
   }
   FL_EXPORT_C(void,Fl_Tree_draw)(fl_Tree tree){
     return (static_cast<Fl_Tree*>(tree))->draw();

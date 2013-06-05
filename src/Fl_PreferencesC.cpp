@@ -7,7 +7,7 @@ EXPORT {
     if (root == SYSTEM) {
       r = Fl_Preferences::SYSTEM;
     }
-    else if (root = USER) {
+    else if (root == USER) {
       r = Fl_Preferences::USER;
     }
     Fl_Preferences* preferences = new Fl_Preferences(r, vendor, application);
@@ -33,7 +33,7 @@ EXPORT {
     Fl_Preferences* preferences = new Fl_Preferences(id);
     return (fl_Preferences) preferences;
   }
-  FL_EXPORT_C(fl_Preferences,Fl_Preferences_Destroy)(fl_Preferences preferences){
+  FL_EXPORT_C(void,Fl_Preferences_Destroy)(fl_Preferences preferences){
     delete (static_cast<Fl_Preferences*>(preferences));
   }
   FL_EXPORT_C(const char*,Fl_newUUID)(){

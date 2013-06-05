@@ -105,11 +105,11 @@ EXPORT {
   }
   FL_EXPORT_C(void,Fl_Value_Input_set_callback_and_user_data)(fl_Value_Input value_input,fl_Callback* cb,void* p){
     Fl_Value_Input* castedButton = (static_cast<Fl_Value_Input*>(value_input));
-    C_to_Fl_Callback* wrapper = new C_to_Fl_Callback(castedButton, cb, p);
+    new C_to_Fl_Callback(castedButton, cb, p);
   }
   FL_EXPORT_C(void,Fl_Value_Input_set_callback)(fl_Value_Input value_input,fl_Callback* cb){
     Fl_Value_Input* castedButton = (static_cast<Fl_Value_Input*>(value_input));
-    C_to_Fl_Callback* wrapper = new C_to_Fl_Callback(castedButton, cb);
+    new C_to_Fl_Callback(castedButton, cb);
   }
   FL_EXPORT_C(void*,Fl_Value_Input_user_data)(fl_Value_Input value_input){
     return (static_cast<Fl_Value_Input*>(value_input))->user_data();

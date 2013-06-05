@@ -105,11 +105,11 @@ EXPORT {
   }
   FL_EXPORT_C(void,Fl_Multiline_Input_set_callback_and_user_data)(fl_Multiline_Input multiline_input,fl_Callback* cb,void* p){
     Fl_Multiline_Input* castedInput_dow = (static_cast<Fl_Multiline_Input*>(multiline_input));
-    C_to_Fl_Callback* wrapper = new C_to_Fl_Callback(castedInput_dow, cb, p);
+    new C_to_Fl_Callback(castedInput_dow, cb, p);
   }
   FL_EXPORT_C(void,Fl_Multiline_Input_set_callback)(fl_Multiline_Input multiline_input,fl_Callback* cb){
     Fl_Multiline_Input* castedInput_dow = (static_cast<Fl_Multiline_Input*>(multiline_input));
-    C_to_Fl_Callback* wrapper = new C_to_Fl_Callback(castedInput_dow, cb);
+    new C_to_Fl_Callback(castedInput_dow, cb);
   }
   FL_EXPORT_C(void*,Fl_Multiline_Input_user_data)(fl_Multiline_Input multiline_input){
     return (static_cast<Fl_Multiline_Input*>(multiline_input))->user_data();

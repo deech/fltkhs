@@ -105,11 +105,11 @@ EXPORT {
   }
   FL_EXPORT_C(void,Fl_Secret_Input_set_callback_and_user_data)(fl_Secret_Input secret_input,fl_Callback* cb,void* p){
     Fl_Secret_Input* castedInput_dow = (static_cast<Fl_Secret_Input*>(secret_input));
-    C_to_Fl_Callback* wrapper = new C_to_Fl_Callback(castedInput_dow, cb, p);
+    new C_to_Fl_Callback(castedInput_dow, cb, p);
   }
   FL_EXPORT_C(void,Fl_Secret_Input_set_callback)(fl_Secret_Input secret_input,fl_Callback* cb){
     Fl_Secret_Input* castedInput_dow = (static_cast<Fl_Secret_Input*>(secret_input));
-    C_to_Fl_Callback* wrapper = new C_to_Fl_Callback(castedInput_dow, cb);
+    new C_to_Fl_Callback(castedInput_dow, cb);
   }
   FL_EXPORT_C(void*,Fl_Secret_Input_user_data)(fl_Secret_Input secret_input){
     return (static_cast<Fl_Secret_Input*>(secret_input))->user_data();

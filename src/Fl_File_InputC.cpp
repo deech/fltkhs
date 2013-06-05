@@ -105,11 +105,11 @@ EXPORT {
   }
   FL_EXPORT_C(void,Fl_File_Input_set_callback_and_user_data)(fl_File_Input file_input,fl_Callback* cb,void* p){
     Fl_File_Input* castedInput_dow = (static_cast<Fl_File_Input*>(file_input));
-    C_to_Fl_Callback* wrapper = new C_to_Fl_Callback(castedInput_dow, cb, p);
+    new C_to_Fl_Callback(castedInput_dow, cb, p);
   }
   FL_EXPORT_C(void,Fl_File_Input_set_callback)(fl_File_Input file_input,fl_Callback* cb){
     Fl_File_Input* castedInput_dow = (static_cast<Fl_File_Input*>(file_input));
-    C_to_Fl_Callback* wrapper = new C_to_Fl_Callback(castedInput_dow, cb);
+    new C_to_Fl_Callback(castedInput_dow, cb);
   }
   FL_EXPORT_C(void*,Fl_File_Input_user_data)(fl_File_Input file_input){
     return (static_cast<Fl_File_Input*>(file_input))->user_data();
@@ -385,7 +385,7 @@ EXPORT {
   FL_EXPORT_C(Fl_Boxtype,Fl_File_Input_down_box)(fl_File_Input file_input){
     return (static_cast<Fl_File_Input*>(file_input))->down_box();
   }
-  FL_EXPORT_C(int,Fl_File_Input_set_down_box)(fl_File_Input file_input,Fl_Boxtype color){
+  FL_EXPORT_C(void,Fl_File_Input_set_down_box)(fl_File_Input file_input,Fl_Boxtype color){
     (static_cast<Fl_File_Input*>(file_input))->down_box(color);
   }
 #ifdef __cplusplus

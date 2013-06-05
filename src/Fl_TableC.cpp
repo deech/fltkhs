@@ -139,11 +139,11 @@ EXPORT {
   }
   FL_EXPORT_C(void,Fl_Table_set_callback_and_user_data)(fl_Table table,fl_Callback* cb,void* p){
     Fl_Table* castedWindow = (static_cast<Fl_Table*>(table));
-    C_to_Fl_Callback* wrapper = new C_to_Fl_Callback(castedWindow, cb, p);
+    new C_to_Fl_Callback(castedWindow, cb, p);
   }
   FL_EXPORT_C(void,Fl_Table_set_callback)(fl_Table table,fl_Callback* cb){
     Fl_Table* castedWindow = (static_cast<Fl_Table*>(table));
-    C_to_Fl_Callback* wrapper = new C_to_Fl_Callback(castedWindow, cb);
+    new C_to_Fl_Callback(castedWindow, cb);
   }
   FL_EXPORT_C(void*,Fl_Table_user_data)(fl_Table table){
     return (static_cast<Fl_Table*>(table))->user_data();

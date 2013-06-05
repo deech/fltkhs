@@ -104,11 +104,11 @@ EXPORT {
   }
   FL_EXPORT_C(void,Fl_Light_Button_set_callback_and_user_data)(fl_Light_Button b,fl_Callback* cb,void* p){
     Fl_Light_Button* castedButton = (static_cast<Fl_Light_Button*>(b));
-    C_to_Fl_Callback* wrapper = new C_to_Fl_Callback(castedButton, cb, p);
+    new C_to_Fl_Callback(castedButton, cb, p);
   }
   FL_EXPORT_C(void,Fl_Light_Button_set_callback)(fl_Light_Button b,fl_Callback* cb){
     Fl_Light_Button* castedButton = (static_cast<Fl_Light_Button*>(b));
-    C_to_Fl_Callback* wrapper = new C_to_Fl_Callback(castedButton, cb);
+    new C_to_Fl_Callback(castedButton, cb);
   }
   FL_EXPORT_C(void*,Fl_Light_Button_user_data)(fl_Light_Button b){
     return (static_cast<Fl_Light_Button*>(b))->user_data();

@@ -141,7 +141,7 @@ EXPORT {
   FL_EXPORT_C(Fl_Color,    Fl_File_Input_errorcolor)(fl_File_Input file_input);
   FL_EXPORT_C(void,         Fl_File_Input_set_errorcolor)(fl_File_Input file_input, Fl_Color color);
   FL_EXPORT_C(Fl_Boxtype,  Fl_File_Input_down_box)(fl_File_Input file_input);
-  FL_EXPORT_C(int,         Fl_File_Input_set_down_box)(fl_File_Input file_input, Fl_Boxtype color);
+  FL_EXPORT_C(void,         Fl_File_Input_set_down_box)(fl_File_Input file_input, Fl_Boxtype color);
 #ifdef __cplusplus
 }
 #endif

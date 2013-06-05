@@ -105,11 +105,11 @@ EXPORT {
   }
   FL_EXPORT_C(void,Fl_Int_Input_set_callback_and_user_data)(fl_Int_Input int_input,fl_Callback* cb,void* p){
     Fl_Int_Input* castedInput_dow = (static_cast<Fl_Int_Input*>(int_input));
-    C_to_Fl_Callback* wrapper = new C_to_Fl_Callback(castedInput_dow, cb, p);
+    new C_to_Fl_Callback(castedInput_dow, cb, p);
   }
   FL_EXPORT_C(void,Fl_Int_Input_set_callback)(fl_Int_Input int_input,fl_Callback* cb){
     Fl_Int_Input* castedInput_dow = (static_cast<Fl_Int_Input*>(int_input));
-    C_to_Fl_Callback* wrapper = new C_to_Fl_Callback(castedInput_dow, cb);
+    new C_to_Fl_Callback(castedInput_dow, cb);
   }
   FL_EXPORT_C(void*,Fl_Int_Input_user_data)(fl_Int_Input int_input){
     return (static_cast<Fl_Int_Input*>(int_input))->user_data();

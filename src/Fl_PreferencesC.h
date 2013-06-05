@@ -22,6 +22,7 @@ EXPORT {
   FL_EXPORT_C(fl_Preferences, Fl_Preferences_With_Parent)( fl_Preferences parent);
   FL_EXPORT_C(const char*, Fl_newUUID)();
   FL_EXPORT_C(fl_Preferences, Fl_Preferences_With_Id)(ID id);
+  FL_EXPORT_C(void,Fl_Preferences_Destroy)(fl_Preferences preferences);
   FL_EXPORT_C(ID, Fl_Preferences_id)(fl_Preferences preferences);
   FL_EXPORT_C(char, Fl_Preferences_remove)(fl_Preferences preferences, ID id_);
   FL_EXPORT_C(const char*, Fl_Preferences_name)(fl_Preferences preferences);
