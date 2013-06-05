@@ -80,9 +80,9 @@ makeArgument className argType argName =
       (False, True) -> Argument (Normal argType) argName ("F" ++ (tail argType))
       (False, False) -> Argument (Normal argType) argName argType
 
-parseArgList = (many (letter <|> char '_' <|> char '*' <|> char '&')) `sepBy` (skipMany1 space) >>= return . filter (/= "")
+parseArgList = (many (letter <|> digit <|> char '_' <|> char '*' <|> char '&')) `sepBy` (skipMany1 space) >>= return . filter (/= "")
 
-parseName = (many letter) `sepBy` (char '_')
+parseName = (many (letter <|> digit)) `sepBy` (char '_')
 
 extractClassName' functionName@(x:xs) accum | (x == "Fl") = extractClassName' xs x
 extractClassName' functionName@(x1:x2:xs) accum | (x1 == "") && (x2 /= "") = accum ++ x1 ++ "_"

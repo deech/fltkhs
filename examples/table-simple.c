@@ -16,6 +16,6 @@ int main(int argc, char* argv){
   funcs->fl_Table_draw_cell = &draw_cell;
   fl_Table table = (fl_Table)Fl_Table_New(10,10,880,380,funcs);
   Fl_Window_end(window);
-  Fl_Window_show();
+  (void)Fl_Window_show();
   return (Fl_run());
 }

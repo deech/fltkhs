@@ -26,6 +26,7 @@
 #include "Fl_TreeC.h"
 #include "Fl_PreferencesC.h"
 #include "Fl_TableC.h"
+#include "Fl_DrawC.h"
 EXPORT {
 #endif
   typedef enum {

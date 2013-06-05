@@ -104,11 +104,11 @@ EXPORT {
   }
   FL_EXPORT_C(void,Fl_Window_set_callback_and_user_data)(fl_Window win,fl_Callback* cb,void* p){
     Fl_Window* castedWindow = (static_cast<Fl_Window*>(win));
-    C_to_Fl_Callback* wrapper = new C_to_Fl_Callback(castedWindow, cb, p);
+    new C_to_Fl_Callback(castedWindow, cb, p);
   }
   FL_EXPORT_C(void,Fl_Window_set_callback)(fl_Window win,fl_Callback* cb){
     Fl_Window* castedWindow = (static_cast<Fl_Window*>(win));
-    C_to_Fl_Callback* wrapper = new C_to_Fl_Callback(castedWindow, cb);
+    new C_to_Fl_Callback(castedWindow, cb);
   }
   FL_EXPORT_C(void*,Fl_Window_user_data)(fl_Window win){
     return (static_cast<Fl_Window*>(win))->user_data();

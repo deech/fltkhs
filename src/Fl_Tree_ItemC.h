@@ -11,7 +11,7 @@ EXPORT {
 #endif
   FL_EXPORT_C(fl_Tree_Item, Fl_Tree_Item_New_WithPrefs)(fl_Tree_Prefs tree_prefs);
   FL_EXPORT_C(fl_Tree_Item, Fl_Tree_Item_New_WithItem)(fl_Tree_Item tree_item);
-  FL_EXPORT_C(fl_Tree_Item, Fl_Tree_Item_Destroy)(fl_Tree_Item tree_item);
+  FL_EXPORT_C(void, Fl_Tree_Item_Destroy)(fl_Tree_Item tree_item);
   FL_EXPORT_C(int, Fl_Tree_Item_x)(fl_Tree_Item tree_item);
   FL_EXPORT_C(int, Fl_Tree_Item_y)(fl_Tree_Item tree_item);
   FL_EXPORT_C(int, Fl_Tree_Item_w)(fl_Tree_Item tree_item);

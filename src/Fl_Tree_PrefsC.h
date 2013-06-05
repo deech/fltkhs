@@ -39,7 +39,7 @@ EXPORT {
 #endif /*FLTK_ABI_VERSION*/
 #endif /*INTERNAL_LINKAGE*/
   FL_EXPORT_C(fl_Tree_Prefs, Fl_Tree_Prefs_New)();
-  FL_EXPORT_C(fl_Tree_Prefs, Fl_Tree_Prefs_Destroy)(fl_Tree_Prefs prefs);
+  FL_EXPORT_C(void, Fl_Tree_Prefs_Destroy)(fl_Tree_Prefs prefs);
   FL_EXPORT_C(Fl_Font, Fl_Tree_Prefs_item_labelfont)(fl_Tree_Prefs tree_prefs);
   FL_EXPORT_C(void, Fl_Tree_Prefs_set_item_labelfont)(fl_Tree_Prefs tree_prefs, Fl_Font val);
   FL_EXPORT_C(Fl_Fontsize, Fl_Tree_Prefs_item_labelsize)(fl_Tree_Prefs tree_prefs);

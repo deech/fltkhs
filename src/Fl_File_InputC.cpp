@@ -379,7 +379,7 @@ EXPORT {
   FL_EXPORT_C(Fl_Color,Fl_File_Input_errorcolor)(fl_File_Input file_input){
     return (static_cast<Fl_File_Input*>(file_input))->errorcolor();
   }
-  FL_EXPORT_C(int,Fl_File_Input_set_errorcolor)(fl_File_Input file_input,Fl_Color color){
+  FL_EXPORT_C(void,Fl_File_Input_set_errorcolor)(fl_File_Input file_input,Fl_Color color){
     (static_cast<Fl_File_Input*>(file_input))->errorcolor(color);
   }
   FL_EXPORT_C(Fl_Boxtype,Fl_File_Input_down_box)(fl_File_Input file_input){

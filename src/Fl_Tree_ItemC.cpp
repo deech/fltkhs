@@ -2,7 +2,7 @@
 #ifdef __cplusplus
 EXPORT {
 #endif
-  FL_EXPORT_C(fl_Tree_Item,Fl_Tree_Item_Destroy)(fl_Tree_Item tree_item){
+  FL_EXPORT_C(void,Fl_Tree_Item_Destroy)(fl_Tree_Item tree_item){
     delete (static_cast<Fl_Tree_Item*>(tree_item));
   }
   FL_EXPORT_C(fl_Tree_Item,Fl_Tree_Item_New_WithItem)(fl_Tree_Item copy_item){

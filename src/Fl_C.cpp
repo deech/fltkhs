@@ -7,7 +7,7 @@
     static fl_Event_Dispatch* cb;
     static int intercept(int event, Fl_Window* window) {
       fl_Window w = (fl_Window)window;
-      (*cb)(event, w);
+      return (*cb)(event, w);
     }
   };
   fl_Event_Dispatch* C_to_Fl_Event_Dispatch::cb = 0;
@@ -190,7 +190,7 @@ EXPORT {
     return (fl_Window)Fl::grab();
   }
   FL_EXPORT_C(fl_Window,Fl_first_window)(){
-    (fl_Window)Fl::first_window();
+    return (fl_Window)Fl::first_window();
   }
   FL_EXPORT_C(void,Fl_set_first_window)(fl_Window window){
     Fl::first_window((static_cast<Fl_Window*>(window)));
