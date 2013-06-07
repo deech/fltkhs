@@ -86,11 +86,7 @@ EXPORT {
   FL_EXPORT_C(fl_Gl_Window, Fl_Table_as_gl_window)(fl_Table table);
 
   /* Fl_Group specific */
-  FL_EXPORT_C(void,         Fl_Table_begin)(fl_Table table);
-  FL_EXPORT_C(void,         Fl_Table_end)(fl_Table table);
   FL_EXPORT_C(int,          Fl_Table_find)(fl_Table table, fl_Widget w);
-  FL_EXPORT_C(void,         Fl_Table_add)(fl_Table table, fl_Widget w);
-  FL_EXPORT_C(void,         Fl_Table_insert)(fl_Table table, fl_Widget w, int i);
   FL_EXPORT_C(void,         Fl_Table_remove_index)(fl_Table table, int index);
   FL_EXPORT_C(void,         Fl_Table_remove_widget)(fl_Table table, fl_Widget w);
   FL_EXPORT_C(void,         Fl_Table_clear)(fl_Table table);
@@ -108,10 +104,12 @@ EXPORT {
   class Fl_DerivedTable : public Fl_Table {
     fl_Table_Virtual_Funcs* overriddenFuncs;
   public:
-    void draw_cell(TableContext tableContext, int R, int C, int X, int Y, int W, int H);
-    void clear();
-    void rows(int val);
-    void cols(int val);
+    virtual void draw_cell(TableContext tableContext, int R, int C, int X, int Y, int W, int H);
+    virtual void clear();
+    virtual void rows(int val);
+    virtual void cols(int val);
+    int rows();
+    int cols();
     Fl_DerivedTable(int X, int Y, int W, int H, const char *l, fl_Table_Virtual_Funcs* funcs);
     Fl_DerivedTable(int X, int Y, int W, int H, fl_Table_Virtual_Funcs* funcs);
   };
@@ -121,7 +119,9 @@ EXPORT {
   FL_EXPORT_C(void, Fl_Table_Destroy)(fl_Table table);
   FL_EXPORT_C(void, Fl_Table_set_table_box)(fl_Table table,Fl_Boxtype val);
   FL_EXPORT_C(Fl_Boxtype, Fl_Table_table_box)(fl_Table table);
+  FL_EXPORT_C(void, Fl_Table_set_rows)(fl_Table table,int val);
   FL_EXPORT_C(int, Fl_Table_rows)(fl_Table table);
+  FL_EXPORT_C(void, Fl_Table_set_cols)(fl_Table table, int val);
   FL_EXPORT_C(int, Fl_Table_cols)(fl_Table table);
   FL_EXPORT_C(void, Fl_Table_set_visible_cells)(fl_Table table,int& r1, int& r2, int& c1, int& c2);
   FL_EXPORT_C(int, Fl_Table_is_interactive_resize)(fl_Table table);

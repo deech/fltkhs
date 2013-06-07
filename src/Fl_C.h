@@ -9,6 +9,7 @@
 #include "Fl_EnumerationsC.h"
 #include "Fl_CallbackC.h"
 #include "Fl_WindowC.h"
+#include "Fl_Double_WindowC.h"
 #include "Fl_ButtonC.h"
 #include "Fl_Check_ButtonC.h"
 #include "Fl_Radio_ButtonC.h"

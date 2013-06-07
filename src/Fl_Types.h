@@ -26,28 +26,6 @@ EXPORT {
     FL_TREE_REASON_CLOSED
   } Fl_Tree_Reason;
 #endif
-  typedef enum {
-    CONTEXT_NONEC       = 0,
-    CONTEXT_STARTPAGEC  = 0x01,
-    CONTEXT_ENDPAGEC    = 0x02,
-    CONTEXT_ROW_HEADERC = 0x04,
-    CONTEXT_COL_HEADERC = 0x08,
-    CONTEXT_CELLC       = 0x10,
-    CONTEXT_TABLEC      = 0x20,
-    CONTEXT_RC_RESIZEC  = 0x40
-  }TableContextC ;
-  struct fl_Table_draw_cell_default_args{
-    int R;
-    int C;
-    int X;
-    int Y;
-  };
-  typedef struct {
-    void (*fl_Table_draw_cell)(TableContextC context,int R, int C, int X, int Y, int W, int H);
-    void (*fl_Table_clear)();
-    void (*fl_Table_rows)(int val);
-    void (*fl_Table_cols)(int val);
-  } fl_Table_Virtual_Funcs;
   typedef void* ID;
   typedef void* fl_Window;
   typedef void* fl_Group;
@@ -176,6 +154,28 @@ EXPORT {
   typedef void* fl_XPM_Image;
   typedef void (fl_Callback )(fl_Widget, void*);
   typedef fl_Callback* fl_Callback_p;
+  typedef enum {
+    CONTEXT_NONEC       = 0,
+    CONTEXT_STARTPAGEC  = 0x01,
+    CONTEXT_ENDPAGEC    = 0x02,
+    CONTEXT_ROW_HEADERC = 0x04,
+    CONTEXT_COL_HEADERC = 0x08,
+    CONTEXT_CELLC       = 0x10,
+    CONTEXT_TABLEC      = 0x20,
+    CONTEXT_RC_RESIZEC  = 0x40
+  }TableContextC ;
+  struct fl_Table_draw_cell_default_args{
+    int R;
+    int C;
+    int X;
+    int Y;
+  };
+  typedef struct {
+    void (*fl_Table_draw_cell)(fl_Table table, TableContextC context,int R, int C, int X, int Y, int W, int H);
+    void (*fl_Table_clear)(fl_Table table);
+    void (*fl_Table_rows)(fl_Table table, int val);
+    void (*fl_Table_cols)(fl_Table table, int val);
+  } fl_Table_Virtual_Funcs;
 #ifdef __cplusplus
 }
 #endif
