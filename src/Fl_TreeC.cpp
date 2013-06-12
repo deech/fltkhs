@@ -455,7 +455,6 @@ EXPORT {
   FL_EXPORT_C(int,Fl_Tree_is_selected_with_path)(fl_Tree tree,const char *path){
     return (static_cast<Fl_Tree*>(tree))->is_selected(path);
   }
-
   FL_EXPORT_C(Fl_Font,Fl_Tree_labelfont)(fl_Tree tree){
     return (static_cast<Fl_Tree*>(tree))->labelfont();
   }

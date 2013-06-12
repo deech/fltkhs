@@ -104,15 +104,24 @@ EXPORT {
   class Fl_DerivedTable : public Fl_Table {
     fl_Table_Virtual_Funcs* overriddenFuncs;
   public:
+    using Fl_Table::rows;
+    using Fl_Table::cols;
+    virtual void draw();
+    virtual int handle(int event);
+    virtual void resize(int x, int y, int w, int h);
+    virtual void show();
+    virtual void hide();
+    virtual Fl_Group* as_group();
+    virtual Fl_Window* as_window();
+    virtual Fl_Gl_Window* as_gl_window();
     virtual void draw_cell(TableContext tableContext, int R, int C, int X, int Y, int W, int H);
     virtual void clear();
     virtual void rows(int val);
     virtual void cols(int val);
-    int rows();
-    int cols();
     Fl_DerivedTable(int X, int Y, int W, int H, const char *l, fl_Table_Virtual_Funcs* funcs);
     Fl_DerivedTable(int X, int Y, int W, int H, fl_Table_Virtual_Funcs* funcs);
   };
+
   FL_EXPORT_C(fl_Table_Virtual_Funcs*, Fl_Table_default_virtual_funcs)();
   FL_EXPORT_C(fl_Table, Fl_Table_New_WithLabel)(int X, int Y, int W, int H, const char *l, fl_Table_Virtual_Funcs* funcs);
   FL_EXPORT_C(fl_Table, Fl_Table_New)(int X, int Y, int W, int H, fl_Table_Virtual_Funcs* funcs);

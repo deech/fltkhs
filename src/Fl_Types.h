@@ -171,10 +171,21 @@ EXPORT {
     int Y;
   };
   typedef struct {
-    void (*fl_Table_draw_cell)(fl_Table table, TableContextC context,int R, int C, int X, int Y, int W, int H);
-    void (*fl_Table_clear)(fl_Table table);
-    void (*fl_Table_rows)(fl_Table table, int val);
-    void (*fl_Table_cols)(fl_Table table, int val);
+    /* From Fl_Widget */
+    void 	 (*fl_Table_draw        )(fl_Table table);
+    int          (*fl_Table_handle      )(fl_Table table,int event);
+    void         (*fl_Table_resize      )(fl_Table table,int x, int y, int w, int h);
+    void         (*fl_Table_show        )(fl_Table table);
+    void         (*fl_Table_hide        )(fl_Table table);
+    fl_Window    (*fl_Table_as_window   )(fl_Table table);
+    fl_Gl_Window (*fl_Table_as_gl_window)(fl_Table table);
+    /* From Fl_Group */
+    fl_Group     (*fl_Table_as_group    )(fl_Table table);
+    /* From Fl_Table */
+    void         (*fl_Table_draw_cell   )(fl_Table table,TableContextC context,int R, int C, int X, int Y, int W, int H);
+    void         (*fl_Table_clear       )(fl_Table table);
+    void         (*fl_Table_rows        )(fl_Table table, int val);
+    void         (*fl_Table_cols        )(fl_Table table, int val);
   } fl_Table_Virtual_Funcs;
 #ifdef __cplusplus
 }

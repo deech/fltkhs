@@ -208,7 +208,7 @@ main = do (argType:arg:args) <- getArgs
 generateFunctionPointers :: [([Argument],FunctionName)] -> String
 generateFunctionPointers impls = printf "struct blah {\n%s\n};" (intercalate ";\n" (map generateFunctionPointer impls))
 generateFunctionPointer :: ([Argument], FunctionName) -> String
-generateFunctionPointer (args, FunctionName _ _ name@(Argument argType argName argRealType)) = printf "(%s)(*%s)(%s)" (getArgumentType argType) ("f" ++ (tail argName)) (intercalate "," (map (ppArgument " ") args))
+generateFunctionPointer (args, FunctionName _ _ name@(Argument argType argName argRealType)) = printf "%s (*%s)(%s)" (getArgumentType argType) ("f" ++ (tail argName)) (intercalate "," (map (ppArgument " ") args))
 generateDerivedMethod :: ([Argument], FunctionName) -> String
 generateDerivedMethod impl =
           let returnType = getArgumentType (argumentType . argument . snd $ impl)
