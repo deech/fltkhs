@@ -62,7 +62,7 @@ void initialize_table(fl_Table table){
   Fl_Table_end(table);			// end the Fl_Table group
 }
 int main(int argc, char** argv){
-  fl_Table_Virtual_Funcs* funcs = Fl_Table_default_virtual_funcs();
+  fl_Table_Virtual_Funcs* funcs = (fl_Table_Virtual_Funcs*)Fl_Table_default_virtual_funcs();
   funcs->fl_Table_draw_cell = &draw_cell;
   fl_Double_Window window = (fl_Double_Window)Fl_Double_Window_New_WithLabel(900,400,"Simple Table");
   Fl_Double_Window_begin(window);

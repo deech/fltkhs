@@ -33,17 +33,17 @@ int main(int argc, char** argv) {
   fl_Tree tree = (fl_Tree)Fl_Tree_New(10,10,Fl_Window_w(window)-20,Fl_Window_h(window)-20);
   Fl_Tree_showroot(tree,0);
 
-  Fl_Tree_add_with_path(tree,"Flintstones/Fred");
-  Fl_Tree_add_with_path(tree,"Flintstones/Wilma");
-  Fl_Tree_add_with_path(tree,"Flintstones/Pebbles");
-  Fl_Tree_add_with_path(tree,"Simpsons/Homer");
-  Fl_Tree_add_with_path(tree,"Simpsons/Marge");
-  Fl_Tree_add_with_path(tree,"Simpsons/Bart");
-  Fl_Tree_add_with_path(tree,"Simpsons/Lisa");
-  Fl_Tree_add_with_path(tree,"Pathnames/\\/bin");		// front slashes
-  Fl_Tree_add_with_path(tree,"Pathnames/\\/usr\\/sbin");
-  Fl_Tree_add_with_path(tree,"Pathnames/C:\\\\Program Files");	// backslashes
-  Fl_Tree_add_with_path(tree,"Pathnames/C:\\\\Documents and Settings");
+  Fl_Tree_add(tree,"Flintstones/Fred");
+  Fl_Tree_add(tree,"Flintstones/Wilma");
+  Fl_Tree_add(tree,"Flintstones/Pebbles");
+  Fl_Tree_add(tree,"Simpsons/Homer");
+  Fl_Tree_add(tree,"Simpsons/Marge");
+  Fl_Tree_add(tree,"Simpsons/Bart");
+  Fl_Tree_add(tree,"Simpsons/Lisa");
+  Fl_Tree_add(tree,"Pathnames/\\/bin");		// front slashes
+  Fl_Tree_add(tree,"Pathnames/\\/usr\\/sbin");
+  Fl_Tree_add(tree,"Pathnames/C:\\\\Program Files");	// backslashes
+  Fl_Tree_add(tree,"Pathnames/C:\\\\Documents and Settings");
 
   Fl_Tree_close_with_path(tree,"Simpsons");
   Fl_Tree_close_with_path(tree,"Pathnames");

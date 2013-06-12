@@ -8,6 +8,7 @@
 EXPORT {
 #endif
 #ifndef INTERNAL_LINKAGE
+#define FLTK_ABI_VERSION        10303  
 #define FL_MAJOR_VERSION	1
 #define FL_MINOR_VERSION	3
 #define FL_PATCH_VERSION	0
@@ -54,7 +55,32 @@ EXPORT {
     FL_WHEN_ENTER_KEY_ALWAYS=10,
     FL_WHEN_ENTER_KEY_CHANGED=11
   } Fl_When;
-
+  typedef enum  Fl_Tree_Sort{
+    FL_TREE_SORT_NONE=0,
+    FL_TREE_SORT_ASCENDING=1,
+    FL_TREE_SORT_DESCENDING=2
+  } Fl_Tree_Sort;
+  typedef enum   Fl_Tree_Connector{
+    FL_TREE_CONNECTOR_NONE=0,
+    FL_TREE_CONNECTOR_DOTTED=1,
+    FL_TREE_CONNECTOR_SOLID=2
+  } Fl_Tree_Connector;
+  typedef enum  Fl_Tree_Select{
+    FL_TREE_SELECT_NONE=0,
+    FL_TREE_SELECT_SINGLE=1,
+    FL_TREE_SELECT_MULTI=2
+  }Fl_Tree_Select;
+#if FLTK_ABI_VERSION >= 10302
+  typedef enum  Fl_Tree_Item_Reselect_Mode{
+    FL_TREE_SELECTABLE_ONCE=0,
+    FL_TREE_SELECTABLE_ALWAYS,
+  }Fl_Tree_Item_Reselect_Mode;
+  typedef enum  Fl_Tree_Item_Draw_Mode{
+    FL_TREE_ITEM_DRAW_DEFAULT=0,
+    FL_TREE_ITEM_DRAW_LABEL_AND_WIDGET=1,
+    FL_TREE_ITEM_HEIGHT_FROM_WIDGET=2
+  }Fl_Tree_Item_Draw_Mode;
+#endif /*FLTK_ABI_VERSION*/
 #define FL_Button	0xfee8
 #define FL_BackSpace	0xff08
 #define FL_Tab		0xff09

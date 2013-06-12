@@ -1,10 +1,12 @@
 #!/bin/runhaskell
 import Control.Monad
 import Text.Parsec
+import Text.Parsec.String
 import Data.List
 import System.Environment
 import Data.Char
 import Text.Printf
+import Debug.Trace
 
 data ArgumentType = Normal String | Self String deriving Show
 data Argument = Argument {
@@ -20,7 +22,7 @@ data FunctionName = FunctionName {
 
 ppArgument :: String -> Argument -> String
 ppArgument seperator argument = (getArgumentType . argumentType $ argument) ++ seperator ++ (argumentName argument)
-
+ppCPPArgument seperator argument = (realArgumentType $ argument) ++ seperator ++ (argumentName argument)
 exportMacro = "FL_EXPORT_C"
 
 getArgumentType (Normal s) = s
@@ -28,6 +30,9 @@ getArgumentType (Self s) = s
 isSelf (Self _) = True
 isSelf _ = False
 
+needsCasting argument = not ((isSelf $ argumentType argument) || ((getArgumentType $ argumentType argument) ==  realArgumentType argument))
+cast argument variable = "(static_cast<" ++ realArgumentType argument ++ "*>" ++ "(" ++ variable ++ "))"
+backCast argument variable = "(" ++ (getArgumentType . argumentType $ argument) ++ ")" ++ " " ++ variable
 castIfNecessary argument | (isSelf $ argumentType argument) = argumentName argument
 castIfNecessary argument | ((getArgumentType $ argumentType argument) ==  (realArgumentType argument)) = argumentName argument
 castIfNecessary argument = "(static_cast<" ++ realArgumentType argument ++ "*>" ++ "(" ++ argumentName argument ++ "))"
@@ -60,7 +65,7 @@ outputDefaultImplementation (fn,args) =
                                                    (realName fn)
                                                    (intercalate "," (map castIfNecessary args)))
                  (Self t, Just self) -> (printf "{\n return (%s)(static_cast<%s>(%s))->%s(%s);\n}"
-                                                t   
+                                                t
                                                 (className fn)
                                                 self
                                                 (realName fn)
@@ -68,10 +73,11 @@ outputDefaultImplementation (fn,args) =
                  _ -> "dunno"
     in
       header ++ body
-extractTypeName arg@(x1:x2:x3:xs) = ((intercalate " " . reverse . tail . reverse $ arg),
-                                     (last arg))
-extractTypeName (x1:x2:xs) = (x1,x2)
-extractTypeName _ = ("","")
+
+extractTypeName arg@(x:[]) = (x,"")
+extractTypeName arg@(x:xs) = ((intercalate " " . init $ arg),(last arg))
+extractTypeName []         = ("","")
+
 upcase = map toUpper
 makeArgument className argType argName =
     case ((upcase argType == upcase className), (isPrefixOf "fl_" argType)) of
@@ -113,6 +119,63 @@ parseTypeName = do string exportMacro
                    return $ FunctionName realName
                                          className
                                          (makeArgument className typeString functionName)
+inBlock start end accumulatedInput level levelp p parsed =
+    do { try (char start);
+         inBlock' start end accumulatedInput level levelp p parsed
+       }
+
+inBlock' start end accumulatedInput level levelp p parsed =
+      do { try (char end);
+           if (levelp level)
+           then
+               case parse p "" accumulatedInput of
+                 Right parsed -> return (Just parsed)
+                 Left err -> return Nothing
+           else return Nothing
+         }
+  <|> do { x <- inBlock start end accumulatedInput (level + 1) levelp p parsed;
+           inBlock' start end "" level levelp p x
+         }
+  <|> do { x <- if (levelp level)
+                then many (noneOf [start,end])
+                else skipMany (noneOf [start,end]) >> return "";
+           inBlock' start end (accumulatedInput ++ x) level levelp p parsed
+         }
+
+parseImplementation = do
+  functionSignature <- parseTypeName
+  spaces
+  arguments <- parseArguments (className functionSignature)
+  spaces
+  actualFunctionName <- case functionSignature of
+                          FunctionName _ _ (Argument (Self _) _ _) ->
+                              do {skipFunctionBody; return Nothing}
+                          FunctionName _ _ (Argument (Normal _) _ _) ->
+                              (inBlock '{' '}' "" 0 (== 0) grabFlCall Nothing)
+                             <|>
+                             do { skipFunctionBody; return Nothing}
+  case actualFunctionName of
+    Just n -> return (arguments,functionSignature {realName = n})
+    Nothing -> return (arguments, functionSignature)
+  where
+    skipFunctionBody = inBlock '{' '}' "" 0 (== 0) (many anyChar) Nothing
+    grabFlCall = do
+      manyTill (noneOf "{}") (string "static_cast");
+      manyTill (noneOf "\n") (string "->")
+      name <- manyTill (noneOf "{}") (try (string "("))
+      return name
+
+ignoreUntil e p = scan
+    where
+      scan = try (do {x <- e; return x})
+             <|>
+             do {p; x <- scan; return x}
+
+parseCPP = do
+  manyTill anyChar (try (string "EXPORT {"))
+  impls <- many (try (ignoreUntil parseImplementation (noneOf "{}")))
+  manyTill anyChar (char '}')
+  return impls
 
 parseArguments className = do char '('
                               spaces
@@ -134,10 +197,57 @@ replaceSquareBrackets = map translateSquareBracket
                           translateSquareBracket '[' = '('
                           translateSquareBracket ']' = ')'
                           translateSquareBracket x = x
-main = do (arg:args) <- getArgs
-          case parse parseTypeSignature "" arg of
-            Right output ->  putStrLn (outputDefaultImplementation output)
-            Left err -> error (show err)
+main = do (argType:arg:args) <- getArgs
+          case argType of
+            "string" ->
+                case parse parseTypeSignature "" arg of
+                  Right output ->  putStrLn (outputDefaultImplementation output)
+                  Left err -> error (show err)
+            -- "file-cpp" ->
+            --     case parseFromFile parseImplementation arg of
+generateFunctionPointers :: [([Argument],FunctionName)] -> String
+generateFunctionPointers impls = printf "struct blah {\n%s\n};" (intercalate ";\n" (map generateFunctionPointer impls))
+generateFunctionPointer :: ([Argument], FunctionName) -> String
+generateFunctionPointer (args, FunctionName _ _ name@(Argument argType argName argRealType)) = printf "(%s)(*%s)(%s)" (getArgumentType argType) ("f" ++ (tail argName)) (intercalate "," (map (ppArgument " ") args))
+generateDerivedMethod :: ([Argument], FunctionName) -> String
+generateDerivedMethod impl =
+          let returnType = getArgumentType (argumentType . argument . snd $ impl)
+              cppReturnType = if (isPrefixOf "fl" returnType)
+                              then "F" ++ (tail returnType) ++ "*"
+                              else returnType
+              functionName = realName (snd impl)
+              cppClass = className $ snd impl
+              makeArgList prettyPrinter args = intercalate "," (map prettyPrinter args)
+              cppArgList prettyPrinter = makeArgList prettyPrinter (case (fst impl) of
+                                                                      ((Argument (Self _) _ _):args) -> args
+                                                                      _ -> (fst impl))
+              cppArgListSignature = cppArgList (ppCPPArgument " ")
+              cppArgListPassing = cppArgList argumentName 
+              functionPointerArgList = case (fst impl) of
+                                         ((Argument (Self s) _ _):args) ->
+                                             case (makeArgList (\arg -> if (needsCasting arg)
+                                                                        then backCast arg (argumentName arg)
+                                                                        else (argumentName arg))
+                                                   args) of
+                                               as@(x:xs) -> "(" ++ s ++ ") this," ++ as
+                                               _ ->"(" ++ s ++ ") this"
+                                         _ -> makeArgList argumentName (fst impl)
+              functionPointer = "f" ++ (tail (argumentName . argument . snd $ impl))
+              callFunctionPointer :: String
+              callFunctionPointer = printf "this->overriddenFuncs->%s(%s)" functionPointer functionPointerArgList
+              returnResult :: String
+              returnResult = if (returnType /= "void")
+                             then
+                                 printf "%s result = %s;\n return %s;"
+                                        returnType
+                                        callFunctionPointer
+                                        (if (needsCasting (argument . snd $ impl))
+                                         then cast (argument . snd $ impl) "result"
+                                         else "result")
+                             else
+                                 printf "%s;" callFunctionPointer
+              in
+                printf "%s %s::%s(%s){\n if (this->overriddenFuncs->%s != NULL) {\n %s \n}\nelse {\n %s::%s(%s);\n}\n}\n" cppReturnType (cppClass ++ "Derived") functionName cppArgListSignature functionPointer returnResult cppClass functionName cppArgListPassing
 
 printImplementation sig =  case parse parseTypeSignature "" sig of
                              Right output ->  outputDefaultImplementation output
@@ -241,3 +351,25 @@ testSet = [  "FL_EXPORT_C(fl_Align,     Fl_Window_align)(fl_Window win);",
   "FL_EXPORT_C(void,         Fl_Window_destroy)(fl_Window win);",
   "FL_EXPORT_C(void,         Fl_Window_resize)(fl_Window win, int X, int Y, int W, int H);",
   "FL_EXPORT_C(void,         Fl_Window_iconize)(fl_Window win);"]
+testSet1 =
+  ["FL_EXPORT_C(fl_Group,Fl_Table_parent)(fl_Table table){ \
+    \return (static_cast<Fl_DerivedTable*>(table))->parent(); \
+  \}",
+  "FL_EXPORT_C(void,Fl_Table_set_parent)(fl_Table table,fl_Group grp){ \
+    \(static_cast<Fl_DerivedTable*>(table))->parent((static_cast<Fl_Group*>(grp)));\
+  \}",
+  "FL_EXPORT_C(void,Fl_Table_do_callback)(fl_Table table, TableContextC tableContext, int row, int col){ \
+    \Fl_Table::TableContext c = (Fl_Table::TableContext)-1;\
+    \switch(tableContext){\
+    \case CONTEXT_NONEC:      {c = Fl_Table::CONTEXT_NONE;      break;}\
+    \case CONTEXT_STARTPAGEC: {c = Fl_Table::CONTEXT_STARTPAGE; break;}\
+    \case CONTEXT_ENDPAGEC:   {c = Fl_Table::CONTEXT_ENDPAGE;   break;}\
+    \case CONTEXT_ROW_HEADERC:{c = Fl_Table::CONTEXT_ROW_HEADER;break;}\
+    \case CONTEXT_COL_HEADERC:{c = Fl_Table::CONTEXT_COL_HEADER;break;}\
+    \case CONTEXT_CELLC:      {c = Fl_Table::CONTEXT_CELL;      break;}\
+    \case CONTEXT_TABLEC:     {c = Fl_Table::CONTEXT_TABLE;     break;}\
+    \case CONTEXT_RC_RESIZEC: {c = Fl_Table::CONTEXT_RC_RESIZE; break;}\
+    \default:                 {c = (Fl_Table::TableContext)-1;  break;}\
+    \}\
+    \(static_cast<Fl_DerivedTable*>(table))->do_callback(c, row, col);\
+  \}"]

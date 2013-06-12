@@ -214,12 +214,56 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Tree_measure_label)(fl_Tree tree,int& ww,int& hh){
     (static_cast<Fl_Tree*>(tree))->measure_label(ww,hh);
   }
+  FL_EXPORT_C(fl_Group,Fl_Tree_as_group)(fl_Tree tree){
+    return (static_cast<Fl_Tree*>(tree))->as_group();
+  }
+  FL_EXPORT_C(fl_Gl_Window,Fl_Tree_as_gl_window)(fl_Tree tree){
+    return (static_cast<Fl_Tree*>(tree))->as_gl_window();
+  }
   FL_EXPORT_C(int,Fl_Tree_handle)(fl_Tree tree,int e){
     return (static_cast<Fl_Tree*>(tree))->handle(e);
   }
   FL_EXPORT_C(void,Fl_Tree_draw)(fl_Tree tree){
     return (static_cast<Fl_Tree*>(tree))->draw();
   }
+
+  FL_EXPORT_C(void,Fl_Tree_begin)(fl_Tree tree){
+    (static_cast<Fl_Tree*>(tree))->begin();
+  }
+  FL_EXPORT_C(void,Fl_Tree_end)(fl_Tree tree){
+    (static_cast<Fl_Tree*>(tree))->end();
+  }
+  FL_EXPORT_C(int,Fl_Tree_find)(fl_Tree tree,fl_Widget w){
+    return (static_cast<Fl_Tree*>(tree))->find(static_cast<Fl_Widget*>(w));
+  }
+  FL_EXPORT_C(void,Fl_Tree_set_resizable_by_reference)(fl_Tree tree,fl_Widget o){
+    (static_cast<Fl_Tree*>(tree))->resizable((static_cast<Fl_Widget*>(o)));
+  }
+  FL_EXPORT_C(void,Fl_Tree_set_resizable)(fl_Tree tree,fl_Widget o){
+    (static_cast<Fl_Tree*>(tree))->resizable((static_cast<Fl_Widget*>(o)));
+  }
+  FL_EXPORT_C(fl_Widget,Fl_Tree_resizable)(fl_Tree tree){
+    return (static_cast<Fl_Tree*>(tree))->resizable();
+  }
+  FL_EXPORT_C(void,Fl_Tree_add_resizable)(fl_Tree tree,fl_Widget o){
+    return (static_cast<Fl_Tree*>(tree))->add_resizable(*(static_cast<Fl_Widget*>(o)));
+  }
+  FL_EXPORT_C(void,Fl_Tree_init_sizes)(fl_Tree tree){
+    (static_cast<Fl_Tree*>(tree))->init_sizes();
+  }
+  FL_EXPORT_C(void,Fl_Tree_set_clip_children)(fl_Tree tree,int c){
+    return (static_cast<Fl_Tree*>(tree))->clip_children(c);
+  }
+  FL_EXPORT_C(unsigned int,Fl_Tree_clip_children)(fl_Tree tree){
+    return (static_cast<Fl_Tree*>(tree))->clip_children();
+  }
+  FL_EXPORT_C(void,Fl_Tree_focus)(fl_Tree tree, fl_Widget W){
+    return (static_cast<Fl_Tree*>(tree))->focus((static_cast<Fl_Widget*>(W)));
+  }
+  FL_EXPORT_C(fl_Widget,Fl_Tree__ddfdesign_kludge)(fl_Tree tree){
+    return (static_cast<Fl_Tree*>(tree))->_ddfdesign_kludge();
+  }
+
   FL_EXPORT_C(fl_Tree, Fl_Tree_New_WithLabel)(int x, int y, int w, int h, const char* label) {
     Fl_Tree* tree = new Fl_Tree(x,y,w,h,label);
     return (static_cast<Fl_Tree*>(tree));
@@ -240,17 +284,14 @@ EXPORT {
   FL_EXPORT_C(fl_Tree_Item,Fl_Tree_root)(fl_Tree tree){
     return (static_cast<Fl_Tree*>(tree))->root();
   }
-  FL_EXPORT_C(fl_Tree_Item,Fl_Tree_add_with_path)(fl_Tree tree,const char *path){
-    return (static_cast<Fl_Tree*>(tree))->add(path);
+  FL_EXPORT_C(fl_Tree_Item,Fl_Tree_add)(fl_Tree tree,const char *path){
+    return (fl_Tree_Item)(static_cast<Fl_Tree*>(tree))->add(path);
   }
-  FL_EXPORT_C(fl_Tree_Item,Fl_Tree_add)(fl_Tree tree,fl_Tree_Item item,const char *name){
-    return (static_cast<Fl_Tree*>(tree))->add((static_cast<Fl_Tree_Item*>(item)),name);
-  }
+  FL_EXPORT_C(fl_Tree_Item, Fl_Tree_add_with_item_name)(fl_Tree tree,fl_Tree_Item item, const char *name){
+    return (fl_Tree_Item)(static_cast<Fl_Tree*>(tree))->add((static_cast<Fl_Tree_Item*>(item)),name);
+  };
   FL_EXPORT_C(fl_Tree_Item,Fl_Tree_insert_above)(fl_Tree tree,fl_Tree_Item above,const char *name){
     return (static_cast<Fl_Tree*>(tree))->insert_above((static_cast<Fl_Tree_Item*>(above)),name);
-  }
-  FL_EXPORT_C(fl_Tree_Item,Fl_Tree_insert)(fl_Tree tree,fl_Tree_Item item,const char *name,int pos){
-    return (static_cast<Fl_Tree*>(tree))->insert((static_cast<Fl_Tree_Item*>(item)),name,pos);
   }
   FL_EXPORT_C(int,Fl_Tree_remove)(fl_Tree tree,fl_Tree_Item item){
     return (static_cast<Fl_Tree*>(tree))->remove((static_cast<Fl_Tree_Item*>(item)));
@@ -421,7 +462,6 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Tree_set_item_labelfont)(fl_Tree tree,Fl_Font val){
     return (static_cast<Fl_Tree*>(tree))->item_labelfont(val);
   }
-
   FL_EXPORT_C(Fl_Fontsize,Fl_Tree_labelsize)(fl_Tree tree){
     return (static_cast<Fl_Tree*>(tree))->labelsize();
   }
@@ -460,7 +500,7 @@ EXPORT {
     return (static_cast<Fl_Tree*>(tree))->margintop(val);
   }
 #if FLTK_ABI_VERSION >= 10302
-  FL_EXPORT_C(int,Fl_Tree_marginbottom)(fl_Tree tree,int val){
+  FL_EXPORT_C(int,Fl_Tree_marginbottom)(fl_Tree tree){
     return (static_cast<Fl_Tree*>(tree))->marginbottom();
   }
   FL_EXPORT_C(void,Fl_Tree_set_marginbottom)(fl_Tree tree,int val){
@@ -572,7 +612,7 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Tree_set_item_draw_mode)(fl_Tree tree,Fl_Tree_Item_Draw_Mode mode){
     (static_cast<Fl_Tree*>(tree))->item_draw_mode(mode);
   }
-  FL_EXPORT_C(void,Fl_Tree_set_item_draw_mode)(fl_Tree tree,int mode){
+  FL_EXPORT_C(void,Fl_Tree_set_item_draw_mode_with_int)(fl_Tree tree,int mode){
     (static_cast<Fl_Tree*>(tree))->item_draw_mode(mode);
   }
 #endif /*FLTK_ABI_VERSION*/

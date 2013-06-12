@@ -302,7 +302,6 @@ EXPORT {
   FL_EXPORT_C(fl_Widget,Fl_Table__ddfdesign_kludge)(fl_Table table){
     return (static_cast<Fl_DerivedTable*>(table))->_ddfdesign_kludge();
   }
-
   FL_EXPORT_C(fl_Table_Virtual_Funcs*, Fl_Table_default_virtual_funcs)(){
     fl_Table_Virtual_Funcs* ptr = (fl_Table_Virtual_Funcs*)malloc(sizeof(fl_Table_Virtual_Funcs));
     ptr->fl_Table_draw_cell = NULL;

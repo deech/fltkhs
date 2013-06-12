@@ -9,35 +9,6 @@
 #ifdef __cplusplus
 EXPORT {
 #endif
-#ifndef INTERNAL_LINKAGE
-  typedef enum {
-  FL_TREE_SORT_NONE=0,
-    FL_TREE_SORT_ASCENDING=1,
-    FL_TREE_SORT_DESCENDING=2
-    } Fl_Tree_Sort;
-  typedef enum  {
-  FL_TREE_CONNECTOR_NONE=0,
-    FL_TREE_CONNECTOR_DOTTED=1,
-    FL_TREE_CONNECTOR_SOLID=2
-    } Fl_Tree_Connector;
-  typedef enum  {
-  FL_TREE_SELECT_NONE=0,
-    FL_TREE_SELECT_SINGLE=1,
-    FL_TREE_SELECT_MULTI=2
-    }Fl_Tree_Select;
-#if FLTK_ABI_VERSION >= 10302
-  typedef enum  {
-  FL_TREE_SELECTABLE_ONCE=0,
-    FL_TREE_SELECTABLE_ALWAYS,
-    }Fl_Tree_Item_Reselect_Mode;
-  typedef enum  {
-  FL_TREE_ITEM_DRAW_DEFAULT=0,
-
-    FL_TREE_ITEM_DRAW_LABEL_AND_WIDGET=1,
-    FL_TREE_ITEM_HEIGHT_FROM_WIDGET=2
-    }Fl_Tree_Item_Draw_Mode;
-#endif /*FLTK_ABI_VERSION*/
-#endif /*INTERNAL_LINKAGE*/
   FL_EXPORT_C(fl_Tree_Prefs, Fl_Tree_Prefs_New)();
   FL_EXPORT_C(void, Fl_Tree_Prefs_Destroy)(fl_Tree_Prefs prefs);
   FL_EXPORT_C(Fl_Font, Fl_Tree_Prefs_item_labelfont)(fl_Tree_Prefs tree_prefs);
