@@ -35,7 +35,7 @@ void Fl_DerivedTable::show(){
     this->overriddenFuncs->fl_Table_show((fl_Table) this);
   }
   else {
-    Fl_Widget::show();
+    Fl_Table::show();
   }
 }
 void Fl_DerivedTable::hide(){
@@ -117,6 +117,22 @@ void Fl_DerivedTable::cols(int val){
 }
 EXPORT {
 #endif
+  FL_EXPORT_C(fl_Table_Virtual_Funcs*, Fl_Table_default_virtual_funcs)(){
+    fl_Table_Virtual_Funcs* ptr = (fl_Table_Virtual_Funcs*)malloc(sizeof(fl_Table_Virtual_Funcs));
+    ptr->fl_Table_draw = NULL;
+    ptr->fl_Table_handle = NULL;
+    ptr->fl_Table_resize = NULL;
+    ptr->fl_Table_show  = NULL;
+    ptr->fl_Table_hide = NULL;
+    ptr->fl_Table_as_group = NULL;
+    ptr->fl_Table_as_window = NULL;
+    ptr->fl_Table_as_gl_window = NULL;
+    ptr->fl_Table_draw_cell = NULL;
+    ptr->fl_Table_clear = NULL;
+    ptr->fl_Table_rows = NULL;
+    ptr->fl_Table_cols = NULL;
+    return ptr;
+  }
   FL_EXPORT_C(fl_Group,Fl_Table_parent)(fl_Table table){
     return (static_cast<Fl_DerivedTable*>(table))->parent();
   }
@@ -364,26 +380,6 @@ EXPORT {
   }
   FL_EXPORT_C(fl_Widget,Fl_Table__ddfdesign_kludge)(fl_Table table){
     return (static_cast<Fl_DerivedTable*>(table))->_ddfdesign_kludge();
-  }
-  FL_EXPORT_C(fl_Table_Virtual_Funcs*, Fl_Table_default_virtual_funcs)(){
-    fl_Table_Virtual_Funcs* ptr = (fl_Table_Virtual_Funcs*)malloc(sizeof(fl_Table_Virtual_Funcs));
-    ptr->fl_Table_draw = NULL;
-    ptr->fl_Table_handle = NULL;
-    ptr->fl_Table_resize = NULL;
-    ptr->fl_Table_show  = NULL;
-    ptr->fl_Table_hide = NULL;
-    ptr->fl_Table_as_group = NULL;
-    ptr->fl_Table_as_window = NULL;
-    ptr->fl_Table_as_gl_window = NULL;
-    ptr->fl_Table_draw_cell = NULL;
-    ptr->fl_Table_clear = NULL;
-    ptr->fl_Table_rows = NULL;
-    ptr->fl_Table_cols = NULL;
-    ptr->fl_Table_draw_cell = NULL;
-    ptr->fl_Table_clear = NULL;
-    ptr->fl_Table_rows = NULL;
-    ptr->fl_Table_cols = NULL;
-    return ptr;
   }
   FL_EXPORT_C(fl_Table, Fl_Table_New_WithLabel)(int X, int Y, int W, int H, const char *l, fl_Table_Virtual_Funcs* funcs){
     Fl_DerivedTable* table = new Fl_DerivedTable(X,Y,W,H,l,funcs);
