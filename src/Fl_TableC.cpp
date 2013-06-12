@@ -23,12 +23,17 @@ void Fl_DerivedTable::draw(){
   }
 }
 int Fl_DerivedTable::handle(int event){
+  int i;
   if (this->overriddenFuncs->fl_Table_handle != NULL) {
-    return this->overriddenFuncs->fl_Table_handle((fl_Table) this,event);
+    i = this->overriddenFuncs->fl_Table_handle((fl_Table) this,event);
   }
   else {
-    return Fl_Table::handle(event);
+    i = Fl_Table::handle(event);
   }
+  return i;
+}
+void Fl_DerivedTable::resize_super(int x, int y, int w, int h){
+  Fl_Table::resize(x,y,w,h);
 }
 void Fl_DerivedTable::resize(int x, int y, int w, int h){
   if (this->overriddenFuncs->fl_Table_resize != NULL) {
@@ -39,6 +44,7 @@ void Fl_DerivedTable::resize(int x, int y, int w, int h){
   }
 }
 void Fl_DerivedTable::show(){
+  puts("show");
   if (this->overriddenFuncs->fl_Table_show != NULL) {
     this->overriddenFuncs->fl_Table_show((fl_Table) this);
   }
@@ -47,6 +53,7 @@ void Fl_DerivedTable::show(){
   }
 }
 void Fl_DerivedTable::hide(){
+  puts("hide");
   if (this->overriddenFuncs->fl_Table_hide != NULL) {
     this->overriddenFuncs->fl_Table_hide((fl_Table) this);
   }
@@ -560,7 +567,7 @@ EXPORT {
     return (static_cast<Fl_DerivedTable*>(table))->move_cursor(R,C);
   }
   FL_EXPORT_C(void,Fl_Table_resize_super)(fl_Table table,int X,int Y,int W,int H){
-    return (static_cast<Fl_Table*>(table))->resize(X,Y,W,H);
+    return (static_cast<Fl_DerivedTable*>(table))->resize_super(X,Y,W,H);
   }
   FL_EXPORT_C(void,Fl_Table_resize)(fl_Table table,int X,int Y,int W,int H){
     return (static_cast<Fl_DerivedTable*>(table))->resize(X,Y,W,H);

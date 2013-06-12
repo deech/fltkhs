@@ -119,6 +119,7 @@ EXPORT {
     void set_other_data(void*);
     virtual void draw();
     virtual int handle(int event);
+    void resize_super(int x, int y, int w, int h);
     virtual void resize(int x, int y, int w, int h);
     virtual void show();
     virtual void hide();

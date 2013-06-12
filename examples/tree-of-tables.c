@@ -7,6 +7,7 @@
 #endif
 void initializeTable(fl_Table table, char* m){
   void* user_data = (void*)m;
+  Fl_Table_set_other_data(table,user_data);
   Fl_Table_begin(table);
   Fl_Table_set_rows(table,11);
   Fl_Table_set_row_height_all(table,20);
@@ -15,7 +16,6 @@ void initializeTable(fl_Table table, char* m){
   Fl_Table_set_col_width_all(table,60);
   Fl_Table_set_col_header(table,1);
   Fl_Table_set_col_resize(table,1);
-  Fl_Table_set_other_data(table,user_data);
   Fl_Table_end(table);
 }
 void resize(fl_Table table,int X,int Y,int W,int H){
@@ -54,9 +54,9 @@ void draw_cell(fl_Table table,TableContextC context, int ROW, int COL, int X, in
 	if ( strcmp(mode, "Exponent") == 0 ) { sprintf(s, "%g", powf((float)ROW,(float)COL)); } else
 	if ( strcmp(mode, "SinCos"  ) == 0 ) { sprintf(s, "%.2f", sin((ROW/10.0)*PI) * cos((COL/10.0)*PI)); } else
 	                                     { sprintf(s, "???"); }
-	flc_color(col); flc_rectf(X,Y,W,H);				// bg
-	flc_color(FL_GRAY0); flc_draw(s, X,Y,W,H, FL_ALIGN_CENTER);	// text
-	flc_color(Fl_Table_color(table));  flc_rect(X,Y,W,H);				// box
+	flc_set_color(col); flc_rectf(X,Y,W,H);				// bg
+	flc_set_color(FL_GRAY0); flc_draw_with_align(s, X,Y,W,H, FL_ALIGN_CENTER);	// text
+	flc_set_color(Fl_Table_color(table));  flc_rect(X,Y,W,H);				// box
         flc_pop_clip();
         return;
       }
@@ -91,32 +91,32 @@ int main(int argc, char *argv[]) {
       table = (fl_Table)Fl_Table_New(0,0,500,156,funcs);
       initializeTable(table,"Addition");
       item = (fl_Tree_Item)Fl_Tree_add(tree, "Arithmetic/Addition");
-      // Fl_Tree_Item_set_widget(item, table);
+      Fl_Tree_Item_set_widget(item, table);
 
       table = (fl_Table)Fl_Table_New(0,0,500,156,funcs);
       initializeTable(table,"Subtract");
       item = (fl_Tree_Item)Fl_Tree_add(tree, "Arithmetic/Subtract");
-      /* Fl_Tree_Item_set_widget(item, table); */
+      Fl_Tree_Item_set_widget(item, table);
 
       table = (fl_Table)Fl_Table_New(0,0,500,156,funcs);
       initializeTable(table,"Multiply");
       item = (fl_Tree_Item)Fl_Tree_add(tree, "Arithmetic/Multiply");
-      /* Fl_Tree_Item_set_widget(item, table); */
+      Fl_Tree_Item_set_widget(item, table);
 
       table = (fl_Table)Fl_Table_New(0,0,500,156,funcs);
       initializeTable(table,"Divide");
       item = (fl_Tree_Item)Fl_Tree_add(tree, "Arithmetic/Divide");
-      /* Fl_Tree_Item_set_widget(item, table); */
+      Fl_Tree_Item_set_widget(item, table);
 
       table = (fl_Table)Fl_Table_New(0,0,500,156,funcs);
       initializeTable(table,"Exponent");
       item = (fl_Tree_Item)Fl_Tree_add(tree, "Misc/Exponent");
-      /* Fl_Tree_Item_set_widget(item, table); */
+      Fl_Tree_Item_set_widget(item, table);
 
       table = (fl_Table)Fl_Table_New(0,0,500,156,funcs);
       initializeTable(table,"SinCos");
       item = (fl_Tree_Item)Fl_Tree_add(tree, "Misc/Sin*Cos");
-      /* Fl_Tree_Item_set_widget(item, table); */
+      Fl_Tree_Item_set_widget(item, table);
     }
     Fl_Tree_end(tree);
   }
