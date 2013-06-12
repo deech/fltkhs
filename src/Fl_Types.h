@@ -184,8 +184,8 @@ EXPORT {
     /* From Fl_Table */
     void         (*fl_Table_draw_cell   )(fl_Table table,TableContextC context,int R, int C, int X, int Y, int W, int H);
     void         (*fl_Table_clear       )(fl_Table table);
-    void         (*fl_Table_rows        )(fl_Table table, int val);
-    void         (*fl_Table_cols        )(fl_Table table, int val);
+    void         (*fl_Table_set_rows        )(fl_Table table, int val);
+    void         (*fl_Table_set_cols        )(fl_Table table, int val);
   } fl_Table_Virtual_Funcs;
 #ifdef __cplusplus
 }

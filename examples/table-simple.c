@@ -25,7 +25,7 @@ void draw_cell(fl_Table table,TableContextC context, int ROW, int COL, int X, in
   static char s[40];
   switch ( context ) {
   case CONTEXT_STARTPAGEC:
-    flc_font(FL_HELVETICA, 16);
+    flc_set_font(FL_HELVETICA, 16);
     return;
   case CONTEXT_COL_HEADERC:
     sprintf(s,"%c",'A'+COL);

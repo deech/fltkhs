@@ -2,10 +2,18 @@
 #ifdef __cplusplus
 Fl_DerivedTable::Fl_DerivedTable(int X, int Y, int W, int H, const char *l, fl_Table_Virtual_Funcs* funcs) : Fl_Table(X,Y,W,H,l){
     overriddenFuncs = funcs;
+    other_data = (void*)"INIT";
  }
 Fl_DerivedTable::Fl_DerivedTable(int X, int Y, int W, int H, fl_Table_Virtual_Funcs* funcs):Fl_Table(X,Y,W,H,0){
     overriddenFuncs = funcs;
+    other_data = (void*)"INIT";
   }
+void* Fl_DerivedTable::get_other_data(){
+  return this->other_data;
+}
+void Fl_DerivedTable::set_other_data(void* data){
+  this->other_data = data;
+}
 void Fl_DerivedTable::draw(){
   if (this->overriddenFuncs->fl_Table_draw != NULL) {
     this->overriddenFuncs->fl_Table_draw((fl_Table) this);
@@ -100,16 +108,16 @@ void Fl_DerivedTable::clear(){
   }
 }
 void Fl_DerivedTable::rows(int val){
-  if (this->overriddenFuncs->fl_Table_rows != NULL) {
-    this->overriddenFuncs->fl_Table_rows((fl_Table) this, val);
+  if (this->overriddenFuncs->fl_Table_set_rows != NULL) {
+    this->overriddenFuncs->fl_Table_set_rows((fl_Table) this, val);
   }
   else {
     Fl_Table::rows(val);
   }
 }
 void Fl_DerivedTable::cols(int val){
-  if (this->overriddenFuncs->fl_Table_cols != NULL) {
-    this->overriddenFuncs->fl_Table_cols((fl_Table) this, val);
+  if (this->overriddenFuncs->fl_Table_set_cols != NULL) {
+    this->overriddenFuncs->fl_Table_set_cols((fl_Table) this, val);
   }
   else {
     Fl_Table::cols(val);
@@ -129,8 +137,8 @@ EXPORT {
     ptr->fl_Table_as_gl_window = NULL;
     ptr->fl_Table_draw_cell = NULL;
     ptr->fl_Table_clear = NULL;
-    ptr->fl_Table_rows = NULL;
-    ptr->fl_Table_cols = NULL;
+    ptr->fl_Table_set_rows = NULL;
+    ptr->fl_Table_set_cols = NULL;
     return ptr;
   }
   FL_EXPORT_C(fl_Group,Fl_Table_parent)(fl_Table table){
@@ -240,6 +248,12 @@ EXPORT {
     Fl_DerivedTable* castedWindow = (static_cast<Fl_DerivedTable*>(table));
     new C_to_Fl_Callback(castedWindow, cb);
   }
+  FL_EXPORT_C(void*,Fl_Table_other_data)(fl_Table table){
+    return (static_cast<Fl_DerivedTable*>(table))->get_other_data();
+  }
+  FL_EXPORT_C(void,Fl_Table_set_other_data)(fl_Table table,void* v){
+    (static_cast<Fl_DerivedTable*>(table))->set_other_data(v);
+  }
   FL_EXPORT_C(void*,Fl_Table_user_data)(fl_Table table){
     return (static_cast<Fl_DerivedTable*>(table))->user_data();
   }
@@ -264,8 +278,17 @@ EXPORT {
   FL_EXPORT_C(int,Fl_Table_visible_r)(fl_Table table){
     return (static_cast<Fl_DerivedTable*>(table))->visible_r();
   }
-  FL_EXPORT_C(void,Fl_Table_set_visible)(fl_Table table){
-    (static_cast<Fl_DerivedTable*>(table))->visible();
+  FL_EXPORT_C(void,Fl_Table_show_super)(fl_Table table){
+    return (static_cast<Fl_Table*>(table))->show();
+  }
+  FL_EXPORT_C(void,Fl_Table_show)(fl_Table table){
+    return (static_cast<Fl_DerivedTable*>(table))->show();
+  }
+  FL_EXPORT_C(void,Fl_Table_hide_super)(fl_Table table){
+    return (static_cast<Fl_Table*>(table))->hide();
+  }
+  FL_EXPORT_C(void,Fl_Table_hide)(fl_Table table){
+    return (static_cast<Fl_DerivedTable*>(table))->hide();
   }
   FL_EXPORT_C(void,Fl_Table_clear_visible)(fl_Table table){
     (static_cast<Fl_DerivedTable*>(table))->clear_visible();
@@ -348,14 +371,20 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Table_measure_label)(fl_Table table,int& ww,int& hh){
     (static_cast<Fl_DerivedTable*>(table))->measure_label(ww,hh);
   }
+  FL_EXPORT_C(fl_Group,Fl_Table_as_group_super)(fl_Table table){
+    return (static_cast<Fl_Table*>(table))->as_group();
+  }
   FL_EXPORT_C(fl_Group,Fl_Table_as_group)(fl_Table table){
     return (static_cast<Fl_DerivedTable*>(table))->as_group();
+  }
+  FL_EXPORT_C(fl_Gl_Window,Fl_Table_as_gl_window_super)(fl_Table table){
+    return (static_cast<Fl_Table*>(table))->as_gl_window();
   }
   FL_EXPORT_C(fl_Gl_Window,Fl_Table_as_gl_window)(fl_Table table){
     return (static_cast<Fl_DerivedTable*>(table))->as_gl_window();
   }
-  FL_EXPORT_C(void,Fl_Table_clear)(fl_Table table){
-    (static_cast<Fl_DerivedTable*>(table))->clear();
+  FL_EXPORT_C(void,Fl_Table_remove)(fl_Table table, fl_Widget w){
+    (static_cast<Fl_DerivedTable*>(table))->remove(*(static_cast<Fl_Widget*>(w)));
   }
   FL_EXPORT_C(void,Fl_Table_set_resizable_by_reference)(fl_Table table,fl_Widget o){
     (static_cast<Fl_DerivedTable*>(table))->resizable((static_cast<Fl_Widget*>(o)));
@@ -404,8 +433,14 @@ EXPORT {
   FL_EXPORT_C(int,Fl_Table_cols)(fl_Table table){
     return (static_cast<Fl_DerivedTable*>(table))->cols();
   }
+  FL_EXPORT_C(void,Fl_Table_set_rows_super)(fl_Table table,int val){
+    (static_cast<Fl_Table*>(table))->rows(val);
+  }
   FL_EXPORT_C(void,Fl_Table_set_rows)(fl_Table table, int val){
     (static_cast<Fl_DerivedTable*>(table))->rows(val);
+  }
+  FL_EXPORT_C(void,Fl_Table_set_cols_super)(fl_Table table,int val){
+    (static_cast<Fl_Table*>(table))->cols(val);
   }
   FL_EXPORT_C(void,Fl_Table_set_cols)(fl_Table table, int val){
     (static_cast<Fl_DerivedTable*>(table))->cols(val);
@@ -524,8 +559,15 @@ EXPORT {
   FL_EXPORT_C(int,Fl_Table_move_cursor)(fl_Table table,int R,int C){
     return (static_cast<Fl_DerivedTable*>(table))->move_cursor(R,C);
   }
+  FL_EXPORT_C(void,Fl_Table_resize_super)(fl_Table table,int X,int Y,int W,int H){
+    return (static_cast<Fl_Table*>(table))->resize(X,Y,W,H);
+  }
   FL_EXPORT_C(void,Fl_Table_resize)(fl_Table table,int X,int Y,int W,int H){
     return (static_cast<Fl_DerivedTable*>(table))->resize(X,Y,W,H);
+  }
+
+  FL_EXPORT_C(void,Fl_Table_draw_super)(fl_Table table){
+    return (static_cast<Fl_Table*>(table))->draw();
   }
   FL_EXPORT_C(void,Fl_Table_draw)(fl_Table table){
     return (static_cast<Fl_DerivedTable*>(table))->draw();
@@ -542,9 +584,6 @@ EXPORT {
   FL_EXPORT_C(void, Fl_Table_insert_with_widget)(fl_Table table,fl_Widget wgt, fl_Widget w2){
     (static_cast<Fl_DerivedTable*>(table))->insert(*(static_cast<Fl_Widget*>(wgt)),(static_cast<Fl_Widget*>(w2)));
   };
-  FL_EXPORT_C(void,Fl_Table_remove)(fl_Table table,fl_Widget wgt){
-    return (static_cast<Fl_DerivedTable*>(table))->remove(*(static_cast<Fl_Widget*>(wgt)));
-  }
   FL_EXPORT_C(void,Fl_Table_begin)(fl_Table table){
     return (static_cast<Fl_DerivedTable*>(table))->begin();
   }

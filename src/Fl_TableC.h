@@ -46,6 +46,8 @@ EXPORT {
   FL_EXPORT_C(void,         Fl_Table_set_tooltip)(fl_Table table, const char* text);
   FL_EXPORT_C(void,         Fl_Table_set_callback_and_user_data)(fl_Table table, fl_Callback* cb, void* p);
   FL_EXPORT_C(void,         Fl_Table_set_callback)(fl_Table table, fl_Callback* cb);
+  FL_EXPORT_C(void*,        Fl_Table_other_data)(fl_Table table);
+  FL_EXPORT_C(void,         Fl_Table_set_other_data)(fl_Table table, void* v);
   FL_EXPORT_C(void*,        Fl_Table_user_data)(fl_Table table);
   FL_EXPORT_C(void,         Fl_Table_set_user_data)(fl_Table table, void* v);
   FL_EXPORT_C(long,         Fl_Table_argument)(fl_Table table);
@@ -54,6 +56,10 @@ EXPORT {
   FL_EXPORT_C(void,         Fl_Table_set_when)(fl_Table table, uchar i);
   FL_EXPORT_C(unsigned int, Fl_Table_visible)(fl_Table table);
   FL_EXPORT_C(int,          Fl_Table_visible_r)(fl_Table table);
+  FL_EXPORT_C(void,         Fl_Table_show_super)(fl_Table table);
+  FL_EXPORT_C(void,         Fl_Table_show)(fl_Table table);
+  FL_EXPORT_C(void,         Fl_Table_hide_super)(fl_Table table);
+  FL_EXPORT_C(void,         Fl_Table_hide)(fl_Table table);
   FL_EXPORT_C(void,         Fl_Table_set_visible)(fl_Table table);
   FL_EXPORT_C(void,         Fl_Table_clear_visible)(fl_Table table);
   FL_EXPORT_C(unsigned int, Fl_Table_active)(fl_Table table);
@@ -82,13 +88,15 @@ EXPORT {
   FL_EXPORT_C(void,         Fl_Table_damage_inside_widget)(fl_Table table, uchar c, int x , int y , int w, int h);
   FL_EXPORT_C(void,         Fl_Table_draw_label)(fl_Table table, int x , int y , int w, int h, Fl_Align alignment);
   FL_EXPORT_C(void,         Fl_Table_measure_label)(fl_Table table, int& ww , int& hh);
+  FL_EXPORT_C(fl_Group,     Fl_Table_as_group_super)(fl_Table table);
   FL_EXPORT_C(fl_Group,     Fl_Table_as_group)(fl_Table table);
+  FL_EXPORT_C(fl_Gl_Window, Fl_Table_as_gl_window_super)(fl_Table table);
   FL_EXPORT_C(fl_Gl_Window, Fl_Table_as_gl_window)(fl_Table table);
 
   /* Fl_Group specific */
-  FL_EXPORT_C(int,          Fl_Table_find)(fl_Table table, fl_Widget w);
   FL_EXPORT_C(void,         Fl_Table_remove_index)(fl_Table table, int index);
   FL_EXPORT_C(void,         Fl_Table_remove_widget)(fl_Table table, fl_Widget w);
+  FL_EXPORT_C(void,         Fl_Table_clear_super)(fl_Table table);
   FL_EXPORT_C(void,         Fl_Table_clear)(fl_Table table);
   FL_EXPORT_C(void,         Fl_Table_set_resizable_by_reference)(fl_Table table,fl_Widget o);
   FL_EXPORT_C(void,         Fl_Table_set_resizable)(fl_Table table,fl_Widget o);
@@ -103,9 +111,12 @@ EXPORT {
   /* Fl_Table specific functions */
   class Fl_DerivedTable : public Fl_Table {
     fl_Table_Virtual_Funcs* overriddenFuncs;
+    void* other_data;
   public:
     using Fl_Table::rows;
     using Fl_Table::cols;
+    void* get_other_data();
+    void set_other_data(void*);
     virtual void draw();
     virtual int handle(int event);
     virtual void resize(int x, int y, int w, int h);
@@ -128,8 +139,10 @@ EXPORT {
   FL_EXPORT_C(void, Fl_Table_Destroy)(fl_Table table);
   FL_EXPORT_C(void, Fl_Table_set_table_box)(fl_Table table,Fl_Boxtype val);
   FL_EXPORT_C(Fl_Boxtype, Fl_Table_table_box)(fl_Table table);
+  FL_EXPORT_C(void, Fl_Table_set_rows_super)(fl_Table table,int val);
   FL_EXPORT_C(void, Fl_Table_set_rows)(fl_Table table,int val);
   FL_EXPORT_C(int, Fl_Table_rows)(fl_Table table);
+  FL_EXPORT_C(void, Fl_Table_set_cols_super)(fl_Table table, int val);
   FL_EXPORT_C(void, Fl_Table_set_cols)(fl_Table table, int val);
   FL_EXPORT_C(int, Fl_Table_cols)(fl_Table table);
   FL_EXPORT_C(void, Fl_Table_set_visible_cells)(fl_Table table,int& r1, int& r2, int& c1, int& c2);
@@ -170,6 +183,7 @@ EXPORT {
   FL_EXPORT_C(void, Fl_Table_get_selection)(fl_Table table,int &row_top, int &col_left, int &row_bot, int &col_right);
   FL_EXPORT_C(void, Fl_Table_set_selection)(fl_Table table,int row_top, int col_left, int row_bot, int col_right);
   FL_EXPORT_C(int, Fl_Table_move_cursor)(fl_Table table,int R, int C);
+  FL_EXPORT_C(void, Fl_Table_resize_super)(fl_Table table,int X, int Y, int W, int H);
   FL_EXPORT_C(void, Fl_Table_resize)(fl_Table table,int X, int Y, int W, int H);
   FL_EXPORT_C(void, Fl_Table_draw)(fl_Table table);
   FL_EXPORT_C(void, Fl_Table_init_sizes)(fl_Table table);
@@ -177,7 +191,6 @@ EXPORT {
   FL_EXPORT_C(void, Fl_Table_add)(fl_Table table,fl_Widget wgt);
   FL_EXPORT_C(void, Fl_Table_insert)(fl_Table table,fl_Widget wgt, int n);
   FL_EXPORT_C(void, Fl_Table_insert_with_widget)(fl_Table table,fl_Widget wgt, fl_Widget w2);
-  FL_EXPORT_C(void, Fl_Table_remove)(fl_Table table,fl_Widget wgt);
   FL_EXPORT_C(void, Fl_Table_begin)(fl_Table table);
   FL_EXPORT_C(void, Fl_Table_end)(fl_Table table);
   FL_EXPORT_C(fl_Widget*, Fl_Table_array)(fl_Table table);
