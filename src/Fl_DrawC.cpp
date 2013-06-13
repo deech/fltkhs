@@ -11,7 +11,7 @@ EXPORT {
   FL_EXPORT_C(void,flc_set_color_with_rgb)(uchar r,uchar g,uchar b){
     fl_color(r,g,b);
   }
-  FL_EXPORT_C(Fl_Color,flc_color)( ){
+  FL_EXPORT_C(Fl_Color,flc_color)(void){
     return fl_color();
   }
   FL_EXPORT_C(void,flc_push_clip)(int x,int y,int w,int h){

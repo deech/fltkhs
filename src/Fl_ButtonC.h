@@ -86,6 +86,22 @@ EXPORT {
   FL_EXPORT_C(void,         Fl_Button_draw_label)(fl_Button win, int x , int y , int w, int h, Fl_Align alignment);
   FL_EXPORT_C(void,         Fl_Button_measure_label)(fl_Button win, int& ww , int& hh);
 
+  class Fl_DerivedButton : public Fl_Button {
+    fl_Button_Virtual_Funcs* overriddenFuncs;
+    void* other_data;
+  public:
+    void* get_other_data();
+    void set_other_data(void*);
+    virtual int handle(int event);
+    virtual void resize(int x, int y, int w, int h);
+    virtual void show();
+    virtual void hide();
+    virtual Fl_Window* as_window();
+    virtual Fl_Gl_Window* as_gl_window();
+    Fl_DerivedButton(int X, int Y, int W, int H, const char *l, fl_Button_Virtual_Funcs* funcs);
+    Fl_DerivedButton(int X, int Y, int W, int H, fl_Button_Virtual_Funcs* funcs);
+    ~Fl_DerivedButton();
+  };
   /* Fl_Button specific functions */
   FL_EXPORT_C(fl_Button,    Fl_Button_New_WithLabel)(int x, int y, int w, int h, const char* label);
   FL_EXPORT_C(fl_Button   , Fl_Button_New)(int x, int y, int w, int h);

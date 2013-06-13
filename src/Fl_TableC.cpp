@@ -8,6 +8,10 @@ Fl_DerivedTable::Fl_DerivedTable(int X, int Y, int W, int H, fl_Table_Virtual_Fu
     overriddenFuncs = funcs;
     other_data = (void*)"INIT";
   }
+Fl_DerivedTable::~Fl_DerivedTable(){
+  free(overriddenFuncs);
+  free(other_data);
+}
 void* Fl_DerivedTable::get_other_data(){
   return this->other_data;
 }
@@ -44,7 +48,6 @@ void Fl_DerivedTable::resize(int x, int y, int w, int h){
   }
 }
 void Fl_DerivedTable::show(){
-  puts("show");
   if (this->overriddenFuncs->fl_Table_show != NULL) {
     this->overriddenFuncs->fl_Table_show((fl_Table) this);
   }
@@ -53,7 +56,6 @@ void Fl_DerivedTable::show(){
   }
 }
 void Fl_DerivedTable::hide(){
-  puts("hide");
   if (this->overriddenFuncs->fl_Table_hide != NULL) {
     this->overriddenFuncs->fl_Table_hide((fl_Table) this);
   }

@@ -13,7 +13,7 @@ EXPORT {
   FL_EXPORT_C(void      , flc_set_color)(Fl_Color c);
   FL_EXPORT_C(void      , flc_set_color_with_c)(int c);
   FL_EXPORT_C(void      , flc_set_color_with_rgb)(uchar r, uchar g, uchar b); // select actual color
-  FL_EXPORT_C(Fl_Color  , flc_color)();
+  FL_EXPORT_C(Fl_Color  , flc_color)(void);
   FL_EXPORT_C(void      , flc_push_clip)(int x, int y, int w, int h);
 #define fl_clipc fl_push_clipc
   FL_EXPORT_C(void      , flc_push_no_clip)();

@@ -1,6 +1,6 @@
 CXXSTATIC = g++ -Wall -DINTERNAL_LINKAGE -g -Icpp -static
 CXX = g++ -Wall -DINTERNAL_LINKAGE -g -Icpp
-CC = gcc -Werror -g -Isrc
+CC = gcc -Wall -g -Isrc
 LD = $(CXX) -shared
 EXE_OBJS = examples/make_window.o examples/make_window_fullscreen.o examples/make_window_resize.o examples/make_window_with_width_height.o examples/make_window_hide.o examples/make_window_with_callback.o examples/make_button_with_callback.o examples/make_input.o examples/tree-simple.o examples/make_tree.o examples/table-simple.o examples/tree-of-tables.o
 C_OBJS = src/Fl_C.o src/Fl_WindowC.o src/Fl_CallbackC.o src/Fl_ButtonC.o src/Fl_Check_ButtonC.o src/Fl_Radio_ButtonC.o src/Fl_Toggle_ButtonC.o src/Fl_Light_ButtonC.o src/Fl_Input_C.o src/Fl_InputC.o src/Fl_File_InputC.o src/Fl_Float_InputC.o src/Fl_Int_InputC.o src/Fl_Multiline_InputC.o src/Fl_Secret_InputC.o src/Fl_Value_InputC.o src/Fl_EnumerationsC.o src/Fl_Tree_PrefsC.o src/Fl_Tree_ItemC.o src/Fl_PreferencesC.o src/Fl_TreeC.o src/Fl_TableC.o src/Fl_DrawC.o src/Fl_Double_WindowC.o src/Fl_AskC.o

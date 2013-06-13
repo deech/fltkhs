@@ -184,9 +184,18 @@ EXPORT {
     /* From Fl_Table */
     void         (*fl_Table_draw_cell   )(fl_Table table,TableContextC context,int R, int C, int X, int Y, int W, int H);
     void         (*fl_Table_clear       )(fl_Table table);
-    void         (*fl_Table_set_rows        )(fl_Table table, int val);
-    void         (*fl_Table_set_cols        )(fl_Table table, int val);
+    void         (*fl_Table_set_rows    )(fl_Table table, int val);
+    void         (*fl_Table_set_cols    )(fl_Table table, int val);
   } fl_Table_Virtual_Funcs;
+  typedef struct {
+    /* From Fl_Widget */
+    int          (*fl_Button_handle      )(fl_Button button,int event);
+    void         (*fl_Button_resize      )(fl_Button button,int x, int y, int w, int h);
+    void         (*fl_Button_show        )(fl_Button button);
+    void         (*fl_Button_hide        )(fl_Button button);
+    fl_Window    (*fl_Button_as_window   )(fl_Button button);
+    fl_Gl_Window (*fl_Button_as_gl_window)(fl_Button button);
+  } fl_Button_Virtual_Funcs;
 #ifdef __cplusplus
 }
 #endif
