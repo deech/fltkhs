@@ -108,14 +108,14 @@ EXPORT {
   FL_EXPORT_C(char,Fl_Preferences_set_void)(fl_Preferences preferences,const char* entry,const void* value,int size){
     return (static_cast<Fl_Preferences*>(preferences))->set(entry,value,size);
   }
-  FL_EXPORT_C(char,Fl_Preferences_get_int)(fl_Preferences preferences,const char* entry,int &value,int defaultValue){
-    return (static_cast<Fl_Preferences*>(preferences))->get(entry,value,defaultValue);
+  FL_EXPORT_C(char,Fl_Preferences_get_int)(fl_Preferences preferences,const char* entry,int *value,int defaultValue){
+    return (static_cast<Fl_Preferences*>(preferences))->get(entry,*value,defaultValue);
   }
-  FL_EXPORT_C(char,Fl_Preferences_get_float)(fl_Preferences preferences,const char* entry,float &value,float defaultValue){
-    return (static_cast<Fl_Preferences*>(preferences))->get(entry,value,defaultValue);
+  FL_EXPORT_C(char,Fl_Preferences_get_float)(fl_Preferences preferences,const char* entry,float *value,float defaultValue){
+    return (static_cast<Fl_Preferences*>(preferences))->get(entry,*value,defaultValue);
   }
-  FL_EXPORT_C(char,Fl_Preferences_get_double)(fl_Preferences preferences,const char* entry,double &value,double defaultValue){
-    return (static_cast<Fl_Preferences*>(preferences))->get(entry,value,defaultValue);
+  FL_EXPORT_C(char,Fl_Preferences_get_double)(fl_Preferences preferences,const char* entry,double *value,double defaultValue){
+    return (static_cast<Fl_Preferences*>(preferences))->get(entry,*value,defaultValue);
   }
   FL_EXPORT_C(char,Fl_Preferences_get_char)(fl_Preferences preferences,const char* entry,char* value,const char* defaultValue){
     return (static_cast<Fl_Preferences*>(preferences))->get(entry,value,defaultValue);

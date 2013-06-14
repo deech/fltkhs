@@ -46,9 +46,9 @@ EXPORT {
   FL_EXPORT_C(char, Fl_Preferences_set_char)(fl_Preferences preferences, const char* entry, char value);
   FL_EXPORT_C(char, Fl_Preferences_set_char_with_size)(fl_Preferences preferences, const char* entry, const char* value, int size);
   FL_EXPORT_C(char, Fl_Preferences_set_void)(fl_Preferences preferences, const char* entry, const void* value, int size);
-  FL_EXPORT_C(char, Fl_Preferences_get_int)(fl_Preferences preferences, const char* entry, int &value, int defaultValue);
-  FL_EXPORT_C(char, Fl_Preferences_get_float)(fl_Preferences preferences, const char* entry, float &value, float defaultValue);
-  FL_EXPORT_C(char, Fl_Preferences_get_double)(fl_Preferences preferences, const char* entry, double &value, double defaultValue);
+  FL_EXPORT_C(char, Fl_Preferences_get_int)(fl_Preferences preferences, const char* entry, int *value, int defaultValue);
+  FL_EXPORT_C(char, Fl_Preferences_get_float)(fl_Preferences preferences, const char* entry, float *value, float defaultValue);
+  FL_EXPORT_C(char, Fl_Preferences_get_double)(fl_Preferences preferences, const char* entry, double *value, double defaultValue);
   FL_EXPORT_C(char, Fl_Preferences_get_char)(fl_Preferences preferences, const char* entry, char* value, const char* defaultValue);
   FL_EXPORT_C(char, Fl_Preferences_get_char_with_maxSize)(fl_Preferences preferences, const char* entry, char* value, const char* defaultValue, int maxSize);
   FL_EXPORT_C(char, Fl_Preferences_get_char_with_defaultSize)(fl_Preferences preferences, const char* entry, char* value, const char* defaultValue, int defaultSize);
