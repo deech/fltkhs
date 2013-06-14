@@ -88,6 +88,9 @@ EXPORT {
   FL_EXPORT_C(void,         Fl_Table_damage_inside_widget)(fl_Table table, uchar c, int x , int y , int w, int h);
   FL_EXPORT_C(void,         Fl_Table_draw_label)(fl_Table table, int x , int y , int w, int h, Fl_Align alignment);
   FL_EXPORT_C(void,         Fl_Table_measure_label)(fl_Table table, int& ww , int& hh);
+  FL_EXPORT_C(fl_Window,    Fl_Table_window)(fl_Table table);
+  FL_EXPORT_C(fl_Window,    Fl_Table_top_window)(fl_Table table);
+  FL_EXPORT_C(fl_Window ,   Fl_Table_top_window_offset)(fl_Table table, int& xoff, int& yoff); 
   FL_EXPORT_C(fl_Group,     Fl_Table_as_group_super)(fl_Table table);
   FL_EXPORT_C(fl_Group,     Fl_Table_as_group)(fl_Table table);
   FL_EXPORT_C(fl_Gl_Window, Fl_Table_as_gl_window_super)(fl_Table table);
@@ -117,6 +120,7 @@ EXPORT {
     using Fl_Table::cols;
     void* get_other_data();
     void set_other_data(void*);
+    int find_cell(TableContext context, int R, int C, int &X, int &Y, int &W, int &H);
     virtual void draw();
     virtual int handle(int event);
     void resize_super(int x, int y, int w, int h);
@@ -203,19 +207,11 @@ EXPORT {
   FL_EXPORT_C(int, Fl_Table_callback_col)(fl_Table table);
   FL_EXPORT_C(TableContextC, Fl_Table_callback_context)(fl_Table table);
   FL_EXPORT_C(void, Fl_Table_do_callback)(fl_Table table, TableContextC tableContext, int row, int col);
-
-/* #if FL_DOXYGEN */
-/* void when(Fl_When flags); */
-/* #endif */
-
-/* #if FL_DOXYGEN */
-/* void callback(fl_Widget, void*); */
-/* #endif */
-
-/* #if FLTK_ABI_VERSION >= 10302 */
-/* int scrollbar_size() ; */
-/* void scrollbar_size(int newSize); */
-/* #endif */
+#if FLTK_ABI_VERSION >= 10302
+  FL_EXPORT_C(void, Fl_Table_set_tab_cell_nav)(fl_Table table, int val);
+  FL_EXPORT_C(int,  Fl_Table_tab_cell_nav)(fl_Table table);
+  FL_EXPORT_C(int,  Fl_Table_find_cell)(fl_Table table, TableContextC context, int R, int C, int &X, int &Y, int &W, int &H);
+#endif
 #ifdef __cplusplus
 }
 #endif

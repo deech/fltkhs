@@ -18,6 +18,9 @@ void* Fl_DerivedTable::get_other_data(){
 void Fl_DerivedTable::set_other_data(void* data){
   this->other_data = data;
 }
+int Fl_DerivedTable::find_cell(TableContext context, int R, int C, int &X, int &Y, int &W, int &H){
+  return Fl_Table::find_cell(context,R,C,X,Y,W,H);
+}
 void Fl_DerivedTable::draw(){
   if (this->overriddenFuncs->fl_Table_draw != NULL) {
     this->overriddenFuncs->fl_Table_draw((fl_Table) this);
@@ -380,6 +383,15 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Table_measure_label)(fl_Table table,int& ww,int& hh){
     (static_cast<Fl_DerivedTable*>(table))->measure_label(ww,hh);
   }
+  FL_EXPORT_C(fl_Window,    Fl_Table_window)(fl_Table table){
+    return (static_cast<Fl_DerivedTable*>(table))->window();
+  }
+  FL_EXPORT_C(fl_Window,    Fl_Table_top_window)(fl_Table table){
+    return (static_cast<Fl_DerivedTable*>(table))->top_window();
+  }
+  FL_EXPORT_C(fl_Window ,   Fl_Table_top_window_offset)(fl_Table table, int& xoff, int& yoff){
+    return (static_cast<Fl_DerivedTable*>(table))->top_window_offset(xoff,yoff);
+  }
   FL_EXPORT_C(fl_Group,Fl_Table_as_group_super)(fl_Table table){
     return (static_cast<Fl_Table*>(table))->as_group();
   }
@@ -649,6 +661,29 @@ EXPORT {
     }
     (static_cast<Fl_DerivedTable*>(table))->do_callback(c, row, col);
   }
+#if FLTK_ABI_VERSION >= 10302
+  FL_EXPORT_C(void, Fl_Table_set_tab_cell_nav)(fl_Table table, int val){
+    (static_cast<Fl_DerivedTable*>(table))->tab_cell_nav(val);
+  }
+  FL_EXPORT_C(int,  Fl_Table_tab_cell_nav)(fl_Table table){
+    return (static_cast<Fl_DerivedTable*>(table))->tab_cell_nav();
+  }
+  FL_EXPORT_C(int,  Fl_Table_find_cell)(fl_Table table, TableContextC context, int R, int C, int &X, int &Y, int &W, int &H){
+    Fl_Table::TableContext c = (Fl_Table::TableContext)-1;
+    switch(context){
+    case CONTEXT_NONEC:      {c = Fl_Table::CONTEXT_NONE;      break;}
+    case CONTEXT_STARTPAGEC: {c = Fl_Table::CONTEXT_STARTPAGE; break;}
+    case CONTEXT_ENDPAGEC:   {c = Fl_Table::CONTEXT_ENDPAGE;   break;}
+    case CONTEXT_ROW_HEADERC:{c = Fl_Table::CONTEXT_ROW_HEADER;break;}
+    case CONTEXT_COL_HEADERC:{c = Fl_Table::CONTEXT_COL_HEADER;break;}
+    case CONTEXT_CELLC:      {c = Fl_Table::CONTEXT_CELL;      break;}
+    case CONTEXT_TABLEC:     {c = Fl_Table::CONTEXT_TABLE;     break;}
+    case CONTEXT_RC_RESIZEC: {c = Fl_Table::CONTEXT_RC_RESIZE; break;}
+    default:                 {c = (Fl_Table::TableContext)-1;  break;}
+    }
+    return (static_cast<Fl_DerivedTable*>(table))->find_cell(c,R,C,X,Y,W,H);
+  }
+#endif
 #ifdef __cplusplus
 }
 #endif

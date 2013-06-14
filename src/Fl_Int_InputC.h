@@ -87,7 +87,35 @@ EXPORT {
   FL_EXPORT_C(void,         Fl_Int_Input_measure_label)(fl_Int_Input int_input, int& ww , int& hh);
 
   /* Fl_Int_Input specific functions */
-  FL_EXPORT_C(int,      Fl_Int_Input_handle)(fl_Int_Input int_input, int event);
+  class Fl_DerivedInt_Input : public Fl_Int_Input {
+    fl_Int_Input_Virtual_Funcs* overriddenFuncs;
+    void* other_data;
+  public:
+    void* get_other_data();
+    void set_other_data(void*);
+    virtual void draw();
+    virtual int handle(int event);
+    virtual void resize(int x, int y, int w, int h);
+    virtual void show();
+    virtual void hide();
+    virtual Fl_Window* as_window();
+    virtual Fl_Gl_Window* as_gl_window();
+    Fl_DerivedInt_Input(int X, int Y, int W, int H, const char *l, fl_Int_Input_Virtual_Funcs* funcs);
+    Fl_DerivedInt_Input(int X, int Y, int W, int H, fl_Int_Input_Virtual_Funcs* funcs);
+    ~Fl_DerivedInt_Input();
+  };
+  FL_EXPORT_C(int ,         Fl_Int_Input_handle_super)(fl_Int_Input int_input,int event);
+  FL_EXPORT_C(int ,         Fl_Int_Input_handle )(fl_Int_Input int_input,int event);
+  FL_EXPORT_C(void,         Fl_Int_Input_resize_super)(fl_Int_Input int_input,int x, int y, int w, int h);
+  FL_EXPORT_C(void,         Fl_Int_Input_resize )(fl_Int_Input int_input,int x, int y, int w, int h);
+  FL_EXPORT_C(void,         Fl_Int_Input_show_super)(fl_Int_Input int_input);
+  FL_EXPORT_C(void,         Fl_Int_Input_show )(fl_Int_Input int_input);
+  FL_EXPORT_C(void,         Fl_Int_Input_hide_super)(fl_Int_Input int_input);
+  FL_EXPORT_C(void,         Fl_Int_Input_hide )(fl_Int_Input int_input);
+  FL_EXPORT_C(fl_Window,    Fl_Int_Input_as_window_super)(fl_Int_Input int_input);
+  FL_EXPORT_C(fl_Window,    Fl_Int_Input_as_window )(fl_Int_Input int_input);
+  FL_EXPORT_C(fl_Gl_Window, Fl_Int_Input_as_gl_window_super)(fl_Int_Input int_input);
+  FL_EXPORT_C(fl_Gl_Window, Fl_Int_Input_as_gl_window)(fl_Int_Input int_input);
   FL_EXPORT_C(fl_Float_Input, Fl_Int_Input_New_WithLabel)(int x, int y, int w, int h, const char* label); 
   FL_EXPORT_C(fl_Float_Input, Fl_Int_Input_New)(int x, int y, int w, int h); 
   FL_EXPORT_C(void,     Fl_Int_Input_Destroy)(fl_Int_Input int_input);

@@ -204,6 +204,9 @@ EXPORT {
   FL_EXPORT_C(void,Fl_set_grab)(fl_Window window){
     Fl::grab((static_cast<Fl_Window*>(window)));
   }
+  FL_EXPORT_C(int,Fl_event)( ){
+    return Fl::event();
+  }
   FL_EXPORT_C(int,Fl_event_x)( ){
     return Fl::event_x();
   }

@@ -10,6 +10,18 @@
 EXPORT {
 #endif
   /* Inherited from Fl_Widget */
+  FL_EXPORT_C(int ,         Fl_Button_handle_super)(fl_Button button,int event);
+  FL_EXPORT_C(int ,         Fl_Button_handle )(fl_Button button,int event);
+  FL_EXPORT_C(void,         Fl_Button_resize_super)(fl_Button button,int x, int y, int w, int h);
+  FL_EXPORT_C(void,         Fl_Button_resize )(fl_Button button,int x, int y, int w, int h);
+  FL_EXPORT_C(void,         Fl_Button_show_super)(fl_Button button);
+  FL_EXPORT_C(void,         Fl_Button_show )(fl_Button button);
+  FL_EXPORT_C(void,         Fl_Button_hide_super)(fl_Button button);
+  FL_EXPORT_C(void,         Fl_Button_hide )(fl_Button button);
+  FL_EXPORT_C(fl_Window,    Fl_Button_as_window_super)(fl_Button button);
+  FL_EXPORT_C(fl_Window,    Fl_Button_as_window )(fl_Button button);
+  FL_EXPORT_C(fl_Gl_Window, Fl_Button_as_gl_window_super)(fl_Button button);
+  FL_EXPORT_C(fl_Gl_Window, Fl_Button_as_gl_window)(fl_Button button);
   FL_EXPORT_C(fl_Group,     Fl_Button_parent)(fl_Button win);
   FL_EXPORT_C(void,         Fl_Button_set_parent)(fl_Button win, fl_Group grp);
   FL_EXPORT_C(uchar,        Fl_Button_type)(fl_Button win);
@@ -92,6 +104,7 @@ EXPORT {
   public:
     void* get_other_data();
     void set_other_data(void*);
+    virtual void draw();
     virtual int handle(int event);
     virtual void resize(int x, int y, int w, int h);
     virtual void show();

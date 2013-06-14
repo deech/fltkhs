@@ -5,6 +5,7 @@
 // always include the FL/*.H headers before local headers
 // Fl_Widget is included transitively and needed for
 // the callback mechanism included below to work.
+#include "Fl_WindowC.h"
 #include "Fl_CallbackC.h"
 #ifdef __cplusplus
 EXPORT {
@@ -107,7 +108,7 @@ EXPORT {
   FL_EXPORT_C(void,         Fl_Double_Window_focus)(fl_Double_Window win,fl_Widget W);
   FL_EXPORT_C(fl_Widget,    Fl_Double_Window__ddfdesign_kludge)(fl_Double_Window win);
   /* FL_EXPORT_C(void,         Fl_Double_Window_forms_end)(fl_Double_Window win); */
-  /* Fl_Double_Window specific */
+  /* Fl_Window inherited */
   FL_EXPORT_C(unsigned int, Fl_Double_Window_changed)(fl_Double_Window win);
   FL_EXPORT_C(void,         Fl_Double_Window_fullscreen)(fl_Double_Window win);
   FL_EXPORT_C(void,         Fl_Double_Window_fullscreen_off)(fl_Double_Window win);
@@ -118,6 +119,55 @@ EXPORT {
   FL_EXPORT_C(fl_Double_Window,    Fl_Double_Window_NewWH)(int x, int y, int w, int h);
   FL_EXPORT_C(void,         Fl_Double_Window_iconize)(fl_Double_Window win);
 
+  FL_EXPORT_C(int ,Fl_Double_Window_handle)(fl_Double_Window win, int event);
+  FL_EXPORT_C(void ,Fl_Double_Window_set_border)(fl_Double_Window win, int b);
+  FL_EXPORT_C(void ,Fl_Double_Window_clear_border)(fl_Double_Window win);
+  FL_EXPORT_C(unsigned int ,Fl_Double_Window_border)(fl_Double_Window win);
+  FL_EXPORT_C(void ,Fl_Double_Window_set_override)(fl_Double_Window win);
+  FL_EXPORT_C(unsigned int,Fl_Double_Window_override)(fl_Double_Window win);
+  FL_EXPORT_C(void ,Fl_Double_Window_set_modal)(fl_Double_Window win);
+  FL_EXPORT_C(unsigned int,Fl_Double_Window_modal)(fl_Double_Window win);
+  FL_EXPORT_C(void ,Fl_Double_Window_set_non_modal)(fl_Double_Window win);
+  FL_EXPORT_C(unsigned int ,Fl_Double_Window_non_modal)(fl_Double_Window win);
+  FL_EXPORT_C(void ,Fl_Double_Window_set_menu_window)(fl_Double_Window win);
+  FL_EXPORT_C(unsigned int,Fl_Double_Window_menu_window)(fl_Double_Window win);
+  FL_EXPORT_C(void ,Fl_Double_Window_set_tooltip_window)(fl_Double_Window win);
+  FL_EXPORT_C(unsigned int,Fl_Double_Window_tooltip_window)(fl_Double_Window win);
+  FL_EXPORT_C(void ,Fl_Double_Window_hotspot_with_x_y)(fl_Double_Window win, int x, int y);
+  FL_EXPORT_C(void ,Fl_Double_Window_hotspot_with_x_y_with_offscreen)(fl_Double_Window win, int x, int y, int offscreen);
+  FL_EXPORT_C(void ,Fl_Double_Window_hotspot_with_widget)(fl_Double_Window win, fl_Widget w);//, int offscreen = 0);
+  FL_EXPORT_C(void ,Fl_Double_Window_hotspot_with_widget_with_offscreen)(fl_Double_Window win, fl_Widget w, int offscreen);
+  FL_EXPORT_C(void ,Fl_Double_Window_free_position)(fl_Double_Window win);
+  FL_EXPORT_C(void ,Fl_Double_Window_size_range)(fl_Double_Window win, int minw, int minh);
+  FL_EXPORT_C(const char*, Fl_Double_Window_label)(fl_Double_Window win);
+  FL_EXPORT_C(const char*, Fl_Double_Window_iconlabel)(fl_Double_Window win);
+  FL_EXPORT_C(void, Fl_Double_Window_set_label)(fl_Double_Window win,const char*);
+  FL_EXPORT_C(void, Fl_Double_Window_set_iconlabel)(fl_Double_Window win,const char*);
+  FL_EXPORT_C(void, Fl_Double_Window_set_label_with_iconlabel)(fl_Double_Window win,const char* label, const char* iconlabel);
+  FL_EXPORT_C(void, Fl_Double_Window_copy_label)(fl_Double_Window win,const char* a);
+  FL_EXPORT_C(void, Fl_Double_Window_set_default_xclass)(const char* label);
+  FL_EXPORT_C(const char*, Fl_Double_Window_default_xclass)();
+  FL_EXPORT_C(const char*, Fl_Double_Window_xclass)(fl_Double_Window win);
+  FL_EXPORT_C(void, Fl_Double_Window_set_xclass)(fl_Double_Window win,const char* c);
+  FL_EXPORT_C(const void*, Fl_Double_Window_icon)(fl_Double_Window win);
+  FL_EXPORT_C(void, Fl_Double_Window_set_icon)(fl_Double_Window win,const void * ic);
+  FL_EXPORT_C(int, Fl_Double_Window_shown)(fl_Double_Window win);
+  FL_EXPORT_C(void, Fl_Double_Window_iconize)(fl_Double_Window win);
+  FL_EXPORT_C(int, Fl_Double_Window_x_root)(fl_Double_Window win);
+  FL_EXPORT_C(int, Fl_Double_Window_y_root)(fl_Double_Window win);
+  FL_EXPORT_C(fl_Double_Window, Fl_Double_Window_current)();
+  FL_EXPORT_C(void, Fl_Double_Window_make_current)(fl_Double_Window win);
+  FL_EXPORT_C(void, Fl_Double_Window_cursor_with_bg)(fl_Double_Window win, Fl_Cursor cursor, Fl_Color bg);
+  FL_EXPORT_C(void, Fl_Double_Window_cursor_with_fg)(fl_Double_Window win,Fl_Cursor cursor, Fl_Color fg);
+  FL_EXPORT_C(void, Fl_Double_Window_cursor_with_fg_bg)(fl_Double_Window win,Fl_Cursor cursor, Fl_Color fg , Fl_Color bg );/* =FL_BLACK *//*=FL_WHITE*/
+  FL_EXPORT_C(void, Fl_Double_Window_cursor)(fl_Double_Window win,Fl_Cursor cursor);
+  FL_EXPORT_C(void, Fl_Double_Window_default_cursor_with_bg)(fl_Double_Window win,Fl_Cursor cursor, Fl_Color bg);
+  FL_EXPORT_C(void, Fl_Double_Window_default_cursor_with_fg)(fl_Double_Window win, Fl_Cursor cursor, Fl_Color fg);
+  FL_EXPORT_C(void, Fl_Double_Window_default_cursor_with_fg_bg)(fl_Double_Window win,Fl_Cursor cursor, Fl_Color fg , Fl_Color bg );
+  FL_EXPORT_C(void, Fl_Double_Window_default_cursor)(fl_Double_Window win,Fl_Cursor cursor);
+  FL_EXPORT_C(void, Fl_Double_Window_default_callback)(fl_Double_Window win, void* v);
+  FL_EXPORT_C(int, Fl_Double_Window_decorated_w)(fl_Double_Window win);
+  FL_EXPORT_C(int, Fl_Double_Window_decorated_h)(fl_Double_Window win);
   /* Fl_Double_Window specific */
   // flush resize destructor, constructor
   FL_EXPORT_C(void,         Fl_Double_Window_show)(fl_Double_Window win);
@@ -126,6 +176,7 @@ EXPORT {
   FL_EXPORT_C(void,         Fl_Double_Window_flush)(fl_Double_Window win);
   FL_EXPORT_C(void,         Fl_Double_Window_resize)(fl_Double_Window win, int X, int Y, int W, int H);
   FL_EXPORT_C(void,         Fl_Double_Window_hide)(fl_Double_Window win);
+
 #ifdef __cplusplus
 }
 #endif

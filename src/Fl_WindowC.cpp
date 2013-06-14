@@ -334,6 +334,154 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Window_iconize)(fl_Window win){
     (static_cast<Fl_Window*>(win))->iconize();
   }
+  FL_EXPORT_C(int,Fl_Window_handle)(fl_Window win,int event){
+    return (static_cast<Fl_Window*>(win))->handle(event);
+  }
+  FL_EXPORT_C(void,Fl_Window_set_border)(fl_Window win,int b){
+    (static_cast<Fl_Window*>(win))->border(b);
+  }
+  FL_EXPORT_C(void,Fl_Window_clear_border)(fl_Window win){
+    (static_cast<Fl_Window*>(win))->clear_border();
+  }
+  FL_EXPORT_C(unsigned int,Fl_Window_border)(fl_Window win){
+    return (static_cast<Fl_Window*>(win))->border();
+  }
+  FL_EXPORT_C(void,Fl_Window_set_override)(fl_Window win){
+    (static_cast<Fl_Window*>(win))->set_override();
+  }
+  FL_EXPORT_C(unsigned int,Fl_Window_override)(fl_Window win){
+    return (static_cast<Fl_Window*>(win))->override();
+  }
+  FL_EXPORT_C(void,Fl_Window_set_modal)(fl_Window win){
+    (static_cast<Fl_Window*>(win))->set_modal();
+  }
+  FL_EXPORT_C(unsigned int,Fl_Window_modal)(fl_Window win){
+    return (static_cast<Fl_Window*>(win))->modal();
+  }
+  FL_EXPORT_C(void,Fl_Window_set_non_modal)(fl_Window win){
+    (static_cast<Fl_Window*>(win))->set_non_modal();
+  }
+  FL_EXPORT_C(unsigned int,Fl_Window_non_modal)(fl_Window win){
+    return (static_cast<Fl_Window*>(win))->non_modal();
+  }
+  FL_EXPORT_C(void,Fl_Window_set_menu_window)(fl_Window win){
+    (static_cast<Fl_Window*>(win))->set_menu_window();
+  }
+  FL_EXPORT_C(unsigned int,Fl_Window_menu_window)(fl_Window win){
+    return (static_cast<Fl_Window*>(win))->menu_window();
+  }
+  FL_EXPORT_C(void,Fl_Window_set_tooltip_window)(fl_Window win){
+    (static_cast<Fl_Window*>(win))->set_tooltip_window();
+  }
+  FL_EXPORT_C(unsigned int,Fl_Window_tooltip_window)(fl_Window win){
+    return (static_cast<Fl_Window*>(win))->tooltip_window();
+  }
+  FL_EXPORT_C(void,Fl_Window_hotspot_with_x_y)(fl_Window win,int x,int y){
+    (static_cast<Fl_Window*>(win))->hotspot(x,y,0);
+  }
+  FL_EXPORT_C(void,Fl_Window_hotspot_with_x_y_with_offscreen)(fl_Window win,int x,int y,int offscreen){
+    (static_cast<Fl_Window*>(win))->hotspot(x,y,offscreen);
+  }
+  FL_EXPORT_C(void,Fl_Window_hotspot_with_widget)(fl_Window win,fl_Widget w){
+    (static_cast<Fl_Window*>(win))->hotspot((static_cast<Fl_Widget*>(w)),0);
+  }
+  FL_EXPORT_C(void,Fl_Window_hotspot_with_widget_with_offscreen)(fl_Window win,fl_Widget w,int offscreen){
+    (static_cast<Fl_Window*>(win))->hotspot((static_cast<Fl_Widget*>(w)),offscreen);
+  }
+  FL_EXPORT_C(void,Fl_Window_free_position)(fl_Window win){
+    (static_cast<Fl_Window*>(win))->free_position();
+  }
+  FL_EXPORT_C(fl_Window_size_range_args*,Fl_Window_size_range_default_args)(){
+    fl_Window_size_range_args* ptr = (fl_Window_size_range_args*)malloc(sizeof(fl_Window_size_range_args));
+    ptr->maxw = 0;
+    ptr->maxh = 0;
+    ptr->dw = 0;
+    ptr->dh = 0;
+    ptr->aspect = 0;
+    return ptr;
+  }
+  FL_EXPORT_C(void,Fl_Window_size_range)(fl_Window win,int minw,int minh){
+    fl_Window_size_range_args* ptr = Fl_Window_size_range_default_args();
+    (static_cast<Fl_Window*>(win))->size_range(minw,minh,ptr->maxw, ptr->maxh, ptr->dw,ptr->dh,ptr->aspect);
+  }
+  FL_EXPORT_C(void,Fl_Window_size_range_with_args)(fl_Window win,int minw,int minh,fl_Window_size_range_args* ptr){
+    (static_cast<Fl_Window*>(win))->size_range(minw,minh,ptr->maxw, ptr->maxh, ptr->dw,ptr->dh,ptr->aspect);
+  }
+  FL_EXPORT_C(const char*,Fl_Window_iconlabel)(fl_Window win){
+    return (static_cast<Fl_Window*>(win))->iconlabel();
+  }
+  FL_EXPORT_C(void,Fl_Window_set_iconlabel)(fl_Window win,const char* label){
+    (static_cast<Fl_Window*>(win))->iconlabel(label);
+  }
+  FL_EXPORT_C(void,Fl_Window_set_label_with_iconlabel)(fl_Window win,const char* label,const char* iconlabel){
+    (static_cast<Fl_Window*>(win))->label(label,iconlabel);
+  }
+  FL_EXPORT_C(const char*,Fl_Window_xclass)(fl_Window win){
+    return (static_cast<Fl_Window*>(win))->xclass();
+  }
+  FL_EXPORT_C(void,Fl_Window_set_xclass)(fl_Window win,const char* c){
+    (static_cast<Fl_Window*>(win))->xclass(c);
+  }
+  FL_EXPORT_C(const void*,Fl_Window_icon)(fl_Window win){
+    return (static_cast<Fl_Window*>(win))->icon();
+  }
+  FL_EXPORT_C(void,Fl_Window_set_icon)(fl_Window win,const void * ic){
+    (static_cast<Fl_Window*>(win))->icon(ic);
+  }
+  FL_EXPORT_C(int,Fl_Window_shown)(fl_Window win){
+    return (static_cast<Fl_Window*>(win))->shown();
+  }
+  FL_EXPORT_C(int,Fl_Window_x_root)(fl_Window win){
+    return (static_cast<Fl_Window*>(win))->x_root();
+  }
+  FL_EXPORT_C(int,Fl_Window_y_root)(fl_Window win){
+    return (static_cast<Fl_Window*>(win))->y_root();
+  }
+  FL_EXPORT_C(void,Fl_Window_make_current)(fl_Window win){
+    (static_cast<Fl_Window*>(win))->make_current();
+  }
+  FL_EXPORT_C(void,Fl_Window_set_cursor_with_bg)(fl_Window win,Fl_Cursor cursor,Fl_Color bg){
+    (static_cast<Fl_Window*>(win))->cursor(cursor,FL_BLACK, bg);
+  }
+  FL_EXPORT_C(void,Fl_Window_set_cursor_with_fg)(fl_Window win,Fl_Cursor cursor,Fl_Color fg){
+    (static_cast<Fl_Window*>(win))->cursor(cursor,fg,FL_WHITE);
+  }
+  FL_EXPORT_C(void,Fl_Window_set_cursor_with_fg_bg)(fl_Window win,Fl_Cursor cursor,Fl_Color fg,Fl_Color bg){
+    (static_cast<Fl_Window*>(win))->cursor(cursor,fg,bg);
+  }
+  FL_EXPORT_C(void,Fl_Window_set_cursor)(fl_Window win,Fl_Cursor cursor){
+    (static_cast<Fl_Window*>(win))->cursor(cursor,FL_BLACK,FL_WHITE);
+  }
+  FL_EXPORT_C(void,Fl_Window_set_default_cursor_with_bg)(fl_Window win,Fl_Cursor cursor,Fl_Color bg){
+    (static_cast<Fl_Window*>(win))->default_cursor(cursor,bg);
+  }
+  FL_EXPORT_C(void,Fl_Window_set_default_cursor_with_fg)(fl_Window win,Fl_Cursor cursor,Fl_Color fg){
+    (static_cast<Fl_Window*>(win))->default_cursor(cursor,fg);
+  }
+  FL_EXPORT_C(void,Fl_Window_set_default_cursor_with_fg_bg)(fl_Window win,Fl_Cursor cursor,Fl_Color fg,Fl_Color bg){
+    (static_cast<Fl_Window*>(win))->default_cursor(cursor,fg,bg);
+  }
+  FL_EXPORT_C(void,Fl_Window_set_default_cursor)(fl_Window win,Fl_Cursor cursor){
+    (static_cast<Fl_Window*>(win))->default_cursor(cursor);
+  }
+  FL_EXPORT_C(int,Fl_Window_decorated_w)(fl_Window win){
+    return (static_cast<Fl_Window*>(win))->decorated_w();
+  }
+  FL_EXPORT_C(int,Fl_Window_decorated_h)(fl_Window win){
+    return (static_cast<Fl_Window*>(win))->decorated_h();
+  }
+  FL_EXPORT_C(void, Fl_Window_set_default_xclass)(const char* label){
+    Fl_Window::default_xclass(label);
+  }
+  FL_EXPORT_C(const char*, Fl_Window_default_xclass)(){
+    return Fl_Window::default_xclass();
+  }
+  FL_EXPORT_C(fl_Window, Fl_Window_current)(){
+    return (fl_Window)Fl_Window::current();
+  }
+  FL_EXPORT_C(void, Fl_Window_default_callback)(fl_Window win, void* v){
+    Fl_Window::default_callback((static_cast<Fl_Window*>(win)), v);
+  }
 #ifdef __cplusplus
 }
 #endif

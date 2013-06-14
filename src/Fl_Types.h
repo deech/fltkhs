@@ -164,7 +164,14 @@ EXPORT {
     CONTEXT_TABLEC      = 0x20,
     CONTEXT_RC_RESIZEC  = 0x40
   }TableContextC ;
-  struct fl_Table_draw_cell_default_args{
+  struct fl_Window_size_range_args{
+    int maxw;
+    int maxh;
+    int dw;
+    int dh;
+    int aspect;
+  };
+  struct fl_Window_draw_cell_default_args{
     int R;
     int C;
     int X;
@@ -189,6 +196,7 @@ EXPORT {
   } fl_Table_Virtual_Funcs;
   typedef struct {
     /* From Fl_Widget */
+    void 	 (*fl_Button_draw         )(fl_Button button);
     int          (*fl_Button_handle      )(fl_Button button,int event);
     void         (*fl_Button_resize      )(fl_Button button,int x, int y, int w, int h);
     void         (*fl_Button_show        )(fl_Button button);
@@ -196,6 +204,16 @@ EXPORT {
     fl_Window    (*fl_Button_as_window   )(fl_Button button);
     fl_Gl_Window (*fl_Button_as_gl_window)(fl_Button button);
   } fl_Button_Virtual_Funcs;
+  typedef struct {
+    /* From Fl_Widget */
+    void 	 (*fl_Int_Input_draw        )(fl_Int_Input int_input);
+    int          (*fl_Int_Input_handle      )(fl_Int_Input int_input,int event);
+    void         (*fl_Int_Input_resize      )(fl_Int_Input int_input,int x, int y, int w, int h);
+    void         (*fl_Int_Input_show        )(fl_Int_Input int_input);
+    void         (*fl_Int_Input_hide        )(fl_Int_Input int_input);
+    fl_Window    (*fl_Int_Input_as_window   )(fl_Int_Input int_input);
+    fl_Gl_Window (*fl_Int_Input_as_gl_window)(fl_Int_Input int_input);
+  } fl_Int_Input_Virtual_Funcs;
 #ifdef __cplusplus
 }
 #endif

@@ -121,6 +121,57 @@ EXPORT {
   FL_EXPORT_C(void,         Fl_Window_destroy)(fl_Window win);
   FL_EXPORT_C(void,         Fl_Window_resize)(fl_Window win, int X, int Y, int W, int H);
   FL_EXPORT_C(void,         Fl_Window_iconize)(fl_Window win);
+  FL_EXPORT_C(int ,Fl_Window_handle)(fl_Window win, int event);
+  FL_EXPORT_C(void ,Fl_Window_set_border)(fl_Window win, int b);
+  FL_EXPORT_C(void ,Fl_Window_clear_border)(fl_Window win);
+  FL_EXPORT_C(unsigned int ,Fl_Window_border)(fl_Window win);
+  FL_EXPORT_C(void ,Fl_Window_set_override)(fl_Window win);
+  FL_EXPORT_C(unsigned int,Fl_Window_override)(fl_Window win);
+  FL_EXPORT_C(void ,Fl_Window_set_modal)(fl_Window win);
+  FL_EXPORT_C(unsigned int,Fl_Window_modal)(fl_Window win);
+  FL_EXPORT_C(void ,Fl_Window_set_non_modal)(fl_Window win);
+  FL_EXPORT_C(unsigned int ,Fl_Window_non_modal)(fl_Window win);
+  FL_EXPORT_C(void ,Fl_Window_set_menu_window)(fl_Window win);
+  FL_EXPORT_C(unsigned int,Fl_Window_menu_window)(fl_Window win);
+  FL_EXPORT_C(void ,Fl_Window_set_tooltip_window)(fl_Window win);
+  FL_EXPORT_C(unsigned int,Fl_Window_tooltip_window)(fl_Window win);
+  FL_EXPORT_C(void ,Fl_Window_hotspot_with_x_y)(fl_Window win, int x, int y);
+  FL_EXPORT_C(void ,Fl_Window_hotspot_with_x_y_with_offscreen)(fl_Window win, int x, int y, int offscreen);
+  FL_EXPORT_C(void ,Fl_Window_hotspot_with_widget)(fl_Window win, fl_Widget w);//, int offscreen = 0);
+  FL_EXPORT_C(void ,Fl_Window_hotspot_with_widget_with_offscreen)(fl_Window win, fl_Widget w, int offscreen);
+  FL_EXPORT_C(void ,Fl_Window_free_position)(fl_Window win);
+  FL_EXPORT_C(fl_Window_size_range_args* ,Fl_Window_size_range_default_args)();
+  FL_EXPORT_C(void ,Fl_Window_size_range)(fl_Window win, int minw, int minh);
+  FL_EXPORT_C(void ,Fl_Window_size_range_with_args)(fl_Window win, int minw, int minh, fl_Window_size_range_args* args);//int maxw=0, int maxh=0, int dw=0, int dh=0, int aspect=0);
+  FL_EXPORT_C(const char*, Fl_Window_label)(fl_Window win);
+  FL_EXPORT_C(const char*, Fl_Window_iconlabel)(fl_Window win);
+  FL_EXPORT_C(void, Fl_Window_set_label)(fl_Window win,const char*);
+  FL_EXPORT_C(void, Fl_Window_set_iconlabel)(fl_Window win,const char*);
+  FL_EXPORT_C(void, Fl_Window_set_label_with_iconlabel)(fl_Window win,const char* label, const char* iconlabel);
+  FL_EXPORT_C(void, Fl_Window_copy_label)(fl_Window win,const char* a);
+  FL_EXPORT_C(void, Fl_Window_set_default_xclass)(const char* label);
+  FL_EXPORT_C(const char*, Fl_Window_default_xclass)();
+  FL_EXPORT_C(const char*, Fl_Window_xclass)(fl_Window win);
+  FL_EXPORT_C(void, Fl_Window_set_xclass)(fl_Window win,const char* c);
+  FL_EXPORT_C(const void*, Fl_Window_icon)(fl_Window win);
+  FL_EXPORT_C(void, Fl_Window_set_icon)(fl_Window win,const void * ic);
+  FL_EXPORT_C(int, Fl_Window_shown)(fl_Window win);
+  FL_EXPORT_C(void, Fl_Window_iconize)(fl_Window win);
+  FL_EXPORT_C(int, Fl_Window_x_root)(fl_Window win);
+  FL_EXPORT_C(int, Fl_Window_y_root)(fl_Window win);
+  FL_EXPORT_C(fl_Window, Fl_Window_current)();
+  FL_EXPORT_C(void, Fl_Window_make_current)(fl_Window win);
+  FL_EXPORT_C(void, Fl_Window_set_cursor_with_bg)(fl_Window win, Fl_Cursor cursor, Fl_Color bg);
+  FL_EXPORT_C(void, Fl_Window_set_cursor_with_fg)(fl_Window win,Fl_Cursor cursor, Fl_Color fg);
+  FL_EXPORT_C(void, Fl_Window_set_cursor_with_fg_bg)(fl_Window win,Fl_Cursor cursor, Fl_Color fg , Fl_Color bg );/* =FL_BLACK *//*=FL_WHITE*/
+  FL_EXPORT_C(void, Fl_Window_set_cursor)(fl_Window win,Fl_Cursor cursor);
+  FL_EXPORT_C(void, Fl_Window_set_default_cursor_with_bg)(fl_Window win,Fl_Cursor cursor, Fl_Color bg);
+  FL_EXPORT_C(void, Fl_Window_set_default_cursor_with_fg)(fl_Window win, Fl_Cursor cursor, Fl_Color fg);
+  FL_EXPORT_C(void, Fl_Window_set_default_cursor_with_fg_bg)(fl_Window win,Fl_Cursor cursor, Fl_Color fg , Fl_Color bg );
+  FL_EXPORT_C(void, Fl_Window_set_default_cursor)(fl_Window win,Fl_Cursor cursor);
+  FL_EXPORT_C(void, Fl_Window_default_callback)(fl_Window win, void* v);
+  FL_EXPORT_C(int, Fl_Window_decorated_w)(fl_Window win);
+  FL_EXPORT_C(int, Fl_Window_decorated_h)(fl_Window win);
 #ifdef __cplusplus
 }
 #endif
