@@ -2,6 +2,13 @@
 #include "Fl_Types.h"
 #include "Fl_C.h"
 #include "Fl_WindowC.h"
+#include "Fl_File_InputC.h"
+#include "Fl_Float_InputC.h"
+#include "Fl_Int_InputC.h"
+#include "Fl_Secret_InputC.h"
+#include "Fl_Multiline_InputC.h"
+#include "Fl_Value_InputC.h"
+#include "Fl_InputC.h"
 
 int main(int argc, char** argv)
 {
@@ -14,7 +21,7 @@ int main(int argc, char** argv)
   Fl_Multiline_Input_New_WithLabel(150,250,200,80,"Multiline Input Box");
   fl_Value_Input value_input = (fl_Value_Input)Fl_Value_Input_New_WithLabel(150,320,200,40,"Value Input Box");
   Fl_Value_Input_set_labeltype(value_input, FL_EMBOSSED_LABEL);
-  fl_Input input = (fl_Input)Fl_Input_New_WithLabel(150,370,200,40,"Input Box");
+  (fl_Input)Fl_Input_New_WithLabel(150,370,200,40,"Input Box");
   Fl_Window_end(win);
   Fl_Window_show(win);
   return Fl_run();

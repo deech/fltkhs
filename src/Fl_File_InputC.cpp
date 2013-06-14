@@ -225,8 +225,8 @@ EXPORT {
   FL_EXPORT_C(void,Fl_File_Input_draw_label)(fl_File_Input file_input,int x,int y,int w,int h,Fl_Align alignment){
     (static_cast<Fl_File_Input*>(file_input))->draw_label(x,y,w,h,alignment);
   }
-  FL_EXPORT_C(void,Fl_File_Input_measure_label)(fl_File_Input file_input,int& ww,int& hh){
-    (static_cast<Fl_File_Input*>(file_input))->measure_label(ww,hh);
+  FL_EXPORT_C(void,Fl_File_Input_measure_label)(fl_File_Input file_input,int* ww,int* hh){
+    (static_cast<Fl_File_Input*>(file_input))->measure_label(*ww,*hh);
   }
 
   /* Fl_File_Input specific functions */

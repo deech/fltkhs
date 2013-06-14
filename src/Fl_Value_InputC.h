@@ -1,12 +1,12 @@
 #ifndef __FL_VALUE_INPUT_C__
 #define __FL_VALUE_INPUT_C__
+#ifdef __cplusplus
 // always include the FL/*.H headers before local headers
 // Fl_Widget is included transitively and needed for
 // the callback mechanism included below to work.
 #include "FL/Fl.H"
 #include "FL/Fl_Value_Input.H"
 #include "Fl_CallbackC.h"
-#ifdef __cplusplus
 EXPORT {
 #endif
   FL_EXPORT_C(fl_Group,     Fl_Value_Input_parent)(fl_Value_Input value_input);
@@ -83,7 +83,7 @@ EXPORT {
   FL_EXPORT_C(void,         Fl_Value_Input_damage_with_text)(fl_Value_Input value_input, uchar c);
   FL_EXPORT_C(void,         Fl_Value_Input_damage_inside_widget)(fl_Value_Input value_input, uchar c, int x , int y , int w, int h);
   FL_EXPORT_C(void,         Fl_Value_Input_draw_label)(fl_Value_Input value_input, int x , int y , int w, int h, Fl_Align alignment);
-  FL_EXPORT_C(void,         Fl_Value_Input_measure_label)(fl_Value_Input value_input, int& ww , int& hh);
+  FL_EXPORT_C(void,         Fl_Value_Input_measure_label)(fl_Value_Input value_input, int* ww , int* hh);
 
   /* Inherited from Fl_Valuator */
 

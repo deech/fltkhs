@@ -1,12 +1,12 @@
 #ifndef __FL_RADIO_BUTTON_C__
 #define __FL_RADIO_BUTTON_C__
+#ifdef __cplusplus
 // always include the FL/*.H headers before local headers
 // Fl_Widget is included transitively and needed for
 // the callback mechanism included below to work.
 #include "FL/Fl.H"
 #include "FL/Fl_Radio_Button.H"
 #include "Fl_CallbackC.h"
-#ifdef __cplusplus
 EXPORT {
 #endif
   /* Inherited from Fl_Widget */
@@ -84,7 +84,7 @@ EXPORT {
   FL_EXPORT_C(void,         Fl_Radio_Button_damage_with_text)(fl_Radio_Button win, uchar c);
   FL_EXPORT_C(void,         Fl_Radio_Button_damage_inside_widget)(fl_Radio_Button win, uchar c, int x , int y , int w, int h);
   FL_EXPORT_C(void,         Fl_Radio_Button_draw_label)(fl_Radio_Button win, int x , int y , int w, int h, Fl_Align alignment);
-  FL_EXPORT_C(void,         Fl_Radio_Button_measure_label)(fl_Radio_Button win, int& ww , int& hh);
+  FL_EXPORT_C(void,         Fl_Radio_Button_measure_label)(fl_Radio_Button win, int* ww , int* hh);
 
   /* Fl_Radio_Button specific functions */
   FL_EXPORT_C(fl_Radio_Button,    Fl_Radio_Button_New_WithLabel)(int x, int y, int w, int h, const char* label);

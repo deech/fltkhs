@@ -1,12 +1,12 @@
 #ifndef __FL_MULTILINE_INPUT_C__
 #define __FL_MULTILINE_INPUT_C__
+#ifdef __cplusplus
 // always include the FL/*.H headers before local headers
 // Fl_Widget is included transitively and needed for
 // the callback mechanism included below to work.
 #include "FL/Fl.H"
 #include "FL/Fl_Multiline_Input.H"
 #include "Fl_CallbackC.h"
-#ifdef __cplusplus
 EXPORT {
 #endif
   /* Inherited from Fl_Widget */
@@ -84,7 +84,7 @@ EXPORT {
   FL_EXPORT_C(void,         Fl_Multiline_Input_damage_with_text)(fl_Multiline_Input multiline_input, uchar c);
   FL_EXPORT_C(void,         Fl_Multiline_Input_damage_inside_widget)(fl_Multiline_Input multiline_input, uchar c, int x , int y , int w, int h);
   FL_EXPORT_C(void,         Fl_Multiline_Input_draw_label)(fl_Multiline_Input multiline_input, int x , int y , int w, int h, Fl_Align alignment);
-  FL_EXPORT_C(void,         Fl_Multiline_Input_measure_label)(fl_Multiline_Input multiline_input, int& ww , int& hh);
+  FL_EXPORT_C(void,         Fl_Multiline_Input_measure_label)(fl_Multiline_Input multiline_input, int* ww , int* hh);
 
   /* Fl_Multiline_Input specific functions */
   FL_EXPORT_C(int,      Fl_Multiline_Input_handle)(fl_Multiline_Input multiline_input, int event);

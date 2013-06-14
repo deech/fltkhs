@@ -224,8 +224,8 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Check_Button_draw_label)(fl_Check_Button b,int x,int y,int w,int h,Fl_Align alignment){
     (static_cast<Fl_Check_Button*>(b))->draw_label(x,y,w,h,alignment);
   }
-  FL_EXPORT_C(void,Fl_Check_Button_measure_label)(fl_Check_Button b,int& ww,int& hh){
-    (static_cast<Fl_Check_Button*>(b))->measure_label(ww,hh);
+  FL_EXPORT_C(void,Fl_Check_Button_measure_label)(fl_Check_Button b,int* ww,int* hh){
+    (static_cast<Fl_Check_Button*>(b))->measure_label(*ww,*hh);
   }
 
   FL_EXPORT_C(fl_Check_Button, Fl_Check_Button_New_WithLabel)(int x, int y, int w, int h, const char* label) {
