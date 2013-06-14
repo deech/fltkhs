@@ -1,12 +1,12 @@
 #ifndef __FL_DRAW_C__
 #define __FL_DRAW_C__
+#ifdef __cplusplus
 // always include the FL/*.H headers before local headers
 // Fl_Widget is included transitively and needed for
 // the callback mechanism included below to work.
 #include "FL/Fl.H"
 #include "FL/fl_draw.H"
 #include "Fl_CallbackC.h"
-#ifdef __cplusplus
 EXPORT {
 #endif
   typedef void (*Fl_Draw_Image_Cb)(void* data,int x,int y,int w,uchar* buf);
@@ -19,10 +19,10 @@ EXPORT {
   FL_EXPORT_C(void      , flc_push_no_clip)();
   FL_EXPORT_C(void      , flc_pop_clip)();
   FL_EXPORT_C(int       , flc_not_clipped)(int x, int y, int w, int h);
-  FL_EXPORT_C(int       , flc_clip_box)(int x , int y, int w, int h, int& X, int& Y, int& W, int& H);
+  FL_EXPORT_C(int       , flc_clip_box)(int x , int y, int w, int h, int* X, int* Y, int* W, int* H);
   FL_EXPORT_C(void      , flc_restore_clip)();
-  FL_EXPORT_C(void      , flc_set_clip_region)(Fl_Region r);
-  FL_EXPORT_C(Fl_Region , flc_clip_region)();
+  FL_EXPORT_C(void      , flc_set_clip_region)(fl_Region r);
+  FL_EXPORT_C(fl_Region , flc_clip_region)();
   FL_EXPORT_C(void      , flc_point)(int x, int y);
   FL_EXPORT_C(void      , flc_line_style_with_width_dashes)(int style, int width, char* dashes);
   FL_EXPORT_C(void      , flc_line_style_with_dashes)(int style, char* dashes);
@@ -99,8 +99,8 @@ EXPORT {
   FL_EXPORT_C(double       , flc_width)(const char* txt);
   FL_EXPORT_C(double       , flc_width_with_n)(const char* txt, int n);
   FL_EXPORT_C(double       , flc_width_with_c)(unsigned int c);
-  FL_EXPORT_C(void         , flc_text_extents)(const char*, int& dx, int& dy, int& w, int& h); // NO fltk symbol expansion will be performed
-  FL_EXPORT_C(void         , flc_text_extents_with_n)(const char *t, int n, int& dx, int& dy, int& w, int& h);
+  FL_EXPORT_C(void         , flc_text_extents)(const char*, int* dx, int* dy, int* w, int* h); // NO fltk symbol expansion will be performed
+  FL_EXPORT_C(void         , flc_text_extents_with_n)(const char *t, int n, int* dx, int* dy, int* w, int* h);
   FL_EXPORT_C(const char*  , flc_latin1_to_local)(const char *t);
   FL_EXPORT_C(const char*  , flc_latin1_to_local_with_n)(const char *t, int n);
   FL_EXPORT_C(const char*  , flc_local_to_latin1)(const char *t);
@@ -114,8 +114,8 @@ EXPORT {
   FL_EXPORT_C(void         , flc_draw_with_n)(const char* str, int n, int x, int y);
   FL_EXPORT_C(void         , flc_draw_with_n_angle)(int angle, const char* str, int n, int x, int y);
   FL_EXPORT_C(void         , flc_rtl_draw)(const char* str, int n, int x, int y);
-  FL_EXPORT_C(void         , flc_measure)(const char* str, int& x, int& y);
-  FL_EXPORT_C(void         , flc_measure_with_draw_symbols)(const char* str, int& x, int& y,int draw_symbols);
+  FL_EXPORT_C(void         , flc_measure)(const char* str, int* x, int* y);
+  FL_EXPORT_C(void         , flc_measure_with_draw_symbols)(const char* str, int* x, int* y,int draw_symbols);
   FL_EXPORT_C(void         , flc_draw_with_img_draw_symbols)(const char* str, int x, int y, int w, int h, Fl_Align align, fl_Image img,int draw_symbols);
   FL_EXPORT_C(void         , flc_draw_with_img)(const char* str, int x, int y, int w, int h, Fl_Align align, fl_Image img);
   FL_EXPORT_C(void         , flc_draw_with_draw_symbols)(const char* str, int x, int y, int w, int h, Fl_Align align,int draw_symbols);
@@ -146,8 +146,8 @@ EXPORT {
   FL_EXPORT_C(int          , flc_draw_pixmap)(char* const* data, int x,int y);
   FL_EXPORT_C(int          , flc_draw_pixmap_with_cdata_color)(char* const* cdata, int x,int y,Fl_Color color);
   FL_EXPORT_C(int          , flc_draw_pixmap_with_cdata)(char* const* cdata, int x,int y);
-  FL_EXPORT_C(int          , flc_measure_pixmap)(char* const* data, int &w, int &h);
-  FL_EXPORT_C(int          , flc_measure_pixmap_with_cdata)(const char* const* cdata, int &w, int &h);
+  FL_EXPORT_C(int          , flc_measure_pixmap)(char* const* data, int *w, int *h);
+  FL_EXPORT_C(int          , flc_measure_pixmap_with_cdata)(const char* const* cdata, int *w, int *h);
   FL_EXPORT_C(void         , flc_scroll)(int X, int Y, int W, int H, int dx, int dy, void (*draw_area)(void*, int,int,int,int), void* data);
   FL_EXPORT_C(const char*  , flc_shortcut_label)(unsigned int shortcut);
   FL_EXPORT_C(const char*  , flc_shortcut_label_with_eom)(unsigned int shortcut, const char **eom);
@@ -158,8 +158,8 @@ EXPORT {
   FL_EXPORT_C(void         , flc_cursor_with_fg)(Fl_Cursor cursor, Fl_Color fg);
   FL_EXPORT_C(void         , flc_cursor_with_bg)(Fl_Cursor cursor, Fl_Color bg);
   FL_EXPORT_C(void         , flc_cursor)(Fl_Cursor cursor);
-  FL_EXPORT_C(const char*  , flc_expand_text_with_draw_symbols)(const char* from, char* buf, int maxbuf, double maxw, int& n, double &width, int wrap, int draw_symbols);
-  FL_EXPORT_C(const char*  , flc_expand_text)(const char* from, char* buf, int maxbuf, double maxw, int& n, double &width, int wrap);
+  FL_EXPORT_C(const char*  , flc_expand_text_with_draw_symbols)(const char* from, char* buf, int maxbuf, double maxw, int* n, double *width, int wrap, int draw_symbols);
+  FL_EXPORT_C(const char*  , flc_expand_text)(const char* from, char* buf, int maxbuf, double maxw, int* n, double *width, int wrap);
   FL_EXPORT_C(void         , flc_set_status)(int X, int Y, int W, int H);
   FL_EXPORT_C(void         , flc_set_spot_with_win)(int font, int size, int X, int Y, int W, int H, fl_Window win);
   FL_EXPORT_C(void         , flc_set_spot)(int font, int size, int X, int Y, int W, int H);

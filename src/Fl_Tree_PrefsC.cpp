@@ -131,23 +131,23 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Tree_Prefs_set_connectorwidth)(fl_Tree_Prefs tree_prefs,int val){
     (static_cast<Fl_Tree_Prefs*>(tree_prefs))->connectorwidth(val);
   }
-  FL_EXPORT_C(Fl_Image*,Fl_Tree_Prefs_openicon)(fl_Tree_Prefs tree_prefs){
-    return (static_cast<Fl_Tree_Prefs*>(tree_prefs))->openicon();
+  FL_EXPORT_C(fl_Image,Fl_Tree_Prefs_openicon)(fl_Tree_Prefs tree_prefs){
+    return (fl_Image)(static_cast<Fl_Tree_Prefs*>(tree_prefs))->openicon();
   }
-  FL_EXPORT_C(void,Fl_Tree_Prefs_set_openicon)(fl_Tree_Prefs tree_prefs,Fl_Image* val){
-    (static_cast<Fl_Tree_Prefs*>(tree_prefs))->openicon(val);
+  FL_EXPORT_C(void,Fl_Tree_Prefs_set_openicon)(fl_Tree_Prefs tree_prefs,fl_Image val){
+    (static_cast<Fl_Tree_Prefs*>(tree_prefs))->openicon((static_cast<Fl_Image*>(val)));
   }
-  FL_EXPORT_C(Fl_Image*,Fl_Tree_Prefs_closeicon)(fl_Tree_Prefs tree_prefs){
-    return (static_cast<Fl_Tree_Prefs*>(tree_prefs))->closeicon();
+  FL_EXPORT_C(fl_Image,Fl_Tree_Prefs_closeicon)(fl_Tree_Prefs tree_prefs){
+    return (fl_Image)(static_cast<Fl_Tree_Prefs*>(tree_prefs))->closeicon();
   }
-  FL_EXPORT_C(void,Fl_Tree_Prefs_set_closeicon)(fl_Tree_Prefs tree_prefs,Fl_Image* val){
-    (static_cast<Fl_Tree_Prefs*>(tree_prefs))->closeicon(val);
+  FL_EXPORT_C(void,Fl_Tree_Prefs_set_closeicon)(fl_Tree_Prefs tree_prefs,fl_Image val){
+    (static_cast<Fl_Tree_Prefs*>(tree_prefs))->closeicon((static_cast<Fl_Image*>(val)));
   }
-  FL_EXPORT_C(Fl_Image*,Fl_Tree_Prefs_usericon)(fl_Tree_Prefs tree_prefs){
-    return (static_cast<Fl_Tree_Prefs*>(tree_prefs))->usericon();
+  FL_EXPORT_C(fl_Image,Fl_Tree_Prefs_usericon)(fl_Tree_Prefs tree_prefs){
+    return (fl_Image)(static_cast<Fl_Tree_Prefs*>(tree_prefs))->usericon();
   }
-  FL_EXPORT_C(void,Fl_Tree_Prefs_set_usericon)(fl_Tree_Prefs tree_prefs,Fl_Image *val){
-    (static_cast<Fl_Tree_Prefs*>(tree_prefs))->usericon(val);
+  FL_EXPORT_C(void,Fl_Tree_Prefs_set_usericon)(fl_Tree_Prefs tree_prefs,fl_Image val){
+    (static_cast<Fl_Tree_Prefs*>(tree_prefs))->usericon((static_cast<Fl_Image*>(val)));
   }
   FL_EXPORT_C(char,Fl_Tree_Prefs_showcollapse)(fl_Tree_Prefs tree_prefs){
     return (static_cast<Fl_Tree_Prefs*>(tree_prefs))->showcollapse();

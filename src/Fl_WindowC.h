@@ -1,11 +1,11 @@
 #ifndef __FL_WINDOW_C__
 #define __FL_WINDOW_C__
+#ifdef __cplusplus
 #include "FL/Fl.H"
 #include "FL/Fl_Window.H" // always include the FL/*.H headers before local headers
                           // Fl_Widget is included transitively and needed for
                           // the callback mechanism included below to work.
 #include "Fl_CallbackC.h"
-#ifdef __cplusplus
 EXPORT {
 #endif
   /* Inherited from Fl_Widget */
@@ -83,7 +83,7 @@ EXPORT {
   FL_EXPORT_C(void,         Fl_Window_damage_with_text)(fl_Window win, uchar c);
   FL_EXPORT_C(void,         Fl_Window_damage_inside_widget)(fl_Window win, uchar c, int x , int y , int w, int h);
   FL_EXPORT_C(void,         Fl_Window_draw_label)(fl_Window win, int x , int y , int w, int h, Fl_Align alignment);
-  FL_EXPORT_C(void,         Fl_Window_measure_label)(fl_Window win, int& ww , int& hh);
+  FL_EXPORT_C(void,         Fl_Window_measure_label)(fl_Window win, int* ww , int* hh);
   FL_EXPORT_C(fl_Group,     Fl_Window_as_group)(fl_Window win);
   FL_EXPORT_C(fl_Gl_Window, Fl_Window_as_gl_window)(fl_Window win);
 
@@ -98,7 +98,7 @@ EXPORT {
   FL_EXPORT_C(void,         Fl_Window_clear)(fl_Window win);
   FL_EXPORT_C(void,         Fl_Window_set_resizable_by_reference)(fl_Window win,fl_Widget o);
   FL_EXPORT_C(void,         Fl_Window_set_resizable)(fl_Window win,fl_Widget o);
-  FL_EXPORT_C(fl_Widget,    Fl_Window_resizable)(fl_Window win);
+  FL_EXPORT_C(void,         Fl_Window_resizable)(fl_Window win);
   FL_EXPORT_C(void,         Fl_Window_add_resizable)(fl_Window win,fl_Widget o);
   FL_EXPORT_C(void,         Fl_Window_init_sizes)(fl_Window win);
   FL_EXPORT_C(void,         Fl_Window_set_clip_children)(fl_Window win,int c);

@@ -2,6 +2,9 @@
 #include "Fl_C.h"
 #include "Fl_EnumerationsC.h"
 #include "Fl_Types.h"
+#include "Fl_WindowC.h"
+#include "Fl_TreeC.h"
+#include "Fl_Tree_ItemC.h"
 
 void TreeCallback(fl_Widget w, void* data){
   fl_Tree tree = (fl_Tree)w;
@@ -31,7 +34,7 @@ int main(int argc, char** argv) {
   fl_Window window = (fl_Window)Fl_Window_New_WithLabel(250,400,"Simple Tree");
   Fl_Window_begin(window);
   fl_Tree tree = (fl_Tree)Fl_Tree_New(10,10,Fl_Window_w(window)-20,Fl_Window_h(window)-20);
-  Fl_Tree_showroot(tree,0);
+  Fl_Tree_set_showroot(tree,0);
 
   Fl_Tree_add(tree,"Flintstones/Fred");
   Fl_Tree_add(tree,"Flintstones/Wilma");

@@ -1,6 +1,10 @@
 #include <stdio.h>
 #include "Fl_C.h"
 #include "Fl_Types.h"
+#include "Fl_WindowC.h"
+#include "Fl_TreeC.h"
+#include "Fl_Tree_ItemC.h"
+#include "Fl_Tree_PrefsC.h"
 
 int main(int argc, char** argv)
 {
@@ -15,7 +19,7 @@ int main(int argc, char** argv)
   for (i = 0; i < 10; i++) {
     item = (fl_Tree_Item)Fl_Tree_Item_New_WithPrefs(prefs);
     Fl_Tree_Item_set_label(item, "test");
-    Fl_Tree_add(tree, item, "test");
+    Fl_Tree_add_with_item_name(tree, item, "test");
   }
   Fl_Window_end(win);
   Fl_Window_show(win);

@@ -211,8 +211,8 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Tree_draw_label)(fl_Tree tree,int x,int y,int w,int h,Fl_Align alignment){
     (static_cast<Fl_Tree*>(tree))->draw_label(x,y,w,h,alignment);
   }
-  FL_EXPORT_C(void,Fl_Tree_measure_label)(fl_Tree tree,int& ww,int& hh){
-    (static_cast<Fl_Tree*>(tree))->measure_label(ww,hh);
+  FL_EXPORT_C(void,Fl_Tree_measure_label)(fl_Tree tree,int* ww,int* hh){
+    (static_cast<Fl_Tree*>(tree))->measure_label(*ww,*hh);
   }
   FL_EXPORT_C(fl_Group,Fl_Tree_as_group)(fl_Tree tree){
     return (static_cast<Fl_Tree*>(tree))->as_group();
@@ -547,20 +547,20 @@ EXPORT {
   FL_EXPORT_C(fl_Image,Fl_Tree_usericon)(fl_Tree tree){
     return (static_cast<Fl_Tree*>(tree))->usericon();
   }
-  FL_EXPORT_C(void,Fl_Tree_set_usericon)(fl_Tree tree,Fl_Image *val){
-    return (static_cast<Fl_Tree*>(tree))->usericon(val);
+  FL_EXPORT_C(void,Fl_Tree_set_usericon)(fl_Tree tree,fl_Image val){
+    return (static_cast<Fl_Tree*>(tree))->usericon((static_cast<Fl_Image*>(val)));
   }
   FL_EXPORT_C(fl_Image,Fl_Tree_openicon)(fl_Tree tree){
     return (static_cast<Fl_Tree*>(tree))->openicon();
   }
-  FL_EXPORT_C(void,Fl_Tree_set_openicon)(fl_Tree tree,Fl_Image *val){
-    return (static_cast<Fl_Tree*>(tree))->openicon(val);
+  FL_EXPORT_C(void,Fl_Tree_set_openicon)(fl_Tree tree,fl_Image val){
+    return (static_cast<Fl_Tree*>(tree))->openicon((static_cast<Fl_Image*>(val)));
   }
   FL_EXPORT_C(fl_Image,Fl_Tree_closeicon)(fl_Tree tree){
     return (static_cast<Fl_Tree*>(tree))->closeicon();
   }
-  FL_EXPORT_C(void,Fl_Tree_set_closeicon)(fl_Tree tree,Fl_Image *val){
-    (static_cast<Fl_Tree*>(tree))->closeicon(val);
+  FL_EXPORT_C(void,Fl_Tree_set_closeicon)(fl_Tree tree,fl_Image val){
+    (static_cast<Fl_Tree*>(tree))->closeicon((static_cast<Fl_Image*>(val)));
   }
   FL_EXPORT_C(int,Fl_Tree_showcollapse)(fl_Tree tree){
     return (static_cast<Fl_Tree*>(tree))->showcollapse();
@@ -657,8 +657,8 @@ EXPORT {
   FL_EXPORT_C(int,Fl_Tree_is_vscroll_visible)(fl_Tree tree){
     return (static_cast<Fl_Tree*>(tree))->is_vscroll_visible();
   }
-  FL_EXPORT_C(void,Fl_Tree_set_callback_item)(fl_Tree tree,Fl_Tree_Item* item){
-    (static_cast<Fl_Tree*>(tree))->callback_item(item);
+  FL_EXPORT_C(void,Fl_Tree_set_callback_item)(fl_Tree tree,fl_Tree_Item item){
+    (static_cast<Fl_Tree*>(tree))->callback_item((static_cast<Fl_Tree_Item*>(item)));
   }
   FL_EXPORT_C(fl_Tree_Item,Fl_Tree_callback_item)(fl_Tree tree){
     return (static_cast<Fl_Tree*>(tree))->callback_item();

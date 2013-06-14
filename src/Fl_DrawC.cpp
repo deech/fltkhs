@@ -26,17 +26,17 @@ EXPORT {
   FL_EXPORT_C(int,flc_not_clipped)(int x,int y,int w,int h){
     return fl_not_clipped(x,y,w,h);
   }
-  FL_EXPORT_C(int,flc_clip_box)(int x,int y,int w,int h,int& X,int& Y,int& W,int& H){
-    return fl_clip_box(x,y,w,h,X,Y,W,H);
+  FL_EXPORT_C(int,flc_clip_box)(int x,int y,int w,int h,int* X,int* Y,int* W,int* H){
+    return fl_clip_box(x,y,w,h,*X,*Y,*W,*H);
   }
   FL_EXPORT_C(void,flc_restore_clip)( ){
     fl_restore_clip();
   }
-  FL_EXPORT_C(void,flc_set_clip_region)(Fl_Region r){
-    fl_clip_region(r);
+  FL_EXPORT_C(void,flc_set_clip_region)(fl_Region r){
+    fl_clip_region((static_cast<Fl_Region>(r)));
   }
-  FL_EXPORT_C(Fl_Region,flc_clip_region)( ){
-    return fl_clip_region();
+  FL_EXPORT_C(fl_Region,flc_clip_region)( ){
+    return (fl_Region)fl_clip_region();
   }
   FL_EXPORT_C(void,flc_point)(int x,int y){
     fl_point(x,y);
@@ -215,11 +215,11 @@ EXPORT {
   FL_EXPORT_C(double,flc_width_with_c)(unsigned int c){
     return fl_width(c);
   }
-  FL_EXPORT_C(void,flc_text_extents)(const char* t,int& dx,int& dy,int& w,int& h){
-    fl_text_extents(t,dx,dy,w,h);
+  FL_EXPORT_C(void,flc_text_extents)(const char* t,int* dx,int* dy,int* w,int* h){
+    fl_text_extents(t,*dx,*dy,*w,*h);
   }
-  FL_EXPORT_C(void,flc_text_extents_with_n)(const char *t,int n,int& dx,int& dy,int& w,int& h){
-    fl_text_extents(t,n,dx,dy,w,h);
+  FL_EXPORT_C(void,flc_text_extents_with_n)(const char *t,int n,int* dx,int* dy,int* w,int* h){
+    fl_text_extents(t,n,*dx,*dy,*w,*h);
   }
   FL_EXPORT_C(const char*,flc_latin1_to_local)(const char *t){
     return fl_latin1_to_local(t);
@@ -260,11 +260,11 @@ EXPORT {
   FL_EXPORT_C(void,flc_rtl_draw)(const char* str,int n,int x,int y){
     fl_rtl_draw(str,n,x,y);
   }
-  FL_EXPORT_C(void,flc_measure)(const char* str,int& x,int& y){
-    fl_measure(str,x,y);
+  FL_EXPORT_C(void,flc_measure)(const char* str,int* x,int* y){
+    fl_measure(str,*x,*y);
   }
-  FL_EXPORT_C(void,flc_measure_with_draw_symbols)(const char* str,int& x,int& y,int draw_symbols){
-    fl_measure(str,x,y,draw_symbols);
+  FL_EXPORT_C(void,flc_measure_with_draw_symbols)(const char* str,int* x,int* y,int draw_symbols){
+    fl_measure(str,*x,*y,draw_symbols);
   }
   FL_EXPORT_C(void,flc_draw_with_img_draw_symbols)(const char* str,int x,int y,int w,int h,Fl_Align align,fl_Image img,int draw_symbols){
     fl_draw(str,x,y,w,h,align,(static_cast<Fl_Image*>(img)),draw_symbols);
@@ -356,12 +356,12 @@ EXPORT {
   FL_EXPORT_C(int,flc_draw_pixmap_with_cdata)(char* const* cdata,int x,int y){
     return fl_draw_pixmap(cdata,x,y);
   }
-  FL_EXPORT_C(int,flc_measure_pixmap)(char* const* data,int &w,int &h){
-    return fl_measure_pixmap(data,w,h);
+  FL_EXPORT_C(int,flc_measure_pixmap)(char* const* data,int *w,int *h){
+    return fl_measure_pixmap(data,*w,*h);
   }
 
-  FL_EXPORT_C(int,flc_measure_pixmap_with_cdata)(const char* const* cdata,int &w,int &h){
-    return fl_measure_pixmap(cdata,w,h);
+  FL_EXPORT_C(int,flc_measure_pixmap_with_cdata)(const char* const* cdata,int *w,int *h){
+    return fl_measure_pixmap(cdata,*w,*h);
   }
   FL_EXPORT_C(void,flc_scroll)(int X, int Y, int W, int H, int dx, int dy, void (*draw_area)(void*, int,int,int,int), void* data){
     fl_scroll(X,Y,W,H,dx,dy,draw_area,data);
@@ -393,11 +393,11 @@ EXPORT {
   FL_EXPORT_C(void,flc_cursor)(Fl_Cursor cursor){
     fl_cursor(cursor);
   }
-  FL_EXPORT_C(const char*,flc_expand_text_with_draw_symbols)(const char* from,char* buf,int maxbuf,double maxw,int& n,double &width,int wrap,int draw_symbols){
-    return fl_expand_text(from,buf,maxbuf,maxw,n,width,wrap,draw_symbols);
+  FL_EXPORT_C(const char*,flc_expand_text_with_draw_symbols)(const char* from,char* buf,int maxbuf,double maxw,int* n,double *width,int wrap,int draw_symbols){
+    return fl_expand_text(from,buf,maxbuf,maxw,*n,*width,wrap,draw_symbols);
   }
-  FL_EXPORT_C(const char*,flc_expand_text)(const char* from,char* buf,int maxbuf,double maxw,int& n,double &width,int wrap){
-    return fl_expand_text(from,buf,maxbuf,maxw,n,width,wrap);
+  FL_EXPORT_C(const char*,flc_expand_text)(const char* from,char* buf,int maxbuf,double maxw,int* n,double *width,int wrap){
+    return fl_expand_text(from,buf,maxbuf,maxw,*n,*width,wrap);
   }
   FL_EXPORT_C(void,flc_set_status)(int X,int Y,int W,int H){
     fl_set_status(X,Y,W,H);

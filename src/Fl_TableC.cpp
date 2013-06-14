@@ -380,8 +380,8 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Table_draw_label)(fl_Table table,int x,int y,int w,int h,Fl_Align alignment){
     (static_cast<Fl_DerivedTable*>(table))->draw_label(x,y,w,h,alignment);
   }
-  FL_EXPORT_C(void,Fl_Table_measure_label)(fl_Table table,int& ww,int& hh){
-    (static_cast<Fl_DerivedTable*>(table))->measure_label(ww,hh);
+  FL_EXPORT_C(void,Fl_Table_measure_label)(fl_Table table,int* ww,int* hh){
+    (static_cast<Fl_DerivedTable*>(table))->measure_label(*ww,*hh);
   }
   FL_EXPORT_C(fl_Window,    Fl_Table_window)(fl_Table table){
     return (static_cast<Fl_DerivedTable*>(table))->window();
@@ -389,8 +389,8 @@ EXPORT {
   FL_EXPORT_C(fl_Window,    Fl_Table_top_window)(fl_Table table){
     return (static_cast<Fl_DerivedTable*>(table))->top_window();
   }
-  FL_EXPORT_C(fl_Window ,   Fl_Table_top_window_offset)(fl_Table table, int& xoff, int& yoff){
-    return (static_cast<Fl_DerivedTable*>(table))->top_window_offset(xoff,yoff);
+  FL_EXPORT_C(fl_Window ,   Fl_Table_top_window_offset)(fl_Table table, int* xoff, int* yoff){
+    return (static_cast<Fl_DerivedTable*>(table))->top_window_offset(*xoff,*yoff);
   }
   FL_EXPORT_C(fl_Group,Fl_Table_as_group_super)(fl_Table table){
     return (static_cast<Fl_Table*>(table))->as_group();
@@ -466,8 +466,8 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Table_set_cols)(fl_Table table, int val){
     (static_cast<Fl_DerivedTable*>(table))->cols(val);
   }
-  FL_EXPORT_C(void, Fl_Table_set_visible_cells)(fl_Table table,int& r1, int& r2, int& c1, int& c2){
-    return (static_cast<Fl_DerivedTable*>(table))->visible_cells(r1,r2,c1,c2);
+  FL_EXPORT_C(void, Fl_Table_set_visible_cells)(fl_Table table,int* r1, int* r2, int* c1, int* c2){
+    return (static_cast<Fl_DerivedTable*>(table))->visible_cells(*r1,*r2,*c1,*c2);
   };
   FL_EXPORT_C(int,Fl_Table_is_interactive_resize)(fl_Table table){
     return (static_cast<Fl_DerivedTable*>(table))->is_interactive_resize();
@@ -571,8 +571,8 @@ EXPORT {
   FL_EXPORT_C(int,Fl_Table_is_selected)(fl_Table table,int r,int c){
     return (static_cast<Fl_DerivedTable*>(table))->is_selected(r,c);
   }
-  FL_EXPORT_C(void,Fl_Table_get_selection)(fl_Table table,int &row_top,int &col_left,int &row_bot,int &col_right){
-    return (static_cast<Fl_DerivedTable*>(table))->get_selection(row_top,col_left,row_bot,col_right);
+  FL_EXPORT_C(void,Fl_Table_get_selection)(fl_Table table,int *row_top,int *col_left,int *row_bot,int *col_right){
+    return (static_cast<Fl_DerivedTable*>(table))->get_selection(*row_top,*col_left,*row_bot,*col_right);
   }
   FL_EXPORT_C(void,Fl_Table_set_selection)(fl_Table table,int row_top,int col_left,int row_bot,int col_right){
     return (static_cast<Fl_DerivedTable*>(table))->set_selection(row_top,col_left,row_bot,col_right);
@@ -668,7 +668,7 @@ EXPORT {
   FL_EXPORT_C(int,  Fl_Table_tab_cell_nav)(fl_Table table){
     return (static_cast<Fl_DerivedTable*>(table))->tab_cell_nav();
   }
-  FL_EXPORT_C(int,  Fl_Table_find_cell)(fl_Table table, TableContextC context, int R, int C, int &X, int &Y, int &W, int &H){
+  FL_EXPORT_C(int,  Fl_Table_find_cell)(fl_Table table, TableContextC context, int R, int C, int *X, int *Y, int *W, int *H){
     Fl_Table::TableContext c = (Fl_Table::TableContext)-1;
     switch(context){
     case CONTEXT_NONEC:      {c = Fl_Table::CONTEXT_NONE;      break;}
@@ -681,7 +681,7 @@ EXPORT {
     case CONTEXT_RC_RESIZEC: {c = Fl_Table::CONTEXT_RC_RESIZE; break;}
     default:                 {c = (Fl_Table::TableContext)-1;  break;}
     }
-    return (static_cast<Fl_DerivedTable*>(table))->find_cell(c,R,C,X,Y,W,H);
+    return (static_cast<Fl_DerivedTable*>(table))->find_cell(c,R,C,*X,*Y,*W,*H);
   }
 #endif
 #ifdef __cplusplus

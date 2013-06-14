@@ -2,6 +2,9 @@
 #include "Fl_C.h"
 #include "Fl_EnumerationsC.h"
 #include "Fl_Types.h"
+#include "Fl_Double_WindowC.h"
+#include "Fl_DrawC.h"
+#include "Fl_TableC.h"
 
 #define MAX_ROWS 30
 #define MAX_COLS 26		// A-Z
@@ -70,6 +73,6 @@ int main(int argc, char** argv){
   initialize_table(table);
   Fl_Double_Window_set_resizable(window, table);
   Fl_Double_Window_end(window);
-  Fl_Double_Window_show();
+  Fl_Double_Window_show(window);
   return (Fl_run());
 }

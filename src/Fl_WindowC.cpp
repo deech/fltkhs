@@ -224,8 +224,8 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Window_draw_label)(fl_Window win,int x,int y,int w,int h,Fl_Align alignment){
     (static_cast<Fl_Window*>(win))->draw_label(x,y,w,h,alignment);
   }
-  FL_EXPORT_C(void,Fl_Window_measure_label)(fl_Window win,int& ww,int& hh){
-    (static_cast<Fl_Window*>(win))->measure_label(ww,hh);
+  FL_EXPORT_C(void,Fl_Window_measure_label)(fl_Window win,int* ww,int* hh){
+    (static_cast<Fl_Window*>(win))->measure_label(*ww,*hh);
   }
   FL_EXPORT_C(fl_Group,Fl_Window_as_group)(fl_Window win){
     return (static_cast<Fl_Window*>(win))->as_group();
@@ -264,8 +264,8 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Window_set_resizable)(fl_Window win,fl_Widget o){
     (static_cast<Fl_Window*>(win))->resizable((static_cast<Fl_Widget*>(o)));
   }
-  FL_EXPORT_C(fl_Widget,Fl_Window_resizable)(fl_Window win){
-    return (static_cast<Fl_Window*>(win))->resizable();
+  FL_EXPORT_C(void,Fl_Window_resizable)(fl_Window win){
+    (static_cast<Fl_Window*>(win))->resizable();
   }
   FL_EXPORT_C(void,Fl_Window_add_resizable)(fl_Window win,fl_Widget o){
     return (static_cast<Fl_Window*>(win))->add_resizable(*(static_cast<Fl_Widget*>(o)));

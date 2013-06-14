@@ -340,8 +340,8 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Int_Input_draw_label)(fl_Int_Input int_input,int x,int y,int w,int h,Fl_Align alignment){
     (static_cast<Fl_DerivedInt_Input*>(int_input))->draw_label(x,y,w,h,alignment);
   }
-  FL_EXPORT_C(void,Fl_Int_Input_measure_label)(fl_Int_Input int_input,int& ww,int& hh){
-    (static_cast<Fl_DerivedInt_Input*>(int_input))->measure_label(ww,hh);
+  FL_EXPORT_C(void,Fl_Int_Input_measure_label)(fl_Int_Input int_input,int* ww,int* hh){
+    (static_cast<Fl_DerivedInt_Input*>(int_input))->measure_label(*ww,*hh);
   }
 
   /* Fl_Int_Input specific functions */

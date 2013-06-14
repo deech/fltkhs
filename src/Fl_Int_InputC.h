@@ -1,12 +1,12 @@
 #ifndef __FL_INT_INPUT_C__
 #define __FL_INT_INPUT_C__
+#ifdef __cplusplus
 // always include the FL/*.H headers before local headers
 // Fl_Widget is included transitively and needed for
 // the callback mechanism included below to work.
 #include "FL/Fl.H"
 #include "FL/Fl_Int_Input.H"
 #include "Fl_CallbackC.h"
-#ifdef __cplusplus
 EXPORT {
 #endif
   /* Inherited from Fl_Widget */
@@ -84,9 +84,10 @@ EXPORT {
   FL_EXPORT_C(void,         Fl_Int_Input_damage_with_text)(fl_Int_Input int_input, uchar c);
   FL_EXPORT_C(void,         Fl_Int_Input_damage_inside_widget)(fl_Int_Input int_input, uchar c, int x , int y , int w, int h);
   FL_EXPORT_C(void,         Fl_Int_Input_draw_label)(fl_Int_Input int_input, int x , int y , int w, int h, Fl_Align alignment);
-  FL_EXPORT_C(void,         Fl_Int_Input_measure_label)(fl_Int_Input int_input, int& ww , int& hh);
+  FL_EXPORT_C(void,         Fl_Int_Input_measure_label)(fl_Int_Input int_input, int* ww , int* hh);
 
   /* Fl_Int_Input specific functions */
+#ifdef __cplusplus
   class Fl_DerivedInt_Input : public Fl_Int_Input {
     fl_Int_Input_Virtual_Funcs* overriddenFuncs;
     void* other_data;
@@ -104,6 +105,7 @@ EXPORT {
     Fl_DerivedInt_Input(int X, int Y, int W, int H, fl_Int_Input_Virtual_Funcs* funcs);
     ~Fl_DerivedInt_Input();
   };
+#endif  
   FL_EXPORT_C(int ,         Fl_Int_Input_handle_super)(fl_Int_Input int_input,int event);
   FL_EXPORT_C(int ,         Fl_Int_Input_handle )(fl_Int_Input int_input,int event);
   FL_EXPORT_C(void,         Fl_Int_Input_resize_super)(fl_Int_Input int_input,int x, int y, int w, int h);
@@ -116,10 +118,10 @@ EXPORT {
   FL_EXPORT_C(fl_Window,    Fl_Int_Input_as_window )(fl_Int_Input int_input);
   FL_EXPORT_C(fl_Gl_Window, Fl_Int_Input_as_gl_window_super)(fl_Int_Input int_input);
   FL_EXPORT_C(fl_Gl_Window, Fl_Int_Input_as_gl_window)(fl_Int_Input int_input);
-  FL_EXPORT_C(fl_Float_Input, Fl_Int_Input_New_WithLabel)(int x, int y, int w, int h, const char* label); 
-  FL_EXPORT_C(fl_Float_Input, Fl_Int_Input_New)(int x, int y, int w, int h); 
+  FL_EXPORT_C(fl_Float_Input, Fl_Int_Input_New_WithLabel)(int x, int y, int w, int h, const char* label);
+  FL_EXPORT_C(fl_Float_Input, Fl_Int_Input_New)(int x, int y, int w, int h);
   FL_EXPORT_C(void,     Fl_Int_Input_Destroy)(fl_Int_Input int_input);
-  
+
   FL_EXPORT_C(void,         Fl_Int_Input_resize)(fl_Int_Input int_input, int X, int Y, int W, int H);
   FL_EXPORT_C(int,          Fl_Int_Input_set_value)(fl_Int_Input int_input, const char*);
   FL_EXPORT_C(int,          Fl_Int_Input_set_value_with_length)(fl_Int_Input int_input, const char* text, int length);

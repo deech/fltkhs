@@ -1,12 +1,12 @@
 #ifndef __FL_TREE_PREFS_C__
 #define __FL_TREE_PREFS_C__
+#ifdef __cplusplus
 // always include the FL/*.H headers before local headers
 // Fl_Widget is included transitively and needed for
 // the callback mechanism included below to work.
 #include "FL/Fl.H"
 #include "FL/Fl_Tree_Prefs.H"
 #include "Fl_CallbackC.h"
-#ifdef __cplusplus
 EXPORT {
 #endif
   FL_EXPORT_C(fl_Tree_Prefs, Fl_Tree_Prefs_New)();
@@ -59,12 +59,12 @@ EXPORT {
   FL_EXPORT_C(void, Fl_Tree_Prefs_set_connectorstyle_with_val)(fl_Tree_Prefs tree_prefs, int val);
   FL_EXPORT_C(int, Fl_Tree_Prefs_connectorwidth)(fl_Tree_Prefs tree_prefs);
   FL_EXPORT_C(void, Fl_Tree_Prefs_set_connectorwidth)(fl_Tree_Prefs tree_prefs, int val);
-  FL_EXPORT_C(Fl_Image*, Fl_Tree_Prefs_openicon)(fl_Tree_Prefs tree_prefs);
-  FL_EXPORT_C(void, Fl_Tree_Prefs_set_openicon)(fl_Tree_Prefs tree_prefs, Fl_Image *val);
-  FL_EXPORT_C(Fl_Image*, Fl_Tree_Prefs_closeicon)(fl_Tree_Prefs tree_prefs);
-  FL_EXPORT_C(void, Fl_Tree_Prefs_set_closeicon)(fl_Tree_Prefs tree_prefs, Fl_Image* val);
-  FL_EXPORT_C(Fl_Image*, Fl_Tree_Prefs_usericon)(fl_Tree_Prefs tree_prefs);
-  FL_EXPORT_C(void, Fl_Tree_Prefs_set_usericon)(fl_Tree_Prefs tree_prefs, Fl_Image *val);
+  FL_EXPORT_C(fl_Image, Fl_Tree_Prefs_openicon)(fl_Tree_Prefs tree_prefs);
+  FL_EXPORT_C(void, Fl_Tree_Prefs_set_openicon)(fl_Tree_Prefs tree_prefs, fl_Image val);
+  FL_EXPORT_C(fl_Image, Fl_Tree_Prefs_closeicon)(fl_Tree_Prefs tree_prefs);
+  FL_EXPORT_C(void, Fl_Tree_Prefs_set_closeicon)(fl_Tree_Prefs tree_prefs, fl_Image val);
+  FL_EXPORT_C(fl_Image, Fl_Tree_Prefs_usericon)(fl_Tree_Prefs tree_prefs);
+  FL_EXPORT_C(void, Fl_Tree_Prefs_set_usericon)(fl_Tree_Prefs tree_prefs, fl_Image val);
   FL_EXPORT_C(char, Fl_Tree_Prefs_showcollapse)(fl_Tree_Prefs tree_prefs);
   FL_EXPORT_C(void, Fl_Tree_Prefs_set_showcollapse)(fl_Tree_Prefs tree_prefs, int val);
   FL_EXPORT_C(Fl_Tree_Sort, Fl_Tree_Prefs_sortorder)(fl_Tree_Prefs tree_prefs);

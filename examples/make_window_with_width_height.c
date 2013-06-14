@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include "Fl_C.h"
 #include "Fl_Types.h"
+#include "Fl_WindowC.h"
 
 int main(int argc, char** argv)
 {

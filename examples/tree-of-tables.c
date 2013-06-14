@@ -1,7 +1,13 @@
 #include <stdio.h>
 #include <math.h>		// powf()
+#include <string.h>
 #include "Fl_C.h"
 #include "Fl_EnumerationsC.h"
+#include "Fl_Double_WindowC.h"
+#include "Fl_TableC.h"
+#include "Fl_DrawC.h"
+#include "Fl_TreeC.h"
+#include "Fl_Tree_ItemC.h"
 #ifndef PI
 #define PI 3.14159
 #endif
@@ -39,8 +45,8 @@ void draw_cell(fl_Table table,TableContextC context, int ROW, int COL, int X, in
 	if ( strcmp(mode, "SinCos" ) == 0 ) { sprintf(s, "%.2f", ((val/10.0)*PI)); }
 	else sprintf(s,"%d",val);
 	flc_draw_box(FL_THIN_UP_BOX, X,Y,W,H, col);
-	flc_color(FL_BLACK);
-	flc_draw(s, X,Y,W,H, FL_ALIGN_CENTER);
+	flc_set_color(FL_BLACK);
+	flc_draw_with_align(s, X,Y,W,H, FL_ALIGN_CENTER);
         flc_pop_clip();
         return;
       }

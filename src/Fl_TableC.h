@@ -1,12 +1,12 @@
 #ifndef __FL_TABLE_C__
 #define __FL_TABLE_C__
+#ifdef __cplusplus
 // always include the FL/*.H headers before local headers
 // Fl_Widget is included transitively and needed for
 // the callback mechanism included below to work.
 #include "FL/Fl.H"
 #include "FL/Fl_Table.H"
 #include "Fl_CallbackC.h"
-#ifdef __cplusplus
 EXPORT {
 #endif
   /* Inherited from Fl_Widget */
@@ -87,10 +87,10 @@ EXPORT {
   FL_EXPORT_C(void,         Fl_Table_damage_with_text)(fl_Table table, uchar c);
   FL_EXPORT_C(void,         Fl_Table_damage_inside_widget)(fl_Table table, uchar c, int x , int y , int w, int h);
   FL_EXPORT_C(void,         Fl_Table_draw_label)(fl_Table table, int x , int y , int w, int h, Fl_Align alignment);
-  FL_EXPORT_C(void,         Fl_Table_measure_label)(fl_Table table, int& ww , int& hh);
+  FL_EXPORT_C(void,         Fl_Table_measure_label)(fl_Table table, int* ww , int* hh);
   FL_EXPORT_C(fl_Window,    Fl_Table_window)(fl_Table table);
   FL_EXPORT_C(fl_Window,    Fl_Table_top_window)(fl_Table table);
-  FL_EXPORT_C(fl_Window ,   Fl_Table_top_window_offset)(fl_Table table, int& xoff, int& yoff); 
+  FL_EXPORT_C(fl_Window ,   Fl_Table_top_window_offset)(fl_Table table, int* xoff, int* yoff);
   FL_EXPORT_C(fl_Group,     Fl_Table_as_group_super)(fl_Table table);
   FL_EXPORT_C(fl_Group,     Fl_Table_as_group)(fl_Table table);
   FL_EXPORT_C(fl_Gl_Window, Fl_Table_as_gl_window_super)(fl_Table table);
@@ -111,7 +111,9 @@ EXPORT {
   FL_EXPORT_C(void,         Fl_Table_focus)(fl_Table table,fl_Widget W);
   FL_EXPORT_C(fl_Widget,    Fl_Table__ddfdesign_kludge)(fl_Table table);
 
+
   /* Fl_Table specific functions */
+#ifdef __cplusplus  
   class Fl_DerivedTable : public Fl_Table {
     fl_Table_Virtual_Funcs* overriddenFuncs;
     void* other_data;
@@ -138,7 +140,7 @@ EXPORT {
     Fl_DerivedTable(int X, int Y, int W, int H, fl_Table_Virtual_Funcs* funcs);
     ~Fl_DerivedTable();
   };
-
+#endif
   FL_EXPORT_C(fl_Table_Virtual_Funcs*, Fl_Table_default_virtual_funcs)();
   FL_EXPORT_C(fl_Table, Fl_Table_New_WithLabel)(int X, int Y, int W, int H, const char *l, fl_Table_Virtual_Funcs* funcs);
   FL_EXPORT_C(fl_Table, Fl_Table_New)(int X, int Y, int W, int H, fl_Table_Virtual_Funcs* funcs);
@@ -151,7 +153,7 @@ EXPORT {
   FL_EXPORT_C(void, Fl_Table_set_cols_super)(fl_Table table, int val);
   FL_EXPORT_C(void, Fl_Table_set_cols)(fl_Table table, int val);
   FL_EXPORT_C(int, Fl_Table_cols)(fl_Table table);
-  FL_EXPORT_C(void, Fl_Table_set_visible_cells)(fl_Table table,int& r1, int& r2, int& c1, int& c2);
+  FL_EXPORT_C(void, Fl_Table_set_visible_cells)(fl_Table table,int* r1, int* r2, int* c1, int* c2);
   FL_EXPORT_C(int, Fl_Table_is_interactive_resize)(fl_Table table);
   FL_EXPORT_C(int, Fl_Table_row_resize)(fl_Table table);
   FL_EXPORT_C(void, Fl_Table_set_row_resize)(fl_Table table,int flag);
@@ -186,7 +188,7 @@ EXPORT {
   FL_EXPORT_C(void, Fl_Table_set_top_row)(fl_Table table,int row);
   FL_EXPORT_C(int, Fl_Table_top_row)(fl_Table table);
   FL_EXPORT_C(int, Fl_Table_is_selected)(fl_Table table,int r, int c);
-  FL_EXPORT_C(void, Fl_Table_get_selection)(fl_Table table,int &row_top, int &col_left, int &row_bot, int &col_right);
+  FL_EXPORT_C(void, Fl_Table_get_selection)(fl_Table table,int *row_top, int *col_left, int *row_bot, int *col_right);
   FL_EXPORT_C(void, Fl_Table_set_selection)(fl_Table table,int row_top, int col_left, int row_bot, int col_right);
   FL_EXPORT_C(int, Fl_Table_move_cursor)(fl_Table table,int R, int C);
   FL_EXPORT_C(void, Fl_Table_resize_super)(fl_Table table,int X, int Y, int W, int H);
@@ -210,7 +212,7 @@ EXPORT {
 #if FLTK_ABI_VERSION >= 10302
   FL_EXPORT_C(void, Fl_Table_set_tab_cell_nav)(fl_Table table, int val);
   FL_EXPORT_C(int,  Fl_Table_tab_cell_nav)(fl_Table table);
-  FL_EXPORT_C(int,  Fl_Table_find_cell)(fl_Table table, TableContextC context, int R, int C, int &X, int &Y, int &W, int &H);
+  FL_EXPORT_C(int,  Fl_Table_find_cell)(fl_Table table, TableContextC context, int R, int C, int *X, int *Y, int *W, int *H);
 #endif
 #ifdef __cplusplus
 }

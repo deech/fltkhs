@@ -225,8 +225,8 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Double_Window_draw_label)(fl_Double_Window win,int x,int y,int w,int h,Fl_Align alignment){
     (static_cast<Fl_Double_Window*>(win))->draw_label(x,y,w,h,alignment);
   }
-  FL_EXPORT_C(void,Fl_Double_Window_measure_label)(fl_Double_Window win,int& ww,int& hh){
-    (static_cast<Fl_Double_Window*>(win))->measure_label(ww,hh);
+  FL_EXPORT_C(void,Fl_Double_Window_measure_label)(fl_Double_Window win,int* ww,int* hh){
+    (static_cast<Fl_Double_Window*>(win))->measure_label(*ww,*hh);
   }
   FL_EXPORT_C(fl_Group,Fl_Double_Window_as_group)(fl_Double_Window win){
     return (static_cast<Fl_Double_Window*>(win))->as_group();
@@ -265,8 +265,8 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Double_Window_set_resizable)(fl_Double_Window win,fl_Widget o){
     (static_cast<Fl_Double_Window*>(win))->resizable((static_cast<Fl_Widget*>(o)));
   }
-  FL_EXPORT_C(fl_Widget,Fl_Double_Window_resizable)(fl_Double_Window win){
-    return (static_cast<Fl_Double_Window*>(win))->resizable();
+  FL_EXPORT_C(void,Fl_Double_Window_resizable)(fl_Double_Window win){
+    (static_cast<Fl_Double_Window*>(win))->resizable();
   }
   FL_EXPORT_C(void,Fl_Double_Window_add_resizable)(fl_Double_Window win,fl_Widget o){
     return (static_cast<Fl_Double_Window*>(win))->add_resizable(*(static_cast<Fl_Widget*>(o)));
@@ -436,28 +436,28 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Double_Window_make_current)(fl_Double_Window win){
     (static_cast<Fl_Double_Window*>(win))->make_current();
   }
-  FL_EXPORT_C(void,Fl_Double_Window_cursor_with_bg)(fl_Double_Window win,Fl_Cursor cursor,Fl_Color bg){
+  FL_EXPORT_C(void,Fl_Double_Window_set_cursor_with_bg)(fl_Double_Window win,Fl_Cursor cursor,Fl_Color bg){
     (static_cast<Fl_Double_Window*>(win))->cursor(cursor,bg);
   }
-  FL_EXPORT_C(void,Fl_Double_Window_cursor_with_fg)(fl_Double_Window win,Fl_Cursor cursor,Fl_Color fg){
+  FL_EXPORT_C(void,Fl_Double_Window_set_cursor_with_fg)(fl_Double_Window win,Fl_Cursor cursor,Fl_Color fg){
     (static_cast<Fl_Double_Window*>(win))->cursor(cursor,fg);
   }
-  FL_EXPORT_C(void,Fl_Double_Window_cursor_with_fg_bg)(fl_Double_Window win,Fl_Cursor cursor,Fl_Color fg,Fl_Color bg){
+  FL_EXPORT_C(void,Fl_Double_Window_set_cursor_with_fg_bg)(fl_Double_Window win,Fl_Cursor cursor,Fl_Color fg,Fl_Color bg){
     (static_cast<Fl_Double_Window*>(win))->cursor(cursor,fg,bg);
   }
-  FL_EXPORT_C(void,Fl_Double_Window_cursor)(fl_Double_Window win,Fl_Cursor cursor){
+  FL_EXPORT_C(void,Fl_Double_Window_set_cursor)(fl_Double_Window win,Fl_Cursor cursor){
     (static_cast<Fl_Double_Window*>(win))->cursor(cursor);
   }
-  FL_EXPORT_C(void,Fl_Double_Window_default_cursor_with_bg)(fl_Double_Window win,Fl_Cursor cursor,Fl_Color bg){
+  FL_EXPORT_C(void,Fl_Double_Window_set_default_cursor_with_bg)(fl_Double_Window win,Fl_Cursor cursor,Fl_Color bg){
     (static_cast<Fl_Double_Window*>(win))->default_cursor(cursor,bg);
   }
-  FL_EXPORT_C(void,Fl_Double_Window_default_cursor_with_fg)(fl_Double_Window win,Fl_Cursor cursor,Fl_Color fg){
+  FL_EXPORT_C(void,Fl_Double_Window_set_default_cursor_with_fg)(fl_Double_Window win,Fl_Cursor cursor,Fl_Color fg){
     (static_cast<Fl_Double_Window*>(win))->default_cursor(cursor,fg);
   }
-  FL_EXPORT_C(void,Fl_Double_Window_default_cursor_with_fg_bg)(fl_Double_Window win,Fl_Cursor cursor,Fl_Color fg,Fl_Color bg){
+  FL_EXPORT_C(void,Fl_Double_Window_set_default_cursor_with_fg_bg)(fl_Double_Window win,Fl_Cursor cursor,Fl_Color fg,Fl_Color bg){
     (static_cast<Fl_Double_Window*>(win))->default_cursor(cursor,fg,bg);
   }
-  FL_EXPORT_C(void,Fl_Double_Window_default_cursor)(fl_Double_Window win,Fl_Cursor cursor){
+  FL_EXPORT_C(void,Fl_Double_Window_set_default_cursor)(fl_Double_Window win,Fl_Cursor cursor){
     (static_cast<Fl_Double_Window*>(win))->default_cursor(cursor);
   }
   FL_EXPORT_C(int,Fl_Double_Window_decorated_w)(fl_Double_Window win){

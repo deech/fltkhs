@@ -152,6 +152,7 @@ EXPORT {
   typedef void* fl_Wizard;
   typedef void* fl_XBM_Image;
   typedef void* fl_XPM_Image;
+  typedef void* fl_Region;
   typedef void (fl_Callback )(fl_Widget, void*);
   typedef fl_Callback* fl_Callback_p;
   typedef enum {
@@ -164,19 +165,19 @@ EXPORT {
     CONTEXT_TABLEC      = 0x20,
     CONTEXT_RC_RESIZEC  = 0x40
   }TableContextC ;
-  struct fl_Window_size_range_args{
+  typedef struct {
     int maxw;
     int maxh;
     int dw;
     int dh;
     int aspect;
-  };
-  struct fl_Window_draw_cell_default_args{
+  }fl_Window_size_range_args;
+  typedef struct {
     int R;
     int C;
     int X;
     int Y;
-  };
+  }fl_Window_draw_cell_default_args;
   typedef struct {
     /* From Fl_Widget */
     void 	 (*fl_Table_draw        )(fl_Table table);

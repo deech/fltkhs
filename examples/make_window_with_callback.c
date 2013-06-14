@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include "Fl_C.h"
 #include "Fl_Types.h"
-
+#include "Fl_WindowC.h"
 void my_callback(fl_Window w, void* user_data) {
   puts("The title of this window is:");
   puts((const char*)Fl_Window_label(w));

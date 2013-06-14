@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include "Fl_C.h"
 #include "Fl_Types.h"
-
+#include "Fl_WindowC.h"
 void callback_button1(fl_Button b1, void* user_data) {
   printf("%s %s\n", (char*) Fl_Button_label(b1), "has been clicked");
 }

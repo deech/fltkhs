@@ -1,12 +1,12 @@
 #ifndef __FL_TREE_C__
 #define __FL_TREE_C__
+#ifdef __cplusplus
 // always include the FL/*.H headers before local headers
 // Fl_Widget is included transitively and needed for
 // the callback mechanism included below to work.
 #include "FL/Fl.H"
 #include "FL/Fl_Tree.H"
 #include "Fl_CallbackC.h"
-#ifdef __cplusplus
 EXPORT {
 #endif
   /* Inherited from Fl_Widget */
@@ -84,7 +84,7 @@ EXPORT {
   FL_EXPORT_C(void,         Fl_Tree_damage_with_text)(fl_Tree tree, uchar c);
   FL_EXPORT_C(void,         Fl_Tree_damage_inside_widget)(fl_Tree tree, uchar c, int x , int y , int w, int h);
   FL_EXPORT_C(void,         Fl_Tree_draw_label)(fl_Tree tree, int x , int y , int w, int h, Fl_Align alignment);
-  FL_EXPORT_C(void,         Fl_Tree_measure_label)(fl_Tree tree, int& ww , int& hh);
+  FL_EXPORT_C(void,         Fl_Tree_measure_label)(fl_Tree tree, int* ww , int* hh);
   FL_EXPORT_C(fl_Group,     Fl_Tree_as_group)(fl_Tree tree);
   FL_EXPORT_C(fl_Gl_Window, Fl_Tree_as_gl_window)(fl_Tree tree);
 
@@ -205,11 +205,11 @@ EXPORT {
   FL_EXPORT_C(int, Fl_Tree_connectorwidth)(fl_Tree tree);
   FL_EXPORT_C(void, Fl_Tree_set_connectorwidth)(fl_Tree tree,int val);
   FL_EXPORT_C(fl_Image, Fl_Tree_usericon)(fl_Tree tree);
-  FL_EXPORT_C(void, Fl_Tree_set_usericon)(fl_Tree tree,Fl_Image *val);
+  FL_EXPORT_C(void, Fl_Tree_set_usericon)(fl_Tree tree,fl_Image val);
   FL_EXPORT_C(fl_Image, Fl_Tree_openicon)(fl_Tree tree);
-  FL_EXPORT_C(void, Fl_Tree_set_openicon)(fl_Tree tree,Fl_Image *val);
+  FL_EXPORT_C(void, Fl_Tree_set_openicon)(fl_Tree tree,fl_Image val);
   FL_EXPORT_C(fl_Image, Fl_Tree_closeicon)(fl_Tree tree);
-  FL_EXPORT_C(void, Fl_Tree_set_closeicon)(fl_Tree tree,Fl_Image *val);
+  FL_EXPORT_C(void, Fl_Tree_set_closeicon)(fl_Tree tree,fl_Image val);
   FL_EXPORT_C(int, Fl_Tree_showcollapse)(fl_Tree tree);
   FL_EXPORT_C(void, Fl_Tree_set_showcollapse)(fl_Tree tree,int val);
   FL_EXPORT_C(int, Fl_Tree_showroot)(fl_Tree tree);
@@ -243,7 +243,7 @@ EXPORT {
   FL_EXPORT_C(int, Fl_Tree_scrollbar_size)(fl_Tree tree);
   FL_EXPORT_C(void, Fl_Tree_set_scrollbar_size)(fl_Tree tree,int size);
   FL_EXPORT_C(int, Fl_Tree_is_vscroll_visible)(fl_Tree tree);
-  FL_EXPORT_C(void, Fl_Tree_set_callback_item)(fl_Tree tree,Fl_Tree_Item* item);
+  FL_EXPORT_C(void, Fl_Tree_set_callback_item)(fl_Tree tree,fl_Tree_Item item);
   FL_EXPORT_C(fl_Tree_Item, Fl_Tree_callback_item)(fl_Tree tree);
   FL_EXPORT_C(void, Fl_Tree_set_callback_reason)(fl_Tree tree,Fl_Tree_Reason reason);
   FL_EXPORT_C(Fl_Tree_Reason, Fl_Tree_callback_reason)(fl_Tree tree);
