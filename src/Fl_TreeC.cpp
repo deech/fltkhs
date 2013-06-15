@@ -26,6 +26,9 @@ EXPORT {
   FL_EXPORT_C(int,Fl_Tree_h)(fl_Tree tree){
     return (static_cast<Fl_Tree*>(tree))->h();
   }
+  FL_EXPORT_C(void,Fl_Tree_set_align)(fl_Tree tree, Fl_Align alignment){
+    (static_cast<Fl_Tree*>(tree))->align(alignment);
+  }
   FL_EXPORT_C(Fl_Align,Fl_Tree_align)(fl_Tree tree){
     return (static_cast<Fl_Tree*>(tree))->align();
   }

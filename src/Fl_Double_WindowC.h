@@ -19,6 +19,7 @@ EXPORT {
   FL_EXPORT_C(int,          Fl_Double_Window_y)(fl_Double_Window win);
   FL_EXPORT_C(int,          Fl_Double_Window_w)(fl_Double_Window win);
   FL_EXPORT_C(int,          Fl_Double_Window_h)(fl_Double_Window win);
+  FL_EXPORT_C(void,         Fl_Double_Window_set_align)(fl_Double_Window double_window, Fl_Align alignment);
   FL_EXPORT_C(Fl_Align,     Fl_Double_Window_align)(fl_Double_Window win);
   FL_EXPORT_C(Fl_Boxtype,   Fl_Double_Window_box)(fl_Double_Window win);
   FL_EXPORT_C(void,         Fl_Double_Window_set_box)(fl_Double_Window win, Fl_Boxtype new_box);

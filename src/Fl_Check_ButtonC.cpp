@@ -27,6 +27,9 @@ EXPORT {
   FL_EXPORT_C(int,Fl_Check_Button_h)(fl_Check_Button b){
     return (static_cast<Fl_Check_Button*>(b))->h();
   }
+  FL_EXPORT_C(void,Fl_Check_Button_set_align)(fl_Check_Button check_button, Fl_Align alignment){
+    (static_cast<Fl_Check_Button*>(check_button))->align(alignment);
+  }
   FL_EXPORT_C(Fl_Align,Fl_Check_Button_align)(fl_Check_Button b){
     return (static_cast<Fl_Check_Button*>(b))->align();
   }
@@ -239,8 +242,11 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Check_Button_Destroy)(fl_Check_Button button){
     delete (static_cast<Fl_Check_Button*>(button));
   }
-  FL_EXPORT_C(int,Fl_Check_Button_value)(fl_Check_Button b,int v){
+  FL_EXPORT_C(int,Fl_Check_Button_set_value)(fl_Check_Button b,int v){
     return (static_cast<Fl_Check_Button*>(b))->value(v);
+  }
+  FL_EXPORT_C(char,Fl_Check_Button_value)(fl_Check_Button b){
+    return (static_cast<Fl_Check_Button*>(b))->value();
   }
   FL_EXPORT_C(int,Fl_Check_Button_clear)(fl_Check_Button b){
     return (static_cast<Fl_Check_Button*>(b))->clear();

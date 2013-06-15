@@ -28,6 +28,9 @@ EXPORT {
   FL_EXPORT_C(int,Fl_Multiline_Input_h)(fl_Multiline_Input multiline_input){
     return (static_cast<Fl_Multiline_Input*>(multiline_input))->h();
   }
+  FL_EXPORT_C(void,Fl_Multiline_Input_set_align)(fl_Multiline_Input multiline_input, Fl_Align alignment){
+    (static_cast<Fl_Multiline_Input*>(multiline_input))->align(alignment);
+  }
   FL_EXPORT_C(Fl_Align,Fl_Multiline_Input_align)(fl_Multiline_Input multiline_input){
     return (static_cast<Fl_Multiline_Input*>(multiline_input))->align();
   }

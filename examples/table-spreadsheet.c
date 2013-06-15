@@ -243,7 +243,7 @@ int main(){
   fl_Double_Window win = (fl_Double_Window) Fl_Double_Window_New_WithLabel(862,322,"Fl_Table Spreadsheet");
   Fl_Double_Window_begin(win);
   fl_Table_Virtual_Funcs* funcs = (fl_Table_Virtual_Funcs*)Fl_Table_default_virtual_funcs();
-  funcs->fl_Table_draw_cell = &draw_cell;
+  funcs->draw_cell = &draw_cell;
   fl_Table spreadsheet = (fl_Table)Fl_Table_New(10,10,
 						Fl_Double_Window_w(win)-20,
 						Fl_Double_Window_h(win)-20,

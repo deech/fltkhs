@@ -18,6 +18,7 @@ EXPORT {
   FL_EXPORT_C(int,          Fl_Input_y)(fl_Input input);
   FL_EXPORT_C(int,          Fl_Input_w)(fl_Input input);
   FL_EXPORT_C(int,          Fl_Input_h)(fl_Input input);
+  FL_EXPORT_C(void,         Fl_Input_set_align)(fl_Input input, Fl_Align alignment);
   FL_EXPORT_C(Fl_Align,     Fl_Input_align)(fl_Input input);
   FL_EXPORT_C(Fl_Boxtype,   Fl_Input_box)(fl_Input input);
   FL_EXPORT_C(void,         Fl_Input_set_box)(fl_Input input, Fl_Boxtype new_box);

@@ -18,6 +18,7 @@ EXPORT {
   FL_EXPORT_C(int,          Fl_Light_Button_y)(fl_Light_Button win);
   FL_EXPORT_C(int,          Fl_Light_Button_w)(fl_Light_Button win);
   FL_EXPORT_C(int,          Fl_Light_Button_h)(fl_Light_Button win);
+  FL_EXPORT_C(void,         Fl_Light_Button_set_align)(fl_Light_Button light_button, Fl_Align alignment);
   FL_EXPORT_C(Fl_Align,     Fl_Light_Button_align)(fl_Light_Button win);
   FL_EXPORT_C(Fl_Boxtype,   Fl_Light_Button_box)(fl_Light_Button win);
   FL_EXPORT_C(void,         Fl_Light_Button_set_box)(fl_Light_Button win, Fl_Boxtype new_box);
@@ -90,7 +91,8 @@ EXPORT {
   FL_EXPORT_C(fl_Light_Button,    Fl_Light_Button_New_WithLabel)(int x, int y, int w, int h, const char* label);
   FL_EXPORT_C(fl_Light_Button,    Fl_Light_Button_New)(int x, int y, int w, int h);
   FL_EXPORT_C(void,Fl_Light_Button_Destroy)(fl_Light_Button button);
-  FL_EXPORT_C(int         , Fl_Light_Button_value)(fl_Light_Button b, int v);
+  FL_EXPORT_C(char        , Fl_Light_Button_value)(fl_Light_Button b);
+  FL_EXPORT_C(int         , Fl_Light_Button_set_value)(fl_Light_Button b, int v);
   FL_EXPORT_C(int         , Fl_Light_Button_set)(fl_Light_Button b);
   FL_EXPORT_C(int         , Fl_Light_Button_clear)(fl_Light_Button b);
   FL_EXPORT_C(void        , Fl_Light_Button_setonly)(fl_Light_Button b);

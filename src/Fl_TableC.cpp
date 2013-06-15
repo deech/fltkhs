@@ -2,11 +2,11 @@
 #ifdef __cplusplus
 Fl_DerivedTable::Fl_DerivedTable(int X, int Y, int W, int H, const char *l, fl_Table_Virtual_Funcs* funcs) : Fl_Table(X,Y,W,H,l){
     overriddenFuncs = funcs;
-    other_data = (void*)"INIT";
+    other_data = (void*)0;
  }
 Fl_DerivedTable::Fl_DerivedTable(int X, int Y, int W, int H, fl_Table_Virtual_Funcs* funcs):Fl_Table(X,Y,W,H,0){
     overriddenFuncs = funcs;
-    other_data = (void*)"INIT";
+    other_data = (void*)0;
   }
 Fl_DerivedTable::~Fl_DerivedTable(){
   free(overriddenFuncs);
@@ -22,8 +22,8 @@ int Fl_DerivedTable::find_cell(TableContext context, int R, int C, int &X, int &
   return Fl_Table::find_cell(context,R,C,X,Y,W,H);
 }
 void Fl_DerivedTable::draw(){
-  if (this->overriddenFuncs->fl_Table_draw != NULL) {
-    this->overriddenFuncs->fl_Table_draw((fl_Table) this);
+  if (this->overriddenFuncs->draw != NULL) {
+    this->overriddenFuncs->draw((fl_Table) this);
   }
   else {
     Fl_Table::draw();
@@ -31,8 +31,8 @@ void Fl_DerivedTable::draw(){
 }
 int Fl_DerivedTable::handle(int event){
   int i;
-  if (this->overriddenFuncs->fl_Table_handle != NULL) {
-    i = this->overriddenFuncs->fl_Table_handle((fl_Table) this,event);
+  if (this->overriddenFuncs->handle != NULL) {
+    i = this->overriddenFuncs->handle((fl_Table) this,event);
   }
   else {
     i = Fl_Table::handle(event);
@@ -43,24 +43,24 @@ void Fl_DerivedTable::resize_super(int x, int y, int w, int h){
   Fl_Table::resize(x,y,w,h);
 }
 void Fl_DerivedTable::resize(int x, int y, int w, int h){
-  if (this->overriddenFuncs->fl_Table_resize != NULL) {
-    this->overriddenFuncs->fl_Table_resize((fl_Table) this,x,y,w,h);
+  if (this->overriddenFuncs->resize != NULL) {
+    this->overriddenFuncs->resize((fl_Table) this,x,y,w,h);
   }
   else {
     Fl_Table::resize(x,y,w,h);
   }
 }
 void Fl_DerivedTable::show(){
-  if (this->overriddenFuncs->fl_Table_show != NULL) {
-    this->overriddenFuncs->fl_Table_show((fl_Table) this);
+  if (this->overriddenFuncs->show != NULL) {
+    this->overriddenFuncs->show((fl_Table) this);
   }
   else {
     Fl_Table::show();
   }
 }
 void Fl_DerivedTable::hide(){
-  if (this->overriddenFuncs->fl_Table_hide != NULL) {
-    this->overriddenFuncs->fl_Table_hide((fl_Table) this);
+  if (this->overriddenFuncs->hide != NULL) {
+    this->overriddenFuncs->hide((fl_Table) this);
   }
   else {
     Fl_Table::hide();
@@ -68,8 +68,8 @@ void Fl_DerivedTable::hide(){
 }
 Fl_Group* Fl_DerivedTable::as_group(){
   Fl_Group* grp;
-  if (this->overriddenFuncs->fl_Table_as_group != NULL) {
-    grp = (static_cast<Fl_Group*>(this->overriddenFuncs->fl_Table_as_group((fl_Table) this)));
+  if (this->overriddenFuncs->as_group != NULL) {
+    grp = (static_cast<Fl_Group*>(this->overriddenFuncs->as_group((fl_Table) this)));
   }
   else {
     grp = Fl_Table::as_group();
@@ -78,8 +78,8 @@ Fl_Group* Fl_DerivedTable::as_group(){
 }
 Fl_Window* Fl_DerivedTable::as_window(){
   Fl_Window* win;
-  if (this->overriddenFuncs->fl_Table_as_window != NULL) {
-    win = (static_cast<Fl_Window*>(this->overriddenFuncs->fl_Table_as_window((fl_Table) this)));
+  if (this->overriddenFuncs->as_window != NULL) {
+    win = (static_cast<Fl_Window*>(this->overriddenFuncs->as_window((fl_Table) this)));
   }
   else {
     win = Fl_Table::as_window();
@@ -88,8 +88,8 @@ Fl_Window* Fl_DerivedTable::as_window(){
 }
 Fl_Gl_Window* Fl_DerivedTable::as_gl_window(){
   Fl_Gl_Window* win;
-  if (this->overriddenFuncs->fl_Table_as_gl_window != NULL) {
-    win = (static_cast<Fl_Gl_Window*>(this->overriddenFuncs->fl_Table_as_gl_window((fl_Table) this)));
+  if (this->overriddenFuncs->as_gl_window != NULL) {
+    win = (static_cast<Fl_Gl_Window*>(this->overriddenFuncs->as_gl_window((fl_Table) this)));
   }
   else {
     win = Fl_Table::as_gl_window();
@@ -109,27 +109,27 @@ void Fl_DerivedTable::draw_cell(TableContext tableContext, int R, int C, int X, 
   case Fl_Table::CONTEXT_RC_RESIZE: {c = CONTEXT_RC_RESIZEC; break;}
   default:                          {c = TableContextC(-1);  break;}
   }
-  (*this->overriddenFuncs->fl_Table_draw_cell)((fl_Table) this,c,R,C,X,Y,W,H);
+  (*this->overriddenFuncs->draw_cell)((fl_Table) this,c,R,C,X,Y,W,H);
 }
 void Fl_DerivedTable::clear(){
-  if (this->overriddenFuncs->fl_Table_clear != NULL) {
-    this->overriddenFuncs->fl_Table_clear((fl_Table) this);
+  if (this->overriddenFuncs->clear != NULL) {
+    this->overriddenFuncs->clear((fl_Table) this);
   }
   else {
     Fl_Table::clear();
   }
 }
 void Fl_DerivedTable::rows(int val){
-  if (this->overriddenFuncs->fl_Table_set_rows != NULL) {
-    this->overriddenFuncs->fl_Table_set_rows((fl_Table) this, val);
+  if (this->overriddenFuncs->set_rows != NULL) {
+    this->overriddenFuncs->set_rows((fl_Table) this, val);
   }
   else {
     Fl_Table::rows(val);
   }
 }
 void Fl_DerivedTable::cols(int val){
-  if (this->overriddenFuncs->fl_Table_set_cols != NULL) {
-    this->overriddenFuncs->fl_Table_set_cols((fl_Table) this, val);
+  if (this->overriddenFuncs->set_cols != NULL) {
+    this->overriddenFuncs->set_cols((fl_Table) this, val);
   }
   else {
     Fl_Table::cols(val);
@@ -139,18 +139,18 @@ EXPORT {
 #endif
   FL_EXPORT_C(fl_Table_Virtual_Funcs*, Fl_Table_default_virtual_funcs)(){
     fl_Table_Virtual_Funcs* ptr = (fl_Table_Virtual_Funcs*)malloc(sizeof(fl_Table_Virtual_Funcs));
-    ptr->fl_Table_draw = NULL;
-    ptr->fl_Table_handle = NULL;
-    ptr->fl_Table_resize = NULL;
-    ptr->fl_Table_show  = NULL;
-    ptr->fl_Table_hide = NULL;
-    ptr->fl_Table_as_group = NULL;
-    ptr->fl_Table_as_window = NULL;
-    ptr->fl_Table_as_gl_window = NULL;
-    ptr->fl_Table_draw_cell = NULL;
-    ptr->fl_Table_clear = NULL;
-    ptr->fl_Table_set_rows = NULL;
-    ptr->fl_Table_set_cols = NULL;
+    ptr->draw = NULL;
+    ptr->handle = NULL;
+    ptr->resize = NULL;
+    ptr->show  = NULL;
+    ptr->hide = NULL;
+    ptr->as_group = NULL;
+    ptr->as_window = NULL;
+    ptr->as_gl_window = NULL;
+    ptr->draw_cell = NULL;
+    ptr->clear = NULL;
+    ptr->set_rows = NULL;
+    ptr->set_cols = NULL;
     return ptr;
   }
   FL_EXPORT_C(fl_Group,Fl_Table_parent)(fl_Table table){
@@ -176,6 +176,9 @@ EXPORT {
   }
   FL_EXPORT_C(int,Fl_Table_h)(fl_Table table){
     return (static_cast<Fl_DerivedTable*>(table))->h();
+  }
+  FL_EXPORT_C(void,Fl_Table_set_align)(fl_Table table, Fl_Align alignment){
+    (static_cast<Fl_DerivedTable*>(table))->align(alignment);
   }
   FL_EXPORT_C(Fl_Align,Fl_Table_align)(fl_Table table){
     return (static_cast<Fl_DerivedTable*>(table))->align();
@@ -404,9 +407,6 @@ EXPORT {
   FL_EXPORT_C(fl_Gl_Window,Fl_Table_as_gl_window)(fl_Table table){
     return (static_cast<Fl_DerivedTable*>(table))->as_gl_window();
   }
-  FL_EXPORT_C(void,Fl_Table_remove)(fl_Table table, fl_Widget w){
-    (static_cast<Fl_DerivedTable*>(table))->remove(*(static_cast<Fl_Widget*>(w)));
-  }
   FL_EXPORT_C(void,Fl_Table_set_resizable_by_reference)(fl_Table table,fl_Widget o){
     (static_cast<Fl_DerivedTable*>(table))->resizable((static_cast<Fl_Widget*>(o)));
   }
@@ -605,6 +605,15 @@ EXPORT {
   FL_EXPORT_C(void, Fl_Table_insert_with_widget)(fl_Table table,fl_Widget wgt, fl_Widget w2){
     (static_cast<Fl_DerivedTable*>(table))->insert(*(static_cast<Fl_Widget*>(wgt)),(static_cast<Fl_Widget*>(w2)));
   };
+  FL_EXPORT_C(void,Fl_Table_remove_widget)(fl_Table table,fl_Widget w){
+    (static_cast<Fl_Table*>(table))->remove(*(static_cast<Fl_Widget*>(w)));
+  }
+  FL_EXPORT_C(void,Fl_Table_clear_super)(fl_Table table){
+    (static_cast<Fl_Table*>(table))->clear();
+  }
+  FL_EXPORT_C(void,Fl_Table_clear)(fl_Table table){
+    (static_cast<Fl_DerivedTable*>(table))->clear();
+  }
   FL_EXPORT_C(void,Fl_Table_begin)(fl_Table table){
     return (static_cast<Fl_DerivedTable*>(table))->begin();
   }

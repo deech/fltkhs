@@ -27,6 +27,9 @@ EXPORT {
   FL_EXPORT_C(int,Fl_Radio_Button_h)(fl_Radio_Button b){
     return (static_cast<Fl_Radio_Button*>(b))->h();
   }
+  FL_EXPORT_C(void,Fl_Radio_Button_set_align)(fl_Radio_Button radio_button, Fl_Align alignment){
+    (static_cast<Fl_Radio_Button*>(radio_button))->align(alignment);
+  }
   FL_EXPORT_C(Fl_Align,Fl_Radio_Button_align)(fl_Radio_Button b){
     return (static_cast<Fl_Radio_Button*>(b))->align();
   }
@@ -239,8 +242,11 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Radio_Button_Destroy)(fl_Radio_Button button){
     delete (static_cast<Fl_Radio_Button*>(button));
   }
-  FL_EXPORT_C(int,Fl_Radio_Button_value)(fl_Radio_Button b,int v){
+  FL_EXPORT_C(int,Fl_Radio_Button_set_value)(fl_Radio_Button b,int v){
     return (static_cast<Fl_Radio_Button*>(b))->value(v);
+  }
+  FL_EXPORT_C(char,Fl_Radio_Button_value)(fl_Radio_Button b){
+    return (static_cast<Fl_Radio_Button*>(b))->value();
   }
   FL_EXPORT_C(int,Fl_Radio_Button_clear)(fl_Radio_Button b){
     return (static_cast<Fl_Radio_Button*>(b))->clear();

@@ -18,6 +18,7 @@ EXPORT {
   FL_EXPORT_C(int,          Fl_Multiline_Input_y)(fl_Multiline_Input multiline_input);
   FL_EXPORT_C(int,          Fl_Multiline_Input_w)(fl_Multiline_Input multiline_input);
   FL_EXPORT_C(int,          Fl_Multiline_Input_h)(fl_Multiline_Input multiline_input);
+  FL_EXPORT_C(void,         Fl_Multiline_Input_set_align)(fl_Multiline_Input multiline_input, Fl_Align alignment);
   FL_EXPORT_C(Fl_Align,     Fl_Multiline_Input_align)(fl_Multiline_Input multiline_input);
   FL_EXPORT_C(Fl_Boxtype,   Fl_Multiline_Input_box)(fl_Multiline_Input multiline_input);
   FL_EXPORT_C(void,         Fl_Multiline_Input_set_box)(fl_Multiline_Input multiline_input, Fl_Boxtype new_box);
@@ -88,10 +89,10 @@ EXPORT {
 
   /* Fl_Multiline_Input specific functions */
   FL_EXPORT_C(int,      Fl_Multiline_Input_handle)(fl_Multiline_Input multiline_input, int event);
-  FL_EXPORT_C(fl_Float_Input, Fl_Multiline_Input_New_WithLabel)(int x, int y, int w, int h, const char* label); 
-  FL_EXPORT_C(fl_Float_Input, Fl_Multiline_Input_New)(int x, int y, int w, int h); 
+  FL_EXPORT_C(fl_Float_Input, Fl_Multiline_Input_New_WithLabel)(int x, int y, int w, int h, const char* label);
+  FL_EXPORT_C(fl_Float_Input, Fl_Multiline_Input_New)(int x, int y, int w, int h);
   FL_EXPORT_C(void,     Fl_Multiline_Input_Destroy)(fl_Multiline_Input multiline_input);
-  
+
   FL_EXPORT_C(void,         Fl_Multiline_Input_resize)(fl_Multiline_Input multiline_input, int X, int Y, int W, int H);
   FL_EXPORT_C(int,          Fl_Multiline_Input_set_value)(fl_Multiline_Input multiline_input, const char*);
   FL_EXPORT_C(int,          Fl_Multiline_Input_set_value_with_length)(fl_Multiline_Input multiline_input, const char* text, int length);

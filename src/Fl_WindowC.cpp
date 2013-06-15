@@ -27,6 +27,9 @@ EXPORT {
   FL_EXPORT_C(int,Fl_Window_h)(fl_Window win){
     return (static_cast<Fl_Window*>(win))->h();
   }
+  FL_EXPORT_C(void,Fl_Window_set_align)(fl_Window window, Fl_Align alignment){
+    (static_cast<Fl_Window*>(window))->align(alignment);
+  }
   FL_EXPORT_C(Fl_Align,Fl_Window_align)(fl_Window win){
     return (static_cast<Fl_Window*>(win))->align();
   }

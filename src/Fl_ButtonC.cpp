@@ -20,8 +20,8 @@ void Fl_DerivedButton::set_other_data(void* data){
 }
 int Fl_DerivedButton::handle(int event){
   int i;
-  if (this->overriddenFuncs->fl_Button_handle != NULL) {
-    i = this->overriddenFuncs->fl_Button_handle((fl_Button) this,event);
+  if (this->overriddenFuncs->handle != NULL) {
+    i = this->overriddenFuncs->handle((fl_Button) this,event);
   }
   else {
     i = Fl_Button::handle(event);
@@ -29,32 +29,32 @@ int Fl_DerivedButton::handle(int event){
   return i;
 }
 void Fl_DerivedButton::resize(int x, int y, int w, int h){
-  if (this->overriddenFuncs->fl_Button_resize != NULL) {
-    this->overriddenFuncs->fl_Button_resize((fl_Button) this,x,y,w,h);
+  if (this->overriddenFuncs->resize != NULL) {
+    this->overriddenFuncs->resize((fl_Button) this,x,y,w,h);
   }
   else {
     Fl_Button::resize(x,y,w,h);
   }
 }
 void Fl_DerivedButton::show(){
-  if (this->overriddenFuncs->fl_Button_show != NULL) {
-    this->overriddenFuncs->fl_Button_show((fl_Button) this);
+  if (this->overriddenFuncs->show != NULL) {
+    this->overriddenFuncs->show((fl_Button) this);
   }
   else {
     Fl_Button::show();
   }
 }
 void Fl_DerivedButton::hide(){
-  if (this->overriddenFuncs->fl_Button_hide != NULL) {
-    this->overriddenFuncs->fl_Button_hide((fl_Button) this);
+  if (this->overriddenFuncs->hide != NULL) {
+    this->overriddenFuncs->hide((fl_Button) this);
   }
   else {
     Fl_Button::hide();
   }
 }
 void Fl_DerivedButton::draw(){
-  if (this->overriddenFuncs->fl_Button_draw != NULL) {
-    this->overriddenFuncs->fl_Button_draw((fl_Button) this);
+  if (this->overriddenFuncs->draw != NULL) {
+    this->overriddenFuncs->draw((fl_Button) this);
   }
   else {
     Fl_Button::draw();
@@ -62,8 +62,8 @@ void Fl_DerivedButton::draw(){
 }
 Fl_Window* Fl_DerivedButton::as_window(){
   Fl_Window* win;
-  if (this->overriddenFuncs->fl_Button_as_window != NULL) {
-    win = (static_cast<Fl_Window*>(this->overriddenFuncs->fl_Button_as_window((fl_Button) this)));
+  if (this->overriddenFuncs->as_window != NULL) {
+    win = (static_cast<Fl_Window*>(this->overriddenFuncs->as_window((fl_Button) this)));
   }
   else {
     win = Fl_Button::as_window();
@@ -72,8 +72,8 @@ Fl_Window* Fl_DerivedButton::as_window(){
 }
 Fl_Gl_Window* Fl_DerivedButton::as_gl_window(){
   Fl_Gl_Window* win;
-  if (this->overriddenFuncs->fl_Button_as_gl_window != NULL) {
-    win = (static_cast<Fl_Gl_Window*>(this->overriddenFuncs->fl_Button_as_gl_window((fl_Button) this)));
+  if (this->overriddenFuncs->as_gl_window != NULL) {
+    win = (static_cast<Fl_Gl_Window*>(this->overriddenFuncs->as_gl_window((fl_Button) this)));
   }
   else {
     win = Fl_Button::as_gl_window();
@@ -84,13 +84,13 @@ EXPORT {
 #endif
   FL_EXPORT_C(fl_Button_Virtual_Funcs*, Fl_Button_default_virtual_funcs)(){
     fl_Button_Virtual_Funcs* ptr = (fl_Button_Virtual_Funcs*)malloc(sizeof(fl_Button_Virtual_Funcs));
-    ptr->fl_Button_draw = NULL;
-    ptr->fl_Button_handle = NULL;
-    ptr->fl_Button_resize = NULL;
-    ptr->fl_Button_show  = NULL;
-    ptr->fl_Button_hide = NULL;
-    ptr->fl_Button_as_window = NULL;
-    ptr->fl_Button_as_gl_window = NULL;
+    ptr->draw = NULL;
+    ptr->handle = NULL;
+    ptr->resize = NULL;
+    ptr->show  = NULL;
+    ptr->hide = NULL;
+    ptr->as_window = NULL;
+    ptr->as_gl_window = NULL;
     return ptr;
   }
 
@@ -153,6 +153,9 @@ EXPORT {
   }
   FL_EXPORT_C(int,Fl_Button_h)(fl_Button b){
     return (static_cast<Fl_DerivedButton*>(b))->h();
+  }
+  FL_EXPORT_C(void,Fl_Button_set_align)(fl_Button button, Fl_Align alignment){
+    (static_cast<Fl_Button*>(button))->align(alignment);
   }
   FL_EXPORT_C(Fl_Align,Fl_Button_align)(fl_Button b){
     return (static_cast<Fl_DerivedButton*>(b))->align();
@@ -375,7 +378,10 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Button_Destroy)(fl_Button button){
     delete (static_cast<Fl_DerivedButton*>(button));
   }
-  FL_EXPORT_C(int,Fl_Button_value)(fl_Button b,int v){
+  FL_EXPORT_C(char,Fl_Button_value)(fl_Button b){
+    return (static_cast<Fl_DerivedButton*>(b))->value();
+  }
+  FL_EXPORT_C(int,Fl_Button_set_value)(fl_Button b,int v){
     return (static_cast<Fl_DerivedButton*>(b))->value(v);
   }
   FL_EXPORT_C(int,Fl_Button_clear)(fl_Button b){

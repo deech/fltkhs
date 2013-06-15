@@ -18,6 +18,7 @@ EXPORT {
   FL_EXPORT_C(int,          Fl_Table_y)(fl_Table table);
   FL_EXPORT_C(int,          Fl_Table_w)(fl_Table table);
   FL_EXPORT_C(int,          Fl_Table_h)(fl_Table table);
+  FL_EXPORT_C(void,     Fl_Table_set_align)(fl_Table table, Fl_Align alignment);
   FL_EXPORT_C(Fl_Align,     Fl_Table_align)(fl_Table table);
   FL_EXPORT_C(Fl_Boxtype,   Fl_Table_box)(fl_Table table);
   FL_EXPORT_C(void,         Fl_Table_set_box)(fl_Table table, Fl_Boxtype new_box);
@@ -91,13 +92,19 @@ EXPORT {
   FL_EXPORT_C(fl_Window,    Fl_Table_window)(fl_Table table);
   FL_EXPORT_C(fl_Window,    Fl_Table_top_window)(fl_Table table);
   FL_EXPORT_C(fl_Window ,   Fl_Table_top_window_offset)(fl_Table table, int* xoff, int* yoff);
+  FL_EXPORT_C(fl_Window,    Fl_Table_as_window_super)(fl_Table table);
+  FL_EXPORT_C(fl_Window,    Fl_Table_as_window)(fl_Table table);
   FL_EXPORT_C(fl_Group,     Fl_Table_as_group_super)(fl_Table table);
   FL_EXPORT_C(fl_Group,     Fl_Table_as_group)(fl_Table table);
   FL_EXPORT_C(fl_Gl_Window, Fl_Table_as_gl_window_super)(fl_Table table);
   FL_EXPORT_C(fl_Gl_Window, Fl_Table_as_gl_window)(fl_Table table);
-
+  FL_EXPORT_C(void,         Fl_Table_draw_super)(fl_Table table);
+  FL_EXPORT_C(void,         Fl_Table_draw)(fl_Table table);
+  FL_EXPORT_C(int,          Fl_Table_handle_super)(fl_Table table, int event);
+  FL_EXPORT_C(int,          Fl_Table_handle)(fl_Table table, int event);
+  FL_EXPORT_C(void,         Fl_Table_resize_super)(fl_Table table, int x, int y, int w, int h);
+  FL_EXPORT_C(void,         Fl_Table_resize)(fl_Table table, int x, int y, int w, int h);
   /* Fl_Group specific */
-  FL_EXPORT_C(void,         Fl_Table_remove_index)(fl_Table table, int index);
   FL_EXPORT_C(void,         Fl_Table_remove_widget)(fl_Table table, fl_Widget w);
   FL_EXPORT_C(void,         Fl_Table_clear_super)(fl_Table table);
   FL_EXPORT_C(void,         Fl_Table_clear)(fl_Table table);
@@ -113,7 +120,7 @@ EXPORT {
 
 
   /* Fl_Table specific functions */
-#ifdef __cplusplus  
+#ifdef __cplusplus
   class Fl_DerivedTable : public Fl_Table {
     fl_Table_Virtual_Funcs* overriddenFuncs;
     void* other_data;
@@ -191,8 +198,6 @@ EXPORT {
   FL_EXPORT_C(void, Fl_Table_get_selection)(fl_Table table,int *row_top, int *col_left, int *row_bot, int *col_right);
   FL_EXPORT_C(void, Fl_Table_set_selection)(fl_Table table,int row_top, int col_left, int row_bot, int col_right);
   FL_EXPORT_C(int, Fl_Table_move_cursor)(fl_Table table,int R, int C);
-  FL_EXPORT_C(void, Fl_Table_resize_super)(fl_Table table,int X, int Y, int W, int H);
-  FL_EXPORT_C(void, Fl_Table_resize)(fl_Table table,int X, int Y, int W, int H);
   FL_EXPORT_C(void, Fl_Table_draw)(fl_Table table);
   FL_EXPORT_C(void, Fl_Table_init_sizes)(fl_Table table);
   FL_EXPORT_C(void, Fl_Table_add)(fl_Table table,fl_Widget wgt);

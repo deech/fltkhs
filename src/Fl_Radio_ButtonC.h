@@ -18,6 +18,7 @@ EXPORT {
   FL_EXPORT_C(int,          Fl_Radio_Button_y)(fl_Radio_Button win);
   FL_EXPORT_C(int,          Fl_Radio_Button_w)(fl_Radio_Button win);
   FL_EXPORT_C(int,          Fl_Radio_Button_h)(fl_Radio_Button win);
+  FL_EXPORT_C(void,         Fl_Radio_Button_set_align)(fl_Radio_Button radio_button, Fl_Align alignment);
   FL_EXPORT_C(Fl_Align,     Fl_Radio_Button_align)(fl_Radio_Button win);
   FL_EXPORT_C(Fl_Boxtype,   Fl_Radio_Button_box)(fl_Radio_Button win);
   FL_EXPORT_C(void,         Fl_Radio_Button_set_box)(fl_Radio_Button win, Fl_Boxtype new_box);
@@ -91,7 +92,8 @@ EXPORT {
   FL_EXPORT_C(fl_Radio_Button,    Fl_Radio_Button_New)(int x, int y, int w, int h);
   FL_EXPORT_C(void,               Fl_Button_Destroy)(fl_Button button);
 
-  FL_EXPORT_C(int         , Fl_Radio_Button_value)(fl_Radio_Button b, int v);
+  FL_EXPORT_C(char        , Fl_Radio_Button_value)(fl_Radio_Button b);
+  FL_EXPORT_C(int         , Fl_Radio_Button_set_value)(fl_Radio_Button b, int v);
   FL_EXPORT_C(int         , Fl_Radio_Button_set)(fl_Radio_Button b);
   FL_EXPORT_C(int         , Fl_Radio_Button_clear)(fl_Radio_Button b);
   FL_EXPORT_C(void        , Fl_Radio_Button_setonly)(fl_Radio_Button b);

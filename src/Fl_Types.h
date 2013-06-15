@@ -156,6 +156,11 @@ EXPORT {
   typedef void (fl_Callback )(fl_Widget, void*);
   typedef fl_Callback* fl_Callback_p;
   typedef enum {
+    SELECT_NONEC,
+    SELECT_SINGLEC,
+    SELECT_MULTIC
+  }TableRowSelectModeC;
+  typedef enum {
     CONTEXT_NONEC       = 0,
     CONTEXT_STARTPAGEC  = 0x01,
     CONTEXT_ENDPAGEC    = 0x02,
@@ -180,41 +185,35 @@ EXPORT {
   }fl_Window_draw_cell_default_args;
   typedef struct {
     /* From Fl_Widget */
-    void 	 (*fl_Table_draw        )(fl_Table table);
-    int          (*fl_Table_handle      )(fl_Table table,int event);
-    void         (*fl_Table_resize      )(fl_Table table,int x, int y, int w, int h);
-    void         (*fl_Table_show        )(fl_Table table);
-    void         (*fl_Table_hide        )(fl_Table table);
-    fl_Window    (*fl_Table_as_window   )(fl_Table table);
-    fl_Gl_Window (*fl_Table_as_gl_window)(fl_Table table);
+    void 	 (*draw        )(fl_Table table);
+    int          (*handle      )(fl_Table table,int event);
+    void         (*resize      )(fl_Table table,int x, int y, int w, int h);
+    void         (*show        )(fl_Table table);
+    void         (*hide        )(fl_Table table);
+    fl_Window    (*as_window   )(fl_Table table);
+    fl_Gl_Window (*as_gl_window)(fl_Table table);
     /* From Fl_Group */
-    fl_Group     (*fl_Table_as_group    )(fl_Table table);
+    fl_Group     (*as_group    )(fl_Table table);
     /* From Fl_Table */
-    void         (*fl_Table_draw_cell   )(fl_Table table,TableContextC context,int R, int C, int X, int Y, int W, int H);
-    void         (*fl_Table_clear       )(fl_Table table);
-    void         (*fl_Table_set_rows    )(fl_Table table, int val);
-    void         (*fl_Table_set_cols    )(fl_Table table, int val);
+    void         (*draw_cell   )(fl_Table table,TableContextC context,int R, int C, int X, int Y, int W, int H);
+    void         (*clear       )(fl_Table table);
+    void         (*set_rows    )(fl_Table table, int val);
+    void         (*set_cols    )(fl_Table table, int val);
   } fl_Table_Virtual_Funcs;
   typedef struct {
-    /* From Fl_Widget */
-    void 	 (*fl_Button_draw         )(fl_Button button);
-    int          (*fl_Button_handle      )(fl_Button button,int event);
-    void         (*fl_Button_resize      )(fl_Button button,int x, int y, int w, int h);
-    void         (*fl_Button_show        )(fl_Button button);
-    void         (*fl_Button_hide        )(fl_Button button);
-    fl_Window    (*fl_Button_as_window   )(fl_Button button);
-    fl_Gl_Window (*fl_Button_as_gl_window)(fl_Button button);
-  } fl_Button_Virtual_Funcs;
-  typedef struct {
-    /* From Fl_Widget */
-    void 	 (*fl_Int_Input_draw        )(fl_Int_Input int_input);
-    int          (*fl_Int_Input_handle      )(fl_Int_Input int_input,int event);
-    void         (*fl_Int_Input_resize      )(fl_Int_Input int_input,int x, int y, int w, int h);
-    void         (*fl_Int_Input_show        )(fl_Int_Input int_input);
-    void         (*fl_Int_Input_hide        )(fl_Int_Input int_input);
-    fl_Window    (*fl_Int_Input_as_window   )(fl_Int_Input int_input);
-    fl_Gl_Window (*fl_Int_Input_as_gl_window)(fl_Int_Input int_input);
-  } fl_Int_Input_Virtual_Funcs;
+    void 	 (*draw        )(fl_Button button);
+    int          (*handle      )(fl_Button button,int event);
+    void         (*resize      )(fl_Button button,int x, int y, int w, int h);
+    void         (*show        )(fl_Button button);
+    void         (*hide        )(fl_Button button);
+    fl_Window    (*as_window   )(fl_Button button);
+    fl_Gl_Window (*as_gl_window)(fl_Button button);
+    fl_Group     (*as_group    )(fl_Table table);
+  } fl_Widget_Virtual_Funcs;
+
+  typedef fl_Table_Virtual_Funcs fl_Table_Row_Virtual_Funcs;
+  typedef fl_Widget_Virtual_Funcs fl_Button_Virtual_Funcs;
+  typedef fl_Widget_Virtual_Funcs fl_Int_Input_Virtual_Funcs;
 #ifdef __cplusplus
 }
 #endif

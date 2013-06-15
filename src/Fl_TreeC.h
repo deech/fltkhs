@@ -18,6 +18,7 @@ EXPORT {
   FL_EXPORT_C(int,          Fl_Tree_y)(fl_Tree tree);
   FL_EXPORT_C(int,          Fl_Tree_w)(fl_Tree tree);
   FL_EXPORT_C(int,          Fl_Tree_h)(fl_Tree tree);
+  FL_EXPORT_C(void,         Fl_Tree_set_align)(fl_Tree tree, Fl_Align alignment);
   FL_EXPORT_C(Fl_Align,     Fl_Tree_align)(fl_Tree tree);
   FL_EXPORT_C(Fl_Boxtype,   Fl_Tree_box)(fl_Tree tree);
   FL_EXPORT_C(void,         Fl_Tree_set_box)(fl_Tree tree, Fl_Boxtype new_box);
@@ -92,8 +93,6 @@ EXPORT {
   FL_EXPORT_C(void,         Fl_Tree_begin)(fl_Tree tree);
   FL_EXPORT_C(void,         Fl_Tree_end)(fl_Tree tree);
   FL_EXPORT_C(int,          Fl_Tree_find)(fl_Tree tree, fl_Widget w);
-  FL_EXPORT_C(void,         Fl_Tree_remove_index)(fl_Tree tree, int index);
-  FL_EXPORT_C(void,         Fl_Tree_remove_widget)(fl_Tree tree, fl_Widget w);
   FL_EXPORT_C(void,         Fl_Tree_clear)(fl_Tree tree);
   FL_EXPORT_C(void,         Fl_Tree_set_resizable_by_reference)(fl_Tree tree,fl_Widget o);
   FL_EXPORT_C(void,         Fl_Tree_set_resizable)(fl_Tree tree,fl_Widget o);

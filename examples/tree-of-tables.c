@@ -91,8 +91,8 @@ int main(int argc, char *argv[]) {
       fl_Table table;
       fl_Tree_Item item;
       fl_Table_Virtual_Funcs* funcs = (fl_Table_Virtual_Funcs*)Fl_Table_default_virtual_funcs();
-      funcs->fl_Table_resize = &resize;
-      funcs->fl_Table_draw_cell = &draw_cell;
+      funcs->resize = &resize;
+      funcs->draw_cell = &draw_cell;
 
       table = (fl_Table)Fl_Table_New(0,0,500,156,funcs);
       initializeTable(table,"Addition");

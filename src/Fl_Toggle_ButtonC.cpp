@@ -27,6 +27,9 @@ EXPORT {
   FL_EXPORT_C(int,Fl_Toggle_Button_h)(fl_Toggle_Button b){
     return (static_cast<Fl_Toggle_Button*>(b))->h();
   }
+  FL_EXPORT_C(void,Fl_Toggle_Button_set_align)(fl_Toggle_Button b, Fl_Align alignment){
+    (static_cast<Fl_Toggle_Button*>(b))->align(alignment);
+  }
   FL_EXPORT_C(Fl_Align,Fl_Toggle_Button_align)(fl_Toggle_Button b){
     return (static_cast<Fl_Toggle_Button*>(b))->align();
   }
@@ -239,8 +242,11 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Toggle_Button_Destroy)(fl_Toggle_Button button){
     delete (static_cast<Fl_Toggle_Button*>(button));
   }
-  FL_EXPORT_C(int,Fl_Toggle_Button_value)(fl_Toggle_Button b,int v){
+  FL_EXPORT_C(int,Fl_Toggle_Button_set_value)(fl_Toggle_Button b,int v){
     return (static_cast<Fl_Toggle_Button*>(b))->value(v);
+  }
+  FL_EXPORT_C(char,Fl_Toggle_Button_value)(fl_Toggle_Button b){
+    return (static_cast<Fl_Toggle_Button*>(b))->value();
   }
   FL_EXPORT_C(int,Fl_Toggle_Button_clear)(fl_Toggle_Button b){
     return (static_cast<Fl_Toggle_Button*>(b))->clear();

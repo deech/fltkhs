@@ -28,6 +28,9 @@ EXPORT {
   FL_EXPORT_C(int,Fl_File_Input_h)(fl_File_Input file_input){
     return (static_cast<Fl_File_Input*>(file_input))->h();
   }
+  FL_EXPORT_C(void,Fl_File_Input_set_align)(fl_File_Input file_input, Fl_Align alignment){
+    (static_cast<Fl_File_Input*>(file_input))->align(alignment);
+  }
   FL_EXPORT_C(Fl_Align,Fl_File_Input_align)(fl_File_Input file_input){
     return (static_cast<Fl_File_Input*>(file_input))->align();
   }

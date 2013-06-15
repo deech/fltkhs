@@ -18,6 +18,7 @@ EXPORT {
   FL_EXPORT_C(int,          Fl_Toggle_Button_y)(fl_Toggle_Button win);
   FL_EXPORT_C(int,          Fl_Toggle_Button_w)(fl_Toggle_Button win);
   FL_EXPORT_C(int,          Fl_Toggle_Button_h)(fl_Toggle_Button win);
+  FL_EXPORT_C(void,         Fl_Toggle_Button_set_align)(fl_Toggle_Button toggle_button, Fl_Align alignment);
   FL_EXPORT_C(Fl_Align,     Fl_Toggle_Button_align)(fl_Toggle_Button win);
   FL_EXPORT_C(Fl_Boxtype,   Fl_Toggle_Button_box)(fl_Toggle_Button win);
   FL_EXPORT_C(void,         Fl_Toggle_Button_set_box)(fl_Toggle_Button win, Fl_Boxtype new_box);
@@ -91,8 +92,8 @@ EXPORT {
   FL_EXPORT_C(fl_Toggle_Button, Fl_Toggle_Button_New)(int x, int y, int w, int h);
   FL_EXPORT_C(void,             Fl_Toggle_Button_Destroy)(fl_Toggle_Button button);
   
-  FL_EXPORT_C(int         , Fl_Toggle_Button_value)(fl_Toggle_Button b, int v);
-  FL_EXPORT_C(int         , Fl_Toggle_Button_set)(fl_Toggle_Button b);
+  FL_EXPORT_C(char        , Fl_Toggle_Button_value)(fl_Toggle_Button b);
+  FL_EXPORT_C(int         , Fl_Toggle_Button_set_value)(fl_Toggle_Button b, int v);
   FL_EXPORT_C(int         , Fl_Toggle_Button_clear)(fl_Toggle_Button b);
   FL_EXPORT_C(void        , Fl_Toggle_Button_setonly)(fl_Toggle_Button b);
   FL_EXPORT_C(int         , Fl_Toggle_Button_get_shortcut )(fl_Toggle_Button b);

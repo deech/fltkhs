@@ -27,6 +27,9 @@ EXPORT {
   FL_EXPORT_C(int,Fl_Light_Button_h)(fl_Light_Button b){
     return (static_cast<Fl_Light_Button*>(b))->h();
   }
+  FL_EXPORT_C(void,Fl_Light_Button_set_align)(fl_Light_Button light_button, Fl_Align alignment){
+    (static_cast<Fl_Light_Button*>(light_button))->align(alignment);
+  }
   FL_EXPORT_C(Fl_Align,Fl_Light_Button_align)(fl_Light_Button b){
     return (static_cast<Fl_Light_Button*>(b))->align();
   }
@@ -239,8 +242,11 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Light_Button_Destroy)(fl_Light_Button button){
     delete (static_cast<Fl_Light_Button*>(button));
   }
-  FL_EXPORT_C(int,Fl_Light_Button_value)(fl_Light_Button b,int v){
+  FL_EXPORT_C(int,Fl_Light_Button_set_value)(fl_Light_Button b,int v){
     return (static_cast<Fl_Light_Button*>(b))->value(v);
+  }
+  FL_EXPORT_C(char,Fl_Light_Button_value)(fl_Light_Button b){
+    return (static_cast<Fl_Light_Button*>(b))->value();
   }
   FL_EXPORT_C(int,Fl_Light_Button_clear)(fl_Light_Button b){
     return (static_cast<Fl_Light_Button*>(b))->clear();

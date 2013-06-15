@@ -21,8 +21,8 @@ void Fl_DerivedInt_Input::set_other_data(void* data){
 }
 int Fl_DerivedInt_Input::handle(int event){
   int i;
-  if (this->overriddenFuncs->fl_Int_Input_handle != NULL) {
-    i = this->overriddenFuncs->fl_Int_Input_handle((fl_Int_Input) this,event);
+  if (this->overriddenFuncs->handle != NULL) {
+    i = this->overriddenFuncs->handle((fl_Int_Input) this,event);
   }
   else {
     i = Fl_Int_Input::handle(event);
@@ -30,32 +30,32 @@ int Fl_DerivedInt_Input::handle(int event){
   return i;
 }
 void Fl_DerivedInt_Input::resize(int x, int y, int w, int h){
-  if (this->overriddenFuncs->fl_Int_Input_resize != NULL) {
-    this->overriddenFuncs->fl_Int_Input_resize((fl_Int_Input) this,x,y,w,h);
+  if (this->overriddenFuncs->resize != NULL) {
+    this->overriddenFuncs->resize((fl_Int_Input) this,x,y,w,h);
   }
   else {
     Fl_Int_Input::resize(x,y,w,h);
   }
 }
 void Fl_DerivedInt_Input::show(){
-  if (this->overriddenFuncs->fl_Int_Input_show != NULL) {
-    this->overriddenFuncs->fl_Int_Input_show((fl_Int_Input) this);
+  if (this->overriddenFuncs->show != NULL) {
+    this->overriddenFuncs->show((fl_Int_Input) this);
   }
   else {
     Fl_Int_Input::show();
   }
 }
 void Fl_DerivedInt_Input::hide(){
-  if (this->overriddenFuncs->fl_Int_Input_hide != NULL) {
-    this->overriddenFuncs->fl_Int_Input_hide((fl_Int_Input) this);
+  if (this->overriddenFuncs->hide != NULL) {
+    this->overriddenFuncs->hide((fl_Int_Input) this);
   }
   else {
     Fl_Int_Input::hide();
   }
 }
 void Fl_DerivedInt_Input::draw(){
-  if (this->overriddenFuncs->fl_Int_Input_draw != NULL) {
-    this->overriddenFuncs->fl_Int_Input_draw((fl_Int_Input) this);
+  if (this->overriddenFuncs->draw != NULL) {
+    this->overriddenFuncs->draw((fl_Int_Input) this);
   }
   else {
     Fl_Int_Input::draw();
@@ -63,8 +63,8 @@ void Fl_DerivedInt_Input::draw(){
 }
 Fl_Window* Fl_DerivedInt_Input::as_window(){
   Fl_Window* win;
-  if (this->overriddenFuncs->fl_Int_Input_as_window != NULL) {
-    win = (static_cast<Fl_Window*>(this->overriddenFuncs->fl_Int_Input_as_window((fl_Int_Input) this)));
+  if (this->overriddenFuncs->as_window != NULL) {
+    win = (static_cast<Fl_Window*>(this->overriddenFuncs->as_window((fl_Int_Input) this)));
   }
   else {
     win = Fl_Int_Input::as_window();
@@ -73,8 +73,8 @@ Fl_Window* Fl_DerivedInt_Input::as_window(){
 }
 Fl_Gl_Window* Fl_DerivedInt_Input::as_gl_window(){
   Fl_Gl_Window* win;
-  if (this->overriddenFuncs->fl_Int_Input_as_gl_window != NULL) {
-    win = (static_cast<Fl_Gl_Window*>(this->overriddenFuncs->fl_Int_Input_as_gl_window((fl_Int_Input) this)));
+  if (this->overriddenFuncs->as_gl_window != NULL) {
+    win = (static_cast<Fl_Gl_Window*>(this->overriddenFuncs->as_gl_window((fl_Int_Input) this)));
   }
   else {
     win = Fl_Int_Input::as_gl_window();
@@ -86,13 +86,13 @@ EXPORT {
   /* Inherited from Fl_Widget */
   FL_EXPORT_C(fl_Int_Input_Virtual_Funcs*, Fl_Int_Input_default_virtual_funcs)(){
     fl_Int_Input_Virtual_Funcs* ptr = (fl_Int_Input_Virtual_Funcs*)malloc(sizeof(fl_Int_Input_Virtual_Funcs));
-    ptr->fl_Int_Input_draw = NULL;
-    ptr->fl_Int_Input_handle = NULL;
-    ptr->fl_Int_Input_resize = NULL;
-    ptr->fl_Int_Input_show  = NULL;
-    ptr->fl_Int_Input_hide = NULL;
-    ptr->fl_Int_Input_as_window = NULL;
-    ptr->fl_Int_Input_as_gl_window = NULL;
+    ptr->draw = NULL;
+    ptr->handle = NULL;
+    ptr->resize = NULL;
+    ptr->show  = NULL;
+    ptr->hide = NULL;
+    ptr->as_window = NULL;
+    ptr->as_gl_window = NULL;
     return ptr;
   }
   FL_EXPORT_C(void,Fl_Int_Input_show_super)(fl_Int_Input int_input){
@@ -142,6 +142,9 @@ EXPORT {
   }
   FL_EXPORT_C(int,Fl_Int_Input_h)(fl_Int_Input int_input){
     return (static_cast<Fl_DerivedInt_Input*>(int_input))->h();
+  }
+  FL_EXPORT_C(void,Fl_Int_Input_set_align)(fl_Int_Input int_input, Fl_Align alignment){
+    (static_cast<Fl_Int_Input*>(int_input))->align(alignment);
   }
   FL_EXPORT_C(Fl_Align,Fl_Int_Input_align)(fl_Int_Input int_input){
     return (static_cast<Fl_DerivedInt_Input*>(int_input))->align();

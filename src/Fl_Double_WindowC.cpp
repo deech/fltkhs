@@ -28,6 +28,9 @@ EXPORT {
   FL_EXPORT_C(int,Fl_Double_Window_h)(fl_Double_Window win){
     return (static_cast<Fl_Double_Window*>(win))->h();
   }
+  FL_EXPORT_C(void,Fl_Double_Window_set_align)(fl_Double_Window double_window, Fl_Align alignment){
+    (static_cast<Fl_Double_Window*>(double_window))->align(alignment);
+  }
   FL_EXPORT_C(Fl_Align,Fl_Double_Window_align)(fl_Double_Window win){
     return (static_cast<Fl_Double_Window*>(win))->align();
   }
