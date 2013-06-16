@@ -10,6 +10,7 @@
 EXPORT {
 #endif
   /* Inherited from Fl_Widget */
+  FL_EXPORT_C(int,Fl_Multiline_Input_handle)(fl_Multiline_Input self, int event);
   FL_EXPORT_C(fl_Group,     Fl_Multiline_Input_parent)(fl_Multiline_Input multiline_input);
   FL_EXPORT_C(void,         Fl_Multiline_Input_set_parent)(fl_Multiline_Input multiline_input, fl_Group grp);
   FL_EXPORT_C(uchar,        Fl_Multiline_Input_type)(fl_Multiline_Input multiline_input);

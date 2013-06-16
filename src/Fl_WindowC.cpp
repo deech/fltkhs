@@ -3,6 +3,9 @@
 #ifdef __cplusplus
 EXPORT {
 #endif
+  FL_EXPORT_C(int,Fl_Window_handle)(fl_Window self, int event){
+    return (static_cast<Fl_Window*>(self))->handle(event);
+  }
   FL_EXPORT_C(fl_Group,Fl_Window_parent)(fl_Window win){
     return (static_cast<Fl_Window*>(win))->parent();
   }
@@ -276,6 +279,9 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Window_init_sizes)(fl_Window win){
     (static_cast<Fl_Window*>(win))->init_sizes();
   }
+  FL_EXPORT_C(int,Fl_Window_children)(fl_Window self){
+    return (static_cast<Fl_Window*>(self))->children();
+  }
   FL_EXPORT_C(void,Fl_Window_set_clip_children)(fl_Window win,int c){
     return (static_cast<Fl_Window*>(win))->clip_children(c);
   }
@@ -287,6 +293,15 @@ EXPORT {
   }
   FL_EXPORT_C(fl_Widget,Fl_Window__ddfdesign_kludge)(fl_Window win){
     return (static_cast<Fl_Window*>(win))->_ddfdesign_kludge();
+  }
+  FL_EXPORT_C(void, Fl_Window_insert_with_before)(fl_Window self, fl_Widget w, fl_Widget before){
+    (static_cast<Fl_Window*>(self))->insert(*(static_cast<Fl_Widget*>(w)),(static_cast<Fl_Widget*>(before)));
+  }
+  FL_EXPORT_C(fl_Widget*, Fl_Window_array)(fl_Window self){
+    return (fl_Widget*)(static_cast<Fl_Window*>(self))->array();
+  }
+  FL_EXPORT_C(fl_Widget, Fl_Window_child)(fl_Window self, int n){
+    return (fl_Widget)(static_cast<Fl_Window*>(self))->child(n);
   }
   // FL_EXPORT_C(void,Fl_Window_forms_end)(fl_Window win){
   //   return (static_cast<Fl_Window*>(win))->forms_end();
@@ -336,9 +351,6 @@ EXPORT {
   }
   FL_EXPORT_C(void,Fl_Window_iconize)(fl_Window win){
     (static_cast<Fl_Window*>(win))->iconize();
-  }
-  FL_EXPORT_C(int,Fl_Window_handle)(fl_Window win,int event){
-    return (static_cast<Fl_Window*>(win))->handle(event);
   }
   FL_EXPORT_C(void,Fl_Window_set_border)(fl_Window win,int b){
     (static_cast<Fl_Window*>(win))->border(b);

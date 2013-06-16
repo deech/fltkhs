@@ -119,6 +119,9 @@ EXPORT {
   FL_EXPORT_C(fl_Gl_Window,Fl_Int_Input_as_gl_window )(fl_Int_Input int_input){
     return (static_cast<Fl_DerivedInt_Input*>(int_input))->as_gl_window();
   }
+  FL_EXPORT_C(int,Fl_Int_Input_handle)(fl_Int_Input self, int event){
+    return (static_cast<Fl_Int_Input*>(self))->handle(event);
+  }
   FL_EXPORT_C(fl_Group,Fl_Int_Input_parent)(fl_Int_Input int_input){
     return (static_cast<Fl_DerivedInt_Input*>(int_input))->parent();
   }
@@ -350,9 +353,6 @@ EXPORT {
   /* Fl_Int_Input specific functions */
   FL_EXPORT_C(int,Fl_Int_Input_handle_super )(fl_Int_Input int_input,int event){
     return (static_cast<Fl_Int_Input*>(int_input))->handle(event);
-  }
-  FL_EXPORT_C(int,Fl_Int_Input_handle )(fl_Int_Input int_input, int event){
-    return (static_cast<Fl_DerivedInt_Input*>(int_input))->handle(event);
   }
   FL_EXPORT_C(fl_Int_Input, Fl_Int_Input_New_WithLabel)(int x, int y, int w, int h, const char* label) {
     fl_Int_Input_Virtual_Funcs* funcs = Fl_Int_Input_default_virtual_funcs();

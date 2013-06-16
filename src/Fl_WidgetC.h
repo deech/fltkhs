@@ -27,6 +27,7 @@ EXPORT {
     ~Fl_DerivedWidget();
   };
 #endif
+  FL_EXPORT_C(int,Fl_Widget_handle)(fl_Widget self, int event);
   FL_EXPORT_C(fl_Group,     Fl_Widget_parent)(fl_Widget widget);
   FL_EXPORT_C(void,         Fl_Widget_set_parent)(fl_Widget widget, fl_Group grp);
   FL_EXPORT_C(uchar,        Fl_Widget_type)(fl_Widget widget);

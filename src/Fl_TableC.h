@@ -10,6 +10,7 @@
 EXPORT {
 #endif
   /* Inherited from Fl_Widget */
+  FL_EXPORT_C(int,Fl_Table_handle)(fl_Table self, int event);
   FL_EXPORT_C(fl_Group,     Fl_Table_parent)(fl_Table table);
   FL_EXPORT_C(void,         Fl_Table_set_parent)(fl_Table table, fl_Group grp);
   FL_EXPORT_C(uchar,        Fl_Table_type)(fl_Table table);
@@ -117,6 +118,10 @@ EXPORT {
   FL_EXPORT_C(unsigned int, Fl_Table_clip_children)(fl_Table table);
   FL_EXPORT_C(void,         Fl_Table_focus)(fl_Table table,fl_Widget W);
   FL_EXPORT_C(fl_Widget,    Fl_Table__ddfdesign_kludge)(fl_Table table);
+  FL_EXPORT_C(void,         Fl_Table_insert_with_before)(fl_Table self, fl_Widget w, fl_Widget before);
+  FL_EXPORT_C(fl_Widget*,   Fl_Table_array)(fl_Table self);
+  FL_EXPORT_C(fl_Widget,    Fl_Table_child)(fl_Table self, int n);
+  FL_EXPORT_C(void,         Fl_Table_forms_end)(fl_Table self);
 
 
   /* Fl_Table specific functions */

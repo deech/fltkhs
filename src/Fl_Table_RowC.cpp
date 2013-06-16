@@ -153,6 +153,9 @@ EXPORT {
     ptr->set_cols = NULL;
     return ptr;
   }
+  FL_EXPORT_C(int,Fl_Table_Row_handle)(fl_Table_Row self, int event){
+    return (static_cast<Fl_DerivedTableRow*>(self))->handle(event);
+  }
   FL_EXPORT_C(fl_Group,Fl_Table_Row_parent)(fl_Table_Row table_row){
     return (static_cast<Fl_DerivedTableRow*>(table_row))->parent();
   }
@@ -425,6 +428,18 @@ EXPORT {
   FL_EXPORT_C(fl_Widget,Fl_Table_Row__ddfdesign_kludge)(fl_Table_Row table_row){
     return (static_cast<Fl_DerivedTableRow*>(table_row))->_ddfdesign_kludge();
   }
+  FL_EXPORT_C(void, Fl_Table_Row_insert_with_before)(fl_Table_Row self, fl_Widget w, fl_Widget before){
+    (static_cast<Fl_DerivedTableRow*>(self))->insert(*(static_cast<Fl_Widget*>(w)),(static_cast<Fl_Widget*>(before)));
+  }
+  FL_EXPORT_C(fl_Widget*, Fl_Table_Row_array)(fl_Table_Row self){
+    return (fl_Widget*)(static_cast<Fl_DerivedTableRow*>(self))->array();
+  }
+  FL_EXPORT_C(fl_Widget, Fl_Table_Row_child)(fl_Table_Row self, int n){
+    return (fl_Widget)(static_cast<Fl_DerivedTableRow*>(self))->child(n);
+  } 
+  FL_EXPORT_C(void,Fl_Table_Row_forms_end)(fl_Table_Row self){
+    (static_cast<Fl_DerivedTableRow*>(self))->forms_end();
+  }
   FL_EXPORT_C(void,Fl_Table_Row_set_table_box)(fl_Table_Row table_row,Fl_Boxtype val){
     return (static_cast<Fl_DerivedTableRow*>(table_row))->table_box(val);
   }
@@ -602,12 +617,6 @@ EXPORT {
   }
   FL_EXPORT_C(void,Fl_Table_Row_end)(fl_Table_Row table_row){
     return (static_cast<Fl_DerivedTableRow*>(table_row))->end();
-  }
-  FL_EXPORT_C(fl_Widget*,Fl_Table_Row_array)(fl_Table_Row table_row){
-    return (fl_Widget*)(static_cast<Fl_DerivedTableRow*>(table_row))->array();
-  }
-  FL_EXPORT_C(fl_Widget,Fl_Table_Row_child)(fl_Table_Row table_row,int n){
-    return (static_cast<Fl_DerivedTableRow*>(table_row))->child(n);
   }
   FL_EXPORT_C(int,Fl_Table_Row_children)(fl_Table_Row table_row){
     return (static_cast<Fl_DerivedTableRow*>(table_row))->children();

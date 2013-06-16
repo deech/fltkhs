@@ -10,6 +10,7 @@
 EXPORT {
 #endif
   /* Inherited from Fl_Widget */
+  FL_EXPORT_C(int,Fl_Check_Button_handle)(fl_Check_Button self, int event);
   FL_EXPORT_C(fl_Group,     Fl_Check_Button_parent)(fl_Check_Button win);
   FL_EXPORT_C(void,         Fl_Check_Button_set_parent)(fl_Check_Button win, fl_Group grp);
   FL_EXPORT_C(uchar,        Fl_Check_Button_type)(fl_Check_Button win);

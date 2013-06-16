@@ -10,6 +10,7 @@
 EXPORT {
 #endif
   /* Inherited from Fl_Widget */
+  FL_EXPORT_C(int,Fl_Table_Row_handle)(fl_Table_Row self, int event);
   FL_EXPORT_C(fl_Group,     Fl_Table_Row_parent)(fl_Table_Row table);
   FL_EXPORT_C(void,         Fl_Table_Row_set_parent)(fl_Table_Row table, fl_Group grp);
   FL_EXPORT_C(int,          Fl_Table_Row_x)(fl_Table_Row table);
@@ -109,6 +110,10 @@ EXPORT {
   FL_EXPORT_C(void,         Fl_Table_Row_focus)(fl_Table_Row table,fl_Widget W);
   FL_EXPORT_C(fl_Widget,    Fl_Table_Row__ddfdesign_kludge)(fl_Table_Row table);
 
+  FL_EXPORT_C(void,         Fl_Table_Row_insert_with_before)(fl_Table_Row self, fl_Widget w, fl_Widget before);
+  FL_EXPORT_C(fl_Widget*, Fl_Table_Row_array)(fl_Table_Row self);
+  FL_EXPORT_C(fl_Widget, Fl_Table_Row_child)(fl_Table_Row self, int n);
+  FL_EXPORT_C(void     , Fl_Table_Row_forms_end)(fl_Table_Row self);
 
   /* Inherited from Fl_Table_Row */
 #ifdef __cplusplus

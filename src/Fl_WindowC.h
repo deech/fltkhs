@@ -9,6 +9,7 @@
 EXPORT {
 #endif
   /* Inherited from Fl_Widget */
+  FL_EXPORT_C(int,Fl_Window_handle)(fl_Window self, int event);
   FL_EXPORT_C(fl_Group,     Fl_Window_parent)(fl_Window win);
   FL_EXPORT_C(void,         Fl_Window_set_parent)(fl_Window win, fl_Group grp);
   FL_EXPORT_C(uchar,        Fl_Window_type)(fl_Window win);
@@ -102,10 +103,15 @@ EXPORT {
   FL_EXPORT_C(void,         Fl_Window_resizable)(fl_Window win);
   FL_EXPORT_C(void,         Fl_Window_add_resizable)(fl_Window win,fl_Widget o);
   FL_EXPORT_C(void,         Fl_Window_init_sizes)(fl_Window win);
+  FL_EXPORT_C(int,          Fl_Window_children)(fl_Window win);
   FL_EXPORT_C(void,         Fl_Window_set_clip_children)(fl_Window win,int c);
   FL_EXPORT_C(unsigned int, Fl_Window_clip_children)(fl_Window win);
   FL_EXPORT_C(void,         Fl_Window_focus)(fl_Window win,fl_Widget W);
   FL_EXPORT_C(fl_Widget,    Fl_Window__ddfdesign_kludge)(fl_Window win);
+  FL_EXPORT_C(void,         Fl_Window_insert_with_before)(fl_Window self, fl_Widget w, fl_Widget before);
+  FL_EXPORT_C(fl_Widget*,   Fl_Window_array)(fl_Window self);
+  FL_EXPORT_C(fl_Widget,    Fl_Window_child)(fl_Window self, int n);
+  FL_EXPORT_C(void,         Fl_Window_forms_end)(fl_Window self);
   /* FL_EXPORT_C(void,         Fl_Window_forms_end)(fl_Window win); */
   /* Fl_Window specific */
   FL_EXPORT_C(unsigned int, Fl_Window_changed)(fl_Window win);

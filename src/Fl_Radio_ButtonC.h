@@ -10,6 +10,7 @@
 EXPORT {
 #endif
   /* Inherited from Fl_Widget */
+  FL_EXPORT_C(int,Fl_Radio_Button_handle)(fl_Radio_Button self, int event);
   FL_EXPORT_C(fl_Group,     Fl_Radio_Button_parent)(fl_Radio_Button win);
   FL_EXPORT_C(void,         Fl_Radio_Button_set_parent)(fl_Radio_Button win, fl_Group grp);
   FL_EXPORT_C(uchar,        Fl_Radio_Button_type)(fl_Radio_Button win);

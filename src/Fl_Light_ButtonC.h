@@ -10,6 +10,7 @@
 EXPORT {
 #endif
   /* Inherited from Fl_Widget */
+  FL_EXPORT_C(int,Fl_Light_Button_handle)(fl_Light_Button self, int event);
   FL_EXPORT_C(fl_Group,     Fl_Light_Button_parent)(fl_Light_Button win);
   FL_EXPORT_C(void,         Fl_Light_Button_set_parent)(fl_Light_Button win, fl_Group grp);
   FL_EXPORT_C(uchar,        Fl_Light_Button_type)(fl_Light_Button win);

@@ -10,6 +10,7 @@
 EXPORT {
 #endif
   /* Inherited from Fl_Widget */
+  FL_EXPORT_C(int,Fl_Toggle_Button_handle)(fl_Toggle_Button self, int event);
   FL_EXPORT_C(fl_Group,     Fl_Toggle_Button_parent)(fl_Toggle_Button win);
   FL_EXPORT_C(void,         Fl_Toggle_Button_set_parent)(fl_Toggle_Button win, fl_Group grp);
   FL_EXPORT_C(uchar,        Fl_Toggle_Button_type)(fl_Toggle_Button win);

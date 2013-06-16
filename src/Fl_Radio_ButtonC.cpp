@@ -3,6 +3,9 @@
 #ifdef __cplusplus
 EXPORT {
 #endif
+  FL_EXPORT_C(int,Fl_Radio_Button_handle)(fl_Radio_Button self, int event){
+    return (static_cast<Fl_Radio_Button*>(self))->handle(event);
+  }
   FL_EXPORT_C(fl_Group,Fl_Radio_Button_parent)(fl_Radio_Button b){
     return (static_cast<Fl_Radio_Button*>(b))->parent();
   }

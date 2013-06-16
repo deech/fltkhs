@@ -4,6 +4,9 @@
 EXPORT {
 #endif
   /* Inherited from Fl_Widget */
+  FL_EXPORT_C(int,Fl_Secret_Input_handle)(fl_Secret_Input self, int event){
+    return (static_cast<Fl_Secret_Input*>(self))->handle(event);
+  }
   FL_EXPORT_C(fl_Group,Fl_Secret_Input_parent)(fl_Secret_Input secret_input){
     return (static_cast<Fl_Secret_Input*>(secret_input))->parent();
   }
@@ -233,9 +236,6 @@ EXPORT {
   }
 
   /* Fl_Secret_Input specific functions */
-  FL_EXPORT_C(int,Fl_Secret_Input_handle)(fl_Secret_Input secret_input,int event){
-    return (static_cast<Fl_Secret_Input*>(secret_input))->handle(event);
-  }
   FL_EXPORT_C(fl_Secret_Input, Fl_Secret_Input_New_WithLabel)(int x, int y, int w, int h, const char* label) {
     Fl_Secret_Input* secret_input = new Fl_Secret_Input(x,y,w,h,label);
     return (static_cast<fl_Secret_Input>(secret_input));

@@ -4,6 +4,9 @@
 EXPORT {
 #endif
   /* Inherited from Fl_Widget */
+  FL_EXPORT_C(int,Fl_Multiline_Input_handle)(fl_Multiline_Input self, int event){
+    return (static_cast<Fl_Multiline_Input*>(self))->handle(event);
+  }
   FL_EXPORT_C(fl_Group,Fl_Multiline_Input_parent)(fl_Multiline_Input multiline_input){
     return (static_cast<Fl_Multiline_Input*>(multiline_input))->parent();
   }
@@ -233,9 +236,6 @@ EXPORT {
   }
 
   /* Fl_Multiline_Input specific functions */
-  FL_EXPORT_C(int,Fl_Multiline_Input_handle)(fl_Multiline_Input multiline_input,int event){
-    return (static_cast<Fl_Multiline_Input*>(multiline_input))->handle(event);
-  }
   FL_EXPORT_C(fl_Multiline_Input, Fl_Multiline_Input_New_WithLabel)(int x, int y, int w, int h, const char* label) {
     Fl_Multiline_Input* multiline_input = new Fl_Multiline_Input(x,y,w,h,label);
     return (static_cast<fl_Multiline_Input>(multiline_input));

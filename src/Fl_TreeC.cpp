@@ -2,6 +2,9 @@
 #ifdef __cplusplus
 EXPORT {
 #endif
+  FL_EXPORT_C(int,Fl_Tree_handle)(fl_Tree self, int event){
+    return (static_cast<Fl_Tree*>(self))->handle(event);
+  }
   FL_EXPORT_C(fl_Group,Fl_Tree_parent)(fl_Tree tree){
     return (static_cast<Fl_Tree*>(tree))->parent();
   }
@@ -223,9 +226,6 @@ EXPORT {
   FL_EXPORT_C(fl_Gl_Window,Fl_Tree_as_gl_window)(fl_Tree tree){
     return (static_cast<Fl_Tree*>(tree))->as_gl_window();
   }
-  FL_EXPORT_C(int,Fl_Tree_handle)(fl_Tree tree,int e){
-    return (static_cast<Fl_Tree*>(tree))->handle(e);
-  }
   FL_EXPORT_C(void,Fl_Tree_draw)(fl_Tree tree){
     return (static_cast<Fl_Tree*>(tree))->draw();
   }
@@ -257,6 +257,9 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Tree_set_clip_children)(fl_Tree tree,int c){
     return (static_cast<Fl_Tree*>(tree))->clip_children(c);
   }
+  FL_EXPORT_C(int,Fl_Tree_children)(fl_Tree tree){
+    return (static_cast<Fl_Tree*>(tree))->children();
+  }
   FL_EXPORT_C(unsigned int,Fl_Tree_clip_children)(fl_Tree tree){
     return (static_cast<Fl_Tree*>(tree))->clip_children();
   }
@@ -266,6 +269,15 @@ EXPORT {
   FL_EXPORT_C(fl_Widget,Fl_Tree__ddfdesign_kludge)(fl_Tree tree){
     return (static_cast<Fl_Tree*>(tree))->_ddfdesign_kludge();
   }
+  FL_EXPORT_C(fl_Widget*, Fl_Tree_array)(fl_Tree self){
+    return (fl_Widget*)(static_cast<Fl_Tree*>(self))->array();
+  }
+  FL_EXPORT_C(fl_Widget, Fl_Tree_child)(fl_Tree self, int n){
+    return (fl_Widget)(static_cast<Fl_Tree*>(self))->child(n);
+  }
+  // FL_EXPORT_C(void     , Fl_Tree_forms_end)(fl_Tree self){
+  //   (static_cast<Fl_Tree*>(self))->forms_end();
+  // }
 
   FL_EXPORT_C(fl_Tree, Fl_Tree_New_WithLabel)(int x, int y, int w, int h, const char* label) {
     Fl_Tree* tree = new Fl_Tree(x,y,w,h,label);

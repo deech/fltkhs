@@ -4,6 +4,9 @@
 #ifdef __cplusplus
 EXPORT {
 #endif
+  FL_EXPORT_C(int,Fl_Double_Window_handle)(fl_Double_Window self, int event){
+    return (static_cast<Fl_Double_Window*>(self))->handle(event);
+  }
   FL_EXPORT_C(fl_Group,Fl_Double_Window_parent)(fl_Double_Window win){
     return (static_cast<Fl_Double_Window*>(win))->parent();
   }
@@ -277,6 +280,9 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Double_Window_init_sizes)(fl_Double_Window win){
     (static_cast<Fl_Double_Window*>(win))->init_sizes();
   }
+  FL_EXPORT_C(int,Fl_Double_Window_children)(fl_Double_Window self){
+    return (static_cast<Fl_Double_Window*>(self))->children();
+  }
   FL_EXPORT_C(void,Fl_Double_Window_set_clip_children)(fl_Double_Window win,int c){
     return (static_cast<Fl_Double_Window*>(win))->clip_children(c);
   }
@@ -288,6 +294,15 @@ EXPORT {
   }
   FL_EXPORT_C(fl_Widget,Fl_Double_Window__ddfdesign_kludge)(fl_Double_Window win){
     return (static_cast<Fl_Double_Window*>(win))->_ddfdesign_kludge();
+  }
+  FL_EXPORT_C(void, Fl_Double_Window_insert_with_before)(fl_Double_Window self, fl_Widget w, fl_Widget before){
+    (static_cast<Fl_Double_Window*>(self))->insert(*(static_cast<Fl_Widget*>(w)),(static_cast<Fl_Widget*>(before)));
+  }
+  FL_EXPORT_C(fl_Widget*, Fl_Double_Window_array)(fl_Double_Window self){
+    return (fl_Widget*)(static_cast<Fl_Double_Window*>(self))->array();
+  }
+  FL_EXPORT_C(fl_Widget, Fl_Double_Window_child)(fl_Double_Window self, int n){
+    return (fl_Widget)(static_cast<Fl_Double_Window*>(self))->child(n);
   }
   // FL_EXPORT_C(void,Fl_Double_Window_forms_end)(fl_Double_Window win){
   //   return (static_cast<Fl_Double_Window*>(win))->forms_end();
@@ -340,10 +355,6 @@ EXPORT {
   }
   FL_EXPORT_C(void,Fl_Double_Window_flush)(fl_Double_Window win){
     (static_cast<Fl_Double_Window*>(win))->flush();
-  }
-  
-  FL_EXPORT_C(int,Fl_Double_Window_handle)(fl_Double_Window win,int event){
-    return (static_cast<Fl_Double_Window*>(win))->handle(event);
   }
   FL_EXPORT_C(void,Fl_Double_Window_set_border)(fl_Double_Window win,int b){
     (static_cast<Fl_Double_Window*>(win))->border(b);

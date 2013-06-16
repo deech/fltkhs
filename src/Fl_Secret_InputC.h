@@ -10,6 +10,7 @@
 EXPORT {
 #endif
   /* Inherited from Fl_Widget */
+  FL_EXPORT_C(int,Fl_Secret_Input_handle)(fl_Secret_Input self, int event);
   FL_EXPORT_C(fl_Group,     Fl_Secret_Input_parent)(fl_Secret_Input secret_input);
   FL_EXPORT_C(void,         Fl_Secret_Input_set_parent)(fl_Secret_Input secret_input, fl_Group grp);
   FL_EXPORT_C(uchar,        Fl_Secret_Input_type)(fl_Secret_Input secret_input);

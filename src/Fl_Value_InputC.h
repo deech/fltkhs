@@ -9,6 +9,7 @@
 #include "Fl_CallbackC.h"
 EXPORT {
 #endif
+  FL_EXPORT_C(int,Fl_Value_Input_handle)(fl_Value_Input self, int event);
   FL_EXPORT_C(fl_Group,     Fl_Value_Input_parent)(fl_Value_Input value_input);
   FL_EXPORT_C(void,         Fl_Value_Input_set_parent)(fl_Value_Input value_input, fl_Group grp);
   FL_EXPORT_C(uchar,        Fl_Value_Input_type)(fl_Value_Input value_input);
@@ -105,7 +106,7 @@ EXPORT {
   FL_EXPORT_C(double ,	Fl_Value_Input_clamp)(fl_Value_Input value_input, double v);
   FL_EXPORT_C(double ,	Fl_Value_Input_increment)(fl_Value_Input value_input, double v, int n);
   /* Fl_Value_Input specific functions */
-  
+
   FL_EXPORT_C(fl_Value_Input,  Fl_Value_Input_New_WithLabel)(int x, int y, int w, int h, const char* label);
   FL_EXPORT_C(fl_Value_Input, Fl_Value_Input_New)(int x, int y, int w, int h);
   FL_EXPORT_C(void          , Fl_Value_Input_Destroy)(fl_Value_Input button);

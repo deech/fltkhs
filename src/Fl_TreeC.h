@@ -10,6 +10,7 @@
 EXPORT {
 #endif
   /* Inherited from Fl_Widget */
+  FL_EXPORT_C(int,Fl_Tree_handle)(fl_Tree self, int event);
   FL_EXPORT_C(fl_Group,     Fl_Tree_parent)(fl_Tree tree);
   FL_EXPORT_C(void,         Fl_Tree_set_parent)(fl_Tree tree, fl_Group grp);
   FL_EXPORT_C(uchar,        Fl_Tree_type)(fl_Tree tree);
@@ -99,10 +100,14 @@ EXPORT {
   FL_EXPORT_C(fl_Widget,    Fl_Tree_resizable)(fl_Tree tree);
   FL_EXPORT_C(void,         Fl_Tree_add_resizable)(fl_Tree tree,fl_Widget o);
   FL_EXPORT_C(void,         Fl_Tree_init_sizes)(fl_Tree tree);
+  FL_EXPORT_C(int,          Fl_Tree_children)(fl_Tree tree);
   FL_EXPORT_C(void,         Fl_Tree_set_clip_children)(fl_Tree tree,int c);
   FL_EXPORT_C(unsigned int, Fl_Tree_clip_children)(fl_Tree tree);
   FL_EXPORT_C(void,         Fl_Tree_focus)(fl_Tree tree,fl_Widget W);
   FL_EXPORT_C(fl_Widget,    Fl_Tree__ddfdesign_kludge)(fl_Tree tree);
+  FL_EXPORT_C(fl_Widget*,   Fl_Tree_array)(fl_Tree self);
+  FL_EXPORT_C(fl_Widget,    Fl_Tree_child)(fl_Tree self, int n);
+  FL_EXPORT_C(void,         Fl_Tree_forms_end)(fl_Tree self);
 
   /* Fl_Tree specific */
   FL_EXPORT_C(fl_Tree,    Fl_Tree_New_WithLabel)(int x, int y, int w, int h, const char* label);

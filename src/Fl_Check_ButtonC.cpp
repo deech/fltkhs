@@ -3,6 +3,9 @@
 #ifdef __cplusplus
 EXPORT {
 #endif
+  FL_EXPORT_C(int,Fl_Check_Button_handle)(fl_Check_Button self, int event){
+    return (static_cast<Fl_Check_Button*>(self))->handle(event);
+  }
   FL_EXPORT_C(fl_Group,Fl_Check_Button_parent)(fl_Check_Button b){
     return (static_cast<Fl_Check_Button*>(b))->parent();
   }

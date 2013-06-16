@@ -4,6 +4,9 @@
 EXPORT {
 #endif
   /* Inherited from Fl_Widget */
+  FL_EXPORT_C(int,Fl_File_Input_handle)(fl_File_Input self, int event){
+    return (static_cast<Fl_File_Input*>(self))->handle(event);
+  }
   FL_EXPORT_C(fl_Group,Fl_File_Input_parent)(fl_File_Input file_input){
     return (static_cast<Fl_File_Input*>(file_input))->parent();
   }
@@ -233,9 +236,6 @@ EXPORT {
   }
 
   /* Fl_File_Input specific functions */
-  FL_EXPORT_C(int,Fl_File_Input_handle)(fl_File_Input file_input,int event){
-    return (static_cast<Fl_File_Input*>(file_input))->handle(event);
-  }
   FL_EXPORT_C(fl_File_Input, Fl_File_Input_New_WithLabel)(int x, int y, int w, int h, const char* label) {
     Fl_File_Input* file_input = new Fl_File_Input(x,y,w,h,label);
     return (static_cast<fl_File_Input>(file_input));

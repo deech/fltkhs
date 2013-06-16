@@ -19,7 +19,7 @@ void Fl_DerivedWidget::set_other_data(void* data){
   this->other_data = data;
 }
 void Fl_DerivedWidget::draw(){
-  // defined as virtual void draw = 0 in Fl_Widget.H, needs to be provided. 
+  // defined as virtual void draw = 0 in Fl_Widget.H, needs to be provided.
   this->overriddenFuncs->draw((fl_Table) this);
 }
 int Fl_DerivedWidget::handle(int event){
@@ -102,6 +102,9 @@ Fl_Gl_Window* Fl_DerivedWidget::as_gl_window(){
     ptr->as_gl_window = NULL;
     ptr->as_group = NULL;
     return ptr;
+  }
+  FL_EXPORT_C(int,Fl_Widget_handle)(fl_Widget self, int event){
+    return (static_cast<Fl_DerivedWidget*>(self))->handle(event);
   }
   FL_EXPORT_C(fl_Group,Fl_Widget_parent)(fl_Widget widget){
     return (static_cast<Fl_DerivedWidget*>(widget))->parent();

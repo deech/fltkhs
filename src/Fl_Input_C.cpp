@@ -4,6 +4,9 @@
 EXPORT {
 #endif
   /* Inherited from Fl_Widget */
+  FL_EXPORT_C(int,Fl_Input__handle)(fl_Input_ self, int event){
+    return (static_cast<Fl_Input_*>(self))->handle(event);
+  }
   FL_EXPORT_C(fl_Group,Fl_Input__parent)(fl_Input_ input_){
     return (static_cast<Fl_Input_*>(input_))->parent();
   }

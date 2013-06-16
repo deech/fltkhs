@@ -153,6 +153,9 @@ EXPORT {
     ptr->set_cols = NULL;
     return ptr;
   }
+  FL_EXPORT_C(int,Fl_Table_handle)(fl_Table self, int event){
+    return (static_cast<Fl_DerivedTable*>(self))->handle(event);
+  }
   FL_EXPORT_C(fl_Group,Fl_Table_parent)(fl_Table table){
     return (static_cast<Fl_DerivedTable*>(table))->parent();
   }
@@ -431,6 +434,12 @@ EXPORT {
   FL_EXPORT_C(fl_Widget,Fl_Table__ddfdesign_kludge)(fl_Table table){
     return (static_cast<Fl_DerivedTable*>(table))->_ddfdesign_kludge();
   }
+  FL_EXPORT_C(void, Fl_Table_insert_with_before)(fl_Table self,fl_Widget w, fl_Widget before){
+    (static_cast<Fl_DerivedTable*>(self))->insert(*(static_cast<Fl_Widget*>(w)),(static_cast<Fl_Widget*>(before)));
+  }
+  // FL_EXPORT_C(void,Fl_Table_forms_end)(fl_Table self){
+  //   (static_cast<Fl_DerivedTable*>(self))->forms_end();
+  // }
   FL_EXPORT_C(fl_Table, Fl_Table_New_WithLabel)(int X, int Y, int W, int H, const char *l, fl_Table_Virtual_Funcs* funcs){
     Fl_DerivedTable* table = new Fl_DerivedTable(X,Y,W,H,l,funcs);
     return (fl_Table)table;
