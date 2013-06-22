@@ -113,7 +113,7 @@ EXPORT {
   FL_EXPORT_C(void,         Fl_Table_Row_insert_with_before)(fl_Table_Row self, fl_Widget w, fl_Widget before);
   FL_EXPORT_C(fl_Widget*, Fl_Table_Row_array)(fl_Table_Row self);
   FL_EXPORT_C(fl_Widget, Fl_Table_Row_child)(fl_Table_Row self, int n);
-  FL_EXPORT_C(void     , Fl_Table_Row_forms_end)(fl_Table_Row self);
+  /* FL_EXPORT_C(void     , Fl_Table_Row_forms_end)(fl_Table_Row self); */
 
   /* Inherited from Fl_Table_Row */
 #ifdef __cplusplus

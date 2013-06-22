@@ -2,9 +2,9 @@ CXXSTATIC = g++ -Wall -DINTERNAL_LINKAGE -g -Icpp -static
 CXX = g++ -Wall -DINTERNAL_LINKAGE -g -Icpp
 CC = gcc -Wall -g -Isrc
 LD = $(CXX) -shared
-EXE_OBJS = examples/make_window.o examples/make_window_fullscreen.o examples/make_window_resize.o examples/make_window_with_width_height.o examples/make_window_hide.o examples/make_window_with_callback.o examples/make_button_with_callback.o examples/make_input.o examples/tree-simple.o examples/make_tree.o examples/table-simple.o examples/tree-of-tables.o examples/table-spreadsheet.o examples/table-as-container.o
+EXE_OBJS = examples/make_window.o examples/make_window_fullscreen.o examples/make_window_resize.o examples/make_window_with_width_height.o examples/make_window_hide.o examples/make_window_with_callback.o examples/make_button_with_callback.o examples/make_input.o examples/tree-simple.o examples/make_tree.o examples/table-simple.o examples/tree-of-tables.o examples/table-spreadsheet.o examples/table-as-container.o examples/table-sort.o
 C_OBJS = src/Fl_C.o src/Fl_WindowC.o src/Fl_CallbackC.o src/Fl_ButtonC.o src/Fl_Check_ButtonC.o src/Fl_Radio_ButtonC.o src/Fl_Toggle_ButtonC.o src/Fl_Light_ButtonC.o src/Fl_Input_C.o src/Fl_InputC.o src/Fl_File_InputC.o src/Fl_Float_InputC.o src/Fl_Int_InputC.o src/Fl_Multiline_InputC.o src/Fl_Secret_InputC.o src/Fl_Value_InputC.o src/Fl_EnumerationsC.o src/Fl_Tree_PrefsC.o src/Fl_Tree_ItemC.o src/Fl_PreferencesC.o src/Fl_TreeC.o src/Fl_TableC.o src/Fl_DrawC.o src/Fl_Double_WindowC.o src/Fl_AskC.o src/Fl_Table_RowC.o src/Fl_WidgetC.o
-TARGETS = libfltkc.a make_window make_window_with_width_height make_window_resize make_window_fullscreen make_window_hide make_window_with_callback make_button_with_callback make_input make_tree tree-simple table-simple tree-of-tables table-spreadsheet table-as-container
+TARGETS = libfltkc.a make_window make_window_with_width_height make_window_resize make_window_fullscreen make_window_hide make_window_with_callback make_button_with_callback make_input make_tree tree-simple table-simple tree-of-tables table-spreadsheet table-as-container table-sort
 EXAMPLEDIR = ./examples
 EXECUTABLEDIR = ./executables
 LIBDIR = ./lib
@@ -53,6 +53,8 @@ table-spreadsheet: examples/table-spreadsheet.o
 table-as-container: examples/table-as-container.o
 	$(CXX) -o $(EXECUTABLEDIR)/$@ $< $(LIBDIR)/libfltkc.a -lfltk_images -lpng -lz -ljpeg -lfltk_gl -lGLU -lGL -lfltk -lXext -lXft -lfontconfig -lXinerama -lpthread -ldl -lm  -lX11
 
+table-sort: examples/table-sort.o
+	$(CXX) -o $(EXECUTABLEDIR)/$@ $< $(LIBDIR)/libfltkc.a -lfltk_images -lpng -lz -ljpeg -lfltk_gl -lGLU -lGL -lfltk -lXext -lXft -lfontconfig -lXinerama -lpthread -ldl -lm  -lX11
 
 tree-of-tables: examples/tree-of-tables.o
 	$(CXX) -o $(EXECUTABLEDIR)/$@ $< $(LIBDIR)/libfltkc.a -lfltk_images -lpng -lz -ljpeg -lfltk_gl -lGLU -lGL -lfltk -lXext -lXft -lfontconfig -lXinerama -lpthread -ldl -lm  -lX11

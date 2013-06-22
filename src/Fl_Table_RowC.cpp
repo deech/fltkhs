@@ -116,7 +116,7 @@ void Fl_DerivedTableRow::clear(){
     this->overriddenFuncs->clear((fl_Table_Row) this);
   }
   else {
-    Fl_Table::clear();
+    Fl_Table_Row::clear();
   }
 }
 void Fl_DerivedTableRow::rows(int val){
@@ -124,7 +124,7 @@ void Fl_DerivedTableRow::rows(int val){
     this->overriddenFuncs->set_rows((fl_Table_Row) this, val);
   }
   else {
-    Fl_Table::rows(val);
+    Fl_Table_Row::rows(val);
   }
 }
 void Fl_DerivedTableRow::cols(int val){
@@ -132,7 +132,7 @@ void Fl_DerivedTableRow::cols(int val){
     this->overriddenFuncs->set_cols((fl_Table_Row) this, val);
   }
   else {
-    Fl_Table::cols(val);
+    Fl_Table_Row::cols(val);
   }
 }
 EXPORT {
@@ -437,9 +437,9 @@ EXPORT {
   FL_EXPORT_C(fl_Widget, Fl_Table_Row_child)(fl_Table_Row self, int n){
     return (fl_Widget)(static_cast<Fl_DerivedTableRow*>(self))->child(n);
   } 
-  FL_EXPORT_C(void,Fl_Table_Row_forms_end)(fl_Table_Row self){
-    (static_cast<Fl_DerivedTableRow*>(self))->forms_end();
-  }
+  // FL_EXPORT_C(void,Fl_Table_Row_forms_end)(fl_Table_Row self){
+  //   (static_cast<Fl_DerivedTableRow*>(self))->forms_end();
+  // }
   FL_EXPORT_C(void,Fl_Table_Row_set_table_box)(fl_Table_Row table_row,Fl_Boxtype val){
     return (static_cast<Fl_DerivedTableRow*>(table_row))->table_box(val);
   }
