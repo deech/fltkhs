@@ -270,8 +270,8 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Window_set_resizable)(fl_Window win,fl_Widget o){
     (static_cast<Fl_Window*>(win))->resizable((static_cast<Fl_Widget*>(o)));
   }
-  FL_EXPORT_C(void,Fl_Window_resizable)(fl_Window win){
-    (static_cast<Fl_Window*>(win))->resizable();
+  FL_EXPORT_C(fl_Widget,Fl_Window_resizable)(fl_Window win){
+    return (fl_Widget)(static_cast<Fl_Window*>(win))->resizable();
   }
   FL_EXPORT_C(void,Fl_Window_add_resizable)(fl_Window win,fl_Widget o){
     return (static_cast<Fl_Window*>(win))->add_resizable(*(static_cast<Fl_Widget*>(o)));
@@ -314,7 +314,7 @@ EXPORT {
     Fl_Window* window = new Fl_Window(x,y,0);
     return (fl_Window)window;
   }
-  FL_EXPORT_C(fl_Window, Fl_Window_NewWH_WithTitle)(int x, int y, int w, int h, const char* title) {
+  FL_EXPORT_C(fl_Window, Fl_Window_NewWH_WithLabel)(int x, int y, int w, int h, const char* title) {
     Fl_Window* window = new Fl_Window(x,y,w,h,title);
     return (fl_Window)window;
   }

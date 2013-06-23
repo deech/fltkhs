@@ -177,6 +177,7 @@ EXPORT {
     int dh;
     int aspect;
   }fl_Window_size_range_args;
+  typedef enum { TOP, BOTTOM, MIDDLE } Fl_Line_Position;
   typedef struct {
     int R;
     int C;
@@ -201,19 +202,49 @@ EXPORT {
     void         (*set_cols    )(fl_Table table, int val);
   } fl_Table_Virtual_Funcs;
   typedef struct {
-    void 	 (*draw        )(fl_Button button);
-    int          (*handle      )(fl_Button button,int event);
-    void         (*resize      )(fl_Button button,int x, int y, int w, int h);
-    void         (*show        )(fl_Button button);
-    void         (*hide        )(fl_Button button);
-    fl_Window    (*as_window   )(fl_Button button);
-    fl_Gl_Window (*as_gl_window)(fl_Button button);
-    fl_Group     (*as_group    )(fl_Table table);
+    void 	 (*draw        )(fl_Widget widget);
+    int          (*handle      )(fl_Widget widget,int event);
+    void         (*resize      )(fl_Widget widget,int x, int y, int w, int h);
+    void         (*show        )(fl_Widget widget);
+    void         (*hide        )(fl_Widget widget);
+    fl_Window    (*as_window   )(fl_Widget widget);
+    fl_Gl_Window (*as_gl_window)(fl_Widget widget);
+    fl_Group     (*as_group    )(fl_Widget table);
   } fl_Widget_Virtual_Funcs;
+
+  typedef struct {
+    /* From Fl_Widget */
+    void 	 (*draw        )(fl_Table table);
+    int          (*handle      )(fl_Table table,int event);
+    void         (*resize      )(fl_Table table,int x, int y, int w, int h);
+    void         (*show        )(fl_Table table);
+    void         (*hide        )(fl_Table table);
+    fl_Window    (*as_window   )(fl_Table table);
+    fl_Gl_Window (*as_gl_window)(fl_Table table);
+    /* From Fl_Group */
+    fl_Group     (*as_group    )(fl_Table table);
+  } fl_Group_Virtual_Funcs;
+
+  typedef struct {
+    /* From Fl_Widget */
+    void 	 (*draw          )(fl_Browser table);
+    int          (*handle        )(fl_Browser table,int event);
+    void         (*resize        )(fl_Browser table,int x, int y, int w, int h);
+    fl_Window    (*as_window     )(fl_Browser table);
+    fl_Gl_Window (*as_gl_window  )(fl_Browser table);
+    /* From Fl_Group */
+    fl_Group     (*as_group      )(fl_Browser table);
+    /* Fl_Browser Specific */
+    void         (*show          )(fl_Browser table);
+    void         (*show_with_line)(fl_Browser table, int line);
+    void         (*hide          )(fl_Browser table);
+    void         (*hide_with_line)(fl_Browser table, int line);
+  } fl_Browser_Virtual_Funcs;
 
   typedef fl_Table_Virtual_Funcs fl_Table_Row_Virtual_Funcs;
   typedef fl_Widget_Virtual_Funcs fl_Button_Virtual_Funcs;
   typedef fl_Widget_Virtual_Funcs fl_Int_Input_Virtual_Funcs;
+  typedef fl_Browser_Virtual_Funcs fl_Multi_Browser_Virtual_Funcs;
 #ifdef __cplusplus
 }
 #endif

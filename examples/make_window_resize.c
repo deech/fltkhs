@@ -4,7 +4,7 @@
 #include "Fl_WindowC.h"
 int main(int argc, char** argv)
 {
-  fl_Window win = (fl_Window)Fl_Window_NewWH_WithTitle(640,480,200,300,"FLTK Window");
+  fl_Window win = (fl_Window)Fl_Window_NewWH_WithLabel(640,480,200,300,"FLTK Window");
   Fl_Window_show_with_args(win,argc,argv);
   Fl_run();
   Fl_Window_resize(win, 100,100, 500,500);

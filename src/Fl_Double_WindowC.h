@@ -102,7 +102,7 @@ EXPORT {
   FL_EXPORT_C(void,         Fl_Double_Window_clear)(fl_Double_Window win);
   FL_EXPORT_C(void,         Fl_Double_Window_set_resizable_by_reference)(fl_Double_Window win,fl_Widget o);
   FL_EXPORT_C(void,         Fl_Double_Window_set_resizable)(fl_Double_Window win,fl_Widget o);
-  FL_EXPORT_C(void,         Fl_Double_Window_resizable)(fl_Double_Window win);
+  FL_EXPORT_C(fl_Widget,         Fl_Double_Window_resizable)(fl_Double_Window win);
   FL_EXPORT_C(void,         Fl_Double_Window_add_resizable)(fl_Double_Window win,fl_Widget o);
   FL_EXPORT_C(void,         Fl_Double_Window_init_sizes)(fl_Double_Window win);
   FL_EXPORT_C(int,          Fl_Double_Window_children)(fl_Double_Window win);
@@ -122,7 +122,7 @@ EXPORT {
   FL_EXPORT_C(void,         Fl_Double_Window_fullscreen_off_with_resize)(fl_Double_Window win,int X,int Y,int W,int H);
   FL_EXPORT_C(fl_Double_Window,    Fl_Double_Window_New_WithLabel)(int x, int y, const char* title);
   FL_EXPORT_C(fl_Double_Window,    Fl_Double_Window_New)(int x, int y);
-  FL_EXPORT_C(fl_Double_Window,    Fl_Double_Window_NewWH_WithTitle)(int x, int y, int w, int h, const char* title);
+  FL_EXPORT_C(fl_Double_Window,    Fl_Double_Window_NewWH_WithLabel)(int x, int y, int w, int h, const char* title);
   FL_EXPORT_C(fl_Double_Window,    Fl_Double_Window_NewWH)(int x, int y, int w, int h);
   FL_EXPORT_C(void,         Fl_Double_Window_iconize)(fl_Double_Window win);
 
