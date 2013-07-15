@@ -9,14 +9,19 @@ Fl_DerivedButton::Fl_DerivedButton(int X, int Y, int W, int H, fl_Button_Virtual
     other_data = 0;
   }
 Fl_DerivedButton::~Fl_DerivedButton(){
+  destroy_data();
   free(overriddenFuncs);
-  free(other_data);
 }
 void* Fl_DerivedButton::get_other_data(){
   return this->other_data;
 }
 void Fl_DerivedButton::set_other_data(void* data){
   this->other_data = data;
+}
+void Fl_DerivedButton::destroy_data(){
+  if (this->overriddenFuncs->destroy_data != NULL){
+    this->overriddenFuncs->destroy_data((fl_Button) this);
+  }
 }
 int Fl_DerivedButton::handle(int event){
   int i;
@@ -91,6 +96,7 @@ EXPORT {
     ptr->hide = NULL;
     ptr->as_window = NULL;
     ptr->as_gl_window = NULL;
+    ptr->destroy_data = NULL;
     return ptr;
   }
 

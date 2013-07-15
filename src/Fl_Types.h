@@ -25,6 +25,17 @@ EXPORT {
     FL_TREE_REASON_OPENED,
     FL_TREE_REASON_CLOSED
   } Fl_Tree_Reason;
+  enum { 
+    FL_MENU_INACTIVE = 1,		
+    FL_MENU_TOGGLE= 2,		
+    FL_MENU_VALUE = 4,		
+    FL_MENU_RADIO = 8,		
+    FL_MENU_INVISIBLE = 0x10,	
+    FL_SUBMENU_POINTER = 0x20,	
+    FL_SUBMENU = 0x40,		
+    FL_MENU_DIVIDER = 0x80,	
+    FL_MENU_HORIZONTAL = 0x100	
+  };
 #endif
   typedef void* ID;
   typedef void* fl_Window;
@@ -200,6 +211,8 @@ EXPORT {
     void         (*clear       )(fl_Table table);
     void         (*set_rows    )(fl_Table table, int val);
     void         (*set_cols    )(fl_Table table, int val);
+    /* Clean up */
+    void         (*destroy_data)(fl_Table table);
   } fl_Table_Virtual_Funcs;
   typedef struct {
     void 	 (*draw        )(fl_Widget widget);
@@ -210,41 +223,65 @@ EXPORT {
     fl_Window    (*as_window   )(fl_Widget widget);
     fl_Gl_Window (*as_gl_window)(fl_Widget widget);
     fl_Group     (*as_group    )(fl_Widget table);
+    /* Clean up */
+    void         (*destroy_data)(fl_Widget widget);
   } fl_Widget_Virtual_Funcs;
 
   typedef struct {
     /* From Fl_Widget */
-    void 	 (*draw        )(fl_Table table);
-    int          (*handle      )(fl_Table table,int event);
-    void         (*resize      )(fl_Table table,int x, int y, int w, int h);
-    void         (*show        )(fl_Table table);
-    void         (*hide        )(fl_Table table);
-    fl_Window    (*as_window   )(fl_Table table);
-    fl_Gl_Window (*as_gl_window)(fl_Table table);
+    void 	 (*draw        )(fl_Group group);
+    int          (*handle      )(fl_Group group,int event);
+    void         (*resize      )(fl_Group group,int x, int y, int w, int h);
+    void         (*show        )(fl_Group group);
+    void         (*hide        )(fl_Group group);
+    fl_Window    (*as_window   )(fl_Group group);
+    fl_Gl_Window (*as_gl_window)(fl_Group group);
     /* From Fl_Group */
-    fl_Group     (*as_group    )(fl_Table table);
+    fl_Group     (*as_group    )(fl_Group group);
+    /* Clean up */
+    void         (*destroy_data)(fl_Group group);
   } fl_Group_Virtual_Funcs;
+  typedef struct {
+    /* From Fl_Widget */
+    void 	 (*draw        )(fl_Window window);
+    int          (*handle      )(fl_Window window,int event);
+    void         (*resize      )(fl_Window window,int x, int y, int w, int h);
+    void         (*show        )(fl_Window window);
+    void         (*hide        )(fl_Window window);
+    fl_Window    (*as_window   )(fl_Window window);
+    fl_Gl_Window (*as_gl_window)(fl_Window window);
+    /* From Fl_Group */
+    fl_Window     (*as_group   )(fl_Window window);
+    /* Fl_Browser Specific */
+    void         (*flush       )(fl_Window window);
+    /* Clean up */
+    void         (*destroy_data)(fl_Window window);
+  } fl_Window_Virtual_Funcs;
 
   typedef struct {
     /* From Fl_Widget */
-    void 	 (*draw          )(fl_Browser table);
-    int          (*handle        )(fl_Browser table,int event);
-    void         (*resize        )(fl_Browser table,int x, int y, int w, int h);
-    fl_Window    (*as_window     )(fl_Browser table);
-    fl_Gl_Window (*as_gl_window  )(fl_Browser table);
+    void 	 (*draw          )(fl_Browser browser);
+    int          (*handle        )(fl_Browser browser,int event);
+    void         (*resize        )(fl_Browser browser,int x, int y, int w, int h);
+    fl_Window    (*as_window     )(fl_Browser browser);
+    fl_Gl_Window (*as_gl_window  )(fl_Browser browser);
     /* From Fl_Group */
-    fl_Group     (*as_group      )(fl_Browser table);
+    fl_Group     (*as_group      )(fl_Browser browser);
     /* Fl_Browser Specific */
-    void         (*show          )(fl_Browser table);
-    void         (*show_with_line)(fl_Browser table, int line);
-    void         (*hide          )(fl_Browser table);
-    void         (*hide_with_line)(fl_Browser table, int line);
+    void         (*show          )(fl_Browser browser);
+    void         (*show_with_line)(fl_Browser browser, int line);
+    void         (*hide          )(fl_Browser browser);
+    void         (*hide_with_line)(fl_Browser browser, int line);
+    /* Clean up */
+    void         (*destroy_data)(fl_Browser browser);
   } fl_Browser_Virtual_Funcs;
 
   typedef fl_Table_Virtual_Funcs fl_Table_Row_Virtual_Funcs;
   typedef fl_Widget_Virtual_Funcs fl_Button_Virtual_Funcs;
   typedef fl_Widget_Virtual_Funcs fl_Int_Input_Virtual_Funcs;
   typedef fl_Browser_Virtual_Funcs fl_Multi_Browser_Virtual_Funcs;
+  typedef fl_Widget_Virtual_Funcs fl_Menu__Virtual_Funcs;
+  typedef fl_Widget_Virtual_Funcs fl_Menu_Bar_Virtual_Funcs;
 #ifdef __cplusplus
 }
 #endif

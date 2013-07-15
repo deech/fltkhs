@@ -9,14 +9,19 @@ Fl_DerivedTableRow::Fl_DerivedTableRow(int X, int Y, int W, int H, fl_Table_Virt
     other_data = (void*)"INIT";
   }
 Fl_DerivedTableRow::~Fl_DerivedTableRow(){
+  destroy_data();
   free(overriddenFuncs);
-  free(other_data);
 }
 void* Fl_DerivedTableRow::get_other_data(){
   return this->other_data;
 }
 void Fl_DerivedTableRow::set_other_data(void* data){
   this->other_data = data;
+}
+void Fl_DerivedTableRow::destroy_data(){
+  if (this->overriddenFuncs->destroy_data != NULL){
+    this->overriddenFuncs->destroy_data((fl_Table_Row) this);
+  }
 }
 int Fl_DerivedTableRow::find_cell(TableContext context, int R, int C, int &X, int &Y, int &W, int &H){
   return Fl_Table_Row::find_cell(context,R,C,X,Y,W,H);
@@ -151,6 +156,7 @@ EXPORT {
     ptr->clear = NULL;
     ptr->set_rows = NULL;
     ptr->set_cols = NULL;
+    ptr->destroy_data = NULL;
     return ptr;
   }
   FL_EXPORT_C(int,Fl_Table_Row_handle)(fl_Table_Row self, int event){

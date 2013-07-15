@@ -9,14 +9,19 @@ Fl_DerivedWidget::Fl_DerivedWidget(int X, int Y, int W, int H, fl_Widget_Virtual
     other_data = (void*)0;
 }
 Fl_DerivedWidget::~Fl_DerivedWidget(){
+  destroy_data();
   free(overriddenFuncs);
-  free(other_data);
 }
 void* Fl_DerivedWidget::get_other_data(){
   return this->other_data;
 }
 void Fl_DerivedWidget::set_other_data(void* data){
   this->other_data = data;
+}
+void Fl_DerivedWidget::destroy_data(){
+  if (this->overriddenFuncs->destroy_data != NULL){
+    this->overriddenFuncs->destroy_data((fl_Widget) this);
+  }
 }
 void Fl_DerivedWidget::draw(){
   // defined as virtual void draw = 0 in Fl_Widget.H, needs to be provided.
@@ -101,6 +106,7 @@ Fl_Gl_Window* Fl_DerivedWidget::as_gl_window(){
     ptr->as_window = NULL;
     ptr->as_gl_window = NULL;
     ptr->as_group = NULL;
+    ptr->destroy_data = NULL;
     return ptr;
   }
   FL_EXPORT_C(int,Fl_Widget_handle)(fl_Widget self, int event){

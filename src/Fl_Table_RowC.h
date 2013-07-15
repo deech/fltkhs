@@ -125,6 +125,7 @@ EXPORT {
     using Fl_Table_Row::cols;
     void* get_other_data();
     void set_other_data(void*);
+    void destroy_data();
     int find_cell(TableContext context, int R, int C, int &X, int &Y, int &W, int &H);
     virtual void draw();
     virtual int handle(int event);

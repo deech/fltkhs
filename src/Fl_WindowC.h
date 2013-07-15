@@ -113,6 +113,27 @@ EXPORT {
   FL_EXPORT_C(fl_Widget,    Fl_Window_child)(fl_Window self, int n);
   FL_EXPORT_C(void,         Fl_Window_forms_end)(fl_Window self);
   /* FL_EXPORT_C(void,         Fl_Window_forms_end)(fl_Window win); */
+#ifdef __cplusplus
+  class Fl_DerivedWindow : public Fl_Window {
+    fl_Window_Virtual_Funcs* overriddenFuncs;
+    void* other_data;
+  public:
+    void* get_other_data();
+    void set_other_data(void*);
+    void destroy_data();
+    virtual void draw();
+    virtual int handle(int event);
+    virtual void resize(int x, int y, int w, int h);
+    virtual void show();
+    virtual void hide();
+    virtual void flush();
+    virtual Fl_Window* as_window();
+    virtual Fl_Gl_Window* as_gl_window();
+    Fl_DerivedWindow(int X, int Y, int W, int H, const char *l, fl_Window_Virtual_Funcs* funcs);
+    Fl_DerivedWindow(int X, int Y, int W, int H, fl_Window_Virtual_Funcs* funcs);
+    ~Fl_DerivedWindow();
+  };
+#endif  
   /* Fl_Window specific */
   FL_EXPORT_C(unsigned int, Fl_Window_changed)(fl_Window win);
   FL_EXPORT_C(void,         Fl_Window_fullscreen)(fl_Window win);

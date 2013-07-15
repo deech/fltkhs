@@ -123,6 +123,7 @@ EXPORT {
     ptr->as_group = NULL;
     ptr->as_window = NULL;
     ptr->as_gl_window = NULL;
+    ptr->destroy_data = NULL;
     return ptr;
   }
   FL_EXPORT_C(int,Fl_Browser_handle)(fl_Browser self, int event){

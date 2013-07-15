@@ -15,6 +15,7 @@ EXPORT {
   public:
     void* get_other_data();
     void set_other_data(void*);
+    void destroy_data();
     virtual void draw();
     virtual int handle(int event);
     void resize_super(int x, int y, int w, int h);

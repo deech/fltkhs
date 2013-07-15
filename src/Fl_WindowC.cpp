@@ -1,8 +1,116 @@
 #include "Fl_WindowC.h"
 
 #ifdef __cplusplus
+Fl_DerivedWindow::Fl_DerivedWindow(int X, int Y, int W, int H, const char *l, fl_Window_Virtual_Funcs* funcs) : Fl_Window(X,Y,W,H,l){
+    overriddenFuncs = funcs;
+    other_data = 0;
+ }
+Fl_DerivedWindow::Fl_DerivedWindow(int X, int Y, int W, int H, fl_Window_Virtual_Funcs* funcs):Fl_Window(X,Y,W,H,0){
+    overriddenFuncs = funcs;
+    other_data = 0;
+  }
+Fl_DerivedWindow::~Fl_DerivedWindow(){
+  destroy_data();
+  free(overriddenFuncs);
+}
+void* Fl_DerivedWindow::get_other_data(){
+  return this->other_data;
+}
+void Fl_DerivedWindow::set_other_data(void* data){
+  this->other_data = data;
+}
+void Fl_DerivedWindow::destroy_data(){
+  if (this->overriddenFuncs->destroy_data != NULL){
+    this->overriddenFuncs->destroy_data((fl_Window) this);
+  }
+}
+int Fl_DerivedWindow::handle(int event){
+  int i;
+  if (this->overriddenFuncs->handle != NULL) {
+    i = this->overriddenFuncs->handle((fl_Window) this,event);
+  }
+  else {
+    i = Fl_Window::handle(event);
+  }
+  return i;
+}
+void Fl_DerivedWindow::resize(int x, int y, int w, int h){
+  if (this->overriddenFuncs->resize != NULL) {
+    this->overriddenFuncs->resize((fl_Window) this,x,y,w,h);
+  }
+  else {
+    Fl_Window::resize(x,y,w,h);
+  }
+}
+
+void Fl_DerivedWindow::flush(){
+  if (this->overriddenFuncs->flush != NULL) {
+    this->overriddenFuncs->flush((fl_Window) this);
+  }
+  else {
+    Fl_Window::flush();
+  }
+}
+
+void Fl_DerivedWindow::show(){
+  if (this->overriddenFuncs->show != NULL) {
+    this->overriddenFuncs->show((fl_Window) this);
+  }
+  else {
+    Fl_Window::show();
+  }
+}
+void Fl_DerivedWindow::hide(){
+  if (this->overriddenFuncs->hide != NULL) {
+    this->overriddenFuncs->hide((fl_Window) this);
+  }
+  else {
+    Fl_Window::hide();
+  }
+}
+void Fl_DerivedWindow::draw(){
+  if (this->overriddenFuncs->draw != NULL) {
+    this->overriddenFuncs->draw((fl_Window) this);
+  }
+  else {
+    Fl_Window::draw();
+  }
+}
+Fl_Window* Fl_DerivedWindow::as_window(){
+  Fl_Window* win;
+  if (this->overriddenFuncs->as_window != NULL) {
+    win = (static_cast<Fl_Window*>(this->overriddenFuncs->as_window((fl_Window) this)));
+  }
+  else {
+    win = Fl_Window::as_window();
+  }
+  return win;
+}
+Fl_Gl_Window* Fl_DerivedWindow::as_gl_window(){
+  Fl_Gl_Window* win;
+  if (this->overriddenFuncs->as_gl_window != NULL) {
+    win = (static_cast<Fl_Gl_Window*>(this->overriddenFuncs->as_gl_window((fl_Window) this)));
+  }
+  else {
+    win = Fl_Window::as_gl_window();
+  }
+  return win;
+}
 EXPORT {
 #endif
+  FL_EXPORT_C(fl_Window_Virtual_Funcs*, Fl_Window_default_virtual_funcs)(){
+    fl_Window_Virtual_Funcs* ptr = (fl_Window_Virtual_Funcs*)malloc(sizeof(fl_Window_Virtual_Funcs));
+    ptr->draw = NULL;
+    ptr->handle = NULL;
+    ptr->resize = NULL;
+    ptr->show  = NULL;
+    ptr->hide = NULL;
+    ptr->as_window = NULL;
+    ptr->as_gl_window = NULL;
+    ptr->flush = NULL;
+    ptr->destroy_data = NULL;
+    return ptr;
+  }
   FL_EXPORT_C(int,Fl_Window_handle)(fl_Window self, int event){
     return (static_cast<Fl_Window*>(self))->handle(event);
   }
