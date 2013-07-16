@@ -362,6 +362,12 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Menu_Bar_measure_label)(fl_Menu_Bar menu_bar,int* ww,int* hh){
     (static_cast<Fl_DerivedMenu_Bar*>(menu_bar))->measure_label(*ww,*hh);
   }
+  FL_EXPORT_C(void*, Fl_Menu_Bar_other_data)(fl_Menu_Bar menu_bar){
+    return (static_cast<Fl_DerivedMenu_Bar*>(menu_bar))->get_other_data();
+  }
+  FL_EXPORT_C(void, Fl_Menu_Bar_set_other_data)(fl_Menu_Bar menu_bar, void* v){
+    (static_cast<Fl_DerivedMenu_Bar*>(menu_bar))->set_other_data(v);
+  }
   FL_EXPORT_C(fl_Menu_Bar, Fl_Menu_Bar_New_WithLabel)(int x, int y, int w, int h, const char* label) {
     fl_Menu_Bar_Virtual_Funcs* funcs = Fl_Menu_Bar_default_virtual_funcs();
     Fl_DerivedMenu_Bar* menu_bar = new Fl_DerivedMenu_Bar(x,y,w,h,label,funcs);

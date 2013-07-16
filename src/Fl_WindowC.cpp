@@ -414,6 +414,12 @@ EXPORT {
   // FL_EXPORT_C(void,Fl_Window_forms_end)(fl_Window win){
   //   return (static_cast<Fl_Window*>(win))->forms_end();
   // }
+  FL_EXPORT_C(void*, Fl_Window_other_data)(fl_Window window){
+    return (static_cast<Fl_DerivedWindow*>(window))->get_other_data();
+  }
+  FL_EXPORT_C(void, Fl_Window_set_other_data)(fl_Window window, void* v){
+    (static_cast<Fl_DerivedWindow*>(window))->set_other_data(v);
+  }
   FL_EXPORT_C(fl_Window, Fl_Window_New_WithLabel)(int x, int y, const char* title) {
     Fl_Window* window = new Fl_Window(x,y,title);
     return (static_cast<fl_Window>(window));

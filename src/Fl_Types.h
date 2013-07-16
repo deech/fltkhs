@@ -14,6 +14,13 @@
 #ifdef __cplusplus
 EXPORT {
 #endif
+#define FL_NORMAL_BROWSER	0	/**< type() of Fl_Browser */
+#define FL_SELECT_BROWSER	1	/**< type() of FL_Select_Browser */
+#define FL_HOLD_BROWSER		2	/**< type() of Fl_Hold_Browser */
+#define FL_MULTI_BROWSER	3	/**< type() of Fl_Multi_Browser */
+
+#define FL_SORT_ASCENDING	0	/**< sort browser items in ascending alphabetic order. */
+#define FL_SORT_DESCENDING	1	/**< sort in descending order */
 #ifndef INTERNAL_LINKAGE
   typedef enum {
     FL_TREE_REASON_NONE=0,
@@ -35,6 +42,15 @@ EXPORT {
     FL_SUBMENU = 0x40,		
     FL_MENU_DIVIDER = 0x80,	
     FL_MENU_HORIZONTAL = 0x100	
+  };
+  enum { 
+    HORIZONTAL = 1,		
+    VERTICAL = 2,		
+    BOTH = 3,			
+    ALWAYS_ON = 4,		
+    HORIZONTAL_ALWAYS = 5,	
+    VERTICAL_ALWAYS = 6,	
+    BOTH_ALWAYS = 7		
   };
 #endif
   typedef void* ID;
@@ -276,6 +292,16 @@ EXPORT {
     void         (*destroy_data)(fl_Browser browser);
   } fl_Browser_Virtual_Funcs;
 
+  typedef struct {
+    void      (*color_average)(fl_Image image, Fl_Color c, float i);
+    fl_Image  (*copy         )(fl_Image image, int W, int H);
+    void      (*desaturate   )(fl_Image image);
+    void      (*label        )(fl_Image image, fl_Widget w);
+    void      (*label_with_menu_item)(fl_Image image, fl_Menu_Item m);
+    void      (*draw         )(fl_Image image, int X, int Y, int W, int H, int cx, int cy);
+    void      (*uncache      )(fl_Image image);
+    void      (*destroy_data )(fl_Image image);
+  } fl_Image_Virtual_Funcs;
   typedef fl_Table_Virtual_Funcs fl_Table_Row_Virtual_Funcs;
   typedef fl_Widget_Virtual_Funcs fl_Button_Virtual_Funcs;
   typedef fl_Widget_Virtual_Funcs fl_Int_Input_Virtual_Funcs;

@@ -550,6 +550,78 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Browser_remove_icon)(fl_Browser browser,int line){
     (static_cast<Fl_DerivedBrowser*>(browser))->remove_icon(line);
   }
+  FL_EXPORT_C(int,Fl_Browser_select_only)(fl_Browser browser,void *item){
+    return (static_cast<Fl_DerivedBrowser*>(browser))->select_only(item);
+  }
+  FL_EXPORT_C(int,Fl_Browser_select_only_with_docallbacks)(fl_Browser browser,void *item,int docallbacks){
+    return (static_cast<Fl_DerivedBrowser*>(browser))->select_only(item,docallbacks);
+  }
+  FL_EXPORT_C(int,Fl_Browser_deselect)(fl_Browser browser){
+    return (static_cast<Fl_DerivedBrowser*>(browser))->deselect();
+  }
+  FL_EXPORT_C(int,Fl_Browser_deselect_with_docallbacks)(fl_Browser browser,int docallbacks){
+    return (static_cast<Fl_DerivedBrowser*>(browser))->deselect(docallbacks);
+  }
+  FL_EXPORT_C(int,Fl_Browser_position)(fl_Browser browser){
+    return (static_cast<Fl_DerivedBrowser*>(browser))->position();
+  }
+  FL_EXPORT_C(void,Fl_Browser_set_position)(fl_Browser browser,int pos){
+    (static_cast<Fl_DerivedBrowser*>(browser))->position(pos);
+  }
+  FL_EXPORT_C(int,Fl_Browser_hposition)(fl_Browser browser){
+    return (static_cast<Fl_DerivedBrowser*>(browser))->hposition();
+  }
+  FL_EXPORT_C(void,Fl_Browser_set_hposition)(fl_Browser browser,int ){
+    (static_cast<Fl_DerivedBrowser*>(browser))->hposition();
+  }
+  FL_EXPORT_C(uchar,Fl_Browser_has_scrollbar)(fl_Browser browser){
+    return (static_cast<Fl_DerivedBrowser*>(browser))->has_scrollbar();
+  }
+  FL_EXPORT_C(void,Fl_Browser_set_has_scrollbar)(fl_Browser browser,uchar mode){
+    (static_cast<Fl_DerivedBrowser*>(browser))->has_scrollbar(mode);
+  }
+  FL_EXPORT_C(Fl_Font,Fl_Browser_textfont)(fl_Browser browser){
+    return (static_cast<Fl_DerivedBrowser*>(browser))->textfont();
+  }
+  FL_EXPORT_C(void,Fl_Browser_set_textfont)(fl_Browser browser,Fl_Font font){
+    (static_cast<Fl_DerivedBrowser*>(browser))->textfont(font);
+  }
+  FL_EXPORT_C(Fl_Fontsize,Fl_Browser_textsize)(fl_Browser browser){
+    return (static_cast<Fl_DerivedBrowser*>(browser))->textsize();
+  }
+  FL_EXPORT_C(void,Fl_Browser_set_textsize)(fl_Browser browser,Fl_Fontsize newSize){
+    (static_cast<Fl_DerivedBrowser*>(browser))->textsize(newSize);
+  }
+  FL_EXPORT_C(Fl_Color,Fl_Browser_textcolor)(fl_Browser browser){
+    return (static_cast<Fl_DerivedBrowser*>(browser))->textcolor();
+  }
+  FL_EXPORT_C(void,Fl_Browser_set_textcolor)(fl_Browser browser,Fl_Color col){
+    (static_cast<Fl_DerivedBrowser*>(browser))->textcolor(col);
+  }
+  FL_EXPORT_C(int,Fl_Browser_scrollbar_size)(fl_Browser browser){
+    return (static_cast<Fl_DerivedBrowser*>(browser))->scrollbar_size();
+  }
+  FL_EXPORT_C(void,Fl_Browser_set_scrollbar_size)(fl_Browser browser,int newSize){
+    (static_cast<Fl_DerivedBrowser*>(browser))->scrollbar_size(newSize);
+  }
+  FL_EXPORT_C(int,Fl_Browser_scrollbar_width)(fl_Browser browser){
+    return (static_cast<Fl_DerivedBrowser*>(browser))->scrollbar_width();
+  }
+  FL_EXPORT_C(void,Fl_Browser_set_scrollbar_width)(fl_Browser browser,int width){
+    (static_cast<Fl_DerivedBrowser*>(browser))->scrollbar_width(width);
+  }
+  FL_EXPORT_C(void,Fl_Browser_scrollbar_right)(fl_Browser browser){
+    (static_cast<Fl_DerivedBrowser*>(browser))->scrollbar_right();
+  }
+  FL_EXPORT_C(void,Fl_Browser_set_scrollbar_left)(fl_Browser browser){
+    (static_cast<Fl_DerivedBrowser*>(browser))->scrollbar_left();
+  }
+  FL_EXPORT_C(void,Fl_Browser_sort)(fl_Browser browser){
+    (static_cast<Fl_DerivedBrowser*>(browser))->sort();
+  }
+  FL_EXPORT_C(void,Fl_Browser_sort_with_flags)(fl_Browser browser,int flags){
+    (static_cast<Fl_DerivedBrowser*>(browser))->sort(flags);
+  }
 #ifdef __cplusplus
 }
 #endif

@@ -19,7 +19,7 @@ void MyMenuCallback(fl_Widget w, void* user_data){
     fprintf(stderr, ", value is %s", Fl_Menu_Item_value(item)?"on":"off");	// Print item's value
   }
   fprintf(stderr, "\n");
-  if ( strcmp(Fl_Menu_Item_label(item), "Google") == 0 ) { flc_open_uri("http://google.com/");}// fprintf(stderr, "Opening Google");}// fl_open_uri("http://google.com/");
+  if ( strcmp(Fl_Menu_Item_label(item), "Google") == 0 ) { flc_open_uri("http://google.com/");}
   if ( strcmp(Fl_Menu_Item_label(item), "&Quit") == 0 ) { exit(0); }
 }
 int main(int argc, char** argv){

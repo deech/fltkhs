@@ -143,6 +143,8 @@ EXPORT {
   FL_EXPORT_C(void,         Fl_Multi_Browser_forms_end)(fl_Multi_Browser self);
 
   /* Fl_Multi_Browser specific functions */
+  FL_EXPORT_C(void*, Fl_Multi_Browser_other_data)(fl_Multi_Browser multi_browser);
+  FL_EXPORT_C(void, Fl_Multi_Browser_set_other_data)(fl_Multi_Browser multi_browser, void* v);
   FL_EXPORT_C(fl_Multi_Browser, Fl_Multi_Browser_New_WithLabel)(int x, int y, int w, int h, const char* label); 
   FL_EXPORT_C(fl_Multi_Browser, Fl_Multi_Browser_New)(int x, int y, int w, int h); 
   FL_EXPORT_C(fl_Multi_Browser, Fl_OverriddenMulti_Browser_New_WithLabel)(int x, int y, int w, int h, const char* label, fl_Multi_Browser_Virtual_Funcs* funcs); 
@@ -189,6 +191,30 @@ EXPORT {
   FL_EXPORT_C(void, Fl_Multi_Browser_set_icon)(fl_Multi_Browser multi_browser, int line, fl_Image icon);
   FL_EXPORT_C(fl_Image, Fl_Multi_Browser_icon)(fl_Multi_Browser multi_browser, int line);
   FL_EXPORT_C(void, Fl_Multi_Browser_remove_icon)(fl_Multi_Browser multi_browser, int line);
+  FL_EXPORT_C(int, Fl_Multi_Browser_select_only)(fl_Multi_Browser multi_browser,void *item);
+  FL_EXPORT_C(int, Fl_Multi_Browser_select_only_with_docallbacks)(fl_Multi_Browser multi_browser,void *item,int docallbacks);
+  FL_EXPORT_C(int, Fl_Multi_Browser_deselect)(fl_Multi_Browser multi_browser);
+  FL_EXPORT_C(int, Fl_Multi_Browser_deselect_with_docallbacks)(fl_Multi_Browser multi_browser,int docallbacks);
+  FL_EXPORT_C(int, Fl_Multi_Browser_position)(fl_Multi_Browser multi_browser); 
+  FL_EXPORT_C(void, Fl_Multi_Browser_set_position)(fl_Multi_Browser multi_browser,int pos); // scroll to here
+  FL_EXPORT_C(int, Fl_Multi_Browser_hposition)(fl_Multi_Browser multi_browser); 
+  FL_EXPORT_C(void, Fl_Multi_Browser_set_hposition)(fl_Multi_Browser multi_browser,int); // pan to here
+  FL_EXPORT_C(uchar, Fl_Multi_Browser_has_scrollbar)(fl_Multi_Browser multi_browser);
+  FL_EXPORT_C(void, Fl_Multi_Browser_set_has_scrollbar)(fl_Multi_Browser multi_browser,uchar mode); 
+  FL_EXPORT_C(Fl_Font, Fl_Multi_Browser_textfont)(fl_Multi_Browser multi_browser); 
+  FL_EXPORT_C(void, Fl_Multi_Browser_set_textfont)(fl_Multi_Browser multi_browser,Fl_Font font); 
+  FL_EXPORT_C(Fl_Fontsize, Fl_Multi_Browser_textsize)(fl_Multi_Browser multi_browser);  
+  FL_EXPORT_C(void, Fl_Multi_Browser_set_textsize)(fl_Multi_Browser multi_browser,Fl_Fontsize newSize); 
+  FL_EXPORT_C(Fl_Color, Fl_Multi_Browser_textcolor)(fl_Multi_Browser multi_browser); 
+  FL_EXPORT_C(void, Fl_Multi_Browser_set_textcolor)(fl_Multi_Browser multi_browser,Fl_Color col); 
+  FL_EXPORT_C(int, Fl_Multi_Browser_scrollbar_size)(fl_Multi_Browser multi_browser); 
+  FL_EXPORT_C(void, Fl_Multi_Browser_set_scrollbar_size)(fl_Multi_Browser multi_browser,int newSize); 
+  FL_EXPORT_C(int, Fl_Multi_Browser_scrollbar_width)(fl_Multi_Browser multi_browser); 
+  FL_EXPORT_C(void, Fl_Multi_Browser_set_scrollbar_width)(fl_Multi_Browser multi_browser,int width); 
+  FL_EXPORT_C(void, Fl_Multi_Browser_scrollbar_right)(fl_Multi_Browser multi_browser); 
+  FL_EXPORT_C(void, Fl_Multi_Browser_set_scrollbar_left)(fl_Multi_Browser multi_browser);
+  FL_EXPORT_C(void, Fl_Multi_Browser_sort)(fl_Multi_Browser multi_browser);
+  FL_EXPORT_C(void, Fl_Multi_Browser_sort_with_flags)(fl_Multi_Browser multi_browser,int flags);
 #ifdef __cplusplus
 }
 #endif

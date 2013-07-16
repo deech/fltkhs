@@ -363,6 +363,12 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Button_measure_label)(fl_Button b,int* ww,int* hh){
     (static_cast<Fl_DerivedButton*>(b))->measure_label(*ww,*hh);
   }
+  FL_EXPORT_C(void*, Fl_Button_other_data)(fl_Button button){
+    return (static_cast<Fl_DerivedButton*>(button))->get_other_data();
+  }
+  FL_EXPORT_C(void, Fl_Button_set_other_data)(fl_Button button, void* v){
+    (static_cast<Fl_DerivedButton*>(button))->set_other_data(v);
+  }
   FL_EXPORT_C(fl_Button, Fl_Button_New_WithLabel)(int x, int y, int w, int h, const char* label) {
     fl_Button_Virtual_Funcs* funcs = Fl_Button_default_virtual_funcs();
     Fl_DerivedButton* button = new Fl_DerivedButton(x,y,w,h,label,funcs);

@@ -120,6 +120,8 @@ EXPORT {
   };
 #endif  
   /* Fl_Button specific functions */
+  FL_EXPORT_C(void*, Fl_Button_other_data)(fl_Button button);
+  FL_EXPORT_C(void, Fl_Button_set_other_data)(fl_Button button, void* v);
   FL_EXPORT_C(fl_Button,    Fl_Button_New_WithLabel)(int x, int y, int w, int h, const char* label);
   FL_EXPORT_C(fl_Button   , Fl_Button_New)(int x, int y, int w, int h);
   FL_EXPORT_C(void        , Fl_Button_Destroy)(fl_Button button);

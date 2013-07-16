@@ -549,6 +549,78 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Multi_Browser_remove_icon)(fl_Multi_Browser multi_browser,int line){
     (static_cast<Fl_DerivedMulti_Browser*>(multi_browser))->remove_icon(line);
   }
+  FL_EXPORT_C(int,Fl_Multi_Browser_select_only)(fl_Multi_Browser multi_browser,void *item){
+    return (static_cast<Fl_DerivedMulti_Browser*>(multi_browser))->select_only(item);
+  }
+  FL_EXPORT_C(int,Fl_Multi_Browser_select_only_with_docallbacks)(fl_Multi_Browser multi_browser,void *item,int docallbacks){
+    return (static_cast<Fl_DerivedMulti_Browser*>(multi_browser))->select_only(item,docallbacks);
+  }
+  FL_EXPORT_C(int,Fl_Multi_Browser_deselect)(fl_Multi_Browser multi_browser){
+    return (static_cast<Fl_DerivedMulti_Browser*>(multi_browser))->deselect();
+  }
+  FL_EXPORT_C(int,Fl_Multi_Browser_deselect_with_docallbacks)(fl_Multi_Browser multi_browser,int docallbacks){
+    return (static_cast<Fl_DerivedMulti_Browser*>(multi_browser))->deselect(docallbacks);
+  }
+  FL_EXPORT_C(int,Fl_Multi_Browser_position)(fl_Multi_Browser multi_browser){
+    return (static_cast<Fl_DerivedMulti_Browser*>(multi_browser))->position();
+  }
+  FL_EXPORT_C(void,Fl_Multi_Browser_set_position)(fl_Multi_Browser multi_browser,int pos){
+    (static_cast<Fl_DerivedMulti_Browser*>(multi_browser))->position(pos);
+  }
+  FL_EXPORT_C(int,Fl_Multi_Browser_hposition)(fl_Multi_Browser multi_browser){
+    return (static_cast<Fl_DerivedMulti_Browser*>(multi_browser))->hposition();
+  }
+  FL_EXPORT_C(void,Fl_Multi_Browser_set_hposition)(fl_Multi_Browser multi_browser,int ){
+    (static_cast<Fl_DerivedMulti_Browser*>(multi_browser))->hposition();
+  }
+  FL_EXPORT_C(uchar,Fl_Multi_Browser_has_scrollbar)(fl_Multi_Browser multi_browser){
+    return (static_cast<Fl_DerivedMulti_Browser*>(multi_browser))->has_scrollbar();
+  }
+  FL_EXPORT_C(void,Fl_Multi_Browser_set_has_scrollbar)(fl_Multi_Browser multi_browser,uchar mode){
+    (static_cast<Fl_DerivedMulti_Browser*>(multi_browser))->has_scrollbar(mode);
+  }
+  FL_EXPORT_C(Fl_Font,Fl_Multi_Browser_textfont)(fl_Multi_Browser multi_browser){
+    return (static_cast<Fl_DerivedMulti_Browser*>(multi_browser))->textfont();
+  }
+  FL_EXPORT_C(void,Fl_Multi_Browser_set_textfont)(fl_Multi_Browser multi_browser,Fl_Font font){
+    (static_cast<Fl_DerivedMulti_Browser*>(multi_browser))->textfont(font);
+  }
+  FL_EXPORT_C(Fl_Fontsize,Fl_Multi_Browser_textsize)(fl_Multi_Browser multi_browser){
+    return (static_cast<Fl_DerivedMulti_Browser*>(multi_browser))->textsize();
+  }
+  FL_EXPORT_C(void,Fl_Multi_Browser_set_textsize)(fl_Multi_Browser multi_browser,Fl_Fontsize newSize){
+    (static_cast<Fl_DerivedMulti_Browser*>(multi_browser))->textsize(newSize);
+  }
+  FL_EXPORT_C(Fl_Color,Fl_Multi_Browser_textcolor)(fl_Multi_Browser multi_browser){
+    return (static_cast<Fl_DerivedMulti_Browser*>(multi_browser))->textcolor();
+  }
+  FL_EXPORT_C(void,Fl_Multi_Browser_set_textcolor)(fl_Multi_Browser multi_browser,Fl_Color col){
+    (static_cast<Fl_DerivedMulti_Browser*>(multi_browser))->textcolor(col);
+  }
+  FL_EXPORT_C(int,Fl_Multi_Browser_scrollbar_size)(fl_Multi_Browser multi_browser){
+    return (static_cast<Fl_DerivedMulti_Browser*>(multi_browser))->scrollbar_size();
+  }
+  FL_EXPORT_C(void,Fl_Multi_Browser_set_scrollbar_size)(fl_Multi_Browser multi_browser,int newSize){
+    (static_cast<Fl_DerivedMulti_Browser*>(multi_browser))->scrollbar_size(newSize);
+  }
+  FL_EXPORT_C(int,Fl_Multi_Browser_scrollbar_width)(fl_Multi_Browser multi_browser){
+    return (static_cast<Fl_DerivedMulti_Browser*>(multi_browser))->scrollbar_width();
+  }
+  FL_EXPORT_C(void,Fl_Multi_Browser_set_scrollbar_width)(fl_Multi_Browser multi_browser,int width){
+    (static_cast<Fl_DerivedMulti_Browser*>(multi_browser))->scrollbar_width(width);
+  }
+  FL_EXPORT_C(void,Fl_Multi_Browser_scrollbar_right)(fl_Multi_Browser multi_browser){
+    (static_cast<Fl_DerivedMulti_Browser*>(multi_browser))->scrollbar_right();
+  }
+  FL_EXPORT_C(void,Fl_Multi_Browser_set_scrollbar_left)(fl_Multi_Browser multi_browser){
+    (static_cast<Fl_DerivedMulti_Browser*>(multi_browser))->scrollbar_left();
+  }
+  FL_EXPORT_C(void,Fl_Multi_Browser_sort)(fl_Multi_Browser multi_browser){
+    (static_cast<Fl_DerivedMulti_Browser*>(multi_browser))->sort();
+  }
+  FL_EXPORT_C(void,Fl_Multi_Browser_sort_with_flags)(fl_Multi_Browser multi_browser,int flags){
+    (static_cast<Fl_DerivedMulti_Browser*>(multi_browser))->sort(flags);
+  }
 #ifdef __cplusplus
 }
 #endif

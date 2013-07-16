@@ -98,6 +98,9 @@ EXPORT {
   FL_EXPORT_C(void,         Fl_Menu__clear_visible_focus)(fl_Menu_ menu_);
   FL_EXPORT_C(void,         Fl_Menu__modify_visible_focus)(fl_Menu_ menu_, int v);
   FL_EXPORT_C(unsigned int, Fl_Menu__visible_focus)(fl_Menu_ menu_);
+  FL_EXPORT_C(void,         Fl_Menu_do_callback)(fl_Menu menu);
+  FL_EXPORT_C(void,         Fl_Menu_do_callback_with_widget_and_user_data)(fl_Menu menu, fl_Widget w, long arg);
+  FL_EXPORT_C(void,         Fl_Menu_do_callback_with_widget_and_default_user_data)(fl_Menu menu, fl_Widget w);
   FL_EXPORT_C(int,          Fl_Menu__contains)(fl_Menu_ menu_, fl_Group w);
   FL_EXPORT_C(int,          Fl_Menu__inside)(fl_Menu_ menu_, fl_Group w);
   FL_EXPORT_C(void,         Fl_Menu__redraw)(fl_Menu_ menu_);
@@ -120,6 +123,8 @@ EXPORT {
   FL_EXPORT_C(void,         Fl_Menu__resize)(fl_Menu_ menu_,int X, int Y, int W, int H);
 
   /* Fl_Menu_ specific */ 
+  FL_EXPORT_C(void*, Fl_Menu__other_data)(fl_Menu_ menu_);
+  FL_EXPORT_C(void, Fl_Menu__set_other_data)(fl_Menu_ menu_, void* v);
   FL_EXPORT_C(fl_Menu_,    Fl_Menu__New_WithLabel)(int x, int y, int w, int h, const char* label);
   FL_EXPORT_C(fl_Menu_   , Fl_Menu__New)(int x, int y, int w, int h);
 

@@ -354,6 +354,12 @@ EXPORT {
   FL_EXPORT_C(int,Fl_Int_Input_handle_super )(fl_Int_Input int_input,int event){
     return (static_cast<Fl_Int_Input*>(int_input))->handle(event);
   }
+  FL_EXPORT_C(void*, Fl_Int_Input_other_data)(fl_Int_Input int_input){
+    return (static_cast<Fl_DerivedInt_Input*>(int_input))->get_other_data();
+  }
+  FL_EXPORT_C(void, Fl_Int_Input_set_other_data)(fl_Int_Input int_input, void* v){
+    (static_cast<Fl_DerivedInt_Input*>(int_input))->set_other_data(v);
+  }
   FL_EXPORT_C(fl_Int_Input, Fl_Int_Input_New_WithLabel)(int x, int y, int w, int h, const char* label) {
     fl_Int_Input_Virtual_Funcs* funcs = Fl_Int_Input_default_virtual_funcs();
     Fl_DerivedInt_Input* int_input = new Fl_DerivedInt_Input(x,y,w,h,label,funcs);
