@@ -125,12 +125,15 @@ EXPORT {
     virtual int handle(int event);
     virtual void resize(int x, int y, int w, int h);
     virtual void show();
+    virtual void show(int,char**);
     virtual void hide();
     virtual void flush();
     virtual Fl_Window* as_window();
     virtual Fl_Gl_Window* as_gl_window();
     Fl_DerivedWindow(int X, int Y, int W, int H, const char *l, fl_Window_Virtual_Funcs* funcs);
     Fl_DerivedWindow(int X, int Y, int W, int H, fl_Window_Virtual_Funcs* funcs);
+    Fl_DerivedWindow(int W, int H, const char *l, fl_Window_Virtual_Funcs* funcs);
+    Fl_DerivedWindow(int W, int H, fl_Window_Virtual_Funcs* funcs);
     ~Fl_DerivedWindow();
   };
 #endif  

@@ -2,9 +2,6 @@
 #ifdef __cplusplus
 EXPORT {
 #endif
-  FL_EXPORT_C(int,Fl_Choice_handle_super )(fl_Choice choice,int event){
-    return (static_cast<Fl_Choice*>(choice))->handle(event);
-  }
   FL_EXPORT_C(int,Fl_Choice_handle )(fl_Choice choice, int event){
     return (static_cast<Fl_Choice*>(choice))->handle(event);
   }

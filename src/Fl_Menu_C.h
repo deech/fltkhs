@@ -29,6 +29,7 @@ EXPORT {
   };
 #endif
   /* Inherited from Fl_Widget */
+  FL_EXPORT_C(int,          Fl_Menu__handle_super)(fl_Group self, int event);
   FL_EXPORT_C(int,          Fl_Menu__handle)(fl_Group self, int event);
   FL_EXPORT_C(fl_Group,     Fl_Menu__parent)(fl_Menu_ menu_);
   FL_EXPORT_C(void,         Fl_Menu__set_parent)(fl_Menu_ menu_, fl_Group grp);

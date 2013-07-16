@@ -308,6 +308,7 @@ EXPORT {
   typedef fl_Browser_Virtual_Funcs fl_Multi_Browser_Virtual_Funcs;
   typedef fl_Widget_Virtual_Funcs fl_Menu__Virtual_Funcs;
   typedef fl_Widget_Virtual_Funcs fl_Menu_Bar_Virtual_Funcs;
+  typedef fl_Widget_Virtual_Funcs fl_Box_Virtual_Funcs;
 #ifdef __cplusplus
 }
 #endif
