@@ -53,7 +53,7 @@ EXPORT {
 #ifdef __cplusplus
   typedef int  (*fl_Args_Handler)(int argc, char** argv, int& i);
 #else
-  typedef int  (*fl_Args_Handler)(int argc, char** argv, int** i);
+  typedef int  (*fl_Args_Handler)(int argc, char** argv, int* i);
 #endif
   typedef void (*fl_Atclose_Handler)(fl_Window window, void *data);
   typedef int  (*fl_Event_Dispatch)(int event, fl_Window w);
