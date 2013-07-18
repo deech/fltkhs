@@ -55,10 +55,10 @@ EXPORT {
   FL_EXPORT_C(void,         Fl_Box_set_labeltype)(fl_Box box, Fl_Labeltype a);
   FL_EXPORT_C(Fl_Color,     Fl_Box_labelcolor)(fl_Box box);
   FL_EXPORT_C(void,         Fl_Box_set_labelcolor)(fl_Box box, Fl_Color c);
-  FL_EXPORT_C(Fl_Font,      Fl_Box_item_labelfont)(fl_Box box);
-  FL_EXPORT_C(void,         Fl_Box_set_item_labelfont)(fl_Box box, Fl_Font c);
-  FL_EXPORT_C(Fl_Fontsize,  Fl_Box_item_labelsize)(fl_Box box);
-  FL_EXPORT_C(void,         Fl_Box_set_item_labelsize)(fl_Box box, Fl_Fontsize pix);
+  FL_EXPORT_C(Fl_Font,      Fl_Box_labelfont)(fl_Box box);
+  FL_EXPORT_C(void,         Fl_Box_set_labelfont)(fl_Box box, Fl_Font c);
+  FL_EXPORT_C(Fl_Fontsize,  Fl_Box_labelsize)(fl_Box box);
+  FL_EXPORT_C(void,         Fl_Box_set_labelsize)(fl_Box box, Fl_Fontsize pix);
   FL_EXPORT_C(fl_Image,     Fl_Box_image)(fl_Box box);
   FL_EXPORT_C(void,         Fl_Box_set_image)(fl_Box box, fl_Image pix);
   FL_EXPORT_C(fl_Image,     Fl_Box_deimage)(fl_Box box);

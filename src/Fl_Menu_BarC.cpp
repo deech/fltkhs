@@ -426,6 +426,10 @@ EXPORT {
     C_to_Fl_Callback* callback_interceptor = new C_to_Fl_Callback(cb, user_data);
     return callback_interceptor->menu_insert((static_cast<Fl_Menu_Bar*>(menu_bar)),index,name,shortcut,flags);
   }
+  FL_EXPORT_C(int,Fl_Menu_Bar_add)(fl_Menu_Bar menu_bar,char* name,int shortcut,fl_Callback* cb){
+    C_to_Fl_Callback* callback_interceptor = new C_to_Fl_Callback(cb);
+    return callback_interceptor->menu_add((static_cast<Fl_Menu_Bar*>(menu_bar)),name,shortcut,0);
+  }
   FL_EXPORT_C(int,Fl_Menu_Bar_add_with_user_data)(fl_Menu_Bar menu_bar,char* name,int shortcut,fl_Callback* cb,void* user_data){
     C_to_Fl_Callback* callback_interceptor = new C_to_Fl_Callback(cb, user_data);
     return callback_interceptor->menu_add((static_cast<Fl_Menu_Bar*>(menu_bar)),name,shortcut,0);
