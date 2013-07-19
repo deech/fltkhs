@@ -66,7 +66,7 @@ EXPORT {
   FL_EXPORT_C(const char*,  Fl_Menu__tooltip)(fl_Menu_ menu_);
   FL_EXPORT_C(void,         Fl_Menu__copy_tooltip)(fl_Menu_ menu_, const char* text);
   FL_EXPORT_C(void,         Fl_Menu__set_tooltip)(fl_Menu_ menu_, const char* text);
-  FL_EXPORT_C(void,         Fl_Menu__set_callback_and_user_data)(fl_Menu_ menu_, fl_Callback* cb, void* p);
+  FL_EXPORT_C(void,         Fl_Menu__set_callback_with_user_data)(fl_Menu_ menu_, fl_Callback* cb, void* p);
   FL_EXPORT_C(void,         Fl_Menu__set_callback)(fl_Menu_ menu_, fl_Callback* cb);
   FL_EXPORT_C(void*,        Fl_Menu__other_data)(fl_Menu_ menu_);
   FL_EXPORT_C(void,         Fl_Menu__set_other_data)(fl_Menu_ menu_, void* v);
@@ -128,6 +128,7 @@ EXPORT {
   FL_EXPORT_C(void, Fl_Menu__set_other_data)(fl_Menu_ menu_, void* v);
   FL_EXPORT_C(fl_Menu_,    Fl_Menu__New_WithLabel)(int x, int y, int w, int h, const char* label);
   FL_EXPORT_C(fl_Menu_   , Fl_Menu__New)(int x, int y, int w, int h);
+  FL_EXPORT_C(void   , Fl_Menu__Destroy)(fl_Menu_ menu_);
 
   FL_EXPORT_C(int, Fl_Menu__item_pathname_with_finditem)(fl_Menu_ menu_, char* name, int namelen,  fl_Menu_Item finditem);
   FL_EXPORT_C(int, Fl_Menu__item_pathname)(fl_Menu_ menu_, char* name, int namelen);

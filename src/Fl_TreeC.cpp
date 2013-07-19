@@ -95,7 +95,7 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Tree_set_tooltip)(fl_Tree tree,const char* text){
     (static_cast<Fl_Tree*>(tree))->tooltip(text);
   }
-  FL_EXPORT_C(void,Fl_Tree_set_callback_and_user_data)(fl_Tree tree,fl_Callback* cb,void* p){
+  FL_EXPORT_C(void,Fl_Tree_set_callback_with_user_data)(fl_Tree tree,fl_Callback* cb,void* p){
     Fl_Tree* castedButton = (static_cast<Fl_Tree*>(tree));
     new C_to_Fl_Callback(castedButton, cb, p);
   }

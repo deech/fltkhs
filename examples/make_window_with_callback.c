@@ -6,7 +6,7 @@ void my_callback(fl_Window w, void* user_data) {
   puts("The title of this window is:");
   puts((const char*)Fl_Window_label(w));
   Fl_Window_hide(w);
-  Fl_Window_destroy(w);
+  Fl_Window_Destroy(w);
 }
 int main(int argc, char** argv)
 {

@@ -237,7 +237,7 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Menu_Bar_set_tooltip)(fl_Menu_Bar menu_bar,const char* text){
     (static_cast<Fl_DerivedMenu_Bar*>(menu_bar))->tooltip(text);
   }
-  FL_EXPORT_C(void,Fl_Menu_Bar_set_callback_and_user_data)(fl_Menu_Bar menu_bar,fl_Callback cb,void* p){
+  FL_EXPORT_C(void,Fl_Menu_Bar_set_callback_with_user_data)(fl_Menu_Bar menu_bar,fl_Callback cb,void* p){
     Fl_Menu_* castedMenu_ = (static_cast<Fl_DerivedMenu_Bar*>(menu_bar));
     new C_to_Fl_Callback(castedMenu_, cb, p);
   }
@@ -377,6 +377,9 @@ EXPORT {
     fl_Menu_Bar_Virtual_Funcs* funcs = Fl_Menu_Bar_default_virtual_funcs();
     Fl_DerivedMenu_Bar* menu_bar = new Fl_DerivedMenu_Bar(x,y,w,h,0,funcs);
     return (fl_Menu_Bar)menu_bar;
+  }
+  FL_EXPORT_C(void   , Fl_Menu_Bar_Destroy)(fl_Menu_Bar menu_bar){
+    delete (static_cast<Fl_DerivedMenu_Bar*>(menu_bar));
   }
   FL_EXPORT_C(int,Fl_Menu_Bar_item_pathname_with_finditem)(fl_Menu_Bar menu_bar,char* name,int namelen,fl_Menu_Item finditem){
     return (static_cast<Fl_Menu_Bar*>(menu_bar))->item_pathname(name,namelen,(static_cast<Fl_Menu_Item*>(finditem)));

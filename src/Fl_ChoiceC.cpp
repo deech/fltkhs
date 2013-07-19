@@ -137,7 +137,7 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Choice_set_tooltip)(fl_Choice choice,const char* text){
     (static_cast<Fl_Choice*>(choice))->tooltip(text);
   }
-  FL_EXPORT_C(void,Fl_Choice_set_callback_and_user_data)(fl_Choice choice,fl_Callback cb,void* p){
+  FL_EXPORT_C(void,Fl_Choice_set_callback_with_user_data)(fl_Choice choice,fl_Callback cb,void* p){
     Fl_Choice* castedMenu_ = (static_cast<Fl_Choice*>(choice));
     new C_to_Fl_Callback(castedMenu_, cb, p);
   }

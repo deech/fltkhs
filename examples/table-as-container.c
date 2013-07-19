@@ -35,7 +35,7 @@ void SetSize(fl_Table table, int newrows, int newcols){
 	  sprintf(s, "%d/%d ", r, c);
 	  fl_Light_Button butt = Fl_Light_Button_New_WithLabel(X,Y,W,H,strdup(s));
 	  Fl_Light_Button_set_align(butt,FL_ALIGN_CENTER|FL_ALIGN_INSIDE);
-	  Fl_Light_Button_set_callback_and_user_data(butt,(fl_Callback*)button_cb, (void*)0);
+	  Fl_Light_Button_set_callback_with_user_data(butt,(fl_Callback*)button_cb, (void*)0);
 	  Fl_Light_Button_set_value(butt,((r+c*2) & 4 ) ? 1 : 0);
 	}
       }

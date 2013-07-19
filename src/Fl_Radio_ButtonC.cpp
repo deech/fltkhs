@@ -108,7 +108,7 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Radio_Button_set_tooltip)(fl_Radio_Button b,const char* text){
     (static_cast<Fl_Radio_Button*>(b))->tooltip(text);
   }
-  FL_EXPORT_C(void,Fl_Radio_Button_set_callback_and_user_data)(fl_Radio_Button b,fl_Callback* cb,void* p){
+  FL_EXPORT_C(void,Fl_Radio_Button_set_callback_with_user_data)(fl_Radio_Button b,fl_Callback* cb,void* p){
     Fl_Radio_Button* castedButton = (static_cast<Fl_Radio_Button*>(b));
     new C_to_Fl_Callback(castedButton, cb, p);
   }

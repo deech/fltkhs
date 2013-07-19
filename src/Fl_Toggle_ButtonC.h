@@ -46,7 +46,7 @@ EXPORT {
   FL_EXPORT_C(const char*,  Fl_Toggle_Button_tooltip)(fl_Toggle_Button win);
   FL_EXPORT_C(void,         Fl_Toggle_Button_copy_tooltip)(fl_Toggle_Button win, const char* text);
   FL_EXPORT_C(void,         Fl_Toggle_Button_set_tooltip)(fl_Toggle_Button win, const char* text);
-  FL_EXPORT_C(void,         Fl_Toggle_Button_set_callback_and_user_data)(fl_Toggle_Button win, fl_Callback* cb, void* p);
+  FL_EXPORT_C(void,         Fl_Toggle_Button_set_callback_with_user_data)(fl_Toggle_Button win, fl_Callback* cb, void* p);
   FL_EXPORT_C(void,         Fl_Toggle_Button_set_callback)(fl_Toggle_Button win, fl_Callback* cb);
   FL_EXPORT_C(void*,        Fl_Toggle_Button_user_data)(fl_Toggle_Button win);
   FL_EXPORT_C(void,         Fl_Toggle_Button_set_user_data)(fl_Toggle_Button win, void* v);

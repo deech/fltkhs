@@ -79,7 +79,7 @@ EXPORT {
   FL_EXPORT_C(const char*,  Fl_Browser_tooltip)(fl_Browser browser);
   FL_EXPORT_C(void,         Fl_Browser_copy_tooltip)(fl_Browser browser, const char* text);
   FL_EXPORT_C(void,         Fl_Browser_set_tooltip)(fl_Browser browser, const char* text);
-  FL_EXPORT_C(void,         Fl_Browser_set_callback_and_user_data)(fl_Browser browser, fl_Callback* cb, void* p);
+  FL_EXPORT_C(void,         Fl_Browser_set_callback_with_user_data)(fl_Browser browser, fl_Callback* cb, void* p);
   FL_EXPORT_C(void,         Fl_Browser_set_callback)(fl_Browser browser, fl_Callback* cb);
   FL_EXPORT_C(void*,        Fl_Browser_user_data)(fl_Browser browser);
   FL_EXPORT_C(void,         Fl_Browser_set_user_data)(fl_Browser browser, void* v);

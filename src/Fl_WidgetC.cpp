@@ -214,7 +214,7 @@ Fl_Gl_Window* Fl_DerivedWidget::as_gl_window(){
   FL_EXPORT_C(void,Fl_Widget_set_tooltip)(fl_Widget widget,const char* text){
     (static_cast<Fl_DerivedWidget*>(widget))->tooltip(text);
   }
-  FL_EXPORT_C(void,Fl_Widget_set_callback_and_user_data)(fl_Widget widget,fl_Callback* cb,void* p){
+  FL_EXPORT_C(void,Fl_Widget_set_callback_with_user_data)(fl_Widget widget,fl_Callback* cb,void* p){
     Fl_DerivedWidget* castedWindow = (static_cast<Fl_DerivedWidget*>(widget));
     new C_to_Fl_Callback(castedWindow, cb, p);
   }

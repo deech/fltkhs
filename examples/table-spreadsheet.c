@@ -135,13 +135,13 @@ void input_cb(fl_Table table, void* user_data){
 }
 void initializeTable(fl_Table table){
   Fl_Table_begin(table);
-  Fl_Table_set_callback_and_user_data(table, (fl_Callback*)event_callback, (void*)table);
+  Fl_Table_set_callback_with_user_data(table, (fl_Callback*)event_callback, (void*)table);
   Fl_Table_set_when(table,FL_WHEN_NOT_CHANGED|Fl_Table_when(table));
   fl_Int_Input input = (fl_Int_Input)Fl_Int_Input_New(Fl_Table_w(table)/2,
   						      Fl_Table_h(table)/2,
   						      0,0);
   Fl_Int_Input_hide(input);
-  Fl_Int_Input_set_callback_and_user_data(input, (fl_Callback*)input_cb, (void*)table);
+  Fl_Int_Input_set_callback_with_user_data(input, (fl_Callback*)input_cb, (void*)table);
   Fl_Int_Input_set_when(input,FL_WHEN_ENTER_KEY_ALWAYS);
   Fl_Int_Input_set_maximum_size(input,5);
   Fl_Int_Input_set_color(input,FL_YELLOW);

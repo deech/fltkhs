@@ -8,7 +8,7 @@
 EXPORT {
 #endif
 #ifndef INTERNAL_LINKAGE
-#define FLTK_ABI_VERSION        10303  
+#define FLTK_ABI_VERSION        10300 
 #define FL_MAJOR_VERSION	1
 #define FL_MINOR_VERSION	3
 #define FL_PATCH_VERSION	0

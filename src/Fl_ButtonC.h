@@ -57,7 +57,7 @@ EXPORT {
   FL_EXPORT_C(const char*,  Fl_Button_tooltip)(fl_Button button);
   FL_EXPORT_C(void,         Fl_Button_copy_tooltip)(fl_Button button, const char* text);
   FL_EXPORT_C(void,         Fl_Button_set_tooltip)(fl_Button button, const char* text);
-  FL_EXPORT_C(void,         Fl_Button_set_callback_and_user_data)(fl_Button button, fl_Callback* cb, void* p);
+  FL_EXPORT_C(void,         Fl_Button_set_callback_with_user_data)(fl_Button button, fl_Callback* cb, void* p);
   FL_EXPORT_C(void,         Fl_Button_set_callback)(fl_Button button, fl_Callback* cb);
   FL_EXPORT_C(void*,        Fl_Button_user_data)(fl_Button button);
   FL_EXPORT_C(void,         Fl_Button_set_user_data)(fl_Button button, void* v);

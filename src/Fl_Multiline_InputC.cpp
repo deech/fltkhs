@@ -109,7 +109,7 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Multiline_Input_set_tooltip)(fl_Multiline_Input multiline_input,const char* text){
     (static_cast<Fl_Multiline_Input*>(multiline_input))->tooltip(text);
   }
-  FL_EXPORT_C(void,Fl_Multiline_Input_set_callback_and_user_data)(fl_Multiline_Input multiline_input,fl_Callback* cb,void* p){
+  FL_EXPORT_C(void,Fl_Multiline_Input_set_callback_with_user_data)(fl_Multiline_Input multiline_input,fl_Callback* cb,void* p){
     Fl_Multiline_Input* castedInput_dow = (static_cast<Fl_Multiline_Input*>(multiline_input));
     new C_to_Fl_Callback(castedInput_dow, cb, p);
   }

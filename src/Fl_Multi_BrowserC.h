@@ -79,7 +79,7 @@ EXPORT {
   FL_EXPORT_C(const char*,  Fl_Multi_Browser_tooltip)(fl_Multi_Browser multi_browser);
   FL_EXPORT_C(void,         Fl_Multi_Browser_copy_tooltip)(fl_Multi_Browser multi_browser, const char* text);
   FL_EXPORT_C(void,         Fl_Multi_Browser_set_tooltip)(fl_Multi_Browser multi_browser, const char* text);
-  FL_EXPORT_C(void,         Fl_Multi_Browser_set_callback_and_user_data)(fl_Multi_Browser multi_browser, fl_Callback* cb, void* p);
+  FL_EXPORT_C(void,         Fl_Multi_Browser_set_callback_with_user_data)(fl_Multi_Browser multi_browser, fl_Callback* cb, void* p);
   FL_EXPORT_C(void,         Fl_Multi_Browser_set_callback)(fl_Multi_Browser multi_browser, fl_Callback* cb);
   FL_EXPORT_C(void*,        Fl_Multi_Browser_user_data)(fl_Multi_Browser multi_browser);
   FL_EXPORT_C(void,         Fl_Multi_Browser_set_user_data)(fl_Multi_Browser multi_browser, void* v);

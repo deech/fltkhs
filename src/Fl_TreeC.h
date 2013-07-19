@@ -46,7 +46,7 @@ EXPORT {
   FL_EXPORT_C(const char*,  Fl_Tree_tooltip)(fl_Tree tree);
   FL_EXPORT_C(void,         Fl_Tree_copy_tooltip)(fl_Tree tree, const char* text);
   FL_EXPORT_C(void,         Fl_Tree_set_tooltip)(fl_Tree tree, const char* text);
-  FL_EXPORT_C(void,         Fl_Tree_set_callback_and_user_data)(fl_Tree tree, fl_Callback* cb, void* p);
+  FL_EXPORT_C(void,         Fl_Tree_set_callback_with_user_data)(fl_Tree tree, fl_Callback* cb, void* p);
   FL_EXPORT_C(void,         Fl_Tree_set_callback)(fl_Tree tree, fl_Callback* cb);
   FL_EXPORT_C(void*,        Fl_Tree_user_data)(fl_Tree tree);
   FL_EXPORT_C(void,         Fl_Tree_set_user_data)(fl_Tree tree, void* v);

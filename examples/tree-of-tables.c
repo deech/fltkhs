@@ -11,6 +11,8 @@
 #ifndef PI
 #define PI 3.14159
 #endif
+
+#if FLTK_ABI_VERSION >= 10301
 void initializeTable(fl_Table table, char* m){
   void* user_data = (void*)m;
   Fl_Table_set_other_data(table,user_data);
@@ -131,3 +133,9 @@ int main(int argc, char *argv[]) {
   Fl_Double_Window_show(win);
   return Fl_run();
 }
+#else
+int main(int argc, char *argv[]) {
+  puts("This example must have FLTK_ABI_VERSION enabled to work properly.");
+  return 0;
+}
+#endif

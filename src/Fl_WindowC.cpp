@@ -227,7 +227,7 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Window_set_tooltip)(fl_Window win,const char* text){
     (static_cast<Fl_DerivedWindow*>(win))->tooltip(text);
   }
-  FL_EXPORT_C(void,Fl_Window_set_callback_and_user_data)(fl_Window win,fl_Callback* cb,void* p){
+  FL_EXPORT_C(void,Fl_Window_set_callback_with_user_data)(fl_Window win,fl_Callback* cb,void* p){
     Fl_DerivedWindow* castedWindow = (static_cast<Fl_DerivedWindow*>(win));
     new C_to_Fl_Callback(castedWindow, cb, p);
   }
@@ -467,6 +467,9 @@ FL_EXPORT_C(fl_Window, Fl_OverriddenWindow_NewWH_WithLabel)(int x, int y, int w,
     Fl_DerivedWindow* window = new Fl_DerivedWindow(x,y,w,h,0,funcs);
     return (fl_Window)window;
   }
+  FL_EXPORT_C(void, Fl_Window_Destroy)(fl_Window window){
+    delete (static_cast<Fl_DerivedWindow*>(window));
+  }
   FL_EXPORT_C(unsigned int,Fl_Window_changed)(fl_Window win){
     return (static_cast<Fl_DerivedWindow*>(win))->changed();
   }
@@ -487,9 +490,6 @@ FL_EXPORT_C(fl_Window, Fl_OverriddenWindow_NewWH_WithLabel)(int x, int y, int w,
   }
   FL_EXPORT_C(void,Fl_Window_show_with_args)(fl_Window win,int argc,char** argv){
     (static_cast<Fl_DerivedWindow*>(win))->show(argc,argv);
-  }
-  FL_EXPORT_C(void,Fl_Window_destroy)(fl_Window win){
-    delete (static_cast<Fl_DerivedWindow*>(win));
   }
   FL_EXPORT_C(void,Fl_Window_resize)(fl_Window win,int X,int Y,int W,int H){
     (static_cast<Fl_DerivedWindow*>(win))->resize(X,Y,W,H);

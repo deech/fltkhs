@@ -108,7 +108,7 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Light_Button_set_tooltip)(fl_Light_Button b,const char* text){
     (static_cast<Fl_Light_Button*>(b))->tooltip(text);
   }
-  FL_EXPORT_C(void,Fl_Light_Button_set_callback_and_user_data)(fl_Light_Button b,fl_Callback* cb,void* p){
+  FL_EXPORT_C(void,Fl_Light_Button_set_callback_with_user_data)(fl_Light_Button b,fl_Callback* cb,void* p){
     Fl_Light_Button* castedButton = (static_cast<Fl_Light_Button*>(b));
     new C_to_Fl_Callback(castedButton, cb, p);
   }

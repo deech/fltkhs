@@ -46,7 +46,7 @@ EXPORT {
   FL_EXPORT_C(const char*,  Fl_Input__tooltip)(fl_Input_ input_);
   FL_EXPORT_C(void,         Fl_Input__copy_tooltip)(fl_Input_ input_, const char* text);
   FL_EXPORT_C(void,         Fl_Input__set_tooltip)(fl_Input_ input_, const char* text);
-  FL_EXPORT_C(void,         Fl_Input__set_callback_and_user_data)(fl_Input_ input_, fl_Callback* cb, void* p);
+  FL_EXPORT_C(void,         Fl_Input__set_callback_with_user_data)(fl_Input_ input_, fl_Callback* cb, void* p);
   FL_EXPORT_C(void,         Fl_Input__set_callback)(fl_Input_ input_, fl_Callback* cb);
   FL_EXPORT_C(void*,        Fl_Input__user_data)(fl_Input_ input_);
   FL_EXPORT_C(void,         Fl_Input__set_user_data)(fl_Input_ input_, void* v);

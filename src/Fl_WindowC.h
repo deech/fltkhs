@@ -45,7 +45,7 @@ EXPORT {
   FL_EXPORT_C(const char*,  Fl_Window_tooltip)(fl_Window win);
   FL_EXPORT_C(void,         Fl_Window_copy_tooltip)(fl_Window win, const char* text);
   FL_EXPORT_C(void,         Fl_Window_set_tooltip)(fl_Window win, const char* text);
-  FL_EXPORT_C(void,         Fl_Window_set_callback_and_user_data)(fl_Window win, fl_Callback* cb, void* p);
+  FL_EXPORT_C(void,         Fl_Window_set_callback_with_user_data)(fl_Window win, fl_Callback* cb, void* p);
   FL_EXPORT_C(void,         Fl_Window_set_callback)(fl_Window win, fl_Callback* cb);
   FL_EXPORT_C(void*,        Fl_Window_user_data)(fl_Window win);
   FL_EXPORT_C(void,         Fl_Window_set_user_data)(fl_Window win, void* v);
@@ -136,7 +136,7 @@ EXPORT {
     Fl_DerivedWindow(int W, int H, fl_Window_Virtual_Funcs* funcs);
     ~Fl_DerivedWindow();
   };
-#endif  
+#endif
   /* Fl_Window specific */
   FL_EXPORT_C(unsigned int, Fl_Window_changed)(fl_Window win);
   FL_EXPORT_C(void,         Fl_Window_fullscreen)(fl_Window win);
@@ -145,13 +145,17 @@ EXPORT {
   FL_EXPORT_C(void*, Fl_Window_other_data)(fl_Window window);
   FL_EXPORT_C(void, Fl_Window_set_other_data)(fl_Window window, void* v);
   FL_EXPORT_C(fl_Window,    Fl_Window_New_WithLabel)(int x, int y, const char* title);
+  FL_EXPORT_C(fl_Window, Fl_OverriddenWindow_New_WithLabel)(int x, int y, const char* title, fl_Window_Virtual_Funcs* funcs);
   FL_EXPORT_C(fl_Window,    Fl_Window_New)(int x, int y);
+  FL_EXPORT_C(fl_Window, Fl_OverriddenWindow_New)(int x, int y,fl_Window_Virtual_Funcs* funcs);
   FL_EXPORT_C(fl_Window,    Fl_Window_NewWH_WithLabel)(int x, int y, int w, int h, const char* title);
+  FL_EXPORT_C(fl_Window, Fl_OverriddenWindow_NewWH_WithLabel)(int x, int y, int w, int h, const char* title,fl_Window_Virtual_Funcs* funcs);
   FL_EXPORT_C(fl_Window,    Fl_Window_NewWH)(int x, int y, int w, int h);
+  FL_EXPORT_C(fl_Window, Fl_OverriddenWindow_NewWH)(int x, int y, int w, int h,fl_Window_Virtual_Funcs* funcs);
   FL_EXPORT_C(void,         Fl_Window_hide)(fl_Window win);
   FL_EXPORT_C(void,         Fl_Window_show)(fl_Window win);
   FL_EXPORT_C(void,         Fl_Window_show_with_args)(fl_Window win, int argc, char** argv);
-  FL_EXPORT_C(void,         Fl_Window_destroy)(fl_Window win);
+  FL_EXPORT_C(void,         Fl_Window_Destroy)(fl_Window win);
   FL_EXPORT_C(void,         Fl_Window_resize)(fl_Window win, int X, int Y, int W, int H);
   FL_EXPORT_C(void,         Fl_Window_iconize)(fl_Window win);
   FL_EXPORT_C(int ,Fl_Window_handle)(fl_Window win, int event);

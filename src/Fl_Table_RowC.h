@@ -44,7 +44,7 @@ EXPORT {
   FL_EXPORT_C(const char*,  Fl_Table_Row_tooltip)(fl_Table_Row table);
   FL_EXPORT_C(void,         Fl_Table_Row_copy_tooltip)(fl_Table_Row table, const char* text);
   FL_EXPORT_C(void,         Fl_Table_Row_set_tooltip)(fl_Table_Row table, const char* text);
-  FL_EXPORT_C(void,         Fl_Table_Row_set_callback_and_user_data)(fl_Table_Row table, fl_Callback* cb, void* p);
+  FL_EXPORT_C(void,         Fl_Table_Row_set_callback_with_user_data)(fl_Table_Row table, fl_Callback* cb, void* p);
   FL_EXPORT_C(void,         Fl_Table_Row_set_callback)(fl_Table_Row table, fl_Callback* cb);
   FL_EXPORT_C(void*,        Fl_Table_Row_other_data)(fl_Table_Row table);
   FL_EXPORT_C(void,         Fl_Table_Row_set_other_data)(fl_Table_Row table, void* v);
@@ -213,6 +213,7 @@ EXPORT {
 #if FLTK_ABI_VERSION >= 10302
   FL_EXPORT_C(void, Fl_Table_Row_set_tab_cell_nav)(fl_Table_Row table, int val);
   FL_EXPORT_C(int,  Fl_Table_Row_tab_cell_nav)(fl_Table_Row table);
+#endif
   FL_EXPORT_C(int,  Fl_Table_Row_find_cell)(fl_Table_Row table, TableContextC context, int R, int C, int *X, int *Y, int *W, int *H);
 
   /* Fl_Table_Row specific */
@@ -231,6 +232,5 @@ EXPORT {
   FL_EXPORT_C(void, Fl_Table_Row_clear)(fl_Table_Row row);
 #ifdef __cplusplus
 }
-#endif
 #endif
 #endif

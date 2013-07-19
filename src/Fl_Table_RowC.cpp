@@ -258,7 +258,7 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Table_Row_set_tooltip)(fl_Table_Row table_row,const char* text){
     (static_cast<Fl_DerivedTableRow*>(table_row))->tooltip(text);
   }
-  FL_EXPORT_C(void,Fl_Table_Row_set_callback_and_user_data)(fl_Table_Row table_row,fl_Callback* cb,void* p){
+  FL_EXPORT_C(void,Fl_Table_Row_set_callback_with_user_data)(fl_Table_Row table_row,fl_Callback* cb,void* p){
     Fl_DerivedTableRow* castedWindow = (static_cast<Fl_DerivedTableRow*>(table_row));
     new C_to_Fl_Callback(castedWindow, cb, p);
   }
@@ -442,7 +442,7 @@ EXPORT {
   }
   FL_EXPORT_C(fl_Widget, Fl_Table_Row_child)(fl_Table_Row self, int n){
     return (fl_Widget)(static_cast<Fl_DerivedTableRow*>(self))->child(n);
-  } 
+  }
   // FL_EXPORT_C(void,Fl_Table_Row_forms_end)(fl_Table_Row self){
   //   (static_cast<Fl_DerivedTableRow*>(self))->forms_end();
   // }
@@ -675,6 +675,7 @@ EXPORT {
   FL_EXPORT_C(int,  Fl_Table_Row_tab_cell_nav)(fl_Table_Row table_row){
     return (static_cast<Fl_DerivedTableRow*>(table_row))->tab_cell_nav();
   }
+#endif
   FL_EXPORT_C(int,  Fl_Table_Row_find_cell)(fl_Table_Row table_row, TableContextC context, int R, int C, int *X, int *Y, int *W, int *H){
     Fl_Table::TableContext c = (Fl_Table::TableContext)-1;
     switch(context){
@@ -747,7 +748,8 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Table_Row_select_all_rows_with_flag)(fl_Table_Row row,int flag){
     return (static_cast<Fl_DerivedTableRow*>(row))->select_all_rows(flag);
   }
-#endif
 #ifdef __cplusplus
 }
 #endif
+
+

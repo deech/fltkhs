@@ -9,7 +9,7 @@ int main(int argc, char** argv)
   Fl_Window_hide(win);
   puts("Should just return. We're showing a window and immediately hiding it.");
   Fl_run();
-  Fl_Window_destroy(win);
+  Fl_Window_Destroy(win);
   win = NULL;
   if (win == NULL) {  puts("Now we've freed the window object"); }
   return 0;

@@ -66,7 +66,7 @@ EXPORT {
   FL_EXPORT_C(const char*,  Fl_Box_tooltip)(fl_Box box);
   FL_EXPORT_C(void,         Fl_Box_copy_tooltip)(fl_Box box, const char* text);
   FL_EXPORT_C(void,         Fl_Box_set_tooltip)(fl_Box box, const char* text);
-  FL_EXPORT_C(void,         Fl_Box_set_callback_and_user_data)(fl_Box box, fl_Callback* cb, void* p);
+  FL_EXPORT_C(void,         Fl_Box_set_callback_with_user_data)(fl_Box box, fl_Callback* cb, void* p);
   FL_EXPORT_C(void,         Fl_Box_set_callback)(fl_Box box, fl_Callback* cb);
   FL_EXPORT_C(void*,        Fl_Box_other_data)(fl_Box box);
   FL_EXPORT_C(void,         Fl_Box_set_other_data)(fl_Box box, void* v);

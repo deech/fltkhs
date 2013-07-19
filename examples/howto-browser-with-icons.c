@@ -138,7 +138,7 @@ int main (int argc, char** argv){
   Fl_Choice_add_with_name(choice,"Small");
   Fl_Choice_add_with_name(choice,"Medium");
   Fl_Choice_add_with_name(choice,"Large");
-  Fl_Choice_set_callback_and_user_data(choice, Choice_CB, (void*)b);
+  Fl_Choice_set_callback_with_user_data(choice, Choice_CB, (void*)b);
   Fl_Choice_take_focus(choice);
   Fl_Choice_value_with_index(choice,1);
   Fl_Choice_do_callback(choice);

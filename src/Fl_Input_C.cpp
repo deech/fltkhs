@@ -109,7 +109,7 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Input__set_tooltip)(fl_Input_ input_,const char* text){
     (static_cast<Fl_Input_*>(input_))->tooltip(text);
   }
-  FL_EXPORT_C(void,Fl_Input__set_callback_and_user_data)(fl_Input_ input_,fl_Callback* cb,void* p){
+  FL_EXPORT_C(void,Fl_Input__set_callback_with_user_data)(fl_Input_ input_,fl_Callback* cb,void* p){
     Fl_Input_* castedInput_dow = (static_cast<Fl_Input_*>(input_));
     new C_to_Fl_Callback(castedInput_dow, cb, p);
   }

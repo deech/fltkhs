@@ -46,7 +46,7 @@ EXPORT {
   FL_EXPORT_C(const char*,  Fl_Light_Button_tooltip)(fl_Light_Button win);
   FL_EXPORT_C(void,         Fl_Light_Button_copy_tooltip)(fl_Light_Button win, const char* text);
   FL_EXPORT_C(void,         Fl_Light_Button_set_tooltip)(fl_Light_Button win, const char* text);
-  FL_EXPORT_C(void,         Fl_Light_Button_set_callback_and_user_data)(fl_Light_Button win, fl_Callback* cb, void* p);
+  FL_EXPORT_C(void,         Fl_Light_Button_set_callback_with_user_data)(fl_Light_Button win, fl_Callback* cb, void* p);
   FL_EXPORT_C(void,         Fl_Light_Button_set_callback)(fl_Light_Button win, fl_Callback* cb);
   FL_EXPORT_C(void*,        Fl_Light_Button_user_data)(fl_Light_Button win);
   FL_EXPORT_C(void,         Fl_Light_Button_set_user_data)(fl_Light_Button win, void* v);

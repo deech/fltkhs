@@ -230,7 +230,7 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Multi_Browser_set_tooltip)(fl_Multi_Browser multi_browser,const char* text){
     (static_cast<Fl_DerivedMulti_Browser*>(multi_browser))->tooltip(text);
   }
-  FL_EXPORT_C(void,Fl_Multi_Browser_set_callback_and_user_data)(fl_Multi_Browser multi_browser,fl_Callback* cb,void* p){
+  FL_EXPORT_C(void,Fl_Multi_Browser_set_callback_with_user_data)(fl_Multi_Browser multi_browser,fl_Callback* cb,void* p){
     Fl_DerivedMulti_Browser* castedWindow = (static_cast<Fl_DerivedMulti_Browser*>(multi_browser));
     new C_to_Fl_Callback(castedWindow, cb, p);
   }

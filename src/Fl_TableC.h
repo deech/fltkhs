@@ -46,7 +46,7 @@ EXPORT {
   FL_EXPORT_C(const char*,  Fl_Table_tooltip)(fl_Table table);
   FL_EXPORT_C(void,         Fl_Table_copy_tooltip)(fl_Table table, const char* text);
   FL_EXPORT_C(void,         Fl_Table_set_tooltip)(fl_Table table, const char* text);
-  FL_EXPORT_C(void,         Fl_Table_set_callback_and_user_data)(fl_Table table, fl_Callback* cb, void* p);
+  FL_EXPORT_C(void,         Fl_Table_set_callback_with_user_data)(fl_Table table, fl_Callback* cb, void* p);
   FL_EXPORT_C(void,         Fl_Table_set_callback)(fl_Table table, fl_Callback* cb);
   FL_EXPORT_C(void*,        Fl_Table_other_data)(fl_Table table);
   FL_EXPORT_C(void,         Fl_Table_set_other_data)(fl_Table table, void* v);
@@ -219,11 +219,11 @@ EXPORT {
   FL_EXPORT_C(int, Fl_Table_callback_col)(fl_Table table);
   FL_EXPORT_C(TableContextC, Fl_Table_callback_context)(fl_Table table);
   FL_EXPORT_C(void, Fl_Table_do_callback)(fl_Table table, TableContextC tableContext, int row, int col);
-#if FLTK_ABI_VERSION >= 10302
+#if FLTK_ABI_VERSION >= 10303
   FL_EXPORT_C(void, Fl_Table_set_tab_cell_nav)(fl_Table table, int val);
   FL_EXPORT_C(int,  Fl_Table_tab_cell_nav)(fl_Table table);
-  FL_EXPORT_C(int,  Fl_Table_find_cell)(fl_Table table, TableContextC context, int R, int C, int *X, int *Y, int *W, int *H);
 #endif
+  FL_EXPORT_C(int,  Fl_Table_find_cell)(fl_Table table, TableContextC context, int R, int C, int *X, int *Y, int *W, int *H);
 #ifdef __cplusplus
 }
 #endif

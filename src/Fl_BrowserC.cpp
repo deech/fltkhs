@@ -231,7 +231,7 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Browser_set_tooltip)(fl_Browser browser,const char* text){
     (static_cast<Fl_DerivedBrowser*>(browser))->tooltip(text);
   }
-  FL_EXPORT_C(void,Fl_Browser_set_callback_and_user_data)(fl_Browser browser,fl_Callback* cb,void* p){
+  FL_EXPORT_C(void,Fl_Browser_set_callback_with_user_data)(fl_Browser browser,fl_Callback* cb,void* p){
     Fl_DerivedBrowser* castedWindow = (static_cast<Fl_DerivedBrowser*>(browser));
     new C_to_Fl_Callback(castedWindow, cb, p);
   }

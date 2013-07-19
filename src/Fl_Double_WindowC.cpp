@@ -109,7 +109,7 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Double_Window_set_tooltip)(fl_Double_Window win,const char* text){
     (static_cast<Fl_Double_Window*>(win))->tooltip(text);
   }
-  FL_EXPORT_C(void,Fl_Double_Window_set_callback_and_user_data)(fl_Double_Window win,fl_Callback* cb,void* p){
+  FL_EXPORT_C(void,Fl_Double_Window_set_callback_with_user_data)(fl_Double_Window win,fl_Callback* cb,void* p){
     Fl_Double_Window* castedWindow = (static_cast<Fl_Double_Window*>(win));
     new C_to_Fl_Callback(castedWindow, cb, p);
   }
