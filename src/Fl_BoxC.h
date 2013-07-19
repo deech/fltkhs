@@ -125,7 +125,7 @@ EXPORT {
   FL_EXPORT_C(fl_Box   , Fl_OverriddenBox_New)(int x, int y, int w, int h, fl_Box_Virtual_Funcs* funcs);
   FL_EXPORT_C(fl_Box,    Fl_Box_New_WithBoxtype)(Fl_Boxtype b, int x, int y, int w, int h, const char* label);
   FL_EXPORT_C(fl_Box,    Fl_OverriddenBox_New_WithBoxtype)(Fl_Boxtype b, int x, int y, int w, int h, const char* label, fl_Box_Virtual_Funcs* funcs);
-
+  FL_EXPORT_C(void,      Fl_Box_Destroy)(fl_Box box);
 #ifdef __cplusplus
 }
 #endif

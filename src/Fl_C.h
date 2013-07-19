@@ -62,7 +62,8 @@ EXPORT {
   FL_EXPORT_C(double, Fl_wait_with_args)(double wait);
   FL_EXPORT_C(int, Fl_check)();
   FL_EXPORT_C(int, Fl_ready)();
-  FL_EXPORT_C(int, Fl_wait)();
+  FL_EXPORT_C(int, Fl_option)(Fl_Option opt);
+  FL_EXPORT_C(void, Fl_set_option)(Fl_Option opt, int val);
 
   FL_EXPORT_C(int, Fl_add_awake_handler_)(fl_Awake_Handler handler, void* user_data);
   FL_EXPORT_C(int, Fl_get_awake_handler_)(fl_Awake_Handler handler, void* user_data);

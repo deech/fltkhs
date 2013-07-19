@@ -580,8 +580,8 @@ EXPORT {
   FL_EXPORT_C(int,Fl_Table_is_selected)(fl_Table table,int r,int c){
     return (static_cast<Fl_DerivedTable*>(table))->is_selected(r,c);
   }
-  FL_EXPORT_C(void,Fl_Table_get_selection)(fl_Table table,int *row_top,int *col_left,int *row_bot,int *col_right){
-    return (static_cast<Fl_DerivedTable*>(table))->get_selection(*row_top,*col_left,*row_bot,*col_right);
+  FL_EXPORT_C(void,Fl_Table_get_selection)(fl_Table table,int row_top,int col_left,int row_bot,int col_right){
+    return (static_cast<Fl_DerivedTable*>(table))->get_selection(row_top,col_left,row_bot,col_right);
   }
   FL_EXPORT_C(void,Fl_Table_set_selection)(fl_Table table,int row_top,int col_left,int row_bot,int col_right){
     return (static_cast<Fl_DerivedTable*>(table))->set_selection(row_top,col_left,row_bot,col_right);

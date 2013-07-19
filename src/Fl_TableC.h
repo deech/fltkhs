@@ -200,7 +200,7 @@ EXPORT {
   FL_EXPORT_C(void, Fl_Table_set_top_row)(fl_Table table,int row);
   FL_EXPORT_C(int, Fl_Table_top_row)(fl_Table table);
   FL_EXPORT_C(int, Fl_Table_is_selected)(fl_Table table,int r, int c);
-  FL_EXPORT_C(void, Fl_Table_get_selection)(fl_Table table,int *row_top, int *col_left, int *row_bot, int *col_right);
+  FL_EXPORT_C(void, Fl_Table_get_selection)(fl_Table table,int row_top, int col_left, int row_bot, int col_right);
   FL_EXPORT_C(void, Fl_Table_set_selection)(fl_Table table,int row_top, int col_left, int row_bot, int col_right);
   FL_EXPORT_C(int, Fl_Table_move_cursor)(fl_Table table,int R, int C);
   FL_EXPORT_C(void, Fl_Table_draw)(fl_Table table);
@@ -223,7 +223,7 @@ EXPORT {
   FL_EXPORT_C(void, Fl_Table_set_tab_cell_nav)(fl_Table table, int val);
   FL_EXPORT_C(int,  Fl_Table_tab_cell_nav)(fl_Table table);
 #endif
-  FL_EXPORT_C(int,  Fl_Table_find_cell)(fl_Table table, TableContextC context, int R, int C, int *X, int *Y, int *W, int *H);
+  FL_EXPORT_C(int,  Fl_Table_find_cell)(fl_Table table, TableContextC context, int R, int C, int* X, int* Y, int* W, int* H);
 #ifdef __cplusplus
 }
 #endif

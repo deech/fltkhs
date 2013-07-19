@@ -399,6 +399,9 @@ EXPORT {
     Fl_DerivedBox* box = new Fl_DerivedBox(b,x,y,w,h,label,funcs);
     return (static_cast<fl_Box>(box));
   }
+  FL_EXPORT_C(void,      Fl_Box_Destroy)(fl_Box box){
+    delete (static_cast<Fl_DerivedBox*>(box));
+  }
 #ifdef __cplusplus
 }
 #endif

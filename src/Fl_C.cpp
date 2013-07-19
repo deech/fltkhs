@@ -119,6 +119,30 @@ EXPORT {
   FL_EXPORT_C(double,Fl_set_wait)(double time){
     return Fl::wait(time);
   }
+  FL_EXPORT_C(int,Fl_option)(Fl_Option option){
+    Fl::Fl_Option o = (Fl::Fl_Option)-1;
+    switch(option){
+    case OPTION_ARROW_FOCUS: { o = Fl::OPTION_ARROW_FOCUS; break;}
+    case OPTION_VISIBLE_FOCUS: { o = Fl::OPTION_VISIBLE_FOCUS; break;}
+    case OPTION_DND_TEXT: { o = Fl::OPTION_DND_TEXT; break;}
+    case OPTION_SHOW_TOOLTIPS: { o = Fl::OPTION_SHOW_TOOLTIPS; break;}
+    case OPTION_LAST: { o = Fl::OPTION_LAST; break;}
+    default:                 {o = (Fl::Fl_Option)-1;  break;}
+    }
+    return Fl::option(o) ? 1 : 0;
+  }
+  FL_EXPORT_C(void,Fl_set_option)(Fl_Option option, int val){
+    Fl::Fl_Option o = (Fl::Fl_Option)-1;
+    switch(option){
+    case OPTION_ARROW_FOCUS: { o = Fl::OPTION_ARROW_FOCUS; break;}
+    case OPTION_VISIBLE_FOCUS: { o = Fl::OPTION_VISIBLE_FOCUS; break;}
+    case OPTION_DND_TEXT: { o = Fl::OPTION_DND_TEXT; break;}
+    case OPTION_SHOW_TOOLTIPS: { o = Fl::OPTION_SHOW_TOOLTIPS; break;}
+    case OPTION_LAST: { o = Fl::OPTION_LAST; break;}
+    default:                 {o = (Fl::Fl_Option)-1;  break;}
+    }
+    Fl::option(o,val >= 1 ? true : false);
+  }
   FL_EXPORT_C(fl_Widget*,Fl_readqueue)(){
     return (fl_Widget*)Fl::readqueue();
   }

@@ -14,6 +14,14 @@
 #ifdef __cplusplus
 EXPORT {
 #endif
+// values for type(), lowest bit indicate horizontal:
+#define FL_VERT_SLIDER		0
+#define FL_HOR_SLIDER		1
+#define FL_VERT_FILL_SLIDER	2
+#define FL_HOR_FILL_SLIDER	3
+#define FL_VERT_NICE_SLIDER	4
+#define FL_HOR_NICE_SLIDER	5
+
 #define FL_NORMAL_BROWSER	0	/**< type() of Fl_Browser */
 #define FL_SELECT_BROWSER	1	/**< type() of FL_Select_Browser */
 #define FL_HOLD_BROWSER		2	/**< type() of Fl_Hold_Browser */
@@ -32,25 +40,25 @@ EXPORT {
     FL_TREE_REASON_OPENED,
     FL_TREE_REASON_CLOSED
   } Fl_Tree_Reason;
-  enum { 
-    FL_MENU_INACTIVE = 1,		
-    FL_MENU_TOGGLE= 2,		
-    FL_MENU_VALUE = 4,		
-    FL_MENU_RADIO = 8,		
-    FL_MENU_INVISIBLE = 0x10,	
-    FL_SUBMENU_POINTER = 0x20,	
-    FL_SUBMENU = 0x40,		
-    FL_MENU_DIVIDER = 0x80,	
-    FL_MENU_HORIZONTAL = 0x100	
+  enum {
+    FL_MENU_INACTIVE = 1,
+    FL_MENU_TOGGLE= 2,
+    FL_MENU_VALUE = 4,
+    FL_MENU_RADIO = 8,
+    FL_MENU_INVISIBLE = 0x10,
+    FL_SUBMENU_POINTER = 0x20,
+    FL_SUBMENU = 0x40,
+    FL_MENU_DIVIDER = 0x80,
+    FL_MENU_HORIZONTAL = 0x100
   };
-  enum { 
-    HORIZONTAL = 1,		
-    VERTICAL = 2,		
-    BOTH = 3,			
-    ALWAYS_ON = 4,		
-    HORIZONTAL_ALWAYS = 5,	
-    VERTICAL_ALWAYS = 6,	
-    BOTH_ALWAYS = 7		
+  enum {
+    HORIZONTAL = 1,
+    VERTICAL = 2,
+    BOTH = 3,
+    ALWAYS_ON = 4,
+    HORIZONTAL_ALWAYS = 5,
+    VERTICAL_ALWAYS = 6,
+    BOTH_ALWAYS = 7
   };
 #endif
   typedef void* ID;
@@ -238,7 +246,7 @@ EXPORT {
     void         (*hide        )(fl_Widget widget);
     fl_Window    (*as_window   )(fl_Widget widget);
     fl_Gl_Window (*as_gl_window)(fl_Widget widget);
-    fl_Group     (*as_group    )(fl_Widget table);
+    fl_Group     (*as_group    )(fl_Widget widget);
     /* Clean up */
     void         (*destroy_data)(fl_Widget widget);
   } fl_Widget_Virtual_Funcs;
@@ -302,6 +310,20 @@ EXPORT {
     void      (*uncache      )(fl_Image image);
     void      (*destroy_data )(fl_Image image);
   } fl_Image_Virtual_Funcs;
+  typedef struct {
+    void 	 (*draw        )(fl_Valuator valuator);
+    int          (*handle      )(fl_Valuator valuator,int event);
+    void         (*resize      )(fl_Valuator valuator,int x, int y, int w, int h);
+    void         (*show        )(fl_Valuator valuator);
+    void         (*hide        )(fl_Valuator valuator);
+    fl_Window    (*as_window   )(fl_Valuator valuator);
+    fl_Gl_Window (*as_gl_window)(fl_Valuator valuator);
+    fl_Group     (*as_group    )(fl_Valuator valuator);
+    /* Clean up */
+    void         (*destroy_data)(fl_Valuator valuator);
+    /* Fl_Valuator specific */
+    int          (*format      )(fl_Valuator valuator, char* format);
+  } fl_Valuator_Virtual_Funcs;
   typedef fl_Table_Virtual_Funcs fl_Table_Row_Virtual_Funcs;
   typedef fl_Widget_Virtual_Funcs fl_Button_Virtual_Funcs;
   typedef fl_Widget_Virtual_Funcs fl_Int_Input_Virtual_Funcs;
