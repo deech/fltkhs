@@ -131,18 +131,18 @@ void event_callback(fl_Widget w, void* user_data){
     return;
   }
 }
-void input_cb(fl_Table table, void* user_data){
-  set_value_hide(table);
+void input_cb(fl_Widget widget, void* user_data){
+  set_value_hide((fl_Table)user_data);
 }
 void initializeTable(fl_Table table){
   Fl_Table_begin(table);
-  Fl_Table_set_callback_with_user_data(table, (fl_Callback*)event_callback, (void*)table);
+  Fl_Table_set_callback_with_user_data(table, event_callback, (void*)table);
   Fl_Table_set_when(table,FL_WHEN_NOT_CHANGED|Fl_Table_when(table));
   fl_Int_Input input = (fl_Int_Input)Fl_Int_Input_New(Fl_Table_w(table)/2,
   						      Fl_Table_h(table)/2,
   						      0,0);
   Fl_Int_Input_hide(input);
-  Fl_Int_Input_set_callback_with_user_data(input, (fl_Callback*)input_cb, (void*)table);
+  Fl_Int_Input_set_callback_with_user_data(input, input_cb, (void*)table);
   Fl_Int_Input_set_when(input,FL_WHEN_ENTER_KEY_ALWAYS);
   Fl_Int_Input_set_maximum_size(input,5);
   int c;
@@ -174,7 +174,7 @@ void draw_cell(fl_Table table,TableContextC context, int R,int C, int X,int Y,in
   fl_Int_Input input = (fl_Int_Input)e->input;
   switch ( context ) {
   case CONTEXT_STARTPAGEC:
-    Fl_Table_get_selection(table, e->s_top, e->s_left, e->s_bottom, e->s_right);
+    Fl_Table_get_selection(table, &e->s_top, &e->s_left, &e->s_bottom, &e->s_right);
     break;
 
   case CONTEXT_COL_HEADERC:

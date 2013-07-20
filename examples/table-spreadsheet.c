@@ -131,7 +131,7 @@ void event_callback(fl_Widget w, void* user_data){
   }
 }
 void input_cb(fl_Table table, void* user_data){
-  set_value_hide(table);
+  set_value_hide((fl_Table)user_data);
 }
 void initializeTable(fl_Table table){
   Fl_Table_begin(table);
