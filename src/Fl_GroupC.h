@@ -3,32 +3,11 @@
 // always include the FL/*.H headers before local headers
 // Fl_Widget is included transitively and needed for
 // the callback mechanism included below to work.
+#ifdef __cplusplus
 #include "FL/Fl.H"
 #include "FL/Fl_Group.H"
 #include "Fl_CallbackC.h"
-#ifdef __cplusplus
 EXPORT {
-#endif
-  class Fl_DerivedGroup : public Fl_Group {
-    fl_Group_Virtual_Funcs* overriddenFuncs;
-    void* other_data;
-  public:
-    void* get_other_data();
-    void set_other_data(void*);
-    void destroy_data();
-    virtual void draw();
-    virtual int handle(int event);
-    void resize_super(int x, int y, int w, int h);
-    virtual void resize(int x, int y, int w, int h);
-    virtual void show();
-    virtual void hide();
-    virtual Fl_Group* as_group();
-    virtual Fl_Window* as_window();
-    virtual Fl_Gl_Window* as_gl_window();
-    Fl_DerivedGroup(int X, int Y, int W, int H, const char *l, fl_Group_Virtual_Funcs* funcs);
-    Fl_DerivedGroup(int X, int Y, int W, int H, fl_Group_Virtual_Funcs* funcs);
-    ~Fl_DerivedGroup();
-  };
 #endif
   /* Inherited from Fl_Widget */
   FL_EXPORT_C(int,          Fl_Group_handle)(fl_Group self, int event);
@@ -124,29 +103,31 @@ EXPORT {
   /* Fl_Group static members */
   FL_EXPORT_C(fl_Group,Fl_Group_set_current)();
   FL_EXPORT_C(void ,   Fl_Group_current)(fl_Group g);
-  
+
   /* Fl_Group specific */
-  FL_EXPORT_C(void,        Fl_Group_remove_widget)(fl_Group group, fl_Widget w);
-  FL_EXPORT_C(void,        Fl_Group_remove_index)(fl_Group group, int index);
-  FL_EXPORT_C(void,        Fl_Group_clear_super)(fl_Group group);
-  FL_EXPORT_C(void,        Fl_Group_clear)(fl_Group group);
-  FL_EXPORT_C(void,        Fl_Group_set_resizable_by_reference)(fl_Group group,fl_Widget o);
-  FL_EXPORT_C(void,        Fl_Group_set_resizable)(fl_Group group,fl_Widget o);
-  FL_EXPORT_C(fl_Widget,   Fl_Group_resizable)(fl_Group group);
-  FL_EXPORT_C(void,        Fl_Group_add_resizable)(fl_Group group,fl_Widget o);
-  FL_EXPORT_C(void,        Fl_Group_init_sizes)(fl_Group group);
-  FL_EXPORT_C(void,        Fl_Group_set_clip_children)(fl_Group group,int c);
-  FL_EXPORT_C(unsigned int,Fl_Group_clip_children)(fl_Group group);
-  FL_EXPORT_C(void,        Fl_Group_focus)(fl_Group group,fl_Widget W);
-  FL_EXPORT_C(fl_Widget,   Fl_Group__ddfdesign_kludge)(fl_Group group);
-  FL_EXPORT_C(int,         Fl_Group_children)(fl_Group group);
-  FL_EXPORT_C(fl_Widget,   Fl_Group_child)(fl_Group group, int n);
-  FL_EXPORT_C(fl_Widget*,  Fl_Group_array)(fl_Group group);
-  FL_EXPORT_C(void,        Fl_Group_Row_add)(fl_Group_Row group,fl_Widget wgt);
-  FL_EXPORT_C(void,        Fl_Group_insert)(fl_Group group,fl_Widget wgt, int n);
-  FL_EXPORT_C(void,        Fl_Group_insert_with_before)(fl_Group group,fl_Widget wgt, fl_Widget before);
-  FL_EXPORT_C(void,        Fl_Group_focus)(fl_Group group, fl_Widget w);
-  FL_EXPORT_C(void,        Fl_Group_forms_end)(fl_Group group, fl_Group g);
+  FL_EXPORT_C(void,         Fl_Group_begin)(fl_Group group);
+  FL_EXPORT_C(void,         Fl_Group_end)(fl_Group group);
+  FL_EXPORT_C(int,          Fl_Group_find)(fl_Group group, fl_Widget w);
+  FL_EXPORT_C(void,         Fl_Group_add)(fl_Group group, fl_Widget w);
+  FL_EXPORT_C(void,         Fl_Group_insert)(fl_Group group, fl_Widget w, int i);
+  FL_EXPORT_C(void,         Fl_Group_remove_index)(fl_Group group, int index);
+  FL_EXPORT_C(void,         Fl_Group_remove_widget)(fl_Group group, fl_Widget w);
+  FL_EXPORT_C(void,         Fl_Group_clear)(fl_Group group);
+  FL_EXPORT_C(void,         Fl_Group_set_resizable_by_reference)(fl_Group group,fl_Widget o);
+  FL_EXPORT_C(void,         Fl_Group_set_resizable)(fl_Group group,fl_Widget o);
+  FL_EXPORT_C(fl_Widget,         Fl_Group_resizable)(fl_Group group);
+  FL_EXPORT_C(void,         Fl_Group_add_resizable)(fl_Group group,fl_Widget o);
+  FL_EXPORT_C(void,         Fl_Group_init_sizes)(fl_Group group);
+  FL_EXPORT_C(int,          Fl_Group_children)(fl_Group group);
+  FL_EXPORT_C(void,         Fl_Group_set_clip_children)(fl_Group group,int c);
+  FL_EXPORT_C(unsigned int, Fl_Group_clip_children)(fl_Group group);
+  FL_EXPORT_C(void,         Fl_Group_focus)(fl_Group group,fl_Widget W);
+  FL_EXPORT_C(fl_Widget,    Fl_Group__ddfdesign_kludge)(fl_Group group);
+  FL_EXPORT_C(void,         Fl_Group_insert_with_before)(fl_Group self, fl_Widget w, fl_Widget before);
+  FL_EXPORT_C(fl_Widget*,   Fl_Group_array)(fl_Group self);
+  FL_EXPORT_C(fl_Widget,    Fl_Group_child)(fl_Group self, int n);
+  FL_EXPORT_C(fl_Group,     Fl_Group_New)(int x, int y, int w, int h);
+  FL_EXPORT_C(fl_Group,     Fl_Group_New_WithLabel)(int x, int y, int w, int h, const char* t);
 #ifdef __cplusplus
 }
 #endif
