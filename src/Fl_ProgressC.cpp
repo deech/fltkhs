@@ -32,12 +32,6 @@ EXPORT {
   FL_EXPORT_C(fl_Window,Fl_Progress_as_window )(fl_Progress progress){
     return (static_cast<Fl_Progress*>(progress))->as_window();
   }
-  FL_EXPORT_C(fl_Gl_Window,Fl_Progress_as_gl_window_super)(fl_Progress progress){
-    return (static_cast<Fl_Progress*>(progress))->as_gl_window();
-  }
-  FL_EXPORT_C(fl_Gl_Window,Fl_Progress_as_gl_window )(fl_Progress progress){
-    return (static_cast<Fl_Progress*>(progress))->as_gl_window();
-  };
   FL_EXPORT_C(fl_Group,Fl_Progress_parent)(fl_Progress progress){
     return (static_cast<Fl_Progress*>(progress))->parent();
   }
@@ -264,6 +258,21 @@ EXPORT {
   }
   FL_EXPORT_C(void,Fl_Progress_measure_label)(fl_Progress progress,int* ww,int* hh){
     (static_cast<Fl_Progress*>(progress))->measure_label(*ww,*hh);
+  }
+  FL_EXPORT_C(fl_Window,    Fl_Progress_window)(fl_Progress progress){
+    return (fl_Window) (static_cast<Fl_Progress*>(progress))->window();
+  }
+  FL_EXPORT_C(fl_Window,    Fl_Progress_top_window)(fl_Progress progress){
+    return (fl_Window) (static_cast<Fl_Progress*>(progress))->top_window();
+  }
+  FL_EXPORT_C(fl_Window ,   Fl_Progress_top_window_offset)(fl_Progress progress, int* xoff, int* yoff){
+    return (fl_Window) (static_cast<Fl_Progress*>(progress))->top_window_offset(*xoff,*yoff);
+  }
+  FL_EXPORT_C(fl_Group,Fl_Progress_as_group)(fl_Progress progress){
+    return (fl_Group) (static_cast<Fl_Progress*>(progress))->as_group();
+  }
+  FL_EXPORT_C(fl_Gl_Window,Fl_Progress_as_gl_window)(fl_Progress progress){
+    return (fl_Gl_Window) (static_cast<Fl_Progress*>(progress))->as_gl_window();
   }
   FL_EXPORT_C(fl_Progress, Fl_Progress_New)(int x, int y, int w, int h){
     Fl_Progress* p = new Fl_Progress(x,y,w,h);

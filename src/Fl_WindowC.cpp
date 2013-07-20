@@ -353,10 +353,19 @@ EXPORT {
     (static_cast<Fl_DerivedWindow*>(win))->measure_label(*ww,*hh);
   }
   FL_EXPORT_C(fl_Group,Fl_Window_as_group)(fl_Window win){
-    return (static_cast<Fl_DerivedWindow*>(win))->as_group();
+    return (fl_Group) (static_cast<Fl_DerivedWindow*>(win))->as_group();
   }
   FL_EXPORT_C(fl_Gl_Window,Fl_Window_as_gl_window)(fl_Window win){
-    return (static_cast<Fl_DerivedWindow*>(win))->as_gl_window();
+    return (fl_Gl_Window) (static_cast<Fl_DerivedWindow*>(win))->as_gl_window();
+  }
+  FL_EXPORT_C(fl_Window,    Fl_Window_window)(fl_Window window){
+    return (fl_Window) (static_cast<Fl_DerivedWindow*>(window))->window();
+  }
+  FL_EXPORT_C(fl_Window,    Fl_Window_top_window)(fl_Window window){
+    return (fl_Window) (static_cast<Fl_DerivedWindow*>(window))->top_window();
+  }
+  FL_EXPORT_C(fl_Window ,   Fl_Window_top_window_offset)(fl_Window window, int* xoff, int* yoff){
+    return (fl_Window) (static_cast<Fl_DerivedWindow*>(window))->top_window_offset(*xoff,*yoff);
   }
 
   FL_EXPORT_C(void,Fl_Window_begin)(fl_Window win){

@@ -88,7 +88,10 @@ EXPORT {
   FL_EXPORT_C(void,         Fl_Int_Input_damage_inside_widget)(fl_Int_Input int_input, uchar c, int x , int y , int w, int h);
   FL_EXPORT_C(void,         Fl_Int_Input_draw_label)(fl_Int_Input int_input, int x , int y , int w, int h, Fl_Align alignment);
   FL_EXPORT_C(void,         Fl_Int_Input_measure_label)(fl_Int_Input int_input, int* ww , int* hh);
-
+  FL_EXPORT_C(fl_Window,    Fl_Int_Input_window)(fl_Int_Input int_input);
+  FL_EXPORT_C(fl_Window,    Fl_Int_Input_top_window)(fl_Int_Input int_input);
+  FL_EXPORT_C(fl_Window ,   Fl_Int_Input_top_window_offset)(fl_Int_Input int_input, int* xoff, int* yoff);
+  FL_EXPORT_C(fl_Group,     Fl_Int_Input_as_group)(fl_Int_Input int_input);
   /* Fl_Int_Input specific functions */
 #ifdef __cplusplus
   class Fl_DerivedInt_Input : public Fl_Int_Input {

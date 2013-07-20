@@ -233,6 +233,21 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Radio_Button_measure_label)(fl_Radio_Button b,int* ww,int* hh){
     (static_cast<Fl_Radio_Button*>(b))->measure_label(*ww,*hh);
   }
+  FL_EXPORT_C(fl_Window,    Fl_Radio_Button_window)(fl_Radio_Button radio_button){
+    return (fl_Window) (static_cast<Fl_Radio_Button*>(radio_button))->window();
+  }
+  FL_EXPORT_C(fl_Window,    Fl_Radio_Button_top_window)(fl_Radio_Button radio_button){
+    return (fl_Window) (static_cast<Fl_Radio_Button*>(radio_button))->top_window();
+  }
+  FL_EXPORT_C(fl_Window ,   Fl_Radio_Button_top_window_offset)(fl_Radio_Button radio_button, int* xoff, int* yoff){
+    return (fl_Window) (static_cast<Fl_Radio_Button*>(radio_button))->top_window_offset(*xoff,*yoff);
+  }
+  FL_EXPORT_C(fl_Group,Fl_Radio_Button_as_group)(fl_Radio_Button radio_button){
+    return (fl_Group) (static_cast<Fl_Radio_Button*>(radio_button))->as_group();
+  }
+  FL_EXPORT_C(fl_Gl_Window,Fl_Radio_Button_as_gl_window)(fl_Radio_Button radio_button){
+    return (fl_Gl_Window) (static_cast<Fl_Radio_Button*>(radio_button))->as_gl_window();
+  }
 
   FL_EXPORT_C(fl_Radio_Button, Fl_Radio_Button_New_WithLabel)(int x, int y, int w, int h, const char* label) {
     Fl_Radio_Button* button = new Fl_Radio_Button(x,y,w,h,label);

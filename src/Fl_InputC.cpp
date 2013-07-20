@@ -235,6 +235,21 @@ EXPORT {
     (static_cast<Fl_Input*>(input))->measure_label(*ww,*hh);
   }
 
+  FL_EXPORT_C(fl_Window,    Fl_Input_window)(fl_Input input){
+    return (fl_Window) (static_cast<Fl_Input*>(input))->window();
+  }
+  FL_EXPORT_C(fl_Window,    Fl_Input_top_window)(fl_Input input){
+    return (fl_Window) (static_cast<Fl_Input*>(input))->top_window();
+  }
+  FL_EXPORT_C(fl_Window ,   Fl_Input_top_window_offset)(fl_Input input, int* xoff, int* yoff){
+    return (fl_Window) (static_cast<Fl_Input*>(input))->top_window_offset(*xoff,*yoff);
+  }
+  FL_EXPORT_C(fl_Group,Fl_Input_as_group)(fl_Input input){
+    return (fl_Group) (static_cast<Fl_Input*>(input))->as_group();
+  }
+  FL_EXPORT_C(fl_Gl_Window,Fl_Input_as_gl_window)(fl_Input input){
+    return (fl_Gl_Window) (static_cast<Fl_Input*>(input))->as_gl_window();
+  }
   /* Fl_Input specific functions */
   FL_EXPORT_C(fl_Input, Fl_Input_New_WithLabel)(int x, int y, int w, int h, const char* label) {
     Fl_Input* input = new Fl_Input(x,y,w,h,label);

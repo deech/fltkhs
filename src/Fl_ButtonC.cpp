@@ -131,10 +131,10 @@ EXPORT {
     return (static_cast<Fl_DerivedButton*>(button))->as_window();
   }
   FL_EXPORT_C(fl_Gl_Window,Fl_Button_as_gl_window_super)(fl_Button button){
-    return (static_cast<Fl_Button*>(button))->as_gl_window();
+    return (fl_Gl_Window) (static_cast<Fl_Button*>(button))->as_gl_window();
   }
   FL_EXPORT_C(fl_Gl_Window,Fl_Button_as_gl_window )(fl_Button button){
-    return (static_cast<Fl_DerivedButton*>(button))->as_gl_window();
+    return (fl_Gl_Window) (static_cast<Fl_DerivedButton*>(button))->as_gl_window();
   };
   FL_EXPORT_C(fl_Group,Fl_Button_parent)(fl_Button b){
     return (static_cast<Fl_DerivedButton*>(b))->parent();
@@ -362,6 +362,18 @@ EXPORT {
   }
   FL_EXPORT_C(void,Fl_Button_measure_label)(fl_Button b,int* ww,int* hh){
     (static_cast<Fl_DerivedButton*>(b))->measure_label(*ww,*hh);
+  }
+  FL_EXPORT_C(fl_Window,    Fl_Button_window)(fl_Button button){
+    return (fl_Window) (static_cast<Fl_DerivedButton*>(button))->window();
+  }
+  FL_EXPORT_C(fl_Window,    Fl_Button_top_window)(fl_Button button){
+    return (fl_Window) (static_cast<Fl_DerivedButton*>(button))->top_window();
+  }
+  FL_EXPORT_C(fl_Window ,   Fl_Button_top_window_offset)(fl_Button button, int* xoff, int* yoff){
+    return (fl_Window) (static_cast<Fl_DerivedButton*>(button))->top_window_offset(*xoff,*yoff);
+  }
+  FL_EXPORT_C(fl_Group,Fl_Button_as_group)(fl_Button button){
+    return (fl_Group) (static_cast<Fl_DerivedButton*>(button))->as_group();
   }
   FL_EXPORT_C(void*, Fl_Button_other_data)(fl_Button button){
     return (static_cast<Fl_DerivedButton*>(button))->get_other_data();

@@ -234,7 +234,21 @@ EXPORT {
   FL_EXPORT_C(void,Fl_File_Input_measure_label)(fl_File_Input file_input,int* ww,int* hh){
     (static_cast<Fl_File_Input*>(file_input))->measure_label(*ww,*hh);
   }
-
+  FL_EXPORT_C(fl_Window,    Fl_File_Input_window)(fl_File_Input file_input){
+    return (fl_Window) (static_cast<Fl_File_Input*>(file_input))->window();
+  }
+  FL_EXPORT_C(fl_Window,    Fl_File_Input_top_window)(fl_File_Input file_input){
+    return (fl_Window) (static_cast<Fl_File_Input*>(file_input))->top_window();
+  }
+  FL_EXPORT_C(fl_Window ,   Fl_File_Input_top_window_offset)(fl_File_Input file_input, int* xoff, int* yoff){
+    return (fl_Window) (static_cast<Fl_File_Input*>(file_input))->top_window_offset(*xoff,*yoff);
+  }
+  FL_EXPORT_C(fl_Group,Fl_File_Input_as_group)(fl_File_Input file_input){
+    return (fl_Group) (static_cast<Fl_File_Input*>(file_input))->as_group();
+  }
+  FL_EXPORT_C(fl_Gl_Window,Fl_File_Input_as_gl_window)(fl_File_Input file_input){
+    return (fl_Gl_Window) (static_cast<Fl_File_Input*>(file_input))->as_gl_window();
+  }
   /* Fl_File_Input specific functions */
   FL_EXPORT_C(fl_File_Input, Fl_File_Input_New_WithLabel)(int x, int y, int w, int h, const char* label) {
     Fl_File_Input* file_input = new Fl_File_Input(x,y,w,h,label);

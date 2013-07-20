@@ -33,10 +33,10 @@ EXPORT {
     return (static_cast<Fl_Slider*>(slider))->as_window();
   }
   FL_EXPORT_C(fl_Gl_Window,Fl_Slider_as_gl_window_super)(fl_Slider slider){
-    return (static_cast<Fl_Slider*>(slider))->Fl_Slider::as_gl_window();
+    return (fl_Gl_Window) (static_cast<Fl_Slider*>(slider))->Fl_Slider::as_gl_window();
   }
   FL_EXPORT_C(fl_Gl_Window,Fl_Slider_as_gl_window )(fl_Slider slider){
-    return (static_cast<Fl_Slider*>(slider))->as_gl_window();
+    return (fl_Gl_Window) (static_cast<Fl_Slider*>(slider))->as_gl_window();
   };
   FL_EXPORT_C(fl_Group,Fl_Slider_parent)(fl_Slider slider){
     return (static_cast<Fl_Slider*>(slider))->parent();
@@ -264,6 +264,18 @@ EXPORT {
   }
   FL_EXPORT_C(void,Fl_Slider_measure_label)(fl_Slider slider,int* ww,int* hh){
     (static_cast<Fl_Slider*>(slider))->measure_label(*ww,*hh);
+  }
+  FL_EXPORT_C(fl_Window,    Fl_Slider_window)(fl_Slider slider){
+    return (fl_Window) (static_cast<Fl_Slider*>(slider))->window();
+  }
+  FL_EXPORT_C(fl_Window,    Fl_Slider_top_window)(fl_Slider slider){
+    return (fl_Window) (static_cast<Fl_Slider*>(slider))->top_window();
+  }
+  FL_EXPORT_C(fl_Window ,   Fl_Slider_top_window_offset)(fl_Slider slider, int* xoff, int* yoff){
+    return (fl_Window) (static_cast<Fl_Slider*>(slider))->top_window_offset(*xoff,*yoff);
+  }
+  FL_EXPORT_C(fl_Group,Fl_Slider_as_group)(fl_Slider slider){
+    return (fl_Group) (static_cast<Fl_Slider*>(slider))->as_group();
   }
   FL_EXPORT_C(void,Fl_Slider_bounds)(fl_Slider slider,double a,double b){
     (static_cast<Fl_Slider*>(slider))->bounds(a,b);

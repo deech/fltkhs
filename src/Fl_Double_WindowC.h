@@ -90,7 +90,9 @@ EXPORT {
   FL_EXPORT_C(void,         Fl_Double_Window_measure_label)(fl_Double_Window win, int* ww , int* hh);
   FL_EXPORT_C(fl_Group,     Fl_Double_Window_as_group)(fl_Double_Window win);
   FL_EXPORT_C(fl_Gl_Window, Fl_Double_Window_as_gl_window)(fl_Double_Window win);
-
+  FL_EXPORT_C(fl_Window,    Fl_Double_Window_window)(fl_Double_Window double_window);
+  FL_EXPORT_C(fl_Window,    Fl_Double_Window_top_window)(fl_Double_Window double_window);
+  FL_EXPORT_C(fl_Window ,   Fl_Double_Window_top_window_offset)(fl_Double_Window double_window, int* xoff, int* yoff);
   /* Inherited from Fl_Group */
   FL_EXPORT_C(void,         Fl_Double_Window_begin)(fl_Double_Window win);
   FL_EXPORT_C(void,         Fl_Double_Window_end)(fl_Double_Window win);

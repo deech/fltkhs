@@ -87,7 +87,11 @@ EXPORT {
   FL_EXPORT_C(void,         Fl_Toggle_Button_damage_inside_widget)(fl_Toggle_Button win, uchar c, int x , int y , int w, int h);
   FL_EXPORT_C(void,         Fl_Toggle_Button_draw_label)(fl_Toggle_Button win, int x , int y , int w, int h, Fl_Align alignment);
   FL_EXPORT_C(void,         Fl_Toggle_Button_measure_label)(fl_Toggle_Button win, int* ww , int* hh);
-
+  FL_EXPORT_C(fl_Window,    Fl_Toggle_Button_window)(fl_Toggle_Button toggle_button);
+  FL_EXPORT_C(fl_Window,    Fl_Toggle_Button_top_window)(fl_Toggle_Button toggle_button);
+  FL_EXPORT_C(fl_Window ,   Fl_Toggle_Button_top_window_offset)(fl_Toggle_Button toggle_button, int* xoff, int* yoff);
+  FL_EXPORT_C(fl_Group,     Fl_Toggle_Button_as_group)(fl_Toggle_Button toggle_button);
+  FL_EXPORT_C(fl_Gl_Window, Fl_Toggle_Button_as_gl_window)(fl_Toggle_Button toggle_button);
   /* Fl_Toggle_Button specific functions */
   FL_EXPORT_C(fl_Toggle_Button, Fl_Toggle_Button_New_WithLabel)(int x, int y, int w, int h, const char* label);
   FL_EXPORT_C(fl_Toggle_Button, Fl_Toggle_Button_New)(int x, int y, int w, int h);

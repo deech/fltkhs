@@ -220,11 +220,20 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Tree_measure_label)(fl_Tree tree,int* ww,int* hh){
     (static_cast<Fl_Tree*>(tree))->measure_label(*ww,*hh);
   }
+  FL_EXPORT_C(fl_Window,    Fl_Tree_window)(fl_Tree tree){
+    return (fl_Window) (static_cast<Fl_Tree*>(tree))->window();
+  }
+  FL_EXPORT_C(fl_Window,    Fl_Tree_top_window)(fl_Tree tree){
+    return (fl_Window) (static_cast<Fl_Tree*>(tree))->top_window();
+  }
+  FL_EXPORT_C(fl_Window ,   Fl_Tree_top_window_offset)(fl_Tree tree, int* xoff, int* yoff){
+    return (fl_Window) (static_cast<Fl_Tree*>(tree))->top_window_offset(*xoff,*yoff);
+  }
   FL_EXPORT_C(fl_Group,Fl_Tree_as_group)(fl_Tree tree){
-    return (static_cast<Fl_Tree*>(tree))->as_group();
+    return (fl_Group) (static_cast<Fl_Tree*>(tree))->as_group();
   }
   FL_EXPORT_C(fl_Gl_Window,Fl_Tree_as_gl_window)(fl_Tree tree){
-    return (static_cast<Fl_Tree*>(tree))->as_gl_window();
+    return (fl_Gl_Window) (static_cast<Fl_Tree*>(tree))->as_gl_window();
   }
   FL_EXPORT_C(void,Fl_Tree_draw)(fl_Tree tree){
     return (static_cast<Fl_Tree*>(tree))->draw();

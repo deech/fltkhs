@@ -87,6 +87,9 @@ EXPORT {
   FL_EXPORT_C(void,         Fl_Tree_damage_inside_widget)(fl_Tree tree, uchar c, int x , int y , int w, int h);
   FL_EXPORT_C(void,         Fl_Tree_draw_label)(fl_Tree tree, int x , int y , int w, int h, Fl_Align alignment);
   FL_EXPORT_C(void,         Fl_Tree_measure_label)(fl_Tree tree, int* ww , int* hh);
+  FL_EXPORT_C(fl_Window,    Fl_Tree_window)(fl_Tree tree);
+  FL_EXPORT_C(fl_Window,    Fl_Tree_top_window)(fl_Tree tree);
+  FL_EXPORT_C(fl_Window ,   Fl_Tree_top_window_offset)(fl_Tree tree, int* xoff, int* yoff);
   FL_EXPORT_C(fl_Group,     Fl_Tree_as_group)(fl_Tree tree);
   FL_EXPORT_C(fl_Gl_Window, Fl_Tree_as_gl_window)(fl_Tree tree);
 

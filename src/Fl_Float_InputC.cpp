@@ -234,6 +234,21 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Float_Input_measure_label)(fl_Float_Input float_input,int* ww,int* hh){
     (static_cast<Fl_Float_Input*>(float_input))->measure_label(*ww,*hh);
   }
+  FL_EXPORT_C(fl_Window,    Fl_Float_Input_window)(fl_Float_Input float_input){
+    return (fl_Window) (static_cast<Fl_Float_Input*>(float_input))->window();
+  }
+  FL_EXPORT_C(fl_Window,    Fl_Float_Input_top_window)(fl_Float_Input float_input){
+    return (fl_Window) (static_cast<Fl_Float_Input*>(float_input))->top_window();
+  }
+  FL_EXPORT_C(fl_Window ,   Fl_Float_Input_top_window_offset)(fl_Float_Input float_input, int* xoff, int* yoff){
+    return (fl_Window) (static_cast<Fl_Float_Input*>(float_input))->top_window_offset(*xoff,*yoff);
+  }
+  FL_EXPORT_C(fl_Group,Fl_Float_Input_as_group)(fl_Float_Input float_input){
+    return (fl_Group) (static_cast<Fl_Float_Input*>(float_input))->as_group();
+  }
+  FL_EXPORT_C(fl_Gl_Window,Fl_Float_Input_as_gl_window)(fl_Float_Input float_input){
+    return (fl_Gl_Window) (static_cast<Fl_Float_Input*>(float_input))->as_gl_window();
+  }
 
   /* Fl_Float_Input specific functions */
   FL_EXPORT_C(fl_Input, Fl_Float_Input_New_WithLabel)(int x, int y, int w, int h, const char* label) {

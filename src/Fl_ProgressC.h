@@ -98,6 +98,11 @@ EXPORT {
   FL_EXPORT_C(void,         Fl_Progress_damage_inside_widget)(fl_Progress progress, uchar c, int x , int y , int w, int h);
   FL_EXPORT_C(void,         Fl_Progress_draw_label)(fl_Progress progress, int x , int y , int w, int h, Fl_Align alignment);
   FL_EXPORT_C(void,         Fl_Progress_measure_label)(fl_Progress progress, int* ww , int* hh);
+  FL_EXPORT_C(fl_Window,    Fl_Progress_window)(fl_Progress progress);
+  FL_EXPORT_C(fl_Window,    Fl_Progress_top_window)(fl_Progress progress);
+  FL_EXPORT_C(fl_Window ,   Fl_Progress_top_window_offset)(fl_Progress progress, int* xoff, int* yoff);
+  FL_EXPORT_C(fl_Group,     Fl_Progress_as_group)(fl_Progress progress);
+  FL_EXPORT_C(fl_Gl_Window, Fl_Progress_as_gl_window)(fl_Progress progress);
 
   FL_EXPORT_C(fl_Progress, Fl_Progress_New)(int x, int y, int w, int h);
   FL_EXPORT_C(fl_Progress, Fl_Progress_New_WithLabel)(int x, int y, int w, int h,const char *l);

@@ -85,6 +85,9 @@ EXPORT {
   FL_EXPORT_C(void,         Fl_Window_damage_with_text)(fl_Window win, uchar c);
   FL_EXPORT_C(void,         Fl_Window_damage_inside_widget)(fl_Window win, uchar c, int x , int y , int w, int h);
   FL_EXPORT_C(void,         Fl_Window_draw_label)(fl_Window win, int x , int y , int w, int h, Fl_Align alignment);
+  FL_EXPORT_C(fl_Window,    Fl_Window_window)(fl_Window window);
+  FL_EXPORT_C(fl_Window,    Fl_Window_top_window)(fl_Window window);
+  FL_EXPORT_C(fl_Window ,   Fl_Window_top_window_offset)(fl_Window window, int* xoff, int* yoff);
   FL_EXPORT_C(void,         Fl_Window_measure_label)(fl_Window win, int* ww , int* hh);
   FL_EXPORT_C(fl_Group,     Fl_Window_as_group)(fl_Window win);
   FL_EXPORT_C(fl_Gl_Window, Fl_Window_as_gl_window)(fl_Window win);

@@ -88,6 +88,11 @@ EXPORT {
   FL_EXPORT_C(void,         Fl_Light_Button_draw_label)(fl_Light_Button win, int x , int y , int w, int h, Fl_Align alignment);
   FL_EXPORT_C(void,         Fl_Light_Button_measure_label)(fl_Light_Button win, int* ww , int* hh);
 
+  FL_EXPORT_C(fl_Window,    Fl_Light_Button_window)(fl_Light_Button light_button);
+  FL_EXPORT_C(fl_Window,    Fl_Light_Button_top_window)(fl_Light_Button light_button);
+  FL_EXPORT_C(fl_Window ,   Fl_Light_Button_top_window_offset)(fl_Light_Button light_button, int* xoff, int* yoff);
+  FL_EXPORT_C(fl_Group,     Fl_Light_Button_as_group)(fl_Light_Button light_button);
+  FL_EXPORT_C(fl_Gl_Window, Fl_Light_Button_as_gl_window)(fl_Light_Button light_button);
   /* Fl_Light_Button specific functions */
   FL_EXPORT_C(fl_Light_Button,    Fl_Light_Button_New_WithLabel)(int x, int y, int w, int h, const char* label);
   FL_EXPORT_C(fl_Light_Button,    Fl_Light_Button_New)(int x, int y, int w, int h);

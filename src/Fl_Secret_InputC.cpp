@@ -235,6 +235,21 @@ EXPORT {
     (static_cast<Fl_Secret_Input*>(secret_input))->measure_label(*ww,*hh);
   }
 
+  FL_EXPORT_C(fl_Window,    Fl_Secret_Input_window)(fl_Secret_Input secret_input){
+    return (fl_Window) (static_cast<Fl_Secret_Input*>(secret_input))->window();
+  }
+  FL_EXPORT_C(fl_Window,    Fl_Secret_Input_top_window)(fl_Secret_Input secret_input){
+    return (fl_Window) (static_cast<Fl_Secret_Input*>(secret_input))->top_window();
+  }
+  FL_EXPORT_C(fl_Window ,   Fl_Secret_Input_top_window_offset)(fl_Secret_Input secret_input, int* xoff, int* yoff){
+    return (fl_Window) (static_cast<Fl_Secret_Input*>(secret_input))->top_window_offset(*xoff,*yoff);
+  }
+  FL_EXPORT_C(fl_Group,Fl_Secret_Input_as_group)(fl_Secret_Input secret_input){
+    return (fl_Group) (static_cast<Fl_Secret_Input*>(secret_input))->as_group();
+  }
+  FL_EXPORT_C(fl_Gl_Window,Fl_Secret_Input_as_gl_window)(fl_Secret_Input secret_input){
+    return (fl_Gl_Window) (static_cast<Fl_Secret_Input*>(secret_input))->as_gl_window();
+  }
   /* Fl_Secret_Input specific functions */
   FL_EXPORT_C(fl_Secret_Input, Fl_Secret_Input_New_WithLabel)(int x, int y, int w, int h, const char* label) {
     Fl_Secret_Input* secret_input = new Fl_Secret_Input(x,y,w,h,label);

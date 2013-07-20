@@ -234,6 +234,21 @@ EXPORT {
     (static_cast<Fl_Light_Button*>(b))->measure_label(*ww,*hh);
   }
 
+  FL_EXPORT_C(fl_Window,    Fl_Light_Button_window)(fl_Light_Button light_button){
+    return (fl_Window) (static_cast<Fl_Light_Button*>(light_button))->window();
+  }
+  FL_EXPORT_C(fl_Window,    Fl_Light_Button_top_window)(fl_Light_Button light_button){
+    return (fl_Window) (static_cast<Fl_Light_Button*>(light_button))->top_window();
+  }
+  FL_EXPORT_C(fl_Window ,   Fl_Light_Button_top_window_offset)(fl_Light_Button light_button, int* xoff, int* yoff){
+    return (fl_Window) (static_cast<Fl_Light_Button*>(light_button))->top_window_offset(*xoff,*yoff);
+  }
+  FL_EXPORT_C(fl_Group,Fl_Light_Button_as_group)(fl_Light_Button light_button){
+    return (fl_Group) (static_cast<Fl_Light_Button*>(light_button))->as_group();
+  }
+  FL_EXPORT_C(fl_Gl_Window,Fl_Light_Button_as_gl_window)(fl_Light_Button light_button){
+    return (fl_Gl_Window) (static_cast<Fl_Light_Button*>(light_button))->as_gl_window();
+  }
   FL_EXPORT_C(fl_Light_Button, Fl_Light_Button_New_WithLabel)(int x, int y, int w, int h, const char* label) {
     Fl_Light_Button* button = new Fl_Light_Button(x,y,w,h,label);
     return (static_cast<fl_Light_Button>(button));

@@ -390,25 +390,25 @@ EXPORT {
     (static_cast<Fl_DerivedTable*>(table))->measure_label(*ww,*hh);
   }
   FL_EXPORT_C(fl_Window,    Fl_Table_window)(fl_Table table){
-    return (static_cast<Fl_DerivedTable*>(table))->window();
+    return (fl_Window) (static_cast<Fl_DerivedTable*>(table))->window();
   }
   FL_EXPORT_C(fl_Window,    Fl_Table_top_window)(fl_Table table){
-    return (static_cast<Fl_DerivedTable*>(table))->top_window();
+    return (fl_Window) (static_cast<Fl_DerivedTable*>(table))->top_window();
   }
   FL_EXPORT_C(fl_Window ,   Fl_Table_top_window_offset)(fl_Table table, int* xoff, int* yoff){
-    return (static_cast<Fl_DerivedTable*>(table))->top_window_offset(*xoff,*yoff);
+    return (fl_Window) (static_cast<Fl_DerivedTable*>(table))->top_window_offset(*xoff,*yoff);
   }
   FL_EXPORT_C(fl_Group,Fl_Table_as_group_super)(fl_Table table){
-    return (static_cast<Fl_Table*>(table))->as_group();
+    return (fl_Group) (static_cast<Fl_Table*>(table))->as_group();
   }
   FL_EXPORT_C(fl_Group,Fl_Table_as_group)(fl_Table table){
-    return (static_cast<Fl_DerivedTable*>(table))->as_group();
+    return (fl_Group) (static_cast<Fl_DerivedTable*>(table))->as_group();
   }
   FL_EXPORT_C(fl_Gl_Window,Fl_Table_as_gl_window_super)(fl_Table table){
-    return (static_cast<Fl_Table*>(table))->as_gl_window();
+    return (fl_Gl_Window) (static_cast<Fl_Table*>(table))->as_gl_window();
   }
   FL_EXPORT_C(fl_Gl_Window,Fl_Table_as_gl_window)(fl_Table table){
-    return (static_cast<Fl_DerivedTable*>(table))->as_gl_window();
+    return (fl_Gl_Window) (static_cast<Fl_DerivedTable*>(table))->as_gl_window();
   }
   FL_EXPORT_C(void,Fl_Table_set_resizable_by_reference)(fl_Table table,fl_Widget o){
     (static_cast<Fl_DerivedTable*>(table))->resizable((static_cast<Fl_Widget*>(o)));

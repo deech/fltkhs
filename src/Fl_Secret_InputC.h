@@ -88,6 +88,11 @@ EXPORT {
   FL_EXPORT_C(void,         Fl_Secret_Input_draw_label)(fl_Secret_Input secret_input, int x , int y , int w, int h, Fl_Align alignment);
   FL_EXPORT_C(void,         Fl_Secret_Input_measure_label)(fl_Secret_Input secret_input, int* ww , int* hh);
 
+  FL_EXPORT_C(fl_Window,    Fl_Secret_Input_window)(fl_Secret_Input secret_input);
+  FL_EXPORT_C(fl_Window,    Fl_Secret_Input_top_window)(fl_Secret_Input secret_input);
+  FL_EXPORT_C(fl_Window ,   Fl_Secret_Input_top_window_offset)(fl_Secret_Input secret_input, int* xoff, int* yoff);
+  FL_EXPORT_C(fl_Group,     Fl_Secret_Input_as_group)(fl_Secret_Input secret_input);
+  FL_EXPORT_C(fl_Gl_Window, Fl_Secret_Input_as_gl_window)(fl_Secret_Input secret_input);
   /* Fl_Secret_Input specific functions */
   FL_EXPORT_C(int,      Fl_Secret_Input_handle)(fl_Secret_Input secret_input, int event);
   FL_EXPORT_C(fl_Float_Input, Fl_Secret_Input_New_WithLabel)(int x, int y, int w, int h, const char* label); 

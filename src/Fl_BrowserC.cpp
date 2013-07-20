@@ -354,25 +354,25 @@ EXPORT {
     (static_cast<Fl_DerivedBrowser*>(browser))->measure_label(*ww,*hh);
   }
   FL_EXPORT_C(fl_Window,    Fl_Browser_window)(fl_Browser browser){
-    return (static_cast<Fl_DerivedBrowser*>(browser))->window();
+    return (fl_Window) (static_cast<Fl_DerivedBrowser*>(browser))->window();
   }
   FL_EXPORT_C(fl_Window,    Fl_Browser_top_window)(fl_Browser browser){
-    return (static_cast<Fl_DerivedBrowser*>(browser))->top_window();
+    return (fl_Window) (static_cast<Fl_DerivedBrowser*>(browser))->top_window();
   }
   FL_EXPORT_C(fl_Window ,   Fl_Browser_top_window_offset)(fl_Browser browser, int* xoff, int* yoff){
-    return (static_cast<Fl_DerivedBrowser*>(browser))->top_window_offset(*xoff,*yoff);
+    return (fl_Window) (static_cast<Fl_DerivedBrowser*>(browser))->top_window_offset(*xoff,*yoff);
   }
   FL_EXPORT_C(fl_Group,Fl_Browser_as_group_super)(fl_Browser browser){
-    return (static_cast<Fl_Browser*>(browser))->as_group();
+    return (fl_Group) (static_cast<Fl_Browser*>(browser))->as_group();
   }
   FL_EXPORT_C(fl_Group,Fl_Browser_as_group)(fl_Browser browser){
-    return (static_cast<Fl_DerivedBrowser*>(browser))->as_group();
+    return (fl_Group) (static_cast<Fl_DerivedBrowser*>(browser))->as_group();
   }
   FL_EXPORT_C(fl_Gl_Window,Fl_Browser_as_gl_window_super)(fl_Browser browser){
-    return (static_cast<Fl_Browser*>(browser))->as_gl_window();
+    return (fl_Gl_Window) (static_cast<Fl_Browser*>(browser))->as_gl_window();
   }
   FL_EXPORT_C(fl_Gl_Window,Fl_Browser_as_gl_window)(fl_Browser browser){
-    return (static_cast<Fl_DerivedBrowser*>(browser))->as_gl_window();
+    return (fl_Gl_Window) (static_cast<Fl_DerivedBrowser*>(browser))->as_gl_window();
   }
   FL_EXPORT_C(void,Fl_Browser_set_resizable_by_reference)(fl_Browser browser,fl_Widget o){
     (static_cast<Fl_DerivedBrowser*>(browser))->resizable((static_cast<Fl_Widget*>(o)));

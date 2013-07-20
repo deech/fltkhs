@@ -33,10 +33,10 @@ EXPORT {
     return (static_cast<Fl_Value_Slider*>(value_slider))->as_window();
   }
   FL_EXPORT_C(fl_Gl_Window,Fl_Value_Slider_as_gl_window_super)(fl_Value_Slider value_slider){
-    return (static_cast<Fl_Value_Slider*>(value_slider))->Fl_Value_Slider::as_gl_window();
+    return (fl_Gl_Window) (static_cast<Fl_Value_Slider*>(value_slider))->Fl_Value_Slider::as_gl_window();
   }
   FL_EXPORT_C(fl_Gl_Window,Fl_Value_Slider_as_gl_window )(fl_Value_Slider value_slider){
-    return (static_cast<Fl_Value_Slider*>(value_slider))->as_gl_window();
+    return (fl_Gl_Window) (static_cast<Fl_Value_Slider*>(value_slider))->as_gl_window();
   };
   FL_EXPORT_C(fl_Group,Fl_Value_Slider_parent)(fl_Value_Slider value_slider){
     return (static_cast<Fl_Value_Slider*>(value_slider))->parent();

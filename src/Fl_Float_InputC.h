@@ -87,7 +87,11 @@ EXPORT {
   FL_EXPORT_C(void,         Fl_Float_Input_damage_inside_widget)(fl_Float_Input float_input, uchar c, int x , int y , int w, int h);
   FL_EXPORT_C(void,         Fl_Float_Input_draw_label)(fl_Float_Input float_input, int x , int y , int w, int h, Fl_Align alignment);
   FL_EXPORT_C(void,         Fl_Float_Input_measure_label)(fl_Float_Input float_input, int* ww , int* hh);
-
+  FL_EXPORT_C(fl_Window,    Fl_Float_Input_window)(fl_Float_Input float_input);
+  FL_EXPORT_C(fl_Window,    Fl_Float_Input_top_window)(fl_Float_Input float_input);
+  FL_EXPORT_C(fl_Window ,   Fl_Float_Input_top_window_offset)(fl_Float_Input float_input, int* xoff, int* yoff);
+  FL_EXPORT_C(fl_Group,     Fl_Float_Input_as_group)(fl_Float_Input float_input);
+  FL_EXPORT_C(fl_Gl_Window, Fl_Float_Input_as_gl_window)(fl_Float_Input float_input);
   /* Fl_Float_Input specific functions */
   FL_EXPORT_C(int,      Fl_Float_Input_handle)(fl_Float_Input float_input, int event);
   FL_EXPORT_C(fl_Float_Input, Fl_Float_Input_New_WithLabel)(int x, int y, int w, int h, const char* label); 

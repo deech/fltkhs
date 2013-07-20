@@ -353,25 +353,25 @@ EXPORT {
     (static_cast<Fl_DerivedMulti_Browser*>(multi_browser))->measure_label(*ww,*hh);
   }
   FL_EXPORT_C(fl_Window,    Fl_Multi_Browser_window)(fl_Multi_Browser multi_browser){
-    return (static_cast<Fl_DerivedMulti_Browser*>(multi_browser))->window();
+    return (fl_Window) (static_cast<Fl_DerivedMulti_Browser*>(multi_browser))->window();
   }
   FL_EXPORT_C(fl_Window,    Fl_Multi_Browser_top_window)(fl_Multi_Browser multi_browser){
-    return (static_cast<Fl_DerivedMulti_Browser*>(multi_browser))->top_window();
+    return (fl_Window) (static_cast<Fl_DerivedMulti_Browser*>(multi_browser))->top_window();
   }
   FL_EXPORT_C(fl_Window ,   Fl_Multi_Browser_top_window_offset)(fl_Multi_Browser multi_browser, int* xoff, int* yoff){
-    return (static_cast<Fl_DerivedMulti_Browser*>(multi_browser))->top_window_offset(*xoff,*yoff);
+    return (fl_Window) (static_cast<Fl_DerivedMulti_Browser*>(multi_browser))->top_window_offset(*xoff,*yoff);
   }
   FL_EXPORT_C(fl_Group,Fl_Multi_Browser_as_group_super)(fl_Multi_Browser multi_browser){
-    return (static_cast<Fl_Multi_Browser*>(multi_browser))->as_group();
+    return (fl_Group) (static_cast<Fl_Multi_Browser*>(multi_browser))->as_group();
   }
   FL_EXPORT_C(fl_Group,Fl_Multi_Browser_as_group)(fl_Multi_Browser multi_browser){
-    return (static_cast<Fl_DerivedMulti_Browser*>(multi_browser))->as_group();
+    return (fl_Group) (static_cast<Fl_DerivedMulti_Browser*>(multi_browser))->as_group();
   }
   FL_EXPORT_C(fl_Gl_Window,Fl_Multi_Browser_as_gl_window_super)(fl_Multi_Browser multi_browser){
-    return (static_cast<Fl_Multi_Browser*>(multi_browser))->as_gl_window();
+    return (fl_Gl_Window) (static_cast<Fl_Multi_Browser*>(multi_browser))->as_gl_window();
   }
   FL_EXPORT_C(fl_Gl_Window,Fl_Multi_Browser_as_gl_window)(fl_Multi_Browser multi_browser){
-    return (static_cast<Fl_DerivedMulti_Browser*>(multi_browser))->as_gl_window();
+    return (fl_Gl_Window) (static_cast<Fl_DerivedMulti_Browser*>(multi_browser))->as_gl_window();
   }
   FL_EXPORT_C(void,Fl_Multi_Browser_set_resizable_by_reference)(fl_Multi_Browser multi_browser,fl_Widget o){
     (static_cast<Fl_DerivedMulti_Browser*>(multi_browser))->resizable((static_cast<Fl_Widget*>(o)));

@@ -346,25 +346,25 @@ Fl_Gl_Window* Fl_DerivedWidget::as_gl_window(){
     (static_cast<Fl_DerivedWidget*>(widget))->measure_label(*ww,*hh);
   }
   FL_EXPORT_C(fl_Window,    Fl_Widget_window)(fl_Widget widget){
-    return (static_cast<Fl_DerivedWidget*>(widget))->window();
+    return (fl_Window) (static_cast<Fl_DerivedWidget*>(widget))->window();
   }
   FL_EXPORT_C(fl_Window,    Fl_Widget_top_window)(fl_Widget widget){
-    return (static_cast<Fl_DerivedWidget*>(widget))->top_window();
+    return (fl_Window) (static_cast<Fl_DerivedWidget*>(widget))->top_window();
   }
   FL_EXPORT_C(fl_Window ,   Fl_Widget_top_window_offset)(fl_Widget widget, int* xoff, int* yoff){
-    return (static_cast<Fl_DerivedWidget*>(widget))->top_window_offset(*xoff,*yoff);
+    return (fl_Window) (static_cast<Fl_DerivedWidget*>(widget))->top_window_offset(*xoff,*yoff);
   }
   FL_EXPORT_C(fl_Group,Fl_Widget_as_group_super)(fl_Widget widget){
-    return (static_cast<Fl_Widget*>(widget))->as_group();
+    return (fl_Group) (static_cast<Fl_Widget*>(widget))->as_group();
   }
   FL_EXPORT_C(fl_Group,Fl_Widget_as_group)(fl_Widget widget){
-    return (static_cast<Fl_DerivedWidget*>(widget))->as_group();
+    return (fl_Group) (static_cast<Fl_DerivedWidget*>(widget))->as_group();
   }
   FL_EXPORT_C(fl_Gl_Window,Fl_Widget_as_gl_window_super)(fl_Widget widget){
-    return (static_cast<Fl_Widget*>(widget))->as_gl_window();
+    return (fl_Gl_Window) (static_cast<Fl_Widget*>(widget))->as_gl_window();
   }
   FL_EXPORT_C(fl_Gl_Window,Fl_Widget_as_gl_window)(fl_Widget widget){
-    return (static_cast<Fl_DerivedWidget*>(widget))->as_gl_window();
+    return (fl_Gl_Window) (static_cast<Fl_DerivedWidget*>(widget))->as_gl_window();
   }
   FL_EXPORT_C(void,Fl_Widget_resize_super)(fl_Widget widget,int X,int Y,int W,int H){
     return (static_cast<Fl_DerivedWidget*>(widget))->resize_super(X,Y,W,H);

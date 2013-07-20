@@ -138,10 +138,10 @@ EXPORT {
     return (static_cast<Fl_DerivedValuator*>(valuator))->as_window();
   }
   FL_EXPORT_C(fl_Gl_Window,Fl_Valuator_as_gl_window_super)(fl_Valuator valuator){
-    return (static_cast<Fl_DerivedValuator*>(valuator))->Fl_Valuator::as_gl_window();
+    return (fl_Gl_Window) (static_cast<Fl_DerivedValuator*>(valuator))->Fl_Valuator::as_gl_window();
   }
   FL_EXPORT_C(fl_Gl_Window,Fl_Valuator_as_gl_window )(fl_Valuator valuator){
-    return (static_cast<Fl_DerivedValuator*>(valuator))->as_gl_window();
+    return (fl_Gl_Window) (static_cast<Fl_DerivedValuator*>(valuator))->as_gl_window();
   };
   FL_EXPORT_C(fl_Group,Fl_Valuator_parent)(fl_Valuator valuator){
     return (static_cast<Fl_DerivedValuator*>(valuator))->parent();

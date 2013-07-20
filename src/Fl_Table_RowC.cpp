@@ -34,6 +34,9 @@ void Fl_DerivedTableRow::draw(){
     Fl_Table_Row::draw();
   }
 }
+int Fl_DerivedTableRow::handle_super(int event){
+  return Fl_Table_Row::handle(event);
+}
 int Fl_DerivedTableRow::handle(int event){
   int i;
   if (this->overriddenFuncs->handle != NULL) {
@@ -161,6 +164,9 @@ EXPORT {
   }
   FL_EXPORT_C(int,Fl_Table_Row_handle)(fl_Table_Row self, int event){
     return (static_cast<Fl_DerivedTableRow*>(self))->handle(event);
+  }
+  FL_EXPORT_C(int,Fl_Table_Row_handle_super)(fl_Table_Row self, int event){
+    return (static_cast<Fl_DerivedTableRow*>(self))->handle_super(event);
   }
   FL_EXPORT_C(fl_Group,Fl_Table_Row_parent)(fl_Table_Row table_row){
     return (static_cast<Fl_DerivedTableRow*>(table_row))->parent();
@@ -390,25 +396,25 @@ EXPORT {
     (static_cast<Fl_DerivedTableRow*>(table_row))->measure_label(*ww,*hh);
   }
   FL_EXPORT_C(fl_Window,    Fl_Table_Row_window)(fl_Table_Row table_row){
-    return (static_cast<Fl_DerivedTableRow*>(table_row))->window();
+    return (fl_Window) (static_cast<Fl_DerivedTableRow*>(table_row))->window();
   }
   FL_EXPORT_C(fl_Window,    Fl_Table_Row_top_window)(fl_Table_Row table_row){
-    return (static_cast<Fl_DerivedTableRow*>(table_row))->top_window();
+    return (fl_Window) (static_cast<Fl_DerivedTableRow*>(table_row))->top_window();
   }
   FL_EXPORT_C(fl_Window ,   Fl_Table_Row_top_window_offset)(fl_Table_Row table_row, int* xoff, int* yoff){
-    return (static_cast<Fl_DerivedTableRow*>(table_row))->top_window_offset(*xoff,*yoff);
+    return (fl_Window) (static_cast<Fl_DerivedTableRow*>(table_row))->top_window_offset(*xoff,*yoff);
   }
   FL_EXPORT_C(fl_Group,Fl_Table_Row_as_group_super)(fl_Table_Row table_row){
-    return (static_cast<Fl_Table_Row*>(table_row))->as_group();
+    return (fl_Group) (static_cast<Fl_Table_Row*>(table_row))->as_group();
   }
   FL_EXPORT_C(fl_Group,Fl_Table_Row_as_group)(fl_Table_Row table_row){
-    return (static_cast<Fl_DerivedTableRow*>(table_row))->as_group();
+    return (fl_Group) (static_cast<Fl_DerivedTableRow*>(table_row))->as_group();
   }
   FL_EXPORT_C(fl_Gl_Window,Fl_Table_Row_as_gl_window_super)(fl_Table_Row table_row){
-    return (static_cast<Fl_Table_Row*>(table_row))->as_gl_window();
+    return (fl_Gl_Window) (fl_Gl_Window) (static_cast<Fl_Table_Row*>(table_row))->as_gl_window();
   }
   FL_EXPORT_C(fl_Gl_Window,Fl_Table_Row_as_gl_window)(fl_Table_Row table_row){
-    return (static_cast<Fl_DerivedTableRow*>(table_row))->as_gl_window();
+    return (fl_Gl_Window) (static_cast<Fl_DerivedTableRow*>(table_row))->as_gl_window();
   }
   FL_EXPORT_C(void,Fl_Table_Row_set_resizable_by_reference)(fl_Table_Row table_row,fl_Widget o){
     (static_cast<Fl_DerivedTableRow*>(table_row))->resizable((static_cast<Fl_Widget*>(o)));
@@ -504,61 +510,61 @@ EXPORT {
     return (static_cast<Fl_DerivedTableRow*>(table_row))->row_header();
   }
   FL_EXPORT_C(void,Fl_Table_Row_set_row_header)(fl_Table_Row table_row,int flag){
-    return (static_cast<Fl_DerivedTableRow*>(table_row))->row_header(flag);
+    (static_cast<Fl_DerivedTableRow*>(table_row))->row_header(flag);
   }
   FL_EXPORT_C(int,Fl_Table_Row_col_header)(fl_Table_Row table_row){
     return (static_cast<Fl_DerivedTableRow*>(table_row))->col_header();
   }
   FL_EXPORT_C(void,Fl_Table_Row_set_col_header)(fl_Table_Row table_row,int flag){
-    return (static_cast<Fl_DerivedTableRow*>(table_row))->col_header(flag);
+    (static_cast<Fl_DerivedTableRow*>(table_row))->col_header(flag);
   }
   FL_EXPORT_C(void,Fl_Table_Row_set_col_header_height)(fl_Table_Row table_row,int height){
-    return (static_cast<Fl_DerivedTableRow*>(table_row))->col_header_height(height);
+    (static_cast<Fl_DerivedTableRow*>(table_row))->col_header_height(height);
   }
   FL_EXPORT_C(int,Fl_Table_Row_col_header_height)(fl_Table_Row table_row){
     return (static_cast<Fl_DerivedTableRow*>(table_row))->col_header_height();
   }
   FL_EXPORT_C(void,Fl_Table_Row_set_row_header_width)(fl_Table_Row table_row,int width){
-    return (static_cast<Fl_DerivedTableRow*>(table_row))->row_header_width(width);
+    (static_cast<Fl_DerivedTableRow*>(table_row))->row_header_width(width);
   }
   FL_EXPORT_C(int,Fl_Table_Row_row_header_width)(fl_Table_Row table_row){
     return (static_cast<Fl_DerivedTableRow*>(table_row))->row_header_width();
   }
   FL_EXPORT_C(void,Fl_Table_Row_set_row_header_color)(fl_Table_Row table_row,Fl_Color val){
-    return (static_cast<Fl_DerivedTableRow*>(table_row))->row_header_color(val);
+    (static_cast<Fl_DerivedTableRow*>(table_row))->row_header_color(val);
   }
   FL_EXPORT_C(Fl_Color,Fl_Table_Row_row_header_color)(fl_Table_Row table_row){
     return (static_cast<Fl_DerivedTableRow*>(table_row))->row_header_color();
   }
   FL_EXPORT_C(void,Fl_Table_Row_set_col_header_color)(fl_Table_Row table_row,Fl_Color val){
-    return (static_cast<Fl_DerivedTableRow*>(table_row))->col_header_color(val);
+    (static_cast<Fl_DerivedTableRow*>(table_row))->col_header_color(val);
   }
   FL_EXPORT_C(Fl_Color,Fl_Table_Row_col_header_color)(fl_Table_Row table_row){
     return (static_cast<Fl_DerivedTableRow*>(table_row))->col_header_color();
   }
   FL_EXPORT_C(void,Fl_Table_Row_set_row_height)(fl_Table_Row table_row,int row,int height){
-    return (static_cast<Fl_DerivedTableRow*>(table_row))->row_height(row,height);
+    (static_cast<Fl_DerivedTableRow*>(table_row))->row_height(row,height);
   }
   FL_EXPORT_C(int,Fl_Table_Row_row_height)(fl_Table_Row table_row,int row){
     return (static_cast<Fl_DerivedTableRow*>(table_row))->row_height(row);
   }
   FL_EXPORT_C(void,Fl_Table_Row_set_col_width)(fl_Table_Row table_row,int col,int width){
-    return (static_cast<Fl_DerivedTableRow*>(table_row))->col_width(col,width);
+    (static_cast<Fl_DerivedTableRow*>(table_row))->col_width(col,width);
   }
   FL_EXPORT_C(int,Fl_Table_Row_col_width)(fl_Table_Row table_row,int col){
     return (static_cast<Fl_DerivedTableRow*>(table_row))->col_width(col);
   }
   FL_EXPORT_C(void,Fl_Table_Row_set_row_height_all)(fl_Table_Row table_row,int height){
-    return (static_cast<Fl_DerivedTableRow*>(table_row))->row_height_all(height);
+    (static_cast<Fl_DerivedTableRow*>(table_row))->row_height_all(height);
   }
   FL_EXPORT_C(void,Fl_Table_Row_set_col_width_all)(fl_Table_Row table_row,int width){
-    return (static_cast<Fl_DerivedTableRow*>(table_row))->col_width_all(width);
+    (static_cast<Fl_DerivedTableRow*>(table_row))->col_width_all(width);
   }
   FL_EXPORT_C(void,Fl_Table_Row_set_row_position)(fl_Table_Row table_row,int row){
-    return (static_cast<Fl_DerivedTableRow*>(table_row))->row_position(row);
+    (static_cast<Fl_DerivedTableRow*>(table_row))->row_position(row);
   }
   FL_EXPORT_C(void,Fl_Table_Row_set_col_position)(fl_Table_Row table_row,int col){
-    return (static_cast<Fl_DerivedTableRow*>(table_row))->col_position(col);
+    (static_cast<Fl_DerivedTableRow*>(table_row))->col_position(col);
   }
   FL_EXPORT_C(int,Fl_Table_Row_row_position)(fl_Table_Row table_row){
     return (static_cast<Fl_DerivedTableRow*>(table_row))->row_position();
@@ -567,7 +573,7 @@ EXPORT {
     return (static_cast<Fl_DerivedTableRow*>(table_row))->col_position();
   }
   FL_EXPORT_C(void,Fl_Table_Row_set_top_row)(fl_Table_Row table_row,int row){
-    return (static_cast<Fl_DerivedTableRow*>(table_row))->top_row(row);
+    (static_cast<Fl_DerivedTableRow*>(table_row))->top_row(row);
   }
   FL_EXPORT_C(int,Fl_Table_Row_top_row)(fl_Table_Row table_row){
     return (static_cast<Fl_DerivedTableRow*>(table_row))->top_row();
@@ -576,32 +582,32 @@ EXPORT {
     return (static_cast<Fl_DerivedTableRow*>(table_row))->is_selected(r,c);
   }
   FL_EXPORT_C(void,Fl_Table_Row_get_selection)(fl_Table_Row table_row,int *row_top,int *col_left,int *row_bot,int *col_right){
-    return (static_cast<Fl_DerivedTableRow*>(table_row))->get_selection(*row_top,*col_left,*row_bot,*col_right);
+    (static_cast<Fl_DerivedTableRow*>(table_row))->get_selection(*row_top,*col_left,*row_bot,*col_right);
   }
   FL_EXPORT_C(void,Fl_Table_Row_set_selection)(fl_Table_Row table_row,int row_top,int col_left,int row_bot,int col_right){
-    return (static_cast<Fl_DerivedTableRow*>(table_row))->set_selection(row_top,col_left,row_bot,col_right);
+    (static_cast<Fl_DerivedTableRow*>(table_row))->set_selection(row_top,col_left,row_bot,col_right);
   }
   FL_EXPORT_C(int,Fl_Table_Row_move_cursor)(fl_Table_Row table_row,int R,int C){
     return (static_cast<Fl_DerivedTableRow*>(table_row))->move_cursor(R,C);
   }
   FL_EXPORT_C(void,Fl_Table_Row_resize_super)(fl_Table_Row table_row,int X,int Y,int W,int H){
-    return (static_cast<Fl_DerivedTableRow*>(table_row))->resize_super(X,Y,W,H);
+    (static_cast<Fl_DerivedTableRow*>(table_row))->resize_super(X,Y,W,H);
   }
   FL_EXPORT_C(void,Fl_Table_Row_resize)(fl_Table_Row table_row,int X,int Y,int W,int H){
-    return (static_cast<Fl_DerivedTableRow*>(table_row))->resize(X,Y,W,H);
+    (static_cast<Fl_DerivedTableRow*>(table_row))->resize(X,Y,W,H);
   }
 
   FL_EXPORT_C(void,Fl_Table_Row_draw_super)(fl_Table_Row table_row){
-    return (static_cast<Fl_Table_Row*>(table_row))->draw();
+    (static_cast<Fl_Table_Row*>(table_row))->draw();
   }
   FL_EXPORT_C(void,Fl_Table_Row_draw)(fl_Table_Row table_row){
-    return (static_cast<Fl_DerivedTableRow*>(table_row))->draw();
+    (static_cast<Fl_DerivedTableRow*>(table_row))->draw();
   }
   FL_EXPORT_C(void,Fl_Table_Row_init_sizes)(fl_Table_Row table_row){
-    return (static_cast<Fl_DerivedTableRow*>(table_row))->init_sizes();
+    (static_cast<Fl_DerivedTableRow*>(table_row))->init_sizes();
   }
   FL_EXPORT_C(void,Fl_Table_Row_add)(fl_Table_Row table_row,fl_Widget wgt){
-    return (static_cast<Fl_DerivedTableRow*>(table_row))->add((static_cast<Fl_Widget*>(wgt)));
+    (static_cast<Fl_DerivedTableRow*>(table_row))->add((static_cast<Fl_Widget*>(wgt)));
   }
   FL_EXPORT_C(void,Fl_Table_Row_insert)(fl_Table_Row table_row,fl_Widget wgt,int n){
     (static_cast<Fl_DerivedTableRow*>(table_row))->insert(*(static_cast<Fl_Widget*>(wgt)),n);
@@ -619,10 +625,10 @@ EXPORT {
     (static_cast<Fl_DerivedTableRow*>(table_row))->clear();
   }
   FL_EXPORT_C(void,Fl_Table_Row_begin)(fl_Table_Row table_row){
-    return (static_cast<Fl_DerivedTableRow*>(table_row))->begin();
+    (static_cast<Fl_DerivedTableRow*>(table_row))->begin();
   }
   FL_EXPORT_C(void,Fl_Table_Row_end)(fl_Table_Row table_row){
-    return (static_cast<Fl_DerivedTableRow*>(table_row))->end();
+    (static_cast<Fl_DerivedTableRow*>(table_row))->end();
   }
   FL_EXPORT_C(int,Fl_Table_Row_children)(fl_Table_Row table_row){
     return (static_cast<Fl_DerivedTableRow*>(table_row))->children();
@@ -743,13 +749,11 @@ EXPORT {
     return (static_cast<Fl_DerivedTableRow*>(row))->select_row(rowIndex,flag);
   }
   FL_EXPORT_C(void,Fl_Table_Row_select_all_rows)(fl_Table_Row row){
-    return (static_cast<Fl_DerivedTableRow*>(row))->select_all_rows();
+    (static_cast<Fl_DerivedTableRow*>(row))->select_all_rows();
   }
   FL_EXPORT_C(void,Fl_Table_Row_select_all_rows_with_flag)(fl_Table_Row row,int flag){
-    return (static_cast<Fl_DerivedTableRow*>(row))->select_all_rows(flag);
+    (static_cast<Fl_DerivedTableRow*>(row))->select_all_rows(flag);
   }
 #ifdef __cplusplus
 }
 #endif
-
-

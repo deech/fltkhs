@@ -10,6 +10,7 @@
 EXPORT {
 #endif
   /* Inherited from Fl_Widget */
+  FL_EXPORT_C(int,Fl_Table_Row_handle_super)(fl_Table_Row self, int event);
   FL_EXPORT_C(int,Fl_Table_Row_handle)(fl_Table_Row self, int event);
   FL_EXPORT_C(fl_Group,     Fl_Table_Row_parent)(fl_Table_Row table);
   FL_EXPORT_C(void,         Fl_Table_Row_set_parent)(fl_Table_Row table, fl_Group grp);
@@ -129,6 +130,7 @@ EXPORT {
     int find_cell(TableContext context, int R, int C, int &X, int &Y, int &W, int &H);
     virtual void draw();
     virtual int handle(int event);
+    int handle_super(int event);
     void resize_super(int x, int y, int w, int h);
     virtual void resize(int x, int y, int w, int h);
     virtual void show();

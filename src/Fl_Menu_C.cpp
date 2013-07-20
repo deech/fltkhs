@@ -130,10 +130,10 @@ EXPORT {
     return (static_cast<Fl_DerivedMenu_*>(menu_))->as_window();
   }
   FL_EXPORT_C(fl_Gl_Window,Fl_Menu__as_gl_window_super)(fl_Menu_ menu_){
-    return (static_cast<Fl_DerivedMenu_*>(menu_))->as_gl_window();
+    return (fl_Gl_Window) (static_cast<Fl_DerivedMenu_*>(menu_))->as_gl_window();
   }
   FL_EXPORT_C(fl_Gl_Window,Fl_Menu__as_gl_window )(fl_Menu_ menu_){
-    return (static_cast<Fl_DerivedMenu_*>(menu_))->as_gl_window();
+    return (fl_Gl_Window) (static_cast<Fl_DerivedMenu_*>(menu_))->as_gl_window();
   };
   FL_EXPORT_C(fl_Group,Fl_Menu__parent)(fl_Menu_ menu_){
     return (static_cast<Fl_DerivedMenu_*>(menu_))->parent();

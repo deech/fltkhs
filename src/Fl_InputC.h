@@ -88,6 +88,11 @@ EXPORT {
   FL_EXPORT_C(void,         Fl_Input_draw_label)(fl_Input input, int x , int y , int w, int h, Fl_Align alignment);
   FL_EXPORT_C(void,         Fl_Input_measure_label)(fl_Input input, int* ww , int* hh);
 
+  FL_EXPORT_C(fl_Window,    Fl_Input_window)(fl_Input input);
+  FL_EXPORT_C(fl_Window,    Fl_Input_top_window)(fl_Input input);
+  FL_EXPORT_C(fl_Window ,   Fl_Input_top_window_offset)(fl_Input input, int* xoff, int* yoff);
+  FL_EXPORT_C(fl_Group,     Fl_Input_as_group)(fl_Input input);
+  FL_EXPORT_C(fl_Gl_Window, Fl_Input_as_gl_window)(fl_Input input);
   /* Fl_Input specific functions */
   FL_EXPORT_C(int,      Fl_Input_handle)(fl_Input input, int event);
   FL_EXPORT_C(fl_Input, Fl_Input_New_WithLabel)(int x, int y, int w, int h, const char* label); 

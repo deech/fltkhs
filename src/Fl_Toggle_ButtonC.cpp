@@ -233,7 +233,21 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Toggle_Button_measure_label)(fl_Toggle_Button b,int* ww,int* hh){
     (static_cast<Fl_Toggle_Button*>(b))->measure_label(*ww,*hh);
   }
-
+  FL_EXPORT_C(fl_Window,    Fl_Toggle_Button_window)(fl_Toggle_Button toggle_button){
+    return (fl_Window)(static_cast<Fl_Toggle_Button*>(toggle_button))->window();
+  }
+  FL_EXPORT_C(fl_Window,    Fl_Toggle_Button_top_window)(fl_Toggle_Button toggle_button){
+    return (fl_Window) (static_cast<Fl_Toggle_Button*>(toggle_button))->top_window();
+  }
+  FL_EXPORT_C(fl_Window ,   Fl_Toggle_Button_top_window_offset)(fl_Toggle_Button toggle_button, int* xoff, int* yoff){
+    return (fl_Window) (static_cast<Fl_Toggle_Button*>(toggle_button))->top_window_offset(*xoff,*yoff);
+  }
+  FL_EXPORT_C(fl_Group,Fl_Toggle_Button_as_group)(fl_Toggle_Button toggle_button){
+    return (fl_Group) (static_cast<Fl_Toggle_Button*>(toggle_button))->as_group();
+  }
+  FL_EXPORT_C(fl_Gl_Window,Fl_Toggle_Button_as_gl_window)(fl_Toggle_Button toggle_button){
+    return (fl_Gl_Window) (static_cast<Fl_Toggle_Button*>(toggle_button))->as_gl_window();
+  }
   FL_EXPORT_C(fl_Toggle_Button, Fl_Toggle_Button_New_WithLabel)(int x, int y, int w, int h, const char* label) {
     Fl_Toggle_Button* button = new Fl_Toggle_Button(x,y,w,h,label);
     return (static_cast<fl_Toggle_Button>(button));

@@ -119,7 +119,11 @@ EXPORT {
   FL_EXPORT_C(void,         Fl_Browser_damage_inside_widget)(fl_Browser browser, uchar c, int x , int y , int w, int h);
   FL_EXPORT_C(void,         Fl_Browser_draw_label)(fl_Browser browser, int x , int y , int w, int h, Fl_Align alignment);
   FL_EXPORT_C(void,         Fl_Browser_measure_label)(fl_Browser browser, int* ww , int* hh);
-
+  FL_EXPORT_C(fl_Window,    Fl_Browser_window)(fl_Browser browser);
+  FL_EXPORT_C(fl_Window,    Fl_Browser_top_window)(fl_Browser browser);
+  FL_EXPORT_C(fl_Window ,   Fl_Browser_top_window_offset)(fl_Browser browser, int* xoff, int* yoff);
+  FL_EXPORT_C(fl_Group,     Fl_Browser_as_group)(fl_Browser browser);
+  FL_EXPORT_C(fl_Gl_Window, Fl_Browser_as_gl_window)(fl_Browser browser);
   /* Inherited from Fl_Group */
   FL_EXPORT_C(void,         Fl_Browser_begin)(fl_Browser self);
   FL_EXPORT_C(void,         Fl_Browser_end)(fl_Browser self);

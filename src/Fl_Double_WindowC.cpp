@@ -234,11 +234,20 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Double_Window_measure_label)(fl_Double_Window win,int* ww,int* hh){
     (static_cast<Fl_Double_Window*>(win))->measure_label(*ww,*hh);
   }
+  FL_EXPORT_C(fl_Window,    Fl_Double_Window_window)(fl_Double_Window double_window){
+    return (fl_Window) (static_cast<Fl_Double_Window*>(double_window))->window();
+  }
+  FL_EXPORT_C(fl_Window,    Fl_Double_Window_top_window)(fl_Double_Window double_window){
+    return (fl_Window) (static_cast<Fl_Double_Window*>(double_window))->top_window();
+  }
+  FL_EXPORT_C(fl_Window ,   Fl_Double_Window_top_window_offset)(fl_Double_Window double_window, int* xoff, int* yoff){
+    return (fl_Window) (static_cast<Fl_Double_Window*>(double_window))->top_window_offset(*xoff,*yoff);
+  }
   FL_EXPORT_C(fl_Group,Fl_Double_Window_as_group)(fl_Double_Window win){
-    return (static_cast<Fl_Double_Window*>(win))->as_group();
+    return (fl_Group) (static_cast<Fl_Double_Window*>(win))->as_group();
   }
   FL_EXPORT_C(fl_Gl_Window,Fl_Double_Window_as_gl_window)(fl_Double_Window win){
-    return (static_cast<Fl_Double_Window*>(win))->as_gl_window();
+    return (fl_Gl_Window) (static_cast<Fl_Double_Window*>(win))->as_gl_window();
   }
 
   FL_EXPORT_C(void,Fl_Double_Window_begin)(fl_Double_Window win){

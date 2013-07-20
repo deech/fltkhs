@@ -87,7 +87,11 @@ EXPORT {
   FL_EXPORT_C(void,         Fl_File_Input_damage_inside_widget)(fl_File_Input file_input, uchar c, int x , int y , int w, int h);
   FL_EXPORT_C(void,         Fl_File_Input_draw_label)(fl_File_Input file_input, int x , int y , int w, int h, Fl_Align alignment);
   FL_EXPORT_C(void,         Fl_File_Input_measure_label)(fl_File_Input file_input, int* ww , int* hh);
-
+  FL_EXPORT_C(fl_Window,    Fl_File_Input_window)(fl_File_Input file_input);
+  FL_EXPORT_C(fl_Window,    Fl_File_Input_top_window)(fl_File_Input file_input);
+  FL_EXPORT_C(fl_Window ,   Fl_File_Input_top_window_offset)(fl_File_Input file_input, int* xoff, int* yoff);
+  FL_EXPORT_C(fl_Group,     Fl_File_Input_as_group)(fl_File_Input file_input);
+  FL_EXPORT_C(fl_Gl_Window, Fl_File_Input_as_gl_window)(fl_File_Input file_input);
   /* Inherited from Fl_Input */
   FL_EXPORT_C(int,           Fl_File_Input_handle)(fl_File_Input file_input, int event);
   FL_EXPORT_C(void,        Fl_File_Input_resize)(fl_File_Input file_input, int X, int Y, int W, int H);

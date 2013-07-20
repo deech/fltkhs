@@ -30,10 +30,10 @@ EXPORT {
     return (static_cast<Fl_Choice*>(choice))->as_window();
   }
   FL_EXPORT_C(fl_Gl_Window,Fl_Choice_as_gl_window_super)(fl_Choice choice){
-    return (static_cast<Fl_Choice*>(choice))->as_gl_window();
+    return (fl_Gl_Window) (static_cast<Fl_Choice*>(choice))->as_gl_window();
   }
   FL_EXPORT_C(fl_Gl_Window,Fl_Choice_as_gl_window )(fl_Choice choice){
-    return (static_cast<Fl_Choice*>(choice))->as_gl_window();
+    return (fl_Gl_Window) (static_cast<Fl_Choice*>(choice))->as_gl_window();
   };
   FL_EXPORT_C(fl_Group,Fl_Choice_parent)(fl_Choice choice){
     return (static_cast<Fl_Choice*>(choice))->parent();

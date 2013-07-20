@@ -162,8 +162,8 @@ void initializeTable(fl_Table table){
   Fl_Table_set_other_data(table, (void*)e);
   Fl_Table_set_selection(table,0,0,0,0);
 }
-
 void draw_cell(fl_Table table,TableContextC context, int R,int C, int X,int Y,int W,int H){
+
   static char s[30];
   spreadsheet_properties* e = (spreadsheet_properties*)Fl_Table_other_data(table);
   int row_edit = e->row_edit;

@@ -134,10 +134,10 @@ EXPORT {
     return (static_cast<Fl_DerivedBox*>(box))->as_window();
   }
   FL_EXPORT_C(fl_Gl_Window,Fl_Box_as_gl_window_super)(fl_Box box){
-    return (static_cast<Fl_DerivedBox*>(box))->Fl_Box::as_gl_window();
+    return (fl_Gl_Window) (static_cast<Fl_DerivedBox*>(box))->Fl_Box::as_gl_window();
   }
   FL_EXPORT_C(fl_Gl_Window,Fl_Box_as_gl_window )(fl_Box box){
-    return (static_cast<Fl_DerivedBox*>(box))->as_gl_window();
+    return (fl_Gl_Window) (static_cast<Fl_DerivedBox*>(box))->as_gl_window();
   };
   FL_EXPORT_C(fl_Group,Fl_Box_parent)(fl_Box box){
     return (static_cast<Fl_DerivedBox*>(box))->parent();

@@ -99,6 +99,11 @@ EXPORT {
   FL_EXPORT_C(void,         Fl_Button_draw_label)(fl_Button button, int x , int y , int w, int h, Fl_Align alignment);
   FL_EXPORT_C(void,         Fl_Button_measure_label)(fl_Button button, int* ww , int* hh);
 
+  FL_EXPORT_C(fl_Window,    Fl_Button_window)(fl_Button button);
+  FL_EXPORT_C(fl_Window,    Fl_Button_top_window)(fl_Button button);
+  FL_EXPORT_C(fl_Window ,   Fl_Button_top_window_offset)(fl_Button button, int* xoff, int* yoff);
+  FL_EXPORT_C(fl_Group,     Fl_Button_as_group)(fl_Button button);
+  FL_EXPORT_C(fl_Gl_Window, Fl_Button_as_gl_window)(fl_Button button);
 #ifdef __cplusplus
   class Fl_DerivedButton : public Fl_Button {
     fl_Button_Virtual_Funcs* overriddenFuncs;

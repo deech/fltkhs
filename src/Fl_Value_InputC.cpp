@@ -235,6 +235,21 @@ EXPORT {
     (static_cast<Fl_Value_Input*>(value_input))->measure_label(*ww,*hh);
   }
 
+  FL_EXPORT_C(fl_Window,    Fl_Value_Input_window)(fl_Value_Input value_input){
+    return (fl_Window) (static_cast<Fl_Value_Input*>(value_input))->window();
+  }
+  FL_EXPORT_C(fl_Window,    Fl_Value_Input_top_window)(fl_Value_Input value_input){
+    return (fl_Window) (static_cast<Fl_Value_Input*>(value_input))->top_window();
+  }
+  FL_EXPORT_C(fl_Window ,   Fl_Value_Input_top_window_offset)(fl_Value_Input value_input, int* xoff, int* yoff){
+    return (fl_Window) (static_cast<Fl_Value_Input*>(value_input))->top_window_offset(*xoff,*yoff);
+  }
+  FL_EXPORT_C(fl_Group,Fl_Value_Input_as_group)(fl_Value_Input value_input){
+    return (fl_Group) (static_cast<Fl_Value_Input*>(value_input))->as_group();
+  }
+  FL_EXPORT_C(fl_Gl_Window,Fl_Value_Input_as_gl_window)(fl_Value_Input value_input){
+    return (fl_Gl_Window) (static_cast<Fl_Value_Input*>(value_input))->as_gl_window();
+  }
   /* Inherited from Fl_Valuator */
 
   FL_EXPORT_C(void,Fl_Value_Input_bounds)(fl_Value_Input value_input,double a,double b){
