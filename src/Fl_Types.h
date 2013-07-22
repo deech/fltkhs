@@ -167,6 +167,7 @@ EXPORT {
   typedef void* fl_Text_Buffer;
   typedef void* fl_Text_Display;
   typedef void* fl_Text_Editor;
+  typedef void* fl_Text_Selection;
   typedef void* fl_Tiled_Image;
   typedef void* fl_Tile;
   typedef void* fl_Timer;
@@ -189,7 +190,7 @@ EXPORT {
   typedef void* fl_XPM_Image;
   typedef void* fl_Region;
   typedef void (fl_Callback )(fl_Widget, void*);
-  typedef fl_Callback* fl_Callback_p;
+  typedef void (fl_Text_Buffer_Callback)(fl_Text_Buffer);
   typedef enum {
     SELECT_NONEC,
     SELECT_SINGLEC,
