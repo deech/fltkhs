@@ -60,6 +60,31 @@ EXPORT {
     VERTICAL_ALWAYS = 6,
     BOTH_ALWAYS = 7
   };
+  enum {
+    NORMAL_CURSOR,
+    CARET_CURSOR,
+    DIM_CURSOR,
+    BLOCK_CURSOR,
+    HEAVY_CURSOR,
+    SIMPLE_CURSOR    /**< as cursor as Fl_Input cursor */
+  };
+  enum {
+    CURSOR_POS,
+    CHARACTER_POS
+  };
+  enum {
+    DRAG_NONE = -2,
+    DRAG_START_DND = -1,
+    DRAG_CHAR = 0,
+    DRAG_WORD = 1,
+    DRAG_LINE = 2
+  };
+  enum {
+    WRAP_NONE,
+    WRAP_AT_COLUMN,
+    WRAP_AT_PIXEL,
+    WRAP_AT_BOUNDS  /**< wrap text so that it fits into the widget width */
+  };
 #endif
   typedef void* ID;
   typedef void* fl_Window;
@@ -191,6 +216,23 @@ EXPORT {
   typedef void* fl_Region;
   typedef void (fl_Callback )(fl_Widget, void*);
   typedef void (fl_Text_Buffer_Callback)(fl_Text_Buffer);
+  typedef void (*Unfinished_Style_Cb)(int, void *);
+  typedef struct Style_Table_Entry {
+    Fl_Color    color;
+    Fl_Font     font;
+    Fl_Fontsize size;
+    unsigned    attr;
+  }Style_Table_Entry;
+  /** Key function binding callback type */
+  typedef int (*fl_Key_Func)(int key, fl_Text_Editor Editor);
+  /** Simple linked list associating a key/state to a function */
+  struct Key_BindingC {
+    int          key;		///< the key pressed
+    int          state;	///< the state of key modifiers
+    fl_Key_Func  function;	///< associated function
+    Key_BindingC* next;	///< next key binding in the list
+  };
+
   typedef enum {
     SELECT_NONEC,
     SELECT_SINGLEC,

@@ -126,38 +126,6 @@ EXPORT {
   FL_EXPORT_C(fl_Group,     Fl_Text_Display_New_WithLabel)(int x, int y, int w, int h, const char* t);
 
   /* Fl_Text_Display specific */
-  enum {
-    NORMAL_CURSOR,
-    CARET_CURSOR,
-    DIM_CURSOR,
-    BLOCK_CURSOR,
-    HEAVY_CURSOR,
-    SIMPLE_CURSOR    /**< as cursor as Fl_Input cursor */
-  };
-  enum {
-    CURSOR_POS,
-    CHARACTER_POS
-  };
-  enum {
-    DRAG_NONE = -2,
-    DRAG_START_DND = -1,
-    DRAG_CHAR = 0,
-    DRAG_WORD = 1,
-    DRAG_LINE = 2
-  };
-  enum {
-    WRAP_NONE,
-    WRAP_AT_COLUMN,
-    WRAP_AT_PIXEL,
-    WRAP_AT_BOUNDS  /**< wrap text so that it fits into the widget width */
-  };
-  typedef void (*Unfinished_Style_Cb)(int, void *);
-  typedef struct Style_Table_Entry {
-    Fl_Color    color;
-    Fl_Font     font;
-    Fl_Fontsize size;
-    unsigned    attr;
-  }Style_Table_Entry;
   FL_EXPORT_C(fl_Text_Display, Fl_Text_Display_New)(int X, int Y, int W, int H);
   FL_EXPORT_C(fl_Text_Display, Fl_Text_Display_New_WithLabel)(int X, int Y, int W, int H, const char* l);
   FL_EXPORT_C(int, Fl_Text_Display_handle)(fl_Text_Display text_display, int e);
