@@ -1,6 +1,7 @@
 #ifndef __FL_TYPES_H
 #define __FL_TYPES_H
 #include "FL/fl_types.h"
+#include "Fl_EnumerationsC.h"
 
 #if defined(WIN32) && !defined(__CYGWIN__)
 # if defined(_WIN64)
@@ -12,6 +13,7 @@
 # define FL_SOCKET int
 #endif
 #ifdef __cplusplus
+class DerivedText_Editor;
 EXPORT {
 #endif
 // values for type(), lowest bit indicate horizontal:
@@ -224,14 +226,14 @@ EXPORT {
     unsigned    attr;
   }Style_Table_Entry;
   /** Key function binding callback type */
-  typedef int (*fl_Key_Func)(int key, fl_Text_Editor Editor);
+  typedef int (fl_Key_Func)(int key, fl_Text_Editor Editor);
   /** Simple linked list associating a key/state to a function */
-  struct Key_BindingC {
-    int          key;		///< the key pressed
-    int          state;	///< the state of key modifiers
-    fl_Key_Func  function;	///< associated function
-    Key_BindingC* next;	///< next key binding in the list
-  };
+  typedef struct Key_BindingC {
+    int           key;
+    int           state;
+    fl_Key_Func*  function;
+    struct Key_BindingC* next;
+  } Key_BindingC;
 
   typedef enum {
     SELECT_NONEC,

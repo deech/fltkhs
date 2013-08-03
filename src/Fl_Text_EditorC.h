@@ -125,7 +125,7 @@ EXPORT {
   FL_EXPORT_C(fl_Group,     Fl_Text_Editor_New)(int x, int y, int w, int h);
   FL_EXPORT_C(fl_Group,     Fl_Text_Editor_New_WithLabel)(int x, int y, int w, int h, const char* t);
 
-  /* Inherited from Fl_Text_Editor */
+  /* Inherited from Fl_Text_Display */
   FL_EXPORT_C(fl_Text_Editor, Fl_Text_Editor_New)(int X, int Y, int W, int H);
   FL_EXPORT_C(fl_Text_Editor, Fl_Text_Editor_New_WithLabel)(int X, int Y, int W, int H, const char* l);
   FL_EXPORT_C(int, Fl_Text_Editor_handle)(fl_Text_Editor text_editor, int e);
@@ -181,16 +181,13 @@ EXPORT {
   /* Fl_Text_Editor specific */
   FL_EXPORT_C(void, Fl_Text_Editor_set_insert_mode)(fl_Text_Editor text_editor, int b);
   FL_EXPORT_C(int, Fl_Text_Editor_insert_mode)(fl_Text_Editor text_editor);
-  FL_EXPORT_C(void, Fl_Text_Editor_add_key_binding)(fl_Text_Editor text_editor,int key, int state, fl_Key_Func f, Key_BindingC** list);
-  FL_EXPORT_C(void, Fl_Text_Editor_add_key_binding_with_list)(fl_Text_Editor text_editor, int key, int state, fl_Key_Func f);
+  FL_EXPORT_C(void, Fl_Text_Editor_add_key_binding_with_list)(fl_Text_Editor text_editor,int key, int state, fl_Key_Func f, Key_BindingC** list);
+  FL_EXPORT_C(void, Fl_Text_Editor_add_key_binding)(fl_Text_Editor text_editor, int key, int state, fl_Key_Func f);
   FL_EXPORT_C(void, Fl_Text_Editor_remove_key_binding_with_list)(fl_Text_Editor text_editor, int key, int state, Key_BindingC** list);
   FL_EXPORT_C(void, Fl_Text_Editor_remove_key_binding)(fl_Text_Editor text_editor, int key, int state);
   FL_EXPORT_C(void, Fl_Text_Editor_remove_all_key_bindings_with_list)(fl_Text_Editor text_editor, Key_BindingC** list);
   FL_EXPORT_C(void, Fl_Text_Editor_remove_all_key_bindings)(fl_Text_Editor text_editor);
   FL_EXPORT_C(void, Fl_Text_Editor_add_default_key_bindings)(fl_Text_Editor text_editor, Key_BindingC** list);
-  FL_EXPORT_C(fl_Key_Func, Fl_Text_Editor_bound_key_function_with_list)(fl_Text_Editor text_editor, int key, int state, Key_BindingC* list);
-  FL_EXPORT_C(fl_Key_Func, Fl_Text_Editor_bound_key_function)(fl_Text_Editor text_editor, int key, int state);
-  FL_EXPORT_C(void, Fl_Text_Editor_default_key_function)(fl_Text_Editor text_editor, fl_Key_Func f);
 
     // functions for the built in default bindings
   FL_EXPORT_C(int, Fl_Text_Editor_kf_default)(int c, fl_Text_Editor e);
