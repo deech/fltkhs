@@ -157,7 +157,7 @@ EXPORT {
     return (static_cast<Fl_DerivedTable*>(self))->handle(event);
   }
   FL_EXPORT_C(fl_Group,Fl_Table_parent)(fl_Table table){
-    return (static_cast<Fl_DerivedTable*>(table))->parent();
+    return (fl_Group) (static_cast<Fl_DerivedTable*>(table))->parent();
   }
   FL_EXPORT_C(void,Fl_Table_set_parent)(fl_Table table,fl_Group grp){
     (static_cast<Fl_DerivedTable*>(table))->parent((static_cast<Fl_Group*>(grp)));

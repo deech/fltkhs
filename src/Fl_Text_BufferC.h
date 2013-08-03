@@ -13,12 +13,13 @@ EXPORT {
   FL_EXPORT_C(fl_Text_Buffer, Fl_Text_Buffer_New_With_RequestedSize)(int requestedSize);
   FL_EXPORT_C(fl_Text_Buffer, Fl_Text_Buffer_New_With_PreferredGapSize)(int preferredGapSize);
   FL_EXPORT_C(fl_Text_Buffer, Fl_Text_Buffer_New_With_RequestedSize_PreferredGapSize)(int requestedSize, int preferredGapSize);
+  FL_EXPORT_C(void, Fl_Text_Buffer_Destroy)(fl_Text_Buffer text_buffer);
 #ifndef INTERNAL_LINKAGE
   typedef void (*Fl_Text_Modify_Cb)(int pos, int nInserted, int nDeleted,
                                   int nRestyled, const char* deletedText,
                                   void* cbArg);
   typedef void (*Fl_Text_Predelete_Cb)(int pos, int nDeleted, void* cbArg);
-#endif  
+#endif
   FL_EXPORT_C(int, Fl_Text_Buffer_input_file_was_transcoded)(fl_Text_Buffer text_buffer);
   FL_EXPORT_C(const char*, Fl_Text_Buffer_file_encoding_warning_message)(fl_Text_Buffer text_buffer);
   FL_EXPORT_C(void, Fl_Text_Buffer_set_transcoding_warning_action)(fl_Text_Buffer text_buffer,fl_Text_Buffer_Callback cb);

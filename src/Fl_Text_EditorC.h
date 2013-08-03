@@ -122,12 +122,11 @@ EXPORT {
   FL_EXPORT_C(void,         Fl_Text_Editor_insert_with_before)(fl_Text_Editor self, fl_Widget w, fl_Widget before);
   FL_EXPORT_C(fl_Widget*,   Fl_Text_Editor_array)(fl_Text_Editor self);
   FL_EXPORT_C(fl_Widget,    Fl_Text_Editor_child)(fl_Text_Editor self, int n);
-  FL_EXPORT_C(fl_Group,     Fl_Text_Editor_New)(int x, int y, int w, int h);
-  FL_EXPORT_C(fl_Group,     Fl_Text_Editor_New_WithLabel)(int x, int y, int w, int h, const char* t);
 
   /* Inherited from Fl_Text_Display */
   FL_EXPORT_C(fl_Text_Editor, Fl_Text_Editor_New)(int X, int Y, int W, int H);
   FL_EXPORT_C(fl_Text_Editor, Fl_Text_Editor_New_WithLabel)(int X, int Y, int W, int H, const char* l);
+  FL_EXPORT_C(void,     Fl_Text_Editor_Destroy)(fl_Text_Editor text_editor);
   FL_EXPORT_C(int, Fl_Text_Editor_handle)(fl_Text_Editor text_editor, int e);
   FL_EXPORT_C(void, Fl_Text_Editor_set_buffer)(fl_Text_Editor text_editor, fl_Text_Buffer buf);
   FL_EXPORT_C(fl_Text_Buffer, Fl_Text_Editor_buffer)(fl_Text_Editor text_editor);

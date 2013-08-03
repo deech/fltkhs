@@ -144,7 +144,7 @@ EXPORT {
     return (fl_Gl_Window) (static_cast<Fl_DerivedValuator*>(valuator))->as_gl_window();
   };
   FL_EXPORT_C(fl_Group,Fl_Valuator_parent)(fl_Valuator valuator){
-    return (static_cast<Fl_DerivedValuator*>(valuator))->parent();
+    return (fl_Group) (static_cast<Fl_DerivedValuator*>(valuator))->parent();
   }
   FL_EXPORT_C(void,Fl_Valuator_set_parent)(fl_Valuator valuator,fl_Group grp){
     (static_cast<Fl_DerivedValuator*>(valuator))->parent((static_cast<Fl_Group*>(grp)));

@@ -137,7 +137,7 @@ EXPORT {
     return (fl_Gl_Window) (static_cast<Fl_DerivedButton*>(button))->as_gl_window();
   };
   FL_EXPORT_C(fl_Group,Fl_Button_parent)(fl_Button b){
-    return (static_cast<Fl_DerivedButton*>(b))->parent();
+    return (fl_Group) (static_cast<Fl_DerivedButton*>(b))->parent();
   }
   FL_EXPORT_C(void,Fl_Button_set_parent)(fl_Button b,fl_Group grp){
     (static_cast<Fl_DerivedButton*>(b))->parent((static_cast<Fl_Group*>(grp)));

@@ -130,7 +130,7 @@ EXPORT {
     return (static_cast<Fl_DerivedBrowser*>(self))->handle(event);
   }
   FL_EXPORT_C(fl_Group,Fl_Browser_parent)(fl_Browser browser){
-    return (static_cast<Fl_DerivedBrowser*>(browser))->parent();
+    return (fl_Group) (static_cast<Fl_DerivedBrowser*>(browser))->parent();
   }
   FL_EXPORT_C(void,Fl_Browser_set_parent)(fl_Browser browser,fl_Group grp){
     (static_cast<Fl_DerivedBrowser*>(browser))->parent((static_cast<Fl_Group*>(grp)));

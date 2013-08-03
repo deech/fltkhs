@@ -6,7 +6,7 @@ EXPORT {
     return (static_cast<Fl_Text_Display*>(self))->handle(event);
   }
   FL_EXPORT_C(fl_Group,Fl_Text_Display_parent)(fl_Text_Display win){
-    return (static_cast<Fl_Text_Display*>(win))->parent();
+    return (fl_Group) (static_cast<Fl_Text_Display*>(win))->parent();
   }
   FL_EXPORT_C(void,Fl_Text_Display_set_parent)(fl_Text_Display win,fl_Text_Display grp){
     (static_cast<Fl_Text_Display*>(win))->parent((static_cast<Fl_Text_Display*>(grp)));

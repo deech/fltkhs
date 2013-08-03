@@ -39,7 +39,7 @@ EXPORT {
     return (fl_Gl_Window) (static_cast<Fl_Value_Slider*>(value_slider))->as_gl_window();
   };
   FL_EXPORT_C(fl_Group,Fl_Value_Slider_parent)(fl_Value_Slider value_slider){
-    return (static_cast<Fl_Value_Slider*>(value_slider))->parent();
+    return (fl_Group) (static_cast<Fl_Value_Slider*>(value_slider))->parent();
   }
   FL_EXPORT_C(void,Fl_Value_Slider_set_parent)(fl_Value_Slider value_slider,fl_Group grp){
     (static_cast<Fl_Value_Slider*>(value_slider))->parent((static_cast<Fl_Group*>(grp)));

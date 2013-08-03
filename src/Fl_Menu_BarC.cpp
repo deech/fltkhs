@@ -136,7 +136,7 @@ EXPORT {
     return (fl_Gl_Window) (static_cast<Fl_DerivedMenu_Bar*>(menu_bar))->as_gl_window();
   };
   FL_EXPORT_C(fl_Group,Fl_Menu_Bar_parent)(fl_Menu_Bar menu_bar){
-    return (static_cast<Fl_DerivedMenu_Bar*>(menu_bar))->parent();
+    return (fl_Group) (static_cast<Fl_DerivedMenu_Bar*>(menu_bar))->parent();
   }
   FL_EXPORT_C(void,Fl_Menu_Bar_set_parent)(fl_Menu_Bar menu_bar,fl_Group grp){
     (static_cast<Fl_DerivedMenu_Bar*>(menu_bar))->parent((static_cast<Fl_Group*>(grp)));

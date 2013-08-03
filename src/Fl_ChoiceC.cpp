@@ -36,7 +36,7 @@ EXPORT {
     return (fl_Gl_Window) (static_cast<Fl_Choice*>(choice))->as_gl_window();
   };
   FL_EXPORT_C(fl_Group,Fl_Choice_parent)(fl_Choice choice){
-    return (static_cast<Fl_Choice*>(choice))->parent();
+    return (fl_Group) (static_cast<Fl_Choice*>(choice))->parent();
   }
   FL_EXPORT_C(void,Fl_Choice_set_parent)(fl_Choice choice,fl_Group grp){
     (static_cast<Fl_Choice*>(choice))->parent((static_cast<Fl_Group*>(grp)));

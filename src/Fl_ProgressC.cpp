@@ -33,7 +33,7 @@ EXPORT {
     return (static_cast<Fl_Progress*>(progress))->as_window();
   }
   FL_EXPORT_C(fl_Group,Fl_Progress_parent)(fl_Progress progress){
-    return (static_cast<Fl_Progress*>(progress))->parent();
+    return (fl_Group) (static_cast<Fl_Progress*>(progress))->parent();
   }
   FL_EXPORT_C(void,Fl_Progress_set_parent)(fl_Progress progress,fl_Group grp){
     (static_cast<Fl_Progress*>(progress))->parent((static_cast<Fl_Group*>(grp)));

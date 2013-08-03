@@ -39,7 +39,7 @@ EXPORT {
     return (static_cast<DerivedText_Editor*>(self))->handle(event);
   }
   FL_EXPORT_C(fl_Group,Fl_Text_Editor_parent)(fl_Text_Editor win){
-    return (static_cast<DerivedText_Editor*>(win))->parent();
+    return (fl_Group) (static_cast<DerivedText_Editor*>(win))->parent();
   }
   FL_EXPORT_C(void,Fl_Text_Editor_set_parent)(fl_Text_Editor win,fl_Text_Editor grp){
     (static_cast<DerivedText_Editor*>(win))->parent((static_cast<DerivedText_Editor*>(grp)));
@@ -345,6 +345,9 @@ EXPORT {
   FL_EXPORT_C(fl_Text_Editor,     Fl_Text_Editor_New_WithLabel)(int x, int y, int w, int h, const char* t){
     DerivedText_Editor* g = new DerivedText_Editor(x,y,w,h,t);
     return (fl_Text_Editor)g;
+  }
+  FL_EXPORT_C(void,     Fl_Text_Editor_Destroy)(fl_Text_Editor text_editor){
+    delete (static_cast<DerivedText_Editor*>(text_editor));
   }
   FL_EXPORT_C(void,Fl_Text_Editor_set_buffer)(fl_Text_Editor text_editor,fl_Text_Buffer buf){
     return (static_cast<DerivedText_Editor*>(text_editor))->buffer((static_cast<Fl_Text_Buffer*>(buf)));

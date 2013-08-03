@@ -8,7 +8,7 @@ EXPORT {
     return (static_cast<Fl_Float_Input*>(self))->handle(event);
   }
   FL_EXPORT_C(fl_Group,Fl_Float_Input_parent)(fl_Float_Input float_input){
-    return (static_cast<Fl_Float_Input*>(float_input))->parent();
+    return (fl_Group) (static_cast<Fl_Float_Input*>(float_input))->parent();
   }
   FL_EXPORT_C(void,Fl_Float_Input_set_parent)(fl_Float_Input float_input,fl_Group grp){
     (static_cast<Fl_Float_Input*>(float_input))->parent((static_cast<Fl_Group*>(grp)));

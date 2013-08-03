@@ -129,7 +129,7 @@ EXPORT {
     return (static_cast<Fl_DerivedMulti_Browser*>(self))->handle(event);
   }
   FL_EXPORT_C(fl_Group,Fl_Multi_Browser_parent)(fl_Multi_Browser multi_browser){
-    return (static_cast<Fl_DerivedMulti_Browser*>(multi_browser))->parent();
+    return (fl_Group) (static_cast<Fl_DerivedMulti_Browser*>(multi_browser))->parent();
   }
   FL_EXPORT_C(void,Fl_Multi_Browser_set_parent)(fl_Multi_Browser multi_browser,fl_Group grp){
     (static_cast<Fl_DerivedMulti_Browser*>(multi_browser))->parent((static_cast<Fl_Group*>(grp)));

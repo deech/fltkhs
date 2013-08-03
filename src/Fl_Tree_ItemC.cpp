@@ -125,7 +125,7 @@ EXPORT {
     return (static_cast<Fl_Tree_Item*>(tree_item))->depth();
   }
   FL_EXPORT_C(fl_Tree_Item,Fl_Tree_Item_parent)(fl_Tree_Item tree_item){
-    return (fl_Tree_Item)(static_cast<Fl_Tree_Item*>(tree_item))->parent();
+    return (fl_Group) (fl_Tree_Item)(static_cast<Fl_Tree_Item*>(tree_item))->parent();
   }
   FL_EXPORT_C(fl_Tree_Item,Fl_Tree_Item_prev_displayed)(fl_Tree_Item tree_item,fl_Tree_Prefs prefs){
     return (fl_Tree_Item)(static_cast<Fl_Tree_Item*>(tree_item))->prev_displayed(*(static_cast<Fl_Tree_Prefs*>(prefs)));

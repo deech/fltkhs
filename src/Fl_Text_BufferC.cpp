@@ -259,6 +259,9 @@ EXPORT {
     Fl_Text_Buffer* b = new Fl_Text_Buffer(requestedSize,preferredGapSize);
     return (fl_Text_Buffer)b;
   }
+  FL_EXPORT_C(void, Fl_Text_Buffer_Destroy)(fl_Text_Buffer text_buffer){
+    delete(static_cast<Fl_Text_Buffer*>(text_buffer));
+  }
 #ifdef __cplusplus
 }
 #endif

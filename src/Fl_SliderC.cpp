@@ -39,7 +39,7 @@ EXPORT {
     return (fl_Gl_Window) (static_cast<Fl_Slider*>(slider))->as_gl_window();
   };
   FL_EXPORT_C(fl_Group,Fl_Slider_parent)(fl_Slider slider){
-    return (static_cast<Fl_Slider*>(slider))->parent();
+    return (fl_Group) (static_cast<Fl_Slider*>(slider))->parent();
   }
   FL_EXPORT_C(void,Fl_Slider_set_parent)(fl_Slider slider,fl_Group grp){
     (static_cast<Fl_Slider*>(slider))->parent((static_cast<Fl_Group*>(grp)));

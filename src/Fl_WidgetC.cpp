@@ -113,7 +113,7 @@ Fl_Gl_Window* Fl_DerivedWidget::as_gl_window(){
     return (static_cast<Fl_DerivedWidget*>(self))->handle(event);
   }
   FL_EXPORT_C(fl_Group,Fl_Widget_parent)(fl_Widget widget){
-    return (static_cast<Fl_DerivedWidget*>(widget))->parent();
+    return (fl_Group) (static_cast<Fl_DerivedWidget*>(widget))->parent();
   }
   FL_EXPORT_C(void,Fl_Widget_set_parent)(fl_Widget widget,fl_Group grp){
     (static_cast<Fl_DerivedWidget*>(widget))->parent((static_cast<Fl_Group*>(grp)));

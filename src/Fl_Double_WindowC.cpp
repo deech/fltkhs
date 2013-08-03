@@ -8,7 +8,7 @@ EXPORT {
     return (static_cast<Fl_Double_Window*>(self))->handle(event);
   }
   FL_EXPORT_C(fl_Group,Fl_Double_Window_parent)(fl_Double_Window win){
-    return (static_cast<Fl_Double_Window*>(win))->parent();
+    return (fl_Group) (static_cast<Fl_Double_Window*>(win))->parent();
   }
   FL_EXPORT_C(void,Fl_Double_Window_set_parent)(fl_Double_Window win,fl_Group grp){
     (static_cast<Fl_Double_Window*>(win))->parent((static_cast<Fl_Group*>(grp)));

@@ -169,7 +169,7 @@ EXPORT {
     return (static_cast<Fl_DerivedTableRow*>(self))->handle_super(event);
   }
   FL_EXPORT_C(fl_Group,Fl_Table_Row_parent)(fl_Table_Row table_row){
-    return (static_cast<Fl_DerivedTableRow*>(table_row))->parent();
+    return (fl_Group) (static_cast<Fl_DerivedTableRow*>(table_row))->parent();
   }
   FL_EXPORT_C(void,Fl_Table_Row_set_parent)(fl_Table_Row table_row,fl_Group grp){
     (static_cast<Fl_DerivedTableRow*>(table_row))->parent((static_cast<Fl_Group*>(grp)));

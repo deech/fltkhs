@@ -123,7 +123,7 @@ EXPORT {
     return (static_cast<Fl_Int_Input*>(self))->handle(event);
   }
   FL_EXPORT_C(fl_Group,Fl_Int_Input_parent)(fl_Int_Input int_input){
-    return (static_cast<Fl_DerivedInt_Input*>(int_input))->parent();
+    return (fl_Group) (static_cast<Fl_DerivedInt_Input*>(int_input))->parent();
   }
   FL_EXPORT_C(void,Fl_Int_Input_set_parent)(fl_Int_Input int_input,fl_Group grp){
     (static_cast<Fl_DerivedInt_Input*>(int_input))->parent((static_cast<Fl_Group*>(grp)));

@@ -126,7 +126,7 @@ EXPORT {
     return (static_cast<Fl_DerivedWindow*>(self))->handle(event);
   }
   FL_EXPORT_C(fl_Group,Fl_Window_parent)(fl_Window win){
-    return (static_cast<Fl_DerivedWindow*>(win))->parent();
+    return (fl_Group) (static_cast<Fl_DerivedWindow*>(win))->parent();
   }
   FL_EXPORT_C(void,Fl_Window_set_parent)(fl_Window win,fl_Group grp){
     (static_cast<Fl_DerivedWindow*>(win))->parent((static_cast<Fl_Group*>(grp)));

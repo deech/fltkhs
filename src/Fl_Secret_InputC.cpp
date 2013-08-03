@@ -8,7 +8,7 @@ EXPORT {
     return (static_cast<Fl_Secret_Input*>(self))->handle(event);
   }
   FL_EXPORT_C(fl_Group,Fl_Secret_Input_parent)(fl_Secret_Input secret_input){
-    return (static_cast<Fl_Secret_Input*>(secret_input))->parent();
+    return (fl_Group) (static_cast<Fl_Secret_Input*>(secret_input))->parent();
   }
   FL_EXPORT_C(void,Fl_Secret_Input_set_parent)(fl_Secret_Input secret_input,fl_Group grp){
     (static_cast<Fl_Secret_Input*>(secret_input))->parent((static_cast<Fl_Group*>(grp)));

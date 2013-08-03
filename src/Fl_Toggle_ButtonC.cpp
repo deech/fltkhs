@@ -7,7 +7,7 @@ EXPORT {
     return (static_cast<Fl_Toggle_Button*>(self))->handle(event);
   }
   FL_EXPORT_C(fl_Group,Fl_Toggle_Button_parent)(fl_Toggle_Button b){
-    return (static_cast<Fl_Toggle_Button*>(b))->parent();
+    return (fl_Group) (static_cast<Fl_Toggle_Button*>(b))->parent();
   }
   FL_EXPORT_C(void,Fl_Toggle_Button_set_parent)(fl_Toggle_Button b,fl_Group grp){
     (static_cast<Fl_Toggle_Button*>(b))->parent((static_cast<Fl_Group*>(grp)));

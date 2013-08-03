@@ -140,7 +140,7 @@ EXPORT {
     return (fl_Gl_Window) (static_cast<Fl_DerivedBox*>(box))->as_gl_window();
   };
   FL_EXPORT_C(fl_Group,Fl_Box_parent)(fl_Box box){
-    return (static_cast<Fl_DerivedBox*>(box))->parent();
+    return (fl_Group) (static_cast<Fl_DerivedBox*>(box))->parent();
   }
   FL_EXPORT_C(void,Fl_Box_set_parent)(fl_Box box,fl_Group grp){
     (static_cast<Fl_DerivedBox*>(box))->parent((static_cast<Fl_Group*>(grp)));
