@@ -4,7 +4,7 @@ Fl_DerivedWidget::Fl_DerivedWidget(int X, int Y, int W, int H, const char *l, fl
     overriddenFuncs = funcs;
     other_data = (void*)0;
 }
-Fl_DerivedWidget::Fl_DerivedWidget(int X, int Y, int W, int H, fl_Widget_Virtual_Funcs* funcs):Fl_Widget(X,Y,W,H,0){
+Fl_DerivedWidget::Fl_DerivedWidget(int X, int Y, int W, int H, fl_Widget_Virtual_Funcs* funcs):Fl_Widget(X,Y,W,H){
     overriddenFuncs = funcs;
     other_data = (void*)0;
 }
@@ -25,12 +25,12 @@ void Fl_DerivedWidget::destroy_data(){
 }
 void Fl_DerivedWidget::draw(){
   // defined as virtual void draw = 0 in Fl_Widget.H, needs to be provided.
-  this->overriddenFuncs->draw((fl_Table) this);
+  this->overriddenFuncs->draw((fl_Widget) this);
 }
 int Fl_DerivedWidget::handle(int event){
   int i;
   if (this->overriddenFuncs->handle != NULL) {
-    i = this->overriddenFuncs->handle((fl_Table) this,event);
+    i = this->overriddenFuncs->handle((fl_Widget) this,event);
   }
   else {
     i = Fl_Widget::handle(event);
@@ -42,7 +42,7 @@ void Fl_DerivedWidget::resize_super(int x, int y, int w, int h){
 }
 void Fl_DerivedWidget::resize(int x, int y, int w, int h){
   if (this->overriddenFuncs->resize != NULL) {
-    this->overriddenFuncs->resize((fl_Table) this,x,y,w,h);
+    this->overriddenFuncs->resize((fl_Widget) this,x,y,w,h);
   }
   else {
     Fl_Widget::resize(x,y,w,h);
@@ -50,7 +50,7 @@ void Fl_DerivedWidget::resize(int x, int y, int w, int h){
 }
 void Fl_DerivedWidget::show(){
   if (this->overriddenFuncs->show != NULL) {
-    this->overriddenFuncs->show((fl_Table) this);
+    this->overriddenFuncs->show((fl_Widget) this);
   }
   else {
     Fl_Widget::show();
@@ -58,7 +58,7 @@ void Fl_DerivedWidget::show(){
 }
 void Fl_DerivedWidget::hide(){
   if (this->overriddenFuncs->hide != NULL) {
-    this->overriddenFuncs->hide((fl_Table) this);
+    this->overriddenFuncs->hide((fl_Widget) this);
   }
   else {
     Fl_Widget::hide();
@@ -371,6 +371,24 @@ Fl_Gl_Window* Fl_DerivedWidget::as_gl_window(){
   }
   FL_EXPORT_C(void,Fl_Widget_resize)(fl_Widget widget,int X,int Y,int W,int H){
     return (static_cast<Fl_DerivedWidget*>(widget))->resize(X,Y,W,H);
+  }
+  FL_EXPORT_C(fl_Widget,    Fl_Widget_New)(int X, int Y, int W, int H){
+    fl_Widget_Virtual_Funcs* fs = Fl_Widget_default_virtual_funcs();
+    Fl_DerivedWidget* w = new Fl_DerivedWidget(X,Y,W,H,fs);
+    return (fl_Widget)w;
+  }
+  FL_EXPORT_C(fl_Widget,    Fl_Widget_New_WithLabel)(int X, int Y, int W, int H, const char* label){
+    fl_Widget_Virtual_Funcs* fs = Fl_Widget_default_virtual_funcs();
+    Fl_DerivedWidget* w = new Fl_DerivedWidget(X,Y,W,H,label,fs);
+    return (fl_Widget)w;
+  }
+  FL_EXPORT_C(fl_Widget,    Fl_Widget_New_WithOverriddenFuncs)(int X, int Y, int W, int H,fl_Widget_Virtual_Funcs* fs){
+    Fl_DerivedWidget* w = new Fl_DerivedWidget(X,Y,W,H,fs);
+    return (fl_Widget)w;
+  }
+  FL_EXPORT_C(fl_Widget,    Fl_Widget_New_WithLabel_WithOverriddenFuncs)(int X, int Y, int W, int H, const char* label, fl_Widget_Virtual_Funcs* fs){
+    Fl_DerivedWidget* w = new Fl_DerivedWidget(X,Y,W,H,label,fs);
+    return (fl_Widget)w;
   }
 #ifdef __cplusplus
  }

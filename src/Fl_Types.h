@@ -12,6 +12,18 @@
 #else
 # define FL_SOCKET int
 #endif
+#ifdef _WIN64
+#ifdef __GNUC__
+#include <stdint.h>
+#else
+#include <stddef.h>  // M$VC
+#endif
+typedef intptr_t fl_intptr_t;
+typedef uintptr_t fl_uintptr_t;
+#else
+typedef long fl_intptr_t;
+typedef unsigned long fl_uintptr_t;
+#endif
 #ifdef __cplusplus
 class DerivedText_Editor;
 EXPORT {

@@ -64,6 +64,7 @@ EXPORT {
   FL_EXPORT_C(void         , flc_yxline_with_y2_x3)(int x, int y, int y1, int x2, int y3);
   FL_EXPORT_C(void         , flc_arc_by_width_height)(int x, int y, int w, int h, double a1, double a2);
   FL_EXPORT_C(void         , flc_pie)(int x, int y, int w, int h, double a1, double a2);
+  FL_EXPORT_C(void         , flc_push_matrix)();
   FL_EXPORT_C(void         , flc_pop_matrix)();
   FL_EXPORT_C(void         , flc_scale_with_y)(double x, double y);
   FL_EXPORT_C(void         , flc_scale)(double x);

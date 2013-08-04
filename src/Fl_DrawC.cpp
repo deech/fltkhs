@@ -110,6 +110,9 @@ EXPORT {
   FL_EXPORT_C(void,flc_pie)(int x,int y,int w,int h,double a1,double a2){
     fl_pie(x,y,w,h,a1,a2);
   }
+  FL_EXPORT_C(void,flc_push_matrix)( ){
+    fl_push_matrix();
+  }
   FL_EXPORT_C(void,flc_pop_matrix)( ){
     fl_pop_matrix();
   }
