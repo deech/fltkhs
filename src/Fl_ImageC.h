@@ -27,9 +27,11 @@ EXPORT {
     ~Fl_DerivedImage();
   };
 #endif
+  FL_EXPORT_C(fl_Image_Virtual_Funcs*, Fl_Image_default_virtual_funcs)();
   FL_EXPORT_C(void*, Fl_Image_other_data)(fl_Image image);
   FL_EXPORT_C(void, Fl_Image_set_other_data)(fl_Image image, void* v);
   FL_EXPORT_C(fl_Image, Fl_Image_New)(int W, int H, int D);
+  FL_EXPORT_C(fl_Image, Fl_Image_New_WithOverriddenFuncs)(int W, int H, int D, fl_Image_Virtual_Funcs* fs);
   FL_EXPORT_C(int, Fl_Image_w)(fl_Image image);
   FL_EXPORT_C(int, Fl_Image_h)(fl_Image image);
   FL_EXPORT_C(int, Fl_Image_d)(fl_Image image);
