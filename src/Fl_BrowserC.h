@@ -149,6 +149,7 @@ EXPORT {
   /* Fl_Browser specific functions */
   FL_EXPORT_C(void*, Fl_Browser_other_data)(fl_Browser browser);
   FL_EXPORT_C(void, Fl_Browser_set_other_data)(fl_Browser browser, void* v);
+  FL_EXPORT_C(fl_Browser_Virtual_Funcs*, Fl_Browser_default_virtual_funcs)();
   FL_EXPORT_C(fl_Browser, Fl_Browser_New_WithLabel)(int x, int y, int w, int h, const char* label); 
   FL_EXPORT_C(fl_Browser, Fl_Browser_New)(int x, int y, int w, int h); 
   FL_EXPORT_C(fl_Browser, Fl_OverriddenBrowser_New_WithLabel)(int x, int y, int w, int h, const char* label, fl_Browser_Virtual_Funcs* funcs); 
