@@ -65,6 +65,9 @@ EXPORT {
   FL_EXPORT_C(double,Fl_version)( ){
     return Fl::version();
   }
+  FL_EXPORT_C(const char*, Fl_help)(){
+    return Fl::help;
+  }
   FL_EXPORT_C(void,Fl_args)(int argc,char **argv){
     Fl::args(argc,argv);
   }

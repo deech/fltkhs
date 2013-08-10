@@ -68,6 +68,7 @@ EXPORT {
   FL_EXPORT_C(int, Fl_add_awake_handler_)(fl_Awake_Handler handler, void* user_data);
   FL_EXPORT_C(int, Fl_get_awake_handler_)(fl_Awake_Handler handler, void* user_data);
   FL_EXPORT_C(double, Fl_version)();
+  FL_EXPORT_C(const char*, Fl_help)();
   FL_EXPORT_C(int, Fl_arg)(int argc, char **argv, int* i);
   FL_EXPORT_C(void, Fl_args)(int argc, char **argv);
   FL_EXPORT_C(int, Fl_args_with_handler)(int argc,char **argv,int* i,fl_Args_Handler cb);

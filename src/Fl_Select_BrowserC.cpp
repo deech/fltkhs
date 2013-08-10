@@ -137,10 +137,10 @@ EXPORT {
     return (static_cast<Fl_Select_Browser*>(select_browser))->visible_r();
   }
   FL_EXPORT_C(void,Fl_Select_Browser_show_super)(fl_Select_Browser select_browser){
-    return (static_cast<Fl_Select_Browser*>(select_browser))->show();
+    (static_cast<Fl_Select_Browser*>(select_browser))->show();
   }
   FL_EXPORT_C(void,Fl_Select_Browser_hide_super)(fl_Select_Browser select_browser){
-    return (static_cast<Fl_Select_Browser*>(select_browser))->hide();
+    (static_cast<Fl_Select_Browser*>(select_browser))->hide();
   }
   FL_EXPORT_C(void,Fl_Select_Browser_clear_visible)(fl_Select_Browser select_browser){
     (static_cast<Fl_Select_Browser*>(select_browser))->clear_visible();
@@ -254,16 +254,16 @@ EXPORT {
     return (static_cast<Fl_Select_Browser*>(select_browser))->resizable();
   }
   FL_EXPORT_C(void,Fl_Select_Browser_add_resizable)(fl_Select_Browser select_browser,fl_Widget o){
-    return (static_cast<Fl_Select_Browser*>(select_browser))->add_resizable(*(static_cast<Fl_Widget*>(o)));
+    (static_cast<Fl_Select_Browser*>(select_browser))->add_resizable(*(static_cast<Fl_Widget*>(o)));
   }
   FL_EXPORT_C(void,Fl_Select_Browser_set_clip_children)(fl_Select_Browser select_browser,int c){
-    return (static_cast<Fl_Select_Browser*>(select_browser))->clip_children(c);
+    (static_cast<Fl_Select_Browser*>(select_browser))->clip_children(c);
   }
   FL_EXPORT_C(unsigned int,Fl_Select_Browser_clip_children)(fl_Select_Browser select_browser){
     return (static_cast<Fl_Select_Browser*>(select_browser))->clip_children();
   }
   FL_EXPORT_C(void,Fl_Select_Browser_focus)(fl_Select_Browser select_browser, fl_Widget W){
-    return (static_cast<Fl_Select_Browser*>(select_browser))->focus((static_cast<Fl_Widget*>(W)));
+    (static_cast<Fl_Select_Browser*>(select_browser))->focus((static_cast<Fl_Widget*>(W)));
   }
   FL_EXPORT_C(fl_Widget,Fl_Select_Browser__ddfdesign_kludge)(fl_Select_Browser select_browser){
     return (static_cast<Fl_Select_Browser*>(select_browser))->_ddfdesign_kludge();
@@ -284,34 +284,37 @@ EXPORT {
     delete (static_cast<Fl_Select_Browser*>(select_browser));
   }
   FL_EXPORT_C(void,Fl_Select_Browser_remove)(fl_Select_Browser select_browser,int line){
-    return (static_cast<Fl_Select_Browser*>(select_browser))->remove(line);
+    (static_cast<Fl_Select_Browser*>(select_browser))->remove(line);
   }
   FL_EXPORT_C(void,Fl_Select_Browser_add)(fl_Select_Browser select_browser,const char* newtext){
-    return (static_cast<Fl_Select_Browser*>(select_browser))->add(newtext);
+    (static_cast<Fl_Select_Browser*>(select_browser))->add(newtext);
   }
   FL_EXPORT_C(void,Fl_Select_Browser_add_with_d)(fl_Select_Browser select_browser,const char* newtext,void* d){
-    return (static_cast<Fl_Select_Browser*>(select_browser))->add(newtext,d);
+    (static_cast<Fl_Select_Browser*>(select_browser))->add(newtext,d);
   }
   FL_EXPORT_C(void,Fl_Select_Browser_insert)(fl_Select_Browser select_browser,int line,const char* newtext){
-    return (static_cast<Fl_Select_Browser*>(select_browser))->insert(line,newtext);
+    (static_cast<Fl_Select_Browser*>(select_browser))->insert(line,newtext);
   }
   FL_EXPORT_C(void,Fl_Select_Browser_insert_with_d)(fl_Select_Browser select_browser,int line,const char* newtext,void* d){
-    return (static_cast<Fl_Select_Browser*>(select_browser))->insert(line,newtext,d);
+    (static_cast<Fl_Select_Browser*>(select_browser))->insert(line,newtext,d);
   }
   FL_EXPORT_C(void,Fl_Select_Browser_move)(fl_Select_Browser select_browser,int to,int from){
-    return (static_cast<Fl_Select_Browser*>(select_browser))->move(to,from);
+    (static_cast<Fl_Select_Browser*>(select_browser))->move(to,from);
   }
   FL_EXPORT_C(int,Fl_Select_Browser_load)(fl_Select_Browser select_browser,const char* filename){
     return (static_cast<Fl_Select_Browser*>(select_browser))->load(filename);
   }
+  FL_EXPORT_C(void, Fl_Select_Browser_swap)(fl_Select_Browser select_browser, int a, int b){
+    (static_cast<Fl_Select_Browser*>(select_browser))->swap(a,b);
+  }
   FL_EXPORT_C(void,Fl_Select_Browser_clear)(fl_Select_Browser select_browser){
-    return (static_cast<Fl_Select_Browser*>(select_browser))->clear();
+    (static_cast<Fl_Select_Browser*>(select_browser))->clear();
   }
   FL_EXPORT_C(int,Fl_Select_Browser_size)(fl_Select_Browser select_browser){
     return (static_cast<Fl_Select_Browser*>(select_browser))->size();
   }
   FL_EXPORT_C(void,Fl_Select_Browser_set_size)(fl_Select_Browser select_browser,int W,int H){
-    return (static_cast<Fl_Select_Browser*>(select_browser))->size(W,H);
+    (static_cast<Fl_Select_Browser*>(select_browser))->size(W,H);
   }
   FL_EXPORT_C(int,Fl_Select_Browser_topline)(fl_Select_Browser select_browser){
     return (static_cast<Fl_Select_Browser*>(select_browser))->topline();
@@ -327,13 +330,13 @@ EXPORT {
     return (static_cast<Fl_Select_Browser*>(select_browser))->lineposition(line,p);
   }
   FL_EXPORT_C(void,Fl_Select_Browser_set_topline)(fl_Select_Browser select_browser,int line){
-    return (static_cast<Fl_Select_Browser*>(select_browser))->topline(line);
+    (static_cast<Fl_Select_Browser*>(select_browser))->topline(line);
   }
   FL_EXPORT_C(void,Fl_Select_Browser_bottomline)(fl_Select_Browser select_browser,int line){
-    return (static_cast<Fl_Select_Browser*>(select_browser))->bottomline(line);
+    (static_cast<Fl_Select_Browser*>(select_browser))->bottomline(line);
   }
   FL_EXPORT_C(void,Fl_Select_Browser_middleline)(fl_Select_Browser select_browser,int line){
-    return (static_cast<Fl_Select_Browser*>(select_browser))->middleline(line);
+    (static_cast<Fl_Select_Browser*>(select_browser))->middleline(line);
   }
   FL_EXPORT_C(int,Fl_Select_Browser_select)(fl_Select_Browser select_browser,int line){
     return (static_cast<Fl_Select_Browser*>(select_browser))->select(line);
