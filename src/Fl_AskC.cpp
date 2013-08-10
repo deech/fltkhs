@@ -3,7 +3,12 @@
 #ifdef __cplusplus
 EXPORT {
 #endif
-  
+  FL_EXPORT_C(void,flc_beep)(){
+    fl_beep();
+  }
+  FL_EXPORT_C(void,flc_beep_with_type)(int type){
+    fl_beep(type);
+  }
 #ifdef __cplusplus
 }
 #endif
