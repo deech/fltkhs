@@ -177,7 +177,7 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Menu__set_color)(fl_Menu_ menu_,Fl_Color bg){
     (static_cast<Fl_DerivedMenu_*>(menu_))->color(bg);
   }
-  FL_EXPORT_C(void,Fl_Menu__set_background_and_selection_color)(fl_Menu_ menu_,Fl_Color bg,Fl_Color a){
+  FL_EXPORT_C(void,Fl_Menu__set_color_with_bg_sel)(fl_Menu_ menu_,Fl_Color bg,Fl_Color a){
     (static_cast<Fl_DerivedMenu_*>(menu_))->color(bg,a);
   }
   FL_EXPORT_C(Fl_Color,Fl_Menu__selection_color)(fl_Menu_ menu_){

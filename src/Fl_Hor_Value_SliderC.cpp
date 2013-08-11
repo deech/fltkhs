@@ -80,7 +80,7 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Hor_Value_Slider_set_color)(fl_Hor_Value_Slider value_slider,Fl_Color bg){
     (static_cast<Fl_Hor_Value_Slider*>(value_slider))->color(bg);
   }
-  FL_EXPORT_C(void,Fl_Hor_Value_Slider_set_background_and_selection_color)(fl_Hor_Value_Slider value_slider,Fl_Color bg,Fl_Color a){
+  FL_EXPORT_C(void,Fl_Hor_Value_Slider_set_color_with_bg_sel)(fl_Hor_Value_Slider value_slider,Fl_Color bg,Fl_Color a){
     (static_cast<Fl_Hor_Value_Slider*>(value_slider))->color(bg,a);
   }
   FL_EXPORT_C(Fl_Color,Fl_Hor_Value_Slider_selection_color)(fl_Hor_Value_Slider value_slider){

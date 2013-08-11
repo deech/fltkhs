@@ -47,7 +47,7 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Tabs_set_color)(fl_Tabs tabs,Fl_Color bg){
     (static_cast<Fl_Tabs*>(tabs))->color(bg);
   }
-  FL_EXPORT_C(void,Fl_Tabs_set_background_and_selection_color)(fl_Tabs tabs,Fl_Color bg,Fl_Color a){
+  FL_EXPORT_C(void,Fl_Tabs_set_color_with_bg_sel)(fl_Tabs tabs,Fl_Color bg,Fl_Color a){
     (static_cast<Fl_Tabs*>(tabs))->color(bg,a);
   }
   FL_EXPORT_C(Fl_Color,Fl_Tabs_selection_color)(fl_Tabs tabs){

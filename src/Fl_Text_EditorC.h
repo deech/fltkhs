@@ -25,7 +25,7 @@ EXPORT {
   FL_EXPORT_C(void,         Fl_Text_Editor_set_box)(fl_Text_Editor text_editor, Fl_Boxtype new_box);
   FL_EXPORT_C(Fl_Color,     Fl_Text_Editor_color)(fl_Text_Editor text_editor);
   FL_EXPORT_C(void,         Fl_Text_Editor_set_color)(fl_Text_Editor text_editor, Fl_Color bg);
-  FL_EXPORT_C(void,         Fl_Text_Editor_set_background_and_selection_color)(fl_Text_Editor text_editor,Fl_Color bg, Fl_Color a);
+  FL_EXPORT_C(void,         Fl_Text_Editor_set_color_with_bg_sel)(fl_Text_Editor text_editor,Fl_Color bg, Fl_Color a);
   FL_EXPORT_C(Fl_Color,     Fl_Text_Editor_selection_color)(fl_Text_Editor text_editor);
   FL_EXPORT_C(void,         Fl_Text_Editor_set_selection_color)(fl_Text_Editor text_editor, Fl_Color a);
   FL_EXPORT_C(const char*,  Fl_Text_Editor_label)(fl_Text_Editor text_editor);

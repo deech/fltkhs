@@ -36,7 +36,7 @@ EXPORT {
   FL_EXPORT_C(void,         Fl_Progress_set_box)(fl_Progress progress, Fl_Boxtype new_box);
   FL_EXPORT_C(Fl_Color,     Fl_Progress_color)(fl_Progress progress);
   FL_EXPORT_C(void,         Fl_Progress_set_color)(fl_Progress progress, Fl_Color bg);
-  FL_EXPORT_C(void,         Fl_Progress_set_background_and_selection_color)(fl_Progress progress,Fl_Color bg, Fl_Color a);
+  FL_EXPORT_C(void,         Fl_Progress_set_color_with_bg_sel)(fl_Progress progress,Fl_Color bg, Fl_Color a);
   FL_EXPORT_C(Fl_Color,     Fl_Progress_selection_color)(fl_Progress progress);
   FL_EXPORT_C(void,         Fl_Progress_set_selection_color)(fl_Progress progress, Fl_Color a);
   FL_EXPORT_C(const char*,  Fl_Progress_label)(fl_Progress progress);

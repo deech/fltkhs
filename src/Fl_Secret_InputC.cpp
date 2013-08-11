@@ -49,7 +49,7 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Secret_Input_set_color)(fl_Secret_Input secret_input,Fl_Color bg){
     (static_cast<Fl_Secret_Input*>(secret_input))->color(bg);
   }
-  FL_EXPORT_C(void,Fl_Secret_Input_set_background_and_selection_color)(fl_Secret_Input secret_input,Fl_Color bg,Fl_Color a){
+  FL_EXPORT_C(void,Fl_Secret_Input_set_color_with_bg_sel)(fl_Secret_Input secret_input,Fl_Color bg,Fl_Color a){
     (static_cast<Fl_Secret_Input*>(secret_input))->color(bg,a);
   }
   FL_EXPORT_C(Fl_Color,Fl_Secret_Input_selection_color)(fl_Secret_Input secret_input){

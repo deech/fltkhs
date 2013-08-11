@@ -25,7 +25,7 @@ EXPORT {
   FL_EXPORT_C(void,         Fl_Hor_Value_Slider_set_box)(fl_Hor_Value_Slider value_slider, Fl_Boxtype new_box);
   FL_EXPORT_C(Fl_Color,     Fl_Hor_Value_Slider_color)(fl_Hor_Value_Slider value_slider);
   FL_EXPORT_C(void,         Fl_Hor_Value_Slider_set_color)(fl_Hor_Value_Slider value_slider, Fl_Color bg);
-  FL_EXPORT_C(void,         Fl_Hor_Value_Slider_set_background_and_selection_color)(fl_Hor_Value_Slider value_slider,Fl_Color bg, Fl_Color a);
+  FL_EXPORT_C(void,         Fl_Hor_Value_Slider_set_color_with_bg_sel)(fl_Hor_Value_Slider value_slider,Fl_Color bg, Fl_Color a);
   FL_EXPORT_C(Fl_Color,     Fl_Hor_Value_Slider_selection_color)(fl_Hor_Value_Slider value_slider);
   FL_EXPORT_C(void,         Fl_Hor_Value_Slider_set_selection_color)(fl_Hor_Value_Slider value_slider, Fl_Color a);
   FL_EXPORT_C(const char*,  Fl_Hor_Value_Slider_label)(fl_Hor_Value_Slider value_slider);

@@ -49,7 +49,7 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Double_Window_set_color)(fl_Double_Window win,Fl_Color bg){
     (static_cast<Fl_Double_Window*>(win))->color(bg);
   }
-  FL_EXPORT_C(void,Fl_Double_Window_set_background_and_selection_color)(fl_Double_Window win,Fl_Color bg,Fl_Color a){
+  FL_EXPORT_C(void,Fl_Double_Window_set_color_with_bg_sel)(fl_Double_Window win,Fl_Color bg,Fl_Color a){
     (static_cast<Fl_Double_Window*>(win))->color(bg,a);
   }
   FL_EXPORT_C(Fl_Color,Fl_Double_Window_selection_color)(fl_Double_Window win){
@@ -420,8 +420,7 @@ EXPORT {
     (static_cast<Fl_Double_Window*>(win))->free_position();
   }
   FL_EXPORT_C(void,Fl_Double_Window_size_range)(fl_Double_Window win,int minw,int minh){
-    fl_Window_size_range_args* ptr = Fl_Window_size_range_default_args();
-    (static_cast<Fl_Double_Window*>(win))->size_range(minw,minh,ptr->maxw, ptr->maxh, ptr->dw,ptr->dh,ptr->aspect);
+    (static_cast<Fl_Double_Window*>(win))->size_range(minw,minh);
   }
   FL_EXPORT_C(void,Fl_Double_Window_size_range_with_args)(fl_Double_Window win,int minw,int minh,fl_Window_size_range_args* ptr){
     (static_cast<Fl_Double_Window*>(win))->size_range(minw,minh,ptr->maxw, ptr->maxh, ptr->dw,ptr->dh,ptr->aspect);

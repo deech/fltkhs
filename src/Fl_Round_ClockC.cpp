@@ -48,7 +48,7 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Round_Clock_set_color)(fl_Round_Clock b,Fl_Color bg){
     (static_cast<Fl_Round_Clock*>(b))->color(bg);
   }
-  FL_EXPORT_C(void,Fl_Round_Clock_set_background_and_selection_color)(fl_Round_Clock b,Fl_Color bg,Fl_Color a){
+  FL_EXPORT_C(void,Fl_Round_Clock_set_color_with_bg_sel)(fl_Round_Clock b,Fl_Color bg,Fl_Color a){
     (static_cast<Fl_Round_Clock*>(b))->color(bg,a);
   }
   FL_EXPORT_C(Fl_Color,Fl_Round_Clock_selection_color)(fl_Round_Clock b){

@@ -80,7 +80,7 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Slider_set_color)(fl_Slider slider,Fl_Color bg){
     (static_cast<Fl_Slider*>(slider))->color(bg);
   }
-  FL_EXPORT_C(void,Fl_Slider_set_background_and_selection_color)(fl_Slider slider,Fl_Color bg,Fl_Color a){
+  FL_EXPORT_C(void,Fl_Slider_set_color_with_bg_sel)(fl_Slider slider,Fl_Color bg,Fl_Color a){
     (static_cast<Fl_Slider*>(slider))->color(bg,a);
   }
   FL_EXPORT_C(Fl_Color,Fl_Slider_selection_color)(fl_Slider slider){

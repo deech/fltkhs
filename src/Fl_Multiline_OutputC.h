@@ -25,7 +25,7 @@ EXPORT {
   FL_EXPORT_C(void,         Fl_Multiline_Output_set_box)(fl_Multiline_Output multiline_output, Fl_Boxtype new_box);
   FL_EXPORT_C(Fl_Color,     Fl_Multiline_Output_color)(fl_Multiline_Output multiline_output);
   FL_EXPORT_C(void,         Fl_Multiline_Output_set_color)(fl_Multiline_Output multiline_output, Fl_Color bg);
-  FL_EXPORT_C(void,         Fl_Multiline_Output_set_background_and_selection_color)(fl_Multiline_Output multiline_output,Fl_Color bg, Fl_Color a);
+  FL_EXPORT_C(void,         Fl_Multiline_Output_set_color_with_bg_sel)(fl_Multiline_Output multiline_output,Fl_Color bg, Fl_Color a);
   FL_EXPORT_C(Fl_Color,     Fl_Multiline_Output_selection_color)(fl_Multiline_Output multiline_output);
   FL_EXPORT_C(void,         Fl_Multiline_Output_set_selection_color)(fl_Multiline_Output multiline_output, Fl_Color a);
   FL_EXPORT_C(const char*,  Fl_Multiline_Output_label)(fl_Multiline_Output multiline_output);

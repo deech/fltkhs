@@ -26,7 +26,7 @@ EXPORT {
   FL_EXPORT_C(void,         Fl_Double_Window_set_box)(fl_Double_Window win, Fl_Boxtype new_box);
   FL_EXPORT_C(Fl_Color,     Fl_Double_Window_color)(fl_Double_Window win);
   FL_EXPORT_C(void,         Fl_Double_Window_set_color)(fl_Double_Window win, Fl_Color bg);
-  FL_EXPORT_C(void,         Fl_Double_Window_set_background_and_selection_color)(fl_Double_Window win,Fl_Color bg, Fl_Color a);
+  FL_EXPORT_C(void,         Fl_Double_Window_set_color_with_bg_sel)(fl_Double_Window win,Fl_Color bg, Fl_Color a);
   FL_EXPORT_C(Fl_Color,     Fl_Double_Window_selection_color)(fl_Double_Window win);
   FL_EXPORT_C(void,         Fl_Double_Window_set_selection_color)(fl_Double_Window win, Fl_Color a);
   FL_EXPORT_C(const char*,  Fl_Double_Window_label)(fl_Double_Window win);
@@ -148,6 +148,7 @@ EXPORT {
   FL_EXPORT_C(void ,Fl_Double_Window_hotspot_with_widget_with_offscreen)(fl_Double_Window win, fl_Widget w, int offscreen);
   FL_EXPORT_C(void ,Fl_Double_Window_free_position)(fl_Double_Window win);
   FL_EXPORT_C(void ,Fl_Double_Window_size_range)(fl_Double_Window win, int minw, int minh);
+  FL_EXPORT_C(void ,Fl_Double_Window_size_range_with_args)(fl_Window win, int minw, int minh, fl_Window_size_range_args* args);//int maxw=0, int maxh=0, int dw=0, int dh=0, int aspect=0);
   FL_EXPORT_C(const char*, Fl_Double_Window_label)(fl_Double_Window win);
   FL_EXPORT_C(const char*, Fl_Double_Window_iconlabel)(fl_Double_Window win);
   FL_EXPORT_C(void, Fl_Double_Window_set_label)(fl_Double_Window win,const char*);

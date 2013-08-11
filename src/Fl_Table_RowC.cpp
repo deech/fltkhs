@@ -204,7 +204,7 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Table_Row_set_color)(fl_Table_Row table_row,Fl_Color bg){
     (static_cast<Fl_DerivedTableRow*>(table_row))->color(bg);
   }
-  FL_EXPORT_C(void,Fl_Table_Row_set_background_and_selection_color)(fl_Table_Row table_row,Fl_Color bg,Fl_Color a){
+  FL_EXPORT_C(void,Fl_Table_Row_set_color_with_bg_sel)(fl_Table_Row table_row,Fl_Color bg,Fl_Color a){
     (static_cast<Fl_DerivedTableRow*>(table_row))->color(bg,a);
   }
   FL_EXPORT_C(Fl_Color,Fl_Table_Row_selection_color)(fl_Table_Row table_row){

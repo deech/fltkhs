@@ -167,7 +167,7 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Window_set_color)(fl_Window win,Fl_Color bg){
     (static_cast<Fl_DerivedWindow*>(win))->color(bg);
   }
-  FL_EXPORT_C(void,Fl_Window_set_background_and_selection_color)(fl_Window win,Fl_Color bg,Fl_Color a){
+  FL_EXPORT_C(void,Fl_Window_set_color_with_bg_sel)(fl_Window win,Fl_Color bg,Fl_Color a){
     (static_cast<Fl_DerivedWindow*>(win))->color(bg,a);
   }
   FL_EXPORT_C(Fl_Color,Fl_Window_selection_color)(fl_Window win){
@@ -560,7 +560,7 @@ FL_EXPORT_C(fl_Window, Fl_OverriddenWindow_NewWH_WithLabel)(int x, int y, int w,
   FL_EXPORT_C(void,Fl_Window_free_position)(fl_Window win){
     (static_cast<Fl_DerivedWindow*>(win))->free_position();
   }
-  FL_EXPORT_C(fl_Window_size_range_args*,Fl_Window_size_range_default_args)(){
+  FL_EXPORT_C(fl_Window_size_range_args*,Fl_Window_default_size_range_args)(){
     fl_Window_size_range_args* ptr = (fl_Window_size_range_args*)malloc(sizeof(fl_Window_size_range_args));
     ptr->maxw = 0;
     ptr->maxh = 0;
@@ -570,7 +570,7 @@ FL_EXPORT_C(fl_Window, Fl_OverriddenWindow_NewWH_WithLabel)(int x, int y, int w,
     return ptr;
   }
   FL_EXPORT_C(void,Fl_Window_size_range)(fl_Window win,int minw,int minh){
-    fl_Window_size_range_args* ptr = Fl_Window_size_range_default_args();
+    fl_Window_size_range_args* ptr = Fl_Window_default_size_range_args();
     (static_cast<Fl_DerivedWindow*>(win))->size_range(minw,minh,ptr->maxw, ptr->maxh, ptr->dw,ptr->dh,ptr->aspect);
   }
   FL_EXPORT_C(void,Fl_Window_size_range_with_args)(fl_Window win,int minw,int minh,fl_Window_size_range_args* ptr){

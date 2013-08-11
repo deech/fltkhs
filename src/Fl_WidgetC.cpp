@@ -154,7 +154,7 @@ Fl_Gl_Window* Fl_DerivedWidget::as_gl_window(){
   FL_EXPORT_C(void,Fl_Widget_set_color)(fl_Widget widget,Fl_Color bg){
     (static_cast<Fl_DerivedWidget*>(widget))->color(bg);
   }
-  FL_EXPORT_C(void,Fl_Widget_set_background_and_selection_color)(fl_Widget widget,Fl_Color bg,Fl_Color a){
+  FL_EXPORT_C(void,Fl_Widget_set_color_with_bg_sel)(fl_Widget widget,Fl_Color bg,Fl_Color a){
     (static_cast<Fl_DerivedWidget*>(widget))->color(bg,a);
   }
   FL_EXPORT_C(Fl_Color,Fl_Widget_selection_color)(fl_Widget widget){

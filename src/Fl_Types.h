@@ -44,6 +44,12 @@ EXPORT {
 #define FL_SORT_ASCENDING	0	/**< sort browser items in ascending alphabetic order. */
 #define FL_SORT_DESCENDING	1	/**< sort in descending order */
 #ifndef INTERNAL_LINKAGE
+#define FL_RESERVED_TYPE 100
+#define FL_NORMAL_BUTTON	0 
+#define FL_TOGGLE_BUTTON	1
+#define FL_RADIO_BUTTON		(FL_RESERVED_TYPE+2)
+#define FL_HIDDEN_BUTTON	3
+
   typedef enum {
     FL_TREE_REASON_NONE=0,
     FL_TREE_REASON_SELECTED,

@@ -47,7 +47,7 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Wizard_set_color)(fl_Wizard wizard,Fl_Color bg){
     (static_cast<Fl_Wizard*>(wizard))->color(bg);
   }
-  FL_EXPORT_C(void,Fl_Wizard_set_background_and_selection_color)(fl_Wizard wizard,Fl_Color bg,Fl_Color a){
+  FL_EXPORT_C(void,Fl_Wizard_set_color_with_bg_sel)(fl_Wizard wizard,Fl_Color bg,Fl_Color a){
     (static_cast<Fl_Wizard*>(wizard))->color(bg,a);
   }
   FL_EXPORT_C(Fl_Color,Fl_Wizard_selection_color)(fl_Wizard wizard){

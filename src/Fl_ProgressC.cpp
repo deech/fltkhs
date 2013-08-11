@@ -74,7 +74,7 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Progress_set_color)(fl_Progress progress,Fl_Color bg){
     (static_cast<Fl_Progress*>(progress))->color(bg);
   }
-  FL_EXPORT_C(void,Fl_Progress_set_background_and_selection_color)(fl_Progress progress,Fl_Color bg,Fl_Color a){
+  FL_EXPORT_C(void,Fl_Progress_set_color_with_bg_sel)(fl_Progress progress,Fl_Color bg,Fl_Color a){
     (static_cast<Fl_Progress*>(progress))->color(bg,a);
   }
   FL_EXPORT_C(Fl_Color,Fl_Progress_selection_color)(fl_Progress progress){

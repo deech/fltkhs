@@ -25,7 +25,7 @@ EXPORT {
   FL_EXPORT_C(void,         Fl_Round_Clock_set_box)(fl_Round_Clock round_clock, Fl_Boxtype new_box);
   FL_EXPORT_C(Fl_Color,     Fl_Round_Clock_color)(fl_Round_Clock round_clock);
   FL_EXPORT_C(void,         Fl_Round_Clock_set_color)(fl_Round_Clock round_clock, Fl_Color bg);
-  FL_EXPORT_C(void,         Fl_Round_Clock_set_background_and_selection_color)(fl_Round_Clock round_clock,Fl_Color bg, Fl_Color a);
+  FL_EXPORT_C(void,         Fl_Round_Clock_set_color_with_bg_sel)(fl_Round_Clock round_clock,Fl_Color bg, Fl_Color a);
   FL_EXPORT_C(Fl_Color,     Fl_Round_Clock_selection_color)(fl_Round_Clock round_clock);
   FL_EXPORT_C(void,         Fl_Round_Clock_set_selection_color)(fl_Round_Clock round_clock, Fl_Color a);
   FL_EXPORT_C(const char*,  Fl_Round_Clock_label)(fl_Round_Clock round_clock);

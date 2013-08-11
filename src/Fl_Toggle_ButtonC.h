@@ -25,7 +25,7 @@ EXPORT {
   FL_EXPORT_C(void,         Fl_Toggle_Button_set_box)(fl_Toggle_Button win, Fl_Boxtype new_box);
   FL_EXPORT_C(Fl_Color,     Fl_Toggle_Button_color)(fl_Toggle_Button win);
   FL_EXPORT_C(void,         Fl_Toggle_Button_set_color)(fl_Toggle_Button win, Fl_Color bg);
-  FL_EXPORT_C(void,         Fl_Toggle_Button_set_background_and_selection_color)(fl_Toggle_Button win,Fl_Color bg, Fl_Color a);
+  FL_EXPORT_C(void,         Fl_Toggle_Button_set_color_with_bg_sel)(fl_Toggle_Button win,Fl_Color bg, Fl_Color a);
   FL_EXPORT_C(Fl_Color,     Fl_Toggle_Button_selection_color)(fl_Toggle_Button win);
   FL_EXPORT_C(void,         Fl_Toggle_Button_set_selection_color)(fl_Toggle_Button win, Fl_Color a);
   FL_EXPORT_C(const char*,  Fl_Toggle_Button_label)(fl_Toggle_Button win);

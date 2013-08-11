@@ -47,7 +47,7 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Group_set_color)(fl_Group win,Fl_Color bg){
     (static_cast<Fl_Group*>(win))->color(bg);
   }
-  FL_EXPORT_C(void,Fl_Group_set_background_and_selection_color)(fl_Group win,Fl_Color bg,Fl_Color a){
+  FL_EXPORT_C(void,Fl_Group_set_color_with_bg_sel)(fl_Group win,Fl_Color bg,Fl_Color a){
     (static_cast<Fl_Group*>(win))->color(bg,a);
   }
   FL_EXPORT_C(Fl_Color,Fl_Group_selection_color)(fl_Group win){

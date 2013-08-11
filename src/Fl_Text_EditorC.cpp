@@ -80,7 +80,7 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Text_Editor_set_color)(fl_Text_Editor win,Fl_Color bg){
     (static_cast<DerivedText_Editor*>(win))->color(bg);
   }
-  FL_EXPORT_C(void,Fl_Text_Editor_set_background_and_selection_color)(fl_Text_Editor win,Fl_Color bg,Fl_Color a){
+  FL_EXPORT_C(void,Fl_Text_Editor_set_color_with_bg_sel)(fl_Text_Editor win,Fl_Color bg,Fl_Color a){
     (static_cast<DerivedText_Editor*>(win))->color(bg,a);
   }
   FL_EXPORT_C(Fl_Color,Fl_Text_Editor_selection_color)(fl_Text_Editor win){

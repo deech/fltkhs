@@ -7,6 +7,7 @@
 #include <Fl_Menu_BarC.h>
 #include <Fl_Native_File_ChooserC.h>
 #include <Fl_BoxC.h>
+#include <Fl_AskC.h>
 
 typedef struct instance_data {
   fl_Native_File_Chooser* fc;
@@ -30,7 +31,7 @@ void save(const char *filename) {
       fprintf(fp, "Hello world.\n");
       fclose(fp);
     } else {
-      printf("Error: %s: %s", filename, strerror(errno));
+      flc_message_with_args("Error: %s: %s", filename, strerror(errno),NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
     }
   } else {
     // A real app would do something useful here.

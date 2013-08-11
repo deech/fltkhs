@@ -45,7 +45,7 @@ EXPORT {
   FL_EXPORT_C(void,         Fl_Menu_Bar_set_box)(fl_Menu_Bar menu_bar, Fl_Boxtype new_box);
   FL_EXPORT_C(Fl_Color,     Fl_Menu_Bar_color)(fl_Menu_Bar menu_bar);
   FL_EXPORT_C(void,         Fl_Menu_Bar_set_color)(fl_Menu_Bar menu_bar, Fl_Color bg);
-  FL_EXPORT_C(void,         Fl_Menu_Bar_set_background_and_selection_color)(fl_Menu_Bar menu_bar,Fl_Color bg, Fl_Color a);
+  FL_EXPORT_C(void,         Fl_Menu_Bar_set_color_with_bg_sel)(fl_Menu_Bar menu_bar,Fl_Color bg, Fl_Color a);
   FL_EXPORT_C(Fl_Color,     Fl_Menu_Bar_selection_color)(fl_Menu_Bar menu_bar);
   FL_EXPORT_C(void,         Fl_Menu_Bar_set_selection_color)(fl_Menu_Bar menu_bar, Fl_Color a);
   FL_EXPORT_C(const char*,  Fl_Menu_Bar_label)(fl_Menu_Bar menu_bar);

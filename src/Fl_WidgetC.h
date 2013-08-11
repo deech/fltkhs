@@ -43,7 +43,7 @@ EXPORT {
   FL_EXPORT_C(void,         Fl_Widget_set_box)(fl_Widget widget, Fl_Boxtype new_box);
   FL_EXPORT_C(Fl_Color,     Fl_Widget_color)(fl_Widget widget);
   FL_EXPORT_C(void,         Fl_Widget_set_color)(fl_Widget widget, Fl_Color bg);
-  FL_EXPORT_C(void,         Fl_Widget_set_background_and_selection_color)(fl_Widget widget,Fl_Color bg, Fl_Color a);
+  FL_EXPORT_C(void,         Fl_Widget_set_color_with_bg_sel)(fl_Widget widget,Fl_Color bg, Fl_Color a);
   FL_EXPORT_C(Fl_Color,     Fl_Widget_selection_color)(fl_Widget widget);
   FL_EXPORT_C(void,         Fl_Widget_set_selection_color)(fl_Widget widget, Fl_Color a);
   FL_EXPORT_C(const char*,  Fl_Widget_label)(fl_Widget widget);

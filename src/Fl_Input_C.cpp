@@ -49,7 +49,7 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Input__set_color)(fl_Input_ input_,Fl_Color bg){
     (static_cast<Fl_Input_*>(input_))->color(bg);
   }
-  FL_EXPORT_C(void,Fl_Input__set_background_and_selection_color)(fl_Input_ input_,Fl_Color bg,Fl_Color a){
+  FL_EXPORT_C(void,Fl_Input__set_color_with_bg_sel)(fl_Input_ input_,Fl_Color bg,Fl_Color a){
     (static_cast<Fl_Input_*>(input_))->color(bg,a);
   }
   FL_EXPORT_C(Fl_Color,Fl_Input__selection_color)(fl_Input_ input_){

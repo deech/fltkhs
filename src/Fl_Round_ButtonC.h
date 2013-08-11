@@ -25,7 +25,7 @@ EXPORT {
   FL_EXPORT_C(void,         Fl_Round_Button_set_box)(fl_Round_Button round_button, Fl_Boxtype new_box);
   FL_EXPORT_C(Fl_Color,     Fl_Round_Button_color)(fl_Round_Button round_button);
   FL_EXPORT_C(void,         Fl_Round_Button_set_color)(fl_Round_Button round_button, Fl_Color bg);
-  FL_EXPORT_C(void,         Fl_Round_Button_set_background_and_selection_color)(fl_Round_Button round_button,Fl_Color bg, Fl_Color a);
+  FL_EXPORT_C(void,         Fl_Round_Button_set_color_with_bg_sel)(fl_Round_Button round_button,Fl_Color bg, Fl_Color a);
   FL_EXPORT_C(Fl_Color,     Fl_Round_Button_selection_color)(fl_Round_Button round_button);
   FL_EXPORT_C(void,         Fl_Round_Button_set_selection_color)(fl_Round_Button round_button, Fl_Color a);
   FL_EXPORT_C(const char*,  Fl_Round_Button_label)(fl_Round_Button round_button);

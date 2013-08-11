@@ -25,7 +25,7 @@ EXPORT {
   FL_EXPORT_C(void,         Fl_Tree_set_box)(fl_Tree tree, Fl_Boxtype new_box);
   FL_EXPORT_C(Fl_Color,     Fl_Tree_color)(fl_Tree tree);
   FL_EXPORT_C(void,         Fl_Tree_set_color)(fl_Tree tree, Fl_Color bg);
-  FL_EXPORT_C(void,         Fl_Tree_set_background_and_selection_color)(fl_Tree tree,Fl_Color bg, Fl_Color a);
+  FL_EXPORT_C(void,         Fl_Tree_set_color_with_bg_sel)(fl_Tree tree,Fl_Color bg, Fl_Color a);
   FL_EXPORT_C(Fl_Color,     Fl_Tree_selection_color)(fl_Tree tree);
   FL_EXPORT_C(void,         Fl_Tree_set_selection_color)(fl_Tree tree, Fl_Color a);
   FL_EXPORT_C(const char*,  Fl_Tree_label)(fl_Tree tree);

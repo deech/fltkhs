@@ -181,7 +181,7 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Box_set_color)(fl_Box box,Fl_Color bg){
     (static_cast<Fl_DerivedBox*>(box))->color(bg);
   }
-  FL_EXPORT_C(void,Fl_Box_set_background_and_selection_color)(fl_Box box,Fl_Color bg,Fl_Color a){
+  FL_EXPORT_C(void,Fl_Box_set_color_with_bg_sel)(fl_Box box,Fl_Color bg,Fl_Color a){
     (static_cast<Fl_DerivedBox*>(box))->color(bg,a);
   }
   FL_EXPORT_C(Fl_Color,Fl_Box_selection_color)(fl_Box box){

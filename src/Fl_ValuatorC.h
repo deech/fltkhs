@@ -45,7 +45,7 @@ EXPORT {
   FL_EXPORT_C(void,         Fl_Valuator_set_box)(fl_Valuator valuator, Fl_Boxtype new_box);
   FL_EXPORT_C(Fl_Color,     Fl_Valuator_color)(fl_Valuator valuator);
   FL_EXPORT_C(void,         Fl_Valuator_set_color)(fl_Valuator valuator, Fl_Color bg);
-  FL_EXPORT_C(void,         Fl_Valuator_set_background_and_selection_color)(fl_Valuator valuator,Fl_Color bg, Fl_Color a);
+  FL_EXPORT_C(void,         Fl_Valuator_set_color_with_bg_sel)(fl_Valuator valuator,Fl_Color bg, Fl_Color a);
   FL_EXPORT_C(Fl_Color,     Fl_Valuator_selection_color)(fl_Valuator valuator);
   FL_EXPORT_C(void,         Fl_Valuator_set_selection_color)(fl_Valuator valuator, Fl_Color a);
   FL_EXPORT_C(const char*,  Fl_Valuator_label)(fl_Valuator valuator);

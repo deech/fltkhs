@@ -47,7 +47,7 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Text_Display_set_color)(fl_Text_Display win,Fl_Color bg){
     (static_cast<Fl_Text_Display*>(win))->color(bg);
   }
-  FL_EXPORT_C(void,Fl_Text_Display_set_background_and_selection_color)(fl_Text_Display win,Fl_Color bg,Fl_Color a){
+  FL_EXPORT_C(void,Fl_Text_Display_set_color_with_bg_sel)(fl_Text_Display win,Fl_Color bg,Fl_Color a){
     (static_cast<Fl_Text_Display*>(win))->color(bg,a);
   }
   FL_EXPORT_C(Fl_Color,Fl_Text_Display_selection_color)(fl_Text_Display win){

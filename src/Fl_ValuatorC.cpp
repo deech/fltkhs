@@ -185,7 +185,7 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Valuator_set_color)(fl_Valuator valuator,Fl_Color bg){
     (static_cast<Fl_DerivedValuator*>(valuator))->color(bg);
   }
-  FL_EXPORT_C(void,Fl_Valuator_set_background_and_selection_color)(fl_Valuator valuator,Fl_Color bg,Fl_Color a){
+  FL_EXPORT_C(void,Fl_Valuator_set_color_with_bg_sel)(fl_Valuator valuator,Fl_Color bg,Fl_Color a){
     (static_cast<Fl_DerivedValuator*>(valuator))->color(bg,a);
   }
   FL_EXPORT_C(Fl_Color,Fl_Valuator_selection_color)(fl_Valuator valuator){

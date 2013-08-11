@@ -25,7 +25,7 @@ EXPORT {
   FL_EXPORT_C(void,         Fl_Return_Button_set_box)(fl_Return_Button return_button, Fl_Boxtype new_box);
   FL_EXPORT_C(Fl_Color,     Fl_Return_Button_color)(fl_Return_Button return_button);
   FL_EXPORT_C(void,         Fl_Return_Button_set_color)(fl_Return_Button return_button, Fl_Color bg);
-  FL_EXPORT_C(void,         Fl_Return_Button_set_background_and_selection_color)(fl_Return_Button return_button,Fl_Color bg, Fl_Color a);
+  FL_EXPORT_C(void,         Fl_Return_Button_set_color_with_bg_sel)(fl_Return_Button return_button,Fl_Color bg, Fl_Color a);
   FL_EXPORT_C(Fl_Color,     Fl_Return_Button_selection_color)(fl_Return_Button return_button);
   FL_EXPORT_C(void,         Fl_Return_Button_set_selection_color)(fl_Return_Button return_button, Fl_Color a);
   FL_EXPORT_C(const char*,  Fl_Return_Button_label)(fl_Return_Button return_button);

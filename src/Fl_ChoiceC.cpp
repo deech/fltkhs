@@ -77,7 +77,7 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Choice_set_color)(fl_Choice choice,Fl_Color bg){
     (static_cast<Fl_Choice*>(choice))->color(bg);
   }
-  FL_EXPORT_C(void,Fl_Choice_set_background_and_selection_color)(fl_Choice choice,Fl_Color bg,Fl_Color a){
+  FL_EXPORT_C(void,Fl_Choice_set_color_with_bg_sel)(fl_Choice choice,Fl_Color bg,Fl_Color a){
     (static_cast<Fl_Choice*>(choice))->color(bg,a);
   }
   FL_EXPORT_C(Fl_Color,Fl_Choice_selection_color)(fl_Choice choice){

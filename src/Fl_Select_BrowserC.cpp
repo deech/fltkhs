@@ -47,7 +47,7 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Select_Browser_set_color)(fl_Select_Browser select_browser,Fl_Color bg){
     (static_cast<Fl_Select_Browser*>(select_browser))->color(bg);
   }
-  FL_EXPORT_C(void,Fl_Select_Browser_set_background_and_selection_color)(fl_Select_Browser select_browser,Fl_Color bg,Fl_Color a){
+  FL_EXPORT_C(void,Fl_Select_Browser_set_color_with_bg_sel)(fl_Select_Browser select_browser,Fl_Color bg,Fl_Color a){
     (static_cast<Fl_Select_Browser*>(select_browser))->color(bg,a);
   }
   FL_EXPORT_C(Fl_Color,Fl_Select_Browser_selection_color)(fl_Select_Browser select_browser){

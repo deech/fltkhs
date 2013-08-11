@@ -8,6 +8,7 @@
 #include "Fl_DrawC.h"
 #include "Fl_TreeC.h"
 #include "Fl_Tree_ItemC.h"
+#include "Fl_AskC.h"
 #ifndef PI
 #define PI 3.14159
 #endif
@@ -135,7 +136,7 @@ int main(int argc, char *argv[]) {
 }
 #else
 int main(int argc, char *argv[]) {
-  puts("This example must have FLTK_ABI_VERSION enabled to work properly.");
+  flc_alert("This example must have FLTK_ABI_VERSION enabled to work properly.");
   return 0;
 }
 #endif

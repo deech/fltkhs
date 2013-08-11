@@ -8,6 +8,9 @@
 #include "FL/filename.H"
 #include "Fl_CallbackC.h"
 EXPORT {
+#else
+#include <dirent.h>
+#include "FL/filename.H"
 #endif
   FL_EXPORT_C(int, flc_filename_list)(const char *d, struct dirent ***l);
   FL_EXPORT_C(int, flc_filename_list_with_s)(const char *d, struct dirent ***l, Fl_File_Sort_F *s);
