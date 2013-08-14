@@ -458,21 +458,21 @@ EXPORT {
     Fl_DerivedWindow* window = new Fl_DerivedWindow(x,y,0,funcs);
     return (fl_Window)window;
   }
-FL_EXPORT_C(fl_Window, Fl_Window_NewWH_WithLabel)(int x, int y, int w, int h, const char* title) {
+FL_EXPORT_C(fl_Window, Fl_Window_NewXY_WithLabel)(int w, int h, int x, int y, const char* title) {
     fl_Window_Virtual_Funcs* funcs = Fl_Window_default_virtual_funcs();
     Fl_DerivedWindow* window = new Fl_DerivedWindow(x,y,w,h,title,funcs);
     return (fl_Window)window;
   }
-FL_EXPORT_C(fl_Window, Fl_OverriddenWindow_NewWH_WithLabel)(int x, int y, int w, int h, const char* title,fl_Window_Virtual_Funcs* funcs) {
+FL_EXPORT_C(fl_Window, Fl_OverriddenWindow_NewXY_WithLabel)(int w, int h, int x, int y, const char* title,fl_Window_Virtual_Funcs* funcs) {
     Fl_DerivedWindow* window = new Fl_DerivedWindow(x,y,w,h,title,funcs);
     return (fl_Window)window;
   }
-  FL_EXPORT_C(fl_Window, Fl_Window_NewWH)(int x, int y, int w, int h) {
+  FL_EXPORT_C(fl_Window, Fl_Window_NewXY)(int w, int h, int x, int y) {
     fl_Window_Virtual_Funcs* funcs = Fl_Window_default_virtual_funcs();
     Fl_DerivedWindow* window = new Fl_DerivedWindow(x,y,w,h,0,funcs);
     return (fl_Window)window;
   }
-  FL_EXPORT_C(fl_Window, Fl_OverriddenWindow_NewWH)(int x, int y, int w, int h,fl_Window_Virtual_Funcs* funcs) {
+  FL_EXPORT_C(fl_Window, Fl_OverriddenWindow_NewXY)(int w, int h, int x, int y,fl_Window_Virtual_Funcs* funcs) {
     Fl_DerivedWindow* window = new Fl_DerivedWindow(x,y,w,h,0,funcs);
     return (fl_Window)window;
   }

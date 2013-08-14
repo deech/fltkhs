@@ -5,7 +5,7 @@
 
 int main(int argc, char** argv)
 {
-  fl_Window win = (fl_Window)Fl_Window_NewWH_WithLabel(640,480,500,500,"FLTK Window");
+  fl_Window win = (fl_Window)Fl_Window_NewXY_WithLabel(640,480,500,500,"FLTK Window");
   Fl_Window_show(win);
   return Fl_run();
 }

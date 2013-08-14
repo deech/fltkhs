@@ -44,14 +44,14 @@ void initialize_receiver(fl_Box receiver){
   Fl_Box_set_label(receiver,"..to\nhere");
 }
 int main(int argc, char** argv){
-  fl_Window win_a = (fl_Window)Fl_Window_NewWH_WithLabel(0,0,200,100,"Sender");
+  fl_Window win_a = (fl_Window)Fl_Window_NewXY_WithLabel(0,0,200,100,"Sender");
   fl_Box_Virtual_Funcs* funcs_a = Fl_Box_default_virtual_funcs();
   funcs_a->handle = &handle_sender;
   fl_Box a = (fl_Box) Fl_OverriddenBox_New(0,0,100,100,funcs_a);
   initialize_sender(a);
   Fl_Window_end(win_a);
   Fl_Window_show(win_a);
-  fl_Window win_b = (fl_Window)Fl_Window_NewWH_WithLabel(400,0,200,100,"Receiver");
+  fl_Window win_b = (fl_Window)Fl_Window_NewXY_WithLabel(400,0,200,100,"Receiver");
   fl_Box_Virtual_Funcs* funcs_b = Fl_Box_default_virtual_funcs();
   funcs_b->handle = &handle_receiver;
   fl_Box b = (fl_Box) Fl_OverriddenBox_New(100,0,100,100,funcs_b);

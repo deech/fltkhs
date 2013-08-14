@@ -151,10 +151,10 @@ EXPORT {
   FL_EXPORT_C(fl_Window, Fl_OverriddenWindow_New_WithLabel)(int x, int y, const char* title, fl_Window_Virtual_Funcs* funcs);
   FL_EXPORT_C(fl_Window,    Fl_Window_New)(int x, int y);
   FL_EXPORT_C(fl_Window, Fl_OverriddenWindow_New)(int x, int y,fl_Window_Virtual_Funcs* funcs);
-  FL_EXPORT_C(fl_Window,    Fl_Window_NewWH_WithLabel)(int x, int y, int w, int h, const char* title);
-  FL_EXPORT_C(fl_Window, Fl_OverriddenWindow_NewWH_WithLabel)(int x, int y, int w, int h, const char* title,fl_Window_Virtual_Funcs* funcs);
-  FL_EXPORT_C(fl_Window,    Fl_Window_NewWH)(int x, int y, int w, int h);
-  FL_EXPORT_C(fl_Window, Fl_OverriddenWindow_NewWH)(int x, int y, int w, int h,fl_Window_Virtual_Funcs* funcs);
+  FL_EXPORT_C(fl_Window,    Fl_Window_NewXY_WithLabel)(int w, int h, int x, int y, const char* title);
+  FL_EXPORT_C(fl_Window, Fl_OverriddenWindow_NewXY_WithLabel)(int w, int h, int x, int y, const char* title,fl_Window_Virtual_Funcs* funcs);
+  FL_EXPORT_C(fl_Window,    Fl_Window_NewXY)(int w, int h, int x, int y);
+  FL_EXPORT_C(fl_Window, Fl_OverriddenWindow_NewXY)(int w, int h, int x, int y,fl_Window_Virtual_Funcs* funcs);
   FL_EXPORT_C(void,         Fl_Window_hide)(fl_Window win);
   FL_EXPORT_C(void,         Fl_Window_show)(fl_Window win);
   FL_EXPORT_C(void,         Fl_Window_show_with_args)(fl_Window win, int argc, char** argv);

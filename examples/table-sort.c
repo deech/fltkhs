@@ -5,6 +5,7 @@
 #include <Fl_Table_RowC.h>
 #include <Fl_DrawC.h>
 #include <Fl_Double_WindowC.h>
+#include <Fl_WindowC.h>
 
 typedef char* string;
 
@@ -424,7 +425,7 @@ void initializeTable(fl_Table_Row table){
   d->_rowData = malloc(sizeof(Node));
   d->_rowData = NULL;
   Fl_Table_Row_set_other_data(table,(void*) d);
-  Fl_Table_Row_set_callback(table,(fl_Callback*)event_callback);
+  // Fl_Table_Row_set_callback(table,(fl_Callback*)event_callback);
 }
 
 void autowidth(fl_Table_Row table, int pad){
@@ -605,8 +606,8 @@ void resize_window(fl_Table table) {
   }
   width += MARGIN*2;
   if (width < 200 || width > Fl_w()) return;
-  fl_Double_Window window = (fl_Double_Window)Fl_Table_Row_window(table);
-  Fl_Double_Window_resize(window, Fl_Double_Window_x(window), Fl_Double_Window_y(window), width, Fl_Double_Window_h(window));
+  fl_Window window = (fl_Window)Fl_Table_Row_window(table);
+  Fl_Window_resize(window, Fl_Window_x(window), Fl_Window_y(window), width, Fl_Window_h(window));
 }
 
 void test(){
@@ -712,7 +713,7 @@ int main(int argc, string* argv){
   funcs->draw_cell = &draw_cell;
   fl_Double_Window window = (fl_Double_Window)Fl_Double_Window_New_WithLabel(900,500,"Table Sorting");
   Fl_Double_Window_begin(window);
-  fl_Table_Row table = (fl_Table_Row)Fl_OverriddenTable_Row_New(MARGIN, MARGIN, Fl_Double_Window_w(window)-MARGIN*2, Fl_Double_Window_w(window)-MARGIN*2,funcs);
+  fl_Table_Row table = (fl_Table_Row)Fl_OverriddenTable_Row_New(MARGIN, MARGIN, Fl_Double_Window_w(window)-MARGIN*2, Fl_Double_Window_h(window)-MARGIN*2,funcs);
   initializeTable(table);
   Fl_Table_Row_set_selection_color(table,FL_YELLOW);
   Fl_Table_Row_set_col_header(table,1);
@@ -723,7 +724,7 @@ int main(int argc, string* argv){
   Fl_Table_Row_set_tooltip(table,"Click on column headings to toggle column sorting");
   Fl_Table_Row_set_color(table,FL_WHITE);
   Fl_Double_Window_end(window);
-  Fl_Double_Window_set_resizable(window, table);
+  Fl_Double_Window_set_resizable(window,table);
   resize_window(table);
   Fl_Double_Window_show(window);
   return (Fl_run());

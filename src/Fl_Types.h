@@ -199,7 +199,6 @@ EXPORT {
   typedef void* fl_Secret_Input;
   typedef void* fl_Select_Browser;
   typedef void* fl_Shared_Image;
-  typedef void* fl_show_colormap;
   typedef void* fl_show_input;
   typedef void* fl_Simple_Counter;
   typedef void* fl_Single_Window;

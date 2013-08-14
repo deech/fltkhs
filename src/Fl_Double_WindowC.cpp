@@ -275,7 +275,7 @@ EXPORT {
     (static_cast<Fl_Double_Window*>(win))->clear();
   }
   FL_EXPORT_C(void,Fl_Double_Window_set_resizable_by_reference)(fl_Double_Window win,fl_Widget o){
-    (static_cast<Fl_Double_Window*>(win))->resizable((static_cast<Fl_Widget*>(o)));
+    (static_cast<Fl_Double_Window*>(win))->resizable(*(static_cast<Fl_Widget*>(o)));
   }
   FL_EXPORT_C(void,Fl_Double_Window_set_resizable)(fl_Double_Window win,fl_Widget o){
     (static_cast<Fl_Double_Window*>(win))->resizable((static_cast<Fl_Widget*>(o)));
@@ -324,11 +324,11 @@ EXPORT {
     Fl_Double_Window* window = new Fl_Double_Window(x,y,0);
     return (fl_Double_Window)window;
   }
-  FL_EXPORT_C(fl_Double_Window, Fl_Double_Window_NewWH_WithLabel)(int x, int y, int w, int h, const char* title) {
+  FL_EXPORT_C(fl_Double_Window, Fl_Double_Window_NewXY_WithLabel)(int w, int h, int x, int y, const char* title) {
     Fl_Double_Window* window = new Fl_Double_Window(x,y,w,h,title);
     return (fl_Double_Window)window;
   }
-  FL_EXPORT_C(fl_Double_Window, Fl_Double_Window_NewWH)(int x, int y, int w, int h) {
+  FL_EXPORT_C(fl_Double_Window, Fl_Double_Window_NewXY)(int w, int h, int x, int y) {
     Fl_Double_Window* window = new Fl_Double_Window(x,y,w,h,0);
     return (fl_Double_Window)window;
   }
