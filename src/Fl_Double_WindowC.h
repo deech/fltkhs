@@ -122,10 +122,10 @@ EXPORT {
   FL_EXPORT_C(void,         Fl_Double_Window_fullscreen)(fl_Double_Window win);
   FL_EXPORT_C(void,         Fl_Double_Window_fullscreen_off)(fl_Double_Window win);
   FL_EXPORT_C(void,         Fl_Double_Window_fullscreen_off_with_resize)(fl_Double_Window win,int X,int Y,int W,int H);
-  FL_EXPORT_C(fl_Double_Window,    Fl_Double_Window_New_WithLabel)(int x, int y, const char* title);
-  FL_EXPORT_C(fl_Double_Window,    Fl_Double_Window_New)(int x, int y);
-  FL_EXPORT_C(fl_Double_Window,    Fl_Double_Window_NewXY_WithLabel)(int w, int h, int x, int y, const char* title);
-  FL_EXPORT_C(fl_Double_Window,    Fl_Double_Window_NewXY)(int w, int h, int x, int y);
+  FL_EXPORT_C(fl_Double_Window,    Fl_Double_Window_New_WithLabel)(int w, int h, const char* title);
+  FL_EXPORT_C(fl_Double_Window,    Fl_Double_Window_New)(int w, int h);
+  FL_EXPORT_C(fl_Double_Window,    Fl_Double_Window_NewXY_WithLabel)(int x, int y, int w, int h, const char* title);
+  FL_EXPORT_C(fl_Double_Window,    Fl_Double_Window_NewXY)(int x, int y, int w, int h);
   FL_EXPORT_C(void,         Fl_Double_Window_iconize)(fl_Double_Window win);
 
   FL_EXPORT_C(int ,Fl_Double_Window_handle)(fl_Double_Window win, int event);

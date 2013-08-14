@@ -316,19 +316,19 @@ EXPORT {
   // FL_EXPORT_C(void,Fl_Double_Window_forms_end)(fl_Double_Window win){
   //   return (static_cast<Fl_Double_Window*>(win))->forms_end();
   // }
-  FL_EXPORT_C(fl_Double_Window, Fl_Double_Window_New_WithLabel)(int x, int y, const char* title) {
-    Fl_Double_Window* window = new Fl_Double_Window(x,y,title);
+  FL_EXPORT_C(fl_Double_Window, Fl_Double_Window_New_WithLabel)(int w, int h, const char* title) {
+    Fl_Double_Window* window = new Fl_Double_Window(w,h,title);
     return (static_cast<fl_Double_Window>(window));
   }
-  FL_EXPORT_C(fl_Double_Window, Fl_Double_Window_New)(int x, int y) {
-    Fl_Double_Window* window = new Fl_Double_Window(x,y,0);
+  FL_EXPORT_C(fl_Double_Window, Fl_Double_Window_New)(int w, int h) {
+    Fl_Double_Window* window = new Fl_Double_Window(w,h,0);
     return (fl_Double_Window)window;
   }
-  FL_EXPORT_C(fl_Double_Window, Fl_Double_Window_NewXY_WithLabel)(int w, int h, int x, int y, const char* title) {
+  FL_EXPORT_C(fl_Double_Window, Fl_Double_Window_NewXY_WithLabel)(int x, int y, int w, int h, const char* title) {
     Fl_Double_Window* window = new Fl_Double_Window(x,y,w,h,title);
     return (fl_Double_Window)window;
   }
-  FL_EXPORT_C(fl_Double_Window, Fl_Double_Window_NewXY)(int w, int h, int x, int y) {
+  FL_EXPORT_C(fl_Double_Window, Fl_Double_Window_NewXY)(int x, int y, int w, int h) {
     Fl_Double_Window* window = new Fl_Double_Window(x,y,w,h,0);
     return (fl_Double_Window)window;
   }
