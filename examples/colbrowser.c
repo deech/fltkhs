@@ -266,7 +266,7 @@ void create_form_cl(void)
   Fl_Double_Window_set_box(cl,FL_UP_BOX);
   Fl_Double_Window_set_color_with_bg_sel(cl,FL_INDIANRED, FL_GRAY);
 
-  fl_Box *title = Fl_Box_New_WithLabel(40, 10, 300, 30, "Color Browser");
+  fl_Box title = Fl_Box_New_WithLabel(40, 10, 300, 30, "Color Browser");
   Fl_Box_set_box(title,FL_NO_BOX);
   Fl_Box_set_labelcolor(title,FL_RED);
   Fl_Box_set_labelsize(title,32);

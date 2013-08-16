@@ -169,10 +169,10 @@ int main (int argc, char** argv){
   Fl_Button_set_callback(sort,sort_cb);
 
   btype = Fl_Choice_New(480, 375, 80, 25);
-  Fl_Choice_add_with_name(btype,"Normal");
-  Fl_Choice_add_with_name(btype,"Select");
-  Fl_Choice_add_with_name(btype,"Hold");
-  Fl_Choice_add_with_name(btype,"Multi");
+  Fl_Choice_add_with_name(btype,(char*)"Normal");
+  Fl_Choice_add_with_name(btype,(char*)"Select");
+  Fl_Choice_add_with_name(btype,(char*)"Hold");
+  Fl_Choice_add_with_name(btype,(char*)"Multi");
   Fl_Choice_set_callback(btype,btype_cb);
   Fl_Choice_value_with_index(btype,3);
   Fl_Choice_set_tooltip(btype,"Changes the browser type()");

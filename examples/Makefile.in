@@ -1,0 +1,69 @@
+FLTKCONFIG=@FLTKCONFIG@
+CXX = $(shell $(FLTKCONFIG) --cxx) $(shell $(FLTKCONFIG) --cxxflags) -Wall -Werror -DINTERNAL_LINKAGE -g -Icpp
+LD = $(CXX) -shared
+CC = $(shell $(FLTKCONFIG) --cc) $(shell $(FLTKCONFIG) --cflags) -Wall -Werror -g -I../src
+
+ifeq '$(OS)' "Windows_NT"
+EXEEXT = .exe
+endif
+
+EXAMPLES= \
+	arc.c \
+	bitmap.c \
+	boxtype.c \
+	browser.c \
+	button.c \
+	buttons.c \
+	clock.c \
+	colbrowser.c \
+	howto-add_fd-and-popen.c \
+	howto-browser-with-icons.c \
+	howto-drag-and-drop.c \
+	howto-parse-args.c \
+	howto-text-over-image-button.c \
+	make_button_with_callback.c \
+	make_input.c \
+	make_tree.c \
+	make_window.c \
+	make_window_fullscreen.c \
+	make_window_hide.c \
+	make_window_resize.c \
+	make_window_with_callback.c \
+	make_window_with_width_height.c \
+	menubar-add.c \
+	nativefilechooser-simple-app.c \
+	progress-simple.c \
+	rgb.txt \
+	table-as-container.c \
+	table-simple.c \
+	table-sort.c \
+	table-spreadsheet.c \
+	table-spreadsheet-with-keyboard-nav.c \
+	table-with-keynav.c \
+	tabs-simple.c \
+	textdisplay-with-colors.c \
+	texteditor-simple.c \
+	tree-of-tables.c \
+	tree-simple.c \
+	wizard-simple.c
+
+.SUFFIXES: .c $(EXEEXT)
+.SILENT:
+EXECUTABLEDIR = ../executables
+LIBDIR = ../lib
+OBJECTS = $(EXAMPLES:.c=$(EXEEXT))
+
+all: $(OBJECTS)
+.c$(EXEEXT):
+	@echo "*** Building $@"
+	$(CC) -c $^ -o $@.o
+	test -d $(EXECUTABLEDIR) || mkdir $(EXECUTABLEDIR)
+	$(CXX) -o $(EXECUTABLEDIR)/$@ $@.o $(LIBDIR)/libfltkc.a -lfltk_images -lpng -lz -ljpeg -lfltk_gl -lGLU -lGL -lfltk -lXext -lXft -lfontconfig -lXinerama -lpthread -ldl -lm  -lX11
+	strip $(EXECUTABLEDIR)/$@
+
+
+clean:
+	rm -f *.o
+	test -d $(EXECUTABLEDIR) && rm -rf $(EXECUTABLEDIR)
+
+%.o:

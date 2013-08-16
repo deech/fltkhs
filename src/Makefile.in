@@ -1,0 +1,88 @@
+FLTKCONFIG=@FLTKCONFIG@
+CXX = $(shell $(FLTKCONFIG) --cxx) $(shell $(FLTKCONFIG) --cxxflags) -Wall -Werror -DINTERNAL_LINKAGE -g -Icpp
+LD = $(CXX) -shared
+CXXSTATIC = $(CXX) -static
+
+CPPFILES= \
+	DerivedText_Editor.cpp \
+	filenameC.cpp \
+	Fl_AskC.cpp \
+	Fl_BitmapC.cpp \
+	Fl_BoxC.cpp \
+	Fl_BrowserC.cpp \
+	Fl_ButtonC.cpp \
+	Fl_CallbackC.cpp \
+	Fl_C.cpp \
+	Fl_Check_ButtonC.cpp \
+	Fl_ChoiceC.cpp \
+	Fl_ClockC.cpp \
+	Fl_Color_ChooserC.cpp \
+	Fl_Double_WindowC.cpp \
+	Fl_DrawC.cpp \
+	Fl_EnumerationsC.cpp \
+	Fl_File_InputC.cpp \
+	Fl_Float_InputC.cpp \
+	Fl_GroupC.cpp \
+	Fl_Hold_BrowserC.cpp \
+	Fl_Hor_Value_SliderC.cpp \
+	Fl_ImageC.cpp \
+	Fl_Input_C.cpp \
+	Fl_InputC.cpp \
+	Fl_Int_InputC.cpp \
+	Fl_Light_ButtonC.cpp \
+	Fl_Menu_BarC.cpp \
+	Fl_Menu_C.cpp \
+	Fl_Menu_ItemC.cpp \
+	Fl_Multi_BrowserC.cpp \
+	Fl_Multiline_InputC.cpp \
+	Fl_Multiline_OutputC.cpp \
+	Fl_Native_File_ChooserC.cpp \
+	Fl_OutputC.cpp \
+	Fl_PixmapC.cpp \
+	Fl_PreferencesC.cpp \
+	Fl_ProgressC.cpp \
+	Fl_Radio_ButtonC.cpp \
+	Fl_Repeat_ButtonC.cpp \
+	Fl_Return_ButtonC.cpp \
+	Fl_RGB_ImageC.cpp \
+	Fl_Round_ButtonC.cpp \
+	Fl_Round_ClockC.cpp \
+	Fl_Secret_InputC.cpp \
+	Fl_Select_BrowserC.cpp \
+	fl_show_colormapC.cpp \
+	Fl_SliderC.cpp \
+	Fl_TableC.cpp \
+	Fl_Table_RowC.cpp \
+	Fl_TabsC.cpp \
+	Fl_Text_BufferC.cpp \
+	Fl_Text_DisplayC.cpp \
+	Fl_Text_EditorC.cpp \
+	Fl_Text_SelectionC.cpp \
+	Fl_Toggle_ButtonC.cpp \
+	Fl_TooltipC.cpp \
+	Fl_TreeC.cpp \
+	Fl_Tree_ItemC.cpp \
+	Fl_Tree_PrefsC.cpp \
+	Fl_ValuatorC.cpp \
+	Fl_Value_InputC.cpp \
+	Fl_Value_SliderC.cpp \
+	Fl_WidgetC.cpp \
+	Fl_WindowC.cpp \
+	Fl_WizardC.cpp \
+
+OBJECTS = $(CPPFILES:.cpp=.o)
+LIBDIR = ../lib
+.SILENT:
+all: libfltkc.a
+.SUFFIXES: .cpp .o
+.cpp.o:
+	@echo "*** Compiling $<..."
+	$(CXXSTATIC) -c $^ -o $@ -lfltk -lfltk_images -lfltk_gl
+libfltkc.a : $(OBJECTS)
+	test -d $(LIBDIR) || mkdir $(LIBDIR)
+	@echo "*** Linking $@..."
+	ar rcs $(LIBDIR)/$@ $^
+clean:
+	rm -f *.o
+	test -d $(LIBDIR) && rm -rf $(LIBDIR)
+

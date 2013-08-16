@@ -7,7 +7,7 @@
 #include <Fl_ChoiceC.h>
 #include <Fl_ImageC.h>
 #include <Fl_PixmapC.h>
-char *big[] = {                       // XPM
+const char* big[] = {                       // XPM
   "50 34 4 1",
   "  c #000000",
   "o c #ff9900",
@@ -50,7 +50,7 @@ char *big[] = {                       // XPM
 };
 
 
-char *med[] = {                       // XPM
+const char* med[] = {                       // XPM
   "14 14 2 1",
   "# c #000000",
   "  c #ffffff",
@@ -69,7 +69,7 @@ char *med[] = {                       // XPM
   "##############",
   "##############",
 };
-char *sml[] = {                       // XPM
+const char* sml[] = {                       // XPM
   "9 11 5 1",
   ".  c None",
   "@  c #000000",
@@ -97,9 +97,9 @@ typedef struct instance_data {
 
 void initialize_browser(fl_Browser browser){
   instance_data* d = (instance_data*)malloc(sizeof(instance_data));
-  d->big_icon = (fl_Image)Fl_Pixmap_New(big);
-  d->med_icon = (fl_Image)Fl_Pixmap_New(med);
-  d->sml_icon = (fl_Image)Fl_Pixmap_New(sml);
+  *(d->big_icon) = (fl_Image)Fl_Pixmap_New((char**)big);
+  *(d->med_icon) = (fl_Image)Fl_Pixmap_New((char**)med);
+  *(d->sml_icon) = (fl_Image)Fl_Pixmap_New((char**)sml);
   Fl_Browser_set_other_data(browser,(void*)d);
   Fl_Browser_set_textfont(browser,FL_COURIER);
   Fl_Browser_set_textsize(browser,14);
@@ -134,10 +134,10 @@ int main (int argc, char** argv){
   fl_Browser b = (fl_Browser)Fl_Browser_New(10,40,Fl_Double_Window_w(w)-20,Fl_Double_Window_h(w)-50);
   initialize_browser(b);
   fl_Choice choice = (fl_Choice)Fl_Choice_New_WithLabel(60,10,140,25,"Icon:");
-  Fl_Choice_add_with_name(choice,"None");
-  Fl_Choice_add_with_name(choice,"Small");
-  Fl_Choice_add_with_name(choice,"Medium");
-  Fl_Choice_add_with_name(choice,"Large");
+  Fl_Choice_add_with_name(choice,(char*)"None");
+  Fl_Choice_add_with_name(choice,(char*)"Small");
+  Fl_Choice_add_with_name(choice,(char*)"Medium");
+  Fl_Choice_add_with_name(choice,(char*)"Large");
   Fl_Choice_set_callback_with_user_data(choice, Choice_CB, (void*)b);
   Fl_Choice_take_focus(choice);
   Fl_Choice_value_with_index(choice,1);
