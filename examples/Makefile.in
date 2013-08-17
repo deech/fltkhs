@@ -51,19 +51,19 @@ EXAMPLES= \
 .SILENT:
 EXECUTABLEDIR = ../executables
 LIBDIR = ../lib
+OBJECT_FILES = ../object_files
 OBJECTS = $(EXAMPLES:.c=$(EXEEXT))
 
 all: $(OBJECTS)
 .c$(EXEEXT):
+	test -d $(OBJECT_FILES) || mkdir $(OBJECT_FILES)
 	@echo "*** Building $@"
-	$(CC) -c $^ -o $@.o
+	$(CC) -c $^ -o $(OBJECT_FILES)/$@.o
 	test -d $(EXECUTABLEDIR) || mkdir $(EXECUTABLEDIR)
-	$(CXX) -o $(EXECUTABLEDIR)/$@ $@.o $(LIBDIR)/libfltkc.a -lfltk_images -lpng -lz -ljpeg -lfltk_gl -lGLU -lGL -lfltk -lXext -lXft -lfontconfig -lXinerama -lpthread -ldl -lm  -lX11
+	$(CXX) -o $(EXECUTABLEDIR)/$@ $(OBJECT_FILES)/$@.o $(LIBDIR)/libfltkc.a -lfltk_images -lpng -lz -ljpeg -lfltk_gl -lGLU -lGL -lfltk -lXext -lXft -lfontconfig -lXinerama -lpthread -ldl -lm  -lX11
 	strip $(EXECUTABLEDIR)/$@
 
-
 clean:
-	rm -f *.o
 	test -d $(EXECUTABLEDIR) && rm -rf $(EXECUTABLEDIR)
-
+	test -d $(OBJECT_FILES) && rm -rf $(OBJECT_FILES)
 %.o:

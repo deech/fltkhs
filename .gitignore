@@ -13,3 +13,4 @@ config.sub
 configure
 config.h
 autoscan.log
+object_files/*

@@ -72,17 +72,19 @@ CPPFILES= \
 
 OBJECTS = $(CPPFILES:.cpp=.o)
 LIBDIR = ../lib
+OBJECT_FILES = ../object_files
 .SILENT:
 all: libfltkc.a
 .SUFFIXES: .cpp .o
 .cpp.o:
+	test -d $(OBJECT_FILES) || mkdir $(OBJECT_FILES)
 	@echo "*** Compiling $<..."
-	$(CXXSTATIC) -c $^ -o $@ -lfltk -lfltk_images -lfltk_gl
+	$(CXXSTATIC) -c $^ -o $(OBJECT_FILES)/$@ -lfltk -lfltk_images -lfltk_gl
 libfltkc.a : $(OBJECTS)
 	test -d $(LIBDIR) || mkdir $(LIBDIR)
 	@echo "*** Linking $@..."
-	ar rcs $(LIBDIR)/$@ $^
+	(cd $(OBJECT_FILES); \
+	ar rcs $(LIBDIR)/$@ $^;)
 clean:
-	rm -f *.o
 	test -d $(LIBDIR) && rm -rf $(LIBDIR)
-
+	test -d $(OBJECT_FILES) && rm -rf $(OBJECT_FILES)
