@@ -137,6 +137,8 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Color_Chooser_rgb2hsv)(double R, double G, double B, double* H, double* S, double* V);
   FL_EXPORT_C(fl_Color_Chooser,Fl_Color_Chooser_New)(int x, int y, int w, int h);
   FL_EXPORT_C(fl_Color_Chooser,Fl_Color_Chooser_New_WithLabel)(int x, int y, int w, int h, const char* t);
+  FL_EXPORT_C(int, flc_color_chooser)(const char* name, double r, double g, double b);
+  FL_EXPORT_C(int, flc_color_chooser_with_m)(const char* name, double r, double g, double b, int m);
 #ifdef __cplusplus
 }
 #endif

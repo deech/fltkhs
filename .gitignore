@@ -3,7 +3,8 @@
 .\#*
 executables/*
 lib/*
-Makefile
+./
+./Makefile
 aclocal.m4
 autom4te.cache
 config.guess
@@ -14,3 +15,5 @@ configure
 config.h
 autoscan.log
 object_files/*
+examples/Makefile
+src/Makefile

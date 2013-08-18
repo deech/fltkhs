@@ -1,9 +1,10 @@
 FLTKCONFIG=@FLTKCONFIG@
-CXX = $(shell $(FLTKCONFIG) --cxx) $(shell $(FLTKCONFIG) --cxxflags) -Wall -Werror -DINTERNAL_LINKAGE -g -Icpp
+CXX = $(shell $(FLTKCONFIG) --cxx) $(shell $(FLTKCONFIG) --cxxflags) -Wall -Werror -DINTERNAL_LINKAGE -g -Icpp -I../
 LD = $(CXX) -shared
 CXXSTATIC = $(CXX) -static
 
 CPPFILES= \
+	xC.cpp \
 	DerivedText_Editor.cpp \
 	filenameC.cpp \
 	Fl_AskC.cpp \
@@ -19,6 +20,7 @@ CPPFILES= \
 	Fl_Color_ChooserC.cpp \
 	Fl_Double_WindowC.cpp \
 	Fl_DrawC.cpp \
+	Fl_DeviceC.cpp \
 	Fl_EnumerationsC.cpp \
 	Fl_File_InputC.cpp \
 	Fl_Float_InputC.cpp \
@@ -68,7 +70,7 @@ CPPFILES= \
 	Fl_Value_SliderC.cpp \
 	Fl_WidgetC.cpp \
 	Fl_WindowC.cpp \
-	Fl_WizardC.cpp \
+	Fl_WizardC.cpp
 
 OBJECTS = $(CPPFILES:.cpp=.o)
 LIBDIR = ../lib

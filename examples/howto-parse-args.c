@@ -25,8 +25,7 @@ int arg(int argc, char **argv, int* i)
 }
 int main(int argc, char** argv)
 {
-  int num = 1;
-  int *i = &num;
+  int i = 1;
    if (Fl_args_with_handler(argc, argv, i, arg) < argc)
     // note the concatenated strings to give a single format string!
     printf("error: unknown option: %s\n"
@@ -34,7 +33,7 @@ int main(int argc, char** argv)
            " -h | --help     : print extended help message\n"
            " -o | --option # : example option with parameter\n"
            " plus standard fltk options\n",
-           argv[*i], argv[0]);
+           argv[i], argv[0]);
   if (helpFlag)
     printf("usage: %s [options]\n"
            " -h | --help     : print extended help message\n"

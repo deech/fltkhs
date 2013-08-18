@@ -55,6 +55,30 @@
    to 0 otherwise. */
 #undef HAVE_MALLOC
 
+/*
+ * USE_XFT
+ *
+ * Use the new Xft library to draw anti-aliased text.
+ */
+
+#define USE_XFT 1
+
+/*
+ * HAVE_XDBE:
+ *
+ * Do we have the X double-buffer extension?
+ */
+
+#define HAVE_XDBE 1
+
+/*
+ * USE_XDBE:
+ *
+ * Actually try to use the double-buffer extension?
+ */
+
+#define USE_XDBE HAVE_XDBE
+
 /* Define to 1 if you have the <memory.h> header file. */
 #undef HAVE_MEMORY_H
 

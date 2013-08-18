@@ -425,7 +425,7 @@ void initializeTable(fl_Table_Row table){
   d->_rowData = malloc(sizeof(Node));
   d->_rowData = NULL;
   Fl_Table_Row_set_other_data(table,(void*) d);
-  // Fl_Table_Row_set_callback(table,(fl_Callback*)event_callback);
+  Fl_Table_Row_set_callback(table,(fl_Callback*)event_callback);
 }
 
 void autowidth(fl_Table_Row table, int pad){

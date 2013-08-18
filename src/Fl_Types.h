@@ -139,11 +139,16 @@ EXPORT {
   typedef void* fl_Fill_Dial;
   typedef void* fl_Fill_Slider;
   typedef void* fl_Float_Input;
+  typedef void* fl_Font_Descriptor;
   typedef void* fl_FormsBitmap;
   typedef void* fl_FormsPixmap;
   typedef void* fl_Free;
   typedef void* fl_GIF_Image;
   typedef void* fl_Gl_Window;
+  typedef void* fl_Graphics_Driver;
+  typedef void* fl_Surface_Device;
+  typedef void* fl_Display_Device;
+  typedef void* fl_Device_Plugin;
   typedef void* fl_Help_Dialog;
   typedef void* fl_Help_View;
   typedef void* fl_Hold_Browser;

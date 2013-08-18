@@ -1,7 +1,7 @@
 FLTKCONFIG=@FLTKCONFIG@
 CXX = $(shell $(FLTKCONFIG) --cxx) $(shell $(FLTKCONFIG) --cxxflags) -Wall -Werror -DINTERNAL_LINKAGE -g -Icpp
 LD = $(CXX) -shared
-CC = $(shell $(FLTKCONFIG) --cc) $(shell $(FLTKCONFIG) --cflags) -Wall -Werror -g -I../src
+CC = $(shell $(FLTKCONFIG) --cc) $(shell $(FLTKCONFIG) --cflags) -Wall -Werror -g -I../src -I../ -I./
 
 ifeq '$(OS)' "Windows_NT"
 EXEEXT = .exe
@@ -16,11 +16,13 @@ EXAMPLES= \
 	buttons.c \
 	clock.c \
 	colbrowser.c \
+        color_chooser.c \
 	howto-add_fd-and-popen.c \
 	howto-browser-with-icons.c \
 	howto-drag-and-drop.c \
 	howto-parse-args.c \
 	howto-text-over-image-button.c \
+	list_visuals.c \
 	make_button_with_callback.c \
 	make_input.c \
 	make_tree.c \
