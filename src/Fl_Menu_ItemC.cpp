@@ -128,6 +128,9 @@ EXPORT {
   FL_EXPORT_C(int, Fl_Menu_Item_flags)(fl_Menu_Item menu_item){
     return (static_cast<Fl_Menu_Item*>(menu_item))->flags;
   }
+  FL_EXPORT_C(void, Fl_Menu_Item_set_flags)(fl_Menu_Item menu_item, int flags){
+    (static_cast<Fl_Menu_Item*>(menu_item))->flags = flags;
+  }
   FL_EXPORT_C(char*, Fl_Menu_Item_text)(fl_Menu_Item menu_item){
     return (char*)(static_cast<Fl_Menu_Item*>(menu_item))->text;
   }
@@ -220,6 +223,13 @@ EXPORT {
   FL_EXPORT_C(int,Fl_Menu_Item_add_with_shortcutname_user_data_flags)(fl_Menu_Item menu_item,char* name,char* shortcut,fl_Callback* cb,void* user_data,int flags){
     C_to_Fl_Callback* callback_interceptor = new C_to_Fl_Callback(cb, user_data);
     return callback_interceptor->menu_add((static_cast<Fl_Menu_Item*>(menu_item)),name,shortcut,flags);
+  }
+  FL_EXPORT_C(fl_Menu_Item, Fl_Menu_Item_New)(){
+    Fl_Menu_Item* i = new Fl_Menu_Item();
+    return (fl_Menu_Item)i;
+  }
+  FL_EXPORT_C(void, Fl_Menu_Item_Destroy)(fl_Menu_Item menu_item){
+    delete (static_cast<Fl_Menu_Item*>(menu_item));
   }
 #ifdef __cplusplus
 }

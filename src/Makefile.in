@@ -5,6 +5,7 @@ CXXSTATIC = $(CXX) -static
 
 CPPFILES= \
 	xC.cpp \
+	glC.cpp \
 	DerivedText_Editor.cpp \
 	filenameC.cpp \
 	Fl_AskC.cpp \
@@ -24,6 +25,7 @@ CPPFILES= \
 	Fl_EnumerationsC.cpp \
 	Fl_File_InputC.cpp \
 	Fl_Float_InputC.cpp \
+	Fl_Gl_WindowC.cpp \
 	Fl_GroupC.cpp \
 	Fl_Hold_BrowserC.cpp \
 	Fl_Hor_Value_SliderC.cpp \
@@ -40,10 +42,13 @@ CPPFILES= \
 	Fl_Multiline_OutputC.cpp \
 	Fl_Native_File_ChooserC.cpp \
 	Fl_OutputC.cpp \
+	Fl_Paged_DeviceC.cpp \
 	Fl_PixmapC.cpp \
 	Fl_PreferencesC.cpp \
+	Fl_PrinterC.cpp \
 	Fl_ProgressC.cpp \
 	Fl_Radio_ButtonC.cpp \
+	Fl_Radio_Light_ButtonC.cpp \
 	Fl_Repeat_ButtonC.cpp \
 	Fl_Return_ButtonC.cpp \
 	Fl_RGB_ImageC.cpp \
@@ -53,6 +58,7 @@ CPPFILES= \
 	Fl_Select_BrowserC.cpp \
 	fl_show_colormapC.cpp \
 	Fl_SliderC.cpp \
+	Fl_Sys_Menu_BarC.cpp \
 	Fl_TableC.cpp \
 	Fl_Table_RowC.cpp \
 	Fl_TabsC.cpp \

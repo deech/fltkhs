@@ -51,6 +51,7 @@ EXPORT {
   FL_EXPORT_C(void, Fl_Menu_Item_draw_with_t)(fl_Menu_Item menu_item, int x, int y, int w, int h, fl_Menu_, int t);
   FL_EXPORT_C(void, Fl_Menu_Item_draw)(fl_Menu_Item menu_item, int x, int y, int w, int h, fl_Menu_ menu);
   FL_EXPORT_C(int, Fl_Menu_Item_flags)(fl_Menu_Item menu_item);
+  FL_EXPORT_C(void, Fl_Menu_Item_set_flags)(fl_Menu_Item menu_item,int flags);
   FL_EXPORT_C(char*, Fl_Menu_Item_text)(fl_Menu_Item menu_item);
   typedef struct popup_args {
     char* title; // = 0
@@ -88,6 +89,8 @@ EXPORT {
   FL_EXPORT_C(int, Fl_Menu_Item_add_with_shortcutname_flags)(fl_Menu_Item menu_item,   char* name,   char* shortcut, fl_Callback cb, int flags);
   FL_EXPORT_C(int, Fl_Menu_Item_add_with_shortcutname_user_data_flags)(fl_Menu_Item menu_item,   char* name,   char* shortcut, fl_Callback cb, void* user_data, int flags);
   FL_EXPORT_C(int, Fl_Menu_Item_size)(fl_Menu_Item menu_item);
+  FL_EXPORT_C(fl_Menu_Item, Fl_Menu_Item_New)();
+  FL_EXPORT_C(void, Fl_Menu_Item_Destroy)(fl_Menu_Item menu_item);
 #ifdef __cplusplus
 }
 #endif

@@ -90,7 +90,7 @@ EXPORT {
   FL_EXPORT_C(void       ,Fl_set_scrollbar_size)(int W);
   FL_EXPORT_C(int        ,Fl_wait)();
   FL_EXPORT_C(double     ,Fl_set_wait)(double time);
-  FL_EXPORT_C(fl_Widget* ,Fl_readqueue)();
+  FL_EXPORT_C(fl_Widget  ,Fl_readqueue)();
   FL_EXPORT_C(void       ,Fl_add_timeout)(double t,fl_Timeout_Handler handler);
   FL_EXPORT_C(void       ,Fl_add_timeout_with_userdata)(double t,fl_Timeout_Handler handler, void* userdata);
   FL_EXPORT_C(void       ,Fl_repeat_timeout)(double t,fl_Timeout_Handler handler);

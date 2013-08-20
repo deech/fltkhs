@@ -55,16 +55,19 @@ outputDefaultImplementation (fn,args) =
                  else
                      "return"
         body = case ((argumentType . argument $ fn), getSelfArgument args) of
-                 (Normal t, Just self) -> (printf "{\n return (static_cast<%s>(%s))->%s(%s);\n}"
+                 (Normal t, Just self) -> (printf "{\n %s (static_cast<%s*>(%s))->%s(%s);\n}"
+                                                   return
                                                    (className fn)
                                                    self
                                                    (realName fn)
                                                    (intercalate "," (map castIfNecessary (tail args))))
-                 (Normal t, Nothing) ->  (printf "{\n return %s::%s(%s);\n}"
+                 (Normal t, Nothing) ->  (printf "{\n %s %s::%s(%s);\n}"
+                                                    return
                                                    (className fn)
                                                    (realName fn)
                                                    (intercalate "," (map castIfNecessary args)))
-                 (Self t, Just self) -> (printf "{\n return (%s)(static_cast<%s>(%s))->%s(%s);\n}"
+                 (Self t, Just self) -> (printf "{\n %s (%s)(static_cast<%s*>(%s))->%s(%s);\n}"
+                                                return
                                                 t
                                                 (className fn)
                                                 self

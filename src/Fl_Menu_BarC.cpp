@@ -408,8 +408,17 @@ EXPORT {
   FL_EXPORT_C(fl_Menu_Item,Fl_Menu_Bar_menu)(fl_Menu_Bar menu_bar){
     return (fl_Menu_Item)(static_cast<Fl_Menu_Bar*>(menu_bar))->menu();
   }
-  FL_EXPORT_C(void,Fl_Menu_Bar_menu_with_m)(fl_Menu_Bar menu_bar,fl_Menu_Item item){
-    return (static_cast<Fl_Menu_Bar*>(menu_bar))->menu((static_cast<Fl_Menu_Item*>(item)));
+  FL_EXPORT_C(Fl_Menu_Item*,convert)(fl_Menu_Item* item, int size){
+    int i = 0;
+    Fl_Menu_Item* current = new Fl_Menu_Item[size];
+    for (;i<size;i++){
+      current[i] = *(static_cast<Fl_Menu_Item*>(*(item + i)));
+    }
+    return current;
+  }
+  FL_EXPORT_C(void,Fl_Menu_Bar_menu_with_m)(fl_Menu_Bar menu_bar,fl_Menu_Item* item, int size){
+    Fl_Menu_Item* converted = convert(item,size);
+    return (static_cast<Fl_Menu_Bar*>(menu_bar))->menu(converted);
   }
   FL_EXPORT_C(void,Fl_Menu_Bar_copy)(fl_Menu_Bar menu_bar,fl_Menu_Item m){
     return (static_cast<Fl_Menu_Bar*>(menu_bar))->copy((static_cast<Fl_Menu_Item*>(m)));

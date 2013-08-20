@@ -48,7 +48,6 @@ EXPORT {
     fl_visual = i;
   }
   FL_EXPORT_C(XVisualInfo*, flc_fl_visual)(){
-    if (!fl_visual) puts("NULL!");
     return fl_visual;
   }
 #ifdef __cplusplus

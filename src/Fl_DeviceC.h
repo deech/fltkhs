@@ -9,43 +9,6 @@
 #include "Fl_CallbackC.h"
 EXPORT {
 #endif
-  // Fl_Font_Descriptor
-/*   FL_EXPORT_C(fl_Font_Descriptor,  Fl_Font_Descriptor_get_next)(fl_Font_Descriptor font_descriptor); */
-/*   FL_EXPORT_C(Fl_Fontsize,         Fl_Font_Descriptor_get_size)(fl_Font_Descriptor font_descriptor); */
-/* #  ifdef WIN3 */
-/*   FL_EXPORT_C(HFONT,               Fl_Font_Descriptor_get_fid)(fl_Font_Descriptor font_descriptor); */
-/*   FL_EXPORT_C(int*,                Fl_Font_Descriptor_get_width)(fl_Font_Descriptor font_descriptor); */
-/*   FL_EXPORT_C(TEXTMETRIC,          Fl_Font_Descriptor_get_metr)(fl_Font_Descriptor font_descriptor); */
-/*   FL_EXPORT_C(int,                 Fl_Font_Descriptor_get_angle)(fl_Font_Descriptor font_descriptor); */
-/*   FL_EXPORT_C(fl_Font_Descriptor,  Fl_Font_Descriptor_New)(const char* fontname, Fl_Fontsize size); */
-/* #  elif defined(__APPLE_QUARTZ__) */
-/*   FL_EXPORT_C(fl_Font_Descriptor,  Fl_Font_Descriptor_New)(const char* fontname, Fl_Fontsize size); */
-/*   FL_EXPORT_C(ATSUTextLayout,      Fl_Font_Descriptor_get_layout)(fl_Font_Descriptor font_descriptor); */
-/* #     if MAC_OS_X_VERSION_MAX_ALLOWED >= MAC_OS_X_VERSION_10_5 */
-/*   FL_EXPORT_C(CTFontRef,           Fl_Font_Descriptor_get_fontref)(fl_Font_Descriptor font_descriptor); */
-/*   FL_EXPORT_C(float*,              Fl_Font_Descriptor_get_width)(fl_Font_Descriptor font_descriptor); */
-/* #     endif */
-/*   FL_EXPORT_C(ATSUStyle, Fl_Font_Descriptor_get_style)(fl_Font_Descriptor font_descriptor); */
-/*   FL_EXPORT_C(short, Fl_Font_Descriptor_get_ascent)(fl_Font_Descriptor font_descriptor); */
-/*   FL_EXPORT_C(short, Fl_Font_Descriptor_get_descent)(fl_Font_Descriptor font_descriptor); */
-/*   FL_EXPORT_C(short, Fl_Font_Descriptor_get_q_width)(fl_Font_Descriptor font_descriptor); */
-/*   FL_EXPORT_C(char*, Fl_Font_Descriptor_get_q_name)(fl_Font_Descriptor font_descriptor); */
-/* #  elif USE_XFT */
-/*   FL_EXPORT_C(XftFont*, Fl_Font_Descriptor_get_font)(fl_Font_Descriptor font_descriptor); */
-/*   FL_EXPORT_C(int, Fl_Font_Descriptor_get_angle)(fl_Font_Descriptor font_descriptor); */
-/*   FL_EXPORT_C(fl_Font_Descriptor,  Fl_Font_Descriptor_New)(const char* xfontname, Fl_Fontsize size, int angle); */
-/* #  else */
-/*   FL_EXPORT_C(XUtf8FontStruct*, Fl_Font_Descriptor_get_font)(fl_Font_Descriptor font_descriptor);	// X UTF-8 font information */
-/*   FL_EXPORT_C(fl_Font_Descriptor,  Fl_Font_Descriptor_New)(const char* fontname); */
-/* #  endif */
-/* #  if HAVE_GL */
-/*   FL_EXPORT_C(unsigned int, Fl_Font_Descriptor_get_listbase)(fl_Font_Descriptor font_descriptor); */
-/* #ifndef __APPLE_QUARTZ__ */
-/*   FL_EXPORT_C(char, Fl_Font_Descriptor_get_glok)(fl_Font_Descriptor font_descriptor); */
-/* #endif // __APPLE_QUARTZ__ */
-/* #  endif // HAVE_GL */
-/*   FL_EXPORT_C(void,  Fl_Font_Descriptor_Destroy)(fl_Font_Descriptor font_descriptor); */
-
   //Fl_Graphics_Driver
   FL_EXPORT_C(const char*, Fl_Graphics_Driver_class_id)();
   FL_EXPORT_C(const char*, Fl_Graphics_Driver_class_name)(fl_Graphics_Driver graphics_driver);
@@ -70,8 +33,8 @@ EXPORT {
   FL_EXPORT_C(const char*, Fl_Surface_Device_class_id)();
   FL_EXPORT_C(const char*, Fl_Surface_Device_class_name)(fl_Surface_Device surface_device);
   FL_EXPORT_C(void, Fl_Surface_Device_set_current)(fl_Surface_Device surface_device);
-  FL_EXPORT_C(void, Fl_Surface_Device_set_driver)(fl_Surface_Device surface_device,fl_Surface_Device new_surface_device);
-  FL_EXPORT_C(fl_Surface_Device, Fl_Surface_Device_driver)(fl_Surface_Device surface_device);
+  FL_EXPORT_C(void, Fl_Surface_Device_set_driver)(fl_Surface_Device surface_device,fl_Graphics_Driver graphics_driver);
+  FL_EXPORT_C(fl_Graphics_Driver, Fl_Surface_Device_driver)(fl_Surface_Device surface_device);
   FL_EXPORT_C(fl_Surface_Device, Fl_Surface_Device_surface)(); 
   FL_EXPORT_C(void, Fl_Surface_Device_Destroy)(fl_Surface_Device surface_device);
 #ifdef __cplusplus

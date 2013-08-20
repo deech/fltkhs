@@ -141,6 +141,7 @@ EXPORT {
   };
 #endif
   /* Fl_Window specific */
+  FL_EXPORT_C(fl_Window_Virtual_Funcs*, Fl_Window_default_virtual_funcs)();
   FL_EXPORT_C(unsigned int, Fl_Window_changed)(fl_Window win);
   FL_EXPORT_C(void,         Fl_Window_fullscreen)(fl_Window win);
   FL_EXPORT_C(void,         Fl_Window_fullscreen_off)(fl_Window win);

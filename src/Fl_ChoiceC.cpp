@@ -297,8 +297,17 @@ EXPORT {
   FL_EXPORT_C(fl_Menu_Item,Fl_Choice_menu)(fl_Choice choice){
     return (fl_Menu_Item)(static_cast<Fl_Choice*>(choice))->menu();
   }
-  FL_EXPORT_C(void,Fl_Choice_menu_with_m)(fl_Choice choice,fl_Menu_Item item){
-    return (static_cast<Fl_Choice*>(choice))->menu((static_cast<Fl_Menu_Item*>(item)));
+  FL_EXPORT_C(Fl_Menu_Item*,convert)(fl_Menu_Item* item, int size){
+    int i = 0;
+    Fl_Menu_Item* current = new Fl_Menu_Item[size];
+    for (;i<size;i++){
+      current[i] = *(static_cast<Fl_Menu_Item*>(*(item + i)));
+    }
+    return current;
+  }
+  FL_EXPORT_C(void,Fl_Choice_menu_with_m)(fl_Choice choice,fl_Menu_Item* item, int size){
+    Fl_Menu_Item* converted = convert(item,size);
+    return (static_cast<Fl_Choice*>(choice))->menu(converted);
   }
   FL_EXPORT_C(void,Fl_Choice_copy)(fl_Choice choice,fl_Menu_Item m){
     return (static_cast<Fl_Choice*>(choice))->copy((static_cast<Fl_Menu_Item*>(m)));

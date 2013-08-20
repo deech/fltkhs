@@ -86,7 +86,7 @@ EXPORT {
     DIM_CURSOR,
     BLOCK_CURSOR,
     HEAVY_CURSOR,
-    SIMPLE_CURSOR    /**< as cursor as Fl_Input cursor */
+    SIMPLE_CURSOR    
   };
   enum {
     CURSOR_POS,
@@ -103,8 +103,52 @@ EXPORT {
     WRAP_NONE,
     WRAP_AT_COLUMN,
     WRAP_AT_PIXEL,
-    WRAP_AT_BOUNDS  /**< wrap text so that it fits into the widget width */
+    WRAP_AT_BOUNDS  
   };
+  enum Page_Format {
+    A0 = 0, 
+    A1,
+    A2,
+    A3,
+    A4, 
+    A5,
+    A6,
+    A7,
+    A8,
+    A9,
+    B0,
+    B1,
+    B2,
+    B3,
+    B4,
+    B5,
+    B6,
+    B7,
+    B8,
+    B9,
+    B10,
+    C5E,
+    DLE,
+    EXECUTIVE,
+    FOLIO,
+    LEDGER,
+    LEGAL,
+    LETTER, 
+    TABLOID,
+    ENVELOPE,
+    MEDIA = 0x1000
+  };
+  enum Page_Layout {
+    PORTRAIT = 0,  
+    LANDSCAPE = 0x100,   
+    REVERSED = 0x200,  
+    ORIENTATION = 0x300 
+  };
+  typedef struct page_format {
+    int width; 
+    int height; 
+    const char *name; 
+  } page_format;
 #endif
   typedef void* ID;
   typedef void* fl_Window;
@@ -398,6 +442,7 @@ EXPORT {
   typedef fl_Widget_Virtual_Funcs fl_Menu__Virtual_Funcs;
   typedef fl_Widget_Virtual_Funcs fl_Menu_Bar_Virtual_Funcs;
   typedef fl_Widget_Virtual_Funcs fl_Box_Virtual_Funcs;
+  typedef fl_Window_Virtual_Funcs fl_Gl_Window_Virtual_Funcs;
 #ifdef __cplusplus
 }
 #endif

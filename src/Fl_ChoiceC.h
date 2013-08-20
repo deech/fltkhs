@@ -7,6 +7,7 @@
 #include "FL/Fl.H"
 #include "FL/Fl_Choice.H"
 #include "Fl_CallbackC.h"
+#include "Fl_Menu_C.h"
 EXPORT {
 #endif
   /* Inherited from Fl_Widget */
@@ -118,7 +119,7 @@ EXPORT {
   FL_EXPORT_C( fl_Menu_Item, Fl_Choice_test_shortcut)(fl_Choice choice);
   FL_EXPORT_C(void, Fl_Choice_global)(fl_Choice choice);
   FL_EXPORT_C( fl_Menu_Item, Fl_Choice_menu)(fl_Choice choice);
-  FL_EXPORT_C(void, Fl_Choice_menu_with_m)(fl_Choice choice,  fl_Menu_Item item);
+  FL_EXPORT_C(void, Fl_Choice_menu_with_m)(fl_Choice choice,  fl_Menu_Item* item, int size);
   FL_EXPORT_C(void, Fl_Choice_copy)(fl_Choice choice,  fl_Menu_Item m);
   FL_EXPORT_C(void, Fl_Choice_copy_with_user_data)(fl_Choice choice,  fl_Menu_Item m, void* user_data);
   FL_EXPORT_C(int, Fl_Choice_insert)(fl_Choice choice, int index,  char* name, int shortcut, fl_Callback cb);

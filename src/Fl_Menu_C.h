@@ -123,7 +123,7 @@ EXPORT {
   FL_EXPORT_C(void,         Fl_Menu__resize_super)(fl_Menu_ menu_,int X, int Y, int W, int H);
   FL_EXPORT_C(void,         Fl_Menu__resize)(fl_Menu_ menu_,int X, int Y, int W, int H);
 
-  /* Fl_Menu_ specific */ 
+  /* Fl_Menu_ specific */
   FL_EXPORT_C(void*, Fl_Menu__other_data)(fl_Menu_ menu_);
   FL_EXPORT_C(void, Fl_Menu__set_other_data)(fl_Menu_ menu_, void* v);
   FL_EXPORT_C(fl_Menu_,    Fl_Menu__New_WithLabel)(int x, int y, int w, int h, const char* label);
@@ -141,7 +141,7 @@ EXPORT {
   FL_EXPORT_C( fl_Menu_Item, Fl_Menu__test_shortcut)(fl_Menu_ menu_);
   FL_EXPORT_C(void, Fl_Menu__global)(fl_Menu_ menu_);
   FL_EXPORT_C( fl_Menu_Item, Fl_Menu__menu)(fl_Menu_ menu_);
-  FL_EXPORT_C(void, Fl_Menu__menu_with_m)(fl_Menu_ menu_,  fl_Menu_Item item);
+  FL_EXPORT_C(void, Fl_Menu__menu_with_m)(fl_Menu_ menu_,  fl_Menu_Item* item, int size);
   FL_EXPORT_C(void, Fl_Menu__copy)(fl_Menu_ menu_,  fl_Menu_Item m);
   FL_EXPORT_C(void, Fl_Menu__copy_with_user_data)(fl_Menu_ menu_,  fl_Menu_Item m, void* user_data);
   FL_EXPORT_C(int, Fl_Menu__insert)(fl_Menu_ menu_, int index,  char* name, int shortcut, fl_Callback cb);
@@ -162,18 +162,18 @@ EXPORT {
   FL_EXPORT_C(int, Fl_Menu__add_with_shortcutname_user_data_flags)(fl_Menu_ menu_, char* name,  char* shortcut, fl_Callback* cb, void* user_data, int flags);
   FL_EXPORT_C(int, Fl_Menu__add_with_name)(fl_Menu_ menu_,  char* name);
   FL_EXPORT_C(int , Fl_Menu__size)(fl_Menu_ menu_);
-  FL_EXPORT_C(void, Fl_Menu__set_size)(fl_Menu_ menu_, int W, int H); 
+  FL_EXPORT_C(void, Fl_Menu__set_size)(fl_Menu_ menu_, int W, int H);
   FL_EXPORT_C(void, Fl_Menu__clear)(fl_Menu_ menu_);
   FL_EXPORT_C(int, Fl_Menu__clear_submenu)(fl_Menu_ menu_, int index);
   FL_EXPORT_C(void, Fl_Menu__replace)(fl_Menu_ menu_, int, char* name);
   FL_EXPORT_C(void, Fl_Menu__remove)(fl_Menu_ menu_, int);
-  FL_EXPORT_C(void, Fl_Menu__shortcut)(fl_Menu_ menu_, int i, int s); 
-  FL_EXPORT_C(void, Fl_Menu__set_mode)(fl_Menu_ menu_, int i,int fl); 
-  FL_EXPORT_C(int , Fl_Menu__mode)(fl_Menu_ menu_, int i);  
+  FL_EXPORT_C(void, Fl_Menu__shortcut)(fl_Menu_ menu_, int i, int s);
+  FL_EXPORT_C(void, Fl_Menu__set_mode)(fl_Menu_ menu_, int i,int fl);
+  FL_EXPORT_C(int , Fl_Menu__mode)(fl_Menu_ menu_, int i);
   FL_EXPORT_C(fl_Menu_Item, Fl_Menu__mvalue)(fl_Menu_ menu_);
   FL_EXPORT_C(int, Fl_Menu__value)(fl_Menu_ menu_);
   FL_EXPORT_C(int, Fl_Menu__value_with_item)(fl_Menu_ menu_,  fl_Menu_Item item);
-  FL_EXPORT_C(int, Fl_Menu__value_with_index)(fl_Menu_ menu_, int index); 
+  FL_EXPORT_C(int, Fl_Menu__value_with_index)(fl_Menu_ menu_, int index);
   FL_EXPORT_C(char*, Fl_Menu__text)(fl_Menu_ menu_);
   FL_EXPORT_C(char*, Fl_Menu__text_with_index)(fl_Menu_ menu_, int i);
   FL_EXPORT_C(Fl_Font, Fl_Menu__textfont)(fl_Menu_ menu_);

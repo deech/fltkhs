@@ -7,6 +7,7 @@
 #include "FL/Fl.H"
 #include "FL/Fl_Menu_Bar.H"
 #include "Fl_CallbackC.h"
+#include "Fl_Menu_C.h"
 EXPORT {
   class Fl_DerivedMenu_Bar : public Fl_Menu_Bar {
     fl_Menu_Bar_Virtual_Funcs* overriddenFuncs;
@@ -136,7 +137,7 @@ EXPORT {
   FL_EXPORT_C( fl_Menu_Item, Fl_Menu_Bar_test_shortcut)(fl_Menu_Bar menu_bar);
   FL_EXPORT_C(void, Fl_Menu_Bar_global)(fl_Menu_Bar menu_bar);
   FL_EXPORT_C( fl_Menu_Item, Fl_Menu_Bar_menu)(fl_Menu_Bar menu_bar);
-  FL_EXPORT_C(void, Fl_Menu_Bar_menu_with_m)(fl_Menu_Bar menu_bar,  fl_Menu_Item item);
+  FL_EXPORT_C(void, Fl_Menu_Bar_menu_with_m)(fl_Menu_Bar menu_bar,  fl_Menu_Item* item, int size);
   FL_EXPORT_C(void, Fl_Menu_Bar_copy)(fl_Menu_Bar menu_bar,  fl_Menu_Item m);
   FL_EXPORT_C(void, Fl_Menu_Bar_copy_with_user_data)(fl_Menu_Bar menu_bar,  fl_Menu_Item m, void* user_data);
   FL_EXPORT_C(int, Fl_Menu_Bar_insert)(fl_Menu_Bar menu_bar, int index,  char* name, int shortcut, fl_Callback cb);

@@ -149,8 +149,8 @@ EXPORT {
     }
     Fl::option(o,val >= 1 ? true : false);
   }
-  FL_EXPORT_C(fl_Widget*,Fl_readqueue)(){
-    return (fl_Widget*)Fl::readqueue();
+  FL_EXPORT_C(fl_Widget,Fl_readqueue)(){
+    return (fl_Widget)Fl::readqueue();
   }
   FL_EXPORT_C(void,Fl_add_timeout)(double t,fl_Timeout_Handler handler){
     Fl::add_timeout(t,handler,0);
