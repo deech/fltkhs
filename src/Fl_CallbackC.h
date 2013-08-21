@@ -46,8 +46,10 @@ class C_to_Fl_Callback {
   C_to_Fl_Callback(fl_Text_Buffer_Callback* callback, void* invoker);
   C_to_Fl_Callback(fl_Key_Func* key_func);
   C_to_Fl_Callback(Fl_Text_Editor::Key_Func* stored_key_func);
+  void* get_user_data();
   void set_callback(Fl_Menu_Item* item);
   void set_callback(Fl_Text_Buffer* b);
+  void set_user_data(void* user_data);
   int menu_insert(Fl_Menu_Item* item, int index, char* name, int shortcut, int flags = 0);
   int menu_insert(Fl_Menu_* menu_, int index, char* name, int shortcut, int flags = 0);
   int menu_insert(Fl_Menu_* menu_, int index, char* name, char* shortcut, int flags = 0);

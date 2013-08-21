@@ -229,10 +229,23 @@ Fl_Gl_Window* Fl_DerivedWidget::as_gl_window(){
     (static_cast<Fl_DerivedWidget*>(widget))->set_other_data(v);
   }
   FL_EXPORT_C(void*,Fl_Widget_user_data)(fl_Widget widget){
-    return (static_cast<Fl_DerivedWidget*>(widget))->user_data();
+    C_to_Fl_Callback* stored_cb = (static_cast<C_to_Fl_Callback*>((static_cast<Fl_DerivedWidget*>(widget))->user_data()));
+    if(stored_cb){
+      return stored_cb->get_user_data();
+    }
+    else {
+      return (static_cast<Fl_DerivedWidget*>(widget))->user_data();
+    }
   }
   FL_EXPORT_C(void,Fl_Widget_set_user_data)(fl_Widget widget,void* v){
-    (static_cast<Fl_DerivedWidget*>(widget))->user_data(v);
+    C_to_Fl_Callback* stored_cb = (static_cast<C_to_Fl_Callback*>((static_cast<Fl_Widget*>(widget))->user_data()));
+    if (stored_cb) {
+      stored_cb->set_user_data(v);
+      (static_cast<Fl_Widget*>(widget))->user_data(stored_cb);
+    }
+    else {
+      (static_cast<Fl_Widget*>(widget))->user_data(v);
+    }
   }
   FL_EXPORT_C(long,Fl_Widget_argument)(fl_Widget widget){
     return (static_cast<Fl_DerivedWidget*>(widget))->argument();

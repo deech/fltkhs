@@ -26,7 +26,9 @@ int main(int argc, char** argv)
   Fl_Button_set_callback(b2, (fl_Callback*)callback_button2);
   fl_Button b3 = (fl_Button)Fl_Button_New_WithLabel(240,20,100,100,"Button 3");
   char* user_data = "User data";
-  Fl_Button_set_callback_with_user_data(b3, (fl_Callback*)callback_button3_with_user_data, (void*) user_data);
+  Fl_Button_set_callback(b3, (fl_Callback*)callback_button3_with_user_data);
+  Fl_Button_set_user_data(b3,(void*)user_data);
+  printf("Retrieve user_data directly:%s\n", (char*)Fl_Button_user_data(b3));
   (fl_Check_Button)Fl_Check_Button_New_WithLabel(20,130,100,100,"Check");
   (fl_Radio_Button)Fl_Radio_Button_New_WithLabel(130,130,100,100,"Radio");
   (fl_Light_Button)Fl_Light_Button_New_WithLabel(240,130,100,100,"Light");

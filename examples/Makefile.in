@@ -18,6 +18,7 @@ EXAMPLES= \
 	colbrowser.c \
         color_chooser.c \
 	cube.c \
+	cursor.c \
 	howto-add_fd-and-popen.c \
 	howto-browser-with-icons.c \
 	howto-drag-and-drop.c \

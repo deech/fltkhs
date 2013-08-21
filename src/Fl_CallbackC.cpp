@@ -10,7 +10,7 @@ C_to_Fl_Callback::C_to_Fl_Callback(Fl_Widget* invoker, fl_Callback* callback, vo
 }
 C_to_Fl_Callback::C_to_Fl_Callback(Fl_Widget* invoker, fl_Callback* callback) {
   this->callback = callback;
-  this->user_data = NULL;
+  this->user_data = invoker->user_data();
   invoker->callback(intercept, this);
 }
 C_to_Fl_Callback::C_to_Fl_Callback(fl_Callback* callback){
@@ -36,6 +36,12 @@ void C_to_Fl_Callback::set_callback(Fl_Menu_Item* item){
 }
 void C_to_Fl_Callback::set_callback(Fl_Text_Buffer* b){
   b->transcoding_warning_action = intercept;
+}
+void* C_to_Fl_Callback::get_user_data(){
+  return this->user_data;
+}
+void C_to_Fl_Callback::set_user_data(void* user_data){
+  this->user_data = user_data;
 }
 int C_to_Fl_Callback::menu_insert(Fl_Menu_Item* item, int index, char* name, int shortcut, int flags){
   return item->insert(index,name,shortcut,intercept,this,flags);

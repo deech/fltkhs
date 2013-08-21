@@ -146,7 +146,13 @@ EXPORT {
     new C_to_Fl_Callback(castedMenu_, cb);
   }
   FL_EXPORT_C(void*,Fl_Choice_user_data)(fl_Choice choice){
-    return (static_cast<Fl_Choice*>(choice))->user_data();
+    C_to_Fl_Callback* stored_cb = (static_cast<C_to_Fl_Callback*>((static_cast<Fl_Choice*>(choice))->user_data()));
+    if(stored_cb){
+      return stored_cb->get_user_data();
+    }
+    else {
+      return (static_cast<Fl_Choice*>(choice))->user_data();
+    }
   }
   FL_EXPORT_C(void,Fl_Choice_set_user_data)(fl_Choice choice,void* v){
     (static_cast<Fl_Choice*>(choice))->user_data(v);

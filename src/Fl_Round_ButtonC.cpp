@@ -117,10 +117,23 @@ EXPORT {
     new C_to_Fl_Callback(castedButton, cb);
   }
   FL_EXPORT_C(void*,Fl_Round_Button_user_data)(fl_Round_Button b){
-    return (static_cast<Fl_Round_Button*>(b))->user_data();
+    C_to_Fl_Callback* stored_cb = (static_cast<C_to_Fl_Callback*>((static_cast<Fl_Round_Button*>(b))->user_data()));
+    if(stored_cb){
+      return stored_cb->get_user_data();
+    }
+    else {
+      return (static_cast<Fl_Round_Button*>(b))->user_data();
+    }
   }
   FL_EXPORT_C(void,Fl_Round_Button_set_user_data)(fl_Round_Button b,void* v){
-    (static_cast<Fl_Round_Button*>(b))->user_data(v);
+    C_to_Fl_Callback* stored_cb = (static_cast<C_to_Fl_Callback*>((static_cast<Fl_Round_Button*>(b))->user_data()));
+    if (stored_cb) {
+      stored_cb->set_user_data(v);
+      (static_cast<Fl_Round_Button*>(b))->user_data(stored_cb);
+    }
+    else {
+      (static_cast<Fl_Round_Button*>(b))->user_data(v);
+    }
   }
   FL_EXPORT_C(long,Fl_Round_Button_argument)(fl_Round_Button b){
     return (static_cast<Fl_Round_Button*>(b))->argument();

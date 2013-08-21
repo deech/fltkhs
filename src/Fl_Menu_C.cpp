@@ -246,10 +246,23 @@ EXPORT {
     new C_to_Fl_Callback(castedMenu_, cb);
   }
   FL_EXPORT_C(void*,Fl_Menu__user_data)(fl_Menu_ menu_){
-    return (static_cast<Fl_DerivedMenu_*>(menu_))->user_data();
+    C_to_Fl_Callback* stored_cb = (static_cast<C_to_Fl_Callback*>((static_cast<Fl_DerivedMenu_*>(menu_))->user_data()));
+    if(stored_cb){
+      return stored_cb->get_user_data();
+    }
+    else {
+      return (static_cast<Fl_DerivedMenu_*>(menu_))->user_data();
+    }
   }
   FL_EXPORT_C(void,Fl_Menu__set_user_data)(fl_Menu_ menu_,void* v){
-    (static_cast<Fl_DerivedMenu_*>(menu_))->user_data(v);
+    C_to_Fl_Callback* stored_cb = (static_cast<C_to_Fl_Callback*>((static_cast<Fl_Menu_*>(menu_))->user_data()));
+    if (stored_cb) {
+      stored_cb->set_user_data(v);
+      (static_cast<Fl_Menu_*>(menu_))->user_data(stored_cb);
+    }
+    else {
+      (static_cast<Fl_Menu_*>(menu_))->user_data(v);
+    }
   }
   FL_EXPORT_C(long,Fl_Menu__argument)(fl_Menu_ menu_){
     return (static_cast<Fl_DerivedMenu_*>(menu_))->argument();

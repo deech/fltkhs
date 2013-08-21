@@ -116,10 +116,23 @@ EXPORT {
     new C_to_Fl_Callback(castedWindow, cb);
   }
   FL_EXPORT_C(void*,Fl_Color_Chooser_user_data)(fl_Color_Chooser color_chooser){
-    return (static_cast<Fl_Color_Chooser*>(color_chooser))->user_data();
+    C_to_Fl_Callback* stored_cb = (static_cast<C_to_Fl_Callback*>((static_cast<Fl_Color_Chooser*>(color_chooser))->user_data()));
+    if(stored_cb){
+      return stored_cb->get_user_data();
+    }
+    else {
+      return (static_cast<Fl_Color_Chooser*>(color_chooser))->user_data();
+    }
   }
   FL_EXPORT_C(void,Fl_Color_Chooser_set_user_data)(fl_Color_Chooser color_chooser,void* v){
-    (static_cast<Fl_Color_Chooser*>(color_chooser))->user_data(v);
+    C_to_Fl_Callback* stored_cb = (static_cast<C_to_Fl_Callback*>((static_cast<Fl_Color_Chooser*>(color_chooser))->user_data()));
+    if (stored_cb) {
+      stored_cb->set_user_data(v);
+      (static_cast<Fl_Color_Chooser*>(color_chooser))->user_data(stored_cb);
+    }
+    else {
+      (static_cast<Fl_Color_Chooser*>(color_chooser))->user_data(v);
+    }
   }
   FL_EXPORT_C(long,Fl_Color_Chooser_argument)(fl_Color_Chooser color_chooser){
     return (static_cast<Fl_Color_Chooser*>(color_chooser))->argument();

@@ -57,8 +57,15 @@ EXPORT {
   return (static_cast<Fl_Menu_Item*>(menu_item))->user_data();
 }
   FL_EXPORT_C(void,Fl_Menu_Item_set_user_data)(fl_Menu_Item menu_item,void* v){
-  return (static_cast<Fl_Menu_Item*>(menu_item))->user_data(v);
-}
+    C_to_Fl_Callback* stored_cb = (static_cast<C_to_Fl_Callback*>((static_cast<Fl_Menu_Item*>(menu_item))->user_data()));
+    if (stored_cb) {
+      stored_cb->set_user_data(v);
+      (static_cast<Fl_Menu_Item*>(menu_item))->user_data(stored_cb);
+    }
+    else {
+      (static_cast<Fl_Menu_Item*>(menu_item))->user_data(v);
+    }
+  }
   FL_EXPORT_C(long,Fl_Menu_Item_argument)(fl_Menu_Item menu_item){
   return (static_cast<Fl_Menu_Item*>(menu_item))->argument();
 }

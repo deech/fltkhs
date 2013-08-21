@@ -47,10 +47,23 @@ EXPORT {
     return (static_cast<Fl_Tree_Item*>(tree_item))->label();
   }
   FL_EXPORT_C(void,Fl_Tree_Item_set_user_data)(fl_Tree_Item tree_item,void* data){
-    (static_cast<Fl_Tree_Item*>(tree_item))->user_data(data);
+    C_to_Fl_Callback* stored_cb = (static_cast<C_to_Fl_Callback*>((static_cast<Fl_Tree_Item*>(tree_item))->user_data()));
+    if (stored_cb) {
+      stored_cb->set_user_data(data);
+      (static_cast<Fl_Tree_Item*>(tree_item))->user_data(stored_cb);
+    }
+    else {
+      (static_cast<Fl_Tree_Item*>(tree_item))->user_data(data);
+    }
   }
   FL_EXPORT_C(void*,Fl_Tree_Item_user_data)(fl_Tree_Item tree_item){
-    return (static_cast<Fl_Tree_Item*>(tree_item))->user_data();
+    C_to_Fl_Callback* stored_cb = (static_cast<C_to_Fl_Callback*>((static_cast<Fl_Tree_Item*>(tree_item))->user_data()));
+    if(stored_cb){
+      return stored_cb->get_user_data();
+    }
+    else {
+      return (static_cast<Fl_Tree_Item*>(tree_item))->user_data();
+    }
   }
   FL_EXPORT_C(void,Fl_Tree_Item_set_labelfont)(fl_Tree_Item tree_item,Fl_Font val){
     (static_cast<Fl_Tree_Item*>(tree_item))->labelfont(val);

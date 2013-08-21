@@ -254,10 +254,23 @@ EXPORT {
     new C_to_Fl_Callback(castedBox, cb);
   }
   FL_EXPORT_C(void*,Fl_Valuator_user_data)(fl_Valuator valuator){
-    return (static_cast<Fl_DerivedValuator*>(valuator))->user_data();
+    C_to_Fl_Callback* stored_cb = (static_cast<C_to_Fl_Callback*>((static_cast<Fl_DerivedValuator*>(valuator))->user_data()));
+    if(stored_cb){
+      return stored_cb->get_user_data();
+    }
+    else {
+      return (static_cast<Fl_DerivedValuator*>(valuator))->user_data();
+    }
   }
   FL_EXPORT_C(void,Fl_Valuator_set_user_data)(fl_Valuator valuator,void* v){
-    (static_cast<Fl_DerivedValuator*>(valuator))->user_data(v);
+    C_to_Fl_Callback* stored_cb = (static_cast<C_to_Fl_Callback*>((static_cast<Fl_Valuator*>(valuator))->user_data()));
+    if (stored_cb) {
+      stored_cb->set_user_data(v);
+      (static_cast<Fl_Valuator*>(valuator))->user_data(stored_cb);
+    }
+    else {
+      (static_cast<Fl_Valuator*>(valuator))->user_data(v);
+    }
   }
   FL_EXPORT_C(long,Fl_Valuator_argument)(fl_Valuator valuator){
     return (static_cast<Fl_DerivedValuator*>(valuator))->argument();

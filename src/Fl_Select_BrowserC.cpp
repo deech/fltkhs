@@ -116,10 +116,23 @@ EXPORT {
     new C_to_Fl_Callback(castedWindow, cb);
   }
   FL_EXPORT_C(void*,Fl_Select_Browser_user_data)(fl_Select_Browser select_browser){
-    return (static_cast<Fl_Select_Browser*>(select_browser))->user_data();
+    C_to_Fl_Callback* stored_cb = (static_cast<C_to_Fl_Callback*>((static_cast<Fl_Select_Browser*>(select_browser))->user_data()));
+    if(stored_cb){
+      return stored_cb->get_user_data();
+    }
+    else {
+      return (static_cast<Fl_Select_Browser*>(select_browser))->user_data();
+    }
   }
   FL_EXPORT_C(void,Fl_Select_Browser_set_user_data)(fl_Select_Browser select_browser,void* v){
-    (static_cast<Fl_Select_Browser*>(select_browser))->user_data(v);
+    C_to_Fl_Callback* stored_cb = (static_cast<C_to_Fl_Callback*>((static_cast<Fl_Select_Browser*>(select_browser))->user_data()));
+    if (stored_cb) {
+      stored_cb->set_user_data(v);
+      (static_cast<Fl_Select_Browser*>(select_browser))->user_data(stored_cb);
+    }
+    else {
+      (static_cast<Fl_Select_Browser*>(select_browser))->user_data(v);
+    }
   }
   FL_EXPORT_C(long,Fl_Select_Browser_argument)(fl_Select_Browser select_browser){
     return (static_cast<Fl_Select_Browser*>(select_browser))->argument();

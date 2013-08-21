@@ -300,19 +300,36 @@ EXPORT {
     new C_to_Fl_Callback(castedMenu_, cb);
   }
   FL_EXPORT_C(void*,Fl_Sys_Menu_Bar_user_data)(fl_Sys_Menu_Bar sys_menu_bar){
+    C_to_Fl_Callback* stored_cb = (static_cast<C_to_Fl_Callback*>((static_cast<Fl_Sys_Menu_Bar*>(sys_menu_bar))->user_data()));
+    if(stored_cb){
+      return stored_cb->get_user_data();
+    }
+    else {
 #if defined(__APPLE__)
-    return (static_cast<Fl_Sys_Menu_Bar*>(sys_menu_bar))->user_data();
+	return (static_cast<Fl_Sys_Menu_Bar*>(sys_menu_bar))->user_data();
 #else
-    return (static_cast<Fl_Menu_Bar*>(sys_menu_bar))->user_data();
+	return (static_cast<Fl_Menu_Bar*>(sys_menu_bar))->user_data();
 #endif
+    }
   }
   FL_EXPORT_C(void,Fl_Sys_Menu_Bar_set_user_data)(fl_Sys_Menu_Bar sys_menu_bar,void* v){
+      C_to_Fl_Callback* stored_cb = (static_cast<C_to_Fl_Callback*>((static_cast<Fl_Menu_Item*>(sys_menu_bar))->user_data()));
+      if (stored_cb) {
+	stored_cb->set_user_data(v);
 #if defined(__APPLE__)
-    (static_cast<Fl_Sys_Menu_Bar*>(sys_menu_bar))->user_data(v);
+	(static_cast<Fl_Sys_Menu_Bar*>(sys_menu_bar))->user_data(stored_cb);
 #else
-    (static_cast<Fl_Menu_Bar*>(sys_menu_bar))->user_data(v);
+	(static_cast<Fl_Menu_Bar*>(sys_menu_bar))->user_data(stored_cb);
 #endif
-  }
+      }
+      else {
+#if defined(__APPLE__)
+	(static_cast<Fl_Sys_Menu_Bar*>(sys_menu_bar))->user_data(v);
+#else
+	(static_cast<Fl_Menu_Bar*>(sys_menu_bar))->user_data(v);
+#endif
+      }
+    }
   FL_EXPORT_C(long,Fl_Sys_Menu_Bar_argument)(fl_Sys_Menu_Bar sys_menu_bar){
 #if defined(__APPLE__)
     return (static_cast<Fl_Sys_Menu_Bar*>(sys_menu_bar))->argument();

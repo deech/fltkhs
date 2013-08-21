@@ -273,10 +273,23 @@ EXPORT {
     (static_cast<Fl_DerivedTable*>(table))->set_other_data(v);
   }
   FL_EXPORT_C(void*,Fl_Table_user_data)(fl_Table table){
-    return (static_cast<Fl_DerivedTable*>(table))->user_data();
+    C_to_Fl_Callback* stored_cb = (static_cast<C_to_Fl_Callback*>((static_cast<Fl_DerivedTable*>(table))->user_data()));
+    if(stored_cb){
+      return stored_cb->get_user_data();
+    }
+    else {
+      return (static_cast<Fl_DerivedTable*>(table))->user_data();
+    }
   }
   FL_EXPORT_C(void,Fl_Table_set_user_data)(fl_Table table,void* v){
-    (static_cast<Fl_DerivedTable*>(table))->user_data(v);
+    C_to_Fl_Callback* stored_cb = (static_cast<C_to_Fl_Callback*>((static_cast<Fl_Table*>(table))->user_data()));
+    if (stored_cb) {
+      stored_cb->set_user_data(v);
+      (static_cast<Fl_Table*>(table))->user_data(stored_cb);
+    }
+    else {
+      (static_cast<Fl_Table*>(table))->user_data(v);
+    }
   }
   FL_EXPORT_C(long,Fl_Table_argument)(fl_Table table){
     return (static_cast<Fl_DerivedTable*>(table))->argument();
