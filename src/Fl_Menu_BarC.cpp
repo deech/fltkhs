@@ -23,6 +23,30 @@ void Fl_DerivedMenu_Bar::destroy_data(){
     this->overriddenFuncs->destroy_data((fl_Menu_) this);
   }
 }
+void Fl_DerivedMenu_Bar::draw_box(){
+  Fl_Menu_Bar::draw_box();
+}
+void Fl_DerivedMenu_Bar::draw_box(Fl_Boxtype t, Fl_Color c){
+  Fl_Menu_Bar::draw_box(t,c);
+}
+void Fl_DerivedMenu_Bar::draw_box(Fl_Boxtype t, int x,int y,int w,int h, Fl_Color c){
+  Fl_Menu_Bar::draw_box(t,x,y,w,h,c);
+}
+void Fl_DerivedMenu_Bar::draw_backdrop(){
+  Fl_Menu_Bar::draw_backdrop();
+}
+void Fl_DerivedMenu_Bar::draw_focus(){
+  Fl_Menu_Bar::draw_focus();
+}
+void Fl_DerivedMenu_Bar::draw_focus(Fl_Boxtype t, int x,int y,int w,int h){
+  Fl_Menu_Bar::draw_focus(t,x,y,w,h);
+}
+void Fl_DerivedMenu_Bar::draw_label(){
+  Fl_Menu_Bar::draw_label();
+}
+void Fl_DerivedMenu_Bar::draw_label(int x,int y,int w,int h,Fl_Align alignment){
+  Fl_Menu_Bar::draw_label(x,y,w,h,alignment);
+}
 int Fl_DerivedMenu_Bar::handle(int event){
   int i;
   if (this->overriddenFuncs->handle != NULL) {

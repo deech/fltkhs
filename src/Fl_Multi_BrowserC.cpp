@@ -26,6 +26,30 @@ void Fl_DerivedMulti_Browser::draw(){
     Fl_Multi_Browser::draw();
   }
 }
+void Fl_DerivedMulti_Browser::draw_box(){
+  Fl_Multi_Browser::draw_box();
+}
+void Fl_DerivedMulti_Browser::draw_box(Fl_Boxtype t, Fl_Color c){
+  Fl_Multi_Browser::draw_box(t,c);
+}
+void Fl_DerivedMulti_Browser::draw_box(Fl_Boxtype t, int x,int y,int w,int h, Fl_Color c){
+  Fl_Multi_Browser::draw_box(t,x,y,w,h,c);
+}
+void Fl_DerivedMulti_Browser::draw_backdrop(){
+  Fl_Multi_Browser::draw_backdrop();
+}
+void Fl_DerivedMulti_Browser::draw_focus(){
+  Fl_Multi_Browser::draw_focus();
+}
+void Fl_DerivedMulti_Browser::draw_focus(Fl_Boxtype t, int x,int y,int w,int h){
+  Fl_Multi_Browser::draw_focus(t,x,y,w,h);
+}
+void Fl_DerivedMulti_Browser::draw_label(){
+  Fl_Multi_Browser::draw_label();
+}
+void Fl_DerivedMulti_Browser::draw_label(int x,int y,int w,int h,Fl_Align alignment){
+  Fl_Multi_Browser::draw_label(x,y,w,h,alignment);
+}
 int Fl_DerivedMulti_Browser::handle(int event){
   int i;
   if (this->overriddenFuncs->handle != NULL) {

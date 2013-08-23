@@ -59,6 +59,7 @@ CPPFILES= \
 	Fl_Secret_InputC.cpp \
 	Fl_Select_BrowserC.cpp \
 	fl_show_colormapC.cpp \
+	Fl_Single_WindowC.cpp \
 	Fl_SliderC.cpp \
 	Fl_Sys_Menu_BarC.cpp \
 	Fl_TableC.cpp \
