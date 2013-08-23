@@ -18,6 +18,7 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Round_Clock_set_type)(fl_Round_Clock b,uchar t){
     (static_cast<Fl_Round_Clock*>(b))->type(t);
   }
+
   FL_EXPORT_C(int,Fl_Round_Clock_x)(fl_Round_Clock b){
     return (static_cast<Fl_Round_Clock*>(b))->x();
   }
@@ -240,7 +241,7 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Round_Clock_damage_inside_widget)(fl_Round_Clock b,uchar c,int x,int y,int w,int h){
     (static_cast<Fl_Round_Clock*>(b))->damage(c,x,y,w,h);
   }
-  FL_EXPORT_C(void,Fl_Round_Clock_draw_label)(fl_Round_Clock b,int x,int y,int w,int h,Fl_Align alignment){
+  FL_EXPORT_C(void,Fl_Round_Clock_draw_label_with_xywh_alignment)(fl_Round_Clock b,int x,int y,int w,int h,Fl_Align alignment){
     (static_cast<Fl_Round_Clock*>(b))->draw_label(x,y,w,h,alignment);
   }
   FL_EXPORT_C(void,Fl_Round_Clock_measure_label)(fl_Round_Clock b,int* ww,int* hh){

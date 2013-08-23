@@ -27,6 +27,7 @@ EXPORT {
   FL_EXPORT_C(void,         Fl_Select_Browser_set_parent)(fl_Select_Browser select_browser, fl_Group grp);
   FL_EXPORT_C(uchar,        Fl_Select_Browser_type)(fl_Select_Browser select_browser);
   FL_EXPORT_C(void,         Fl_Select_Browser_set_type)(fl_Select_Browser select_browser, uchar t);
+
   FL_EXPORT_C(int,          Fl_Select_Browser_x)(fl_Select_Browser select_browser);
   FL_EXPORT_C(int,          Fl_Select_Browser_y)(fl_Select_Browser select_browser);
   FL_EXPORT_C(int,          Fl_Select_Browser_w)(fl_Select_Browser select_browser);
@@ -96,7 +97,7 @@ EXPORT {
   FL_EXPORT_C(void,         Fl_Select_Browser_clear_damage)(fl_Select_Browser select_browser);
   FL_EXPORT_C(void,         Fl_Select_Browser_damage_with_text)(fl_Select_Browser select_browser, uchar c);
   FL_EXPORT_C(void,         Fl_Select_Browser_damage_inside_widget)(fl_Select_Browser select_browser, uchar c, int x , int y , int w, int h);
-  FL_EXPORT_C(void,         Fl_Select_Browser_draw_label)(fl_Select_Browser select_browser, int x , int y , int w, int h, Fl_Align alignment);
+  FL_EXPORT_C(void,         Fl_Select_Browser_draw_label_with_xywh_alignment)(fl_Select_Browser select_browser, int x , int y , int w, int h, Fl_Align alignment);
   FL_EXPORT_C(void,         Fl_Select_Browser_measure_label)(fl_Select_Browser select_browser, int* ww , int* hh);
   FL_EXPORT_C(fl_Window,    Fl_Select_Browser_window)(fl_Select_Browser select_browser);
   FL_EXPORT_C(fl_Window,    Fl_Select_Browser_top_window)(fl_Select_Browser select_browser);

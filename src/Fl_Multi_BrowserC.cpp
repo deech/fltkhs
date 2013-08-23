@@ -140,6 +140,28 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Multi_Browser_set_type)(fl_Multi_Browser multi_browser,uchar t){
     (static_cast<Fl_DerivedMulti_Browser*>(multi_browser))->type(t);
   }
+
+FL_EXPORT_C(void, Fl_Multi_Browser_draw_box)(fl_Multi_Browser Multi_Browser){
+ (static_cast<Fl_DerivedMulti_Browser*>(Multi_Browser))->draw_box();
+}
+FL_EXPORT_C(void, Fl_Multi_Browser_draw_box_with_tc)(fl_Multi_Browser Multi_Browser,Fl_Boxtype t, Fl_Color c){
+ (static_cast<Fl_DerivedMulti_Browser*>(Multi_Browser))->draw_box(t,c);
+}
+FL_EXPORT_C(void, Fl_Multi_Browser_draw_box_with_txywhc)(fl_Multi_Browser Multi_Browser,Fl_Boxtype t, int x,int y,int w,int h, Fl_Color c){
+ (static_cast<Fl_DerivedMulti_Browser*>(Multi_Browser))->draw_box(t,x,y,w,h,c);
+}
+FL_EXPORT_C(void, Fl_Multi_Browser_draw_backdrop)(fl_Multi_Browser Multi_Browser){
+ (static_cast<Fl_DerivedMulti_Browser*>(Multi_Browser))->draw_backdrop();
+}
+FL_EXPORT_C(void, Fl_Multi_Browser_draw_focus)(fl_Multi_Browser Multi_Browser){
+ (static_cast<Fl_DerivedMulti_Browser*>(Multi_Browser))->draw_focus();
+}
+FL_EXPORT_C(void, Fl_Multi_Browser_draw_focus_with_txywh)(fl_Multi_Browser Multi_Browser,Fl_Boxtype t, int x,int y,int w,int h){
+ (static_cast<Fl_DerivedMulti_Browser*>(Multi_Browser))->draw_focus(t,x,y,w,h);
+}
+FL_EXPORT_C(void, Fl_Multi_Browser_draw_label)(fl_Multi_Browser Multi_Browser){
+ (static_cast<Fl_DerivedMulti_Browser*>(Multi_Browser))->draw_label();
+}
   FL_EXPORT_C(int,Fl_Multi_Browser_x)(fl_Multi_Browser multi_browser){
     return (static_cast<Fl_DerivedMulti_Browser*>(multi_browser))->x();
   }
@@ -359,7 +381,7 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Multi_Browser_damage_inside_widget)(fl_Multi_Browser multi_browser,uchar c,int x,int y,int w,int h){
     (static_cast<Fl_DerivedMulti_Browser*>(multi_browser))->damage(c,x,y,w,h);
   }
-  FL_EXPORT_C(void,Fl_Multi_Browser_draw_label)(fl_Multi_Browser multi_browser,int x,int y,int w,int h,Fl_Align alignment){
+  FL_EXPORT_C(void,Fl_Multi_Browser_draw_label_with_xywh_alignment)(fl_Multi_Browser multi_browser,int x,int y,int w,int h,Fl_Align alignment){
     (static_cast<Fl_DerivedMulti_Browser*>(multi_browser))->draw_label(x,y,w,h,alignment);
   }
   FL_EXPORT_C(void,Fl_Multi_Browser_measure_label)(fl_Multi_Browser multi_browser,int* ww,int* hh){

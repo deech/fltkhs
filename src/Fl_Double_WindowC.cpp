@@ -19,6 +19,7 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Double_Window_set_type)(fl_Double_Window win,uchar t){
     (static_cast<Fl_Double_Window*>(win))->type(t);
   }
+
   FL_EXPORT_C(int,Fl_Double_Window_x)(fl_Double_Window win){
     return (static_cast<Fl_Double_Window*>(win))->x();
   }
@@ -241,7 +242,7 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Double_Window_damage_inside_widget)(fl_Double_Window win,uchar c,int x,int y,int w,int h){
     (static_cast<Fl_Double_Window*>(win))->damage(c,x,y,w,h);
   }
-  FL_EXPORT_C(void,Fl_Double_Window_draw_label)(fl_Double_Window win,int x,int y,int w,int h,Fl_Align alignment){
+  FL_EXPORT_C(void,Fl_Double_Window_draw_label_with_xywh_alignment)(fl_Double_Window win,int x,int y,int w,int h,Fl_Align alignment){
     (static_cast<Fl_Double_Window*>(win))->draw_label(x,y,w,h,alignment);
   }
   FL_EXPORT_C(void,Fl_Double_Window_measure_label)(fl_Double_Window win,int* ww,int* hh){

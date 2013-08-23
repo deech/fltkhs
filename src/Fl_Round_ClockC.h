@@ -15,6 +15,7 @@ EXPORT {
   FL_EXPORT_C(void,         Fl_Round_Clock_set_parent)(fl_Round_Clock round_clock, fl_Group grp);
   FL_EXPORT_C(uchar,        Fl_Round_Clock_type)(fl_Round_Clock round_clock);
   FL_EXPORT_C(void,         Fl_Round_Clock_set_type)(fl_Round_Clock round_clock, uchar t);
+
   FL_EXPORT_C(int,          Fl_Round_Clock_x)(fl_Round_Clock round_clock);
   FL_EXPORT_C(int,          Fl_Round_Clock_y)(fl_Round_Clock round_clock);
   FL_EXPORT_C(int,          Fl_Round_Clock_w)(fl_Round_Clock round_clock);
@@ -85,7 +86,7 @@ EXPORT {
   FL_EXPORT_C(void,         Fl_Round_Clock_clear_damage)(fl_Round_Clock round_clock);
   FL_EXPORT_C(void,         Fl_Round_Clock_damage_with_text)(fl_Round_Clock round_clock, uchar c);
   FL_EXPORT_C(void,         Fl_Round_Clock_damage_inside_widget)(fl_Round_Clock round_clock, uchar c, int x , int y , int w, int h);
-  FL_EXPORT_C(void,         Fl_Round_Clock_draw_label)(fl_Round_Clock round_clock, int x , int y , int w, int h, Fl_Align alignment);
+  FL_EXPORT_C(void,         Fl_Round_Clock_draw_label_with_xywh_alignment)(fl_Round_Clock round_clock, int x , int y , int w, int h, Fl_Align alignment);
   FL_EXPORT_C(void,         Fl_Round_Clock_measure_label)(fl_Round_Clock round_clock, int* ww , int* hh);
 
   FL_EXPORT_C(fl_Window,    Fl_Round_Clock_window)(fl_Round_Clock round_clock);

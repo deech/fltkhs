@@ -15,6 +15,7 @@ EXPORT {
   FL_EXPORT_C(void,         Fl_Hor_Value_Slider_set_parent)(fl_Hor_Value_Slider value_slider, fl_Group grp);
   FL_EXPORT_C(uchar,        Fl_Hor_Value_Slider_type)(fl_Hor_Value_Slider value_slider);
   FL_EXPORT_C(void,         Fl_Hor_Value_Slider_set_type)(fl_Hor_Value_Slider value_slider, uchar t);
+
   FL_EXPORT_C(int,          Fl_Hor_Value_Slider_x)(fl_Hor_Value_Slider value_slider);
   FL_EXPORT_C(int,          Fl_Hor_Value_Slider_y)(fl_Hor_Value_Slider value_slider);
   FL_EXPORT_C(int,          Fl_Hor_Value_Slider_w)(fl_Hor_Value_Slider value_slider);
@@ -88,7 +89,7 @@ EXPORT {
   FL_EXPORT_C(void,         Fl_Hor_Value_Slider_clear_damage)(fl_Hor_Value_Slider value_slider);
   FL_EXPORT_C(void,         Fl_Hor_Value_Slider_damage_with_text)(fl_Hor_Value_Slider value_slider, uchar c);
   FL_EXPORT_C(void,         Fl_Hor_Value_Slider_damage_inside_widget)(fl_Hor_Value_Slider value_slider, uchar c, int x , int y , int w, int h);
-  FL_EXPORT_C(void,         Fl_Hor_Value_Slider_draw_label)(fl_Hor_Value_Slider value_slider, int x , int y , int w, int h, Fl_Align alignment);
+  FL_EXPORT_C(void,         Fl_Hor_Value_Slider_draw_label_with_xywh_alignment)(fl_Hor_Value_Slider value_slider, int x , int y , int w, int h, Fl_Align alignment);
   FL_EXPORT_C(void,         Fl_Hor_Value_Slider_measure_label)(fl_Hor_Value_Slider value_slider, int* ww , int* hh);
   FL_EXPORT_C(fl_Window,    Fl_Hor_Value_Slider_window)(fl_Hor_Value_Slider value_slider);
   FL_EXPORT_C(fl_Window,    Fl_Hor_Value_Slider_top_window)(fl_Hor_Value_Slider value_slider);

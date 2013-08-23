@@ -23,6 +23,30 @@ void Fl_DerivedButton::destroy_data(){
     this->overriddenFuncs->destroy_data((fl_Button) this);
   }
 }
+void Fl_DerivedButton::draw_box(){
+  Fl_Button::draw_box();
+}
+void Fl_DerivedButton::draw_box(Fl_Boxtype t, Fl_Color c){
+  Fl_Button::draw_box(t,c);
+}
+void Fl_DerivedButton::draw_box(Fl_Boxtype t, int x,int y,int w,int h, Fl_Color c){
+  Fl_Button::draw_box(t,x,y,w,h,c);
+}
+void Fl_DerivedButton::draw_backdrop(){
+  Fl_Button::draw_backdrop();
+}
+void Fl_DerivedButton::draw_focus(){
+  Fl_Button::draw_focus();
+}
+void Fl_DerivedButton::draw_focus(Fl_Boxtype t, int x,int y,int w,int h){
+  Fl_Button::draw_focus(t,x,y,w,h);
+}
+void Fl_DerivedButton::draw_label(){
+  Fl_Button::draw_label();
+}
+void Fl_DerivedButton::draw_label(int x,int y,int w,int h,Fl_Align alignment){
+  Fl_Button::draw_label(x,y,w,h,alignment);
+}
 int Fl_DerivedButton::handle(int event){
   int i;
   if (this->overriddenFuncs->handle != NULL) {
@@ -56,6 +80,9 @@ void Fl_DerivedButton::hide(){
   else {
     Fl_Button::hide();
   }
+}
+void Fl_DerivedButton::draw_super(){
+  Fl_Button::draw();
 }
 void Fl_DerivedButton::draw(){
   if (this->overriddenFuncs->draw != NULL) {
@@ -99,7 +126,9 @@ EXPORT {
     ptr->destroy_data = NULL;
     return ptr;
   }
-
+  FL_EXPORT_C(void,         Fl_Button_draw_super)(fl_Button button){
+    (static_cast<Fl_DerivedButton*>(button))->draw_super();
+  }
   FL_EXPORT_C(int,Fl_Button_handle_super )(fl_Button button,int event){
     return (static_cast<Fl_Button*>(button))->handle(event);
   }
@@ -148,6 +177,28 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Button_set_type)(fl_Button b,uchar t){
     (static_cast<Fl_DerivedButton*>(b))->type(t);
   }
+
+FL_EXPORT_C(void, Fl_Button_draw_box)(fl_Button Button){
+ (static_cast<Fl_DerivedButton*>(Button))->draw_box();
+}
+FL_EXPORT_C(void, Fl_Button_draw_box_with_tc)(fl_Button Button,Fl_Boxtype t, Fl_Color c){
+ (static_cast<Fl_DerivedButton*>(Button))->draw_box(t,c);
+}
+FL_EXPORT_C(void, Fl_Button_draw_box_with_txywhc)(fl_Button Button,Fl_Boxtype t, int x,int y,int w,int h, Fl_Color c){
+ (static_cast<Fl_DerivedButton*>(Button))->draw_box(t,x,y,w,h,c);
+}
+FL_EXPORT_C(void, Fl_Button_draw_backdrop)(fl_Button Button){
+ (static_cast<Fl_DerivedButton*>(Button))->draw_backdrop();
+}
+FL_EXPORT_C(void, Fl_Button_draw_focus)(fl_Button Button){
+ (static_cast<Fl_DerivedButton*>(Button))->draw_focus();
+}
+FL_EXPORT_C(void, Fl_Button_draw_focus_with_txywh)(fl_Button Button,Fl_Boxtype t, int x,int y,int w,int h){
+ (static_cast<Fl_DerivedButton*>(Button))->draw_focus(t,x,y,w,h);
+}
+FL_EXPORT_C(void, Fl_Button_draw_label)(fl_Button Button){
+ (static_cast<Fl_DerivedButton*>(Button))->draw_label();
+}
   FL_EXPORT_C(int,Fl_Button_x)(fl_Button b){
     return (static_cast<Fl_DerivedButton*>(b))->x();
   }
@@ -370,7 +421,7 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Button_damage_inside_widget)(fl_Button b,uchar c,int x,int y,int w,int h){
     (static_cast<Fl_DerivedButton*>(b))->damage(c,x,y,w,h);
   }
-  FL_EXPORT_C(void,Fl_Button_draw_label)(fl_Button b,int x,int y,int w,int h,Fl_Align alignment){
+  FL_EXPORT_C(void,Fl_Button_draw_label_with_xywh_alignment)(fl_Button b,int x,int y,int w,int h,Fl_Align alignment){
     (static_cast<Fl_DerivedButton*>(b))->draw_label(x,y,w,h,alignment);
   }
   FL_EXPORT_C(void,Fl_Button_measure_label)(fl_Button b,int* ww,int* hh){
@@ -433,13 +484,13 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Button_set_shortcut)(fl_Button b,int s){
     (static_cast<Fl_DerivedButton*>(b))->shortcut(s);
   }
-  FL_EXPORT_C(Fl_Boxtype,Fl_Button_get_down_box)(fl_Button b){
+  FL_EXPORT_C(Fl_Boxtype,Fl_Button_down_box)(fl_Button b){
     return (static_cast<Fl_DerivedButton*>(b))->down_box();
   }
   FL_EXPORT_C(void,Fl_Button_set_down_box)(fl_Button b,Fl_Boxtype boxtype){
     (static_cast<Fl_DerivedButton*>(b))->down_box(boxtype);
   }
-  FL_EXPORT_C(Fl_Color,Fl_Button_get_down_color)(fl_Button b){
+  FL_EXPORT_C(Fl_Color,Fl_Button_down_color)(fl_Button b){
     return (static_cast<Fl_DerivedButton*>(b))->down_color();
   }
   FL_EXPORT_C(void,Fl_Button_set_down_color)(fl_Button b,Fl_Color c){

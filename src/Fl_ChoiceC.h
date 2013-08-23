@@ -16,6 +16,7 @@ EXPORT {
   FL_EXPORT_C(void,         Fl_Choice_set_parent)(fl_Choice choice, fl_Group grp);
   FL_EXPORT_C(uchar,        Fl_Choice_type)(fl_Choice choice);
   FL_EXPORT_C(void,         Fl_Choice_set_type)(fl_Choice choice, uchar t);
+
   FL_EXPORT_C(int,          Fl_Choice_x)(fl_Choice choice);
   FL_EXPORT_C(int,          Fl_Choice_y)(fl_Choice choice);
   FL_EXPORT_C(int,          Fl_Choice_w)(fl_Choice choice);
@@ -92,7 +93,7 @@ EXPORT {
   FL_EXPORT_C(void,         Fl_Choice_clear_damage)(fl_Choice choice);
   FL_EXPORT_C(void,         Fl_Choice_damage_with_text)(fl_Choice choice, uchar c);
   FL_EXPORT_C(void,         Fl_Choice_damage_inside_group)(fl_Choice choice, uchar c, int x , int y , int w, int h);
-  FL_EXPORT_C(void,         Fl_Choice_draw_label)(fl_Choice choice, int x , int y , int w, int h, Fl_Align alignment);
+  FL_EXPORT_C(void,         Fl_Choice_draw_label_with_xywh_alignment)(fl_Choice choice, int x , int y , int w, int h, Fl_Align alignment);
   FL_EXPORT_C(void,         Fl_Choice_measure_label)(fl_Choice choice, int* ww , int* hh);
   FL_EXPORT_C(fl_Window,    Fl_Choice_window)(fl_Choice choice);
   FL_EXPORT_C(fl_Window,    Fl_Choice_top_window)(fl_Choice choice);

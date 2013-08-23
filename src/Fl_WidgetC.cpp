@@ -27,6 +27,30 @@ void Fl_DerivedWidget::draw(){
   // defined as virtual void draw = 0 in Fl_Widget.H, needs to be provided.
   this->overriddenFuncs->draw((fl_Widget) this);
 }
+void Fl_DerivedWidget::draw_box(){
+  Fl_Widget::draw_box();
+}
+void Fl_DerivedWidget::draw_box(Fl_Boxtype t, Fl_Color c){
+  Fl_Widget::draw_box(t,c);
+}
+void Fl_DerivedWidget::draw_box(Fl_Boxtype t, int x,int y,int w,int h, Fl_Color c){
+  Fl_Widget::draw_box(t,x,y,w,h,c);
+}
+void Fl_DerivedWidget::draw_backdrop(){
+  Fl_Widget::draw_backdrop();
+}
+void Fl_DerivedWidget::draw_focus(){
+  Fl_Widget::draw_focus();
+}
+void Fl_DerivedWidget::draw_focus(Fl_Boxtype t, int x,int y,int w,int h){
+  Fl_Widget::draw_focus(t,x,y,w,h);
+}
+void Fl_DerivedWidget::draw_label(){
+  Fl_Widget::draw_label();
+}
+void Fl_DerivedWidget::draw_label(int x,int y,int w,int h,Fl_Align alignment){
+  Fl_Widget::draw_label(x,y,w,h,alignment);
+}
 int Fl_DerivedWidget::handle(int event){
   int i;
   if (this->overriddenFuncs->handle != NULL) {
@@ -124,6 +148,28 @@ Fl_Gl_Window* Fl_DerivedWidget::as_gl_window(){
   FL_EXPORT_C(void,Fl_Widget_set_type)(fl_Widget widget,uchar t){
     (static_cast<Fl_DerivedWidget*>(widget))->type(t);
   }
+
+FL_EXPORT_C(void, Fl_Widget_draw_box)(fl_Widget Widget){
+ (static_cast<Fl_DerivedWidget*>(Widget))->draw_box();
+}
+FL_EXPORT_C(void, Fl_Widget_draw_box_with_tc)(fl_Widget Widget,Fl_Boxtype t, Fl_Color c){
+ (static_cast<Fl_DerivedWidget*>(Widget))->draw_box(t,c);
+}
+FL_EXPORT_C(void, Fl_Widget_draw_box_with_txywhc)(fl_Widget Widget,Fl_Boxtype t, int x,int y,int w,int h, Fl_Color c){
+ (static_cast<Fl_DerivedWidget*>(Widget))->draw_box(t,x,y,w,h,c);
+}
+FL_EXPORT_C(void, Fl_Widget_draw_backdrop)(fl_Widget Widget){
+ (static_cast<Fl_DerivedWidget*>(Widget))->draw_backdrop();
+}
+FL_EXPORT_C(void, Fl_Widget_draw_focus)(fl_Widget Widget){
+ (static_cast<Fl_DerivedWidget*>(Widget))->draw_focus();
+}
+FL_EXPORT_C(void, Fl_Widget_draw_focus_with_txywh)(fl_Widget Widget,Fl_Boxtype t, int x,int y,int w,int h){
+ (static_cast<Fl_DerivedWidget*>(Widget))->draw_focus(t,x,y,w,h);
+}
+FL_EXPORT_C(void, Fl_Widget_draw_label)(fl_Widget Widget){
+ (static_cast<Fl_DerivedWidget*>(Widget))->draw_label();
+}
   FL_EXPORT_C(int,Fl_Widget_x)(fl_Widget widget){
     return (static_cast<Fl_DerivedWidget*>(widget))->x();
   }
@@ -352,7 +398,7 @@ Fl_Gl_Window* Fl_DerivedWidget::as_gl_window(){
   FL_EXPORT_C(void,Fl_Widget_damage_inside_widget)(fl_Widget widget,uchar c,int x,int y,int w,int h){
     (static_cast<Fl_DerivedWidget*>(widget))->damage(c,x,y,w,h);
   }
-  FL_EXPORT_C(void,Fl_Widget_draw_label)(fl_Widget widget,int x,int y,int w,int h,Fl_Align alignment){
+  FL_EXPORT_C(void,Fl_Widget_draw_label_with_xywh_alignment)(fl_Widget widget,int x,int y,int w,int h,Fl_Align alignment){
     (static_cast<Fl_DerivedWidget*>(widget))->draw_label(x,y,w,h,alignment);
   }
   FL_EXPORT_C(void,Fl_Widget_measure_label)(fl_Widget widget,int* ww,int* hh){

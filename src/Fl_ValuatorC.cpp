@@ -23,6 +23,30 @@ void Fl_DerivedValuator::destroy_data(){
     this->overriddenFuncs->destroy_data((fl_Box) this);
   }
 }
+void Fl_DerivedValuator::draw_box(){
+  Fl_Valuator::draw_box();
+}
+void Fl_DerivedValuator::draw_box(Fl_Boxtype t, Fl_Color c){
+  Fl_Valuator::draw_box(t,c);
+}
+void Fl_DerivedValuator::draw_box(Fl_Boxtype t, int x,int y,int w,int h, Fl_Color c){
+  Fl_Valuator::draw_box(t,x,y,w,h,c);
+}
+void Fl_DerivedValuator::draw_backdrop(){
+  Fl_Valuator::draw_backdrop();
+}
+void Fl_DerivedValuator::draw_focus(){
+  Fl_Valuator::draw_focus();
+}
+void Fl_DerivedValuator::draw_focus(Fl_Boxtype t, int x,int y,int w,int h){
+  Fl_Valuator::draw_focus(t,x,y,w,h);
+}
+void Fl_DerivedValuator::draw_label(){
+  Fl_Valuator::draw_label();
+}
+void Fl_DerivedValuator::draw_label(int x,int y,int w,int h,Fl_Align alignment){
+  Fl_Valuator::draw_label(x,y,w,h,alignment);
+}
 int Fl_DerivedValuator::handle(int event){
   int i;
   if (this->overriddenFuncs->handle != NULL) {
@@ -155,6 +179,28 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Valuator_set_type)(fl_Valuator valuator,uchar t){
     (static_cast<Fl_DerivedValuator*>(valuator))->type(t);
   }
+
+FL_EXPORT_C(void, Fl_Valuator_draw_box)(fl_Valuator Valuator){
+ (static_cast<Fl_DerivedValuator*>(Valuator))->draw_box();
+}
+FL_EXPORT_C(void, Fl_Valuator_draw_box_with_tc)(fl_Valuator Valuator,Fl_Boxtype t, Fl_Color c){
+ (static_cast<Fl_DerivedValuator*>(Valuator))->draw_box(t,c);
+}
+FL_EXPORT_C(void, Fl_Valuator_draw_box_with_txywhc)(fl_Valuator Valuator,Fl_Boxtype t, int x,int y,int w,int h, Fl_Color c){
+ (static_cast<Fl_DerivedValuator*>(Valuator))->draw_box(t,x,y,w,h,c);
+}
+FL_EXPORT_C(void, Fl_Valuator_draw_backdrop)(fl_Valuator Valuator){
+ (static_cast<Fl_DerivedValuator*>(Valuator))->draw_backdrop();
+}
+FL_EXPORT_C(void, Fl_Valuator_draw_focus)(fl_Valuator Valuator){
+ (static_cast<Fl_DerivedValuator*>(Valuator))->draw_focus();
+}
+FL_EXPORT_C(void, Fl_Valuator_draw_focus_with_txywh)(fl_Valuator Valuator,Fl_Boxtype t, int x,int y,int w,int h){
+ (static_cast<Fl_DerivedValuator*>(Valuator))->draw_focus(t,x,y,w,h);
+}
+FL_EXPORT_C(void, Fl_Valuator_draw_label)(fl_Valuator Valuator){
+ (static_cast<Fl_DerivedValuator*>(Valuator))->draw_label();
+}
   FL_EXPORT_C(int,Fl_Valuator_x)(fl_Valuator valuator){
     return (static_cast<Fl_DerivedValuator*>(valuator))->x();
   }
@@ -377,7 +423,7 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Valuator_damage_inside_widget)(fl_Valuator valuator,uchar c,int x,int y,int w,int h){
     (static_cast<Fl_DerivedValuator*>(valuator))->damage(c,x,y,w,h);
   }
-  FL_EXPORT_C(void,Fl_Valuator_draw_label)(fl_Valuator valuator,int x,int y,int w,int h,Fl_Align alignment){
+  FL_EXPORT_C(void,Fl_Valuator_draw_label_with_xywh_alignment)(fl_Valuator valuator,int x,int y,int w,int h,Fl_Align alignment){
     (static_cast<Fl_DerivedValuator*>(valuator))->draw_label(x,y,w,h,alignment);
   }
   FL_EXPORT_C(void,Fl_Valuator_measure_label)(fl_Valuator valuator,int* ww,int* hh){

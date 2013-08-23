@@ -17,6 +17,7 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Tree_set_type)(fl_Tree tree,uchar t){
     (static_cast<Fl_Tree*>(tree))->type(t);
   }
+
   FL_EXPORT_C(int,Fl_Tree_x)(fl_Tree tree){
     return (static_cast<Fl_Tree*>(tree))->x();
   }
@@ -227,7 +228,7 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Tree_damage_inside_widget)(fl_Tree tree,uchar c,int x,int y,int w,int h){
     (static_cast<Fl_Tree*>(tree))->damage(c,x,y,w,h);
   }
-  FL_EXPORT_C(void,Fl_Tree_draw_label)(fl_Tree tree,int x,int y,int w,int h,Fl_Align alignment){
+  FL_EXPORT_C(void,Fl_Tree_draw_label_with_xywh_alignment)(fl_Tree tree,int x,int y,int w,int h,Fl_Align alignment){
     (static_cast<Fl_Tree*>(tree))->draw_label(x,y,w,h,alignment);
   }
   FL_EXPORT_C(void,Fl_Tree_measure_label)(fl_Tree tree,int* ww,int* hh){

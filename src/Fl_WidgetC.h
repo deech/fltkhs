@@ -14,6 +14,14 @@ EXPORT {
     void* get_other_data();
     void set_other_data(void*);
     void destroy_data();
+    void draw_box();
+    void draw_box(Fl_Boxtype t, Fl_Color c);
+    void draw_box(Fl_Boxtype t, int x,int y,int w,int h, Fl_Color c);
+    void draw_backdrop();
+    void draw_focus();
+    void draw_focus(Fl_Boxtype t, int x,int y,int w,int h);
+    void draw_label();
+    void draw_label(int x,int y,int w,int h,Fl_Align alignment);
     virtual void draw();
     virtual int handle(int event);
     void resize_super(int x, int y, int w, int h);
@@ -33,6 +41,14 @@ EXPORT {
   FL_EXPORT_C(void,         Fl_Widget_set_parent)(fl_Widget widget, fl_Group grp);
   FL_EXPORT_C(uchar,        Fl_Widget_type)(fl_Widget widget);
   FL_EXPORT_C(void,         Fl_Widget_set_type)(fl_Widget widget, uchar t);
+
+FL_EXPORT_C(void, Fl_Widget_draw_box)(fl_Widget Widget);
+FL_EXPORT_C(void, Fl_Widget_draw_box_with_tc)(fl_Widget Widget,Fl_Boxtype t, Fl_Color c);
+FL_EXPORT_C(void, Fl_Widget_draw_box_with_txywhc)(fl_Widget Widget,Fl_Boxtype t, int x,int y,int w,int h, Fl_Color c);
+FL_EXPORT_C(void, Fl_Widget_draw_backdrop)(fl_Widget Widget);
+FL_EXPORT_C(void, Fl_Widget_draw_focus)(fl_Widget Widget);
+FL_EXPORT_C(void, Fl_Widget_draw_focus_with_txywh)(fl_Widget Widget,Fl_Boxtype t, int x,int y,int w,int h);
+FL_EXPORT_C(void, Fl_Widget_draw_label)(fl_Widget Widget);
   FL_EXPORT_C(int,          Fl_Widget_x)(fl_Widget widget);
   FL_EXPORT_C(int,          Fl_Widget_y)(fl_Widget widget);
   FL_EXPORT_C(int,          Fl_Widget_w)(fl_Widget widget);
@@ -106,7 +122,7 @@ EXPORT {
   FL_EXPORT_C(void,         Fl_Widget_clear_damage)(fl_Widget widget);
   FL_EXPORT_C(void,         Fl_Widget_damage_with_text)(fl_Widget widget, uchar c);
   FL_EXPORT_C(void,         Fl_Widget_damage_inside_widget)(fl_Widget widget, uchar c, int x , int y , int w, int h);
-  FL_EXPORT_C(void,         Fl_Widget_draw_label)(fl_Widget widget, int x , int y , int w, int h, Fl_Align alignment);
+  FL_EXPORT_C(void,         Fl_Widget_draw_label_with_xywh_alignment)(fl_Widget widget, int x , int y , int w, int h, Fl_Align alignment);
   FL_EXPORT_C(void,         Fl_Widget_measure_label)(fl_Widget widget, int* ww , int* hh);
   FL_EXPORT_C(fl_Window,    Fl_Widget_window)(fl_Widget widget);
   FL_EXPORT_C(fl_Window,    Fl_Widget_top_window)(fl_Widget widget);

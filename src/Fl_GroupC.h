@@ -15,6 +15,7 @@ EXPORT {
   FL_EXPORT_C(void,         Fl_Group_set_parent)(fl_Group group, fl_Group grp);
   FL_EXPORT_C(uchar,        Fl_Group_type)(fl_Group group);
   FL_EXPORT_C(void,         Fl_Group_set_type)(fl_Group group, uchar t);
+
   FL_EXPORT_C(int,          Fl_Group_x)(fl_Group group);
   FL_EXPORT_C(int,          Fl_Group_y)(fl_Group group);
   FL_EXPORT_C(int,          Fl_Group_w)(fl_Group group);
@@ -88,7 +89,7 @@ EXPORT {
   FL_EXPORT_C(void,         Fl_Group_clear_damage)(fl_Group group);
   FL_EXPORT_C(void,         Fl_Group_damage_with_text)(fl_Group group, uchar c);
   FL_EXPORT_C(void,         Fl_Group_damage_inside_group)(fl_Group group, uchar c, int x , int y , int w, int h);
-  FL_EXPORT_C(void,         Fl_Group_draw_label)(fl_Group group, int x , int y , int w, int h, Fl_Align alignment);
+  FL_EXPORT_C(void,         Fl_Group_draw_label_with_xywh_alignment)(fl_Group group, int x , int y , int w, int h, Fl_Align alignment);
   FL_EXPORT_C(void,         Fl_Group_measure_label)(fl_Group group, int* ww , int* hh);
   FL_EXPORT_C(fl_Window,    Fl_Group_window)(fl_Group group);
   FL_EXPORT_C(fl_Window,    Fl_Group_top_window)(fl_Group group);

@@ -50,6 +50,7 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Value_Slider_set_type)(fl_Value_Slider value_slider,uchar t){
     (static_cast<Fl_Value_Slider*>(value_slider))->type(t);
   }
+
   FL_EXPORT_C(int,Fl_Value_Slider_x)(fl_Value_Slider value_slider){
     return (static_cast<Fl_Value_Slider*>(value_slider))->x();
   }
@@ -272,7 +273,7 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Value_Slider_damage_inside_widget)(fl_Value_Slider value_slider,uchar c,int x,int y,int w,int h){
     (static_cast<Fl_Value_Slider*>(value_slider))->damage(c,x,y,w,h);
   }
-  FL_EXPORT_C(void,Fl_Value_Slider_draw_label)(fl_Value_Slider value_slider,int x,int y,int w,int h,Fl_Align alignment){
+  FL_EXPORT_C(void,Fl_Value_Slider_draw_label_with_xywh_alignment)(fl_Value_Slider value_slider,int x,int y,int w,int h,Fl_Align alignment){
     (static_cast<Fl_Value_Slider*>(value_slider))->draw_label(x,y,w,h,alignment);
   }
   FL_EXPORT_C(void,Fl_Value_Slider_measure_label)(fl_Value_Slider value_slider,int* ww,int* hh){

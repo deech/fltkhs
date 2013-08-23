@@ -19,6 +19,30 @@ void* Fl_DerivedInt_Input::get_other_data(){
 void Fl_DerivedInt_Input::set_other_data(void* data){
   this->other_data = data;
 }
+void Fl_DerivedInt_Input::draw_box(){
+  Fl_Int_Input::draw_box();
+}
+void Fl_DerivedInt_Input::draw_box(Fl_Boxtype t, Fl_Color c){
+  Fl_Int_Input::draw_box(t,c);
+}
+void Fl_DerivedInt_Input::draw_box(Fl_Boxtype t, int x,int y,int w,int h, Fl_Color c){
+  Fl_Int_Input::draw_box(t,x,y,w,h,c);
+}
+void Fl_DerivedInt_Input::draw_backdrop(){
+  Fl_Int_Input::draw_backdrop();
+}
+void Fl_DerivedInt_Input::draw_focus(){
+  Fl_Int_Input::draw_focus();
+}
+void Fl_DerivedInt_Input::draw_focus(Fl_Boxtype t, int x,int y,int w,int h){
+  Fl_Int_Input::draw_focus(t,x,y,w,h);
+}
+void Fl_DerivedInt_Input::draw_label(){
+  Fl_Int_Input::draw_label();
+}
+void Fl_DerivedInt_Input::draw_label(int x,int y,int w,int h,Fl_Align alignment){
+  Fl_Int_Input::draw_label(x,y,w,h,alignment);
+}
 int Fl_DerivedInt_Input::handle(int event){
   int i;
   if (this->overriddenFuncs->handle != NULL) {
@@ -134,6 +158,28 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Int_Input_set_type)(fl_Int_Input int_input,uchar t){
     (static_cast<Fl_DerivedInt_Input*>(int_input))->type(t);
   }
+
+FL_EXPORT_C(void, Fl_Int_Input_draw_box)(fl_Int_Input Int_Input){
+ (static_cast<Fl_DerivedInt_Input*>(Int_Input))->draw_box();
+}
+FL_EXPORT_C(void, Fl_Int_Input_draw_box_with_tc)(fl_Int_Input Int_Input,Fl_Boxtype t, Fl_Color c){
+ (static_cast<Fl_DerivedInt_Input*>(Int_Input))->draw_box(t,c);
+}
+FL_EXPORT_C(void, Fl_Int_Input_draw_box_with_txywhc)(fl_Int_Input Int_Input,Fl_Boxtype t, int x,int y,int w,int h, Fl_Color c){
+ (static_cast<Fl_DerivedInt_Input*>(Int_Input))->draw_box(t,x,y,w,h,c);
+}
+FL_EXPORT_C(void, Fl_Int_Input_draw_backdrop)(fl_Int_Input Int_Input){
+ (static_cast<Fl_DerivedInt_Input*>(Int_Input))->draw_backdrop();
+}
+FL_EXPORT_C(void, Fl_Int_Input_draw_focus)(fl_Int_Input Int_Input){
+ (static_cast<Fl_DerivedInt_Input*>(Int_Input))->draw_focus();
+}
+FL_EXPORT_C(void, Fl_Int_Input_draw_focus_with_txywh)(fl_Int_Input Int_Input,Fl_Boxtype t, int x,int y,int w,int h){
+ (static_cast<Fl_DerivedInt_Input*>(Int_Input))->draw_focus(t,x,y,w,h);
+}
+FL_EXPORT_C(void, Fl_Int_Input_draw_label)(fl_Int_Input Int_Input){
+ (static_cast<Fl_DerivedInt_Input*>(Int_Input))->draw_label();
+}
   FL_EXPORT_C(int,Fl_Int_Input_x)(fl_Int_Input int_input){
     return (static_cast<Fl_DerivedInt_Input*>(int_input))->x();
   }
@@ -350,7 +396,7 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Int_Input_damage_inside_widget)(fl_Int_Input int_input,uchar c,int x,int y,int w,int h){
     (static_cast<Fl_DerivedInt_Input*>(int_input))->damage(c,x,y,w,h);
   }
-  FL_EXPORT_C(void,Fl_Int_Input_draw_label)(fl_Int_Input int_input,int x,int y,int w,int h,Fl_Align alignment){
+  FL_EXPORT_C(void,Fl_Int_Input_draw_label_with_xywh_alignment)(fl_Int_Input int_input,int x,int y,int w,int h,Fl_Align alignment){
     (static_cast<Fl_DerivedInt_Input*>(int_input))->draw_label(x,y,w,h,alignment);
   }
   FL_EXPORT_C(void,Fl_Int_Input_measure_label)(fl_Int_Input int_input,int* ww,int* hh){

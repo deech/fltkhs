@@ -17,6 +17,7 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Hold_Browser_set_type)(fl_Hold_Browser hold_browser,uchar t){
     (static_cast<Fl_Hold_Browser*>(hold_browser))->type(t);
   }
+
   FL_EXPORT_C(int,Fl_Hold_Browser_x)(fl_Hold_Browser hold_browser){
     return (static_cast<Fl_Hold_Browser*>(hold_browser))->x();
   }
@@ -230,7 +231,7 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Hold_Browser_damage_inside_widget)(fl_Hold_Browser hold_browser,uchar c,int x,int y,int w,int h){
     (static_cast<Fl_Hold_Browser*>(hold_browser))->damage(c,x,y,w,h);
   }
-  FL_EXPORT_C(void,Fl_Hold_Browser_draw_label)(fl_Hold_Browser hold_browser,int x,int y,int w,int h,Fl_Align alignment){
+  FL_EXPORT_C(void,Fl_Hold_Browser_draw_label_with_xywh_alignment)(fl_Hold_Browser hold_browser,int x,int y,int w,int h,Fl_Align alignment){
     (static_cast<Fl_Hold_Browser*>(hold_browser))->draw_label(x,y,w,h,alignment);
   }
   FL_EXPORT_C(void,Fl_Hold_Browser_measure_label)(fl_Hold_Browser hold_browser,int* ww,int* hh){

@@ -15,6 +15,7 @@ EXPORT {
   FL_EXPORT_C(void,         Fl_Tree_set_parent)(fl_Tree tree, fl_Group grp);
   FL_EXPORT_C(uchar,        Fl_Tree_type)(fl_Tree tree);
   FL_EXPORT_C(void,         Fl_Tree_set_type)(fl_Tree tree, uchar t);
+
   FL_EXPORT_C(int,          Fl_Tree_x)(fl_Tree tree);
   FL_EXPORT_C(int,          Fl_Tree_y)(fl_Tree tree);
   FL_EXPORT_C(int,          Fl_Tree_w)(fl_Tree tree);
@@ -85,7 +86,7 @@ EXPORT {
   FL_EXPORT_C(void,         Fl_Tree_clear_damage)(fl_Tree tree);
   FL_EXPORT_C(void,         Fl_Tree_damage_with_text)(fl_Tree tree, uchar c);
   FL_EXPORT_C(void,         Fl_Tree_damage_inside_widget)(fl_Tree tree, uchar c, int x , int y , int w, int h);
-  FL_EXPORT_C(void,         Fl_Tree_draw_label)(fl_Tree tree, int x , int y , int w, int h, Fl_Align alignment);
+  FL_EXPORT_C(void,         Fl_Tree_draw_label_with_xywh_alignment)(fl_Tree tree, int x , int y , int w, int h, Fl_Align alignment);
   FL_EXPORT_C(void,         Fl_Tree_measure_label)(fl_Tree tree, int* ww , int* hh);
   FL_EXPORT_C(fl_Window,    Fl_Tree_window)(fl_Tree tree);
   FL_EXPORT_C(fl_Window,    Fl_Tree_top_window)(fl_Tree tree);

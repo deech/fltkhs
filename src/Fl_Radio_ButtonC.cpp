@@ -18,6 +18,7 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Radio_Button_set_type)(fl_Radio_Button b,uchar t){
     (static_cast<Fl_Radio_Button*>(b))->type(t);
   }
+
   FL_EXPORT_C(int,Fl_Radio_Button_x)(fl_Radio_Button b){
     return (static_cast<Fl_Radio_Button*>(b))->x();
   }
@@ -240,7 +241,7 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Radio_Button_damage_inside_widget)(fl_Radio_Button b,uchar c,int x,int y,int w,int h){
     (static_cast<Fl_Radio_Button*>(b))->damage(c,x,y,w,h);
   }
-  FL_EXPORT_C(void,Fl_Radio_Button_draw_label)(fl_Radio_Button b,int x,int y,int w,int h,Fl_Align alignment){
+  FL_EXPORT_C(void,Fl_Radio_Button_draw_label_with_xywh_alignment)(fl_Radio_Button b,int x,int y,int w,int h,Fl_Align alignment){
     (static_cast<Fl_Radio_Button*>(b))->draw_label(x,y,w,h,alignment);
   }
   FL_EXPORT_C(void,Fl_Radio_Button_measure_label)(fl_Radio_Button b,int* ww,int* hh){
@@ -291,13 +292,13 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Radio_Button_set_shortcut)(fl_Radio_Button b,int s){
     (static_cast<Fl_Radio_Button*>(b))->shortcut(s);
   }
-  FL_EXPORT_C(Fl_Boxtype,Fl_Radio_Button_get_down_box)(fl_Radio_Button b){
+  FL_EXPORT_C(Fl_Boxtype,Fl_Radio_Button_down_box)(fl_Radio_Button b){
     return (static_cast<Fl_Radio_Button*>(b))->down_box();
   }
   FL_EXPORT_C(void,Fl_Radio_Button_set_down_box)(fl_Radio_Button b,Fl_Boxtype boxtype){
     (static_cast<Fl_Radio_Button*>(b))->down_box(boxtype);
   }
-  FL_EXPORT_C(Fl_Color,Fl_Radio_Button_get_down_color)(fl_Radio_Button b){
+  FL_EXPORT_C(Fl_Color,Fl_Radio_Button_down_color)(fl_Radio_Button b){
     return (static_cast<Fl_Radio_Button*>(b))->down_color();
   }
   FL_EXPORT_C(void,Fl_Radio_Button_set_down_color)(fl_Radio_Button b,Fl_Color c){

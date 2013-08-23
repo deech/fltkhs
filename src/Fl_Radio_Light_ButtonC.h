@@ -15,6 +15,7 @@ EXPORT {
   FL_EXPORT_C(void,         Fl_Radio_Light_Button_set_parent)(fl_Radio_Light_Button radio_light_button, fl_Group grp);
   FL_EXPORT_C(uchar,        Fl_Radio_Light_Button_type)(fl_Radio_Light_Button radio_light_button);
   FL_EXPORT_C(void,         Fl_Radio_Light_Button_set_type)(fl_Radio_Light_Button radio_light_button, uchar t);
+
   FL_EXPORT_C(int,          Fl_Radio_Light_Button_x)(fl_Radio_Light_Button radio_light_button);
   FL_EXPORT_C(int,          Fl_Radio_Light_Button_y)(fl_Radio_Light_Button radio_light_button);
   FL_EXPORT_C(int,          Fl_Radio_Light_Button_w)(fl_Radio_Light_Button radio_light_button);
@@ -85,7 +86,7 @@ EXPORT {
   FL_EXPORT_C(void,         Fl_Radio_Light_Button_clear_damage)(fl_Radio_Light_Button radio_light_button);
   FL_EXPORT_C(void,         Fl_Radio_Light_Button_damage_with_text)(fl_Radio_Light_Button radio_light_button, uchar c);
   FL_EXPORT_C(void,         Fl_Radio_Light_Button_damage_inside_widget)(fl_Radio_Light_Button radio_light_button, uchar c, int x , int y , int w, int h);
-  FL_EXPORT_C(void,         Fl_Radio_Light_Button_draw_label)(fl_Radio_Light_Button radio_light_button, int x , int y , int w, int h, Fl_Align alignment);
+  FL_EXPORT_C(void,         Fl_Radio_Light_Button_draw_label_with_xywh_alignment)(fl_Radio_Light_Button radio_light_button, int x , int y , int w, int h, Fl_Align alignment);
   FL_EXPORT_C(void,         Fl_Radio_Light_Button_measure_label)(fl_Radio_Light_Button radio_light_button, int* ww , int* hh);
 
   FL_EXPORT_C(fl_Window,    Fl_Radio_Light_Button_window)(fl_Radio_Light_Button radio_light_button);
@@ -104,9 +105,9 @@ EXPORT {
   FL_EXPORT_C(void        , Fl_Radio_Light_Button_setonly)(fl_Radio_Light_Button b);
   FL_EXPORT_C(int         , Fl_Radio_Light_Button_get_shortcut )(fl_Radio_Light_Button b);
   FL_EXPORT_C(void        , Fl_Radio_Light_Button_set_shortcut )(fl_Radio_Light_Button b, int s);
-  FL_EXPORT_C(Fl_Boxtype  , Fl_Radio_Light_Button_get_down_box)(fl_Radio_Light_Button b);
+  FL_EXPORT_C(Fl_Boxtype  , Fl_Radio_Light_Button_down_box)(fl_Radio_Light_Button b);
   FL_EXPORT_C(void        , Fl_Radio_Light_Button_set_down_box)(fl_Radio_Light_Button b,Fl_Boxtype boxtype);
-  FL_EXPORT_C(Fl_Color    , Fl_Radio_Light_Button_get_down_color )(fl_Radio_Light_Button b);
+  FL_EXPORT_C(Fl_Color    , Fl_Radio_Light_Button_down_color )(fl_Radio_Light_Button b);
   FL_EXPORT_C(void        , Fl_Radio_Light_Button_set_down_color)(fl_Radio_Light_Button b, Fl_Color c);
 #ifdef __cplusplus
 }

@@ -15,6 +15,7 @@ EXPORT {
   FL_EXPORT_C(void,         Fl_Tabs_set_parent)(fl_Tabs tabs, fl_Group grp);
   FL_EXPORT_C(uchar,        Fl_Tabs_type)(fl_Tabs tabs);
   FL_EXPORT_C(void,         Fl_Tabs_set_type)(fl_Tabs tabs, uchar t);
+
   FL_EXPORT_C(int,          Fl_Tabs_x)(fl_Tabs tabs);
   FL_EXPORT_C(int,          Fl_Tabs_y)(fl_Tabs tabs);
   FL_EXPORT_C(int,          Fl_Tabs_w)(fl_Tabs tabs);
@@ -85,7 +86,7 @@ EXPORT {
   FL_EXPORT_C(void,         Fl_Tabs_clear_damage)(fl_Tabs tabs);
   FL_EXPORT_C(void,         Fl_Tabs_damage_with_text)(fl_Tabs tabs, uchar c);
   FL_EXPORT_C(void,         Fl_Tabs_damage_inside_widget)(fl_Tabs tabs, uchar c, int x , int y , int w, int h);
-  FL_EXPORT_C(void,         Fl_Tabs_draw_label)(fl_Tabs tabs, int x , int y , int w, int h, Fl_Align alignment);
+  FL_EXPORT_C(void,         Fl_Tabs_draw_label_with_xywh_alignment)(fl_Tabs tabs, int x , int y , int w, int h, Fl_Align alignment);
   FL_EXPORT_C(void,         Fl_Tabs_measure_label)(fl_Tabs tabs, int* ww , int* hh);
   FL_EXPORT_C(fl_Window,    Fl_Tabs_window)(fl_Tabs tabs);
   FL_EXPORT_C(fl_Window,    Fl_Tabs_top_window)(fl_Tabs tabs);

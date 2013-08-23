@@ -19,6 +19,7 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Value_Input_set_type)(fl_Value_Input value_input,uchar t){
     (static_cast<Fl_Value_Input*>(value_input))->type(t);
   }
+
   FL_EXPORT_C(int,Fl_Value_Input_x)(fl_Value_Input value_input){
     return (static_cast<Fl_Value_Input*>(value_input))->x();
   }
@@ -241,7 +242,7 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Value_Input_damage_inside_widget)(fl_Value_Input value_input,uchar c,int x,int y,int w,int h){
     (static_cast<Fl_Value_Input*>(value_input))->damage(c,x,y,w,h);
   }
-  FL_EXPORT_C(void,Fl_Value_Input_draw_label)(fl_Value_Input value_input,int x,int y,int w,int h,Fl_Align alignment){
+  FL_EXPORT_C(void,Fl_Value_Input_draw_label_with_xywh_alignment)(fl_Value_Input value_input,int x,int y,int w,int h,Fl_Align alignment){
     (static_cast<Fl_Value_Input*>(value_input))->draw_label(x,y,w,h,alignment);
   }
   FL_EXPORT_C(void,Fl_Value_Input_measure_label)(fl_Value_Input value_input,int* ww,int* hh){

@@ -14,6 +14,14 @@ EXPORT {
   public:
     void* get_other_data();
     void set_other_data(void*);
+    void draw_box();
+    void draw_box(Fl_Boxtype t, Fl_Color c);
+    void draw_box(Fl_Boxtype t, int x,int y,int w,int h, Fl_Color c);
+    void draw_backdrop();
+    void draw_focus();
+    void draw_focus(Fl_Boxtype t, int x,int y,int w,int h);
+    void draw_label();
+    void draw_label(int x,int y,int w,int h,Fl_Align alignment);
     virtual void draw();
     virtual int handle(int event);
     void resize_super(int x, int y, int w, int h);
@@ -48,6 +56,14 @@ EXPORT {
   FL_EXPORT_C(void,         Fl_Multi_Browser_set_parent)(fl_Multi_Browser multi_browser, fl_Group grp);
   FL_EXPORT_C(uchar,        Fl_Multi_Browser_type)(fl_Multi_Browser multi_browser);
   FL_EXPORT_C(void,         Fl_Multi_Browser_set_type)(fl_Multi_Browser multi_browser, uchar t);
+
+FL_EXPORT_C(void, Fl_Multi_Browser_draw_box)(fl_Multi_Browser Multi_Browser);
+FL_EXPORT_C(void, Fl_Multi_Browser_draw_box_with_tc)(fl_Multi_Browser Multi_Browser,Fl_Boxtype t, Fl_Color c);
+FL_EXPORT_C(void, Fl_Multi_Browser_draw_box_with_txywhc)(fl_Multi_Browser Multi_Browser,Fl_Boxtype t, int x,int y,int w,int h, Fl_Color c);
+FL_EXPORT_C(void, Fl_Multi_Browser_draw_backdrop)(fl_Multi_Browser Multi_Browser);
+FL_EXPORT_C(void, Fl_Multi_Browser_draw_focus)(fl_Multi_Browser Multi_Browser);
+FL_EXPORT_C(void, Fl_Multi_Browser_draw_focus_with_txywh)(fl_Multi_Browser Multi_Browser,Fl_Boxtype t, int x,int y,int w,int h);
+FL_EXPORT_C(void, Fl_Multi_Browser_draw_label)(fl_Multi_Browser Multi_Browser);
   FL_EXPORT_C(int,          Fl_Multi_Browser_x)(fl_Multi_Browser multi_browser);
   FL_EXPORT_C(int,          Fl_Multi_Browser_y)(fl_Multi_Browser multi_browser);
   FL_EXPORT_C(int,          Fl_Multi_Browser_w)(fl_Multi_Browser multi_browser);
@@ -117,7 +133,7 @@ EXPORT {
   FL_EXPORT_C(void,         Fl_Multi_Browser_clear_damage)(fl_Multi_Browser multi_browser);
   FL_EXPORT_C(void,         Fl_Multi_Browser_damage_with_text)(fl_Multi_Browser multi_browser, uchar c);
   FL_EXPORT_C(void,         Fl_Multi_Browser_damage_inside_widget)(fl_Multi_Browser multi_browser, uchar c, int x , int y , int w, int h);
-  FL_EXPORT_C(void,         Fl_Multi_Browser_draw_label)(fl_Multi_Browser multi_browser, int x , int y , int w, int h, Fl_Align alignment);
+  FL_EXPORT_C(void,         Fl_Multi_Browser_draw_label_with_xywh_alignment)(fl_Multi_Browser multi_browser, int x , int y , int w, int h, Fl_Align alignment);
   FL_EXPORT_C(void,         Fl_Multi_Browser_measure_label)(fl_Multi_Browser multi_browser, int* ww , int* hh);
   FL_EXPORT_C(fl_Window,    Fl_Multi_Browser_window)(fl_Multi_Browser multi_browser);
   FL_EXPORT_C(fl_Window,    Fl_Multi_Browser_top_window)(fl_Multi_Browser multi_browser);

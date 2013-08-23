@@ -26,6 +26,30 @@ void Fl_DerivedBrowser::draw(){
     Fl_Browser::draw();
   }
 }
+void Fl_DerivedBrowser::draw_box(){
+  Fl_Browser::draw_box();
+}
+void Fl_DerivedBrowser::draw_box(Fl_Boxtype t, Fl_Color c){
+  Fl_Browser::draw_box(t,c);
+}
+void Fl_DerivedBrowser::draw_box(Fl_Boxtype t, int x,int y,int w,int h, Fl_Color c){
+  Fl_Browser::draw_box(t,x,y,w,h,c);
+}
+void Fl_DerivedBrowser::draw_backdrop(){
+  Fl_Browser::draw_backdrop();
+}
+void Fl_DerivedBrowser::draw_focus(){
+  Fl_Browser::draw_focus();
+}
+void Fl_DerivedBrowser::draw_focus(Fl_Boxtype t, int x,int y,int w,int h){
+  Fl_Browser::draw_focus(t,x,y,w,h);
+}
+void Fl_DerivedBrowser::draw_label(){
+  Fl_Browser::draw_label();
+}
+void Fl_DerivedBrowser::draw_label(int x,int y,int w,int h,Fl_Align alignment){
+  Fl_Browser::draw_label(x,y,w,h,alignment);
+}
 int Fl_DerivedBrowser::handle(int event){
   int i;
   if (this->overriddenFuncs->handle != NULL) {
@@ -141,6 +165,28 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Browser_set_type)(fl_Browser browser,uchar t){
     (static_cast<Fl_DerivedBrowser*>(browser))->type(t);
   }
+
+FL_EXPORT_C(void, Fl_Browser_draw_box)(fl_Browser Browser){
+ (static_cast<Fl_DerivedBrowser*>(Browser))->draw_box();
+}
+FL_EXPORT_C(void, Fl_Browser_draw_box_with_tc)(fl_Browser Browser,Fl_Boxtype t, Fl_Color c){
+ (static_cast<Fl_DerivedBrowser*>(Browser))->draw_box(t,c);
+}
+FL_EXPORT_C(void, Fl_Browser_draw_box_with_txywhc)(fl_Browser Browser,Fl_Boxtype t, int x,int y,int w,int h, Fl_Color c){
+ (static_cast<Fl_DerivedBrowser*>(Browser))->draw_box(t,x,y,w,h,c);
+}
+FL_EXPORT_C(void, Fl_Browser_draw_backdrop)(fl_Browser Browser){
+ (static_cast<Fl_DerivedBrowser*>(Browser))->draw_backdrop();
+}
+FL_EXPORT_C(void, Fl_Browser_draw_focus)(fl_Browser Browser){
+ (static_cast<Fl_DerivedBrowser*>(Browser))->draw_focus();
+}
+FL_EXPORT_C(void, Fl_Browser_draw_focus_with_txywh)(fl_Browser Browser,Fl_Boxtype t, int x,int y,int w,int h){
+ (static_cast<Fl_DerivedBrowser*>(Browser))->draw_focus(t,x,y,w,h);
+}
+FL_EXPORT_C(void, Fl_Browser_draw_label)(fl_Browser Browser){
+ (static_cast<Fl_DerivedBrowser*>(Browser))->draw_label();
+}
   FL_EXPORT_C(int,Fl_Browser_x)(fl_Browser browser){
     return (static_cast<Fl_DerivedBrowser*>(browser))->x();
   }
@@ -360,7 +406,7 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Browser_damage_inside_widget)(fl_Browser browser,uchar c,int x,int y,int w,int h){
     (static_cast<Fl_DerivedBrowser*>(browser))->damage(c,x,y,w,h);
   }
-  FL_EXPORT_C(void,Fl_Browser_draw_label)(fl_Browser browser,int x,int y,int w,int h,Fl_Align alignment){
+  FL_EXPORT_C(void,Fl_Browser_draw_label_with_xywh_alignment)(fl_Browser browser,int x,int y,int w,int h,Fl_Align alignment){
     (static_cast<Fl_DerivedBrowser*>(browser))->draw_label(x,y,w,h,alignment);
   }
   FL_EXPORT_C(void,Fl_Browser_measure_label)(fl_Browser browser,int* ww,int* hh){

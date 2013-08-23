@@ -17,6 +17,7 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Tabs_set_type)(fl_Tabs tabs,uchar t){
     (static_cast<Fl_Tabs*>(tabs))->type(t);
   }
+
   FL_EXPORT_C(int,Fl_Tabs_x)(fl_Tabs tabs){
     return (static_cast<Fl_Tabs*>(tabs))->x();
   }
@@ -227,7 +228,7 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Tabs_damage_inside_widget)(fl_Tabs tabs,uchar c,int x,int y,int w,int h){
     (static_cast<Fl_Tabs*>(tabs))->damage(c,x,y,w,h);
   }
-  FL_EXPORT_C(void,Fl_Tabs_draw_label)(fl_Tabs tabs,int x,int y,int w,int h,Fl_Align alignment){
+  FL_EXPORT_C(void,Fl_Tabs_draw_label_with_xywh_alignment)(fl_Tabs tabs,int x,int y,int w,int h,Fl_Align alignment){
     (static_cast<Fl_Tabs*>(tabs))->draw_label(x,y,w,h,alignment);
   }
   FL_EXPORT_C(void,Fl_Tabs_measure_label)(fl_Tabs tabs,int* ww,int* hh){

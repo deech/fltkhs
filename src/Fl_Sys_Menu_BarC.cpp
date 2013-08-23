@@ -73,6 +73,7 @@ EXPORT {
     (static_cast<Fl_Menu_Bar*>(sys_menu_bar))->type(t);
 #endif
   }
+
   FL_EXPORT_C(int,Fl_Sys_Menu_Bar_x)(fl_Sys_Menu_Bar sys_menu_bar){
 #if defined(__APPLE__)
     return (static_cast<Fl_Sys_Menu_Bar*>(sys_menu_bar))->x();
@@ -575,7 +576,7 @@ EXPORT {
     (static_cast<Fl_Menu_Bar*>(sys_menu_bar))->damage(c,x,y,w,h);
 #endif
   }
-  FL_EXPORT_C(void,Fl_Sys_Menu_Bar_draw_label)(fl_Sys_Menu_Bar sys_menu_bar,int x,int y,int w,int h,Fl_Align alignment){
+  FL_EXPORT_C(void,Fl_Sys_Menu_Bar_draw_label_with_xywh_alignment)(fl_Sys_Menu_Bar sys_menu_bar,int x,int y,int w,int h,Fl_Align alignment){
 #if defined(__APPLE__)
     (static_cast<Fl_Sys_Menu_Bar*>(sys_menu_bar))->draw_label(x,y,w,h,alignment);
 #else

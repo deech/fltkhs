@@ -32,6 +32,30 @@ void Fl_DerivedWindow::destroy_data(){
     this->overriddenFuncs->destroy_data((fl_Window) this);
   }
 }
+void Fl_DerivedWindow::draw_box(){
+  Fl_Window::draw_box();
+}
+void Fl_DerivedWindow::draw_box(Fl_Boxtype t, Fl_Color c){
+  Fl_Window::draw_box(t,c);
+}
+void Fl_DerivedWindow::draw_box(Fl_Boxtype t, int x,int y,int w,int h, Fl_Color c){
+  Fl_Window::draw_box(t,x,y,w,h,c);
+}
+void Fl_DerivedWindow::draw_backdrop(){
+  Fl_Window::draw_backdrop();
+}
+void Fl_DerivedWindow::draw_focus(){
+  Fl_Window::draw_focus();
+}
+void Fl_DerivedWindow::draw_focus(Fl_Boxtype t, int x,int y,int w,int h){
+  Fl_Window::draw_focus(t,x,y,w,h);
+}
+void Fl_DerivedWindow::draw_label(){
+  Fl_Window::draw_label();
+}
+void Fl_DerivedWindow::draw_label(int x,int y,int w,int h,Fl_Align alignment){
+  Fl_Window::draw_label(x,y,w,h,alignment);
+}
 int Fl_DerivedWindow::handle(int event){
   int i;
   if (this->overriddenFuncs->handle != NULL) {
@@ -137,6 +161,28 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Window_set_type)(fl_Window win,uchar t){
     (static_cast<Fl_DerivedWindow*>(win))->type(t);
   }
+
+FL_EXPORT_C(void, Fl_Window_draw_box)(fl_Window Window){
+ (static_cast<Fl_DerivedWindow*>(Window))->draw_box();
+}
+FL_EXPORT_C(void, Fl_Window_draw_box_with_tc)(fl_Window Window,Fl_Boxtype t, Fl_Color c){
+ (static_cast<Fl_DerivedWindow*>(Window))->draw_box(t,c);
+}
+FL_EXPORT_C(void, Fl_Window_draw_box_with_txywhc)(fl_Window Window,Fl_Boxtype t, int x,int y,int w,int h, Fl_Color c){
+ (static_cast<Fl_DerivedWindow*>(Window))->draw_box(t,x,y,w,h,c);
+}
+FL_EXPORT_C(void, Fl_Window_draw_backdrop)(fl_Window Window){
+ (static_cast<Fl_DerivedWindow*>(Window))->draw_backdrop();
+}
+FL_EXPORT_C(void, Fl_Window_draw_focus)(fl_Window Window){
+ (static_cast<Fl_DerivedWindow*>(Window))->draw_focus();
+}
+FL_EXPORT_C(void, Fl_Window_draw_focus_with_txywh)(fl_Window Window,Fl_Boxtype t, int x,int y,int w,int h){
+ (static_cast<Fl_DerivedWindow*>(Window))->draw_focus(t,x,y,w,h);
+}
+FL_EXPORT_C(void, Fl_Window_draw_label)(fl_Window Window){
+ (static_cast<Fl_DerivedWindow*>(Window))->draw_label();
+}
   FL_EXPORT_C(int,Fl_Window_x)(fl_Window win){
     return (static_cast<Fl_DerivedWindow*>(win))->x();
   }
@@ -359,7 +405,7 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Window_damage_inside_widget)(fl_Window win,uchar c,int x,int y,int w,int h){
     (static_cast<Fl_DerivedWindow*>(win))->damage(c,x,y,w,h);
   }
-  FL_EXPORT_C(void,Fl_Window_draw_label)(fl_Window win,int x,int y,int w,int h,Fl_Align alignment){
+  FL_EXPORT_C(void,Fl_Window_draw_label_with_xywh_alignment)(fl_Window win,int x,int y,int w,int h,Fl_Align alignment){
     (static_cast<Fl_DerivedWindow*>(win))->draw_label(x,y,w,h,alignment);
   }
   FL_EXPORT_C(void,Fl_Window_measure_label)(fl_Window win,int* ww,int* hh){

@@ -15,6 +15,7 @@ EXPORT {
   FL_EXPORT_C(void,         Fl_Text_Editor_set_parent)(fl_Text_Editor text_editor, fl_Text_Editor grp);
   FL_EXPORT_C(uchar,        Fl_Text_Editor_type)(fl_Text_Editor text_editor);
   FL_EXPORT_C(void,         Fl_Text_Editor_set_type)(fl_Text_Editor text_editor, uchar t);
+
   FL_EXPORT_C(int,          Fl_Text_Editor_x)(fl_Text_Editor text_editor);
   FL_EXPORT_C(int,          Fl_Text_Editor_y)(fl_Text_Editor text_editor);
   FL_EXPORT_C(int,          Fl_Text_Editor_w)(fl_Text_Editor text_editor);
@@ -88,7 +89,7 @@ EXPORT {
   FL_EXPORT_C(void,         Fl_Text_Editor_clear_damage)(fl_Text_Editor text_editor);
   FL_EXPORT_C(void,         Fl_Text_Editor_damage_with_text)(fl_Text_Editor text_editor, uchar c);
   FL_EXPORT_C(void,         Fl_Text_Editor_damage_inside_text_editor)(fl_Text_Editor text_editor, uchar c, int x , int y , int w, int h);
-  FL_EXPORT_C(void,         Fl_Text_Editor_draw_label)(fl_Text_Editor text_editor, int x , int y , int w, int h, Fl_Align alignment);
+  FL_EXPORT_C(void,         Fl_Text_Editor_draw_label_with_xywh_alignment)(fl_Text_Editor text_editor, int x , int y , int w, int h, Fl_Align alignment);
   FL_EXPORT_C(void,         Fl_Text_Editor_measure_label)(fl_Text_Editor text_editor, int* ww , int* hh);
   FL_EXPORT_C(fl_Window,    Fl_Text_Editor_window)(fl_Text_Editor text_editor);
   FL_EXPORT_C(fl_Window,    Fl_Text_Editor_top_window)(fl_Text_Editor text_editor);

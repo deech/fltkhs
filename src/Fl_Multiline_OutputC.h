@@ -15,6 +15,7 @@ EXPORT {
   FL_EXPORT_C(void,         Fl_Multiline_Output_set_parent)(fl_Multiline_Output multiline_output, fl_Group grp);
   FL_EXPORT_C(uchar,        Fl_Multiline_Output_type)(fl_Multiline_Output multiline_output);
   FL_EXPORT_C(void,         Fl_Multiline_Output_set_type)(fl_Multiline_Output multiline_output, uchar t);
+
   FL_EXPORT_C(int,          Fl_Multiline_Output_x)(fl_Multiline_Output multiline_output);
   FL_EXPORT_C(int,          Fl_Multiline_Output_y)(fl_Multiline_Output multiline_output);
   FL_EXPORT_C(int,          Fl_Multiline_Output_w)(fl_Multiline_Output multiline_output);
@@ -85,7 +86,7 @@ EXPORT {
   FL_EXPORT_C(void,         Fl_Multiline_Output_clear_damage)(fl_Multiline_Output multiline_output);
   FL_EXPORT_C(void,         Fl_Multiline_Output_damage_with_text)(fl_Multiline_Output multiline_output, uchar c);
   FL_EXPORT_C(void,         Fl_Multiline_Output_damage_inside_widget)(fl_Multiline_Output multiline_output, uchar c, int x , int y , int w, int h);
-  FL_EXPORT_C(void,         Fl_Multiline_Output_draw_label)(fl_Multiline_Output multiline_output, int x , int y , int w, int h, Fl_Align alignment);
+  FL_EXPORT_C(void,         Fl_Multiline_Output_draw_label_with_xywh_alignment)(fl_Multiline_Output multiline_output, int x , int y , int w, int h, Fl_Align alignment);
   FL_EXPORT_C(void,         Fl_Multiline_Output_measure_label)(fl_Multiline_Output multiline_output, int* ww , int* hh);
 
   FL_EXPORT_C(fl_Window,    Fl_Multiline_Output_window)(fl_Multiline_Output multiline_output);

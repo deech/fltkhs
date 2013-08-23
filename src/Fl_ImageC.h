@@ -23,6 +23,13 @@ EXPORT {
     void label(Fl_Menu_Item* m);
     void draw(int X, int Y, int W, int H, int cx=0, int cy=0);
     void uncache();
+    void draw_box();
+    void draw_box(Fl_Boxtype t, Fl_Color c);
+    void draw_box(Fl_Boxtype t, int x,int y,int w,int h, Fl_Color c);
+    void draw_backdrop();
+    void draw_focus();
+    void draw_focus(Fl_Boxtype t, int x,int y,int w,int h);
+    void draw_label();
     Fl_DerivedImage(int W, int H, int D, fl_Image_Virtual_Funcs* funcs);
     ~Fl_DerivedImage();
   };

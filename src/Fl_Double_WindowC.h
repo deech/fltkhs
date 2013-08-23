@@ -16,6 +16,7 @@ EXPORT {
   FL_EXPORT_C(void,         Fl_Double_Window_set_parent)(fl_Double_Window win, fl_Group grp);
   FL_EXPORT_C(uchar,        Fl_Double_Window_type)(fl_Double_Window win);
   FL_EXPORT_C(void,         Fl_Double_Window_set_type)(fl_Double_Window win, uchar t);
+
   FL_EXPORT_C(int,          Fl_Double_Window_x)(fl_Double_Window win);
   FL_EXPORT_C(int,          Fl_Double_Window_y)(fl_Double_Window win);
   FL_EXPORT_C(int,          Fl_Double_Window_w)(fl_Double_Window win);
@@ -86,7 +87,7 @@ EXPORT {
   FL_EXPORT_C(void,         Fl_Double_Window_clear_damage)(fl_Double_Window win);
   FL_EXPORT_C(void,         Fl_Double_Window_damage_with_text)(fl_Double_Window win, uchar c);
   FL_EXPORT_C(void,         Fl_Double_Window_damage_inside_widget)(fl_Double_Window win, uchar c, int x , int y , int w, int h);
-  FL_EXPORT_C(void,         Fl_Double_Window_draw_label)(fl_Double_Window win, int x , int y , int w, int h, Fl_Align alignment);
+  FL_EXPORT_C(void,         Fl_Double_Window_draw_label_with_xywh_alignment)(fl_Double_Window win, int x , int y , int w, int h, Fl_Align alignment);
   FL_EXPORT_C(void,         Fl_Double_Window_measure_label)(fl_Double_Window win, int* ww , int* hh);
   FL_EXPORT_C(fl_Group,     Fl_Double_Window_as_group)(fl_Double_Window win);
   FL_EXPORT_C(fl_Gl_Window, Fl_Double_Window_as_gl_window)(fl_Double_Window win);

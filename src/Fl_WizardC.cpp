@@ -17,6 +17,7 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Wizard_set_type)(fl_Wizard wizard,uchar t){
     (static_cast<Fl_Wizard*>(wizard))->type(t);
   }
+
   FL_EXPORT_C(int,Fl_Wizard_x)(fl_Wizard wizard){
     return (static_cast<Fl_Wizard*>(wizard))->x();
   }
@@ -239,7 +240,7 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Wizard_damage_inside_widget)(fl_Wizard wizard,uchar c,int x,int y,int w,int h){
     (static_cast<Fl_Wizard*>(wizard))->damage(c,x,y,w,h);
   }
-  FL_EXPORT_C(void,Fl_Wizard_draw_label)(fl_Wizard wizard,int x,int y,int w,int h,Fl_Align alignment){
+  FL_EXPORT_C(void,Fl_Wizard_draw_label_with_xywh_alignment)(fl_Wizard wizard,int x,int y,int w,int h,Fl_Align alignment){
     (static_cast<Fl_Wizard*>(wizard))->draw_label(x,y,w,h,alignment);
   }
   FL_EXPORT_C(void,Fl_Wizard_measure_label)(fl_Wizard wizard,int* ww,int* hh){

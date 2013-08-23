@@ -15,6 +15,7 @@ EXPORT {
   FL_EXPORT_C(void,         Fl_Color_Chooser_set_parent)(fl_Color_Chooser color_chooser, fl_Group grp);
   FL_EXPORT_C(uchar,        Fl_Color_Chooser_type)(fl_Color_Chooser color_chooser);
   FL_EXPORT_C(void,         Fl_Color_Chooser_set_type)(fl_Color_Chooser color_chooser, uchar t);
+
   FL_EXPORT_C(int,          Fl_Color_Chooser_x)(fl_Color_Chooser color_chooser);
   FL_EXPORT_C(int,          Fl_Color_Chooser_y)(fl_Color_Chooser color_chooser);
   FL_EXPORT_C(int,          Fl_Color_Chooser_w)(fl_Color_Chooser color_chooser);
@@ -88,7 +89,7 @@ EXPORT {
   FL_EXPORT_C(void,         Fl_Color_Chooser_clear_damage)(fl_Color_Chooser color_chooser);
   FL_EXPORT_C(void,         Fl_Color_Chooser_damage_with_text)(fl_Color_Chooser color_chooser, uchar c);
   FL_EXPORT_C(void,         Fl_Color_Chooser_damage_inside_group)(fl_Color_Chooser color_chooser, uchar c, int x , int y , int w, int h);
-  FL_EXPORT_C(void,         Fl_Color_Chooser_draw_label)(fl_Color_Chooser color_chooser, int x , int y , int w, int h, Fl_Align alignment);
+  FL_EXPORT_C(void,         Fl_Color_Chooser_draw_label_with_xywh_alignment)(fl_Color_Chooser color_chooser, int x , int y , int w, int h, Fl_Align alignment);
   FL_EXPORT_C(void,         Fl_Color_Chooser_measure_label)(fl_Color_Chooser color_chooser, int* ww , int* hh);
   FL_EXPORT_C(fl_Window,    Fl_Color_Chooser_window)(fl_Color_Chooser color_chooser);
   FL_EXPORT_C(fl_Window,    Fl_Color_Chooser_top_window)(fl_Color_Chooser color_chooser);

@@ -85,7 +85,7 @@ EXPORT {
   FL_EXPORT_C(void,         Fl_Clock_clear_damage)(fl_Clock clock);
   FL_EXPORT_C(void,         Fl_Clock_damage_with_text)(fl_Clock clock, uchar c);
   FL_EXPORT_C(void,         Fl_Clock_damage_inside_widget)(fl_Clock clock, uchar c, int x , int y , int w, int h);
-  FL_EXPORT_C(void,         Fl_Clock_draw_label)(fl_Clock clock, int x , int y , int w, int h, Fl_Align alignment);
+  FL_EXPORT_C(void,         Fl_Clock_draw_label_with_xywh_alignment)(fl_Clock clock, int x , int y , int w, int h, Fl_Align alignment);
   FL_EXPORT_C(void,         Fl_Clock_measure_label)(fl_Clock clock, int* ww , int* hh);
 
   FL_EXPORT_C(fl_Window,    Fl_Clock_window)(fl_Clock clock);

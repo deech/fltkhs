@@ -15,6 +15,7 @@ EXPORT {
   FL_EXPORT_C(void,         Fl_Return_Button_set_parent)(fl_Return_Button return_button, fl_Group grp);
   FL_EXPORT_C(uchar,        Fl_Return_Button_type)(fl_Return_Button return_button);
   FL_EXPORT_C(void,         Fl_Return_Button_set_type)(fl_Return_Button return_button, uchar t);
+
   FL_EXPORT_C(int,          Fl_Return_Button_x)(fl_Return_Button return_button);
   FL_EXPORT_C(int,          Fl_Return_Button_y)(fl_Return_Button return_button);
   FL_EXPORT_C(int,          Fl_Return_Button_w)(fl_Return_Button return_button);
@@ -85,7 +86,7 @@ EXPORT {
   FL_EXPORT_C(void,         Fl_Return_Button_clear_damage)(fl_Return_Button return_button);
   FL_EXPORT_C(void,         Fl_Return_Button_damage_with_text)(fl_Return_Button return_button, uchar c);
   FL_EXPORT_C(void,         Fl_Return_Button_damage_inside_widget)(fl_Return_Button return_button, uchar c, int x , int y , int w, int h);
-  FL_EXPORT_C(void,         Fl_Return_Button_draw_label)(fl_Return_Button return_button, int x , int y , int w, int h, Fl_Align alignment);
+  FL_EXPORT_C(void,         Fl_Return_Button_draw_label_with_xywh_alignment)(fl_Return_Button return_button, int x , int y , int w, int h, Fl_Align alignment);
   FL_EXPORT_C(void,         Fl_Return_Button_measure_label)(fl_Return_Button return_button, int* ww , int* hh);
 
   FL_EXPORT_C(fl_Window,    Fl_Return_Button_window)(fl_Return_Button return_button);
@@ -104,9 +105,9 @@ EXPORT {
   FL_EXPORT_C(void        , Fl_Return_Button_setonly)(fl_Return_Button b);
   FL_EXPORT_C(int         , Fl_Return_Button_get_shortcut )(fl_Return_Button b);
   FL_EXPORT_C(void        , Fl_Return_Button_set_shortcut )(fl_Return_Button b, int s);
-  FL_EXPORT_C(Fl_Boxtype  , Fl_Return_Button_get_down_box)(fl_Return_Button b);
+  FL_EXPORT_C(Fl_Boxtype  , Fl_Return_Button_down_box)(fl_Return_Button b);
   FL_EXPORT_C(void        , Fl_Return_Button_set_down_box)(fl_Return_Button b,Fl_Boxtype boxtype);
-  FL_EXPORT_C(Fl_Color    , Fl_Return_Button_get_down_color )(fl_Return_Button b);
+  FL_EXPORT_C(Fl_Color    , Fl_Return_Button_down_color )(fl_Return_Button b);
   FL_EXPORT_C(void        , Fl_Return_Button_set_down_color)(fl_Return_Button b, Fl_Color c);
 #ifdef __cplusplus
 }

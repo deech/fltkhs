@@ -16,6 +16,14 @@ EXPORT {
   FL_EXPORT_C(void,         Fl_Int_Input_set_parent)(fl_Int_Input int_input, fl_Group grp);
   FL_EXPORT_C(uchar,        Fl_Int_Input_type)(fl_Int_Input int_input);
   FL_EXPORT_C(void,         Fl_Int_Input_set_type)(fl_Int_Input int_input, uchar t);
+
+FL_EXPORT_C(void, Fl_Int_Input_draw_box)(fl_Int_Input Int_Input);
+FL_EXPORT_C(void, Fl_Int_Input_draw_box_with_tc)(fl_Int_Input Int_Input,Fl_Boxtype t, Fl_Color c);
+FL_EXPORT_C(void, Fl_Int_Input_draw_box_with_txywhc)(fl_Int_Input Int_Input,Fl_Boxtype t, int x,int y,int w,int h, Fl_Color c);
+FL_EXPORT_C(void, Fl_Int_Input_draw_backdrop)(fl_Int_Input Int_Input);
+FL_EXPORT_C(void, Fl_Int_Input_draw_focus)(fl_Int_Input Int_Input);
+FL_EXPORT_C(void, Fl_Int_Input_draw_focus_with_txywh)(fl_Int_Input Int_Input,Fl_Boxtype t, int x,int y,int w,int h);
+FL_EXPORT_C(void, Fl_Int_Input_draw_label)(fl_Int_Input Int_Input);
   FL_EXPORT_C(int,          Fl_Int_Input_x)(fl_Int_Input int_input);
   FL_EXPORT_C(int,          Fl_Int_Input_y)(fl_Int_Input int_input);
   FL_EXPORT_C(int,          Fl_Int_Input_w)(fl_Int_Input int_input);
@@ -86,7 +94,7 @@ EXPORT {
   FL_EXPORT_C(void,         Fl_Int_Input_clear_damage)(fl_Int_Input int_input);
   FL_EXPORT_C(void,         Fl_Int_Input_damage_with_text)(fl_Int_Input int_input, uchar c);
   FL_EXPORT_C(void,         Fl_Int_Input_damage_inside_widget)(fl_Int_Input int_input, uchar c, int x , int y , int w, int h);
-  FL_EXPORT_C(void,         Fl_Int_Input_draw_label)(fl_Int_Input int_input, int x , int y , int w, int h, Fl_Align alignment);
+  FL_EXPORT_C(void,         Fl_Int_Input_draw_label_with_xywh_alignment)(fl_Int_Input int_input, int x , int y , int w, int h, Fl_Align alignment);
   FL_EXPORT_C(void,         Fl_Int_Input_measure_label)(fl_Int_Input int_input, int* ww , int* hh);
   FL_EXPORT_C(fl_Window,    Fl_Int_Input_window)(fl_Int_Input int_input);
   FL_EXPORT_C(fl_Window,    Fl_Int_Input_top_window)(fl_Int_Input int_input);
@@ -100,6 +108,14 @@ EXPORT {
   public:
     void* get_other_data();
     void set_other_data(void*);
+    void draw_box();
+    void draw_box(Fl_Boxtype t, Fl_Color c);
+    void draw_box(Fl_Boxtype t, int x,int y,int w,int h, Fl_Color c);
+    void draw_backdrop();
+    void draw_focus();
+    void draw_focus(Fl_Boxtype t, int x,int y,int w,int h);
+    void draw_label();
+    void draw_label(int x,int y,int w,int h,Fl_Align alignment);
     virtual void draw();
     virtual int handle(int event);
     virtual void resize(int x, int y, int w, int h);

@@ -10,8 +10,9 @@
 EXPORT {
 #endif
   /* Inherited from Fl_Widget */
+  FL_EXPORT_C(void,         Fl_Button_draw_super)(fl_Button button);
   FL_EXPORT_C(int ,         Fl_Button_handle_super)(fl_Button button,int event);
-  FL_EXPORT_C(int ,         Fl_Button_handle )(fl_Button button,int event);
+  FL_EXPORT_C(int ,         Fl_Button_handle)(fl_Button button,int event);
   FL_EXPORT_C(void,         Fl_Button_resize_super)(fl_Button button,int x, int y, int w, int h);
   FL_EXPORT_C(void,         Fl_Button_resize )(fl_Button button,int x, int y, int w, int h);
   FL_EXPORT_C(void,         Fl_Button_show_super)(fl_Button button);
@@ -26,6 +27,14 @@ EXPORT {
   FL_EXPORT_C(void,         Fl_Button_set_parent)(fl_Button button, fl_Group grp);
   FL_EXPORT_C(uchar,        Fl_Button_type)(fl_Button button);
   FL_EXPORT_C(void,         Fl_Button_set_type)(fl_Button button, uchar t);
+
+FL_EXPORT_C(void, Fl_Button_draw_box)(fl_Button Button);
+FL_EXPORT_C(void, Fl_Button_draw_box_with_tc)(fl_Button Button,Fl_Boxtype t, Fl_Color c);
+FL_EXPORT_C(void, Fl_Button_draw_box_with_txywhc)(fl_Button Button,Fl_Boxtype t, int x,int y,int w,int h, Fl_Color c);
+FL_EXPORT_C(void, Fl_Button_draw_backdrop)(fl_Button Button);
+FL_EXPORT_C(void, Fl_Button_draw_focus)(fl_Button Button);
+FL_EXPORT_C(void, Fl_Button_draw_focus_with_txywh)(fl_Button Button,Fl_Boxtype t, int x,int y,int w,int h);
+FL_EXPORT_C(void, Fl_Button_draw_label)(fl_Button Button);
   FL_EXPORT_C(int,          Fl_Button_x)(fl_Button button);
   FL_EXPORT_C(int,          Fl_Button_y)(fl_Button button);
   FL_EXPORT_C(int,          Fl_Button_w)(fl_Button button);
@@ -96,7 +105,7 @@ EXPORT {
   FL_EXPORT_C(void,         Fl_Button_clear_damage)(fl_Button button);
   FL_EXPORT_C(void,         Fl_Button_damage_with_text)(fl_Button button, uchar c);
   FL_EXPORT_C(void,         Fl_Button_damage_inside_widget)(fl_Button button, uchar c, int x , int y , int w, int h);
-  FL_EXPORT_C(void,         Fl_Button_draw_label)(fl_Button button, int x , int y , int w, int h, Fl_Align alignment);
+  FL_EXPORT_C(void,         Fl_Button_draw_label_with_xywh_alignment)(fl_Button button, int x , int y , int w, int h, Fl_Align alignment);
   FL_EXPORT_C(void,         Fl_Button_measure_label)(fl_Button button, int* ww , int* hh);
 
   FL_EXPORT_C(fl_Window,    Fl_Button_window)(fl_Button button);
@@ -112,7 +121,16 @@ EXPORT {
     void* get_other_data();
     void set_other_data(void*);
     void destroy_data();
+    void draw_box();
+    void draw_box(Fl_Boxtype t, Fl_Color c);
+    void draw_box(Fl_Boxtype t, int x,int y,int w,int h, Fl_Color c);
+    void draw_backdrop();
+    void draw_focus();
+    void draw_focus(Fl_Boxtype t, int x,int y,int w,int h);
+    void draw_label();
+    void draw_label(int x,int y,int w,int h,Fl_Align alignment);
     virtual void draw();
+    void draw_super();
     virtual int handle(int event);
     virtual void resize(int x, int y, int w, int h);
     virtual void show();
@@ -125,10 +143,13 @@ EXPORT {
   };
 #endif  
   /* Fl_Button specific functions */
+  FL_EXPORT_C(fl_Button_Virtual_Funcs*, Fl_Button_default_virtual_funcs)();
   FL_EXPORT_C(void*, Fl_Button_other_data)(fl_Button button);
   FL_EXPORT_C(void, Fl_Button_set_other_data)(fl_Button button, void* v);
   FL_EXPORT_C(fl_Button,    Fl_Button_New_WithLabel)(int x, int y, int w, int h, const char* label);
   FL_EXPORT_C(fl_Button   , Fl_Button_New)(int x, int y, int w, int h);
+  FL_EXPORT_C(fl_Button,    Fl_OverriddenButton_New_WithLabel)(int x, int y, int w, int h, const char* label, fl_Button_Virtual_Funcs* funcs);
+  FL_EXPORT_C(fl_Button   , Fl_OverriddenButton_New)(int x, int y, int w, int h, fl_Button_Virtual_Funcs* funcs);
   FL_EXPORT_C(void        , Fl_Button_Destroy)(fl_Button button);
   FL_EXPORT_C(char        , Fl_Button_value)(fl_Button b);
   FL_EXPORT_C(int         , Fl_Button_set_value)(fl_Button b, int v);
@@ -137,9 +158,9 @@ EXPORT {
   FL_EXPORT_C(void        , Fl_Button_setonly)(fl_Button b);
   FL_EXPORT_C(int         , Fl_Button_get_shortcut )(fl_Button b);
   FL_EXPORT_C(void        , Fl_Button_set_shortcut )(fl_Button b, int s);
-  FL_EXPORT_C(Fl_Boxtype  , Fl_Button_get_down_box)(fl_Button b);
+  FL_EXPORT_C(Fl_Boxtype  , Fl_Button_down_box)(fl_Button b);
   FL_EXPORT_C(void        , Fl_Button_set_down_box)(fl_Button b,Fl_Boxtype boxtype);
-  FL_EXPORT_C(Fl_Color    , Fl_Button_get_down_color )(fl_Button b);
+  FL_EXPORT_C(Fl_Color    , Fl_Button_down_color )(fl_Button b);
   FL_EXPORT_C(void        , Fl_Button_set_down_color)(fl_Button b, Fl_Color c);
 #ifdef __cplusplus
 }

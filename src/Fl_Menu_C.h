@@ -15,6 +15,14 @@ EXPORT {
     void* get_other_data();
     void set_other_data(void*);
     void destroy_data();
+    void draw_box();
+    void draw_box(Fl_Boxtype t, Fl_Color c);
+    void draw_box(Fl_Boxtype t, int x,int y,int w,int h, Fl_Color c);
+    void draw_backdrop();
+    void draw_focus();
+    void draw_focus(Fl_Boxtype t, int x,int y,int w,int h);
+    void draw_label();
+    void draw_label(int x,int y,int w,int h,Fl_Align alignment);
     virtual void draw();
     virtual int handle(int event);
     void resize_super(int x, int y, int w, int h);
@@ -35,6 +43,14 @@ EXPORT {
   FL_EXPORT_C(void,         Fl_Menu__set_parent)(fl_Menu_ menu_, fl_Group grp);
   FL_EXPORT_C(uchar,        Fl_Menu__type)(fl_Menu_ menu_);
   FL_EXPORT_C(void,         Fl_Menu__set_type)(fl_Menu_ menu_, uchar t);
+
+FL_EXPORT_C(void, Fl_Menu__draw_box)(fl_Menu_ Menu_);
+FL_EXPORT_C(void, Fl_Menu__draw_box_with_tc)(fl_Menu_ Menu_,Fl_Boxtype t, Fl_Color c);
+FL_EXPORT_C(void, Fl_Menu__draw_box_with_txywhc)(fl_Menu_ Menu_,Fl_Boxtype t, int x,int y,int w,int h, Fl_Color c);
+FL_EXPORT_C(void, Fl_Menu__draw_backdrop)(fl_Menu_ Menu_);
+FL_EXPORT_C(void, Fl_Menu__draw_focus)(fl_Menu_ Menu_);
+FL_EXPORT_C(void, Fl_Menu__draw_focus_with_txywh)(fl_Menu_ Menu_,Fl_Boxtype t, int x,int y,int w,int h);
+FL_EXPORT_C(void, Fl_Menu__draw_label)(fl_Menu_ Menu_);
   FL_EXPORT_C(int,          Fl_Menu__x)(fl_Menu_ menu_);
   FL_EXPORT_C(int,          Fl_Menu__y)(fl_Menu_ menu_);
   FL_EXPORT_C(int,          Fl_Menu__w)(fl_Menu_ menu_);
@@ -111,7 +127,7 @@ EXPORT {
   FL_EXPORT_C(void,         Fl_Menu__clear_damage)(fl_Menu_ menu_);
   FL_EXPORT_C(void,         Fl_Menu__damage_with_text)(fl_Menu_ menu_, uchar c);
   FL_EXPORT_C(void,         Fl_Menu__damage_inside_group)(fl_Menu_ menu_, uchar c, int x , int y , int w, int h);
-  FL_EXPORT_C(void,         Fl_Menu__draw_label)(fl_Menu_ menu_, int x , int y , int w, int h, Fl_Align alignment);
+  FL_EXPORT_C(void,         Fl_Menu__draw_label_with_xywh_alignment)(fl_Menu_ menu_, int x , int y , int w, int h, Fl_Align alignment);
   FL_EXPORT_C(void,         Fl_Menu__measure_label)(fl_Menu_ menu_, int* ww , int* hh);
   FL_EXPORT_C(fl_Window,    Fl_Menu__window)(fl_Menu_ menu_);
   FL_EXPORT_C(fl_Window,    Fl_Menu__top_window)(fl_Menu_ menu_);

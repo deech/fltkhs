@@ -17,6 +17,7 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Color_Chooser_set_type)(fl_Color_Chooser color_chooser,uchar t){
     (static_cast<Fl_Color_Chooser*>(color_chooser))->type(t);
   }
+
   FL_EXPORT_C(int,Fl_Color_Chooser_x)(fl_Color_Chooser color_chooser){
     return (static_cast<Fl_Color_Chooser*>(color_chooser))->x();
   }
@@ -239,7 +240,7 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Color_Chooser_damage_inside_widget)(fl_Color_Chooser color_chooser,uchar c,int x,int y,int w,int h){
     (static_cast<Fl_Color_Chooser*>(color_chooser))->damage(c,x,y,w,h);
   }
-  FL_EXPORT_C(void,Fl_Color_Chooser_draw_label)(fl_Color_Chooser color_chooser,int x,int y,int w,int h,Fl_Align alignment){
+  FL_EXPORT_C(void,Fl_Color_Chooser_draw_label_with_xywh_alignment)(fl_Color_Chooser color_chooser,int x,int y,int w,int h,Fl_Align alignment){
     (static_cast<Fl_Color_Chooser*>(color_chooser))->draw_label(x,y,w,h,alignment);
   }
   FL_EXPORT_C(void,Fl_Color_Chooser_measure_label)(fl_Color_Chooser color_chooser,int* ww,int* hh){

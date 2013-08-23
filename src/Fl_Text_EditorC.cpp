@@ -50,6 +50,7 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Text_Editor_set_type)(fl_Text_Editor win,uchar t){
     (static_cast<DerivedText_Editor*>(win))->type(t);
   }
+
   FL_EXPORT_C(int,Fl_Text_Editor_x)(fl_Text_Editor win){
     return (static_cast<DerivedText_Editor*>(win))->x();
   }
@@ -272,7 +273,7 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Text_Editor_damage_inside_widget)(fl_Text_Editor win,uchar c,int x,int y,int w,int h){
     (static_cast<DerivedText_Editor*>(win))->damage(c,x,y,w,h);
   }
-  FL_EXPORT_C(void,Fl_Text_Editor_draw_label)(fl_Text_Editor win,int x,int y,int w,int h,Fl_Align alignment){
+  FL_EXPORT_C(void,Fl_Text_Editor_draw_label_with_xywh_alignment)(fl_Text_Editor win,int x,int y,int w,int h,Fl_Align alignment){
     (static_cast<DerivedText_Editor*>(win))->draw_label(x,y,w,h,alignment);
   }
   FL_EXPORT_C(void,Fl_Text_Editor_measure_label)(fl_Text_Editor win,int* ww,int* hh){

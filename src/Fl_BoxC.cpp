@@ -27,6 +27,30 @@ void Fl_DerivedBox::destroy_data(){
     this->overriddenFuncs->destroy_data((fl_Box) this);
   }
 }
+void Fl_DerivedBox::draw_box(){
+  Fl_Box::draw_box();
+}
+void Fl_DerivedBox::draw_box(Fl_Boxtype t, Fl_Color c){
+  Fl_Box::draw_box(t,c);
+}
+void Fl_DerivedBox::draw_box(Fl_Boxtype t, int x,int y,int w,int h, Fl_Color c){
+  Fl_Box::draw_box(t,x,y,w,h,c);
+}
+void Fl_DerivedBox::draw_backdrop(){
+  Fl_Box::draw_backdrop();
+}
+void Fl_DerivedBox::draw_focus(){
+  Fl_Box::draw_focus();
+}
+void Fl_DerivedBox::draw_focus(Fl_Boxtype t, int x,int y,int w,int h){
+  Fl_Box::draw_focus(t,x,y,w,h);
+}
+void Fl_DerivedBox::draw_label(){
+  Fl_Box::draw_label();
+}
+void Fl_DerivedBox::draw_label(int x,int y,int w,int h,Fl_Align alignment){
+  Fl_Box::draw_label(x,y,w,h,alignment);
+}
 int Fl_DerivedBox::handle(int event){
   int i;
   if (this->overriddenFuncs->handle != NULL) {
@@ -61,6 +85,12 @@ void Fl_DerivedBox::hide(){
     Fl_Box::hide();
   }
 }
+
+
+void Fl_DerivedBox::draw_super(){
+  Fl_Box::draw();
+}
+
 void Fl_DerivedBox::draw(){
   if (this->overriddenFuncs->draw != NULL) {
     this->overriddenFuncs->draw((fl_Box) this);
@@ -69,6 +99,7 @@ void Fl_DerivedBox::draw(){
     Fl_Box::draw();
   }
 }
+
 Fl_Window* Fl_DerivedBox::as_window(){
   Fl_Window* win;
   if (this->overriddenFuncs->as_window != NULL) {
@@ -102,6 +133,9 @@ EXPORT {
     ptr->as_gl_window = NULL;
     ptr->destroy_data = NULL;
     return ptr;
+  }
+  FL_EXPORT_C(void, Fl_Box_draw_super)(fl_Box box){
+    (static_cast<Fl_DerivedBox*>(box))->draw_super();
   }
   FL_EXPORT_C(int,Fl_Box_handle_super)(fl_Box box,int event){
     return (static_cast<Fl_DerivedBox*>(box))->Fl_Box::handle(event);
@@ -149,7 +183,7 @@ EXPORT {
     return (static_cast<Fl_DerivedBox*>(box))->type();
   }
   FL_EXPORT_C(void,Fl_Box_set_type)(fl_Box box,uchar t){
-    (static_cast<Fl_DerivedBox*>(box))->type(t);
+   (static_cast<Fl_DerivedBox*>(box))->type(t);
   }
   FL_EXPORT_C(int,Fl_Box_x)(fl_Box box){
     return (static_cast<Fl_DerivedBox*>(box))->x();
@@ -373,7 +407,7 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Box_damage_inside_widget)(fl_Box box,uchar c,int x,int y,int w,int h){
     (static_cast<Fl_DerivedBox*>(box))->damage(c,x,y,w,h);
   }
-  FL_EXPORT_C(void,Fl_Box_draw_label)(fl_Box box,int x,int y,int w,int h,Fl_Align alignment){
+  FL_EXPORT_C(void,Fl_Box_draw_label_with_xywh_alignment)(fl_Box box,int x,int y,int w,int h,Fl_Align alignment){
     (static_cast<Fl_DerivedBox*>(box))->draw_label(x,y,w,h,alignment);
   }
   FL_EXPORT_C(void,Fl_Box_measure_label)(fl_Box box,int* ww,int* hh){

@@ -15,6 +15,7 @@ EXPORT {
   FL_EXPORT_C(void,         Fl_Input_set_parent)(fl_Input input, fl_Group grp);
   FL_EXPORT_C(uchar,        Fl_Input_type)(fl_Input input);
   FL_EXPORT_C(void,         Fl_Input_set_type)(fl_Input input, uchar t);
+
   FL_EXPORT_C(int,          Fl_Input_x)(fl_Input input);
   FL_EXPORT_C(int,          Fl_Input_y)(fl_Input input);
   FL_EXPORT_C(int,          Fl_Input_w)(fl_Input input);
@@ -85,7 +86,7 @@ EXPORT {
   FL_EXPORT_C(void,         Fl_Input_clear_damage)(fl_Input input);
   FL_EXPORT_C(void,         Fl_Input_damage_with_text)(fl_Input input, uchar c);
   FL_EXPORT_C(void,         Fl_Input_damage_inside_widget)(fl_Input input, uchar c, int x , int y , int w, int h);
-  FL_EXPORT_C(void,         Fl_Input_draw_label)(fl_Input input, int x , int y , int w, int h, Fl_Align alignment);
+  FL_EXPORT_C(void,         Fl_Input_draw_label_with_xywh_alignment)(fl_Input input, int x , int y , int w, int h, Fl_Align alignment);
   FL_EXPORT_C(void,         Fl_Input_measure_label)(fl_Input input, int* ww , int* hh);
 
   FL_EXPORT_C(fl_Window,    Fl_Input_window)(fl_Input input);

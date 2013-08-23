@@ -15,6 +15,7 @@ EXPORT {
   FL_EXPORT_C(void,         Fl_Check_Button_set_parent)(fl_Check_Button win, fl_Group grp);
   FL_EXPORT_C(uchar,        Fl_Check_Button_type)(fl_Check_Button win);
   FL_EXPORT_C(void,         Fl_Check_Button_set_type)(fl_Check_Button win, uchar t);
+
   FL_EXPORT_C(int,          Fl_Check_Button_x)(fl_Check_Button win);
   FL_EXPORT_C(int,          Fl_Check_Button_y)(fl_Check_Button win);
   FL_EXPORT_C(int,          Fl_Check_Button_w)(fl_Check_Button win);
@@ -85,7 +86,7 @@ EXPORT {
   FL_EXPORT_C(void,         Fl_Check_Button_clear_damage)(fl_Check_Button win);
   FL_EXPORT_C(void,         Fl_Check_Button_damage_with_text)(fl_Check_Button win, uchar c);
   FL_EXPORT_C(void,         Fl_Check_Button_damage_inside_widget)(fl_Check_Button win, uchar c, int x , int y , int w, int h);
-  FL_EXPORT_C(void,         Fl_Check_Button_draw_label)(fl_Check_Button win, int x , int y , int w, int h, Fl_Align alignment);
+  FL_EXPORT_C(void,         Fl_Check_Button_draw_label_with_xywh_alignment)(fl_Check_Button win, int x , int y , int w, int h, Fl_Align alignment);
   FL_EXPORT_C(void,         Fl_Check_Button_measure_label)(fl_Check_Button win, int* ww , int* hh);
 
   /* Fl_Check_Button specific functions */
@@ -100,9 +101,9 @@ EXPORT {
   FL_EXPORT_C(void        , Fl_Check_Button_setonly)(fl_Check_Button b);
   FL_EXPORT_C(int         , Fl_Check_Button_get_shortcut )(fl_Check_Button b);
   FL_EXPORT_C(void        , Fl_Check_Button_set_shortcut )(fl_Check_Button b, int s);
-  FL_EXPORT_C(Fl_Boxtype  , Fl_Check_Button_get_down_box)(fl_Check_Button b);
+  FL_EXPORT_C(Fl_Boxtype  , Fl_Check_Button_down_box)(fl_Check_Button b);
   FL_EXPORT_C(void        , Fl_Check_Button_set_down_box)(fl_Check_Button b,Fl_Boxtype boxtype);
-  FL_EXPORT_C(Fl_Color    , Fl_Check_Button_get_down_color )(fl_Check_Button b);
+  FL_EXPORT_C(Fl_Color    , Fl_Check_Button_down_color )(fl_Check_Button b);
   FL_EXPORT_C(void        , Fl_Check_Button_set_down_color)(fl_Check_Button b, Fl_Color c);
 #ifdef __cplusplus
 }

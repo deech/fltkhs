@@ -43,6 +43,7 @@ CPPFILES= \
 	Fl_Multiline_OutputC.cpp \
 	Fl_Native_File_ChooserC.cpp \
 	Fl_OutputC.cpp \
+	Fl_Overlay_WindowC.cpp \
 	Fl_Paged_DeviceC.cpp \
 	Fl_PixmapC.cpp \
 	Fl_PreferencesC.cpp \

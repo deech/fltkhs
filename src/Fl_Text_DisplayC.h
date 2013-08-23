@@ -15,6 +15,7 @@ EXPORT {
   FL_EXPORT_C(void,         Fl_Text_Display_set_parent)(fl_Text_Display text_display, fl_Text_Display grp);
   FL_EXPORT_C(uchar,        Fl_Text_Display_type)(fl_Text_Display text_display);
   FL_EXPORT_C(void,         Fl_Text_Display_set_type)(fl_Text_Display text_display, uchar t);
+
   FL_EXPORT_C(int,          Fl_Text_Display_x)(fl_Text_Display text_display);
   FL_EXPORT_C(int,          Fl_Text_Display_y)(fl_Text_Display text_display);
   FL_EXPORT_C(int,          Fl_Text_Display_w)(fl_Text_Display text_display);
@@ -88,7 +89,7 @@ EXPORT {
   FL_EXPORT_C(void,         Fl_Text_Display_clear_damage)(fl_Text_Display text_display);
   FL_EXPORT_C(void,         Fl_Text_Display_damage_with_text)(fl_Text_Display text_display, uchar c);
   FL_EXPORT_C(void,         Fl_Text_Display_damage_inside_text_display)(fl_Text_Display text_display, uchar c, int x , int y , int w, int h);
-  FL_EXPORT_C(void,         Fl_Text_Display_draw_label)(fl_Text_Display text_display, int x , int y , int w, int h, Fl_Align alignment);
+  FL_EXPORT_C(void,         Fl_Text_Display_draw_label_with_xywh_alignment)(fl_Text_Display text_display, int x , int y , int w, int h, Fl_Align alignment);
   FL_EXPORT_C(void,         Fl_Text_Display_measure_label)(fl_Text_Display text_display, int* ww , int* hh);
   FL_EXPORT_C(fl_Window,    Fl_Text_Display_window)(fl_Text_Display text_display);
   FL_EXPORT_C(fl_Window,    Fl_Text_Display_top_window)(fl_Text_Display text_display);

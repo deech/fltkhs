@@ -17,6 +17,14 @@ EXPORT {
   FL_EXPORT_C(void,         Fl_Gl_Window_set_parent)(fl_Gl_Window win, fl_Group grp);
   FL_EXPORT_C(uchar,        Fl_Gl_Window_type)(fl_Gl_Window win);
   FL_EXPORT_C(void,         Fl_Gl_Window_set_type)(fl_Gl_Window win, uchar t);
+FL_EXPORT_C(void, Fl_Gl_Window_draw_box)(fl_Gl_Window Gl_Window);
+FL_EXPORT_C(void, Fl_Gl_Window_draw_box_with_tc)(fl_Gl_Window Gl_Window,Fl_Boxtype t, Fl_Color c);
+FL_EXPORT_C(void, Fl_Gl_Window_draw_box_with_txywhc)(fl_Gl_Window Gl_Window,Fl_Boxtype t, int x,int y,int w,int h, Fl_Color c);
+FL_EXPORT_C(void, Fl_Gl_Window_draw_backdrop)(fl_Gl_Window Gl_Window);
+FL_EXPORT_C(void, Fl_Gl_Window_draw_focus)(fl_Gl_Window Gl_Window);
+FL_EXPORT_C(void, Fl_Gl_Window_draw_focus_with_txywh)(fl_Gl_Window Gl_Window,Fl_Boxtype t, int x,int y,int w,int h);
+FL_EXPORT_C(void, Fl_Gl_Window_draw_label)(fl_Gl_Window Gl_Window);
+
   FL_EXPORT_C(int,          Fl_Gl_Window_x)(fl_Gl_Window win);
   FL_EXPORT_C(int,          Fl_Gl_Window_y)(fl_Gl_Window win);
   FL_EXPORT_C(int,          Fl_Gl_Window_w)(fl_Gl_Window win);
@@ -87,7 +95,7 @@ EXPORT {
   FL_EXPORT_C(void,         Fl_Gl_Window_clear_damage)(fl_Gl_Window win);
   FL_EXPORT_C(void,         Fl_Gl_Window_damage_with_text)(fl_Gl_Window win, uchar c);
   FL_EXPORT_C(void,         Fl_Gl_Window_damage_inside_widget)(fl_Gl_Window win, uchar c, int x , int y , int w, int h);
-  FL_EXPORT_C(void,         Fl_Gl_Window_draw_label)(fl_Gl_Window win, int x , int y , int w, int h, Fl_Align alignment);
+  FL_EXPORT_C(void,         Fl_Gl_Window_draw_label_with_xywh_alignment)(fl_Gl_Window win, int x , int y , int w, int h, Fl_Align alignment);
   FL_EXPORT_C(fl_Window,    Fl_Gl_Window_window)(fl_Gl_Window gl_window);
   FL_EXPORT_C(fl_Window,    Fl_Gl_Window_top_window)(fl_Gl_Window gl_window);
   FL_EXPORT_C(fl_Window ,   Fl_Gl_Window_top_window_offset)(fl_Gl_Window gl_window, int* xoff, int* yoff);
@@ -127,6 +135,14 @@ EXPORT {
     void* get_other_data();
     void set_other_data(void*);
     void destroy_data();
+    void draw_box();
+    void draw_box(Fl_Boxtype t, Fl_Color c);
+    void draw_box(Fl_Boxtype t, int x,int y,int w,int h, Fl_Color c);
+    void draw_backdrop();
+    void draw_focus();
+    void draw_focus(Fl_Boxtype t, int x,int y,int w,int h);
+    void draw_label();
+    void draw_label(int x,int y,int w,int h,Fl_Align alignment);
     virtual void draw();
     void draw_super();
     virtual int handle(int event);

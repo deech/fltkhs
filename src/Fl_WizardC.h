@@ -15,6 +15,7 @@ EXPORT {
   FL_EXPORT_C(void,         Fl_Wizard_set_parent)(fl_Wizard wizard, fl_Group grp);
   FL_EXPORT_C(uchar,        Fl_Wizard_type)(fl_Wizard wizard);
   FL_EXPORT_C(void,         Fl_Wizard_set_type)(fl_Wizard wizard, uchar t);
+
   FL_EXPORT_C(int,          Fl_Wizard_x)(fl_Wizard wizard);
   FL_EXPORT_C(int,          Fl_Wizard_y)(fl_Wizard wizard);
   FL_EXPORT_C(int,          Fl_Wizard_w)(fl_Wizard wizard);
@@ -88,7 +89,7 @@ EXPORT {
   FL_EXPORT_C(void,         Fl_Wizard_clear_damage)(fl_Wizard wizard);
   FL_EXPORT_C(void,         Fl_Wizard_damage_with_text)(fl_Wizard wizard, uchar c);
   FL_EXPORT_C(void,         Fl_Wizard_damage_inside_group)(fl_Wizard wizard, uchar c, int x , int y , int w, int h);
-  FL_EXPORT_C(void,         Fl_Wizard_draw_label)(fl_Wizard wizard, int x , int y , int w, int h, Fl_Align alignment);
+  FL_EXPORT_C(void,         Fl_Wizard_draw_label_with_xywh_alignment)(fl_Wizard wizard, int x , int y , int w, int h, Fl_Align alignment);
   FL_EXPORT_C(void,         Fl_Wizard_measure_label)(fl_Wizard wizard, int* ww , int* hh);
   FL_EXPORT_C(fl_Window,    Fl_Wizard_window)(fl_Wizard wizard);
   FL_EXPORT_C(fl_Window,    Fl_Wizard_top_window)(fl_Wizard wizard);

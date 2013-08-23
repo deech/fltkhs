@@ -19,6 +19,7 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Secret_Input_set_type)(fl_Secret_Input secret_input,uchar t){
     (static_cast<Fl_Secret_Input*>(secret_input))->type(t);
   }
+
   FL_EXPORT_C(int,Fl_Secret_Input_x)(fl_Secret_Input secret_input){
     return (static_cast<Fl_Secret_Input*>(secret_input))->x();
   }
@@ -241,7 +242,7 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Secret_Input_damage_inside_widget)(fl_Secret_Input secret_input,uchar c,int x,int y,int w,int h){
     (static_cast<Fl_Secret_Input*>(secret_input))->damage(c,x,y,w,h);
   }
-  FL_EXPORT_C(void,Fl_Secret_Input_draw_label)(fl_Secret_Input secret_input,int x,int y,int w,int h,Fl_Align alignment){
+  FL_EXPORT_C(void,Fl_Secret_Input_draw_label_with_xywh_alignment)(fl_Secret_Input secret_input,int x,int y,int w,int h,Fl_Align alignment){
     (static_cast<Fl_Secret_Input*>(secret_input))->draw_label(x,y,w,h,alignment);
   }
   FL_EXPORT_C(void,Fl_Secret_Input_measure_label)(fl_Secret_Input secret_input,int* ww,int* hh){

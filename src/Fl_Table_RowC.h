@@ -14,6 +14,14 @@ EXPORT {
   FL_EXPORT_C(int,Fl_Table_Row_handle)(fl_Table_Row self, int event);
   FL_EXPORT_C(fl_Group,     Fl_Table_Row_parent)(fl_Table_Row table);
   FL_EXPORT_C(void,         Fl_Table_Row_set_parent)(fl_Table_Row table, fl_Group grp);
+
+FL_EXPORT_C(void, Fl_Table_Row_draw_box)(fl_Table_Row Table_Row);
+FL_EXPORT_C(void, Fl_Table_Row_draw_box_with_tc)(fl_Table_Row Table_Row,Fl_Boxtype t, Fl_Color c);
+FL_EXPORT_C(void, Fl_Table_Row_draw_box_with_txywhc)(fl_Table_Row Table_Row,Fl_Boxtype t, int x,int y,int w,int h, Fl_Color c);
+FL_EXPORT_C(void, Fl_Table_Row_draw_backdrop)(fl_Table_Row Table_Row);
+FL_EXPORT_C(void, Fl_Table_Row_draw_focus)(fl_Table_Row Table_Row);
+FL_EXPORT_C(void, Fl_Table_Row_draw_focus_with_txywh)(fl_Table_Row Table_Row,Fl_Boxtype t, int x,int y,int w,int h);
+FL_EXPORT_C(void, Fl_Table_Row_draw_label)(fl_Table_Row Table_Row);
   FL_EXPORT_C(int,          Fl_Table_Row_x)(fl_Table_Row table);
   FL_EXPORT_C(int,          Fl_Table_Row_y)(fl_Table_Row table);
   FL_EXPORT_C(int,          Fl_Table_Row_w)(fl_Table_Row table);
@@ -87,7 +95,7 @@ EXPORT {
   FL_EXPORT_C(void,         Fl_Table_Row_clear_damage)(fl_Table_Row table);
   FL_EXPORT_C(void,         Fl_Table_Row_damage_with_text)(fl_Table_Row table, uchar c);
   FL_EXPORT_C(void,         Fl_Table_Row_damage_inside_widget)(fl_Table_Row table, uchar c, int x , int y , int w, int h);
-  FL_EXPORT_C(void,         Fl_Table_Row_draw_label)(fl_Table_Row table, int x , int y , int w, int h, Fl_Align alignment);
+  FL_EXPORT_C(void,         Fl_Table_Row_draw_label_with_xywh_alignment)(fl_Table_Row table, int x , int y , int w, int h, Fl_Align alignment);
   FL_EXPORT_C(void,         Fl_Table_Row_measure_label)(fl_Table_Row table, int* ww , int* hh);
   FL_EXPORT_C(fl_Window,    Fl_Table_Row_window)(fl_Table_Row table);
   FL_EXPORT_C(fl_Window,    Fl_Table_Row_top_window)(fl_Table_Row table);
@@ -118,7 +126,7 @@ EXPORT {
 
   /* Inherited from Fl_Table_Row */
 #ifdef __cplusplus
-  class Fl_DerivedTableRow : public Fl_Table_Row {
+  class Fl_DerivedTable_Row : public Fl_Table_Row {
     fl_Table_Row_Virtual_Funcs* overriddenFuncs;
     void* other_data;
   public:
@@ -128,6 +136,14 @@ EXPORT {
     void set_other_data(void*);
     void destroy_data();
     int find_cell(TableContext context, int R, int C, int &X, int &Y, int &W, int &H);
+    void draw_box();
+    void draw_box(Fl_Boxtype t, Fl_Color c);
+    void draw_box(Fl_Boxtype t, int x,int y,int w,int h, Fl_Color c);
+    void draw_backdrop();
+    void draw_focus();
+    void draw_focus(Fl_Boxtype t, int x,int y,int w,int h);
+    void draw_label();
+    void draw_label(int x,int y,int w,int h,Fl_Align alignment);
     virtual void draw();
     virtual int handle(int event);
     int handle_super(int event);
@@ -142,9 +158,9 @@ EXPORT {
     virtual void clear();
     virtual void rows(int val);
     virtual void cols(int val);
-    Fl_DerivedTableRow(int X, int Y, int W, int H, const char *l, fl_Table_Row_Virtual_Funcs* funcs);
-    Fl_DerivedTableRow(int X, int Y, int W, int H, fl_Table_Row_Virtual_Funcs* funcs);
-    ~Fl_DerivedTableRow();
+    Fl_DerivedTable_Row(int X, int Y, int W, int H, const char *l, fl_Table_Row_Virtual_Funcs* funcs);
+    Fl_DerivedTable_Row(int X, int Y, int W, int H, fl_Table_Row_Virtual_Funcs* funcs);
+    ~Fl_DerivedTable_Row();
   };
 #endif
   FL_EXPORT_C(fl_Table_Row_Virtual_Funcs*, Fl_Table_Row_default_virtual_funcs)();

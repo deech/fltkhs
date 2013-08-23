@@ -15,6 +15,7 @@ EXPORT {
   FL_EXPORT_C(void,         Fl_Toggle_Button_set_parent)(fl_Toggle_Button win, fl_Group grp);
   FL_EXPORT_C(uchar,        Fl_Toggle_Button_type)(fl_Toggle_Button win);
   FL_EXPORT_C(void,         Fl_Toggle_Button_set_type)(fl_Toggle_Button win, uchar t);
+
   FL_EXPORT_C(int,          Fl_Toggle_Button_x)(fl_Toggle_Button win);
   FL_EXPORT_C(int,          Fl_Toggle_Button_y)(fl_Toggle_Button win);
   FL_EXPORT_C(int,          Fl_Toggle_Button_w)(fl_Toggle_Button win);
@@ -85,7 +86,7 @@ EXPORT {
   FL_EXPORT_C(void,         Fl_Toggle_Button_clear_damage)(fl_Toggle_Button win);
   FL_EXPORT_C(void,         Fl_Toggle_Button_damage_with_text)(fl_Toggle_Button win, uchar c);
   FL_EXPORT_C(void,         Fl_Toggle_Button_damage_inside_widget)(fl_Toggle_Button win, uchar c, int x , int y , int w, int h);
-  FL_EXPORT_C(void,         Fl_Toggle_Button_draw_label)(fl_Toggle_Button win, int x , int y , int w, int h, Fl_Align alignment);
+  FL_EXPORT_C(void,         Fl_Toggle_Button_draw_label_with_xywh_alignment)(fl_Toggle_Button win, int x , int y , int w, int h, Fl_Align alignment);
   FL_EXPORT_C(void,         Fl_Toggle_Button_measure_label)(fl_Toggle_Button win, int* ww , int* hh);
   FL_EXPORT_C(fl_Window,    Fl_Toggle_Button_window)(fl_Toggle_Button toggle_button);
   FL_EXPORT_C(fl_Window,    Fl_Toggle_Button_top_window)(fl_Toggle_Button toggle_button);
@@ -103,9 +104,9 @@ EXPORT {
   FL_EXPORT_C(void        , Fl_Toggle_Button_setonly)(fl_Toggle_Button b);
   FL_EXPORT_C(int         , Fl_Toggle_Button_get_shortcut )(fl_Toggle_Button b);
   FL_EXPORT_C(void        , Fl_Toggle_Button_set_shortcut )(fl_Toggle_Button b, int s);
-  FL_EXPORT_C(Fl_Boxtype  , Fl_Toggle_Button_get_down_box)(fl_Toggle_Button b);
+  FL_EXPORT_C(Fl_Boxtype  , Fl_Toggle_Button_down_box)(fl_Toggle_Button b);
   FL_EXPORT_C(void        , Fl_Toggle_Button_set_down_box)(fl_Toggle_Button b,Fl_Boxtype boxtype);
-  FL_EXPORT_C(Fl_Color    , Fl_Toggle_Button_get_down_color )(fl_Toggle_Button b);
+  FL_EXPORT_C(Fl_Color    , Fl_Toggle_Button_down_color )(fl_Toggle_Button b);
   FL_EXPORT_C(void        , Fl_Toggle_Button_set_down_color)(fl_Toggle_Button b, Fl_Color c);
 #ifdef __cplusplus
 }

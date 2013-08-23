@@ -29,6 +29,30 @@ void Fl_DerivedTable::draw(){
     Fl_Table::draw();
   }
 }
+void Fl_DerivedTable::draw_box(){
+  Fl_Table::draw_box();
+}
+void Fl_DerivedTable::draw_box(Fl_Boxtype t, Fl_Color c){
+  Fl_Table::draw_box(t,c);
+}
+void Fl_DerivedTable::draw_box(Fl_Boxtype t, int x,int y,int w,int h, Fl_Color c){
+  Fl_Table::draw_box(t,x,y,w,h,c);
+}
+void Fl_DerivedTable::draw_backdrop(){
+  Fl_Table::draw_backdrop();
+}
+void Fl_DerivedTable::draw_focus(){
+  Fl_Table::draw_focus();
+}
+void Fl_DerivedTable::draw_focus(Fl_Boxtype t, int x,int y,int w,int h){
+  Fl_Table::draw_focus(t,x,y,w,h);
+}
+void Fl_DerivedTable::draw_label(){
+  Fl_Table::draw_label();
+}
+void Fl_DerivedTable::draw_label(int x,int y,int w,int h,Fl_Align alignment){
+  Fl_Table::draw_label(x,y,w,h,alignment);
+}
 int Fl_DerivedTable::handle(int event){
   int i;
   if (this->overriddenFuncs->handle != NULL) {
@@ -168,6 +192,28 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Table_set_type)(fl_Table table,uchar t){
     (static_cast<Fl_DerivedTable*>(table))->type(t);
   }
+
+FL_EXPORT_C(void, Fl_Table_draw_box)(fl_Table Table){
+ (static_cast<Fl_DerivedTable*>(Table))->draw_box();
+}
+FL_EXPORT_C(void, Fl_Table_draw_box_with_tc)(fl_Table Table,Fl_Boxtype t, Fl_Color c){
+ (static_cast<Fl_DerivedTable*>(Table))->draw_box(t,c);
+}
+FL_EXPORT_C(void, Fl_Table_draw_box_with_txywhc)(fl_Table Table,Fl_Boxtype t, int x,int y,int w,int h, Fl_Color c){
+ (static_cast<Fl_DerivedTable*>(Table))->draw_box(t,x,y,w,h,c);
+}
+FL_EXPORT_C(void, Fl_Table_draw_backdrop)(fl_Table Table){
+ (static_cast<Fl_DerivedTable*>(Table))->draw_backdrop();
+}
+FL_EXPORT_C(void, Fl_Table_draw_focus)(fl_Table Table){
+ (static_cast<Fl_DerivedTable*>(Table))->draw_focus();
+}
+FL_EXPORT_C(void, Fl_Table_draw_focus_with_txywh)(fl_Table Table,Fl_Boxtype t, int x,int y,int w,int h){
+ (static_cast<Fl_DerivedTable*>(Table))->draw_focus(t,x,y,w,h);
+}
+FL_EXPORT_C(void, Fl_Table_draw_label)(fl_Table Table){
+ (static_cast<Fl_DerivedTable*>(Table))->draw_label();
+}
   FL_EXPORT_C(int,Fl_Table_x)(fl_Table table){
     return (static_cast<Fl_DerivedTable*>(table))->x();
   }
@@ -396,7 +442,7 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Table_damage_inside_widget)(fl_Table table,uchar c,int x,int y,int w,int h){
     (static_cast<Fl_DerivedTable*>(table))->damage(c,x,y,w,h);
   }
-  FL_EXPORT_C(void,Fl_Table_draw_label)(fl_Table table,int x,int y,int w,int h,Fl_Align alignment){
+  FL_EXPORT_C(void,Fl_Table_draw_label_with_xywh_alignment)(fl_Table table,int x,int y,int w,int h,Fl_Align alignment){
     (static_cast<Fl_DerivedTable*>(table))->draw_label(x,y,w,h,alignment);
   }
   FL_EXPORT_C(void,Fl_Table_measure_label)(fl_Table table,int* ww,int* hh){

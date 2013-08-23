@@ -19,6 +19,7 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Multiline_Input_set_type)(fl_Multiline_Input multiline_input,uchar t){
     (static_cast<Fl_Multiline_Input*>(multiline_input))->type(t);
   }
+
   FL_EXPORT_C(int,Fl_Multiline_Input_x)(fl_Multiline_Input multiline_input){
     return (static_cast<Fl_Multiline_Input*>(multiline_input))->x();
   }
@@ -241,7 +242,7 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Multiline_Input_damage_inside_widget)(fl_Multiline_Input multiline_input,uchar c,int x,int y,int w,int h){
     (static_cast<Fl_Multiline_Input*>(multiline_input))->damage(c,x,y,w,h);
   }
-  FL_EXPORT_C(void,Fl_Multiline_Input_draw_label)(fl_Multiline_Input multiline_input,int x,int y,int w,int h,Fl_Align alignment){
+  FL_EXPORT_C(void,Fl_Multiline_Input_draw_label_with_xywh_alignment)(fl_Multiline_Input multiline_input,int x,int y,int w,int h,Fl_Align alignment){
     (static_cast<Fl_Multiline_Input*>(multiline_input))->draw_label(x,y,w,h,alignment);
   }
   FL_EXPORT_C(void,Fl_Multiline_Input_measure_label)(fl_Multiline_Input multiline_input,int* ww,int* hh){

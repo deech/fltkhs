@@ -15,6 +15,15 @@ EXPORT {
     void* get_other_data();
     void set_other_data(void*);
     void destroy_data();
+    void draw_super();
+    void draw_box();
+    void draw_box(Fl_Boxtype t, Fl_Color c);
+    void draw_box(Fl_Boxtype t, int x,int y,int w,int h, Fl_Color c);
+    void draw_backdrop();
+    void draw_focus();
+    void draw_focus(Fl_Boxtype t, int x,int y,int w,int h);
+    void draw_label();
+    void draw_label(int x,int y,int w,int h,Fl_Align alignment);
     virtual void draw();
     virtual int handle(int event);
     void resize_super(int x, int y, int w, int h);
@@ -29,12 +38,21 @@ EXPORT {
     ~Fl_DerivedBox();
   };
 #endif
+  FL_EXPORT_C(void, Fl_Box_draw_super)(fl_Box box);
   FL_EXPORT_C(int,Fl_Box_handle)(fl_Widget self, int event);
   FL_EXPORT_C(int,Fl_Box_handle_super)(fl_Widget self, int event);
   FL_EXPORT_C(fl_Group,     Fl_Box_parent)(fl_Box box);
   FL_EXPORT_C(void,         Fl_Box_set_parent)(fl_Box box, fl_Group grp);
   FL_EXPORT_C(uchar,        Fl_Box_type)(fl_Box box);
   FL_EXPORT_C(void,         Fl_Box_set_type)(fl_Box box, uchar t);
+
+FL_EXPORT_C(void, Fl_Box_draw_box)(fl_Box Box);
+FL_EXPORT_C(void, Fl_Box_draw_box_with_tc)(fl_Box Box,Fl_Boxtype t, Fl_Color c);
+FL_EXPORT_C(void, Fl_Box_draw_box_with_txywhc)(fl_Box Box,Fl_Boxtype t, int x,int y,int w,int h, Fl_Color c);
+FL_EXPORT_C(void, Fl_Box_draw_backdrop)(fl_Box Box);
+FL_EXPORT_C(void, Fl_Box_draw_focus)(fl_Box Box);
+FL_EXPORT_C(void, Fl_Box_draw_focus_with_txywh)(fl_Box Box,Fl_Boxtype t, int x,int y,int w,int h);
+FL_EXPORT_C(void, Fl_Box_draw_label)(fl_Box Box);
   FL_EXPORT_C(int,          Fl_Box_x)(fl_Box box);
   FL_EXPORT_C(int,          Fl_Box_y)(fl_Box box);
   FL_EXPORT_C(int,          Fl_Box_w)(fl_Box box);
@@ -108,7 +126,7 @@ EXPORT {
   FL_EXPORT_C(void,         Fl_Box_clear_damage)(fl_Box box);
   FL_EXPORT_C(void,         Fl_Box_damage_with_text)(fl_Box box, uchar c);
   FL_EXPORT_C(void,         Fl_Box_damage_inside_widget)(fl_Box box, uchar c, int x , int y , int w, int h);
-  FL_EXPORT_C(void,         Fl_Box_draw_label)(fl_Box box, int x , int y , int w, int h, Fl_Align alignment);
+  FL_EXPORT_C(void,         Fl_Box_draw_label_with_xywh_alignment)(fl_Box box, int x , int y , int w, int h, Fl_Align alignment);
   FL_EXPORT_C(void,         Fl_Box_measure_label)(fl_Box box, int* ww , int* hh);
   FL_EXPORT_C(fl_Window,    Fl_Box_window)(fl_Box box);
   FL_EXPORT_C(fl_Window,    Fl_Box_top_window)(fl_Box box);

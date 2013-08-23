@@ -16,6 +16,7 @@ EXPORT {
   FL_EXPORT_C(void,         Fl_Sys_Menu_Bar_set_parent)(fl_Sys_Menu_Bar sys_menu_bar, fl_Group grp);
   FL_EXPORT_C(uchar,        Fl_Sys_Menu_Bar_type)(fl_Sys_Menu_Bar sys_menu_bar);
   FL_EXPORT_C(void,         Fl_Sys_Menu_Bar_set_type)(fl_Sys_Menu_Bar sys_menu_bar, uchar t);
+
   FL_EXPORT_C(int,          Fl_Sys_Menu_Bar_x)(fl_Sys_Menu_Bar sys_menu_bar);
   FL_EXPORT_C(int,          Fl_Sys_Menu_Bar_y)(fl_Sys_Menu_Bar sys_menu_bar);
   FL_EXPORT_C(int,          Fl_Sys_Menu_Bar_w)(fl_Sys_Menu_Bar sys_menu_bar);
@@ -87,7 +88,7 @@ EXPORT {
   FL_EXPORT_C(void,         Fl_Sys_Menu_Bar_clear_damage)(fl_Sys_Menu_Bar sys_menu_bar);
   FL_EXPORT_C(void,         Fl_Sys_Menu_Bar_damage_with_text)(fl_Sys_Menu_Bar sys_menu_bar, uchar c);
   FL_EXPORT_C(void,         Fl_Sys_Menu_Bar_damage_inside_group)(fl_Sys_Menu_Bar sys_menu_bar, uchar c, int x , int y , int w, int h);
-  FL_EXPORT_C(void,         Fl_Sys_Menu_Bar_draw_label)(fl_Sys_Menu_Bar sys_menu_bar, int x , int y , int w, int h, Fl_Align alignment);
+  FL_EXPORT_C(void,         Fl_Sys_Menu_Bar_draw_label_with_xywh_alignment)(fl_Sys_Menu_Bar sys_menu_bar, int x , int y , int w, int h, Fl_Align alignment);
   FL_EXPORT_C(void,         Fl_Sys_Menu_Bar_measure_label)(fl_Sys_Menu_Bar sys_menu_bar, int* ww , int* hh);
   FL_EXPORT_C(fl_Window,    Fl_Sys_Menu_Bar_window)(fl_Sys_Menu_Bar sys_menu_bar);
   FL_EXPORT_C(fl_Window,    Fl_Sys_Menu_Bar_top_window)(fl_Sys_Menu_Bar sys_menu_bar);

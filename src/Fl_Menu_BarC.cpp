@@ -147,6 +147,28 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Menu_Bar_set_type)(fl_Menu_Bar menu_bar,uchar t){
     (static_cast<Fl_DerivedMenu_Bar*>(menu_bar))->type(t);
   }
+
+FL_EXPORT_C(void, Fl_Menu_Bar_draw_box)(fl_Menu_Bar Menu_Bar){
+ (static_cast<Fl_DerivedMenu_Bar*>(Menu_Bar))->draw_box();
+}
+FL_EXPORT_C(void, Fl_Menu_Bar_draw_box_with_tc)(fl_Menu_Bar Menu_Bar,Fl_Boxtype t, Fl_Color c){
+ (static_cast<Fl_DerivedMenu_Bar*>(Menu_Bar))->draw_box(t,c);
+}
+FL_EXPORT_C(void, Fl_Menu_Bar_draw_box_with_txywhc)(fl_Menu_Bar Menu_Bar,Fl_Boxtype t, int x,int y,int w,int h, Fl_Color c){
+ (static_cast<Fl_DerivedMenu_Bar*>(Menu_Bar))->draw_box(t,x,y,w,h,c);
+}
+FL_EXPORT_C(void, Fl_Menu_Bar_draw_backdrop)(fl_Menu_Bar Menu_Bar){
+ (static_cast<Fl_DerivedMenu_Bar*>(Menu_Bar))->draw_backdrop();
+}
+FL_EXPORT_C(void, Fl_Menu_Bar_draw_focus)(fl_Menu_Bar Menu_Bar){
+ (static_cast<Fl_DerivedMenu_Bar*>(Menu_Bar))->draw_focus();
+}
+FL_EXPORT_C(void, Fl_Menu_Bar_draw_focus_with_txywh)(fl_Menu_Bar Menu_Bar,Fl_Boxtype t, int x,int y,int w,int h){
+ (static_cast<Fl_DerivedMenu_Bar*>(Menu_Bar))->draw_focus(t,x,y,w,h);
+}
+FL_EXPORT_C(void, Fl_Menu_Bar_draw_label)(fl_Menu_Bar Menu_Bar){
+ (static_cast<Fl_DerivedMenu_Bar*>(Menu_Bar))->draw_label();
+}
   FL_EXPORT_C(int,Fl_Menu_Bar_x)(fl_Menu_Bar menu_bar){
     return (static_cast<Fl_DerivedMenu_Bar*>(menu_bar))->x();
   }
@@ -369,7 +391,7 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Menu_Bar_damage_inside_widget)(fl_Menu_Bar menu_bar,uchar c,int x,int y,int w,int h){
     (static_cast<Fl_DerivedMenu_Bar*>(menu_bar))->damage(c,x,y,w,h);
   }
-  FL_EXPORT_C(void,Fl_Menu_Bar_draw_label)(fl_Menu_Bar menu_bar,int x,int y,int w,int h,Fl_Align alignment){
+  FL_EXPORT_C(void,Fl_Menu_Bar_draw_label_with_xywh_alignment)(fl_Menu_Bar menu_bar,int x,int y,int w,int h,Fl_Align alignment){
     (static_cast<Fl_DerivedMenu_Bar*>(menu_bar))->draw_label(x,y,w,h,alignment);
   }
   FL_EXPORT_C(void,Fl_Menu_Bar_measure_label)(fl_Menu_Bar menu_bar,int* ww,int* hh){

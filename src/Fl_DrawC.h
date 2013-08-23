@@ -133,6 +133,7 @@ EXPORT {
   FL_EXPORT_C(void         , flc_draw_image_buf_with_l)(const uchar* buf, int X,int Y,int W,int H,int L);
   FL_EXPORT_C(void         , flc_draw_image_buf)(const uchar* buf, int X,int Y,int W,int H);
   FL_EXPORT_C(void         , flc_draw_image_mono_buf_with_d_l)(const uchar* buf, int X,int Y,int W,int H, int D, int L);
+  FL_EXPORT_C(void         , flc_draw_box)(Fl_Boxtype boxtype, int x, int y, int w, int h, Fl_Color color);
   FL_EXPORT_C(void         , flc_draw_image_mono_buf_with_d)(const uchar* buf, int X,int Y,int W,int H, int D);
   FL_EXPORT_C(void         , flc_draw_image_mono_buf_with_l)(const uchar* buf, int X,int Y,int W,int H, int L);
   FL_EXPORT_C(void         , flc_draw_image_mono_buf)(const uchar* buf, int X,int Y,int W,int H);
