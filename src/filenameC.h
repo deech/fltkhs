@@ -20,6 +20,15 @@ EXPORT {
   FL_EXPORT_C(int, flc_open_uri_with_msg)(const char *uri, char *msg);
   FL_EXPORT_C(int, flc_open_uri)(const char *uri);
   FL_EXPORT_C(void, flc_decode_uri)(char *uri);
+  FL_EXPORT_C(const char*	,flc_filename_name)(const char*  filename);
+  FL_EXPORT_C(const char*	,flc_filename_ext)(const char* buf);
+  FL_EXPORT_C(char*	,flc_filename_setext)(char* to, int tolen, const char* ext);
+  FL_EXPORT_C(int		,flc_filename_expand)(char* to, int tolen, const char* from);
+  FL_EXPORT_C(int		,flc_filename_absolute)(char* to, int tolen, const char* from);
+  FL_EXPORT_C(int		,flc_filename_relative)(char* to, int tolen, const char* from);
+  FL_EXPORT_C(int		,flc_filename_match)(const char* name, const char* pattern);
+  FL_EXPORT_C(int		,flc_filename_isdir)(const char* name);
+  FL_EXPORT_C(int		,flc_filename_relative_with_cwd)(char* to, int tolen, const char* from, const char* cwd);
 #ifdef __cplusplus
 }
 #endif

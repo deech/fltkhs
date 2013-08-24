@@ -8,6 +8,7 @@ CPPFILES= \
 	glC.cpp \
 	glutC.cpp \
 	DerivedText_Editor.cpp \
+	DerivedShared_Image.cpp \
 	filenameC.cpp \
 	Fl_AskC.cpp \
 	Fl_BitmapC.cpp \
@@ -24,12 +25,16 @@ CPPFILES= \
 	Fl_DrawC.cpp \
 	Fl_DeviceC.cpp \
 	Fl_EnumerationsC.cpp \
+	Fl_File_BrowserC.cpp \
+	Fl_File_IconC.cpp \
 	Fl_File_InputC.cpp \
+	Fl_File_ChooserC.cpp \
 	Fl_Float_InputC.cpp \
 	Fl_Gl_WindowC.cpp \
 	Fl_GroupC.cpp \
 	Fl_Hold_BrowserC.cpp \
 	Fl_Hor_Value_SliderC.cpp \
+	Fl_Hor_SliderC.cpp \
 	Fl_ImageC.cpp \
 	Fl_Input_C.cpp \
 	Fl_InputC.cpp \
@@ -46,6 +51,7 @@ CPPFILES= \
 	Fl_Overlay_WindowC.cpp \
 	Fl_Paged_DeviceC.cpp \
 	Fl_PixmapC.cpp \
+	Fl_PNM_ImageC.cpp \
 	Fl_PreferencesC.cpp \
 	Fl_PrinterC.cpp \
 	Fl_ProgressC.cpp \
@@ -58,6 +64,7 @@ CPPFILES= \
 	Fl_Round_ClockC.cpp \
 	Fl_Secret_InputC.cpp \
 	Fl_Select_BrowserC.cpp \
+        Fl_Shared_ImageC.cpp \
 	fl_show_colormapC.cpp \
 	Fl_Single_WindowC.cpp \
 	Fl_SliderC.cpp \

@@ -31,6 +31,9 @@ C_to_Fl_Callback::C_to_Fl_Callback(fl_Callback* callback, void* user_data){
   this->callback = callback;
   this->user_data = user_data;
 }
+void C_to_Fl_Callback::set_callback(Fl_File_Chooser* c){
+  c->callback(intercept, this);
+}
 void C_to_Fl_Callback::set_callback(Fl_Menu_Item* item){
   item->callback(intercept,this);
 }
@@ -79,6 +82,9 @@ int C_to_Fl_Callback::runCallback(int key, DerivedText_Editor* editor){
     result = (*cpp_key_func)(key, editor);
   }
   return result;
+}
+void C_to_Fl_Callback::runCallback(Fl_File_Chooser* c){
+  (*callback)((fl_File_Chooser) c, user_data);
 }
 int C_to_Fl_Callback::intercept(int key, fl_Text_Editor editor){
   DerivedText_Editor* e = (static_cast<DerivedText_Editor*>(editor));

@@ -1,5 +1,5 @@
-#ifndef __FL_DOUBLE_WINDOW_C__
-#define __FL_DOUBLE_WINDOW_C__
+#ifndef __FL_SINGLE_WINDOW_C__
+#define __FL_SINGLE_WINDOW_C__
 #ifdef __cplusplus
 // always include the FL/*.H headers before local headers
 // Fl_Widget is included transitively and needed for
@@ -95,6 +95,12 @@ EXPORT {
   FL_EXPORT_C(fl_Window,    Fl_Single_Window_top_window)(fl_Single_Window double_window);
   FL_EXPORT_C(fl_Window ,   Fl_Single_Window_top_window_offset)(fl_Single_Window double_window, int* xoff, int* yoff);
   /* Inherited from Fl_Group */
+  FL_EXPORT_C(void, Fl_Single_Window_draw)(fl_Single_Window Single_Window);
+  FL_EXPORT_C(void, Fl_Single_Window_draw_child)(fl_Single_Window Single_Window,fl_Widget widget);
+  FL_EXPORT_C(void, Fl_Single_Window_draw_children)(fl_Single_Window Single_Window);
+  FL_EXPORT_C(void, Fl_Single_Window_draw_outside_label)(fl_Single_Window Single_Window,fl_Widget widget);
+  FL_EXPORT_C(void, Fl_Single_Window_update_child)(fl_Single_Window Single_Window,fl_Widget widget);
+  FL_EXPORT_C(int*, Fl_Single_Window_sizes)(fl_Single_Window Single_Window);
   FL_EXPORT_C(void,         Fl_Single_Window_begin)(fl_Single_Window win);
   FL_EXPORT_C(void,         Fl_Single_Window_end)(fl_Single_Window win);
   FL_EXPORT_C(int,          Fl_Single_Window_find)(fl_Single_Window win, fl_Widget w);
@@ -127,8 +133,16 @@ EXPORT {
   FL_EXPORT_C(fl_Single_Window,    Fl_Single_Window_New)(int w, int h);
   FL_EXPORT_C(fl_Single_Window,    Fl_Single_Window_NewXY_WithLabel)(int x, int y, int w, int h, const char* title);
   FL_EXPORT_C(fl_Single_Window,    Fl_Single_Window_NewXY)(int x, int y, int w, int h);
+  FL_EXPORT_C(fl_Single_Window, Fl_OverriddenSingle_Window_New_WithLabel)(int w, int h, const char* title, fl_Single_Window_Virtual_Funcs* funcs); 
+  FL_EXPORT_C(fl_Single_Window, Fl_OverriddenSingle_Window_New)(int w, int h,fl_Single_Window_Virtual_Funcs* funcs); 
+  FL_EXPORT_C(fl_Single_Window, Fl_OverriddenSingle_Window_NewXY_WithLabel)(int x, int y, int w, int h, const char* title,fl_Single_Window_Virtual_Funcs* funcs); 
+  FL_EXPORT_C(fl_Single_Window, Fl_OverriddenSingle_Window_NewXY)(int x, int y, int w, int h,fl_Single_Window_Virtual_Funcs* funcs); 
   FL_EXPORT_C(void,         Fl_Single_Window_iconize)(fl_Single_Window win);
 
+  FL_EXPORT_C(fl_Single_Window, Fl_OverriddenSingle_Window_New_WithLabel)(int w, int h, const char* title, fl_Single_Window_Virtual_Funcs* funcs); 
+  FL_EXPORT_C(fl_Single_Window, Fl_OverriddenSingle_Window_New)(int w, int h,fl_Single_Window_Virtual_Funcs* funcs); 
+  FL_EXPORT_C(fl_Single_Window, Fl_OverriddenSingle_Window_NewXY_WithLabel)(int x, int y, int w, int h, const char* title,fl_Single_Window_Virtual_Funcs* funcs); 
+  FL_EXPORT_C(fl_Single_Window, Fl_OverriddenSingle_Window_NewXY)(int x, int y, int w, int h,fl_Single_Window_Virtual_Funcs* funcs); 
   FL_EXPORT_C(int ,Fl_Single_Window_handle)(fl_Single_Window win, int event);
   FL_EXPORT_C(void ,Fl_Single_Window_set_border)(fl_Single_Window win, int b);
   FL_EXPORT_C(void ,Fl_Single_Window_clear_border)(fl_Single_Window win);
@@ -167,7 +181,7 @@ EXPORT {
   FL_EXPORT_C(int, Fl_Single_Window_x_root)(fl_Single_Window win);
   FL_EXPORT_C(int, Fl_Single_Window_y_root)(fl_Single_Window win);
   FL_EXPORT_C(fl_Single_Window, Fl_Single_Window_current)();
-  FL_EXPORT_C(void, Fl_Single_Window_make_current)(fl_Single_Window win);
+  // FL_EXPORT_C(int, Fl_Single_Window_make_current)(fl_Single_Window win);
   FL_EXPORT_C(void, Fl_Single_Window_set_cursor_with_bg)(fl_Single_Window win, Fl_Cursor cursor, Fl_Color bg);
   FL_EXPORT_C(void, Fl_Single_Window_set_cursor_with_fg)(fl_Single_Window win,Fl_Cursor cursor, Fl_Color fg);
   FL_EXPORT_C(void, Fl_Single_Window_set_cursor_with_fg_bg)(fl_Single_Window win,Fl_Cursor cursor, Fl_Color fg , Fl_Color bg );/* =FL_BLACK *//*=FL_WHITE*/
@@ -181,6 +195,44 @@ EXPORT {
   FL_EXPORT_C(int, Fl_Single_Window_decorated_h)(fl_Single_Window win);
   /* Fl_Single_Window specific */
   // flush resize destructor, constructor
+#ifdef __cplusplus
+  class Fl_DerivedSingle_Window : public Fl_Single_Window {
+    fl_Single_Window_Virtual_Funcs* overriddenFuncs;
+    void* other_data;
+  public:
+    void* get_other_data();
+    void set_other_data(void*);
+    void destroy_data();
+    void draw_box();
+    void draw_box(Fl_Boxtype t, Fl_Color c);
+    void draw_box(Fl_Boxtype t, int x,int y,int w,int h, Fl_Color c);
+    void draw_backdrop();
+    void draw_focus();
+    void draw_focus(Fl_Boxtype t, int x,int y,int w,int h);
+    void draw_label();
+    void draw_label(int x,int y,int w,int h,Fl_Align alignment);
+    virtual void draw();
+    virtual int handle(int event);
+    virtual void resize(int x, int y, int w, int h);
+    virtual void show();
+    virtual void show(int,char**);
+    virtual void hide();
+    virtual void flush();
+    virtual Fl_Window* as_window();
+    virtual Fl_Gl_Window* as_gl_window();
+    void draw_child(Fl_Widget* widget);
+    void draw_children();
+    void draw_outside_label(Fl_Widget* widget);
+    void update_child(Fl_Widget* widget);
+    int* sizes();
+    Fl_DerivedSingle_Window(int X, int Y, int W, int H, const char *l, fl_Single_Window_Virtual_Funcs* funcs);
+    Fl_DerivedSingle_Window(int X, int Y, int W, int H, fl_Single_Window_Virtual_Funcs* funcs);
+    Fl_DerivedSingle_Window(int W, int H, const char *l, fl_Single_Window_Virtual_Funcs* funcs);
+    Fl_DerivedSingle_Window(int W, int H, fl_Single_Window_Virtual_Funcs* funcs);
+    ~Fl_DerivedSingle_Window();
+  };
+#endif
+  FL_EXPORT_C(fl_Single_Window_Virtual_Funcs*, Fl_Single_Window_default_virtual_funcs)();
   FL_EXPORT_C(void,         Fl_Single_Window_show)(fl_Single_Window win);
   FL_EXPORT_C(void,         Fl_Single_Window_show_with_args)(fl_Single_Window win, int argc, char** argv);
   FL_EXPORT_C(void,         Fl_Single_Window_destroy)(fl_Single_Window win);
@@ -192,4 +244,4 @@ EXPORT {
 }
 #endif
 
-#endif /* __FL_DOUBLE_WINDOW_C__ */
+#endif /* __FL_SINGLE_WINDOW_C__ */

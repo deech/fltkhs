@@ -56,6 +56,21 @@ void Fl_DerivedWindow::draw_label(){
 void Fl_DerivedWindow::draw_label(int x,int y,int w,int h,Fl_Align alignment){
   Fl_Window::draw_label(x,y,w,h,alignment);
 }
+void Fl_DerivedWindow::draw_child(Fl_Widget* widget){
+  Fl_Window::draw_child(*widget);
+}
+void Fl_DerivedWindow::draw_children(){
+  Fl_Window::draw_children();
+}
+void Fl_DerivedWindow::draw_outside_label(Fl_Widget* widget){
+  Fl_Window::draw_outside_label(*widget);
+}
+void Fl_DerivedWindow::update_child(Fl_Widget* widget){
+  Fl_Window::update_child(*widget);
+}
+int* Fl_DerivedWindow:: sizes(){
+  return Fl_Window::sizes();
+}
 int Fl_DerivedWindow::handle(int event){
   int i;
   if (this->overriddenFuncs->handle != NULL) {
@@ -426,7 +441,21 @@ FL_EXPORT_C(void, Fl_Window_draw_label)(fl_Window Window){
   FL_EXPORT_C(fl_Window ,   Fl_Window_top_window_offset)(fl_Window window, int* xoff, int* yoff){
     return (fl_Window) (static_cast<Fl_DerivedWindow*>(window))->top_window_offset(*xoff,*yoff);
   }
-
+  FL_EXPORT_C(void, Fl_Window_draw_child)(fl_Window Window,fl_Widget widget){
+    (static_cast<Fl_DerivedWindow*>(Window))->draw_child(static_cast<Fl_Widget*>(widget));
+  }
+  FL_EXPORT_C(void, Fl_Window_draw_children)(fl_Window Window){
+    (static_cast<Fl_DerivedWindow*>(Window))->draw_children();
+  }
+  FL_EXPORT_C(void, Fl_Window_draw_outside_label)(fl_Window Window,fl_Widget widget){
+    (static_cast<Fl_DerivedWindow*>(Window))->draw_outside_label(static_cast<Fl_Widget*>(widget));
+  }
+  FL_EXPORT_C(void, Fl_Window_update_child)(fl_Window Window,fl_Widget widget){
+    (static_cast<Fl_DerivedWindow*>(Window))->update_child(static_cast<Fl_Widget*>(widget));
+  }
+  FL_EXPORT_C(int*, Fl_Window_sizes)(fl_Window Window){
+    return (static_cast<Fl_DerivedWindow*>(Window))->sizes();
+  }
   FL_EXPORT_C(void,Fl_Window_begin)(fl_Window win){
     (static_cast<Fl_DerivedWindow*>(win))->begin();
   }

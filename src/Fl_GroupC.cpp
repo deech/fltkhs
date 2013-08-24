@@ -261,7 +261,6 @@ EXPORT {
   FL_EXPORT_C(fl_Gl_Window,Fl_Group_as_gl_window)(fl_Group win){
     return (fl_Gl_Window) (static_cast<Fl_Group*>(win))->as_gl_window();
   }
-
   FL_EXPORT_C(void,Fl_Group_begin)(fl_Group win){
     (static_cast<Fl_Group*>(win))->begin();
   }

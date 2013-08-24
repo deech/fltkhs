@@ -263,7 +263,6 @@ EXPORT {
   FL_EXPORT_C(fl_Gl_Window,Fl_Overlay_Window_as_gl_window)(fl_Overlay_Window win){
     return (fl_Gl_Window) (static_cast<Fl_Overlay_Window*>(win))->as_gl_window();
   }
-
   FL_EXPORT_C(void,Fl_Overlay_Window_begin)(fl_Overlay_Window win){
     (static_cast<Fl_Overlay_Window*>(win))->begin();
   }

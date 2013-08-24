@@ -101,6 +101,12 @@ FL_EXPORT_C(void, Fl_Window_draw_label)(fl_Window Window);
   FL_EXPORT_C(fl_Gl_Window, Fl_Window_as_gl_window)(fl_Window win);
 
   /* Inherited from Fl_Group */
+  FL_EXPORT_C(void, Fl_Window_draw)(fl_Window Window);
+  FL_EXPORT_C(void, Fl_Window_draw_child)(fl_Window Window,fl_Widget widget);
+  FL_EXPORT_C(void, Fl_Window_draw_children)(fl_Window Window);
+  FL_EXPORT_C(void, Fl_Window_draw_outside_label)(fl_Window Window,fl_Widget widget);
+  FL_EXPORT_C(void, Fl_Window_update_child)(fl_Window Window,fl_Widget widget);
+  FL_EXPORT_C(int*, Fl_Window_sizes)(fl_Window Window);
   FL_EXPORT_C(void,         Fl_Window_begin)(fl_Window win);
   FL_EXPORT_C(void,         Fl_Window_end)(fl_Window win);
   FL_EXPORT_C(int,          Fl_Window_find)(fl_Window win, fl_Widget w);
@@ -149,6 +155,11 @@ FL_EXPORT_C(void, Fl_Window_draw_label)(fl_Window Window);
     virtual void flush();
     virtual Fl_Window* as_window();
     virtual Fl_Gl_Window* as_gl_window();
+    void draw_child(Fl_Widget* widget);
+    void draw_children();
+    void draw_outside_label(Fl_Widget* widget);
+    void update_child(Fl_Widget* widget);
+    int* sizes();
     Fl_DerivedWindow(int X, int Y, int W, int H, const char *l, fl_Window_Virtual_Funcs* funcs);
     Fl_DerivedWindow(int X, int Y, int W, int H, fl_Window_Virtual_Funcs* funcs);
     Fl_DerivedWindow(int W, int H, const char *l, fl_Window_Virtual_Funcs* funcs);

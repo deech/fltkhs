@@ -21,6 +21,8 @@ EXAMPLES= \
 	cursor.c \
 	curve.c \
 	device.c \
+	doublebuffer.c \
+	file_chooser.c \
 	howto-add_fd-and-popen.c \
 	howto-browser-with-icons.c \
 	howto-drag-and-drop.c \

@@ -95,6 +95,11 @@ EXPORT {
   FL_EXPORT_C(fl_Window,    Fl_Double_Window_top_window)(fl_Double_Window double_window);
   FL_EXPORT_C(fl_Window ,   Fl_Double_Window_top_window_offset)(fl_Double_Window double_window, int* xoff, int* yoff);
   /* Inherited from Fl_Group */
+  FL_EXPORT_C(void, Fl_Double_Window_draw_child)(fl_Double_Window Double_Window,fl_Widget widget);
+  FL_EXPORT_C(void, Fl_Double_Window_draw_children)(fl_Double_Window Double_Window);
+  FL_EXPORT_C(void, Fl_Double_Window_draw_outside_label)(fl_Double_Window Double_Window,fl_Widget widget);
+  FL_EXPORT_C(void, Fl_Double_Window_update_child)(fl_Double_Window Double_Window,fl_Widget widget);
+  FL_EXPORT_C(int*, Fl_Double_Window_sizes)(fl_Double_Window Double_Window);
   FL_EXPORT_C(void,         Fl_Double_Window_begin)(fl_Double_Window win);
   FL_EXPORT_C(void,         Fl_Double_Window_end)(fl_Double_Window win);
   FL_EXPORT_C(int,          Fl_Double_Window_find)(fl_Double_Window win, fl_Widget w);
@@ -129,6 +134,10 @@ EXPORT {
   FL_EXPORT_C(fl_Double_Window,    Fl_Double_Window_NewXY)(int x, int y, int w, int h);
   FL_EXPORT_C(void,         Fl_Double_Window_iconize)(fl_Double_Window win);
 
+  FL_EXPORT_C(fl_Double_Window, Fl_OverriddenDouble_Window_New_WithLabel)(int w, int h, const char* title, fl_Double_Window_Virtual_Funcs* funcs); 
+  FL_EXPORT_C(fl_Double_Window, Fl_OverriddenDouble_Window_New)(int w, int h,fl_Double_Window_Virtual_Funcs* funcs); 
+  FL_EXPORT_C(fl_Double_Window, Fl_OverriddenDouble_Window_NewXY_WithLabel)(int x, int y, int w, int h, const char* title,fl_Double_Window_Virtual_Funcs* funcs); 
+  FL_EXPORT_C(fl_Double_Window, Fl_OverriddenDouble_Window_NewXY)(int x, int y, int w, int h,fl_Double_Window_Virtual_Funcs* funcs); 
   FL_EXPORT_C(int ,Fl_Double_Window_handle)(fl_Double_Window win, int event);
   FL_EXPORT_C(void ,Fl_Double_Window_set_border)(fl_Double_Window win, int b);
   FL_EXPORT_C(void ,Fl_Double_Window_clear_border)(fl_Double_Window win);
@@ -181,6 +190,44 @@ EXPORT {
   FL_EXPORT_C(int, Fl_Double_Window_decorated_h)(fl_Double_Window win);
   /* Fl_Double_Window specific */
   // flush resize destructor, constructor
+#ifdef __cplusplus
+  class Fl_DerivedDouble_Window : public Fl_Double_Window {
+    fl_Double_Window_Virtual_Funcs* overriddenFuncs;
+    void* other_data;
+  public:
+    void* get_other_data();
+    void set_other_data(void*);
+    void destroy_data();
+    void draw_box();
+    void draw_box(Fl_Boxtype t, Fl_Color c);
+    void draw_box(Fl_Boxtype t, int x,int y,int w,int h, Fl_Color c);
+    void draw_backdrop();
+    void draw_focus();
+    void draw_focus(Fl_Boxtype t, int x,int y,int w,int h);
+    void draw_label();
+    void draw_label(int x,int y,int w,int h,Fl_Align alignment);
+    virtual void draw();
+    virtual int handle(int event);
+    virtual void resize(int x, int y, int w, int h);
+    virtual void show();
+    virtual void show(int,char**);
+    virtual void hide();
+    virtual void flush();
+    virtual Fl_Window* as_window();
+    virtual Fl_Gl_Window* as_gl_window();
+    void draw_child(Fl_Widget* widget);
+    void draw_children();
+    void draw_outside_label(Fl_Widget* widget);
+    void update_child(Fl_Widget* widget);
+    int* sizes();
+    Fl_DerivedDouble_Window(int X, int Y, int W, int H, const char *l, fl_Double_Window_Virtual_Funcs* funcs);
+    Fl_DerivedDouble_Window(int X, int Y, int W, int H, fl_Double_Window_Virtual_Funcs* funcs);
+    Fl_DerivedDouble_Window(int W, int H, const char *l, fl_Double_Window_Virtual_Funcs* funcs);
+    Fl_DerivedDouble_Window(int W, int H, fl_Double_Window_Virtual_Funcs* funcs);
+    ~Fl_DerivedDouble_Window();
+  };
+#endif
+  FL_EXPORT_C(fl_Double_Window_Virtual_Funcs*, Fl_Double_Window_default_virtual_funcs)();
   FL_EXPORT_C(void,         Fl_Double_Window_show)(fl_Double_Window win);
   FL_EXPORT_C(void,         Fl_Double_Window_show_with_args)(fl_Double_Window win, int argc, char** argv);
   FL_EXPORT_C(void,         Fl_Double_Window_destroy)(fl_Double_Window win);

@@ -398,10 +398,10 @@ EXPORT {
   FL_EXPORT_C(int,Fl_Choice_value)(fl_Choice choice){
     return (static_cast<Fl_Choice*>(choice))->value();
   }
-  FL_EXPORT_C(int,Fl_Choice_value_with_item)(fl_Choice choice,fl_Menu_Item item){
+  FL_EXPORT_C(int,Fl_Choice_set_value_with_item)(fl_Choice choice,fl_Menu_Item item){
     return (static_cast<Fl_Choice*>(choice))->value(static_cast<Fl_Menu_Item*>(item));
   }
-  FL_EXPORT_C(int,Fl_Choice_value_with_index)(fl_Choice choice,int index){
+  FL_EXPORT_C(int,Fl_Choice_set_value_with_index)(fl_Choice choice,int index){
     return (static_cast<Fl_Choice*>(choice))->value(index);
   }
   FL_EXPORT_C(char*,Fl_Choice_text)(fl_Choice choice){

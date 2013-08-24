@@ -174,7 +174,7 @@ int main (int argc, char** argv){
   Fl_Choice_add_with_name(btype,(char*)"Hold");
   Fl_Choice_add_with_name(btype,(char*)"Multi");
   Fl_Choice_set_callback(btype,btype_cb);
-  Fl_Choice_value_with_index(btype,3);
+  Fl_Choice_set_value_with_index(btype,3);
   Fl_Choice_set_tooltip(btype,"Changes the browser type()");
 
   Fl_Double_Window_set_resizable(window,browser);

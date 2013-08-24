@@ -151,8 +151,8 @@ EXPORT {
   FL_EXPORT_C(int , Fl_Choice_mode)(fl_Choice choice, int i);  
   FL_EXPORT_C(fl_Menu_Item, Fl_Choice_mvalue)(fl_Choice choice);
   FL_EXPORT_C(int, Fl_Choice_value)(fl_Choice choice);
-  FL_EXPORT_C(int, Fl_Choice_value_with_item)(fl_Choice choice,  fl_Menu_Item item);
-  FL_EXPORT_C(int, Fl_Choice_value_with_index)(fl_Choice choice, int index); 
+  FL_EXPORT_C(int, Fl_Choice_set_value_with_item)(fl_Choice choice,  fl_Menu_Item item);
+  FL_EXPORT_C(int, Fl_Choice_set_value_with_index)(fl_Choice choice, int index); 
   FL_EXPORT_C(char*, Fl_Choice_text)(fl_Choice choice);
   FL_EXPORT_C(char*, Fl_Choice_text_with_index)(fl_Choice choice, int i);
   FL_EXPORT_C(Fl_Font, Fl_Choice_textfont)(fl_Choice choice);

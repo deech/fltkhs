@@ -44,8 +44,35 @@ EXPORT {
 #define FL_SORT_ASCENDING	0	/**< sort browser items in ascending alphabetic order. */
 #define FL_SORT_DESCENDING	1	/**< sort in descending order */
 #ifndef INTERNAL_LINKAGE
+  enum { FL_FILE_BROWSER_FILES, FL_FILE_BROWSER_DIRECTORIES };
+  enum
+  {
+    FL_FILE_ICON_ANY,
+    FL_FILE_ICON_PLAIN,
+    FL_FILE_ICON_FIFO,
+    FL_FILE_ICON_DEVICE,
+    FL_FILE_ICON_LINK,
+    FL_FILE_ICON_DIRECTORY
+  };
+  enum
+  {
+    FL_FILE_ICON_END,
+    FL_FILE_ICON_COLOR,
+    FL_FILE_ICON_LINE,
+    FL_FILE_ICON_CLOSEDLINE,
+    FL_FILE_ICON_POLYGON,
+    FL_FILE_ICON_OUTLINEPOLYGON,
+    FL_FILE_ICON_VERTEX
+  };
+  enum {
+    FL_FILE_CHOOSER_SINGLE = 0,
+    FL_FILE_CHOOSER_MULTI = 1,
+    FL_FILE_CHOOSER_CREATE = 2,
+    FL_FILE_CHOOSER_DIRECTORY = 4
+  };
+
 #define FL_RESERVED_TYPE 100
-#define FL_NORMAL_BUTTON	0 
+#define FL_NORMAL_BUTTON	0
 #define FL_TOGGLE_BUTTON	1
 #define FL_RADIO_BUTTON		(FL_RESERVED_TYPE+2)
 #define FL_HIDDEN_BUTTON	3
@@ -85,7 +112,7 @@ EXPORT {
     DIM_CURSOR,
     BLOCK_CURSOR,
     HEAVY_CURSOR,
-    SIMPLE_CURSOR    
+    SIMPLE_CURSOR
   };
   enum {
     CURSOR_POS,
@@ -102,14 +129,14 @@ EXPORT {
     WRAP_NONE,
     WRAP_AT_COLUMN,
     WRAP_AT_PIXEL,
-    WRAP_AT_BOUNDS  
+    WRAP_AT_BOUNDS
   };
   enum Page_Format {
-    A0 = 0, 
+    A0 = 0,
     A1,
     A2,
     A3,
-    A4, 
+    A4,
     A5,
     A6,
     A7,
@@ -132,21 +159,21 @@ EXPORT {
     FOLIO,
     LEDGER,
     LEGAL,
-    LETTER, 
+    LETTER,
     TABLOID,
     ENVELOPE,
     MEDIA = 0x1000
   };
   enum Page_Layout {
-    PORTRAIT = 0,  
-    LANDSCAPE = 0x100,   
-    REVERSED = 0x200,  
-    ORIENTATION = 0x300 
+    PORTRAIT = 0,
+    LANDSCAPE = 0x100,
+    REVERSED = 0x200,
+    ORIENTATION = 0x300
   };
   typedef struct page_format {
-    int width; 
-    int height; 
-    const char *name; 
+    int width;
+    int height;
+    const char *name;
   } page_format;
 #include <config.h>
 #if HAVE_LIBGL
@@ -315,7 +342,7 @@ EXPORT {
   Fl_Glut_StrokeFont glutStrokeMonoRoman;
 #  define GLUT_STROKE_ROMAN		(&glutStrokeRoman)
 #  define GLUT_STROKE_MONO_ROMAN	(&glutStrokeMonoRoman)
-#endif /* HAVE_GL */ 
+#endif /* HAVE_GL */
 #endif /* INTERNAL_LINKAGE */
   typedef void* ID;
   typedef void* fl_Window;
@@ -453,6 +480,8 @@ EXPORT {
   typedef void (fl_Callback )(fl_Widget, void*);
   typedef void (fl_Text_Buffer_Callback)(fl_Text_Buffer);
   typedef void (*Unfinished_Style_Cb)(int, void *);
+  typedef void (fl_File_Chooser_Callback)(fl_File_Chooser,void*);
+  typedef fl_Image (fl_Shared_Image_Handler)(const char *name, uchar *header,int headerlen);
   typedef struct Style_Table_Entry {
     Fl_Color    color;
     Fl_Font     font;
@@ -611,6 +640,8 @@ EXPORT {
   typedef fl_Widget_Virtual_Funcs fl_Menu_Bar_Virtual_Funcs;
   typedef fl_Widget_Virtual_Funcs fl_Box_Virtual_Funcs;
   typedef fl_Window_Virtual_Funcs fl_Gl_Window_Virtual_Funcs;
+  typedef fl_Window_Virtual_Funcs fl_Double_Window_Virtual_Funcs;
+  typedef fl_Window_Virtual_Funcs fl_Single_Window_Virtual_Funcs;
 #ifdef __cplusplus
 }
 #endif
