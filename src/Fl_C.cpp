@@ -439,14 +439,20 @@ EXPORT {
   FL_EXPORT_C(const char*,Fl_get_font_name_with_attributes)(Fl_Font font,int* attributes){
     return Fl::get_font_name(font,attributes);
   }
-  FL_EXPORT_C(int,Fl_get_font_sizes)(Fl_Font font,int** sizep){
-    return Fl::get_font_sizes(font,*sizep);
+  FL_EXPORT_C(int,Fl_get_font_sizes)(Fl_Font font,int* sizep){
+    return Fl::get_font_sizes(font,sizep);
   }
   FL_EXPORT_C(void,Fl_set_font_by_string)(Fl_Font font,const char* text){
     Fl::set_font(font,text);
   }
   FL_EXPORT_C(void,Fl_set_font_by_font)(Fl_Font to,Fl_Font from){
     Fl::set_font(to,from);
+  }
+  FL_EXPORT_C(Fl_Font,Fl_set_fonts)(){
+    return Fl::set_fonts();
+  }
+  FL_EXPORT_C(Fl_Font,Fl_set_fonts_with_string)(const char* string){
+    return Fl::set_fonts(string);
   }
   FL_EXPORT_C(void,Fl_set_labeltype)(Fl_Labeltype labeltype,fl_Label_Draw_F* label_draw_f,fl_Label_Measure_F* label_measure_f){
     C_to_Fl_Label_Draw_F::cb = label_draw_f;

@@ -23,6 +23,7 @@ EXAMPLES= \
 	device.c \
 	doublebuffer.c \
 	file_chooser.c \
+	fonts.c \
 	howto-add_fd-and-popen.c \
 	howto-browser-with-icons.c \
 	howto-drag-and-drop.c \

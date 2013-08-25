@@ -195,9 +195,11 @@ EXPORT {
   FL_EXPORT_C(const char*       ,Fl_get_font)(Fl_Font font);
   FL_EXPORT_C(const char*       ,Fl_get_font_name)(Fl_Font font);
   FL_EXPORT_C(const char*       ,Fl_get_font_name_with_attributes)(Fl_Font font,int* attributes);
-  FL_EXPORT_C(int               ,Fl_get_font_sizes)(Fl_Font font,int** sizep);
+  FL_EXPORT_C(int               ,Fl_get_font_sizes)(Fl_Font font,int* sizep);
   FL_EXPORT_C(void              ,Fl_set_font_by_string)(Fl_Font font,const char*);
   FL_EXPORT_C(void              ,Fl_set_font_by_font)(Fl_Font to,Fl_Font from);
+  FL_EXPORT_C(Fl_Font           ,Fl_set_fonts)();
+  FL_EXPORT_C(Fl_Font           ,Fl_set_fonts_with_string)(const char* string);
   FL_EXPORT_C(void              ,Fl_set_labeltype)(Fl_Labeltype labeltype,fl_Label_Draw_F* label_draw_f,fl_Label_Measure_F* label_measure_f);
   /* FL_EXPORT_C(void              ,Fl_set_labeltype_by_labeltype)(Fl_Labeltype to,Fl_Labeltype from); */
   FL_EXPORT_C(fl_Box_Draw_F*    ,Fl_get_boxtype)(Fl_Boxtype boxtype);

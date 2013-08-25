@@ -379,13 +379,13 @@ EXPORT {
   FL_EXPORT_C(int,Fl_Select_Browser_value)(fl_Select_Browser select_browser){
     return (static_cast<Fl_Select_Browser*>(select_browser))->value();
   }
-  FL_EXPORT_C(void,Fl_Select_Browser_value_with_line)(fl_Select_Browser select_browser,int line){
+  FL_EXPORT_C(void,Fl_Select_Browser_set_value)(fl_Select_Browser select_browser,int line){
     (static_cast<Fl_Select_Browser*>(select_browser))->value(line);
   }
-  FL_EXPORT_C(const char*,Fl_Select_Browser_text_with_line)(fl_Select_Browser select_browser,int line){
+  FL_EXPORT_C(const char*,Fl_Select_Browser_text)(fl_Select_Browser select_browser,int line){
     return (static_cast<Fl_Select_Browser*>(select_browser))->text(line);
   }
-  FL_EXPORT_C(void,Fl_Select_Browser_text)(fl_Select_Browser select_browser,int line,const char* newtext){
+  FL_EXPORT_C(void,Fl_Select_Browser_set_text)(fl_Select_Browser select_browser,int line,const char* newtext){
     (static_cast<Fl_Select_Browser*>(select_browser))->text(line,newtext);
   }
   FL_EXPORT_C(void*,Fl_Select_Browser_data)(fl_Select_Browser select_browser,int line){

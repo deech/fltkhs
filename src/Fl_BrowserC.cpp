@@ -561,13 +561,13 @@ FL_EXPORT_C(void, Fl_Browser_draw_label)(fl_Browser Browser){
   FL_EXPORT_C(int,Fl_Browser_value)(fl_Browser browser){
     return (static_cast<Fl_DerivedBrowser*>(browser))->value();
   }
-  FL_EXPORT_C(void,Fl_Browser_value_with_line)(fl_Browser browser,int line){
+  FL_EXPORT_C(void,Fl_Browser_set_value)(fl_Browser browser,int line){
     (static_cast<Fl_DerivedBrowser*>(browser))->value(line);
   }
-  FL_EXPORT_C(const char*,Fl_Browser_text_with_line)(fl_Browser browser,int line){
+  FL_EXPORT_C(const char*,Fl_Browser_text)(fl_Browser browser,int line){
     return (static_cast<Fl_DerivedBrowser*>(browser))->text(line);
   }
-  FL_EXPORT_C(void,Fl_Browser_text)(fl_Browser browser,int line,const char* newtext){
+  FL_EXPORT_C(void,Fl_Browser_set_text)(fl_Browser browser,int line,const char* newtext){
     (static_cast<Fl_DerivedBrowser*>(browser))->text(line,newtext);
   }
   FL_EXPORT_C(void*,Fl_Browser_data)(fl_Browser browser,int line){

@@ -154,9 +154,9 @@ EXPORT {
   FL_EXPORT_C(void, Fl_File_Browser_hide)(fl_File_Browser file_browser);
   FL_EXPORT_C(int, Fl_File_Browser_visible)(fl_File_Browser file_browser, int line);
   FL_EXPORT_C(int, Fl_File_Browser_value)(fl_File_Browser file_browser);
-  FL_EXPORT_C(void, Fl_File_Browser_value_with_line)(fl_File_Browser file_browser, int line);
-  FL_EXPORT_C(const char*, Fl_File_Browser_text_with_line)(fl_File_Browser file_browser, int line);
-  FL_EXPORT_C(void, Fl_File_Browser_text)(fl_File_Browser file_browser, int line, const char* newtext);
+  FL_EXPORT_C(void, Fl_File_Browser_set_value)(fl_File_Browser file_browser, int line);
+  FL_EXPORT_C(const char*, Fl_File_Browser_text)(fl_File_Browser file_browser, int line);
+  FL_EXPORT_C(void, Fl_File_Browser_set_text)(fl_File_Browser file_browser, int line, const char* newtext);
   FL_EXPORT_C(void*, Fl_File_Browser_data)(fl_File_Browser file_browser, int line);
   FL_EXPORT_C(void, Fl_File_Browser_set_data)(fl_File_Browser file_browser, int line, void* d);
   FL_EXPORT_C(char, Fl_File_Browser_format_char)(fl_File_Browser file_browser);

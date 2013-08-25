@@ -136,8 +136,8 @@ FL_EXPORT_C(void, Fl_Widget_draw_label)(fl_Widget Widget);
   FL_EXPORT_C(fl_Widget_Virtual_Funcs*, Fl_Widget_default_virtual_funcs)();
   FL_EXPORT_C(fl_Widget,    Fl_Widget_New)(int X, int Y, int W, int H);
   FL_EXPORT_C(fl_Widget,    Fl_Widget_New_WithLabel)(int X, int Y, int W, int H, const char* label);
-  FL_EXPORT_C(fl_Widget,    Fl_Widget_New_WithOverriddenFuncs)(int X, int Y, int W, int H,fl_Widget_Virtual_Funcs* fs);
-  FL_EXPORT_C(fl_Widget,    Fl_Widget_New_WithLabel_WithOverriddenFuncs)(int X, int Y, int W, int H, const char* label, fl_Widget_Virtual_Funcs* fs);
+  FL_EXPORT_C(fl_Widget,    Fl_OverriddenWidget_New)(int X, int Y, int W, int H,fl_Widget_Virtual_Funcs* fs);
+  FL_EXPORT_C(fl_Widget,    Fl_OverriddenWidget_New_WithLabel)(int X, int Y, int W, int H, const char* label, fl_Widget_Virtual_Funcs* fs);
 #ifdef __cplusplus
 }
 #endif

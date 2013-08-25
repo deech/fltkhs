@@ -104,7 +104,7 @@ EXPORT {
     Fl_DerivedImage* d = new Fl_DerivedImage(W,H,D,fs);
     return (fl_Image)d;
   }
-  FL_EXPORT_C(fl_Image, Fl_Image_New_WithOverriddenFuncs)(int W, int H, int D, fl_Image_Virtual_Funcs* fs){
+  FL_EXPORT_C(fl_Image, Fl_OverriddenImage_New)(int W, int H, int D, fl_Image_Virtual_Funcs* fs){
     Fl_DerivedImage* d = new Fl_DerivedImage(W,H,D,fs);
     return (fl_Image)d;
   }

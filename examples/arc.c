@@ -50,7 +50,7 @@ int main(int argc, char** argv) {
   fs->draw = &draw;
   fl_Double_Window window = (fl_Double_Window)Fl_Double_Window_New(300,500);
   Fl_Double_Window_begin(window);
-  fl_Widget widget = (fl_Widget)Fl_Widget_New_WithOverriddenFuncs(10,10,280,280,fs);
+  fl_Widget widget = (fl_Widget)Fl_OverriddenWidget_New(10,10,280,280,fs);
   d = widget;
   int y = 300;
   int n = 0;

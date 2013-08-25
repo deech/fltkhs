@@ -63,7 +63,7 @@ int main(int argc, char** argv) {
   fl_Widget_Virtual_Funcs* funcs = Fl_Widget_default_virtual_funcs();
   funcs->draw = &draw;
   fl_Double_Window window = (fl_Double_Window)Fl_Double_Window_New(300,555);
-  fl_Widget drawing = (fl_Widget)Fl_Widget_New_WithOverriddenFuncs(10,10,280,280,funcs);
+  fl_Widget drawing = (fl_Widget)Fl_OverriddenWidget_New(10,10,280,280,funcs);
   d = drawing;
   int y = 300;
   int n = 0;

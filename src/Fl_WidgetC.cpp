@@ -441,11 +441,11 @@ FL_EXPORT_C(void, Fl_Widget_draw_label)(fl_Widget Widget){
     Fl_DerivedWidget* w = new Fl_DerivedWidget(X,Y,W,H,label,fs);
     return (fl_Widget)w;
   }
-  FL_EXPORT_C(fl_Widget,    Fl_Widget_New_WithOverriddenFuncs)(int X, int Y, int W, int H,fl_Widget_Virtual_Funcs* fs){
+  FL_EXPORT_C(fl_Widget,    Fl_OverriddenWidget_New)(int X, int Y, int W, int H,fl_Widget_Virtual_Funcs* fs){
     Fl_DerivedWidget* w = new Fl_DerivedWidget(X,Y,W,H,fs);
     return (fl_Widget)w;
   }
-  FL_EXPORT_C(fl_Widget,    Fl_Widget_New_WithLabel_WithOverriddenFuncs)(int X, int Y, int W, int H, const char* label, fl_Widget_Virtual_Funcs* fs){
+  FL_EXPORT_C(fl_Widget,    Fl_OverriddenWidget_New_WithLabel)(int X, int Y, int W, int H, const char* label, fl_Widget_Virtual_Funcs* fs){
     Fl_DerivedWidget* w = new Fl_DerivedWidget(X,Y,W,H,label,fs);
     return (fl_Widget)w;
   }

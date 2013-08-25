@@ -560,13 +560,13 @@ FL_EXPORT_C(void, Fl_Multi_Browser_draw_label)(fl_Multi_Browser Multi_Browser){
   FL_EXPORT_C(int,Fl_Multi_Browser_value)(fl_Multi_Browser multi_browser){
     return (static_cast<Fl_DerivedMulti_Browser*>(multi_browser))->value();
   }
-  FL_EXPORT_C(void,Fl_Multi_Browser_value_with_line)(fl_Multi_Browser multi_browser,int line){
+  FL_EXPORT_C(void,Fl_Multi_Browser_set_value)(fl_Multi_Browser multi_browser,int line){
     (static_cast<Fl_DerivedMulti_Browser*>(multi_browser))->value(line);
   }
-  FL_EXPORT_C(const char*,Fl_Multi_Browser_text_with_line)(fl_Multi_Browser multi_browser,int line){
+  FL_EXPORT_C(const char*,Fl_Multi_Browser_text)(fl_Multi_Browser multi_browser,int line){
     return (static_cast<Fl_DerivedMulti_Browser*>(multi_browser))->text(line);
   }
-  FL_EXPORT_C(void,Fl_Multi_Browser_text)(fl_Multi_Browser multi_browser,int line,const char* newtext){
+  FL_EXPORT_C(void,Fl_Multi_Browser_set_text)(fl_Multi_Browser multi_browser,int line,const char* newtext){
     (static_cast<Fl_DerivedMulti_Browser*>(multi_browser))->text(line,newtext);
   }
   FL_EXPORT_C(void*,Fl_Multi_Browser_data)(fl_Multi_Browser multi_browser,int line){

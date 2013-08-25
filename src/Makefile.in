@@ -76,6 +76,7 @@ CPPFILES= \
 	Fl_Text_DisplayC.cpp \
 	Fl_Text_EditorC.cpp \
 	Fl_Text_SelectionC.cpp \
+	Fl_TileC.cpp \
 	Fl_Toggle_ButtonC.cpp \
 	Fl_TooltipC.cpp \
 	Fl_TreeC.cpp \
