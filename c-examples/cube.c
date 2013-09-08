@@ -6,11 +6,10 @@
 #include <Fl_Radio_Light_ButtonC.h>
 #include <Fl_SliderC.h>
 #include <Fl_Menu_ItemC.h>
+#include <Fl_Gl_WindowC.h>
 #include <stdlib.h>
 #include <stdio.h>
 
-#if HAVE_LIBGL
-#include <Fl_Gl_WindowC.h>
 #include <glC.h>
 typedef struct instance_data {
   double lasttime;
@@ -87,7 +86,6 @@ int handle(fl_Gl_Window cube_box, int e) {
   }
   return Fl_Gl_Window_handle_super(cube_box,e);
 }
-#endif
 fl_Window form;
 fl_Slider speed;
 fl_Slider size;

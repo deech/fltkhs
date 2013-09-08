@@ -449,8 +449,8 @@ EXPORT {
   FL_EXPORT_C(Fl_Color, fl_color_averageC)(Fl_Color c1, Fl_Color c2, float weight);
   FL_EXPORT_C(Fl_Color, fl_lighterC)(Fl_Color c);
   FL_EXPORT_C(Fl_Color, fl_darkerC)(Fl_Color c);
-  FL_EXPORT_C(Fl_Color, fl_rgb_color_with_rgb_C)(uchar r, uchar g, uchar b);
-  FL_EXPORT_C(Fl_Color, fl_rgb_colorC_with_grayscale_C)(uchar g);
+  FL_EXPORT_C(Fl_Color, fl_rgb_color_with_rgbC)(uchar r, uchar g, uchar b);
+  FL_EXPORT_C(Fl_Color, fl_rgb_color_with_grayscaleC)(uchar g);
   FL_EXPORT_C(Fl_Color, fl_gray_rampC)(int i);
   FL_EXPORT_C(Fl_Color, fl_color_cubeC)(int r, int g, int b);
 #ifdef __cplusplus

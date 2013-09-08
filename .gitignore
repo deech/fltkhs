@@ -17,3 +17,4 @@ autoscan.log
 object_files/*
 examples/Makefile
 src/Makefile
+dist/*

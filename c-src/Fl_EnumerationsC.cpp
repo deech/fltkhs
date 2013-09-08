@@ -28,8 +28,8 @@ EXPORT {
   FL_EXPORT_C(Fl_Color, fl_color_averageC)(Fl_Color c1, Fl_Color c2, float weight){ return fl_color_average(c1,c2,weight);}
   FL_EXPORT_C(Fl_Color, fl_lighterC)(Fl_Color c){return fl_lighter(c);}
   FL_EXPORT_C(Fl_Color, fl_darkerC)(Fl_Color c){return fl_darker(c);}
-  FL_EXPORT_C(Fl_Color, fl_rgb_color_with_rgb_C)(uchar r, uchar g, uchar b){return fl_rgb_color(r,g,b);}
-  FL_EXPORT_C(Fl_Color, fl_rgb_colorC_with_grayscale_C)(uchar g){return fl_rgb_color(g);}
+  FL_EXPORT_C(Fl_Color, fl_rgb_color_with_rgbC)(uchar r, uchar g, uchar b){return fl_rgb_color(r,g,b);}
+  FL_EXPORT_C(Fl_Color, fl_rgb_color_with_grayscaleC)(uchar g){return fl_rgb_color(g);}
   FL_EXPORT_C(Fl_Color, fl_gray_rampC)(int i){return fl_gray_ramp(i);}
   FL_EXPORT_C(Fl_Color, fl_color_cubeC)(int r, int g, int b){return fl_color_cube(r,g,b);}
 #ifdef __cplusplus

@@ -1,0 +1,35 @@
+name: fltkhs
+version: 0.1.0.0
+synopsis: FLTK bindings
+description:
+    Low level bindings for the FLTK GUI toolkit.
+license: MIT
+license-file: LICENSE
+author: Aditya Siram
+maintainer: aditya.siram@gmail.com
+homepage: http://github.com/deech/fltkc
+-- bug-reports:
+-- copyright:
+category: UI
+build-type: Custom
+cabal-version: >=1.8
+library
+  exposed-modules: Graphics.UI.FLTK.LowLevel.Fl_Window
+                   Graphics.UI.FLTK.LowLevel.Fl_Enumerations
+                   Graphics.UI.FLTK.LowLevel.Fl_Types
+  build-depends: base
+  build-tools: c2hs
+  extensions: ForeignFunctionInterface
+  hs-source-dirs: src
+  other-modules: C2HS
+  ghc-options: -Wall -lfltkc -I./c-src
+
+Executable test_call
+  Main-Is: TestCall.hs
+  Hs-Source-Dirs: src/TestPrograms
+  include-dirs: ./object_files
+  ghc-Options: -Wall -threaded -lHSfltkhs-0.1.0.0 -lfltk -lfltk_images -lpng -lz -ljpeg -lfltk_gl -lGLU -lGL -lXext -lXft -lfontconfig -lXinerama -lpthread -ldl -lm  -lX11 -lstdc++
+  Build-Depends:
+    base,
+    fltkhs
+    

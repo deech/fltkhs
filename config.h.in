@@ -15,39 +15,6 @@
 /* Define to 1 if you have the `fltk_images' library (-lfltk_images). */
 #undef HAVE_LIBFLTK_IMAGES
 
-/* Define to 1 if you have the `fontconfig' library (-lfontconfig). */
-#undef HAVE_LIBFONTCONFIG
-
-/* Define to 1 if you have the `GL' library (-lGL). */
-#undef HAVE_LIBGL
-
-/* Define to 1 if you have the `GLU' library (-lGLU). */
-#undef HAVE_LIBGLU
-
-/* Define to 1 if you have the `jpeg' library (-ljpeg). */
-#undef HAVE_LIBJPEG
-
-/* Define to 1 if you have the `m' library (-lm). */
-#undef HAVE_LIBM
-
-/* Define to 1 if you have the `png' library (-lpng). */
-#undef HAVE_LIBPNG
-
-/* Define to 1 if you have the `pthread' library (-lpthread). */
-#undef HAVE_LIBPTHREAD
-
-/* Define to 1 if you have the `X11' library (-lX11). */
-#undef HAVE_LIBX11
-
-/* Define to 1 if you have the `Xext' library (-lXext). */
-#undef HAVE_LIBXEXT
-
-/* Define to 1 if you have the `Xft' library (-lXft). */
-#undef HAVE_LIBXFT
-
-/* Define to 1 if you have the `Xinerama' library (-lXinerama). */
-#undef HAVE_LIBXINERAMA
-
 /* Define to 1 if you have the `z' library (-lz). */
 #undef HAVE_LIBZ
 

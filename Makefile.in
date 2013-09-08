@@ -1,19 +1,21 @@
 EXECUTABLEDIR = executables
 LIBDIR = lib
 OBJECT_FILES = object_files
-DIRS = src examples
+SRC = c-src
+EXAMPLES = c-examples
+DIRS = $(SRC) $(EXAMPLES)
+CLEANUPDIRS = $(EXECUTABLEDIR) $(LIBDIR) $(OBJECT_FILES)
 .SILENT:
-all:
-	for dir in $(DIRS); do\
-		echo "=== making $$dir ===";\
-		(cd $$dir; $(MAKE) all) || exit 1;\
-	done
-
+.PHONY: src all clean
+src:
+	cd $(SRC); $(MAKE) all
+examples: src
+	cd $(EXAMPLES); $(MAKE) all
+all: examples
 clean:
-	test -d $(EXECUTABLEDIR) && rm -rf $(EXECUTABLEDIR)
-	test -d $(LIBDIR) && rm -rf $(LIBDIR)
-	test -d $(OBJECT_FILES) && rm -rf $(OBJECT_FILES)
-# for dir in $(DIRS); do\
-# 	echo "=== cleaning $$dir ===";\
-# 	(cd $$dir; $(MAKE) clean) || exit 1;\
-# done
+	for dir in $(CLEANUPDIRS); do\
+	 	echo "=== removing $$dir ===";\
+		if [ -d "./$$dir" ];then     \
+	 	  rm -rf $$dir; \
+                fi \
+	done

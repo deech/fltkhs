@@ -10,7 +10,7 @@ EXPORT {
     return (fl_Tree_Item)tree_item;
   }
   FL_EXPORT_C(fl_Tree_Item,Fl_Tree_Item_New_WithPrefs)(fl_Tree_Prefs tree_prefs){
-    Fl_Tree_Item* tree_item = new Fl_Tree_Item((static_cast<Fl_Tree_Item*>(tree_prefs)));
+    Fl_Tree_Item* tree_item = new Fl_Tree_Item(*(static_cast<Fl_Tree_Prefs*>(tree_prefs)));
     return (fl_Tree_Item)tree_item;
   }
 

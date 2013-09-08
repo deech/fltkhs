@@ -51,7 +51,7 @@ int main(int argc, char *argv[])
   if (slash)
     strcpy(slash, "/../Resources/rgb.txt");
 #else
-  strcpy(dbname, "../examples/rgb.txt");
+  strcpy(dbname, "./rgb.txt");
 #endif
 
   if (load_browser(dbname))

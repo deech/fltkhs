@@ -1,8 +1,8 @@
 FLTKCONFIG=@FLTKCONFIG@
 CXX = $(shell $(FLTKCONFIG) --cxx) $(shell $(FLTKCONFIG) --cxxflags) -Wall -Werror -DINTERNAL_LINKAGE -g -Icpp
 LD = $(CXX) -shared
-CC = $(shell $(FLTKCONFIG) --cc) $(shell $(FLTKCONFIG) --cflags) -Wall -Werror -g -I../src -I../ -I./
-
+CC = $(shell $(FLTKCONFIG) --cc) $(shell $(FLTKCONFIG) --cflags) -Wall -Werror -g -I../c-src -I../ -I./
+CXXLDFLAGS = $(shell $(FLTKCONFIG) --use-gl --use-glut --use-images --use-cairo --ldflags)
 ifeq '$(OS)' "Windows_NT"
 EXEEXT = .exe
 endif
@@ -69,7 +69,9 @@ all: $(OBJECTS)
 	@echo "*** Building $@"
 	$(CC) -c $^ -o $(OBJECT_FILES)/$@.o
 	test -d $(EXECUTABLEDIR) || mkdir $(EXECUTABLEDIR)
-	$(CXX) -o $(EXECUTABLEDIR)/$@ $(OBJECT_FILES)/$@.o $(LIBDIR)/libfltkc.a -lfltk_images -lpng -lz -ljpeg -lfltk_gl -lGLU -lGL -lfltk -lXext -lXft -lfontconfig -lXinerama -lpthread -ldl -lm  -lX11
+	test -d $(EXECUTABLEDIR)/pixmaps || cp -r pixmaps $(EXECUTABLEDIR)
+	test -f $(EXECUTABLEDIR)/rgb.txt || cp rgb.txt $(EXECUTABLEDIR)
+	$(CXX) -o $(EXECUTABLEDIR)/$@ $(OBJECT_FILES)/$@.o $(LIBDIR)/libfltkc.a $(CXXLDFLAGS)
 	strip $(EXECUTABLEDIR)/$@
 
 clean:
