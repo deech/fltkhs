@@ -526,6 +526,16 @@ EXPORT {
  FL_EXPORT_C(int,Fl_Text_Editor_insert_mode)(fl_Text_Editor text_editor){
    return (static_cast<DerivedText_Editor*>(text_editor))->insert_mode();
  }
+ FL_EXPORT_C(int, Fl_Text_Editor_num_keybindings)(Key_BindingC* bindings){
+   int count = 0;
+   Key_BindingC* curr = bindings;
+   for (;curr;curr = curr->next){
+     if (curr) {
+       count++;
+     }
+   }
+   return count;
+ }
  FL_EXPORT_C(void,Fl_Text_Editor_add_key_binding_with_list)(fl_Text_Editor text_editor,int key,int state,fl_Key_Func f,Key_BindingC* list){
    DerivedText_Editor::Key_Binding_With_Callback* bs = convertKeyBindings(list);
    DerivedText_Editor* e =  (static_cast<DerivedText_Editor*>(text_editor));

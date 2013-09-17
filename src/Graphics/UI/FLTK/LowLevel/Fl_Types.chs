@@ -1,6 +1,7 @@
 {-# LANGUAGE CPP #-}
 module Graphics.UI.FLTK.LowLevel.Fl_Types where
 #include "Fl_Types.h"
+#include "Fl_Text_EditorC.h"         
 import Foreign
 import Foreign.C
 import Graphics.UI.FLTK.LowLevel.Fl_Enumerations
@@ -494,7 +495,7 @@ data KeyBinding = KeyBinding {
       state :: CInt,
       keyFunc :: KeyFunc
     }
-{#fun pure unsafe num_keybindings as
+{#fun pure unsafe Fl_Text_Editor_num_key_bindings as
       numKeybindings {castPtr `Ptr KeyBindings'} -> `Int' #}
 newtype KeyBindings = KeyBindings [KeyBinding]
 
@@ -865,4 +866,3 @@ data SingleWindowVirtualFuncs = SingleWindowVirtualFuncs {
     , singleWindowFlush :: FunPtr (SingleWindowPtr -> IO ())
     , singleWindowDestroyData :: FunPtr (SingleWindowPtr -> IO ())
     }
-                              

@@ -496,16 +496,6 @@ EXPORT {
     struct Key_BindingC* next;
   } Key_BindingC;
 
-  FL_EXPORT_C(int ,num_keybindings)(Key_BindingC* bindings){
-    int count = 0;
-    Key_BindingC* curr = bindings;
-    for (;curr;curr = curr->next){
-      if (curr) {
-        count++;
-      }
-    }
-    return count;
-  }
   typedef enum {
     SELECT_NONEC,
     SELECT_SINGLEC,

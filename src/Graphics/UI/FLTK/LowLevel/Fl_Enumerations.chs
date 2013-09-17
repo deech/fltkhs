@@ -772,6 +772,15 @@ cFromColor (Color c) = fromIntegral c
 cToColor :: CUInt -> Color
 cToColor c = Color (fromIntegral c)
 
+cFromEnum :: (Enum a) => a -> CInt
+cFromEnum = fromIntegral . fromEnum
+cToEnum :: (Enum a) => CInt -> a
+cToEnum = toEnum . fromIntegral
+
+cToBool :: CInt -> Bool
+cToBool status = case status of
+                   0 -> False
+                   _ -> True
 {#fun pure unsafe fl_inactiveC as inactive {cFromColor `Color' } -> `Color' cToColor#}
 {#fun pure unsafe fl_contrastC as contrast {cFromColor `Color',
                                             cFromColor `Color'} -> `Color' cToColor#}

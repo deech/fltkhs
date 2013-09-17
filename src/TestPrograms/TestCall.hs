@@ -1,6 +1,8 @@
 module Main where
-import Graphics.UI.FLTK.LowLevel.Fl_Enumerations
+import Graphics.UI.FLTK.LowLevel.Fl_Window
+import Graphics.UI.FLTK.LowLevel.FL    
 main :: IO ()
 main = do
-  print $ fromEnum defineGtkUpBox
-  print $ contrast whiteColor blackColor
+  windowPtr <- windowNewWithLabel 100 100 "Test"
+  windowShow windowPtr
+  flRun

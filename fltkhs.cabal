@@ -17,6 +17,7 @@ library
   exposed-modules: Graphics.UI.FLTK.LowLevel.Fl_Window
                    Graphics.UI.FLTK.LowLevel.Fl_Enumerations
                    Graphics.UI.FLTK.LowLevel.Fl_Types
+                   Graphics.UI.FLTK.LowLevel.FL
   build-depends: base
   build-tools: c2hs
   extensions: ForeignFunctionInterface
