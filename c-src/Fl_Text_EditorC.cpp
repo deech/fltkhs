@@ -526,8 +526,8 @@ EXPORT {
  FL_EXPORT_C(int,Fl_Text_Editor_insert_mode)(fl_Text_Editor text_editor){
    return (static_cast<DerivedText_Editor*>(text_editor))->insert_mode();
  }
- FL_EXPORT_C(void,Fl_Text_Editor_add_key_binding_with_list)(fl_Text_Editor text_editor,int key,int state,fl_Key_Func f,Key_BindingC** list){
-   DerivedText_Editor::Key_Binding_With_Callback* bs = convertKeyBindings(*list);
+ FL_EXPORT_C(void,Fl_Text_Editor_add_key_binding_with_list)(fl_Text_Editor text_editor,int key,int state,fl_Key_Func f,Key_BindingC* list){
+   DerivedText_Editor::Key_Binding_With_Callback* bs = convertKeyBindings(list);
    DerivedText_Editor* e =  (static_cast<DerivedText_Editor*>(text_editor));
    C_to_Fl_Callback* context = new C_to_Fl_Callback(f);
    e->add_key_binding(key,state,context,&bs);
@@ -536,22 +536,22 @@ EXPORT {
    C_to_Fl_Callback* context = new C_to_Fl_Callback(f);
    (static_cast<DerivedText_Editor*>(text_editor))->add_key_binding(key,state,context);
  }
- FL_EXPORT_C(void,Fl_Text_Editor_remove_key_binding_with_list)(fl_Text_Editor text_editor,int key,int state,Key_BindingC** list){
-   DerivedText_Editor::Key_Binding_With_Callback* bs = convertKeyBindings(*list);
+ FL_EXPORT_C(void,Fl_Text_Editor_remove_key_binding_with_list)(fl_Text_Editor text_editor,int key,int state,Key_BindingC* list){
+   DerivedText_Editor::Key_Binding_With_Callback* bs = convertKeyBindings(list);
    (static_cast<DerivedText_Editor*>(text_editor))->remove_key_binding(key,state,&bs);
  }
  FL_EXPORT_C(void,Fl_Text_Editor_remove_key_binding)(fl_Text_Editor text_editor,int key,int state){
    (static_cast<DerivedText_Editor*>(text_editor))->remove_key_binding(key,state);
  }
- FL_EXPORT_C(void,Fl_Text_Editor_remove_all_key_bindings_with_list)(fl_Text_Editor text_editor,Key_BindingC** list){
-   DerivedText_Editor::Key_Binding_With_Callback* bs = convertKeyBindings(*list);
+ FL_EXPORT_C(void,Fl_Text_Editor_remove_all_key_bindings_with_list)(fl_Text_Editor text_editor,Key_BindingC* list){
+   DerivedText_Editor::Key_Binding_With_Callback* bs = convertKeyBindings(list);
    (static_cast<DerivedText_Editor*>(text_editor))->remove_all_key_bindings(&bs);
  }
  FL_EXPORT_C(void,Fl_Text_Editor_remove_all_key_bindings)(fl_Text_Editor text_editor){
    (static_cast<DerivedText_Editor*>(text_editor))->remove_all_key_bindings();
  }
- FL_EXPORT_C(void,Fl_Text_Editor_add_default_key_bindings)(fl_Text_Editor text_editor,Key_BindingC** list){
-   DerivedText_Editor::Key_Binding_With_Callback* bs = convertKeyBindings(*list);
+ FL_EXPORT_C(void,Fl_Text_Editor_add_default_key_bindings)(fl_Text_Editor text_editor,Key_BindingC* list){
+   DerivedText_Editor::Key_Binding_With_Callback* bs = convertKeyBindings(list);
    (static_cast<DerivedText_Editor*>(text_editor))->add_default_key_bindings(&bs);
  }
  FL_EXPORT_C(int,Fl_Text_Editor_kf_undo)(int c,fl_Text_Editor e){

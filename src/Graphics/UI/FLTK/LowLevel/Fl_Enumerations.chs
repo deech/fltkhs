@@ -2,11 +2,6 @@
 module Graphics.UI.FLTK.LowLevel.Fl_Enumerations where
 #include "Fl_C.h"
 #include "Fl_EnumerationsC.h"
-import Control.Monad
-import Foreign
-import Foreign.C
-import Foreign.C.String
-import Foreign.Ptr
 import C2HS
 #c
 enum VersionInfo {
@@ -572,10 +567,10 @@ italic :: Font
 italic = helveticaItalic
 boldItalic :: Font
 boldItalic = helveticaBoldItalic
-------------
--- Colors --
-------------
-newtype Color = Color CInt deriving Show
+
+-- Colors
+
+newtype Color = Color CUInt deriving Show
 foregroundColor :: Color
 foregroundColor = Color 0
 background2Color :: Color
@@ -648,15 +643,15 @@ numBlue :: Color
 numBlue = Color 5
 
 newtype FontSize = FontSize CInt
---------------------
--- Fl_Mode Aliases -
---------------------
+
+-- Fl_Mode Aliases
+
 single :: Mode
 single = RGB
 
------------------
--- Fl_LabelType -
------------------
+
+-- Fl_LabelType
+
 data Labeltype = NormalLabel
      	       | NoLabel
 	       | ShadowLabel
@@ -678,6 +673,7 @@ instance Enum Labeltype where
              | x == defineEngravedLabel_ = EngravedLabel
              | x == defineEmbossedLabel_ = EmbossedLabel
     toEnum 8 = FreeLabelType
+
 symbolLabel :: Labeltype
 symbolLabel = NormalLabel
 

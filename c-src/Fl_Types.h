@@ -176,7 +176,6 @@ EXPORT {
     const char *name;
   } page_format;
 #include <config.h>
-#if HAVE_LIBGL
 #  ifdef __APPLE__
 #    include <OpenGL/gl.h>
 #  else
@@ -342,7 +341,6 @@ EXPORT {
   Fl_Glut_StrokeFont glutStrokeMonoRoman;
 #  define GLUT_STROKE_ROMAN		(&glutStrokeRoman)
 #  define GLUT_STROKE_MONO_ROMAN	(&glutStrokeMonoRoman)
-#endif /* HAVE_GL */
 #endif /* INTERNAL_LINKAGE */
   typedef void* ID;
   typedef void* fl_Window;
@@ -498,6 +496,16 @@ EXPORT {
     struct Key_BindingC* next;
   } Key_BindingC;
 
+  FL_EXPORT_C(int ,num_keybindings)(Key_BindingC* bindings){
+    int count = 0;
+    Key_BindingC* curr = bindings;
+    for (;curr;curr = curr->next){
+      if (curr) {
+        count++;
+      }
+    }
+    return count;
+  }
   typedef enum {
     SELECT_NONEC,
     SELECT_SINGLEC,

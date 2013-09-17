@@ -15,6 +15,6 @@ configure
 config.h
 autoscan.log
 object_files/*
-examples/Makefile
-src/Makefile
+c-examples/Makefile
+c-src/Makefile
 dist/*
