@@ -60,21 +60,19 @@ EXAMPLES= \
 .SILENT:
 EXECUTABLEDIR = ../executables
 LIBDIR = ../lib
-OBJECT_FILES = ../object_files
 OBJECTS = $(EXAMPLES:.c=$(EXEEXT))
 
 all: $(OBJECTS)
 .c$(EXEEXT):
-	test -d $(OBJECT_FILES) || mkdir $(OBJECT_FILES)
 	@echo "*** Building $@"
-	$(CC) -c $^ -o $(OBJECT_FILES)/$@.o
+	$(CC) -c $^ -o $@.o
 	test -d $(EXECUTABLEDIR) || mkdir $(EXECUTABLEDIR)
 	test -d $(EXECUTABLEDIR)/pixmaps || cp -r pixmaps $(EXECUTABLEDIR)
 	test -f $(EXECUTABLEDIR)/rgb.txt || cp rgb.txt $(EXECUTABLEDIR)
-	$(CXX) -o $(EXECUTABLEDIR)/$@ $(OBJECT_FILES)/$@.o $(LIBDIR)/libfltkc.a $(CXXLDFLAGS)
+	$(CXX) -o $(EXECUTABLEDIR)/$@ $@.o $(LIBDIR)/libfltkc.a $(CXXLDFLAGS)
 	strip $(EXECUTABLEDIR)/$@
 
 clean:
+	rm *.o
 	test -d $(EXECUTABLEDIR) && rm -rf $(EXECUTABLEDIR)
-	test -d $(OBJECT_FILES) && rm -rf $(OBJECT_FILES)
 %.o:

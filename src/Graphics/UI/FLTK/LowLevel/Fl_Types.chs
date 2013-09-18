@@ -1,7 +1,7 @@
 {-# LANGUAGE CPP #-}
 module Graphics.UI.FLTK.LowLevel.Fl_Types where
 #include "Fl_Types.h"
-#include "Fl_Text_EditorC.h"         
+#include "Fl_Text_EditorC.h"
 import Foreign
 import Foreign.C
 import Graphics.UI.FLTK.LowLevel.Fl_Enumerations
@@ -169,6 +169,7 @@ import Graphics.UI.FLTK.LowLevel.Fl_Enumerations
     LinePositionMiddle = MIDDLE,
     LinePositionBottom = BOTTOM
   };
+  typedef FL_SOCKET Fl_Socket;
 #endc
 {#enum BrowserType {}#}
 {#enum SortType {}#}
@@ -197,10 +198,12 @@ newtype GLUTMenuStatusFunction = GLUTMenuStatusFunction
 {#pointer *Fl_Glut_StrokeVertex as GlutStrokeVertexPtr newtype#}
 {#pointer *Fl_Glut_StrokeStrip as GlutStrokeStripPtr newtype#}
 {#pointer *Fl_Glut_StrokeFont as GlutStrokeFontPtr newtype#}
+type RGB                   = (CUChar, CUChar, CUChar)
 type FlIntPtr              = {#type fl_intptr_t #}
 type FlUIntPtr             = {#type fl_uintptr_t#}
 type ID                    = {#type ID#}
 type Align                 = {#type Fl_Align#}
+type Socket                = {#type Fl_Socket#}
 data Window                = Window
 type WindowPtr             = ForeignPtr Window
 data Group                 = Group
@@ -460,6 +463,7 @@ type RegionPtr             = ForeignPtr Region
 data UserData              = UserData
 type UserDataPtr           = ForeignPtr UserData
 type Callback              = FunPtr (WidgetPtr -> UserDataPtr -> IO ())
+type CallbackPrim 	   = Ptr () -> Ptr () -> IO ()
 type TextBufferCallback    = FunPtr (TextBufferPtr -> IO ())
 type UnfinishedStyleCb     = FunPtr (CInt -> UserDataPtr -> IO ())
 type FileChooserCallback   = FunPtr (FileChooserPtr -> UserDataPtr -> IO())
@@ -593,15 +597,15 @@ instance Storable WindowDrawCellArgs where
           {#set fl_Window_draw_cell_default_args->Y #} p drawCellY'
 
 data TableVirtualFuncs = TableVirtualFuncs {
-      tableDraw :: FunPtr (TablePtr -> IO ())
-    , tableHandle :: FunPtr (TablePtr -> Event -> IO CInt)
-    , tableResize :: FunPtr (TablePtr -> CInt -> CInt -> CInt -> CInt -> IO ())
-    , tableShow :: FunPtr (TablePtr -> IO ())
-    , tableHide :: FunPtr (TablePtr -> IO ())
-    , tableAsWindow :: FunPtr (TablePtr -> IO WindowPtr)
-    , tableAsGlWindow :: FunPtr (TablePtr -> IO GlWindowPtr)
-    , tableAsGroup :: FunPtr (TablePtr -> IO Group)
-    , tableDrawCell :: FunPtr (TablePtr ->
+      tableDraw_ :: FunPtr (TablePtr -> IO ())
+    , tableHandle_ :: FunPtr (TablePtr -> Event -> IO CInt)
+    , tableResize_ :: FunPtr (TablePtr -> CInt -> CInt -> CInt -> CInt -> IO ())
+    , tableShow_ :: FunPtr (TablePtr -> IO ())
+    , tableHide_ :: FunPtr (TablePtr -> IO ())
+    , tableAsWindow_ :: FunPtr (TablePtr -> IO WindowPtr)
+    , tableAsGlWindow_ :: FunPtr (TablePtr -> IO GlWindowPtr)
+    , tableAsGroup_ :: FunPtr (TablePtr -> IO Group)
+    , tableDrawCell_ :: FunPtr (TablePtr ->
                                TableContext ->
                                CInt ->
                                CInt ->
@@ -610,77 +614,82 @@ data TableVirtualFuncs = TableVirtualFuncs {
                                CInt ->
                                CInt ->
                                IO ())
-    , tableClear :: FunPtr (TablePtr -> IO  ())
-    , tableSetRows :: FunPtr (TablePtr -> CInt -> IO ())
-    , tableDestroyData :: FunPtr (TablePtr -> IO ())
+    , tableClear_ :: FunPtr (TablePtr -> IO  ())
+    , tableSetRows_ :: FunPtr (TablePtr -> CInt -> IO ())
+    , tableDestroyData_ :: FunPtr (TablePtr -> IO ())
     }
 
 data WidgetVirtualFuncs = WidgetVirtualFuncs {
-      widgetDraw :: FunPtr (WidgetPtr -> IO ())
-    , widgetHandle :: FunPtr (WidgetPtr -> Event -> IO CInt)
-    , widgetResize :: FunPtr (WidgetPtr -> CInt -> CInt -> CInt -> CInt -> IO ())
-    , widgetShow :: FunPtr (WidgetPtr -> IO ())
-    , widgetHide :: FunPtr (WidgetPtr -> IO ())
-    , widgetAsWindow :: FunPtr (WidgetPtr -> IO WindowPtr)
-    , widgetAsGlWindow :: FunPtr (WidgetPtr -> IO GlWindowPtr)
-    , widgetAsGroup :: FunPtr (WidgetPtr -> IO Group)
-    , widgetDestroyData :: FunPtr (WidgetPtr -> IO ())
+      widgetDraw_ :: FunPtr (WidgetPtr -> IO ())
+    , widgetHandle_ :: FunPtr (WidgetPtr -> Event -> IO CInt)
+    , widgetResize_ :: FunPtr (WidgetPtr ->
+                               CInt ->
+			       CInt ->
+			       CInt ->
+			       CInt ->
+			       IO ())
+    , widgetShow_ :: FunPtr (WidgetPtr -> IO ())
+    , widgetHide_ :: FunPtr (WidgetPtr -> IO ())
+    , widgetAsWindow_ :: FunPtr (WidgetPtr -> IO WindowPtr)
+    , widgetAsGlWindow_ :: FunPtr (WidgetPtr -> IO GlWindowPtr)
+    , widgetAsGroup_ :: FunPtr (WidgetPtr -> IO Group)
+    , widgetDestroyData_ :: FunPtr (WidgetPtr -> IO ())
     }
 
 data GroupVirtualFuncs = GroupVirtualFuncs {
-      groupDraw :: FunPtr (GroupPtr -> IO ())
-    , groupHandle :: FunPtr (GroupPtr -> Event -> IO CInt)
-    , groupResize :: FunPtr (GroupPtr -> CInt -> CInt -> CInt -> CInt -> IO ())
-    , groupShow :: FunPtr (GroupPtr -> IO ())
-    , groupHide :: FunPtr (GroupPtr -> IO ())
-    , groupAsWindow :: FunPtr (GroupPtr -> IO WindowPtr)
-    , groupAsGlWindow :: FunPtr (GroupPtr -> IO GlWindowPtr)
-    , groupAsGroup :: FunPtr (GroupPtr -> IO Group)
-    , groupDestroyData :: FunPtr (GroupPtr -> IO ())
+      groupDraw_ :: FunPtr (GroupPtr -> IO ())
+    , groupHandle_ :: FunPtr (GroupPtr -> Event -> IO CInt)
+    , groupResize_ :: FunPtr (GroupPtr -> CInt -> CInt -> CInt -> CInt -> IO ())
+    , groupShow_ :: FunPtr (GroupPtr -> IO ())
+    , groupHide_ :: FunPtr (GroupPtr -> IO ())
+    , groupAsWindow_ :: FunPtr (GroupPtr -> IO WindowPtr)
+    , groupAsGlWindow_ :: FunPtr (GroupPtr -> IO GlWindowPtr)
+    , groupAsGroup_ :: FunPtr (GroupPtr -> IO Group)
+    , groupDestroyData_ :: FunPtr (GroupPtr -> IO ())
     }
 
 data WindowVirtualFuncs = WindowVirtualFuncs {
-      windowDraw :: FunPtr (WindowPtr -> IO ())
-    , windowHandle :: FunPtr (WindowPtr -> Event -> IO CInt)
-    , windowResize :: FunPtr (WindowPtr ->
+      windowDraw_ :: FunPtr (WindowPtr -> IO ())
+    , windowHandle_ :: FunPtr (WindowPtr -> Event -> IO CInt)
+    , windowResize_ :: FunPtr (WindowPtr ->
                               CInt ->
                               CInt ->
                               CInt ->
                               CInt ->
                               IO ())
-    , windowShow :: FunPtr (WindowPtr -> IO ())
-    , windowHide :: FunPtr (WindowPtr -> IO ())
-    , windowAsWindow :: FunPtr (WindowPtr -> IO WindowPtr)
-    , windowAsGlWindow :: FunPtr (WindowPtr -> IO GlWindowPtr)
-    , windowAsGroup :: FunPtr (WindowPtr -> IO Group)
-    , windowFlush :: FunPtr (WindowPtr -> IO ())
-    , windowDestroyData :: FunPtr (WindowPtr -> IO ())
+    , windowShow_ :: FunPtr (WindowPtr -> IO ())
+    , windowHide_ :: FunPtr (WindowPtr -> IO ())
+    , windowAsWindow_ :: FunPtr (WindowPtr -> IO WindowPtr)
+    , windowAsGlWindow_ :: FunPtr (WindowPtr -> IO GlWindowPtr)
+    , windowAsGroup_ :: FunPtr (WindowPtr -> IO Group)
+    , windowFlush_ :: FunPtr (WindowPtr -> IO ())
+    , windowDestroyData_ :: FunPtr (WindowPtr -> IO ())
     }
 data BrowserVirtualFuncs = BrowserVirtualFuncs {
-      browserDraw :: FunPtr (BrowserPtr -> IO ())
-    , browserHandle :: FunPtr (BrowserPtr -> Event -> IO CInt)
-    , browserResize :: FunPtr (BrowserPtr ->
+      browserDraw_ :: FunPtr (BrowserPtr -> IO ())
+    , browserHandle_ :: FunPtr (BrowserPtr -> Event -> IO CInt)
+    , browserResize_ :: FunPtr (BrowserPtr ->
                                CInt ->
                                CInt ->
                                CInt ->
                                CInt ->
                                IO ())
-    , browserShow :: FunPtr (BrowserPtr -> IO ())
-    , browserShowWithLine :: FunPtr (BrowserPtr -> CInt -> IO ())
-    , browserHide :: FunPtr (BrowserPtr -> IO ())
-    , browserHideWithLine :: FunPtr (BrowserPtr -> CInt -> IO ())
-    , browserAsWindow :: FunPtr (BrowserPtr -> IO WindowPtr)
-    , browserAsGlWindow :: FunPtr (BrowserPtr -> IO GlWindowPtr)
-    , browserAsGroup :: FunPtr (BrowserPtr -> IO Group)
-    , browserDestroyData :: FunPtr (BrowserPtr -> IO ())
+    , browserShow_ :: FunPtr (BrowserPtr -> IO ())
+    , browserShowWithLine_ :: FunPtr (BrowserPtr -> CInt -> IO ())
+    , browserHide_ :: FunPtr (BrowserPtr -> IO ())
+    , browserHideWithLine_ :: FunPtr (BrowserPtr -> CInt -> IO ())
+    , browserAsWindow_ :: FunPtr (BrowserPtr -> IO WindowPtr)
+    , browserAsGlWindow_ :: FunPtr (BrowserPtr -> IO GlWindowPtr)
+    , browserAsGroup_ :: FunPtr (BrowserPtr -> IO Group)
+    , browserDestroyData_ :: FunPtr (BrowserPtr -> IO ())
     }
 data ImageVirtualFuncs = ImageVirtualFuncs {
-      imageColorAverage :: FunPtr (ImagePtr -> Color -> CFloat -> IO ())
-    , imageCopy :: FunPtr (ImagePtr -> CInt -> CInt -> IO ImagePtr)
-    , imageDesaturate :: FunPtr (ImagePtr -> IO ())
-    , imageLabel :: FunPtr (ImagePtr -> WidgetPtr)
-    , imageLabelWithMenuItem :: FunPtr (ImagePtr -> MenuItemPtr -> IO ())
-    , imageDraw :: FunPtr (ImagePtr ->
+      imageColorAverage_ :: FunPtr (ImagePtr -> Color -> CFloat -> IO ())
+    , imageCopy_ :: FunPtr (ImagePtr -> CInt -> CInt -> IO ImagePtr)
+    , imageDesaturate_ :: FunPtr (ImagePtr -> IO ())
+    , imageLabel_ :: FunPtr (ImagePtr -> WidgetPtr)
+    , imageLabelWithMenuItem_ :: FunPtr (ImagePtr -> MenuItemPtr -> IO ())
+    , imageDraw_ :: FunPtr (ImagePtr ->
                            CInt ->
                            CInt ->
                            CInt ->
@@ -688,43 +697,43 @@ data ImageVirtualFuncs = ImageVirtualFuncs {
                            CInt ->
                            CInt ->
                            IO ())
-    , imageUncache :: FunPtr (ImagePtr -> IO())
-    , imageDestroyData :: FunPtr (ImagePtr -> IO())
+    , imageUncache_ :: FunPtr (ImagePtr -> IO())
+    , imageDestroyData_ :: FunPtr (ImagePtr -> IO())
     }
 
 data ValuatorVirtualFuncs = ValuatorVirtualFuncs {
-      valuatorDraw :: FunPtr (ValuatorPtr -> IO ())
-    , valuatorHandle :: FunPtr (ValuatorPtr -> Event -> IO CInt)
-    , valuatorResize :: FunPtr (ValuatorPtr ->
+      valuatorDraw_ :: FunPtr (ValuatorPtr -> IO ())
+    , valuatorHandle_ :: FunPtr (ValuatorPtr -> Event -> IO CInt)
+    , valuatorResize_ :: FunPtr (ValuatorPtr ->
                                 CInt ->
                                 CInt ->
                                 CInt ->
                                 CInt ->
                                 IO ())
-    , valuatorShow :: FunPtr (ValuatorPtr -> IO ())
-    , valuatorHide :: FunPtr (ValuatorPtr -> IO ())
-    , valuatorAsWindow:: FunPtr (ValuatorPtr -> IO WindowPtr)
-    , valuatorAsGlWindow :: FunPtr (ValuatorPtr -> IO GlWindowPtr)
-    , valuatorAsGroup :: FunPtr (ValuatorPtr -> IO Group)
-    , valuatorFormat :: FunPtr (ValuatorPtr -> String -> IO ())
-    , valuatorDestroyData :: FunPtr (ValuatorPtr -> IO ())
+    , valuatorShow_ :: FunPtr (ValuatorPtr -> IO ())
+    , valuatorHide_ :: FunPtr (ValuatorPtr -> IO ())
+    , valuatorAsWindo_w:: FunPtr (ValuatorPtr -> IO WindowPtr)
+    , valuatorAsGlWindow_ :: FunPtr (ValuatorPtr -> IO GlWindowPtr)
+    , valuatorAsGroup_ :: FunPtr (ValuatorPtr -> IO Group)
+    , valuatorFormat_ :: FunPtr (ValuatorPtr -> String -> IO ())
+    , valuatorDestroyData_ :: FunPtr (ValuatorPtr -> IO ())
     }
 
 data TableRowVirtualFuncs = TableRowVirtualFuncs {
-      tableRowDraw :: FunPtr (TableRowPtr -> IO ())
-    , tableRowHandle :: FunPtr (TableRowPtr -> Event -> IO CInt)
-    , tableRowResize :: FunPtr (TableRowPtr ->
+      tableRowDraw_ :: FunPtr (TableRowPtr -> IO ())
+    , tableRowHandle_ :: FunPtr (TableRowPtr -> Event -> IO CInt)
+    , tableRowResize_ :: FunPtr (TableRowPtr ->
                                 CInt ->
                                 CInt ->
                                 CInt ->
                                 CInt ->
                                 IO ())
-    , tableRowShow :: FunPtr (TableRowPtr -> IO ())
-    , tableRowHide :: FunPtr (TableRowPtr -> IO ())
-    , tableRowAsWindow :: FunPtr (TableRowPtr -> IO WindowPtr)
-    , tableRowAsGlWindow :: FunPtr (TableRowPtr -> IO GlWindowPtr)
-    , tableRowAsGroup :: FunPtr (TableRowPtr -> IO Group)
-    , tableRowDrawCell :: FunPtr (TableRowPtr ->
+    , tableRowShow_ :: FunPtr (TableRowPtr -> IO ())
+    , tableRowHide_ :: FunPtr (TableRowPtr -> IO ())
+    , tableRowAsWindow_ :: FunPtr (TableRowPtr -> IO WindowPtr)
+    , tableRowAsGlWindow_ :: FunPtr (TableRowPtr -> IO GlWindowPtr)
+    , tableRowAsGroup_ :: FunPtr (TableRowPtr -> IO Group)
+    , tableRowDrawCell_ :: FunPtr (TableRowPtr ->
                                   TableContext ->
                                   CInt ->
                                   CInt ->
@@ -733,136 +742,151 @@ data TableRowVirtualFuncs = TableRowVirtualFuncs {
                                   CInt ->
                                   CInt ->
                                   IO ())
-    , tableRowClear :: FunPtr (TableRowPtr -> IO  ())
-    , tableRowSetRows :: FunPtr (TableRowPtr -> CInt -> IO ())
-    , tableRowDestroyData :: FunPtr (TableRowPtr -> IO ())
+    , tableRowClear_ :: FunPtr (TableRowPtr -> IO  ())
+    , tableRowSetRows_ :: FunPtr (TableRowPtr -> CInt -> IO ())
+    , tableRowDestroyData_ :: FunPtr (TableRowPtr -> IO ())
     }
 data ButtonVirtualFuncs = ButtonVirtualFuncs {
-      buttonDraw :: FunPtr (ButtonPtr -> IO ())
-    , buttonHandle :: FunPtr (ButtonPtr -> Event -> IO CInt)
-    , buttonResize :: FunPtr (ButtonPtr -> CInt -> CInt -> CInt -> CInt -> IO ())
-    , buttonShow :: FunPtr (ButtonPtr -> IO ())
-    , buttonHide :: FunPtr (ButtonPtr -> IO ())
-    , buttonAsWindow :: FunPtr (ButtonPtr -> IO WindowPtr)
-    , buttonAsGlWindow :: FunPtr (ButtonPtr -> IO GlWindowPtr)
-    , buttonAsGroup :: FunPtr (ButtonPtr -> IO Group)
-    , buttonDestroyData :: FunPtr (ButtonPtr -> IO ())
+      buttonDraw_ :: FunPtr (ButtonPtr -> IO ())
+    , buttonHandle_ :: FunPtr (ButtonPtr -> Event -> IO CInt)
+    , buttonResize_ :: FunPtr (ButtonPtr ->
+                               CInt ->
+			       CInt ->
+			       CInt ->
+			       CInt ->
+			       IO ())
+    , buttonShow_ :: FunPtr (ButtonPtr -> IO ())
+    , buttonHide_ :: FunPtr (ButtonPtr -> IO ())
+    , buttonAsWindow_ :: FunPtr (ButtonPtr -> IO WindowPtr)
+    , buttonAsGlWindow_ :: FunPtr (ButtonPtr -> IO GlWindowPtr)
+    , buttonAsGroup_ :: FunPtr (ButtonPtr -> IO Group)
+    , buttonDestroyData_ :: FunPtr (ButtonPtr -> IO ())
     }
 data IntInputVirtualFuncs = IntInputVirtualFuncs {
-      intInputDraw :: FunPtr (IntInputPtr -> IO ())
-    , intInputHandle :: FunPtr (IntInputPtr -> Event -> IO CInt)
-    , intInputResize :: FunPtr (IntInputPtr -> CInt -> CInt -> CInt -> CInt -> IO ())
-    , intInputShow :: FunPtr (IntInputPtr -> IO ())
-    , intInputHide :: FunPtr (IntInputPtr -> IO ())
-    , intInputAsWindow :: FunPtr (IntInputPtr -> IO WindowPtr)
-    , intInputAsGlWindow :: FunPtr (IntInputPtr -> IO GlWindowPtr)
-    , intInputAsGroup :: FunPtr (IntInputPtr -> IO Group)
-    , intInputDestroyData :: FunPtr (IntInputPtr -> IO ())
+      intInputDraw_ :: FunPtr (IntInputPtr -> IO ())
+    , intInputHandle_ :: FunPtr (IntInputPtr -> Event -> IO CInt)
+    , intInputResize_ :: FunPtr (IntInputPtr ->
+                                 CInt ->
+				 CInt ->
+				 CInt ->
+				 CInt ->
+				 IO ())
+    , intInputShow_ :: FunPtr (IntInputPtr -> IO ())
+    , intInputHide_ :: FunPtr (IntInputPtr -> IO ())
+    , intInputAsWindow_ :: FunPtr (IntInputPtr -> IO WindowPtr)
+    , intInputAsGlWindow_ :: FunPtr (IntInputPtr -> IO GlWindowPtr)
+    , intInputAsGroup_ :: FunPtr (IntInputPtr -> IO Group)
+    , intInputDestroyData_ :: FunPtr (IntInputPtr -> IO ())
     }
 
 data MultiBrowserVirtualFuncs = MultiBrowserVirtualFuncs {
-      multiBrowserDraw :: FunPtr (MultiBrowserPtr -> IO ())
-    , multiBrowserHandle :: FunPtr (MultiBrowserPtr -> Event -> IO CInt)
-    , multiBrowserResize :: FunPtr (MultiBrowserPtr ->
+      multiBrowserDraw_ :: FunPtr (MultiBrowserPtr -> IO ())
+    , multiBrowserHandle_ :: FunPtr (MultiBrowserPtr -> Event -> IO CInt)
+    , multiBrowserResize_ :: FunPtr (MultiBrowserPtr ->
                                CInt ->
                                CInt ->
                                CInt ->
                                CInt ->
                                IO ())
-    , multiBrowserShow :: FunPtr (MultiBrowserPtr -> IO ())
-    , multiBrowserShowWithLine :: FunPtr (MultiBrowserPtr -> CInt -> IO ())
-    , multiBrowserHide :: FunPtr (MultiBrowserPtr -> IO ())
-    , multiBrowserHideWithLine :: FunPtr (MultiBrowserPtr -> CInt -> IO ())
-    , multiBrowserAsWindow :: FunPtr (MultiBrowserPtr -> IO WindowPtr)
-    , multiBrowserAsGlWindow :: FunPtr (MultiBrowserPtr -> IO GlWindowPtr)
-    , multiBrowserAsGroup :: FunPtr (MultiBrowserPtr -> IO Group)
-    , multiBrowserDestroyData :: FunPtr (MultiBrowserPtr -> IO ())
+    , multiBrowserShow_ :: FunPtr (MultiBrowserPtr -> IO ())
+    , multiBrowserShowWithLine_ :: FunPtr (MultiBrowserPtr -> CInt -> IO ())
+    , multiBrowserHide_ :: FunPtr (MultiBrowserPtr -> IO ())
+    , multiBrowserHideWithLine_ :: FunPtr (MultiBrowserPtr -> CInt -> IO ())
+    , multiBrowserAsWindow_ :: FunPtr (MultiBrowserPtr -> IO WindowPtr)
+    , multiBrowserAsGlWindow_ :: FunPtr (MultiBrowserPtr -> IO GlWindowPtr)
+    , multiBrowserAsGroup_ :: FunPtr (MultiBrowserPtr -> IO Group)
+    , multiBrowserDestroyData_ :: FunPtr (MultiBrowserPtr -> IO ())
     }
 data MenuVirtualFuncs = MenuVirtualFuncs {
-      menuDraw :: FunPtr (MenuPtr -> IO ())
-    , menuHandle :: FunPtr (MenuPtr -> Event -> IO CInt)
-    , menuResize :: FunPtr (MenuPtr -> CInt -> CInt -> CInt -> CInt -> IO ())
-    , menuShow :: FunPtr (MenuPtr -> IO ())
-    , menuHide :: FunPtr (MenuPtr -> IO ())
-    , menuAsWindow :: FunPtr (MenuPtr -> IO WindowPtr)
-    , menuAsGlWindow :: FunPtr (MenuPtr -> IO GlWindowPtr)
-    , menuAsGroup :: FunPtr (MenuPtr -> IO Group)
-    , menuDestroyData :: FunPtr (MenuPtr -> IO ())
+      menuDraw_ :: FunPtr (MenuPtr -> IO ())
+    , menuHandle_ :: FunPtr (MenuPtr -> Event -> IO CInt)
+    , menuResize_ :: FunPtr (MenuPtr -> CInt -> CInt -> CInt -> CInt -> IO ())
+    , menuShow_ :: FunPtr (MenuPtr -> IO ())
+    , menuHide_ :: FunPtr (MenuPtr -> IO ())
+    , menuAsWindow_ :: FunPtr (MenuPtr -> IO WindowPtr)
+    , menuAsGlWindow_ :: FunPtr (MenuPtr -> IO GlWindowPtr)
+    , menuAsGroup_ :: FunPtr (MenuPtr -> IO Group)
+    , menuDestroyData_ :: FunPtr (MenuPtr -> IO ())
     }
 
 data MenuBarVirtualFuncs = MenuBarVirtualFuncs {
-      menuBarDraw :: FunPtr (MenuBarPtr -> IO ())
-    , menuBarHandle :: FunPtr (MenuBarPtr -> Event -> IO CInt)
-    , menuBarResize :: FunPtr (MenuBarPtr -> CInt -> CInt -> CInt -> CInt -> IO ())
-    , menuBarShow :: FunPtr (MenuBarPtr -> IO ())
-    , menuBarHide :: FunPtr (MenuBarPtr -> IO ())
-    , menuBarAsWindow :: FunPtr (MenuBarPtr -> IO WindowPtr)
-    , menuBarAsGlWindow :: FunPtr (MenuBarPtr -> IO GlWindowPtr)
-    , menuBarAsGroup :: FunPtr (MenuBarPtr -> IO Group)
-    , menuBarDestroyData :: FunPtr (MenuBarPtr -> IO ())
+      menuBarDraw_ :: FunPtr (MenuBarPtr -> IO ())
+    , menuBarHandle_ :: FunPtr (MenuBarPtr -> Event -> IO CInt)
+    , menuBarResize_ :: FunPtr (MenuBarPtr ->
+                                CInt ->
+				CInt ->
+				CInt ->
+				CInt ->
+				IO ())
+    , menuBarShow_ :: FunPtr (MenuBarPtr -> IO ())
+    , menuBarHide_ :: FunPtr (MenuBarPtr -> IO ())
+    , menuBarAsWindow_ :: FunPtr (MenuBarPtr -> IO WindowPtr)
+    , menuBarAsGlWindow_ :: FunPtr (MenuBarPtr -> IO GlWindowPtr)
+    , menuBarAsGroup_ :: FunPtr (MenuBarPtr -> IO Group)
+    , menuBarDestroyData_ :: FunPtr (MenuBarPtr -> IO ())
     }
 
 data BoxVirtualFuncs = BoxVirtualFuncs {
-      boxDraw :: FunPtr (BoxPtr -> IO ())
-    , boxHandle :: FunPtr (BoxPtr -> Event -> IO CInt)
-    , boxResize :: FunPtr (BoxPtr -> CInt -> CInt -> CInt -> CInt -> IO ())
-    , boxShow :: FunPtr (BoxPtr -> IO ())
-    , boxHide :: FunPtr (BoxPtr -> IO ())
-    , boxAsWindow :: FunPtr (BoxPtr -> IO WindowPtr)
-    , boxAsGlWindow :: FunPtr (BoxPtr -> IO GlWindowPtr)
-    , boxAsGroup :: FunPtr (BoxPtr -> IO Group)
-    , boxDestroyData :: FunPtr (BoxPtr -> IO ())
+      boxDraw_ :: FunPtr (BoxPtr -> IO ())
+    , boxHandle_ :: FunPtr (BoxPtr -> Event -> IO CInt)
+    , boxResize_ :: FunPtr (BoxPtr -> CInt -> CInt -> CInt -> CInt -> IO ())
+    , boxShow_ :: FunPtr (BoxPtr -> IO ())
+    , boxHide_ :: FunPtr (BoxPtr -> IO ())
+    , boxAsWindow_ :: FunPtr (BoxPtr -> IO WindowPtr)
+    , boxAsGlWindow_ :: FunPtr (BoxPtr -> IO GlWindowPtr)
+    , boxAsGroup_ :: FunPtr (BoxPtr -> IO Group)
+    , boxDestroyData_ :: FunPtr (BoxPtr -> IO ())
     }
 
 data GlWindowVirtualFuncs = GlWindowVirtualFuncs {
-      glWindowDraw :: FunPtr (GlWindowPtr -> IO ())
-    , glWindowHandle :: FunPtr (GlWindowPtr -> Event -> IO CInt)
-    , glWindowResize :: FunPtr (GlWindowPtr ->
-                              CInt ->
-                              CInt ->
-                              CInt ->
-                              CInt ->
-                              IO ())
-    , glWindowShow :: FunPtr (GlWindowPtr -> IO ())
-    , glWindowHide :: FunPtr (GlWindowPtr -> IO ())
-    , glWindowAsWindow :: FunPtr (GlWindowPtr -> IO WindowPtr)
-    , glWindowAsGlWindow :: FunPtr (GlWindowPtr -> IO GlWindowPtr)
-    , glWindowAsGroup :: FunPtr (GlWindowPtr -> IO Group)
-    , glWindowFlush :: FunPtr (GlWindowPtr -> IO ())
-    , glWindowDestroyData :: FunPtr (GlWindowPtr -> IO ())
+      glWindowDraw_ :: FunPtr (GlWindowPtr -> IO ())
+    , glWindowHandle_ :: FunPtr (GlWindowPtr -> Event -> IO CInt)
+    , glWindowResize_ :: FunPtr (GlWindowPtr ->
+                                 CInt ->
+                                 CInt ->
+                                 CInt ->
+                                 CInt ->
+                                 IO ())
+    , glWindowShow_ :: FunPtr (GlWindowPtr -> IO ())
+    , glWindowHide_ :: FunPtr (GlWindowPtr -> IO ())
+    , glWindowAsWindow_ :: FunPtr (GlWindowPtr -> IO WindowPtr)
+    , glWindowAsGlWindow_ :: FunPtr (GlWindowPtr -> IO GlWindowPtr)
+    , glWindowAsGroup_ :: FunPtr (GlWindowPtr -> IO Group)
+    , glWindowFlush_ :: FunPtr (GlWindowPtr -> IO ())
+    , glWindowDestroyData_ :: FunPtr (GlWindowPtr -> IO ())
     }
 data DoubleWindowVirtualFuncs = DoubleWindowVirtualFuncs {
-      doubleWindowDraw :: FunPtr (DoubleWindowPtr -> IO ())
-    , doubleWindowHandle :: FunPtr (DoubleWindowPtr -> Event -> IO CInt)
-    , doubleWindowResize :: FunPtr (DoubleWindowPtr ->
-                              CInt ->
-                              CInt ->
-                              CInt ->
-                              CInt ->
-                              IO ())
-    , doubleWindowShow :: FunPtr (DoubleWindowPtr -> IO ())
-    , doubleWindowHide :: FunPtr (DoubleWindowPtr -> IO ())
-    , doubleWindowAsWindow :: FunPtr (DoubleWindowPtr -> IO WindowPtr)
-    , doubleWindowAsGlWindow :: FunPtr (DoubleWindowPtr -> IO GlWindowPtr)
-    , doubleWindowAsGroup :: FunPtr (DoubleWindowPtr -> IO Group)
-    , doubleWindowFlush :: FunPtr (DoubleWindowPtr -> IO ())
-    , doubleWindowDestroyData :: FunPtr (DoubleWindowPtr -> IO ())
+      doubleWindowDraw_ :: FunPtr (DoubleWindowPtr -> IO ())
+    , doubleWindowHandle_ :: FunPtr (DoubleWindowPtr -> Event -> IO CInt)
+    , doubleWindowResize_ :: FunPtr (DoubleWindowPtr ->
+                                     CInt ->
+                                     CInt ->
+                                     CInt ->
+                                     CInt ->
+                                     IO ())
+    , doubleWindowShow_ :: FunPtr (DoubleWindowPtr -> IO ())
+    , doubleWindowHide_ :: FunPtr (DoubleWindowPtr -> IO ())
+    , doubleWindowAsWindow_ :: FunPtr (DoubleWindowPtr -> IO WindowPtr)
+    , doubleWindowAsGlWindow_ :: FunPtr (DoubleWindowPtr -> IO GlWindowPtr)
+    , doubleWindowAsGroup_ :: FunPtr (DoubleWindowPtr -> IO Group)
+    , doubleWindowFlush_ :: FunPtr (DoubleWindowPtr -> IO ())
+    , doubleWindowDestroyData_ :: FunPtr (DoubleWindowPtr -> IO ())
     }
 
 data SingleWindowVirtualFuncs = SingleWindowVirtualFuncs {
-      singleWindowDraw :: FunPtr (SingleWindowPtr -> IO ())
-    , singleWindowHandle :: FunPtr (SingleWindowPtr -> Event -> IO CInt)
-    , singleWindowResize :: FunPtr (SingleWindowPtr ->
-                              CInt ->
-                              CInt ->
-                              CInt ->
-                              CInt ->
-                              IO ())
-    , singleWindowShow :: FunPtr (SingleWindowPtr -> IO ())
-    , singleWindowHide :: FunPtr (SingleWindowPtr -> IO ())
-    , singleWindowAsWindow :: FunPtr (SingleWindowPtr -> IO WindowPtr)
-    , singleWindowAsGlWindow :: FunPtr (SingleWindowPtr -> IO GlWindowPtr)
-    , singleWindowAsGroup :: FunPtr (SingleWindowPtr -> IO Group)
-    , singleWindowFlush :: FunPtr (SingleWindowPtr -> IO ())
-    , singleWindowDestroyData :: FunPtr (SingleWindowPtr -> IO ())
+      singleWindowDraw_ :: FunPtr (SingleWindowPtr -> IO ())
+    , singleWindowHandle_ :: FunPtr (SingleWindowPtr -> Event -> IO CInt)
+    , singleWindowResize_ :: FunPtr (SingleWindowPtr ->
+                                     CInt ->
+                                     CInt ->
+                                     CInt ->
+                                     CInt ->
+                                     IO ())
+    , singleWindowShow_ :: FunPtr (SingleWindowPtr -> IO ())
+    , singleWindowHide_ :: FunPtr (SingleWindowPtr -> IO ())
+    , singleWindowAsWindow_ :: FunPtr (SingleWindowPtr -> IO WindowPtr)
+    , singleWindowAsGlWindow_ :: FunPtr (SingleWindowPtr -> IO GlWindowPtr)
+    , singleWindowAsGroup_ :: FunPtr (SingleWindowPtr -> IO Group)
+    , singleWindowFlush_ :: FunPtr (SingleWindowPtr -> IO ())
+    , singleWindowDestroyData_ :: FunPtr (SingleWindowPtr -> IO ())
     }

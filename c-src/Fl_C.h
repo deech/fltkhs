@@ -81,7 +81,7 @@ EXPORT {
   FL_EXPORT_C(void, Fl_get_system_colors)();
   FL_EXPORT_C(void, Fl_foreground)(uchar r, uchar g, uchar b);
   FL_EXPORT_C(void, Fl_background)(uchar r, uchar g, uchar b);
-  FL_EXPORT_C(void, Fl_Fl_background2)(uchar r, uchar g, uchar b);
+  FL_EXPORT_C(void, Fl_background2)(uchar r, uchar g, uchar b);
 
   FL_EXPORT_C(const char*,Fl_scheme)();
   FL_EXPORT_C(int        ,Fl_set_scheme)(const char* text);

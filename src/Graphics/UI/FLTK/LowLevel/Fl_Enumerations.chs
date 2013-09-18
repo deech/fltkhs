@@ -294,36 +294,36 @@ enum Cursor {
 };
 enum Mode {
  RGB         = FL_RGB,
- Index	     = FL_INDEX,
- Double	     = FL_DOUBLE,
- Accum	     = FL_ACCUM,
- Alpha	     = FL_ALPHA,
- Depth	     = FL_DEPTH,
+ Index       = FL_INDEX,
+ Double      = FL_DOUBLE,
+ Accum       = FL_ACCUM,
+ Alpha       = FL_ALPHA,
+ Depth       = FL_DEPTH,
  Stencil     = FL_STENCIL,
- RGB8	     = FL_RGB8,
+ RGB8        = FL_RGB8,
  Multisample = FL_MULTISAMPLE,
- Stereo	     = FL_STEREO,
+ Stereo      = FL_STEREO,
  FakeSingle  = FL_FAKE_SINGLE
 };
 enum AlignType {
  AlignCenter          = 0,
- AlignTop	      = 1,
- AlignBottom	      = 2,
- AlignLeft	      = 4,
- AlignRight	      = 8,
- AlignInside	      = 16,
+ AlignTop             = 1,
+ AlignBottom          = 2,
+ AlignLeft            = 4,
+ AlignRight           = 8,
+ AlignInside          = 16,
  AlignTextOverImage   = 0x0020,
- AlignClip	      = 64,
- AlignWrap	      = 128,
+ AlignClip            = 64,
+ AlignWrap            = 128,
  AlignImageNextToText = 0x0100,
  AlignTextNextToImage = 0x0120,
  AlignImageBackdrop   = 0x0200,
- AlignLeftTop	      = 0x0007,
- AlignRightTop	      = 0x000b,
+ AlignLeftTop         = 0x0007,
+ AlignRightTop        = 0x000b,
  AlignLeftBottom      = 0x000d,
  AlignRightBottom     = 0x000e,
  AlignPositionMask    = 0x000f,
- AlignImageMask	      = 0x0320
+ AlignImageMask       = 0x0320
 };
 #endc
 {#enum Event {} deriving (Show) #}
@@ -517,7 +517,8 @@ instance Enum Boxtype where
            | x == defineGtkUpBox_ + 7 = GtkThinDownFrame
            | x == defineGtkUpBox_ + 8 = GtkRoundUpBox
            | x == defineGtkUpBox_ + 9 = GtkRoundDownBox
-           | otherwise = error ("Boxtype.toEnum: Cannot match " ++ show otherwise)
+           | otherwise = error ("Boxtype.toEnum: Cannot match " ++
+	                                         show otherwise)
 frame,frameBox, circleBox, diamondBox :: Boxtype
 frame = EngravedFrame
 frameBox = EngravedBox
@@ -653,11 +654,11 @@ single = RGB
 -- Fl_LabelType
 
 data Labeltype = NormalLabel
-     	       | NoLabel
-	       | ShadowLabel
-	       | EngravedLabel
-	       | EmbossedLabel
-	       | FreeLabelType
+               | NoLabel
+               | ShadowLabel
+               | EngravedLabel
+               | EmbossedLabel
+               | FreeLabelType
 
 instance Enum Labeltype where
     fromEnum NormalLabel = 0
@@ -756,16 +757,21 @@ defineEmbossedLabel :: Labeltype
 defineEmbossedLabel = toEnum defineEmbossedLabel_
 
 alignTopLeft :: AlignType
-alignTopLeft = toEnum $ fromIntegral {#call pure unsafe FL_ALIGN_TOP_LEFTC as aLIGN_TOP_LEFTC #}
-
+alignTopLeft = toEnum $ fromIntegral {#call pure unsafe FL_ALIGN_TOP_LEFTC as
+                                                        aLIGN_TOP_LEFTC #}
 alignTopRight :: AlignType
-alignTopRight = toEnum $ fromIntegral {#call pure unsafe FL_ALIGN_TOP_RIGHTC as aLIGN_TOP_RIGHTC #}
+alignTopRight = toEnum $ fromIntegral {#call pure unsafe FL_ALIGN_TOP_RIGHTC as
+                                                         aLIGN_TOP_RIGHTC #}
 
 alignBottomLeft :: AlignType
-alignBottomLeft = toEnum $ fromIntegral {#call pure unsafe FL_ALIGN_BOTTOM_LEFTC as aLIGN_BOTTOM_LEFTC #}
+alignBottomLeft =
+       toEnum $ fromIntegral {#call pure unsafe FL_ALIGN_BOTTOM_LEFTC as
+                                                aLIGN_BOTTOM_LEFTC #}
 
 alignBottomRight :: AlignType
-alignBottomRight = toEnum $ fromIntegral {#call pure unsafe FL_ALIGN_BOTTOM_RIGHTC as aLIGN_BOTTOM_RIGHTC #}
+alignBottomRight =
+      toEnum $ fromIntegral {#call pure unsafe FL_ALIGN_BOTTOM_RIGHTC as
+                                               aLIGN_BOTTOM_RIGHTC #}
 
 cFromColor :: Color -> CUInt
 cFromColor (Color c) = fromIntegral c
@@ -781,17 +787,28 @@ cToBool :: CInt -> Bool
 cToBool status = case status of
                    0 -> False
                    _ -> True
-{#fun pure unsafe fl_inactiveC as inactive {cFromColor `Color' } -> `Color' cToColor#}
-{#fun pure unsafe fl_contrastC as contrast {cFromColor `Color',
-                                            cFromColor `Color'} -> `Color' cToColor#}
-{#fun pure unsafe fl_color_averageC as color_average {cFromColor `Color',
-                                                      cFromColor `Color',
-                                                      realToFrac `Double'} -> `Color' cToColor#}
-{#fun pure unsafe fl_lighterC as lighter {cFromColor `Color'} -> `Color' cToColor#}
-{#fun pure unsafe fl_darkerC as darker {cFromColor `Color'} -> `Color' cToColor#}
-{#fun pure unsafe fl_rgb_color_with_rgbC as rgbColorWithRgb {castCharToCUChar `Char',
-                                                             castCharToCUChar `Char',
-                                                             castCharToCUChar `Char'} -> `Color' cToColor#}
-{#fun pure unsafe fl_rgb_color_with_grayscaleC as rgbColorWithGrayscale {castCharToCUChar `Char'} -> `Color' cToColor#}
+{#fun pure unsafe fl_inactiveC as
+                  inactive {cFromColor `Color' } -> `Color' cToColor#}
+{#fun pure unsafe fl_contrastC as
+                  contrast {cFromColor `Color',cFromColor `Color'}
+-                 > `Color' cToColor#}
+{#fun pure unsafe fl_color_averageC as
+                  color_average {cFromColor `Color',
+                                 cFromColor `Color',
+                                 realToFrac `Double'}
+                  -> `Color' cToColor#}
+{#fun pure unsafe fl_lighterC as
+                  lighter {cFromColor `Color'} -> `Color' cToColor#}
+{#fun pure unsafe fl_darkerC as
+                  darker {cFromColor `Color'} -> `Color' cToColor#}
+{#fun pure unsafe fl_rgb_color_with_rgbC as
+                  rgbColorWithRgb {castCharToCUChar `Char',
+                                   castCharToCUChar `Char',
+                                   castCharToCUChar `Char'}
+                  -> `Color' cToColor#}
+{#fun pure unsafe fl_rgb_color_with_grayscaleC as
+                  rgbColorWithGrayscale {castCharToCUChar `Char'}
+                  -> `Color' cToColor#}
 {#fun pure unsafe fl_gray_rampC as grayRamp {`Int'} -> `Color' cToColor#}
-{#fun pure unsafe fl_color_cubeC as colorCube {`Int',`Int',`Int'} -> `Color' cToColor#}
+{#fun pure unsafe fl_color_cubeC as colorCube {`Int',`Int',`Int'}
+                  -> `Color' cToColor#}
