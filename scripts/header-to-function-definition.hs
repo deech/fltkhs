@@ -44,7 +44,7 @@ getSelfArgument args = case filter (\arg -> case (argumentType arg) of
                          (x:xs) -> Just(argumentName x)
                          [] -> Nothing
 
-outputDefaultImplementation (fn,args) =
+outputDefaultImplementation (CPP (fn,args)) =
     let header = exportMacro ++ "(" ++ ppArgument "," (argument fn) ++ ")"
                  ++ "("
                  ++ intercalate "," (map (ppArgument " ") args)
@@ -77,10 +77,134 @@ outputDefaultImplementation (fn,args) =
     in
       header ++ body
 
-extractTypeName arg@(x:[]) = (x,"")
 extractTypeName arg@(x:xs) = ((intercalate " " . init $ arg),(last arg))
 extractTypeName []         = ("","")
 
+
+valueOrMe key table = case (lookup key table) of
+                        Just v -> v
+                        Nothing -> key
+
+toHaskell (CPP (function, arguments)) =
+   let oldTypeName = getArgumentType . argumentType
+       name = toHaskellName (realName function)
+                            (\f -> if (isPrefixOf "Fl_" f)
+                                   then (drop 3 f)
+                                   else f)
+       returnType = (valueOrMe (oldTypeName . argument $ function) simpleTypeMap, oldTypeName (argument function))
+       haskellArgs = map (\a -> (valueOrMe (oldTypeName a) simpleTypeMap, oldTypeName a))
+                         arguments
+       oldName = if (className function /= "")
+                 then (className function) ++ "_" ++ (realName function)
+                 else (realName function)
+   in Haskell (oldName, name,returnType,haskellArgs)
+
+toHaskellName name firstPartFunc
+    = case parse parseName "" name of
+        Right (part:parts) ->
+            let processedParts' =
+                    map (\p -> if (not $ null p)
+                               then ((upcase $ [head p]) ++
+                                              (tail p))
+                               else p)
+                        parts
+                surroundedByEmpty as = not (null as) && (null (head as)) && (null (last as))
+                headEmpty as  = not (null as) && null (head as)
+                lastEmpty as  = not (null as) && null (last as)
+                setLast x as | not (null as) = take (length as - 1) as ++ [x]
+                setLast x _ = [x]
+                setHead x as | not (null as) = [x] ++ drop 1 as
+                setHead x _ = [x]
+                ifDo p f xs = if (p xs) then f xs else xs
+                processedParts = ifDo lastEmpty (setLast "_")
+                                 (ifDo headEmpty (setHead "_") processedParts')
+                processFirstThing = firstPartFunc part
+            in
+              intercalate "" ([processFirstThing] ++ processedParts)
+        Left _ -> error "shouldn't happen"
+
+withMarshaller marshaller a =
+    if (isPrefixOf "Ptr" a || isPrefixOf "FunPtr" a)
+    then (Just "id")
+    else
+        lookup a marshaller
+
+printHaskell (Haskell (oldName, name, returnType, haskellArgs)) =
+    let addInMarshaller arg =
+            case withMarshaller inMarshallMap arg of
+              Just m -> m ++ " `" ++ arg ++ "'"
+              Nothing -> "`" ++ arg ++ "'"
+        addOutMarshaller arg =
+            case withMarshaller outMarshallMap arg of
+              Just m -> "`" ++ arg ++ "' " ++ m
+              Nothing -> "`" ++ arg ++ "'"
+        comment hArg cppArg = if (hArg == "Ptr ()")
+                              then "{- " ++ cppArg ++ " -}"
+                              else ""
+    in
+    printf "{# fun unsafe %s as %s { %s } -> %s #}\n {- %s -}\n"
+           oldName name
+           (intercalate "," (map (\(hArg,_) -> (addInMarshaller hArg))
+                                 haskellArgs))
+           (addOutMarshaller (fst returnType))
+           (intercalate " -> " ((map snd haskellArgs) ++ [(snd returnType)]))
+
+inMarshallMap =
+    [
+     ("Boxtype", "cFromEnum")
+    ,("Labeltype", "cFromEnum")
+    ,("Color", "cFromColor")
+    ,("Font", "cFromFont")
+    ,("CUInt", "id")
+    ,("FlShortcut", "id")
+    ]
+outMarshallMap =
+    [
+     ("Boxtype", "cToEnum")
+    ,("Labeltype", "cToEnum")
+    ,("Color", "cToColor")
+    ,("Font", "cToFont")
+    ,("FlShortcut", "id")
+    ]
+simpleTypeMap =
+    [
+     ("void", "()")
+    ,("int", "Int")
+    ,("void*", "Ptr ()")
+    ,("double", "Double")
+    ,("int*", "Ptr CInt")
+    ,("char*", "String")
+    ,("const char*", "String")
+    ,("float", "Float")
+    ,("uchar", "Word8")
+    ,("float*", "Ptr CFloat")
+    ,("unsigned", "Int")
+    ,("Fl_Boxtype", "Boxtype")
+    ,("fl_Widget", "Ptr ()")
+    ,("fl_Window", "Ptr ()")
+    ,("Fl_Color", "Color")
+    ,("Fl_Font", "Font")
+    ,("Fl_Shortcut", "FlShortcut")
+    ,("Fl_Labeltype", "Labeltype")
+    ,("fl_Label_Draw_F*", "FunPtr LabelDrawFPrim")
+    ,("fl_Label_Measure_F*", "FunPtr LabelMeasureFPrim")
+    ,("fl_Box_Draw_F*", "FunPtr BoxDrawFPrim")
+    ,("fl_Awake_Handler", "FunPtr AwakeHandlerPrim")
+    ,("fl_Event_Handler", "FunPtr EventHandlerPrim")
+    ,("fl_Timeout_Handler", "FunPtr TimeoutHandlerPrim")
+    ,("fl_Abort_Handler", "FunPtr AbortHandlerPrim")
+    ,("fl_Args_Handler", "FunPtr ArgsHandlerPrim")
+    ,("fl_Atclose_Handler", "FunPtr AtCloseHandlerPrim")
+    ,("fl_Atclose_Handler*", "Ptr (FunPtr AtCloseHandlerPrim)")
+    ,("fl_Event_Dispatch*", "Ptr (FunPtr EventDispatchPrim)")
+    ,("fl_Event_Dispatch",  "FunPtr EventDispatchPrim")
+    ,("fl_FD_Handler", "FunPtr FDHandlerPrim")
+    ,("fl_Idle_Handler", "FunPtr IdleHandlerPrim")
+    ,("fl_Old_Idle_Handler", "FunPtr OldIdleHandlerPrim")
+    ,("fl_Event_Dispatch*", "Ptr (FunPtr EventDispatchPrim)")
+    ,("Fl_Shortcut", "CUInt")
+    ,("fl_Atclose_Handler*", "Ptr (FunPtr AtCloseHandler)")
+    ]
 upcase = map toUpper
 makeArgument className argType argName =
     case ((upcase argType == upcase className), (isPrefixOf "fl_" argType)) of
@@ -95,7 +219,8 @@ parseName = (many (letter <|> digit)) `sepBy` (char '_')
 
 extractClassName' functionName@(x:xs) accum | (x == "Fl") = extractClassName' xs x
 extractClassName' functionName@(x1:x2:xs) accum | (x1 == "") && (x2 /= "") = accum ++ x1 ++ "_"
-extractClassName' functionName@(x1:xs) accum | (x1 == "")  = extractClassName' xs (accum ++ "_")
+extractClassName' functionName@(x:xs) accum | (x == "") && (null xs) = accum
+extractClassName' functionName@(x:xs) accum | (x == "")  = extractClassName' xs (accum ++ "_")
 extractClassName' functionName@(x:xs) accum | (x /= "") && (isUpper(head x))= extractClassName' xs (accum ++ "_" ++ x)
 extractClassName' functionName@(x:xs) accum = extractClassName' xs accum
 extractClassName' [] accum = accum
@@ -182,8 +307,11 @@ parseCPP = do
 
 parseArguments className = do char '('
                               spaces
-                              arguments <- parseArgList `sepBy` (char ',') >>=
-                                           return . map (uncurry (makeArgument className) . extractTypeName)
+                              arguments <- do
+                                args <- parseArgList `sepBy` (char ',')
+                                if (not (null (head args)))
+                                then return $ map (uncurry (makeArgument className) . extractTypeName) args
+                                else return []
                               spaces
                               char ')'
                               return arguments
@@ -193,21 +321,29 @@ parseTypeSignature = do spaces
                         arguments <- parseArguments (className typeName)
                         char ';'
                         spaces
-                        return (typeName, arguments)
+                        return $ CPP (typeName, arguments)
 
 replaceSquareBrackets = map translateSquareBracket
                         where
                           translateSquareBracket '[' = '('
                           translateSquareBracket ']' = ')'
                           translateSquareBracket x = x
+
+parseAndProcess parser input f =
+    case parse parser "" input of
+      Right output -> f output
+      Left err -> error (show err)
+data ParseOutputType = Haskell (String,String,(String,String),[(String,String)]) |
+                       CPP (FunctionName, [Argument]) deriving Show
+
 main = do (argType:arg:args) <- getArgs
           case argType of
             "string" ->
-                case parse parseTypeSignature "" arg of
-                  Right output ->  putStrLn (outputDefaultImplementation output)
-                  Left err -> error (show err)
-            -- "file-cpp" ->
-            --     case parseFromFile parseImplementation arg of
+                parseAndProcess parseTypeSignature arg (putStrLn . outputDefaultImplementation)
+            "haskell" ->
+                parseAndProcess parseTypeSignature arg (printHaskell . toHaskell)
+testHaskellName input =
+                parseAndProcess parseTypeSignature input (printHaskell . toHaskell)
 generateFunctionPointers :: [([Argument],FunctionName)] -> String
 generateFunctionPointers impls = printf "struct blah {\n%s\n};" (intercalate ";\n" (map generateFunctionPointer impls))
 generateFunctionPointer :: ([Argument], FunctionName) -> String
@@ -225,7 +361,7 @@ generateDerivedMethod impl =
                                                                       ((Argument (Self _) _ _):args) -> args
                                                                       _ -> (fst impl))
               cppArgListSignature = cppArgList (ppCPPArgument " ")
-              cppArgListPassing = cppArgList argumentName 
+              cppArgListPassing = cppArgList argumentName
               functionPointerArgList = case (fst impl) of
                                          ((Argument (Self s) _ _):args) ->
                                              case (makeArgList (\arg -> if (needsCasting arg)

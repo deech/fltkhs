@@ -18,6 +18,7 @@ library
                    Graphics.UI.FLTK.LowLevel.Fl_Enumerations
                    Graphics.UI.FLTK.LowLevel.Fl_Types
                    Graphics.UI.FLTK.LowLevel.FL
+                   Graphics.UI.FLTK.LowLevel.Utils
   build-depends: base
   build-tools: c2hs
   extensions: ForeignFunctionInterface
@@ -33,4 +34,3 @@ Executable test_call
   Build-Depends:
     base,
     fltkhs
-    

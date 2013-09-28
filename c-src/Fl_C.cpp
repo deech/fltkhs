@@ -486,6 +486,13 @@ EXPORT {
   FL_EXPORT_C(int,Fl_draw_box_active)( ){
     return Fl::draw_box_active();
   }
+  FL_EXPORT_C(void,Fl_default_atclose)(fl_Window window,void* data){
+    Fl::default_atclose((static_cast<Fl_Window*>(window)),data);
+  }
+  FL_EXPORT_C(void,Fl_set_atclose)(fl_Atclose_Handler* f){
+    C_to_Fl_Atclose_Handler::cb = f;
+    Fl::set_atclose(C_to_Fl_Atclose_Handler::intercept);
+  }
   FL_EXPORT_C(int,Fl_event_shift)( ){
     return Fl::event_shift();
   }

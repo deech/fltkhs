@@ -196,7 +196,7 @@ EXPORT {
   FL_EXPORT_C(const char*       ,Fl_get_font_name)(Fl_Font font);
   FL_EXPORT_C(const char*       ,Fl_get_font_name_with_attributes)(Fl_Font font,int* attributes);
   FL_EXPORT_C(int               ,Fl_get_font_sizes)(Fl_Font font,int* sizep);
-  FL_EXPORT_C(void              ,Fl_set_font_by_string)(Fl_Font font,const char*);
+  FL_EXPORT_C(void              ,Fl_set_font_by_string)(Fl_Font font,const char* fontString);
   FL_EXPORT_C(void              ,Fl_set_font_by_font)(Fl_Font to,Fl_Font from);
   FL_EXPORT_C(Fl_Font           ,Fl_set_fonts)();
   FL_EXPORT_C(Fl_Font           ,Fl_set_fonts_with_string)(const char* string);
@@ -210,9 +210,8 @@ EXPORT {
   FL_EXPORT_C(int               ,Fl_box_dw)(Fl_Boxtype boxtype);
   FL_EXPORT_C(int               ,Fl_box_dh)(Fl_Boxtype boxtype);
   FL_EXPORT_C(int               ,Fl_draw_box_active)();
-  FL_EXPORT_C(void              ,Fl_set_abort)(fl_Abort_Handler f);
-  FL_EXPORT_C(void              ,Fl_default_atclose)(fl_Window* window,void* data);
-  FL_EXPORT_C(void              ,Fl_set_atclose)(fl_Atclose_Handler f);
+  FL_EXPORT_C(void              ,Fl_default_atclose)(fl_Window window,void* data);
+  FL_EXPORT_C(void              ,Fl_set_atclose)(fl_Atclose_Handler* f);
   FL_EXPORT_C(int               ,Fl_event_shift)();
   FL_EXPORT_C(int               ,Fl_event_ctrl)();
   FL_EXPORT_C(int               ,Fl_event_command)();

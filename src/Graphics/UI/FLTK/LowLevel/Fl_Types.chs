@@ -198,6 +198,10 @@ newtype GLUTMenuStatusFunction = GLUTMenuStatusFunction
 {#pointer *Fl_Glut_StrokeVertex as GlutStrokeVertexPtr newtype#}
 {#pointer *Fl_Glut_StrokeStrip as GlutStrokeStripPtr newtype#}
 {#pointer *Fl_Glut_StrokeFont as GlutStrokeFontPtr newtype#}
+type FlShortcut            = {#type Fl_Shortcut #}
+type FlColor               = {#type Fl_Color #}
+type FlFont                = {#type Fl_Font #}
+type FlAlign               = {#type Fl_Align #}
 type RGB                   = (CUChar, CUChar, CUChar)
 type FlIntPtr              = {#type fl_intptr_t #}
 type FlUIntPtr             = {#type fl_uintptr_t#}
@@ -468,7 +472,6 @@ type TextBufferCallback    = FunPtr (TextBufferPtr -> IO ())
 type UnfinishedStyleCb     = FunPtr (CInt -> UserDataPtr -> IO ())
 type FileChooserCallback   = FunPtr (FileChooserPtr -> UserDataPtr -> IO())
 type SharedImageHandler    = FunPtr (CString -> CUChar -> CInt -> ImagePtr)
-
 {#pointer *Style_Table_Entry as StyleTableEntryPtr foreign -> StyleTableEntry #}
 data StyleTableEntry = StyleTableEntry {
       color :: Color,
@@ -890,3 +893,8 @@ data SingleWindowVirtualFuncs = SingleWindowVirtualFuncs {
     , singleWindowFlush_ :: FunPtr (SingleWindowPtr -> IO ())
     , singleWindowDestroyData_ :: FunPtr (SingleWindowPtr -> IO ())
     }
+
+newtype Width = Width Int
+newtype Height = Height Int
+newtype X = X Int
+newtype Y = Y Int

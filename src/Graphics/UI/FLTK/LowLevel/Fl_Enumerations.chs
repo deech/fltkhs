@@ -569,6 +569,11 @@ italic = helveticaItalic
 boldItalic :: Font
 boldItalic = helveticaBoldItalic
 
+cFromFont :: Font -> CInt
+cFromFont (Font f) = fromIntegral f
+cToFont :: CInt -> Font 
+cToFont f = Font (fromIntegral f)
+
 -- Colors
 
 newtype Color = Color CUInt deriving Show
@@ -778,20 +783,11 @@ cFromColor (Color c) = fromIntegral c
 cToColor :: CUInt -> Color
 cToColor c = Color (fromIntegral c)
 
-cFromEnum :: (Enum a) => a -> CInt
-cFromEnum = fromIntegral . fromEnum
-cToEnum :: (Enum a) => CInt -> a
-cToEnum = toEnum . fromIntegral
-
-cToBool :: CInt -> Bool
-cToBool status = case status of
-                   0 -> False
-                   _ -> True
 {#fun pure unsafe fl_inactiveC as
                   inactive {cFromColor `Color' } -> `Color' cToColor#}
 {#fun pure unsafe fl_contrastC as
                   contrast {cFromColor `Color',cFromColor `Color'}
--                 > `Color' cToColor#}
+                  -> `Color' cToColor#}
 {#fun pure unsafe fl_color_averageC as
                   color_average {cFromColor `Color',
                                  cFromColor `Color',
