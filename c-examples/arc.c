@@ -1,11 +1,11 @@
 #include <stdio.h>
-#include "Fl_C.h"
-#include "Fl_Types.h"
-#include "Fl_Double_WindowC.h"
-#include "Fl_Hor_Value_SliderC.h"
-#include "Fl_DrawC.h"
-#include "Fl_WidgetC.h"
-#include "Fl_SliderC.h"
+#include <Fl_C.h>
+#include <Fl_Types.h>
+#include <Fl_Double_WindowC.h>
+#include <Fl_Hor_Value_SliderC.h>
+#include <Fl_DrawC.h>
+#include <Fl_WidgetC.h>
+#include <Fl_SliderC.h>
 
 
 double my_args[6] = {140, 140, 50, 0, 360, 0};
