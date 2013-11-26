@@ -59,14 +59,13 @@ EXPORT {
   typedef int  (*fl_Event_Dispatch)(int event, fl_Window w);
 
   FL_EXPORT_C(int, Fl_run)();
-  FL_EXPORT_C(double, Fl_wait_with_args)(double wait);
   FL_EXPORT_C(int, Fl_check)();
   FL_EXPORT_C(int, Fl_ready)();
   FL_EXPORT_C(int, Fl_option)(Fl_Option opt);
   FL_EXPORT_C(void, Fl_set_option)(Fl_Option opt, int val);
 
   FL_EXPORT_C(int, Fl_add_awake_handler_)(fl_Awake_Handler handler, void* user_data);
-  FL_EXPORT_C(int, Fl_get_awake_handler_)(fl_Awake_Handler handler, void* user_data);
+  FL_EXPORT_C(int, Fl_get_awake_handler_)(fl_Awake_Handler* handler, void** user_data);
   FL_EXPORT_C(double, Fl_version)();
   FL_EXPORT_C(const char*, Fl_help)();
   FL_EXPORT_C(int, Fl_arg)(int argc, char **argv, int i);
@@ -135,9 +134,9 @@ EXPORT {
   FL_EXPORT_C(int        ,Fl_event_dy)();
   FL_EXPORT_C(void       ,Fl_get_mouse)(int* x, int* y);
   FL_EXPORT_C(int        ,Fl_event_clicks)();
-  FL_EXPORT_C(void       ,Fl_event_set_clicks)(int i);
+  FL_EXPORT_C(void       ,Fl_set_event_clicks)(int i);
   FL_EXPORT_C(int        ,Fl_event_is_click)();
-  FL_EXPORT_C(void       ,Fl_event_set_is_click)(int i);
+  FL_EXPORT_C(void       ,Fl_set_event_is_click)(int i);
   FL_EXPORT_C(int        ,Fl_event_button)();
   FL_EXPORT_C(int        ,Fl_event_state)();
   FL_EXPORT_C(int        ,Fl_event_set_state)(int i);
@@ -178,9 +177,9 @@ EXPORT {
   FL_EXPORT_C(int       ,Fl_h)();
   FL_EXPORT_C(int               ,Fl_screen_count)();
   FL_EXPORT_C(void              ,Fl_screen_xywh)(int* X,int* Y,int* W,int* H);
-  FL_EXPORT_C(void              ,Fl_screen_xywh_with_mx_my)(int* X,int* Y,int* W,int* H,int mx,int my);
+  FL_EXPORT_C(void              ,Fl_screen_xywh_with_mxmy)(int* X,int* Y,int* W,int* H,int mx,int my);
   FL_EXPORT_C(void              ,Fl_screen_xywh_with_n)(int* X,int* Y,int* W,int* H,int n);
-  FL_EXPORT_C(void              ,Fl_screen_xywh_with_n_mx_my)(int* X,int* Y,int* W,int* H,int mx,int my,int mw,int mh);
+  FL_EXPORT_C(void              ,Fl_screen_xywh_with_mxmymwmh)(int* X,int* Y,int* W,int* H,int mx,int my,int mw,int mh);
   FL_EXPORT_C(void              ,Fl_screen_dpi)(float* h,float* v);
   FL_EXPORT_C(void              ,Fl_screen_dpi_with_n)(float* h,float* v,int n);
   FL_EXPORT_C(void              ,Fl_screen_work_area_with_mx_my)(int* X,int* Y,int* W,int* H,int mx,int my);
@@ -224,7 +223,7 @@ EXPORT {
   FL_EXPORT_C(void              ,Fl_release)();
   FL_EXPORT_C(void              ,Fl_set_visible_focus)(int v);
   FL_EXPORT_C(int               ,Fl_visible_focus)();
-  FL_EXPORT_C(void              ,Fl_dnd_set_text_ops)(int v);
+  FL_EXPORT_C(void              ,Fl_set_dnd_text_ops)(int v);
   FL_EXPORT_C(int               ,Fl_dnd_text_ops)();
   FL_EXPORT_C(int               ,Fl_lock)();
   FL_EXPORT_C(void              ,Fl_unlock)();
@@ -237,7 +236,7 @@ EXPORT {
   FL_EXPORT_C(void              ,Fl_do_widget_deletion)();
   FL_EXPORT_C(void              ,Fl_watch_widget_pointer)(fl_Widget w);
   FL_EXPORT_C(void              ,Fl_release_widget_pointer)(fl_Widget w);
-  FL_EXPORT_C(void              ,Fl_Fl_clear_widget_pointer)(fl_Widget w);
+  FL_EXPORT_C(void              ,Fl_clear_widget_pointer)(fl_Widget w);
 #ifdef __cplusplus
 }
 #endif

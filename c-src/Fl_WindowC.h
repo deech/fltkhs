@@ -15,13 +15,13 @@ EXPORT {
   FL_EXPORT_C(uchar,        Fl_Window_type)(fl_Window win);
   FL_EXPORT_C(void,         Fl_Window_set_type)(fl_Window win, uchar t);
 
-FL_EXPORT_C(void, Fl_Window_draw_box)(fl_Window Window);
-FL_EXPORT_C(void, Fl_Window_draw_box_with_tc)(fl_Window Window,Fl_Boxtype t, Fl_Color c);
-FL_EXPORT_C(void, Fl_Window_draw_box_with_txywhc)(fl_Window Window,Fl_Boxtype t, int x,int y,int w,int h, Fl_Color c);
-FL_EXPORT_C(void, Fl_Window_draw_backdrop)(fl_Window Window);
-FL_EXPORT_C(void, Fl_Window_draw_focus)(fl_Window Window);
-FL_EXPORT_C(void, Fl_Window_draw_focus_with_txywh)(fl_Window Window,Fl_Boxtype t, int x,int y,int w,int h);
-FL_EXPORT_C(void, Fl_Window_draw_label)(fl_Window Window);
+  FL_EXPORT_C(void, Fl_Window_draw_box)(fl_Window Window);
+  FL_EXPORT_C(void, Fl_Window_draw_box_with_tc)(fl_Window Window,Fl_Boxtype t, Fl_Color c);
+  FL_EXPORT_C(void, Fl_Window_draw_box_with_txywhc)(fl_Window Window,Fl_Boxtype t, int x,int y,int w,int h, Fl_Color c);
+  FL_EXPORT_C(void, Fl_Window_draw_backdrop)(fl_Window Window);
+  FL_EXPORT_C(void, Fl_Window_draw_focus)(fl_Window Window);
+  FL_EXPORT_C(void, Fl_Window_draw_focus_with_txywh)(fl_Window Window,Fl_Boxtype t, int x,int y,int w,int h);
+  FL_EXPORT_C(void, Fl_Window_draw_label)(fl_Window Window);
   FL_EXPORT_C(int,          Fl_Window_x)(fl_Window win);
   FL_EXPORT_C(int,          Fl_Window_y)(fl_Window win);
   FL_EXPORT_C(int,          Fl_Window_w)(fl_Window win);

@@ -4,7 +4,13 @@ import Foreign
 import Foreign.C
 
 foreign import ccall "wrapper"
-        mkCallbackPtr :: CallbackPrim -> IO (FunPtr CallbackPrim)
+        mkWidgetCallbackPtr :: CallbackPrim -> IO (FunPtr CallbackPrim)
+
+foreign import ccall "wrapper"
+        mkCallbackPtr :: Callback -> IO (FunPtr Callback)
+
+foreign import ccall "dynamic"
+        unwrapCallbackPtr :: FunPtr Callback -> Callback
 
 cFromEnum :: (Enum a, Integral b) => a -> b
 cFromEnum = fromIntegral . fromEnum

@@ -153,6 +153,7 @@ inMarshallMap =
     [
      ("Boxtype", "cFromEnum")
     ,("Labeltype", "cFromEnum")
+    ,("AlignType", "cFromEnum")
     ,("Color", "cFromColor")
     ,("Font", "cFromFont")
     ,("CUInt", "id")
@@ -165,6 +166,7 @@ outMarshallMap =
     ,("Color", "cToColor")
     ,("Font", "cToFont")
     ,("FlShortcut", "id")
+    ,("AlignType", "cToEnum")
     ]
 simpleTypeMap =
     [
@@ -182,8 +184,10 @@ simpleTypeMap =
     ,("Fl_Boxtype", "Boxtype")
     ,("fl_Widget", "Ptr ()")
     ,("fl_Window", "Ptr ()")
+    ,("fl_Group", "Ptr ()")
     ,("Fl_Color", "Color")
     ,("Fl_Font", "Font")
+    ,("Fl_Align", "AlignType")
     ,("Fl_Shortcut", "FlShortcut")
     ,("Fl_Labeltype", "Labeltype")
     ,("fl_Label_Draw_F*", "FunPtr LabelDrawFPrim")

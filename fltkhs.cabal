@@ -24,13 +24,14 @@ library
   extensions: ForeignFunctionInterface
   hs-source-dirs: src
   other-modules: C2HS
-  ghc-options: -Wall -lfltkc -I./c-src
+  include-dirs: ./c-src
+  ghc-options: -Wall -lfltkc
 
 Executable test_call
   Main-Is: TestCall.hs
   Hs-Source-Dirs: src/TestPrograms
-  include-dirs: ./object_files
-  ghc-Options: -Wall -threaded -lHSfltkhs-0.1.0.0 -lfltk -lfltk_images -lpng -lz -ljpeg -lfltk_gl -lGLU -lGL -lXext -lXft -lfontconfig -lXinerama -lpthread -ldl -lm  -lX11 -lstdc++
+  include-dirs: ./object_files ./lib
+  ghc-Options: -Wall -threaded -lHSfltkhs-0.1.0.0 -lfltkc -lfltk -lfltk_images -lpng -lz -ljpeg -lfltk_gl  -lGLU -lGL -lXfixes -lXext -lXft -lfontconfig -lXinerama -lpthread -ldl -lm  -lX11 -lstdc++
   Build-Depends:
     base,
     fltkhs

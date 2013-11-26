@@ -59,8 +59,8 @@ EXPORT {
   FL_EXPORT_C(int, Fl_add_awake_handler_)(fl_Awake_Handler handler, void* user_data){
     return Fl::add_awake_handler_(handler, user_data);}
 
-  FL_EXPORT_C(int, Fl_get_awake_handler_)(fl_Awake_Handler handler, void* user_data){
-    return Fl::get_awake_handler_(handler, user_data);
+  FL_EXPORT_C(int, Fl_get_awake_handler_)(fl_Awake_Handler* handler, void** user_data){
+    return Fl::get_awake_handler_(*handler, *user_data);
   }
   FL_EXPORT_C(double,Fl_version)( ){
     return Fl::version();
@@ -197,6 +197,9 @@ EXPORT {
   }
   FL_EXPORT_C(int,Fl_has_idle_with_userdata)(fl_Idle_Handler cb,void* userdata){
     return Fl::has_idle(cb,userdata);
+  }
+  FL_EXPORT_C(void,Fl_remove_idle)(fl_Idle_Handler cb){
+    Fl::remove_idle(cb);
   }
   FL_EXPORT_C(void,Fl_remove_idle_with_userdata)(fl_Idle_Handler cb,void* data){
     Fl::remove_idle(cb,data);
@@ -388,13 +391,16 @@ EXPORT {
   FL_EXPORT_C(int,Fl_screen_count)( ){
     return Fl::screen_count();
   }
-  FL_EXPORT_C(void,Fl_screen_xywh_with_mx_my)(int* X,int* Y,int* W,int* H,int mx,int my){
+  FL_EXPORT_C(void,Fl_screen_xywh)(int* X,int* Y,int* W,int* H){
+    Fl::screen_xywh(*X,*Y,*W,*H);
+  }
+  FL_EXPORT_C(void,Fl_screen_xywh_with_mxmy)(int* X,int* Y,int* W,int* H,int mx,int my){
     Fl::screen_xywh(*X,*Y,*W,*H,mx,my);
   }
   FL_EXPORT_C(void,Fl_screen_xywh_with_n)(int* X,int* Y,int* W,int* H,int n){
     Fl::screen_xywh(*X,*Y,*W,*H,n);
   }
-  FL_EXPORT_C(void,Fl_screen_xywh_with_n_mx_my_mh)(int* X,int* Y,int* W,int* H,int mx,int my,int mw,int mh){
+  FL_EXPORT_C(void,Fl_screen_xywh_with_mxmymwmh)(int* X,int* Y,int* W,int* H,int mx,int my,int mw,int mh){
     Fl::screen_xywh(*X,*Y,*W,*H,mx,my,mw,mh);
   }
   FL_EXPORT_C(void,Fl_screen_dpi)(float* h,float* v){
@@ -555,6 +561,9 @@ EXPORT {
   }
   FL_EXPORT_C(void*,Fl_thread_message)( ){
     return Fl::thread_message();
+  }
+  FL_EXPORT_C(void,Fl_delete_widget)(fl_Widget w) {
+    Fl::delete_widget((static_cast<Fl_Widget*>(w)));
   }
   FL_EXPORT_C(void,Fl_clear_widget_pointer)(fl_Widget w){
     Fl::clear_widget_pointer((static_cast<Fl_Widget*>(w)));

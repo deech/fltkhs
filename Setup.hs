@@ -1,7 +1,7 @@
 import Data.Maybe(fromJust)
 import Data.List(partition, isPrefixOf)
 import Distribution.Simple.Compiler
-import Distribution.Simple.Configure    
+import Distribution.Simple.Configure
 import Distribution.Simple.LocalBuildInfo
 import Distribution.PackageDescription
 import Distribution.Simple
@@ -15,10 +15,14 @@ import qualified Distribution.ModuleName as ModuleName
 import Distribution.Simple.BuildPaths
 import System.Directory(getCurrentDirectory, getDirectoryContents, copyFile, doesDirectoryExist)
 import System.FilePath ( (</>), (<.>), takeExtension,
-                         takeDirectory, replaceExtension, splitExtension, combine, takeBaseName) 
+                         takeDirectory, replaceExtension, splitExtension, combine, takeBaseName)
 import System.IO
+import Debug.Trace
 
-main = defaultMainWithHooks autoconfUserHooks {buildHook = myBuildHook, cleanHook = myCleanHook}
+main = defaultMainWithHooks autoconfUserHooks {
+         buildHook = myBuildHook,
+         cleanHook = myCleanHook
+       }
 
 fltkcdir = unsafePerformIO getCurrentDirectory ++ "/lib"
 fltkclib = "fltkc"
@@ -33,7 +37,7 @@ getHeaders = unsafePerformIO $ do
   return headerFiles
 objectFileDir = unsafePerformIO getCurrentDirectory ++ "/object_files"
 getObjectFileDirContents = getDirectoryContents objectFileDir
-                    
+
 addIncludeDirs pd =
   let lib = (fromJust . library) $ pd
       bi = libBuildInfo lib
@@ -118,7 +122,7 @@ myBuildHook pkg_descr local_bld_info user_hooks bld_flags =
           case comp of
             (CLib lib) -> do
                       hobjs <- getHaskellObjects lib local_bld_info pref objExtension True
-                      let staticObjectFiles = hobjs ++ cobjs
+                      let staticObjectFiles = cobjs ++ hobjs
                       (arProg, _) <- requireProgram verbosity arProgram (withPrograms local_bld_info)
                       let pkgid = packageId pkg_descr
                           vanillaLibFilePath = pref </> mkLibName pkgid

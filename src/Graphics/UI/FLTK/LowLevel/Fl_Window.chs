@@ -27,28 +27,12 @@ windowNewWithLabel w h title = do
 windowShow :: WindowPtr -> IO ()
 windowShow windowPtr = withForeignPtr windowPtr (\p -> windowShow' (castPtr p))
 
-{# fun unsafe Fl_Window_set_callback_with_user_data as
-              windowSetCallbackWithUserData'
-              {id `Ptr ()' , id `FunPtr CallbackPrim', id `Ptr ()'} -> `()' #}
-windowSetCallbackWithUserData :: WindowPtr ->
-                                 CallbackPrim ->
-                                 UserDataPtr ->
-                                 IO ()
-windowSetCallbackWithUserData windowPtr callback userDataPtr =
-    withForeignPtr windowPtr
-       (\w -> withForeignPtr userDataPtr
-            (\u -> do
-               callbackPtr <- mkCallbackPtr callback
-               windowSetCallbackWithUserData' (castPtr w)
-                                              callbackPtr
-                                              (castPtr u)))
-
 {# fun unsafe Fl_Window_set_callback as
               windowSetCallback' {id `Ptr ()' , id `FunPtr CallbackPrim'}
               -> `()' #}
 
-windowSetCallback :: WindowPtr -> CallbackPrim -> IO ()
+windowSetCallback :: WindowPtr -> IO () -> IO ()
 windowSetCallback windowPtr callback =
     withForeignPtr windowPtr (\w -> do
                                   callbackPtr <- mkCallbackPtr callback
-                                  windowSetCallback' (castPtr w) callbackPtr)
+                                  windowSetCallback' (castPtr w) (castFunPtr callbackPtr))

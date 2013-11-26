@@ -15,7 +15,7 @@ AC_CHECK_LIB([dl], [main])
 AC_CHECK_LIB([fltk], [fl_alphasort])
 AC_CHECK_LIB([fltk_gl], [main])
 AC_CHECK_LIB([fltk_images], [main])
-AC_CHECK_PROG(FLTKCONFIG,fltk-config,fltk-config,AC_MSG_ERROR(Cannot find then fltk-config executable. Is the FLTK library installed?))
+AC_CHECK_PROG(FLTKCONFIG,fltk-config,fltk-config,AC_MSG_ERROR(Cannot find the fltk-config executable. Is FLTK installed?))
 # Checks for header files.
 AC_CHECK_HEADERS([stddef.h stdint.h stdlib.h string.h unistd.h])
 LIBS=""
