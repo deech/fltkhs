@@ -348,24 +348,114 @@ flBackground2 (r,g,b) = flBackground2_ r g b
        {  } -> `Int' #}
 {# fun unsafe Fl_screen_count as screenCount
        {  } -> `Int' #}
+
 {# fun unsafe Fl_screen_xywh as screenXYWH
-       { id `Ptr CInt',id `Ptr CInt',id `Ptr CInt',id `Ptr CInt' } -> `()' #}
+       {
+         alloca- `Int' peekIntConv* ,
+         alloca- `Int' peekIntConv* ,
+         alloca- `Int' peekIntConv* ,
+         alloca- `Int' peekIntConv*
+       } -> `()' #}
 {# fun unsafe Fl_screen_xywh_with_mxmy as screenXYWYWithMXMY
-       { id `Ptr CInt',id `Ptr CInt',id `Ptr CInt',id `Ptr CInt',`Int',`Int' } -> `()' #}
+       {
+         alloca- `Int' peekIntConv* ,
+         alloca- `Int' peekIntConv* ,
+         alloca- `Int' peekIntConv* ,
+         alloca- `Int' peekIntConv* ,
+         `Int',
+         `Int'
+       } -> `()' #}
 {# fun unsafe Fl_screen_xywh_with_n as screenXYWNWithN
-       { id `Ptr CInt',id `Ptr CInt',id `Ptr CInt',id `Ptr CInt',`Int' } -> `()' #}
+       {
+         alloca- `Int' peekIntConv* ,
+         alloca- `Int' peekIntConv* ,
+         alloca- `Int' peekIntConv* ,
+         alloca- `Int' peekIntConv* ,
+         `Int'
+       } -> `()' #}
 {# fun unsafe Fl_screen_xywh_with_mxmymwmh as screenXYWHWithNMXMYMWMH
-       { id `Ptr CInt',id `Ptr CInt',id `Ptr CInt',id `Ptr CInt',`Int',`Int',`Int',`Int' } -> `()' #}
-{# fun unsafe Fl_screen_dpi as screenDpi
-       { id `Ptr CFloat',id `Ptr CFloat' } -> `()' #}
-{# fun unsafe Fl_screen_dpi_with_n as screenDpiWithN
-       { id `Ptr CFloat',id `Ptr CFloat',`Int' } -> `()' #}
-{# fun unsafe Fl_screen_work_area_with_mx_my as screenWorkAreaWithMxMy
-       { id `Ptr CInt',id `Ptr CInt',id `Ptr CInt',id `Ptr CInt',`Int',`Int' } -> `()' #}
-{# fun unsafe Fl_screen_work_area_with_n as screenWorkAreaWithN
-       { id `Ptr CInt',id `Ptr CInt',id `Ptr CInt',id `Ptr CInt',`Int' } -> `()' #}
-{# fun unsafe Fl_screen_work_area as screenWorkArea
-       { id `Ptr CInt',id `Ptr CInt',id `Ptr CInt',id `Ptr CInt' } -> `()' #}
+       {
+         alloca- `Int' peekIntConv* ,
+         alloca- `Int' peekIntConv* ,
+         alloca- `Int' peekIntConv* ,
+         alloca- `Int' peekIntConv* ,
+         `Int',
+         `Int',
+         `Int',
+         `Int'
+       } -> `()' #}
+
+toRectangle :: (Int,Int,Int,Int) -> Rectangle
+toRectangle (x, y, w, h) = Rectangle (X (fromIntegral x))
+                                     (Y (fromIntegral y))
+                                     (Width (fromIntegral w))
+                                     (Height (fromIntegral h))
+
+screen :: Maybe ScreenLocation -> IO Rectangle
+screen location =
+    case location of
+      (Just (Intersect (Rectangle (X x) (Y y) (Width w) (Height h)))) ->
+          screenXYWHWithNMXMYMWMH x y w h >>= return . toRectangle
+      (Just (ScreenPosition (Position (X x) (Y y)))) ->
+          screenXYWYWithMXMY x y >>= return . toRectangle
+      (Just (ScreenNumber n)) ->
+          screenXYWNWithN n >>= return . toRectangle
+      Nothing ->
+          screenXYWH >>= return . toRectangle
+
+{# fun unsafe Fl_screen_dpi as screenDpi'
+       { alloca- `Float' peekFloatConv*,
+         alloca- `Float' peekFloatConv* }
+           -> `()' #}
+{# fun unsafe Fl_screen_dpi_with_n as screenDpiWithN'
+       { alloca- `Float' peekFloatConv*,
+         alloca- `Float' peekFloatConv*,
+                 `Int' } -> `()' #}
+
+screenDPI :: Maybe Int -> IO DPI
+screenDPI (Just n) = do
+  (dpiX, dpiY) <- screenDpiWithN' n
+  return $ DPI dpiX dpiY
+screenDPI Nothing = do
+  (dpiX, dpiY) <- screenDpi'
+  return $ DPI dpiX dpiY
+
+{# fun unsafe Fl_screen_work_area_with_mx_my as screenWorkAreaWithMXMY'
+       {
+         alloca- `Int' peekIntConv* ,
+         alloca- `Int' peekIntConv* ,
+         alloca- `Int' peekIntConv* ,
+         alloca- `Int' peekIntConv* ,
+         `Int',
+         `Int'
+       } -> `()' #}
+{# fun unsafe Fl_screen_work_area_with_n as screenWorkAreaWithN'
+       {
+         alloca- `Int' peekIntConv* ,
+         alloca- `Int' peekIntConv* ,
+         alloca- `Int' peekIntConv* ,
+         alloca- `Int' peekIntConv* ,
+         `Int'
+       } -> `()' #}
+{# fun unsafe Fl_screen_work_area as screenWorkArea'
+       {
+         alloca- `Int' peekIntConv* ,
+         alloca- `Int' peekIntConv* ,
+         alloca- `Int' peekIntConv* ,
+         alloca- `Int' peekIntConv* 
+       } -> `()' #}
+screenWorkArea :: Maybe ScreenLocation -> IO Rectangle
+screenWorkArea location =
+    case location of
+      (Just (Intersect (Rectangle (X x) (Y y) _ _))) ->
+          screenWorkAreaWithMXMY' x y >>= return . toRectangle
+      (Just (ScreenPosition (Position (X x) (Y y)))) ->
+          screenWorkAreaWithMXMY' x y >>= return . toRectangle
+      (Just (ScreenNumber n)) ->
+          screenWorkAreaWithN' n >>= return . toRectangle
+      Nothing ->
+          screenWorkArea' >>= return . toRectangle
+
 {# fun unsafe Fl_set_color_rgb as setColorRgb
        { cFromColor `Color',`Word8',`Word8',`Word8' } -> `()' #}
 {# fun unsafe Fl_set_color as setColor
@@ -449,7 +539,7 @@ flBackground2 (r,g,b) = flBackground2_ r g b
 {# fun unsafe Fl_unlock as unlock
        {  } -> `()' #}
 {# fun unsafe Fl_awake as awake
-       {  } -> `()' #}
+       {} -> `()' #}
 {# fun unsafe Fl_awake_with_message as awakeWithMessage
        { id `Ptr ()' } -> `()' #}
 {# fun unsafe Fl_awake_with_cb as awakeWithCb

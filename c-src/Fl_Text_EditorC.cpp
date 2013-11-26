@@ -526,7 +526,7 @@ EXPORT {
  FL_EXPORT_C(int,Fl_Text_Editor_insert_mode)(fl_Text_Editor text_editor){
    return (static_cast<DerivedText_Editor*>(text_editor))->insert_mode();
  }
- FL_EXPORT_C(int, Fl_Text_Editor_num_keybindings)(Key_BindingC* bindings){
+ FL_EXPORT_C(int, Fl_Text_Editor_num_key_bindings)(Key_BindingC* bindings){
    int count = 0;
    Key_BindingC* curr = bindings;
    for (;curr;curr = curr->next){

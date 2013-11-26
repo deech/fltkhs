@@ -897,3 +897,12 @@ newtype Width = Width Int
 newtype Height = Height Int
 newtype X = X Int
 newtype Y = Y Int
+data Position = Position X Y
+data DPI = DPI Float Float 
+data Rectangle = Rectangle X Y Width Height
+data ScreenLocation = Intersect Rectangle
+                    | ScreenNumber Int
+                    | ScreenPosition Position
+
+toWidget :: ForeignPtr a -> WidgetPtr
+toWidget = castForeignPtr
