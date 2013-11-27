@@ -6,9 +6,10 @@ import Graphics.UI.FLTK.LowLevel.Fl_Types
 import Graphics.UI.FLTK.LowLevel.Utils
 import Foreign.Ptr
 import Foreign.C.Types
-import Foreign
+import Foreign hiding (unsafePerformIO)
 import Foreign.C.String
-import C2HS hiding (cFromEnum)
+import C2HS hiding (cFromEnum, unsafePerformIO)
+import System.IO.Unsafe (unsafePerformIO)
 #c
  enum Option {
    ArrowFocus = OPTION_ARROW_FOCUS,
@@ -61,35 +62,7 @@ foreign import ccall "wrapper"
         wrapBoxDrawFPrim :: BoxDrawFPrim ->
                             IO (FunPtr BoxDrawFPrim)
 
-type AwakeHandlerPrim = Ptr () -> IO ()
-type AwakeHandler = IO ()
-
-foreign import ccall "wrapper"
-        mkAwakeHandler :: AwakeHandler ->
-                          IO (FunPtr AwakeHandler)
-
-foreign import ccall "dynamic"
-        unwrapAwakeHandler :: FunPtr AwakeHandler -> AwakeHandler
-
-type TimeoutHandlerPrim = (Ptr () ->
-                           IO())
-foreign import ccall "wrapper"
-        wrapTimeoutHandlerPrim :: TimeoutHandlerPrim ->
-                                  IO (FunPtr TimeoutHandlerPrim)
-type TimeoutHandler = IO ()
-
-type IdleHandlerPrim = (Ptr () ->
-                        IO())
-foreign import ccall "wrapper"
-        wrapIdleHandlerPrim :: IdleHandlerPrim ->
-                               IO (FunPtr IdleHandlerPrim)
-type IdleHandler = IO ()
-
-type OldIdleHandlerPrim = (IO ())
-foreign import ccall "wrapper"
-        wrapOldIdleHandlerPrim :: OldIdleHandlerPrim ->
-                                  IO (FunPtr OldIdleHandlerPrim)
-type OldIdleHandler = IO ()
+type HandlerPrim = Ptr() -> IO ()
 
 type FDHandlerPrim = (Socket ->
                       Ptr () ->
@@ -142,8 +115,17 @@ flReady = flReady'
 flOption :: Option -> IO Int
 flOption opt = flOption' opt
 
+toUserDataHandlerPrim :: Callback -> FunPtr HandlerPrim
+toUserDataHandlerPrim cb =
+    unsafePerformIO $ do
+      ptr <- mkCallbackPtr cb
+      return $ castFunPtr ptr
+             
+unsafeMkCallbackPtr :: Callback -> FunPtr Callback
+unsafeMkCallbackPtr = unsafePerformIO . mkCallbackPtr
+
 {# fun unsafe Fl_add_awake_handler_ as flAddAwakeHandler'
-  {id `FunPtr AwakeHandlerPrim', id `(Ptr ())'} -> `Int' #}
+  {id `FunPtr HandlerPrim', id `(Ptr ())'} -> `Int' #}
 flAddAwakeHandler :: Callback -> IO Int
 flAddAwakeHandler awakeHandler =
     do
@@ -151,8 +133,8 @@ flAddAwakeHandler awakeHandler =
       flAddAwakeHandler' (castFunPtr callbackPtr) nullPtr
 
 {# fun unsafe Fl_get_awake_handler_ as flGetAwakeHandler_'
-  {id `Ptr (FunPtr AwakeHandlerPrim)', id `Ptr (Ptr ())'} -> `Int' #}
-flGetAwakeHandler_ :: IO AwakeHandler
+  {id `Ptr (FunPtr HandlerPrim)', id `Ptr (Ptr ())'} -> `Int' #}
+flGetAwakeHandler_ :: IO Callback
 flGetAwakeHandler_ =
     alloca $ \ptrToFunPtr ->
         alloca $ \ptrToUD -> do
@@ -160,10 +142,8 @@ flGetAwakeHandler_ =
           funPtr <- peek ptrToFunPtr
           return $ unwrapCallbackPtr $ castFunPtr funPtr
 
-{# fun unsafe Fl_version as flVersion'
+{# fun unsafe Fl_version as flVersion
   {} -> `Double' #}
-flVersion :: IO Double
-flVersion = flVersion
 {# fun unsafe Fl_help as flHelp
   {} -> `String' #}
 {# fun unsafe Fl_display as flDisplay
@@ -178,18 +158,24 @@ flVersion = flVersion
   {} -> `()' #}
 {# fun unsafe Fl_get_system_colors as flGetSystemColors
   {} -> `()' #}
-{# fun unsafe Fl_foreground as flForeground_
-  {id `CUChar' ,id `CUChar' , id `CUChar'} -> `()' #}
-flForeground :: RGB -> IO ()
-flForeground (r,g,b) = flForeground_ r g b
-{# fun unsafe Fl_background as flBackground_
-  {id `CUChar' , id `CUChar' , id `CUChar'} -> `()' #}
-flBackground :: RGB -> IO ()
-flBackground (r,g,b) = flBackground_ r g b
-{# fun unsafe Fl_background2 as flBackground2_
-  {id `CUChar' , id `CUChar' , id `CUChar'} -> `()' #}
-flBackground2 :: RGB -> IO ()
-flBackground2 (r,g,b) = flBackground2_ r g b
+{# fun unsafe Fl_foreground as flForeground
+  {
+    fromIntegral `Int' ,
+    fromIntegral `Int' ,
+    fromIntegral `Int'
+  } -> `()' #}
+{# fun unsafe Fl_background as flBackground
+  {
+    fromIntegral `Int' ,
+    fromIntegral `Int' ,
+    fromIntegral `Int'
+  } -> `()' #}
+{# fun unsafe Fl_background2 as flBackground2
+  {
+    fromIntegral `Int' ,
+    fromIntegral `Int' ,
+    fromIntegral `Int'
+  } -> `()' #}
 {# fun pure unsafe Fl_scheme as flScheme
   {} -> `String' #}
 {# fun unsafe Fl_set_scheme as flSetScheme
@@ -199,35 +185,35 @@ flBackground2 (r,g,b) = flBackground2_ r g b
 {# fun unsafe Fl_set_wait as setWait
        { `Double' } -> `Double' #}
 {# fun unsafe Fl_readqueue as readqueue
-       {  } -> `Ptr ()' id #}
+       {  } -> `WidgetPtr' castPtrToWidget* #}
 {# fun unsafe Fl_add_timeout as addTimeout
-       { `Double',id `FunPtr TimeoutHandlerPrim' } -> `()' #}
+       { `Double', toUserDataHandlerPrim `Callback' } -> `()' #}
 {# fun unsafe Fl_repeat_timeout as repeatTimeout
-       { `Double',id `FunPtr TimeoutHandlerPrim' } -> `()' #}
+       { `Double',toUserDataHandlerPrim `Callback' } -> `()' #}
 {# fun unsafe Fl_has_timeout as hasTimeout
-       { id `FunPtr TimeoutHandlerPrim' } -> `Int' #}
+       { toUserDataHandlerPrim `Callback' } -> `Int' #}
 {# fun unsafe Fl_remove_timeout as removeTimeout
-       { id `FunPtr TimeoutHandlerPrim' } -> `()' #}
+       { toUserDataHandlerPrim `Callback' } -> `()' #}
 {# fun unsafe Fl_add_check as addCheck
-       { id `FunPtr TimeoutHandlerPrim' } -> `()' #}
+       { toUserDataHandlerPrim `Callback' } -> `()' #}
 {# fun unsafe Fl_has_check as hasCheck
-       { id `FunPtr TimeoutHandlerPrim' } -> `Int' #}
+       { toUserDataHandlerPrim `Callback' } -> `Int' #}
 {# fun unsafe Fl_remove_check as removeCheck
-       { id `FunPtr TimeoutHandlerPrim' } -> `()' #}
+       { toUserDataHandlerPrim `Callback' } -> `()' #}
 {# fun unsafe Fl_add_fd_with_when as addFdWithWhen
        { `Int',`Int',id `FunPtr FDHandlerPrim' } -> `()' #}
 {# fun unsafe Fl_add_fd as addFd
-       { `Int',id `FunPtr FDHandlerPrim' } -> `()' #}
+       { `Int',id `FunPtr FDHandlerPrim'} -> `()' #}
 {# fun unsafe Fl_remove_fd_with_when as removeFdWithWhen
        { `Int',`Int' } -> `()' #}
 {# fun unsafe Fl_remove_fd as removeFd
        { `Int' } -> `()' #}
 {# fun unsafe Fl_add_idle as addIdle
-       { id `FunPtr IdleHandlerPrim' } -> `()' #}
+       { toUserDataHandlerPrim `Callback' } -> `()' #}
 {# fun unsafe Fl_has_idle as hasIdle
-       { id `FunPtr IdleHandlerPrim' } -> `Int' #}
+       { toUserDataHandlerPrim `Callback' } -> `Int' #}
 {# fun unsafe Fl_remove_idle as removeIdle
-       { id `FunPtr IdleHandlerPrim' } -> `()' #}
+       { toUserDataHandlerPrim `Callback' } -> `()' #}
 {# fun unsafe Fl_damage as damage
        {  } -> `Int' #}
 {# fun unsafe Fl_redraw as redraw
@@ -235,7 +221,7 @@ flBackground2 (r,g,b) = flBackground2_ r g b
 {# fun unsafe Fl_flush as flush
        {  } -> `()' #}
 {# fun unsafe Fl_first_window as firstWindow
-       {  } -> `Ptr ()' id #}
+       {  } -> `WindowPtr' castPtrToWindow* #}
 {# fun unsafe Fl_set_first_window as setFirstWindow
        { id `Ptr ()' } -> `()' #}
 {# fun unsafe Fl_next_window as nextWindow
@@ -410,7 +396,8 @@ screen location =
 {# fun unsafe Fl_screen_dpi_with_n as screenDpiWithN'
        { alloca- `Float' peekFloatConv*,
          alloca- `Float' peekFloatConv*,
-                 `Int' } -> `()' #}
+                 `Int' }
+           -> `()' #}
 
 screenDPI :: Maybe Int -> IO DPI
 screenDPI (Just n) = do
@@ -428,7 +415,8 @@ screenDPI Nothing = do
          alloca- `Int' peekIntConv* ,
          `Int',
          `Int'
-       } -> `()' #}
+       }
+         -> `()' #}
 {# fun unsafe Fl_screen_work_area_with_n as screenWorkAreaWithN'
        {
          alloca- `Int' peekIntConv* ,
@@ -436,14 +424,16 @@ screenDPI Nothing = do
          alloca- `Int' peekIntConv* ,
          alloca- `Int' peekIntConv* ,
          `Int'
-       } -> `()' #}
+       }
+        -> `()' #}
 {# fun unsafe Fl_screen_work_area as screenWorkArea'
        {
          alloca- `Int' peekIntConv* ,
          alloca- `Int' peekIntConv* ,
          alloca- `Int' peekIntConv* ,
-         alloca- `Int' peekIntConv* 
-       } -> `()' #}
+         alloca- `Int' peekIntConv*
+       }
+        -> `()' #}
 screenWorkArea :: Maybe ScreenLocation -> IO Rectangle
 screenWorkArea location =
     case location of
@@ -457,13 +447,18 @@ screenWorkArea location =
           screenWorkArea' >>= return . toRectangle
 
 {# fun unsafe Fl_set_color_rgb as setColorRgb
-       { cFromColor `Color',`Word8',`Word8',`Word8' } -> `()' #}
+       { cFromColor `Color',`Int',`Int',`Int'} -> `()' #}
 {# fun unsafe Fl_set_color as setColor
        { cFromColor `Color',`Int' } -> `()' #}
 {# fun unsafe Fl_get_color as getColor
        { cFromColor `Color' } -> `Int' #}
 {# fun unsafe Fl_get_color_rgb as getColorRgb
-       { cFromColor `Color',`Word8',`Word8',`Word8' } -> `()' #}
+       {
+         cFromColor `Color',
+         alloca- `Word8' peekIntConv*,
+         alloca- `Word8' peekIntConv*,
+         alloca- `Word8' peekIntConv*
+       } -> `()' #}
 {# fun unsafe Fl_free_color as freeColor
        { cFromColor `Color' } -> `()' #}
 {# fun unsafe Fl_free_color_with_overlay as freeColorWithOverlay
@@ -523,7 +518,7 @@ screenWorkArea location =
 {# fun unsafe Fl_event_button3 as eventButton3
        {  } -> `Int' #}
 {# fun unsafe Fl_set_idle as setIdle
-       { id `FunPtr OldIdleHandlerPrim' } -> `()' #}
+       { unsafeMkCallbackPtr `Callback' } -> `()' #}
 {# fun unsafe Fl_release as release
        {  } -> `()' #}
 {# fun unsafe Fl_set_visible_focus as setVisibleFocus
@@ -534,26 +529,14 @@ screenWorkArea location =
        { `Int' } -> `()' #}
 {# fun unsafe Fl_dnd_text_ops as dndTextOps
        {  } -> `Int' #}
-{# fun unsafe Fl_lock as lock
-       {  } -> `Int' #}
-{# fun unsafe Fl_unlock as unlock
-       {  } -> `()' #}
-{# fun unsafe Fl_awake as awake
-       {} -> `()' #}
-{# fun unsafe Fl_awake_with_message as awakeWithMessage
-       { id `Ptr ()' } -> `()' #}
-{# fun unsafe Fl_awake_with_cb as awakeWithCb
-       { id `FunPtr AwakeHandlerPrim' } -> `Int' #}
-{# fun unsafe Fl_awake_with_cb_message as awakeWithCbMessage
-       { id `FunPtr AwakeHandlerPrim',id `Ptr ()' } -> `Int' #}
-{# fun unsafe Fl_thread_message as threadMessage
-       {  } -> `Ptr ()' id #}
 {# fun unsafe Fl_delete_widget as deleteWidget
        { id `Ptr ()' } -> `()' #}
 {# fun unsafe Fl_do_widget_deletion as doWidgetDeletion
        {  } -> `()' #}
-{# fun unsafe Fl_watch_widget_pointer as watchWidgetPointer
-       { id `Ptr ()' } -> `()' #}
+{# fun unsafe Fl_watch_widget_pointer as watchWidgetPointer'
+       {id `Ptr ()' } -> `()' #}
+watchWidgetPointer :: WidgetPtr -> IO ()
+watchWidgetPointer wptr = withForeignPtr wptr $ watchWidgetPointer' . castPtr
 {# fun unsafe Fl_release_widget_pointer as releaseWidgetPointer
        { id `Ptr ()' } -> `()' #}
 {# fun unsafe Fl_clear_widget_pointer as clearWidgetPointer

@@ -202,7 +202,7 @@ type FlShortcut            = {#type Fl_Shortcut #}
 type FlColor               = {#type Fl_Color #}
 type FlFont                = {#type Fl_Font #}
 type FlAlign               = {#type Fl_Align #}
-type RGB                   = (CUChar, CUChar, CUChar)
+type RGB                   = (Int, Int, Int)
 type FlIntPtr              = {#type fl_intptr_t #}
 type FlUIntPtr             = {#type fl_uintptr_t#}
 type ID                    = {#type ID#}
@@ -483,7 +483,7 @@ instance Storable StyleTableEntry where
     sizeOf _ = {# sizeof Style_Table_Entry #}
     alignment _ = {# alignof Style_Table_Entry #}
     poke p (StyleTableEntry (Color c) (Font f) (FontSize fs) attr') = do
-                                   {#set Style_Table_Entry->color #} p c
+                                   {#set Style_Table_Entry->color #} p (fromIntegral c)
                                    {#set Style_Table_Entry->font#} p f
                                    {#set Style_Table_Entry->size#} p fs
                                    {#set Style_Table_Entry->attr#} p attr'
@@ -492,7 +492,7 @@ instance Storable StyleTableEntry where
       f    <- {#get Style_Table_Entry->font#} p
       fs   <- {#get Style_Table_Entry->size#} p
       attr' <- {#get Style_Table_Entry->attr#} p
-      return $ StyleTableEntry (Color c) (Font f) (FontSize fs) attr'
+      return $ StyleTableEntry (Color (fromIntegral c)) (Font f) (FontSize fs) attr'
 
 type KeyFunc = FunPtr (CInt -> TextEditorPtr -> CInt)
 {#pointer *Key_BindingC as KeyBindingCPtr foreign -> KeyBinding #}
@@ -898,11 +898,16 @@ newtype Height = Height Int
 newtype X = X Int
 newtype Y = Y Int
 data Position = Position X Y
-data DPI = DPI Float Float 
+data DPI = DPI Float Float
 data Rectangle = Rectangle X Y Width Height
 data ScreenLocation = Intersect Rectangle
                     | ScreenNumber Int
                     | ScreenPosition Position
 
-toWidget :: ForeignPtr a -> WidgetPtr
-toWidget = castForeignPtr
+castToWidget :: ForeignPtr a -> WidgetPtr
+castToWidget = castForeignPtr
+
+castPtrToWidget :: Ptr () -> IO WidgetPtr
+castPtrToWidget = newForeignPtr_ . castPtr
+castPtrToWindow :: Ptr () -> IO WindowPtr                  
+castPtrToWindow = newForeignPtr_ . castPtr

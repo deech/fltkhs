@@ -576,7 +576,7 @@ cToFont f = Font (fromIntegral f)
 
 -- Colors
 
-newtype Color = Color CUInt deriving Show
+newtype Color = Color Int deriving Show
 foregroundColor :: Color
 foregroundColor = Color 0
 background2Color :: Color
