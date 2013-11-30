@@ -345,7 +345,7 @@ EXPORT {
   FL_EXPORT_C(void,Fl_remove_handler)(fl_Event_Handler h){
     Fl::remove_handler(h);
   }
-  FL_EXPORT_C(void,Fl_event_set_dispatch)(fl_Event_Dispatch* d){
+  FL_EXPORT_C(void,Fl_set_event_dispatch)(fl_Event_Dispatch* d){
     C_to_Fl_Event_Dispatch::cb = d;
     Fl::event_dispatch(C_to_Fl_Event_Dispatch::intercept);
   }

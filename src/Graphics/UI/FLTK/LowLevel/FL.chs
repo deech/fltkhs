@@ -80,20 +80,15 @@ foreign import ccall "wrapper"
 type EventHandler= (Event ->
                     IO ())
 
-type AtCloseHandlerPrim = (Ptr () ->
-                           Ptr () ->
-                           IO ())
-foreign import ccall "wrapper"
-        wrapAtCloseHandlerPrim :: AtCloseHandlerPrim ->
-                                  IO (FunPtr AtCloseHandlerPrim)
-type AtCloseHandler= (WindowPtr -> IO ())
-
 type EventDispatchPrim = (CInt ->
                           Ptr () ->
                           IO CInt)
 foreign import ccall "wrapper"
         wrapEventDispatchPrim :: EventDispatchPrim ->
                                  IO (FunPtr EventDispatchPrim)
+foreign import ccall "dynamic"
+        unwrapEventDispatchPrim :: FunPtr EventDispatchPrim -> EventDispatchPrim
+
 type EventDispatch = (Event ->
                       WindowPtr ->
                       IO CInt)
@@ -120,7 +115,7 @@ toUserDataHandlerPrim cb =
     unsafePerformIO $ do
       ptr <- mkCallbackPtr cb
       return $ castFunPtr ptr
-             
+
 unsafeMkCallbackPtr :: Callback -> FunPtr Callback
 unsafeMkCallbackPtr = unsafePerformIO . mkCallbackPtr
 
@@ -304,10 +299,39 @@ flGetAwakeHandler_ =
        { id `FunPtr EventHandlerPrim' } -> `()' #}
 {# fun unsafe Fl_remove_handler as removeHandler
        { id `FunPtr EventHandlerPrim' } -> `()' #}
-{# fun unsafe Fl_event_set_dispatch as eventSetDispatch
+{# fun unsafe Fl_set_event_dispatch as setEventDispatch'
        { id `Ptr (FunPtr EventDispatchPrim)' } -> `()' #}
-{# fun unsafe Fl_event_dispatch as eventDispatch
+{# fun unsafe Fl_event_dispatch as eventDispatch'
        {  } -> `FunPtr EventDispatchPrim' id #}
+eventDispatch :: IO EventDispatch
+eventDispatch =
+    do
+      funPtr <- eventDispatch'
+      let wrapped = (\event windowPtr ->
+                         withForeignPtr windowPtr
+                                            (\ptr ->
+                                                 let eventNum = fromIntegral $ fromEnum event
+                                                     fun = unwrapEventDispatchPrim funPtr
+                                                 in do
+                                                   print eventNum
+                                                   fun eventNum (castPtr ptr)))
+      return wrapped
+
+
+setEventDispatch :: EventDispatch -> IO ()
+setEventDispatch ed = do
+    do
+      let toPrim = (\event ptr ->
+                      let eventEnum = toEnum $ fromIntegral event
+                      in
+                      do
+                        newPtr <- newForeignPtr_ (castPtr ptr)
+                        ed eventEnum newPtr
+                    )
+      callbackPtr <-  wrapEventDispatchPrim toPrim
+      ptrToCallbackPtr <- new callbackPtr
+      poke ptrToCallbackPtr callbackPtr
+      setEventDispatch' ptrToCallbackPtr
 {# fun unsafe Fl_copy as copy
        { `String',`Int' } -> `()' #}
 {# fun unsafe Fl_copy_with_destination as copyWithDestination
@@ -480,13 +504,27 @@ screenWorkArea location =
 {# fun unsafe Fl_set_fonts_with_string as setFontsWithString
        { `String' } -> `Font' cToFont #}
 {# fun unsafe Fl_set_labeltype as setLabeltype
-       { cFromEnum `Labeltype',id `FunPtr LabelDrawFPrim',id `FunPtr LabelMeasureFPrim' } -> `()' #}
+       {
+         cFromEnum `Labeltype',
+         id `FunPtr LabelDrawFPrim',
+         id `FunPtr LabelMeasureFPrim'
+       } -> `()' #}
 {# fun unsafe Fl_get_boxtype as getBoxtype
        { cFromEnum `Boxtype' } -> `FunPtr BoxDrawFPrim' id #}
 {# fun unsafe Fl_set_boxtype as setBoxtype
-       { cFromEnum `Boxtype',id `FunPtr BoxDrawFPrim',`Word8',`Word8',`Word8',`Word8' } -> `()' #}
+       {
+         cFromEnum `Boxtype',
+         id `FunPtr BoxDrawFPrim',
+         `Word8',
+         `Word8',
+         `Word8',
+         `Word8'
+       } -> `()' #}
 {# fun unsafe Fl_set_boxtype_by_boxtype as setBoxtypeByBoxtype
-       { cFromEnum `Boxtype',cFromEnum `Boxtype' } -> `()' #}
+       {
+         cFromEnum `Boxtype',
+         cFromEnum `Boxtype'
+       } -> `()' #}
 {# fun unsafe Fl_box_dx as boxDx
        { cFromEnum `Boxtype' } -> `Int' #}
 {# fun unsafe Fl_box_dy as boxDy
@@ -497,10 +535,6 @@ screenWorkArea location =
        { cFromEnum `Boxtype' } -> `Int' #}
 {# fun unsafe Fl_draw_box_active as drawBoxActive
        {  } -> `Int' #}
-{# fun unsafe Fl_default_atclose as defaultAtclose
-       { id `Ptr ()',id `Ptr ()' } -> `()' #}
-{# fun unsafe Fl_set_atclose as setAtclose
-       { id `Ptr (FunPtr AtCloseHandlerPrim)' } -> `()' #}
 {# fun unsafe Fl_event_shift as eventShift
        {  } -> `Int' #}
 {# fun unsafe Fl_event_ctrl as eventCtrl

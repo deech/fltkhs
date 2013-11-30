@@ -161,7 +161,7 @@ EXPORT {
   FL_EXPORT_C(void       ,Fl_set_focus)(fl_Widget widget);
   FL_EXPORT_C(void       ,Fl_add_handler)(fl_Event_Handler h);
   FL_EXPORT_C(void       ,Fl_remove_handler)(fl_Event_Handler h);
-  FL_EXPORT_C(void              ,Fl_event_set_dispatch)(fl_Event_Dispatch* d);
+  FL_EXPORT_C(void              ,Fl_set_event_dispatch)(fl_Event_Dispatch* d);
   FL_EXPORT_C(fl_Event_Dispatch ,Fl_event_dispatch)();
   FL_EXPORT_C(void      ,Fl_copy)(const char* stuff,int len);
   FL_EXPORT_C(void      ,Fl_copy_with_destination)(const char* stuff,int len,int destination);
