@@ -139,7 +139,7 @@ EXPORT {
   FL_EXPORT_C(void       ,Fl_set_event_is_click)(int i);
   FL_EXPORT_C(int        ,Fl_event_button)();
   FL_EXPORT_C(int        ,Fl_event_state)();
-  FL_EXPORT_C(int        ,Fl_event_set_state)(int i);
+  FL_EXPORT_C(int        ,Fl_set_event_state)(int i);
   FL_EXPORT_C(int        ,Fl_event_key)();
   FL_EXPORT_C(int        ,Fl_event_original_key)();
   FL_EXPORT_C(int        ,Fl_set_event_key)(int key);
@@ -156,7 +156,7 @@ EXPORT {
   FL_EXPORT_C(fl_Widget  ,Fl_belowmouse)();
   FL_EXPORT_C(void       ,Fl_set_belowmouse)(fl_Widget widget);
   FL_EXPORT_C(fl_Widget  ,Fl_pushed)();
-  FL_EXPORT_C(void       ,Fl_set_pushed)();
+  FL_EXPORT_C(void       ,Fl_set_pushed)(fl_Widget widget);
   FL_EXPORT_C(fl_Widget  ,Fl_focus)();
   FL_EXPORT_C(void       ,Fl_set_focus)(fl_Widget widget);
   FL_EXPORT_C(void       ,Fl_add_handler)(fl_Event_Handler h);

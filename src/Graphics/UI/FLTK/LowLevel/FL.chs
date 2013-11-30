@@ -8,7 +8,7 @@ import Foreign.Ptr
 import Foreign.C.Types
 import Foreign hiding (unsafePerformIO)
 import Foreign.C.String
-import C2HS hiding (cFromEnum, unsafePerformIO)
+import C2HS hiding (cFromEnum, unsafePerformIO, cFromBool)
 import System.IO.Unsafe (unsafePerformIO)
 #c
  enum Option {
@@ -118,6 +118,10 @@ toUserDataHandlerPrim cb =
 
 unsafeMkCallbackPtr :: Callback -> FunPtr Callback
 unsafeMkCallbackPtr = unsafePerformIO . mkCallbackPtr
+unsafeCastPtrToWidget :: Ptr () -> WidgetPtr
+unsafeCastPtrToWidget = unsafePerformIO . castPtrToWidget
+unsafeCastPtrToWindow :: Ptr () -> WindowPtr
+unsafeCastPtrToWindow = unsafePerformIO . castPtrToWindow
 
 {# fun unsafe Fl_add_awake_handler_ as flAddAwakeHandler'
   {id `FunPtr HandlerPrim', id `(Ptr ())'} -> `Int' #}
@@ -217,16 +221,27 @@ flGetAwakeHandler_ =
        {  } -> `()' #}
 {# fun unsafe Fl_first_window as firstWindow
        {  } -> `WindowPtr' castPtrToWindow* #}
-{# fun unsafe Fl_set_first_window as setFirstWindow
+{# fun unsafe Fl_set_first_window as setFirstWindow'
        { id `Ptr ()' } -> `()' #}
-{# fun unsafe Fl_next_window as nextWindow
+setFirstWindow :: WindowPtr -> IO ()
+setFirstWindow wp =
+    withForeignPtr wp (\ptr -> setFirstWindow' (castPtr ptr))
+{# fun unsafe Fl_next_window as nextWindow'
        { id `Ptr ()' } -> `Ptr ()' id #}
-{# fun unsafe Fl_modal as modal
-       {  } -> `Ptr ()' id #}
-{# fun unsafe Fl_grab as grab
-       {  } -> `Ptr ()' id #}
-{# fun unsafe Fl_set_grab as setGrab
+nextWindow :: WindowPtr -> IO WindowPtr
+nextWindow currWindow =
+    withForeignPtr currWindow
+                       (\ptr -> do
+                          nw <- nextWindow' (castPtr ptr)
+                          newForeignPtr_ $ castPtr nw)
+{# fun unsafe Fl_modal as modal'
+       {  } -> `WindowPtr' castPtrToWindow* #}
+{# fun unsafe Fl_grab as grab'
+       {  } -> `WindowPtr' castPtrToWindow* #}
+{# fun unsafe Fl_set_grab as setGrab'
        { id `Ptr ()' } -> `()' #}
+setGrab :: WindowPtr -> IO ()
+setGrab wp = withForeignPtr wp (\ptr -> setGrab' (castPtr ptr))
 {# fun unsafe Fl_event as event
        {  } -> `Int' #}
 {# fun unsafe Fl_event_x as eventX
@@ -241,8 +256,15 @@ flGetAwakeHandler_ =
        {  } -> `Int' #}
 {# fun unsafe Fl_event_dy as eventDy
        {  } -> `Int' #}
-{# fun unsafe Fl_get_mouse as getMouse
-       { id `Ptr CInt',id `Ptr CInt' } -> `()' #}
+{# fun unsafe Fl_get_mouse as getMouse'
+   {
+     alloca- `Int' peekIntConv* ,
+     alloca- `Int' peekIntConv*
+   } -> `()' #}
+getMouse :: IO Position
+getMouse = do
+  (x_pos,y_pos) <- getMouse'
+  return $ (Position (X x_pos) (Y y_pos))
 {# fun unsafe Fl_event_clicks as eventClicks
        {  } -> `Int' #}
 {# fun unsafe Fl_set_event_clicks as setEventClicks
@@ -255,7 +277,7 @@ flGetAwakeHandler_ =
        {  } -> `Int' #}
 {# fun unsafe Fl_event_state as eventState
        {  } -> `Int' #}
-{# fun unsafe Fl_event_set_state as eventSetState
+{# fun unsafe Fl_set_event_state as eventSetState
        { `Int' } -> `Int' #}
 {# fun unsafe Fl_event_key as eventKey
        {  } -> `Int' #}
@@ -273,28 +295,55 @@ flGetAwakeHandler_ =
        { id `Ptr CInt' } -> `Int' #}
 {# fun unsafe Fl_compose_reset as composeReset
        {  } -> `()' #}
-{# fun unsafe Fl_event_inside_region as eventInsideRegion
+{# fun unsafe Fl_event_inside_region as eventInsideRegion'
        { `Int',`Int',`Int',`Int' } -> `Int' #}
-{# fun unsafe Fl_event_inside_widget as eventInsideWidget
+eventInsideRegion :: Rectangle -> IO Event
+eventInsideRegion (Rectangle (X x_pos) (Y y_pos) (Width width) (Height height)) =
+    do
+      eventNum <- eventInsideRegion' x_pos y_pos width height
+      return $ toEnum eventNum
+{# fun unsafe Fl_event_inside_widget as eventInsideWidget'
        { id `Ptr ()' } -> `Int' #}
+eventInsideWidget :: WidgetPtr -> IO Event
+eventInsideWidget wp =
+    withForeignPtr wp (\ptr -> do
+                         eventNum <- eventInsideWidget' (castPtr ptr)
+                         return $ toEnum eventNum)
 {# fun unsafe Fl_test_shortcut as testShortcut
        { id `FlShortcut' } -> `Int' #}
-{# fun unsafe Fl_handle as handle
+{# fun unsafe Fl_handle as handle'
        { `Int',id `Ptr ()' } -> `Int' #}
-{# fun unsafe Fl_handle_ as handle_
+handle :: Event -> WindowPtr -> IO Int
+handle e wp =
+    withForeignPtr wp (\ptr -> do
+                         result <- handle' (cFromEnum e) (castPtr ptr)
+                         return result)
+
+{# fun unsafe Fl_handle_ as handle_'
        { `Int',id `Ptr ()' } -> `Int' #}
-{# fun unsafe Fl_belowmouse as belowmouse
-       {  } -> `Ptr ()' id #}
-{# fun unsafe Fl_set_belowmouse as setBelowmouse
+handle_ :: Event -> WindowPtr -> IO Int
+handle_ e wp =
+    withForeignPtr wp (\ptr -> do
+                         result <- handle_' (cFromEnum e) (castPtr ptr)
+                         return result)
+{# fun unsafe Fl_belowmouse as belowmouse'
+       {  } -> `WidgetPtr' castPtrToWidget* #}
+{# fun unsafe Fl_set_belowmouse as setBelowmouse'
        { id `Ptr ()' } -> `()' #}
+setBelowmouse :: WidgetPtr -> IO ()
+setBelowmouse wp = withForeignPtr wp (\ptr -> setBelowmouse' (castPtr ptr))
 {# fun unsafe Fl_pushed as pushed
-       {  } -> `Ptr ()' id #}
-{# fun unsafe Fl_set_pushed as setPushed
-       {  } -> `()' #}
-{# fun unsafe Fl_focus as focus
-       {  } -> `Ptr ()' id #}
-{# fun unsafe Fl_set_focus as setFocus
+       {  } -> `WidgetPtr' castPtrToWidget* #}
+{# fun unsafe Fl_set_pushed as setPushed'
        { id `Ptr ()' } -> `()' #}
+setPushed :: WidgetPtr -> IO ()
+setPushed wp = withForeignPtr wp (\ptr -> setPushed' (castPtr ptr))
+{# fun unsafe Fl_focus as focus
+       {  } -> `WidgetPtr' castPtrToWidget* #}
+{# fun unsafe Fl_set_focus as setFocus'
+       { id `Ptr ()' } -> `()' #}
+setFocus :: WidgetPtr -> IO ()
+setFocus wp = withForeignPtr wp (\ptr -> setFocus' (castPtr ptr))
 {# fun unsafe Fl_add_handler as addHandler
        { id `FunPtr EventHandlerPrim' } -> `()' #}
 {# fun unsafe Fl_remove_handler as removeHandler
@@ -307,10 +356,10 @@ eventDispatch :: IO EventDispatch
 eventDispatch =
     do
       funPtr <- eventDispatch'
-      let wrapped = (\event windowPtr ->
+      let wrapped = (\e windowPtr ->
                          withForeignPtr windowPtr
                                             (\ptr ->
-                                                 let eventNum = fromIntegral $ fromEnum event
+                                                 let eventNum = fromIntegral $ fromEnum e
                                                      fun = unwrapEventDispatchPrim funPtr
                                                  in do
                                                    print eventNum
@@ -321,8 +370,8 @@ eventDispatch =
 setEventDispatch :: EventDispatch -> IO ()
 setEventDispatch ed = do
     do
-      let toPrim = (\event ptr ->
-                      let eventEnum = toEnum $ fromIntegral event
+      let toPrim = (\e ptr ->
+                      let eventEnum = toEnum $ fromIntegral e
                       in
                       do
                         newPtr <- newForeignPtr_ (castPtr ptr)
@@ -396,18 +445,18 @@ setEventDispatch ed = do
        } -> `()' #}
 
 toRectangle :: (Int,Int,Int,Int) -> Rectangle
-toRectangle (x, y, w, h) = Rectangle (X (fromIntegral x))
-                                     (Y (fromIntegral y))
-                                     (Width (fromIntegral w))
-                                     (Height (fromIntegral h))
+toRectangle (x_pos, y_pos, width, height) = Rectangle (X (fromIntegral x_pos))
+                                                      (Y (fromIntegral y_pos))
+                                                      (Width (fromIntegral width))
+                                                      (Height (fromIntegral height))
 
 screen :: Maybe ScreenLocation -> IO Rectangle
 screen location =
     case location of
-      (Just (Intersect (Rectangle (X x) (Y y) (Width w) (Height h)))) ->
-          screenXYWHWithNMXMYMWMH x y w h >>= return . toRectangle
-      (Just (ScreenPosition (Position (X x) (Y y)))) ->
-          screenXYWYWithMXMY x y >>= return . toRectangle
+      (Just (Intersect (Rectangle (X x_pos) (Y y_pos) (Width width) (Height height)))) ->
+          screenXYWHWithNMXMYMWMH x_pos y_pos width height >>= return . toRectangle
+      (Just (ScreenPosition (Position (X x_pos) (Y y_pos)))) ->
+          screenXYWYWithMXMY x_pos y_pos >>= return . toRectangle
       (Just (ScreenNumber n)) ->
           screenXYWNWithN n >>= return . toRectangle
       Nothing ->
@@ -461,10 +510,10 @@ screenDPI Nothing = do
 screenWorkArea :: Maybe ScreenLocation -> IO Rectangle
 screenWorkArea location =
     case location of
-      (Just (Intersect (Rectangle (X x) (Y y) _ _))) ->
-          screenWorkAreaWithMXMY' x y >>= return . toRectangle
-      (Just (ScreenPosition (Position (X x) (Y y)))) ->
-          screenWorkAreaWithMXMY' x y >>= return . toRectangle
+      (Just (Intersect (Rectangle (X x_pos) (Y y_pos) _ _))) ->
+          screenWorkAreaWithMXMY' x_pos y_pos >>= return . toRectangle
+      (Just (ScreenPosition (Position (X x_pos) (Y y_pos)))) ->
+          screenWorkAreaWithMXMY' x_pos y_pos >>= return . toRectangle
       (Just (ScreenNumber n)) ->
           screenWorkAreaWithN' n >>= return . toRectangle
       Nothing ->
@@ -560,19 +609,29 @@ screenWorkArea location =
 {# fun unsafe Fl_visible_focus as visibleFocus
        {  } -> `Int' #}
 {# fun unsafe Fl_set_dnd_text_ops as setDndTextOps
-       { `Int' } -> `()' #}
-{# fun unsafe Fl_dnd_text_ops as dndTextOps
-       {  } -> `Int' #}
-{# fun unsafe Fl_delete_widget as deleteWidget
+       { fromBool `Bool' } -> `()' #}
+{# fun unsafe Fl_dnd_text_ops as dndTextOps'
+       {  } -> `Int'  #}
+dndTextOps :: IO Option
+dndTextOps = do
+  result <- dndTextOps'
+  return $ Graphics.UI.FLTK.LowLevel.Utils.cToEnum result
+
+{# fun unsafe Fl_delete_widget as deleteWidget'
        { id `Ptr ()' } -> `()' #}
+deleteWidget :: WidgetPtr -> IO ()
+deleteWidget wptr = withForeignPtr wptr $ deleteWidget' . castPtr
 {# fun unsafe Fl_do_widget_deletion as doWidgetDeletion
        {  } -> `()' #}
 {# fun unsafe Fl_watch_widget_pointer as watchWidgetPointer'
        {id `Ptr ()' } -> `()' #}
 watchWidgetPointer :: WidgetPtr -> IO ()
 watchWidgetPointer wptr = withForeignPtr wptr $ watchWidgetPointer' . castPtr
-{# fun unsafe Fl_release_widget_pointer as releaseWidgetPointer
+{# fun unsafe Fl_release_widget_pointer as releaseWidgetPointer'
        { id `Ptr ()' } -> `()' #}
-{# fun unsafe Fl_clear_widget_pointer as clearWidgetPointer
+releaseWidgetPointer :: WidgetPtr -> IO ()
+releaseWidgetPointer wp = withForeignPtr wp (\ptr -> releaseWidgetPointer' (castPtr ptr))
+{# fun unsafe Fl_clear_widget_pointer as clearWidgetPointer'
        { id `Ptr ()' } -> `()' #}
-       {- fl_Widget -> void -}
+clearWidgetPointer :: WidgetPtr -> IO ()
+clearWidgetPointer wp = withForeignPtr wp (\ptr -> clearWidgetPointer' (castPtr ptr))

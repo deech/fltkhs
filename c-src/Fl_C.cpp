@@ -279,7 +279,7 @@ EXPORT {
   FL_EXPORT_C(int,Fl_event_state)( ){
     return Fl::event_state();
   }
-  FL_EXPORT_C(int,Fl_event_set_state)(int i){
+  FL_EXPORT_C(int,Fl_set_event_state)(int i){
     return Fl::event_state(i);
   }
   FL_EXPORT_C(int,Fl_event_key)( ){
@@ -330,8 +330,8 @@ EXPORT {
   FL_EXPORT_C(fl_Widget,Fl_pushed)( ){
     return (fl_Widget)Fl::pushed();
   }
-  FL_EXPORT_C(void,Fl_set_pushed)( ){
-    Fl::pushed();
+  FL_EXPORT_C(void,Fl_set_pushed)(fl_Widget widget){
+    Fl::pushed((static_cast<Fl_Widget*>(widget)));
   }
   FL_EXPORT_C(fl_Widget,Fl_focus)( ){
     return (fl_Widget)Fl::focus();
