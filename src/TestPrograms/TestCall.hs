@@ -14,12 +14,9 @@ addWindow = do
   windowShow window
   return window
 
-addAwakeHandler :: IO Int
-addAwakeHandler = flAddAwakeHandler (callback "awake handler's callback data")
-
 runAwakeHandler :: IO ()
 runAwakeHandler = do
-  awakeHandler <- flGetAwakeHandler_
+  awakeHandler <- getAwakeHandler_
   awakeHandler
 
 eventIntercept :: Event -> WindowPtr -> IO Int
@@ -86,7 +83,7 @@ main :: IO ()
 main = do
   win <- addWindow
   print "added Window"
-  _ <- addAwakeHandler
+  _ <- addAwakeHandler (callback "awake handler's callback data")
   print "added awake handler"
   _ <- runAwakeHandler
   _ <- setEventDispatch eventIntercept
@@ -94,4 +91,4 @@ main = do
   _ <- f DndDrag win
   _ <- setHandler globalEventHandler
   print "ran awake handler"
-  flRun
+  run

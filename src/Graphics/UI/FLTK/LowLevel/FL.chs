@@ -96,22 +96,14 @@ type EventDispatch = (Event ->
                       WindowPtr ->
                       IO Int)
 
-{# fun unsafe Fl_run as flRun'
+{# fun unsafe Fl_run as run
   {} -> `()' #}
-flRun :: IO ()
-flRun = flRun'
-{# fun unsafe Fl_check as flCheck'
+{# fun unsafe Fl_check as check
   {} -> `Int' #}
-flCheck :: IO Int
-flCheck = flCheck'
-{# fun unsafe Fl_ready as flReady'
+{# fun unsafe Fl_ready as ready
   {} -> `Int' #}
-flReady :: IO Int
-flReady = flReady'
-{# fun unsafe Fl_option as flOption'
+{# fun unsafe Fl_option as option
   {cFromEnum `Option'} -> `Int' #}
-flOption :: Option -> IO Int
-flOption opt = flOption' opt
 
 toUserDataHandlerPrim :: Callback -> FunPtr HandlerPrim
 toUserDataHandlerPrim cb =
@@ -126,61 +118,61 @@ unsafeCastPtrToWidget = unsafePerformIO . castPtrToWidget
 unsafeCastPtrToWindow :: Ptr () -> WindowPtr
 unsafeCastPtrToWindow = unsafePerformIO . castPtrToWindow
 
-{# fun unsafe Fl_add_awake_handler_ as flAddAwakeHandler'
+{# fun unsafe Fl_add_awake_handler_ as addAwakeHandler'
   {id `FunPtr HandlerPrim', id `(Ptr ())'} -> `Int' #}
-flAddAwakeHandler :: Callback -> IO Int
-flAddAwakeHandler awakeHandler =
+addAwakeHandler :: Callback -> IO Int
+addAwakeHandler awakeHandler =
     do
       callbackPtr <-  mkCallbackPtr awakeHandler
-      flAddAwakeHandler' (castFunPtr callbackPtr) nullPtr
+      addAwakeHandler' (castFunPtr callbackPtr) nullPtr
 
-{# fun unsafe Fl_get_awake_handler_ as flGetAwakeHandler_'
+{# fun unsafe Fl_get_awake_handler_ as getAwakeHandler_'
   {id `Ptr (FunPtr HandlerPrim)', id `Ptr (Ptr ())'} -> `Int' #}
-flGetAwakeHandler_ :: IO Callback
-flGetAwakeHandler_ =
+getAwakeHandler_ :: IO Callback
+getAwakeHandler_ =
     alloca $ \ptrToFunPtr ->
         alloca $ \ptrToUD -> do
-          _ <- flGetAwakeHandler_' ptrToFunPtr ptrToUD
+          _ <- getAwakeHandler_' ptrToFunPtr ptrToUD
           funPtr <- peek ptrToFunPtr
           return $ unwrapCallbackPtr $ castFunPtr funPtr
 
-{# fun unsafe Fl_version as flVersion
+{# fun unsafe Fl_version as version
   {} -> `Double' #}
-{# fun unsafe Fl_help as flHelp
+{# fun unsafe Fl_help as help
   {} -> `String' #}
-{# fun unsafe Fl_display as flDisplay
+{# fun unsafe Fl_display as display
   {`String'} -> `()' #}
-{# fun unsafe Fl_visual as flVisual
+{# fun unsafe Fl_visual as visual
   {cFromEnum `Mode'} -> `Int' #}
-{# fun unsafe Fl_gl_visual as flGlVisual
+{# fun unsafe Fl_gl_visual as glVisual
   {cFromEnum `Mode'} -> `Int' #}
-{# fun unsafe Fl_gl_visual_with_alist as flGlVisualWithAlist
+{# fun unsafe Fl_gl_visual_with_alist as glVisualWithAlist
   {cFromEnum `Mode', id `Ptr CInt'} -> `Int' #}
-{# fun unsafe Fl_own_colormap as flOwnColormap
+{# fun unsafe Fl_own_colormap as ownColormap
   {} -> `()' #}
-{# fun unsafe Fl_get_system_colors as flGetSystemColors
+{# fun unsafe Fl_get_system_colors as getSystemColors
   {} -> `()' #}
-{# fun unsafe Fl_foreground as flForeground
+{# fun unsafe Fl_foreground as foreground
   {
     fromIntegral `Int' ,
     fromIntegral `Int' ,
     fromIntegral `Int'
   } -> `()' #}
-{# fun unsafe Fl_background as flBackground
+{# fun unsafe Fl_background as background
   {
     fromIntegral `Int' ,
     fromIntegral `Int' ,
     fromIntegral `Int'
   } -> `()' #}
-{# fun unsafe Fl_background2 as flBackground2
+{# fun unsafe Fl_background2 as background2
   {
     fromIntegral `Int' ,
     fromIntegral `Int' ,
     fromIntegral `Int'
   } -> `()' #}
-{# fun pure unsafe Fl_scheme as flScheme
+{# fun pure unsafe Fl_scheme as scheme
   {} -> `String' #}
-{# fun unsafe Fl_set_scheme as flSetScheme
+{# fun unsafe Fl_set_scheme as setScheme
   {`String'} -> `()' #}
 {# fun unsafe Fl_wait as wait
        {  } -> `Int' #}
@@ -629,7 +621,6 @@ dndTextOps :: IO Option
 dndTextOps = do
   result <- dndTextOps'
   return $ Graphics.UI.FLTK.LowLevel.Utils.cToEnum result
-
 {# fun unsafe Fl_delete_widget as deleteWidget'
        { id `Ptr ()' } -> `()' #}
 deleteWidget :: WidgetPtr -> IO ()
