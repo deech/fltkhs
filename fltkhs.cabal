@@ -19,7 +19,7 @@ library
                    Graphics.UI.FLTK.LowLevel.Fl_Types
                    Graphics.UI.FLTK.LowLevel.FL
                    Graphics.UI.FLTK.LowLevel.Utils
-  build-depends: base
+  build-depends: base, containers, stm
   build-tools: c2hs
   extensions: ForeignFunctionInterface
   hs-source-dirs: src

@@ -1,14 +1,12 @@
 {-# LANGUAGE CPP #-}
 module Graphics.UI.FLTK.LowLevel.FL where
 #include "Fl_C.h"
+import C2HS hiding (cFromEnum, unsafePerformIO, cFromBool, cToBool)
+import Control.Concurrent.STM
+import Foreign.C.Types
 import Graphics.UI.FLTK.LowLevel.Fl_Enumerations
 import Graphics.UI.FLTK.LowLevel.Fl_Types
 import Graphics.UI.FLTK.LowLevel.Utils
-import Foreign.Ptr
-import Foreign.C.Types
-import Foreign hiding (unsafePerformIO)
-import Foreign.C.String
-import C2HS hiding (cFromEnum, unsafePerformIO, cFromBool)
 import System.IO.Unsafe (unsafePerformIO)
 #c
  enum Option {
@@ -72,13 +70,18 @@ foreign import ccall "wrapper"
                              IO (FunPtr FDHandlerPrim)
 type FDHandler = Socket -> IO ()
 
+ptrToGlobalEventHandler :: TVar (FunPtr EventHandlerPrim)
+ptrToGlobalEventHandler = unsafePerformIO $ do
+                            initialHandler <- wrapEventHandlerPrim (\_ -> return (0 :: CInt))
+                            newTVarIO initialHandler
+
 type EventHandlerPrim = (CInt ->
                          IO CInt)
 foreign import ccall "wrapper"
         wrapEventHandlerPrim :: EventHandlerPrim ->
                                 IO (FunPtr EventHandlerPrim)
-type EventHandler= (Event ->
-                    IO ())
+type EventHandler = (Event ->
+                     IO Int)
 
 type EventDispatchPrim = (CInt ->
                           Ptr () ->
@@ -91,7 +94,7 @@ foreign import ccall "dynamic"
 
 type EventDispatch = (Event ->
                       WindowPtr ->
-                      IO CInt)
+                      IO Int)
 
 {# fun unsafe Fl_run as flRun'
   {} -> `()' #}
@@ -292,7 +295,7 @@ getMouse = do
 {# fun unsafe Fl_event_length as eventLength
        {  } -> `Int' #}
 {# fun unsafe Fl_compose as compose
-       { id `Ptr CInt' } -> `Int' #}
+       { alloca- `Int' peekIntConv* } -> `Bool' cToBool #}
 {# fun unsafe Fl_compose_reset as composeReset
        {  } -> `()' #}
 {# fun unsafe Fl_event_inside_region as eventInsideRegion'
@@ -344,10 +347,24 @@ setPushed wp = withForeignPtr wp (\ptr -> setPushed' (castPtr ptr))
        { id `Ptr ()' } -> `()' #}
 setFocus :: WidgetPtr -> IO ()
 setFocus wp = withForeignPtr wp (\ptr -> setFocus' (castPtr ptr))
-{# fun unsafe Fl_add_handler as addHandler
+{# fun unsafe Fl_add_handler as addHandler'
        { id `FunPtr EventHandlerPrim' } -> `()' #}
-{# fun unsafe Fl_remove_handler as removeHandler
+{# fun unsafe Fl_remove_handler as removeHandler'
        { id `FunPtr EventHandlerPrim' } -> `()' #}
+setHandler :: EventHandler -> IO ()
+setHandler eh = do
+  let toPrim = (\e ->
+                    let eventEnum = toEnum $ fromIntegral e
+                    in
+                      eh eventEnum >>= return . fromIntegral)
+  newEventHandler <- wrapEventHandlerPrim toPrim
+  curr <- atomically $ do
+                  old <- readTVar ptrToGlobalEventHandler
+                  writeTVar ptrToGlobalEventHandler newEventHandler
+                  return old
+  removeHandler' curr
+  addHandler' newEventHandler
+
 {# fun unsafe Fl_set_event_dispatch as setEventDispatch'
        { id `Ptr (FunPtr EventDispatchPrim)' } -> `()' #}
 {# fun unsafe Fl_event_dispatch as eventDispatch'
@@ -356,16 +373,16 @@ eventDispatch :: IO EventDispatch
 eventDispatch =
     do
       funPtr <- eventDispatch'
-      let wrapped = (\e windowPtr ->
-                         withForeignPtr windowPtr
-                                            (\ptr ->
-                                                 let eventNum = fromIntegral $ fromEnum e
-                                                     fun = unwrapEventDispatchPrim funPtr
-                                                 in do
-                                                   print eventNum
-                                                   fun eventNum (castPtr ptr)))
-      return wrapped
-
+      return (\e windowPtr ->
+                  withForeignPtr
+                    windowPtr
+                    (\ptr ->
+                         let eventNum = fromIntegral (fromEnum e)
+                             fun = unwrapEventDispatchPrim funPtr
+                         in fun eventNum (castPtr ptr) >>=
+                            return . fromIntegral
+                    )
+             )
 
 setEventDispatch :: EventDispatch -> IO ()
 setEventDispatch ed = do
@@ -375,7 +392,7 @@ setEventDispatch ed = do
                       in
                       do
                         newPtr <- newForeignPtr_ (castPtr ptr)
-                        ed eventEnum newPtr
+                        ed eventEnum newPtr >>= return . fromIntegral
                     )
       callbackPtr <-  wrapEventDispatchPrim toPrim
       ptrToCallbackPtr <- new callbackPtr
@@ -387,16 +404,12 @@ setEventDispatch ed = do
        { `String',`Int',`Int' } -> `()' #}
 {# fun unsafe Fl_paste_with_source as pasteWithSource
        { id `Ptr ()',`Int' } -> `()' #}
+paste :: WidgetPtr -> Maybe Int -> IO ()
+paste widget (Just clipboard) = withForeignPtr widget (\p -> pasteWithSource (castPtr p) clipboard)
+paste widget Nothing          = withForeignPtr widget (\p -> pasteWithSource (castPtr p)  0)
+
 {# fun unsafe Fl_dnd as dnd
        {  } -> `Int' #}
-{# fun unsafe Fl_selection_owner as selectionOwner
-       {  } -> `Ptr ()' id #}
-{# fun unsafe Fl_set_selection_owner as setSelectionOwner
-       { id `Ptr ()' } -> `()' #}
-{# fun unsafe Fl_selection as selection
-       { id `Ptr ()',`String',`Int' } -> `()' #}
-{# fun unsafe Fl_paste as paste
-       { id `Ptr ()' } -> `()' #}
 {# fun unsafe Fl_x as x
        {  } -> `Int' #}
 {# fun unsafe Fl_y as y
