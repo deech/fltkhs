@@ -51,9 +51,9 @@ enum When {
   WhenEnterKeyChanged = FL_WHEN_ENTER_KEY_CHANGED
 };
 enum FdWhen {
-  WhenRead = FL_READ,
-  WhenWrite = FL_WRITE,
-  WhenExcept = FL_EXCEPT
+  CanRead = FL_READ,
+  CanWrite = FL_WRITE,
+  OnExcept = FL_EXCEPT
 };
 enum TreeSort{
   TreeSortNone = FL_TREE_SORT_NONE,
@@ -527,7 +527,29 @@ diamondBox = DiamondDownBox
 
 
 -- Fonts
-newtype Font = Font CInt
+newtype Font = Font Int
+data FontAttribute = Bold | Italic | BoldItalic deriving Enum
+cFromFont :: Font -> CInt
+cFromFont (Font f) = fromIntegral f
+cToFont :: CInt -> Font
+cToFont f = Font (fromIntegral f)
+
+cFromFontAttribute :: FontAttribute -> CInt
+cFromFontAttribute Bold = cFromFont helveticaBold
+cFromFontAttribute Italic = cFromFont helveticaItalic
+cFromFontAttribute BoldItalic = cFromFont helveticaBoldItalic
+
+cToFontAttribute :: CInt -> Maybe FontAttribute
+cToFontAttribute attributeCode =
+      case (attributeCode `has` helveticaBold, attributeCode `has` helveticaItalic) of
+        (True,True) -> Just BoldItalic
+        (True,False) -> Just Bold
+        (False,True) -> Just Italic
+        (False,False) -> Nothing
+      where
+        has :: CInt -> Font -> Bool
+        has code (Font f) = code .&. (fromIntegral f) /= 0
+
 helvetica :: Font
 helvetica = Font 0
 helveticaBold :: Font
@@ -562,17 +584,6 @@ zapfDingbats :: Font
 zapfDingbats = Font 15
 freeFont :: Font
 freeFont = Font 16
-bold :: Font
-bold = helveticaBold
-italic :: Font
-italic = helveticaItalic
-boldItalic :: Font
-boldItalic = helveticaBoldItalic
-
-cFromFont :: Font -> CInt
-cFromFont (Font f) = fromIntegral f
-cToFont :: CInt -> Font 
-cToFont f = Font (fromIntegral f)
 
 -- Colors
 

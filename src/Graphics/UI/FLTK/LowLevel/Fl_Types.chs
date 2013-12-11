@@ -476,7 +476,7 @@ data StyleTableEntry = StyleTableEntry {
       color :: Color,
       font :: Font,
       size :: FontSize,
-      attr :: CUInt
+      attr :: FontAttribute
     }
 
 instance Storable StyleTableEntry where
@@ -484,15 +484,22 @@ instance Storable StyleTableEntry where
     alignment _ = {# alignof Style_Table_Entry #}
     poke p (StyleTableEntry (Color c) (Font f) (FontSize fs) attr') = do
                                    {#set Style_Table_Entry->color #} p (fromIntegral c)
-                                   {#set Style_Table_Entry->font#} p f
+                                   {#set Style_Table_Entry->font#} p (fromIntegral f)
                                    {#set Style_Table_Entry->size#} p fs
-                                   {#set Style_Table_Entry->attr#} p attr'
+                                   {#set Style_Table_Entry->attr#} p (fromIntegral
+                                                                      (cFromFontAttribute attr'))
     peek p  = do
       c    <- {#get Style_Table_Entry->color #} p
       f    <- {#get Style_Table_Entry->font#} p
       fs   <- {#get Style_Table_Entry->size#} p
-      attr' <- {#get Style_Table_Entry->attr#} p
-      return $ StyleTableEntry (Color (fromIntegral c)) (Font f) (FontSize fs) attr'
+      attrCode <- {#get Style_Table_Entry->attr#} p
+      case (cToFontAttribute (fromIntegral attrCode)) of
+        Just attr' -> return $ StyleTableEntry
+                               (Color (fromIntegral c))
+                               (Font (fromIntegral f))
+                               (FontSize fs)
+                               attr'
+        Nothing -> error $ "Attribute code " ++ (show attrCode) ++ " is invalid."
 
 type KeyFunc = FunPtr (CInt -> TextEditorPtr -> CInt)
 {#pointer *Key_BindingC as KeyBindingCPtr foreign -> KeyBinding #}
@@ -909,5 +916,5 @@ castToWidget = castForeignPtr
 
 castPtrToWidget :: Ptr () -> IO WidgetPtr
 castPtrToWidget = newForeignPtr_ . castPtr
-castPtrToWindow :: Ptr () -> IO WindowPtr                  
+castPtrToWindow :: Ptr () -> IO WindowPtr
 castPtrToWindow = newForeignPtr_ . castPtr

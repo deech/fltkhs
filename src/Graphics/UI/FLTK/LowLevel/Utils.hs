@@ -16,7 +16,6 @@ cFromEnum :: (Enum a, Integral b) => a -> b
 cFromEnum = fromIntegral . fromEnum
 cToEnum :: (Integral b, Enum a) => b -> a
 cToEnum = toEnum . fromIntegral
-
 cToBool :: CInt -> Bool
 cToBool status = case status of
                    0 -> False

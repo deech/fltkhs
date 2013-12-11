@@ -91,4 +91,5 @@ main = do
   _ <- f DndDrag win
   _ <- setHandler globalEventHandler
   print "ran awake handler"
-  run
+  _ <- run
+  return ()
