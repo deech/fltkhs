@@ -7,7 +7,7 @@ import Graphics.UI.FLTK.LowLevel.Fl_Types
 callback ::  (Show a) => a -> IO ()
 callback a = print a
 
-addWindow :: IO WindowPtr
+addWindow :: IO (Window ())
 addWindow = do
   window <- windowNewWithLabel 100 100 "Test"
   windowSetCallback window (callback "window's callback data")
@@ -19,7 +19,7 @@ runAwakeHandler = do
   awakeHandler <- getAwakeHandler_
   awakeHandler
 
-eventIntercept :: Event -> WindowPtr -> IO Int
+eventIntercept :: Event -> (Window ()) -> IO Int
 eventIntercept e _ =
     case e of
       NoEvent                    -> do { putStrLn "NoEvent"; return 0; }

@@ -1,7 +1,150 @@
 {-# LANGUAGE CPP #-}
-module Graphics.UI.FLTK.LowLevel.Fl_Enumerations where
 #include "Fl_C.h"
 #include "Fl_EnumerationsC.h"
+module Graphics.UI.FLTK.LowLevel.Fl_Enumerations
+    (
+     -- * Events
+     Event(..),
+     When(..),
+     FdWhen(..),
+     -- * Tree Attributes
+     TreeSort(..),
+     TreeConnector(..),
+     TreeSelect(..),
+#if FLTK_ABI_VERSION >= 10302
+     TreeItemReselectMode(..),
+     TreeItemDrawMode(..),
+#endif /*FLTK_ABI_VERSION*/
+     -- * Keyboard and mouse codes
+     KeyboardCode(..),
+     MouseButton(..),
+     kb_Command, kb_Control, kb_KpLast, kb_KeyMask,
+     -- * Widget damage types
+     Damage(..),
+     -- * Glut attributes
+     GlutDraw(..),
+     GlutMouseCodes(..),
+     GlutUpDown(..),
+     GlutVisibility(..),
+     GlutMenuProperties(..),
+     GlutEnteredLeft(..),
+     GlutKeyboardCodes(..),
+     GlutConstants(..),
+     GlutWindowProperties(..),
+     GlutCursor(..),
+     glutCursorFullCrossHair,
+     -- * Cursor type
+     Cursor(..),
+     -- * Various modes
+     Mode(..),
+     single,
+     -- * Alignment
+     AlignType(..),
+     alignNoWrap, alignImageOverText,
+     alignTopLeft,
+     alignTopRight,
+     alignBottomLeft,
+     alignBottomRight,
+     -- * Box types
+     Boxtype(..),
+     frame,frameBox, circleBox, diamondBox,
+     -- * Box functions
+     defineRoundUpBox,
+     defineShadowBox,
+     defineRoundedBox,
+     defineRflatBox,
+     defineRshadowBox,
+     defineDiamondBox,
+     defineOvalBox,
+     definePlasticUpBox,
+     defineGtkUpBox,
+     -- * Fonts
+     Font(..),
+     FontAttribute(..),
+     FontSize(..),
+     -- ** (Un-)marshalling
+     cFromFont,
+     cToFont,
+     cFromFontAttribute,
+     cToFontAttribute,
+     -- ** Font Names
+     helvetica,
+     helveticaBold,
+     helveticaItalic,
+     helveticaBoldItalic,
+     courier,
+     courierBold,
+     courierItalic,
+     courierBoldItalic,
+     times,
+     timesBold,
+     timesItalic,
+     timesBoldItalic,
+     symbol,
+     screen,
+     screenBold,
+     zapfDingbats,
+     freeFont,
+
+     -- * Colors
+     Color(..),
+     -- ** (Un-)marshalling
+     cFromColor,
+     cToColor,
+     -- ** Various Color Functions
+     inactive,
+     contrast,
+     color_average,
+     lighter,
+     darker,
+     rgbColorWithRgb,
+     rgbColorWithGrayscale,
+     grayRamp,
+     colorCube,
+     -- ** Color Names
+     foregroundColor,
+     background2Color,
+     inactiveColor,
+     selectionColor,
+     gray0Color,
+     dark3Color,
+     dark2Color,
+     dark1Color,
+     backgroundColor,
+     light1Color,
+     light2Color,
+     light3Color,
+     blackColor,
+     redColor,
+     greenColor,
+     yellowColor,
+     blueColor,
+     magentaColor,
+     cyanColor,
+     darkRedColor,
+     darkGreenColor,
+     darkYellowColor,
+     darkBlueColor,
+     darkMagentaColor,
+     darkCyanColor,
+     whiteColor,
+     freeColor,
+     numFreeColor,
+     grayRampColor,
+     numGray,
+     grayColor,
+     colorCubeColor,
+     numRed,
+     numGreen,
+     numBlue,
+     -- * Labels
+     Labeltype(..),
+     symbolLabel,
+     defineShadowLabel,
+     defineEngravedLabel,
+     defineEmbossedLabel
+    )
+where
 import C2HS
 #c
 enum VersionInfo {
@@ -81,7 +224,7 @@ enum Tree_Item_Draw_Mode{
   TreeItemHeightFromWidget = FL_TREE_ITEM_HEIGHT_FROM_WIDGET
 };
 #endif /*FLTK_ABI_VERSION*/
-enum KeyboardMouseCodes {
+enum KeyboardCode {
   Button = FL_Button,
   Kb_Backspace = FL_BackSpace,
   Kb_Tab = FL_Tab,
@@ -130,9 +273,6 @@ enum KeyboardMouseCodes {
   Kb_Refresh = FL_Refresh,
   Kb_Sleep = FL_Sleep,
   Kb_Favorites = FL_Favorites,
-  Mouse_Left = FL_LEFT_MOUSE,
-  Mouse_Middle = FL_MIDDLE_MOUSE,
-  Mouse_Right = FL_RIGHT_MOUSE,
   Kb_Shift = FL_SHIFT,
   Kb_CapsLock = FL_CAPS_LOCK,
   Kb_Ctrl = FL_CTRL,
@@ -145,6 +285,12 @@ enum KeyboardMouseCodes {
   Kb_Button3 = FL_BUTTON3,
   Kb_Buttons = FL_BUTTONS,
 };
+enum MouseButton {
+  Mouse_Left = FL_LEFT_MOUSE,
+  Mouse_Middle = FL_MIDDLE_MOUSE,
+  Mouse_Right = FL_RIGHT_MOUSE,
+};
+
 enum Damage {
  DamageChild   = FL_DAMAGE_CHILD,
  DamageExpose  = FL_DAMAGE_EXPOSE,
@@ -336,8 +482,9 @@ enum AlignType {
 {#enum TreeItemReselectMode {} deriving (Show) #}
 {#enum TreeItemDrawMode {} deriving (Show) #}
 #endif /*FLTK_ABI_VERSION*/
-{#enum KeyboardMouseCodes {} deriving (Show) #}
-kb_Command, kb_Control, kb_KpLast, kb_KeyMask :: KeyboardMouseCodes
+{#enum KeyboardCode {} deriving (Show, Eq) #}
+{#enum MouseButton {} deriving (Show, Eq) #}
+kb_Command, kb_Control, kb_KpLast, kb_KeyMask :: KeyboardCode
 #ifdef __APPLE__
 kb_Command = Kb_Meta
 kb_Control = Kb_Control
@@ -788,14 +935,13 @@ alignBottomRight :: AlignType
 alignBottomRight =
       toEnum $ fromIntegral {#call pure unsafe FL_ALIGN_BOTTOM_RIGHTC as
                                                aLIGN_BOTTOM_RIGHTC #}
-
 cFromColor :: Color -> CUInt
 cFromColor (Color c) = fromIntegral c
-cToColor :: CUInt -> Color
+cToColor :: CUInt-> Color
 cToColor c = Color (fromIntegral c)
 
 {#fun pure unsafe fl_inactiveC as
-                  inactive {cFromColor `Color' } -> `Color' cToColor#}
+                 inactive {cFromColor `Color' } -> `Color' cToColor#}
 {#fun pure unsafe fl_contrastC as
                   contrast {cFromColor `Color',cFromColor `Color'}
                   -> `Color' cToColor#}

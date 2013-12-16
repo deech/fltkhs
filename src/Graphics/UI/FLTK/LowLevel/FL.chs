@@ -1,8 +1,152 @@
 {-# LANGUAGE CPP #-}
-module Graphics.UI.FLTK.LowLevel.FL where
+module Graphics.UI.FLTK.LowLevel.FL
+    (
+     Option(..),
+     LabelDrawF,
+     LabelMeasureF,
+     EventHandlerF,
+     EventDispatchF,
+     run,
+     check,
+     ready,
+     option,
+     toUserDataHandlerPrim,
+     addAwakeHandler,
+     getAwakeHandler_,
+     display,
+     ownColormap,
+     getSystemColors,
+     foreground,
+     background,
+     background2,
+     setScheme,
+     setFirstWindow,
+     nextWindow,
+     setGrab,
+     getMouse,
+     validKeyboardStates,
+     extractModifiers,
+     foldModifiers,
+     eventInsideRegion,
+     eventInsideWidget,
+     handle,
+     handle_,
+     belowmouse,
+     setBelowmouse,
+     setPushed,
+     setFocus,
+     setHandler,
+     eventDispatch,
+     setEventDispatch,
+     paste,
+     toRectangle,
+     screenBounds,
+     screenDPI,
+     screenWorkArea,
+     setColorRgb,
+     toAttribute,
+     getFontName,
+     setIdle,
+     release,
+     setVisibleFocus,
+     visibleFocus,
+     setDndTextOps,
+     dndTextOps,
+     deleteWidget,
+     doWidgetDeletion,
+     watchWidgetPointer,
+     releaseWidgetPointer,
+     clearWidgetPointer,
+     version,
+     help,
+     visual,
+     glVisual,
+     glVisualWithAlist,
+     scheme,
+     wait,
+     setWait,
+     readqueue,
+     addTimeout,
+     repeatTimeout,
+     hasTimeout,
+     removeTimeout,
+     addCheck,
+     hasCheck,
+     removeCheck,
+     addIdle,
+     hasIdle,
+     removeIdle,
+     damage,
+     redraw,
+     flush,
+     firstWindow,
+     modal,
+     grab,
+     event,
+     eventX,
+     eventY,
+     eventXRoot,
+     eventYRoot,
+     eventDx,
+     eventDy,
+     eventClicks,
+     setEventClicks,
+     eventIsClick,
+     setEventIsClick,
+     eventButton,
+     eventState,
+     containsEventState,
+     eventKey,
+     eventOriginalKey,
+     eventKeyPressed,
+     getKey,
+     eventText,
+     eventLength,
+     compose,
+     composeReset,
+     testShortcut,
+     pushed,
+     focus,
+     copy,
+     copyWithDestination,
+     pasteWithSource,
+     dnd,
+     x,
+     y,
+     w,
+     h,
+     screenCount,
+     setColor,
+     getColor,
+     getColorRgb,
+     removeFromColormap,
+     getFont,
+     getFontSizes,
+     setFontByString,
+     setFontByFont,
+     setFonts,
+     setFontsWithString,
+     setLabeltype,
+     getBoxtype,
+     setBoxtype,
+     boxDx,
+     boxDy,
+     boxDw,
+     boxDh,
+     drawBoxActive,
+     eventShift,
+     eventCtrl,
+     eventCommand,
+     eventAlt,
+     eventButtons,
+     eventButton1,
+     eventButton2,
+     eventButton3,
+    )
+where
 #include "Fl_C.h"
-import C2HS hiding (cFromEnum, unsafePerformIO, cFromBool, cToBool,cToEnum)
-import Control.Concurrent.STM
+import C2HS hiding (cFromEnum, unsafePerformIO, cToBool,cToEnum)
+import Control.Concurrent.STM hiding (check)
 import Foreign.C.Types
 import Graphics.UI.FLTK.LowLevel.Fl_Enumerations
 import Graphics.UI.FLTK.LowLevel.Fl_Types
@@ -20,7 +164,7 @@ import System.IO.Unsafe (unsafePerformIO)
 
 {#enum Option {} deriving (Show) #}
 
-type LabelDrawFPrim = (Ptr (Ptr ()) ->
+type LabelDrawFPrim = (Ptr () ->
      		       CInt ->
 		       CInt ->
 		       CInt ->
@@ -30,25 +174,21 @@ type LabelDrawFPrim = (Ptr (Ptr ()) ->
 foreign import ccall "wrapper"
         wrapLabelDrawFPrim :: LabelDrawFPrim ->
                               IO (FunPtr LabelDrawFPrim)
-type LabelDrawF=  (LabelPtr ->
-     		   CInt ->
-		   CInt ->
-		   CInt ->
-		   CInt ->
-		   AlignType ->
-		   IO ())
 
-type LabelMeasureFPrim = (Ptr(Ptr ()) ->
+
+type LabelDrawF a = (Label a ->
+                     Rectangle ->
+		     AlignType ->
+		     IO ())
+
+type LabelMeasureFPrim = (Ptr () ->
                           Ptr CInt ->
                           Ptr CInt ->
                           IO ())
 foreign import ccall "wrapper"
         wrapLabelMeasureFPrim :: LabelMeasureFPrim ->
                                  IO (FunPtr LabelMeasureFPrim)
-type LabelMeasureF = (LabelPtr ->
-                          Ptr CInt ->
-                          Ptr CInt ->
-                          IO ())
+type LabelMeasureF a = (Label a -> IO RectangleSize)
 
 type BoxDrawFPrim = (CInt ->
                      CInt ->
@@ -59,6 +199,11 @@ type BoxDrawFPrim = (CInt ->
 foreign import ccall "wrapper"
         wrapBoxDrawFPrim :: BoxDrawFPrim ->
                             IO (FunPtr BoxDrawFPrim)
+
+foreign import ccall "dynamic"
+        unwrapBoxDrawFPrim :: FunPtr BoxDrawFPrim ->
+                              BoxDrawFPrim
+type BoxDrawF = Rectangle -> Color -> IO ()
 
 type HandlerPrim = Ptr() -> IO ()
 
@@ -72,7 +217,7 @@ type EventHandlerPrim = (CInt ->
 foreign import ccall "wrapper"
         wrapEventHandlerPrim :: EventHandlerPrim ->
                                 IO (FunPtr EventHandlerPrim)
-type EventHandler = (Event ->
+type EventHandlerF = (Event ->
                      IO Int)
 
 type EventDispatchPrim = (CInt ->
@@ -84,10 +229,9 @@ foreign import ccall "wrapper"
 foreign import ccall "dynamic"
         unwrapEventDispatchPrim :: FunPtr EventDispatchPrim -> EventDispatchPrim
 
-type EventDispatch = (Event ->
-                      WindowPtr ->
-                      IO Int)
-
+type EventDispatchF a = (Event ->
+                        Window a ->
+                        IO Int)
 run :: IO Int
 run = {#call unsafe Fl_run as fl_run #} >>= return . fromIntegral
 
@@ -145,31 +289,31 @@ ownColormap = {#call unsafe Fl_own_colormap as fl_own_colormap #}
 getSystemColors :: IO ()
 getSystemColors = {#call unsafe Fl_get_system_colors as fl_get_system_colors #}
 
-foreground :: Int -> Int -> Int -> IO ()
-foreground r g b = {#call unsafe Fl_foreground as fl_foreground #}
+foreground :: RGB -> IO ()
+foreground (r,g,b) = {#call unsafe Fl_foreground as fl_foreground #}
                     (fromIntegral r)
                     (fromIntegral g)
                     (fromIntegral b)
-background :: Int -> Int -> Int -> IO ()
-background r g b = {#call unsafe Fl_background as fl_background #}
+background :: RGB -> IO ()
+background (r,g,b) = {#call unsafe Fl_background as fl_background #}
                     (fromIntegral r)
                     (fromIntegral g)
                     (fromIntegral b)
-background2 :: Int -> Int -> Int -> IO ()
-background2 r g b = {#call unsafe Fl_background2 as fl_background2 #}
+background2 :: RGB -> IO ()
+background2 (r,g,b) = {#call unsafe Fl_background2 as fl_background2 #}
                     (fromIntegral r)
                     (fromIntegral g)
                     (fromIntegral b)
 {# fun pure unsafe Fl_scheme as scheme
   {} -> `String' #}
 setScheme :: String -> IO Int
-setScheme scheme = withCString scheme $ \str -> {#call unsafe Fl_set_scheme as fl_set_scheme #} str >>= return . fromIntegral
+setScheme sch = withCString sch $ \str -> {#call unsafe Fl_set_scheme as fl_set_scheme #} str >>= return . fromIntegral
 {# fun unsafe Fl_wait as wait
        {  } -> `Int' #}
 {# fun unsafe Fl_set_wait as setWait
        { `Double' } -> `Double' #}
 {# fun unsafe Fl_readqueue as readqueue
-       {  } -> `WidgetPtr' castPtrToWidget* #}
+       {  } -> `Widget ()' toWidget #}
 {# fun unsafe Fl_add_timeout as addTimeout
        { `Double', toUserDataHandlerPrim `Callback' } -> `()' #}
 {# fun unsafe Fl_repeat_timeout as repeatTimeout
@@ -197,42 +341,39 @@ setScheme scheme = withCString scheme $ \str -> {#call unsafe Fl_set_scheme as f
 {# fun unsafe Fl_flush as flush
        {  } -> `()' #}
 {# fun unsafe Fl_first_window as firstWindow
-       {  } -> `WindowPtr' castPtrToWindow* #}
+       {  } -> `Window ()' toWidget #}
 {# fun unsafe Fl_set_first_window as setFirstWindow'
        { id `Ptr ()' } -> `()' #}
-setFirstWindow :: WindowPtr -> IO ()
+setFirstWindow :: Window a -> IO ()
 setFirstWindow wp =
-    withForeignPtr wp (\ptr -> setFirstWindow' (castPtr ptr))
+    withWidget wp setFirstWindow'
 {# fun unsafe Fl_next_window as nextWindow'
-       { id `Ptr ()' } -> `Ptr ()' id #}
-nextWindow :: WindowPtr -> IO WindowPtr
+       { id `Ptr ()' } -> `Window ()' toWidget #}
+nextWindow :: Window a -> IO (Window ())
 nextWindow currWindow =
-    withForeignPtr currWindow
-                       (\ptr -> do
-                          nw <- nextWindow' (castPtr ptr)
-                          newForeignPtr_ $ castPtr nw)
-{# fun unsafe Fl_modal as modal'
-       {  } -> `WindowPtr' castPtrToWindow* #}
-{# fun unsafe Fl_grab as grab'
-       {  } -> `WindowPtr' castPtrToWindow* #}
+    withWidget currWindow nextWindow'
+{# fun unsafe Fl_modal as modal
+       {  } -> `Window ()' toWidget #}
+{# fun unsafe Fl_grab as grab
+       {  } -> `Window ()' toWidget #}
 {# fun unsafe Fl_set_grab as setGrab'
        { id `Ptr ()' } -> `()' #}
-setGrab :: WindowPtr -> IO ()
-setGrab wp = withForeignPtr wp (\ptr -> setGrab' (castPtr ptr))
+setGrab :: Window a -> IO ()
+setGrab wp = withWidget wp setGrab'
 {# fun unsafe Fl_event as event
        {  } -> `Int' #}
 {# fun unsafe Fl_event_x as eventX
-       {  } -> `Int' #}
+       {  } -> `Event' cToEnum #}
 {# fun unsafe Fl_event_y as eventY
-       {  } -> `Int' #}
+       {  } -> `Event' cToEnum #}
 {# fun unsafe Fl_event_x_root as eventXRoot
-       {  } -> `Int' #}
+       {  } -> `Event' cToEnum #}
 {# fun unsafe Fl_event_y_root as eventYRoot
        {  } -> `Int' #}
 {# fun unsafe Fl_event_dx as eventDx
        {  } -> `Int' #}
 {# fun unsafe Fl_event_dy as eventDy
-       {  } -> `Int' #}
+       {  } ->  `Int' #}
 {# fun unsafe Fl_get_mouse as getMouse'
    {
      alloca- `Int' peekIntConv* ,
@@ -243,27 +384,53 @@ getMouse = do
   (x_pos,y_pos) <- getMouse'
   return $ (Position (X x_pos) (Y y_pos))
 {# fun unsafe Fl_event_clicks as eventClicks
-       {  } -> `Int' #}
+       {  } -> `Int'#}
 {# fun unsafe Fl_set_event_clicks as setEventClicks
        { `Int' } -> `()' #}
 {# fun unsafe Fl_event_is_click as eventIsClick
-       {  } -> `Int' #}
+       {  } -> `Bool' toBool #}
 {# fun unsafe Fl_set_event_is_click as setEventIsClick
        { `Int' } -> `()' #}
 {# fun unsafe Fl_event_button as eventButton
-       {  } -> `Int' #}
+       {  } -> `MouseButton' cToEnum #}
+validKeyboardStates :: [KeyboardCode]
+validKeyboardStates = [ Kb_Shift
+                      , Kb_CapsLock
+                      , Kb_Ctrl
+                      , Kb_Alt
+                      , Kb_NumLock
+                      , Kb_Meta
+                      , Kb_ScrollLock
+                      , Kb_Button1
+                      , Kb_Button2
+                      , Kb_Button3
+                      ]
+extractModifiers :: (Enum a) => [a] -> CInt -> [a]
+extractModifiers allCodes compoundCode 
+    = map cToEnum $
+      filter (masks compoundCode) $
+      map cFromEnum allCodes
+unmaskKeysyms :: CInt -> [KeyboardCode]
+unmaskKeysyms = extractModifiers validKeyboardStates
+foldModifiers :: [KeyboardCode] -> CInt
+foldModifiers codes =
+    let validKeysyms = map cFromEnum (filter (\c -> c `elem` validKeyboardStates) codes)
+    in
+      case validKeysyms of
+        [] -> (-1)
+        (k:ks) -> foldl (\accum k' -> accum .&. k') k ks
 {# fun unsafe Fl_event_state as eventState
-       {  } -> `Int' #}
-{# fun unsafe Fl_set_event_state as eventSetState
-       { `Int' } -> `Int' #}
+       {  } -> `[KeyboardCode]' unmaskKeysyms #}
+{# fun unsafe Fl_contains_event_state as containsEventState
+       {cFromEnum `KeyboardCode' } -> `Bool' cToBool #}
 {# fun unsafe Fl_event_key as eventKey
-       {  } -> `Int' #}
+       {  } -> `KeyboardCode' cToEnum #}
 {# fun unsafe Fl_event_original_key as eventOriginalKey
-       {  } -> `Int' #}
-{# fun unsafe Fl_set_event_key as setEventKey
-       { `Int' } -> `Int' #}
+       {  } -> `KeyboardCode' cToEnum #}
+{# fun unsafe Fl_event_key_pressed as eventKeyPressed
+       {cFromEnum `KeyboardCode' } -> `Bool' cToBool #}
 {# fun unsafe Fl_get_key as getKey
-       { `Int' } -> `Int' #}
+       {cFromEnum `KeyboardCode' } -> `Bool' cToBool #}
 {# fun unsafe Fl_event_text as eventText
        {  } -> `String' #}
 {# fun unsafe Fl_event_length as eventLength
@@ -275,57 +442,58 @@ getMouse = do
 {# fun unsafe Fl_event_inside_region as eventInsideRegion'
        { `Int',`Int',`Int',`Int' } -> `Int' #}
 eventInsideRegion :: Rectangle -> IO Event
-eventInsideRegion (Rectangle (X x_pos) (Y y_pos) (Width width) (Height height)) =
+eventInsideRegion (Rectangle
+                   (Position
+                    (X x_pos)
+                    (Y y_pos))
+                   (RectangleSize
+                    (Width width)
+                    (Height height))) =
     do
       eventNum <- eventInsideRegion' x_pos y_pos width height
       return $ toEnum eventNum
 {# fun unsafe Fl_event_inside_widget as eventInsideWidget'
        { id `Ptr ()' } -> `Int' #}
-eventInsideWidget :: WidgetPtr -> IO Event
+eventInsideWidget :: Widget a -> IO Event
 eventInsideWidget wp =
-    withForeignPtr wp (\ptr -> do
-                         eventNum <- eventInsideWidget' (castPtr ptr)
-                         return $ toEnum eventNum)
+    withWidget wp  (\ptr -> do
+                      eventNum <- eventInsideWidget' (castPtr ptr)
+                      return $ toEnum eventNum)
 {# fun unsafe Fl_test_shortcut as testShortcut
        { id `FlShortcut' } -> `Int' #}
 {# fun unsafe Fl_handle as handle'
        { `Int',id `Ptr ()' } -> `Int' #}
-handle :: Event -> WindowPtr -> IO Int
+handle :: Event -> Window a -> IO Int
 handle e wp =
-    withForeignPtr wp (\ptr -> do
-                         result <- handle' (cFromEnum e) (castPtr ptr)
-                         return result)
-
+    withWidget wp (handle' (cFromEnum e))
 {# fun unsafe Fl_handle_ as handle_'
        { `Int',id `Ptr ()' } -> `Int' #}
-handle_ :: Event -> WindowPtr -> IO Int
+handle_ :: Event -> Window a -> IO Int
 handle_ e wp =
-    withForeignPtr wp (\ptr -> do
-                         result <- handle_' (cFromEnum e) (castPtr ptr)
-                         return result)
-{# fun unsafe Fl_belowmouse as belowmouse'
-       {  } -> `WidgetPtr' castPtrToWidget* #}
+    withWidget wp (handle_' (cFromEnum e))
+{# fun unsafe Fl_belowmouse as belowmouse
+       {  } -> `Widget ()' toWidget #}
 {# fun unsafe Fl_set_belowmouse as setBelowmouse'
        { id `Ptr ()' } -> `()' #}
-setBelowmouse :: WidgetPtr -> IO ()
-setBelowmouse wp = withForeignPtr wp (\ptr -> setBelowmouse' (castPtr ptr))
+setBelowmouse :: Widget a -> IO ()
+setBelowmouse wp = withWidget wp setBelowmouse'
 {# fun unsafe Fl_pushed as pushed
-       {  } -> `WidgetPtr' castPtrToWidget* #}
+       {  } -> `Widget ()' toWidget #}
 {# fun unsafe Fl_set_pushed as setPushed'
        { id `Ptr ()' } -> `()' #}
-setPushed :: WidgetPtr -> IO ()
-setPushed wp = withForeignPtr wp (\ptr -> setPushed' (castPtr ptr))
+setPushed :: Widget a -> IO ()
+setPushed wp = withWidget wp setPushed'
 {# fun unsafe Fl_focus as focus
-       {  } -> `WidgetPtr' castPtrToWidget* #}
+       {  } -> `Widget ()' toWidget #}
 {# fun unsafe Fl_set_focus as setFocus'
        { id `Ptr ()' } -> `()' #}
-setFocus :: WidgetPtr -> IO ()
-setFocus wp = withForeignPtr wp (\ptr -> setFocus' (castPtr ptr))
+setFocus :: Widget a -> IO ()
+setFocus wp = withWidget wp setFocus'
 {# fun unsafe Fl_add_handler as addHandler'
        { id `FunPtr EventHandlerPrim' } -> `()' #}
 {# fun unsafe Fl_remove_handler as removeHandler'
        { id `FunPtr EventHandlerPrim' } -> `()' #}
-setHandler :: EventHandler -> IO ()
+setHandler :: EventHandlerF -> IO ()
 setHandler eh = do
   let toPrim = (\e ->
                     let eventEnum = toEnum $ fromIntegral e
@@ -343,13 +511,13 @@ setHandler eh = do
        { id `Ptr (FunPtr EventDispatchPrim)' } -> `()' #}
 {# fun unsafe Fl_event_dispatch as eventDispatch'
        {  } -> `FunPtr EventDispatchPrim' id #}
-eventDispatch :: IO EventDispatch
+eventDispatch :: IO (EventDispatchF a)
 eventDispatch =
     do
       funPtr <- eventDispatch'
-      return (\e windowPtr ->
-                  withForeignPtr
-                    windowPtr
+      return (\e window ->
+                  withWidget
+                   window
                     (\ptr ->
                          let eventNum = fromIntegral (fromEnum e)
                              fun = unwrapEventDispatchPrim funPtr
@@ -358,15 +526,13 @@ eventDispatch =
                     )
              )
 
-setEventDispatch :: EventDispatch -> IO ()
+setEventDispatch :: (EventDispatchF a) -> IO ()
 setEventDispatch ed = do
     do
       let toPrim = (\e ptr ->
                       let eventEnum = toEnum $ fromIntegral e
                       in
-                      do
-                        newPtr <- newForeignPtr_ (castPtr ptr)
-                        ed eventEnum newPtr >>= return . fromIntegral
+                        ed eventEnum (toWidget (castPtr ptr)) >>= return . fromIntegral
                     )
       callbackPtr <-  wrapEventDispatchPrim toPrim
       ptrToCallbackPtr <- new callbackPtr
@@ -378,9 +544,9 @@ setEventDispatch ed = do
        { `String',`Int',`Int' } -> `()' #}
 {# fun unsafe Fl_paste_with_source as pasteWithSource
        { id `Ptr ()',`Int' } -> `()' #}
-paste :: WidgetPtr -> Maybe Int -> IO ()
-paste widget (Just clipboard) = withForeignPtr widget (\p -> pasteWithSource (castPtr p) clipboard)
-paste widget Nothing          = withForeignPtr widget (\p -> pasteWithSource (castPtr p)  0)
+paste :: Widget a -> Maybe Int -> IO ()
+paste widget (Just clipboard) = withWidget widget ((flip pasteWithSource) clipboard)
+paste widget Nothing          = withWidget widget ((flip pasteWithSource) 0)
 
 {# fun unsafe Fl_dnd as dnd
        {  } -> `Int' #}
@@ -432,15 +598,26 @@ paste widget Nothing          = withForeignPtr widget (\p -> pasteWithSource (ca
        } -> `()' #}
 
 toRectangle :: (Int,Int,Int,Int) -> Rectangle
-toRectangle (x_pos, y_pos, width, height) = Rectangle (X (fromIntegral x_pos))
-                                                      (Y (fromIntegral y_pos))
-                                                      (Width (fromIntegral width))
-                                                      (Height (fromIntegral height))
+toRectangle (x_pos, y_pos, width, height) =
+    Rectangle (Position
+               (X x_pos)
+               (Y y_pos))
+              (RectangleSize
+               (Width width)
+               (Height height))
 
-screen :: Maybe ScreenLocation -> IO Rectangle
-screen location =
+fromRectangle ::  Rectangle -> (Int,Int,Int,Int)
+fromRectangle (Rectangle (Position
+                          (X x_pos)
+                          (Y y_pos))
+                         (RectangleSize
+                          (Width width)
+                          (Height height))) =
+              (x_pos, y_pos, width, height)
+screenBounds :: Maybe ScreenLocation -> IO Rectangle
+screenBounds location =
     case location of
-      (Just (Intersect (Rectangle (X x_pos) (Y y_pos) (Width width) (Height height)))) ->
+      (Just (Intersect (Rectangle (Position (X x_pos) (Y y_pos)) (RectangleSize (Width width) (Height height))))) ->
           screenXYWHWithNMXMYMWMH x_pos y_pos width height >>= return . toRectangle
       (Just (ScreenPosition (Position (X x_pos) (Y y_pos)))) ->
           screenXYWYWithMXMY x_pos y_pos >>= return . toRectangle
@@ -497,7 +674,7 @@ screenDPI Nothing = do
 screenWorkArea :: Maybe ScreenLocation -> IO Rectangle
 screenWorkArea location =
     case location of
-      (Just (Intersect (Rectangle (X x_pos) (Y y_pos) _ _))) ->
+      (Just (Intersect (Rectangle (Position (X x_pos) (Y y_pos)) _))) ->
           screenWorkAreaWithMXMY' x_pos y_pos >>= return . toRectangle
       (Just (ScreenPosition (Position (X x_pos) (Y y_pos)))) ->
           screenWorkAreaWithMXMY' x_pos y_pos >>= return . toRectangle
@@ -523,10 +700,13 @@ setColorRgb c r g b = {#call unsafe Fl_set_color_rgb as fl_set_color_rgb #}
          alloca- `Word8' peekIntConv*,
          alloca- `Word8' peekIntConv*
        } -> `()' #}
-{# fun unsafe Fl_free_color as freeColor
+{# fun unsafe Fl_free_color as freeColor'
       { cFromColor `Color' } -> `()' #}
-{# fun unsafe Fl_free_color_with_overlay as freeColorWithOverlay
-       { cFromColor `Color',`Int' } -> `()' #}
+{# fun unsafe Fl_free_color_with_overlay as freeColorWithOverlay'
+       { cFromColor `Color', `Int' } -> `()' #}
+removeFromColormap :: Maybe Int -> Color -> IO ()
+removeFromColormap (Just overlay) c = freeColorWithOverlay' c overlay
+removeFromColormap Nothing c = freeColor' c
 {# fun unsafe Fl_get_font as getFont
        { cFromFont `Font' } -> `String' #}
 {# fun unsafe Fl_get_font_name_with_attributes as getFontNameWithAttributes'
@@ -548,15 +728,66 @@ getFontName f = getFontNameWithAttributes' f
        {  } -> `Font' cToFont #}
 {# fun unsafe Fl_set_fonts_with_string as setFontsWithString
        { `String' } -> `Font' cToFont #}
-{# fun unsafe Fl_set_labeltype as setLabeltype
+{# fun unsafe Fl_set_labeltype as setLabeltype'
        {
          cFromEnum `Labeltype',
          id `FunPtr LabelDrawFPrim',
          id `FunPtr LabelMeasureFPrim'
        } -> `()' #}
-{# fun unsafe Fl_get_boxtype as getBoxtype
+setLabeltype :: Labeltype ->
+                LabelDrawF a ->
+                LabelMeasureF a ->
+                IO ()
+setLabeltype label drawF measureF =
+    let drawFPrim = (\rawPtr xPrim yPrim wPrim hPrim alignPrim ->
+                         let rectangle = toRectangle (fromIntegral xPrim,
+                                                      fromIntegral yPrim,
+                                                      fromIntegral wPrim,
+                                                      fromIntegral hPrim)
+                             alignType = cToEnum alignPrim
+                         in drawF (toWidget rawPtr) rectangle alignType)
+        measureFPrim = (\rawPtr wPtr hPtr -> do
+                          (RectangleSize (Width width) (Height height)) <- measureF (toWidget rawPtr)
+                          poke wPtr (fromIntegral width)
+                          poke hPtr (fromIntegral height))
+    in
+      do
+        wrappedDrawFPrim <- wrapLabelDrawFPrim drawFPrim
+        wrappedMeasureFPrim <- wrapLabelMeasureFPrim measureFPrim
+        setLabeltype' label wrappedDrawFPrim wrappedMeasureFPrim
+
+{# fun unsafe Fl_get_boxtype as getBoxtype'
        { cFromEnum `Boxtype' } -> `FunPtr BoxDrawFPrim' id #}
-{# fun unsafe Fl_set_boxtype as setBoxtype
+toBoxDrawF :: BoxDrawFPrim -> BoxDrawF
+toBoxDrawF boxDrawPrim =
+    (\r c ->
+       let (x_pos,y_pos,width,height) = fromRectangle r
+           colorPrim = cFromColor c
+       in
+         boxDrawPrim ((fromIntegral x_pos) :: CInt)
+                     ((fromIntegral y_pos) :: CInt)
+                     ((fromIntegral width) :: CInt)
+                     ((fromIntegral height) :: CInt)
+                     colorPrim
+    )
+toBoxDrawFPrim :: BoxDrawF -> BoxDrawFPrim
+toBoxDrawFPrim f =
+    (\xPrim yPrim wPrim hPrim colorPrim ->
+       let r = toRectangle (fromIntegral xPrim,
+                            fromIntegral yPrim,
+                            fromIntegral wPrim,
+                            fromIntegral hPrim)
+           c = cToColor colorPrim
+       in
+           f r c)
+
+getBoxtype :: Boxtype -> IO BoxDrawF
+getBoxtype bt = do
+  wrappedFunPtr <- getBoxtype' bt
+  let boxDrawPrim = unwrapBoxDrawFPrim wrappedFunPtr
+  return $ toBoxDrawF boxDrawPrim
+
+{# fun unsafe Fl_set_boxtype as setBoxtype'
        {
          cFromEnum `Boxtype',
          id `FunPtr BoxDrawFPrim',
@@ -565,11 +796,22 @@ getFontName f = getFontNameWithAttributes' f
          `Word8',
          `Word8'
        } -> `()' #}
-{# fun unsafe Fl_set_boxtype_by_boxtype as setBoxtypeByBoxtype
+{# fun unsafe Fl_set_boxtype_by_boxtype as setBoxtypeByBoxtype'
        {
          cFromEnum `Boxtype',
          cFromEnum `Boxtype'
        } -> `()' #}
+
+data BoxtypeSpec = FromSpec BoxDrawF Word8 Word8 Word8 Word8
+                 | FromBoxtype Boxtype
+setBoxtype :: Boxtype -> BoxtypeSpec -> IO ()
+setBoxtype bt (FromSpec f dx dy dw dh) =
+    do
+      funPtr <- wrapBoxDrawFPrim (toBoxDrawFPrim f)
+      setBoxtype' bt funPtr dx dy dw dh
+setBoxtype bt (FromBoxtype template) =
+    setBoxtypeByBoxtype' bt template
+
 {# fun unsafe Fl_box_dx as boxDx
        { cFromEnum `Boxtype' } -> `Int' #}
 {# fun unsafe Fl_box_dy as boxDy
@@ -579,23 +821,23 @@ getFontName f = getFontNameWithAttributes' f
 {# fun unsafe Fl_box_dh as boxDh
        { cFromEnum `Boxtype' } -> `Int' #}
 {# fun unsafe Fl_draw_box_active as drawBoxActive
-       {  } -> `Int' #}
+       {  } -> `Bool' cToBool #}
 {# fun unsafe Fl_event_shift as eventShift
-       {  } -> `Int' #}
+       {  } -> `Bool' cToBool #}
 {# fun unsafe Fl_event_ctrl as eventCtrl
-       {  } -> `Int' #}
+       {  } -> `Bool' cToBool #}
 {# fun unsafe Fl_event_command as eventCommand
-       {  } -> `Int' #}
+       {  } -> `Bool' cToBool #}
 {# fun unsafe Fl_event_alt as eventAlt
-       {  } -> `Int' #}
+       {  } -> `Bool' cToBool #}
 {# fun unsafe Fl_event_buttons as eventButtons
-       {  } -> `Int' #}
+       {  } -> `Bool' cToBool #}
 {# fun unsafe Fl_event_button1 as eventButton1
-       {  } -> `Int' #}
+       {  } -> `Bool' cToBool #}
 {# fun unsafe Fl_event_button2 as eventButton2
-       {  } -> `Int' #}
+       {  } -> `Bool' cToBool #}
 {# fun unsafe Fl_event_button3 as eventButton3
-      {  } -> `Int' #}
+      {  } -> `Bool' cToBool #}
 setIdle :: Callback -> IO ()
 setIdle cb = mkCallbackPtr cb >>= {#call unsafe Fl_set_idle as fl_set_idle #}
 release :: IO ()
@@ -608,13 +850,13 @@ setDndTextOps :: Bool -> IO ()
 setDndTextOps =  {#call unsafe Fl_set_dnd_text_ops as fl_set_dnd_text_ops #} . fromBool
 dndTextOps :: IO Option
 dndTextOps = {#call unsafe Fl_dnd_text_ops as fl_dnd_text_ops #} >>= return . cToEnum
-deleteWidget :: WidgetPtr -> IO ()
-deleteWidget wptr = withForeignPtr wptr (\ptr -> {#call Fl_delete_widget as fl_delete_widget #} (castPtr ptr))
+deleteWidget :: Widget a -> IO ()
+deleteWidget wptr = withWidget wptr {#call Fl_delete_widget as fl_delete_widget #}
 doWidgetDeletion :: IO ()
 doWidgetDeletion = {#call unsafe Fl_do_widget_deletion as fl_do_widget_deletion #}
-watchWidgetPointer :: WidgetPtr -> IO ()
-watchWidgetPointer wp = withForeignPtr wp (\ptr -> {#call unsafe Fl_watch_widget_pointer as fl_Watch_widget_Pointer #} (castPtr ptr))
-releaseWidgetPointer :: WidgetPtr -> IO ()
-releaseWidgetPointer wp = withForeignPtr wp (\ptr -> {#call unsafe Fl_release_widget_pointer as fl_release_widget_pointer #} (castPtr ptr))
-clearWidgetPointer :: WidgetPtr -> IO ()
-clearWidgetPointer wp = withForeignPtr wp (\ptr -> {#call unsafe Fl_clear_widget_pointer as fl_Clear_Widget_Pointer #} (castPtr ptr))
+watchWidgetPointer :: Widget a -> IO ()
+watchWidgetPointer wp = withWidget wp {#call unsafe Fl_watch_widget_pointer as fl_Watch_widget_Pointer #}
+releaseWidgetPointer :: Widget a -> IO ()
+releaseWidgetPointer wp = withWidget wp {#call unsafe Fl_release_widget_pointer as fl_release_widget_pointer #}
+clearWidgetPointer :: Widget a -> IO ()
+clearWidgetPointer wp = withWidget wp {#call unsafe Fl_clear_widget_pointer as fl_Clear_Widget_Pointer #}

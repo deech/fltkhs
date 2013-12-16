@@ -40,8 +40,8 @@ EXPORT {
     OPTION_SHOW_TOOLTIPS,
     OPTION_LAST
   } Fl_Option;
-  typedef void (fl_Label_Draw_F)(const fl_Label *label, int x, int y, int w, int h, Fl_Align align);
-  typedef void (fl_Label_Measure_F)(const fl_Label *label, int *width, int *height);
+  typedef void (fl_Label_Draw_F)(const fl_Label label, int x, int y, int w, int h, Fl_Align align);
+  typedef void (fl_Label_Measure_F)(const fl_Label label, int *width, int *height);
   typedef void (fl_Box_Draw_F)(int x, int y, int w, int h, Fl_Color color);
   typedef void (*fl_Timeout_Handler)(void *data);
   typedef void (*fl_Awake_Handler)(void *data);
@@ -139,10 +139,10 @@ EXPORT {
   FL_EXPORT_C(void       ,Fl_set_event_is_click)(int i);
   FL_EXPORT_C(int        ,Fl_event_button)();
   FL_EXPORT_C(int        ,Fl_event_state)();
-  FL_EXPORT_C(int        ,Fl_set_event_state)(int i);
+  FL_EXPORT_C(int        ,Fl_contains_event_state)(int i);
   FL_EXPORT_C(int        ,Fl_event_key)();
   FL_EXPORT_C(int        ,Fl_event_original_key)();
-  FL_EXPORT_C(int        ,Fl_set_event_key)(int key);
+  FL_EXPORT_C(int        ,Fl_event_key_pressed)(int key);
   FL_EXPORT_C(int        ,Fl_get_key)(int key);
   FL_EXPORT_C(const char*,Fl_event_text)();
   FL_EXPORT_C(int        ,Fl_event_length)();

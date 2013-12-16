@@ -279,7 +279,7 @@ EXPORT {
   FL_EXPORT_C(int,Fl_event_state)( ){
     return Fl::event_state();
   }
-  FL_EXPORT_C(int,Fl_set_event_state)(int i){
+  FL_EXPORT_C(int,Fl_contains_event_state)(int i){
     return Fl::event_state(i);
   }
   FL_EXPORT_C(int,Fl_event_key)( ){
@@ -288,7 +288,7 @@ EXPORT {
   FL_EXPORT_C(int,Fl_event_original_key)( ){
     return Fl::event_original_key();
   }
-  FL_EXPORT_C(int,Fl_set_event_key)(int key){
+  FL_EXPORT_C(int,Fl_event_key_pressed)(int key){
     return Fl::event_key(key);
   }
   FL_EXPORT_C(int,Fl_get_key)(int key){

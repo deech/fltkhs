@@ -23,3 +23,6 @@ cToBool status = case status of
 
 toFunPtr :: (a -> FunPtr a) -> a -> FunPtr a
 toFunPtr f a = f a
+
+masks :: CInt -> CInt -> Bool
+masks compoundCode code = (code .|. compoundCode) /= 0
