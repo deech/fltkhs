@@ -101,7 +101,7 @@ Fl_Group* Fl_DerivedWidget::as_group(){
 Fl_Window* Fl_DerivedWidget::as_window(){
   Fl_Window* win;
   if (this->overriddenFuncs->as_window != NULL) {
-    win = (static_cast<Fl_Window*>(this->overriddenFuncs->as_window((fl_Table) this)));
+    win = (static_cast<Fl_Window*>(this->overriddenFuncs->as_window((fl_Widget) this)));
   }
   else {
     win = Fl_Widget::as_window();
@@ -111,7 +111,7 @@ Fl_Window* Fl_DerivedWidget::as_window(){
 Fl_Gl_Window* Fl_DerivedWidget::as_gl_window(){
   Fl_Gl_Window* win;
   if (this->overriddenFuncs->as_gl_window != NULL) {
-    win = (static_cast<Fl_Gl_Window*>(this->overriddenFuncs->as_gl_window((fl_Table) this)));
+    win = (static_cast<Fl_Gl_Window*>(this->overriddenFuncs->as_gl_window((fl_Widget) this)));
   }
   else {
     win = Fl_Widget::as_gl_window();

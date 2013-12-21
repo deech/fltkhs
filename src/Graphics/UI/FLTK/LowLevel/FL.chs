@@ -4,13 +4,10 @@ module Graphics.UI.FLTK.LowLevel.FL
      Option(..),
      LabelDrawF,
      LabelMeasureF,
-     EventHandlerF,
-     EventDispatchF,
      run,
      check,
      ready,
      option,
-     toUserDataHandlerPrim,
      addAwakeHandler,
      getAwakeHandler_,
      display,
@@ -26,9 +23,6 @@ module Graphics.UI.FLTK.LowLevel.FL
      getMouse,
      validKeyboardStates,
      extractModifiers,
-     foldModifiers,
-     eventInsideRegion,
-     eventInsideWidget,
      handle,
      handle_,
      belowmouse,
@@ -36,17 +30,14 @@ module Graphics.UI.FLTK.LowLevel.FL
      setPushed,
      setFocus,
      setHandler,
-     eventDispatch,
-     setEventDispatch,
      paste,
      toRectangle,
+     fromRectangle,
      screenBounds,
      screenDPI,
      screenWorkArea,
      setColorRgb,
      toAttribute,
-     getFontName,
-     setIdle,
      release,
      setVisibleFocus,
      visibleFocus,
@@ -82,26 +73,7 @@ module Graphics.UI.FLTK.LowLevel.FL
      firstWindow,
      modal,
      grab,
-     event,
-     eventX,
-     eventY,
-     eventXRoot,
-     eventYRoot,
-     eventDx,
-     eventDy,
-     eventClicks,
-     setEventClicks,
-     eventIsClick,
-     setEventIsClick,
-     eventButton,
-     eventState,
-     containsEventState,
-     eventKey,
-     eventOriginalKey,
-     eventKeyPressed,
      getKey,
-     eventText,
-     eventLength,
      compose,
      composeReset,
      testShortcut,
@@ -120,13 +92,9 @@ module Graphics.UI.FLTK.LowLevel.FL
      getColor,
      getColorRgb,
      removeFromColormap,
-     getFont,
-     getFontSizes,
-     setFontByString,
-     setFontByFont,
-     setFonts,
-     setFontsWithString,
      setLabeltype,
+     -- * Box
+     BoxtypeSpec,
      getBoxtype,
      setBoxtype,
      boxDx,
@@ -134,6 +102,17 @@ module Graphics.UI.FLTK.LowLevel.FL
      boxDw,
      boxDh,
      drawBoxActive,
+     -- * Fonts
+     getFontName,
+     getFont,
+     getFontSizes,
+     setFontByString,
+     setFontByFont,
+     setFonts,
+     setFontsWithString,
+     -- * Events
+     EventDispatchF,
+     event,
      eventShift,
      eventCtrl,
      eventCommand,
@@ -142,6 +121,28 @@ module Graphics.UI.FLTK.LowLevel.FL
      eventButton1,
      eventButton2,
      eventButton3,
+     eventX,
+     eventY,
+     eventXRoot,
+     eventYRoot,
+     eventDx,
+     eventDy,
+     eventClicks,
+     setEventClicks,
+     eventIsClick,
+     setEventIsClick,
+     eventButton,
+     eventState,
+     containsEventState,
+     eventKey,
+     eventOriginalKey,
+     eventKeyPressed,
+     eventInsideRegion,
+     eventInsideWidget,
+     eventDispatch,
+     setEventDispatch,
+     eventText,
+     eventLength,
     )
 where
 #include "Fl_C.h"
@@ -205,20 +206,10 @@ foreign import ccall "dynamic"
                               BoxDrawFPrim
 type BoxDrawF = Rectangle -> Color -> IO ()
 
-type HandlerPrim = Ptr() -> IO ()
-
-ptrToGlobalEventHandler :: TVar (FunPtr EventHandlerPrim)
+ptrToGlobalEventHandler :: TVar (FunPtr GlobalEventHandlerPrim)
 ptrToGlobalEventHandler = unsafePerformIO $ do
-                            initialHandler <- wrapEventHandlerPrim (\_ -> return (0 :: CInt))
+                            initialHandler <- toGlobalEventHandlerPrim (\_ -> return (-1))
                             newTVarIO initialHandler
-
-type EventHandlerPrim = (CInt ->
-                         IO CInt)
-foreign import ccall "wrapper"
-        wrapEventHandlerPrim :: EventHandlerPrim ->
-                                IO (FunPtr EventHandlerPrim)
-type EventHandlerF = (Event ->
-                     IO Int)
 
 type EventDispatchPrim = (CInt ->
                           Ptr () ->
@@ -230,8 +221,9 @@ foreign import ccall "dynamic"
         unwrapEventDispatchPrim :: FunPtr EventDispatchPrim -> EventDispatchPrim
 
 type EventDispatchF a = (Event ->
-                        Window a ->
-                        IO Int)
+                         Widget a ->
+                         IO Int)
+
 run :: IO Int
 run = {#call unsafe Fl_run as fl_run #} >>= return . fromIntegral
 
@@ -245,22 +237,19 @@ ready = {#call unsafe Fl_ready as fl_ready #} >>= return . fromIntegral
 option :: Option -> IO Int
 option o = {#call unsafe Fl_option as fl_option #} (cFromEnum o) >>= return . fromIntegral
 
-toUserDataHandlerPrim :: Callback -> FunPtr HandlerPrim
-toUserDataHandlerPrim cb =
-    unsafePerformIO $ do
-      ptr <- mkCallbackPtr cb
-      return $ castFunPtr ptr
+unsafeToCallbackPrim :: Callback -> FunPtr CallbackPrim
+unsafeToCallbackPrim = unsafePerformIO . toCallbackPrim 
 
 {# fun unsafe Fl_add_awake_handler_ as addAwakeHandler'
-  {id `FunPtr HandlerPrim', id `(Ptr ())'} -> `Int' #}
+  {id `FunPtr CallbackPrim', id `(Ptr ())'} -> `Int' #}
 addAwakeHandler :: Callback -> IO Int
 addAwakeHandler awakeHandler =
     do
-      callbackPtr <-  mkCallbackPtr awakeHandler
+      callbackPtr <-  toCallbackPrim awakeHandler
       addAwakeHandler' (castFunPtr callbackPtr) nullPtr
 
 {# fun unsafe Fl_get_awake_handler_ as getAwakeHandler_'
-  {id `Ptr (FunPtr HandlerPrim)', id `Ptr (Ptr ())'} -> `Int' #}
+  {id `Ptr (FunPtr CallbackPrim)', id `Ptr (Ptr ())'} -> `Int' #}
 getAwakeHandler_ :: IO Callback
 getAwakeHandler_ =
     alloca $ \ptrToFunPtr ->
@@ -313,27 +302,27 @@ setScheme sch = withCString sch $ \str -> {#call unsafe Fl_set_scheme as fl_set_
 {# fun unsafe Fl_set_wait as setWait
        { `Double' } -> `Double' #}
 {# fun unsafe Fl_readqueue as readqueue
-       {  } -> `Widget ()' toWidget #}
+       {  } -> `Maybe (Widget ())' toObject #}
 {# fun unsafe Fl_add_timeout as addTimeout
-       { `Double', toUserDataHandlerPrim `Callback' } -> `()' #}
+       { `Double', unsafeToCallbackPrim `Callback' } -> `()' #}
 {# fun unsafe Fl_repeat_timeout as repeatTimeout
-      { `Double',toUserDataHandlerPrim `Callback' } -> `()' #}
+      { `Double',unsafeToCallbackPrim `Callback' } -> `()' #}
 {# fun unsafe Fl_has_timeout as hasTimeout
-       { toUserDataHandlerPrim `Callback' } -> `Int' #}
+       { unsafeToCallbackPrim `Callback' } -> `Int' #}
 {# fun unsafe Fl_remove_timeout as removeTimeout
-       { toUserDataHandlerPrim `Callback' } -> `()' #}
+       { unsafeToCallbackPrim `Callback' } -> `()' #}
 {# fun unsafe Fl_add_check as addCheck
-       { toUserDataHandlerPrim `Callback' } -> `()' #}
+       { unsafeToCallbackPrim `Callback' } -> `()' #}
 {# fun unsafe Fl_has_check as hasCheck
-       { toUserDataHandlerPrim `Callback' } -> `Int' #}
+       { unsafeToCallbackPrim `Callback' } -> `Int' #}
 {# fun unsafe Fl_remove_check as removeCheck
-       { toUserDataHandlerPrim `Callback' } -> `()' #}
+       { unsafeToCallbackPrim `Callback' } -> `()' #}
 {# fun unsafe Fl_add_idle as addIdle
-       { toUserDataHandlerPrim `Callback' } -> `()' #}
+       { unsafeToCallbackPrim `Callback' } -> `()' #}
 {# fun unsafe Fl_has_idle as hasIdle
-       { toUserDataHandlerPrim `Callback' } -> `Int' #}
+       { unsafeToCallbackPrim `Callback' } -> `Int' #}
 {# fun unsafe Fl_remove_idle as removeIdle
-       { toUserDataHandlerPrim `Callback' } -> `()' #}
+       { unsafeToCallbackPrim `Callback' } -> `()' #}
 {# fun unsafe Fl_damage as damage
        {  } -> `Int' #}
 {# fun unsafe Fl_redraw as redraw
@@ -341,33 +330,33 @@ setScheme sch = withCString sch $ \str -> {#call unsafe Fl_set_scheme as fl_set_
 {# fun unsafe Fl_flush as flush
        {  } -> `()' #}
 {# fun unsafe Fl_first_window as firstWindow
-       {  } -> `Window ()' toWidget #}
+       {  } -> `Maybe (Window ())' toObject #}
 {# fun unsafe Fl_set_first_window as setFirstWindow'
        { id `Ptr ()' } -> `()' #}
 setFirstWindow :: Window a -> IO ()
 setFirstWindow wp =
-    withWidget wp setFirstWindow'
+    withObject wp setFirstWindow'
 {# fun unsafe Fl_next_window as nextWindow'
-       { id `Ptr ()' } -> `Window ()' toWidget #}
-nextWindow :: Window a -> IO (Window ())
+       { id `Ptr ()' } -> `Maybe (Window ())' toObject #}
+nextWindow :: Window a -> IO (Maybe (Window ()))
 nextWindow currWindow =
-    withWidget currWindow nextWindow'
+    withObject currWindow nextWindow'
 {# fun unsafe Fl_modal as modal
-       {  } -> `Window ()' toWidget #}
+       {  } -> `Maybe (Window ())' toObject #}
 {# fun unsafe Fl_grab as grab
-       {  } -> `Window ()' toWidget #}
+       {  } -> `Maybe (Window ())' toObject #}
 {# fun unsafe Fl_set_grab as setGrab'
        { id `Ptr ()' } -> `()' #}
 setGrab :: Window a -> IO ()
-setGrab wp = withWidget wp setGrab'
+setGrab wp = withObject wp setGrab'
 {# fun unsafe Fl_event as event
-       {  } -> `Int' #}
+       {  } -> `Event' cToEnum #}
 {# fun unsafe Fl_event_x as eventX
-       {  } -> `Event' cToEnum #}
+       {  } -> `Int'#}
 {# fun unsafe Fl_event_y as eventY
-       {  } -> `Event' cToEnum #}
+       {  } -> `Int'#}
 {# fun unsafe Fl_event_x_root as eventXRoot
-       {  } -> `Event' cToEnum #}
+       {  } -> `Int' #}
 {# fun unsafe Fl_event_y_root as eventYRoot
        {  } -> `Int' #}
 {# fun unsafe Fl_event_dx as eventDx
@@ -406,19 +395,19 @@ validKeyboardStates = [ Kb_Shift
                       , Kb_Button3
                       ]
 extractModifiers :: (Enum a) => [a] -> CInt -> [a]
-extractModifiers allCodes compoundCode 
+extractModifiers allCodes compoundCode
     = map cToEnum $
       filter (masks compoundCode) $
       map cFromEnum allCodes
 unmaskKeysyms :: CInt -> [KeyboardCode]
 unmaskKeysyms = extractModifiers validKeyboardStates
-foldModifiers :: [KeyboardCode] -> CInt
-foldModifiers codes =
-    let validKeysyms = map cFromEnum (filter (\c -> c `elem` validKeyboardStates) codes)
-    in
-      case validKeysyms of
-        [] -> (-1)
-        (k:ks) -> foldl (\accum k' -> accum .&. k') k ks
+-- foldModifiers :: [KeyboardCode] -> CInt
+-- foldModifiers codes =
+--     let validKeysyms = map cFromEnum (filter (\c -> c `elem` validKeyboardStates) codes)
+--     in
+--       case validKeysyms of
+--         [] -> (-1)
+--         (k:ks) -> foldl (\accum k' -> accum .&. k') k ks
 {# fun unsafe Fl_event_state as eventState
        {  } -> `[KeyboardCode]' unmaskKeysyms #}
 {# fun unsafe Fl_contains_event_state as containsEventState
@@ -456,7 +445,7 @@ eventInsideRegion (Rectangle
        { id `Ptr ()' } -> `Int' #}
 eventInsideWidget :: Widget a -> IO Event
 eventInsideWidget wp =
-    withWidget wp  (\ptr -> do
+    withObject wp  (\ptr -> do
                       eventNum <- eventInsideWidget' (castPtr ptr)
                       return $ toEnum eventNum)
 {# fun unsafe Fl_test_shortcut as testShortcut
@@ -465,47 +454,43 @@ eventInsideWidget wp =
        { `Int',id `Ptr ()' } -> `Int' #}
 handle :: Event -> Window a -> IO Int
 handle e wp =
-    withWidget wp (handle' (cFromEnum e))
+    withObject wp (handle' (cFromEnum e))
 {# fun unsafe Fl_handle_ as handle_'
        { `Int',id `Ptr ()' } -> `Int' #}
 handle_ :: Event -> Window a -> IO Int
 handle_ e wp =
-    withWidget wp (handle_' (cFromEnum e))
+    withObject wp (handle_' (cFromEnum e))
 {# fun unsafe Fl_belowmouse as belowmouse
-       {  } -> `Widget ()' toWidget #}
+       {  } -> `Maybe (Widget ())' toObject #}
 {# fun unsafe Fl_set_belowmouse as setBelowmouse'
        { id `Ptr ()' } -> `()' #}
 setBelowmouse :: Widget a -> IO ()
-setBelowmouse wp = withWidget wp setBelowmouse'
+setBelowmouse wp = withObject wp setBelowmouse'
 {# fun unsafe Fl_pushed as pushed
-       {  } -> `Widget ()' toWidget #}
+       {  } -> `Maybe (Widget ())' toObject #}
 {# fun unsafe Fl_set_pushed as setPushed'
        { id `Ptr ()' } -> `()' #}
 setPushed :: Widget a -> IO ()
-setPushed wp = withWidget wp setPushed'
+setPushed wp = withObject wp setPushed'
 {# fun unsafe Fl_focus as focus
-       {  } -> `Widget ()' toWidget #}
+       {  } -> `Maybe (Widget ())' toObject #}
 {# fun unsafe Fl_set_focus as setFocus'
        { id `Ptr ()' } -> `()' #}
 setFocus :: Widget a -> IO ()
-setFocus wp = withWidget wp setFocus'
+setFocus wp = withObject wp setFocus'
 {# fun unsafe Fl_add_handler as addHandler'
-       { id `FunPtr EventHandlerPrim' } -> `()' #}
+       { id `FunPtr GlobalEventHandlerPrim' } -> `()' #}
 {# fun unsafe Fl_remove_handler as removeHandler'
-       { id `FunPtr EventHandlerPrim' } -> `()' #}
+       { id `FunPtr GlobalEventHandlerPrim' } -> `()' #}
 setHandler :: EventHandlerF -> IO ()
 setHandler eh = do
-  let toPrim = (\e ->
-                    let eventEnum = toEnum $ fromIntegral e
-                    in
-                      eh eventEnum >>= return . fromIntegral)
-  newEventHandler <- wrapEventHandlerPrim toPrim
+  newGlobalEventHandler <- toGlobalEventHandlerPrim eh
   curr <- atomically $ do
                   old <- readTVar ptrToGlobalEventHandler
-                  writeTVar ptrToGlobalEventHandler newEventHandler
+                  writeTVar ptrToGlobalEventHandler newGlobalEventHandler
                   return old
   removeHandler' curr
-  addHandler' newEventHandler
+  addHandler' newGlobalEventHandler
 
 {# fun unsafe Fl_set_event_dispatch as setEventDispatch'
        { id `Ptr (FunPtr EventDispatchPrim)' } -> `()' #}
@@ -516,7 +501,7 @@ eventDispatch =
     do
       funPtr <- eventDispatch'
       return (\e window ->
-                  withWidget
+                  withObject
                    window
                     (\ptr ->
                          let eventNum = fromIntegral (fromEnum e)
@@ -532,7 +517,9 @@ setEventDispatch ed = do
       let toPrim = (\e ptr ->
                       let eventEnum = toEnum $ fromIntegral e
                       in
-                        ed eventEnum (toWidget (castPtr ptr)) >>= return . fromIntegral
+                        maybe (error "Null pointer passed in to event dispatch function")
+                              (\p -> ed eventEnum p  >>= return . fromIntegral)
+                              (toObject (castPtr ptr))
                     )
       callbackPtr <-  wrapEventDispatchPrim toPrim
       ptrToCallbackPtr <- new callbackPtr
@@ -545,8 +532,8 @@ setEventDispatch ed = do
 {# fun unsafe Fl_paste_with_source as pasteWithSource
        { id `Ptr ()',`Int' } -> `()' #}
 paste :: Widget a -> Maybe Int -> IO ()
-paste widget (Just clipboard) = withWidget widget ((flip pasteWithSource) clipboard)
-paste widget Nothing          = withWidget widget ((flip pasteWithSource) 0)
+paste widget (Just clipboard) = withObject widget ((flip pasteWithSource) clipboard)
+paste widget Nothing          = withObject widget ((flip pasteWithSource) 0)
 
 {# fun unsafe Fl_dnd as dnd
        {  } -> `Int' #}
@@ -597,23 +584,6 @@ paste widget Nothing          = withWidget widget ((flip pasteWithSource) 0)
          `Int'
        } -> `()' #}
 
-toRectangle :: (Int,Int,Int,Int) -> Rectangle
-toRectangle (x_pos, y_pos, width, height) =
-    Rectangle (Position
-               (X x_pos)
-               (Y y_pos))
-              (RectangleSize
-               (Width width)
-               (Height height))
-
-fromRectangle ::  Rectangle -> (Int,Int,Int,Int)
-fromRectangle (Rectangle (Position
-                          (X x_pos)
-                          (Y y_pos))
-                         (RectangleSize
-                          (Width width)
-                          (Height height))) =
-              (x_pos, y_pos, width, height)
 screenBounds :: Maybe ScreenLocation -> IO Rectangle
 screenBounds location =
     case location of
@@ -745,11 +715,17 @@ setLabeltype label drawF measureF =
                                                       fromIntegral wPrim,
                                                       fromIntegral hPrim)
                              alignType = cToEnum alignPrim
-                         in drawF (toWidget rawPtr) rectangle alignType)
-        measureFPrim = (\rawPtr wPtr hPtr -> do
-                          (RectangleSize (Width width) (Height height)) <- measureF (toWidget rawPtr)
-                          poke wPtr (fromIntegral width)
-                          poke hPtr (fromIntegral height))
+                         in
+                           maybe (error "Null pointer passed in to label drawing function")
+                                 (\p -> drawF p rectangle alignType)
+                                 (toObject rawPtr))
+        measureFPrim = (\rawPtr wPtr hPtr ->
+                            maybe (error "Null pointer passed to label measuring function ")
+                                  (\p -> do
+                                     (RectangleSize (Width width) (Height height)) <- measureF p
+                                     poke wPtr (fromIntegral width)
+                                     poke hPtr (fromIntegral height))
+                                  (toObject (castPtr rawPtr)))
     in
       do
         wrappedDrawFPrim <- wrapLabelDrawFPrim drawFPrim
@@ -838,8 +814,6 @@ setBoxtype bt (FromBoxtype template) =
        {  } -> `Bool' cToBool #}
 {# fun unsafe Fl_event_button3 as eventButton3
       {  } -> `Bool' cToBool #}
-setIdle :: Callback -> IO ()
-setIdle cb = mkCallbackPtr cb >>= {#call unsafe Fl_set_idle as fl_set_idle #}
 release :: IO ()
 release = {#call unsafe Fl_release as fl_release #}
 setVisibleFocus :: Int -> IO ()
@@ -851,12 +825,12 @@ setDndTextOps =  {#call unsafe Fl_set_dnd_text_ops as fl_set_dnd_text_ops #} . f
 dndTextOps :: IO Option
 dndTextOps = {#call unsafe Fl_dnd_text_ops as fl_dnd_text_ops #} >>= return . cToEnum
 deleteWidget :: Widget a -> IO ()
-deleteWidget wptr = withWidget wptr {#call Fl_delete_widget as fl_delete_widget #}
+deleteWidget wptr = withObject wptr {#call Fl_delete_widget as fl_delete_widget #}
 doWidgetDeletion :: IO ()
 doWidgetDeletion = {#call unsafe Fl_do_widget_deletion as fl_do_widget_deletion #}
 watchWidgetPointer :: Widget a -> IO ()
-watchWidgetPointer wp = withWidget wp {#call unsafe Fl_watch_widget_pointer as fl_Watch_widget_Pointer #}
+watchWidgetPointer wp = withObject wp {#call unsafe Fl_watch_widget_pointer as fl_Watch_widget_Pointer #}
 releaseWidgetPointer :: Widget a -> IO ()
-releaseWidgetPointer wp = withWidget wp {#call unsafe Fl_release_widget_pointer as fl_release_widget_pointer #}
+releaseWidgetPointer wp = withObject wp {#call unsafe Fl_release_widget_pointer as fl_release_widget_pointer #}
 clearWidgetPointer :: Widget a -> IO ()
-clearWidgetPointer wp = withWidget wp {#call unsafe Fl_clear_widget_pointer as fl_Clear_Widget_Pointer #}
+clearWidgetPointer wp = withObject wp {#call unsafe Fl_clear_widget_pointer as fl_Clear_Widget_Pointer #}

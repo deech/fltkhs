@@ -85,19 +85,19 @@ valueOrMe key table = case (lookup key table) of
                         Just v -> v
                         Nothing -> key
 
-toHaskell (CPP (function, arguments)) =
+toHaskell prefix (CPP (function, arguments)) =
    let oldTypeName = getArgumentType . argumentType
        name = toHaskellName (realName function)
                             (\f -> if (isPrefixOf "Fl_" f)
                                    then (drop 3 f)
                                    else f)
        returnType = (valueOrMe (oldTypeName . argument $ function) simpleTypeMap, oldTypeName (argument function))
-       haskellArgs = map (\a -> (valueOrMe (oldTypeName a) simpleTypeMap, oldTypeName a))
+       haskellArgs = map (\a -> ((argumentName a), (valueOrMe (oldTypeName a) simpleTypeMap, oldTypeName a)))
                          arguments
        oldName = if (className function /= "")
                  then (className function) ++ "_" ++ (realName function)
                  else (realName function)
-   in Haskell (oldName, name,returnType,haskellArgs)
+   in Haskell (prefix, oldName, name,returnType,haskellArgs)
 
 toHaskellName name firstPartFunc
     = case parse parseName "" name of
@@ -129,7 +129,7 @@ withMarshaller marshaller a =
     else
         lookup a marshaller
 
-printHaskell (Haskell (oldName, name, returnType, haskellArgs)) =
+printHaskell (Haskell (prefix, oldName, name, returnType, haskellArgs)) =
     let addInMarshaller arg =
             case withMarshaller inMarshallMap arg of
               Just m -> m ++ " `" ++ arg ++ "'"
@@ -141,13 +141,48 @@ printHaskell (Haskell (oldName, name, returnType, haskellArgs)) =
         comment hArg cppArg = if (hArg == "Ptr ()")
                               then "{- " ++ cppArg ++ " -}"
                               else ""
+        cppNameToHaskellName = map toLower
+        nameToPtrName n = (cppNameToHaskellName n) ++ "Ptr"
+        haskellFunction hArg = if ((fst . snd $ hArg) == "Ptr ()")
+                               then ("withObject" ++ (cppNameToHaskellName (fst hArg))
+                                                   ++ " $ \\" ++ (nameToPtrName (fst hArg)) ++ " -> ")
+                               else ""
+        toHaskellType arg = case (lookup arg haskellEquivalent) of
+                              Just a -> a ++ " a "
+                              Nothing -> case (lookup arg simpleTypeMap) of
+                                           Just a' -> a'
+                                           Nothing -> arg
+        haskellFunctionName = case prefix of
+                               (Just p) -> p ++ [(toUpper . head $ name)] ++ (tail name)
+                               Nothing -> name
     in
-    printf "{# fun unsafe %s as %s { %s } -> %s #}\n {- %s -}\n"
-           oldName name
-           (intercalate "," (map (\(hArg,_) -> (addInMarshaller hArg))
+    printf "{# fun unsafe %s as %s { %s } -> %s #}\n%s\n%s"
+           oldName (name ++ "'")
+           (intercalate "," (map (\(_,(hArg,_)) -> (addInMarshaller hArg))
                                  haskellArgs))
            (addOutMarshaller (fst returnType))
-           (intercalate " -> " ((map snd haskellArgs) ++ [(snd returnType)]))
+           -- (intercalate " -> " ((map (snd . snd) haskellArgs) ++ [(snd returnType)]))
+           (haskellFunctionName ++
+            " :: " ++
+            (intercalate
+             " -> "
+             ((map (toHaskellType . snd . snd) haskellArgs)
+              ++ [" IO (" ++ (fst returnType) ++ ")"])))
+           (haskellFunctionName
+            ++ " "
+            ++ (intercalate " " (map (cppNameToHaskellName . fst) haskellArgs))
+            ++ " = "
+            ++ (concat (map haskellFunction haskellArgs))
+            ++ (name ++ "'") ++ " "
+            ++ (intercalate " " (map (\hArg -> if ((fst . snd $ hArg) == "Ptr ()")
+                                               then (nameToPtrName (fst hArg))
+                                               else (cppNameToHaskellName (fst hArg)))
+                                 haskellArgs
+                                )
+               )
+           )
+
+
 
 inMarshallMap =
     [
@@ -158,6 +193,7 @@ inMarshallMap =
     ,("Font", "cFromFont")
     ,("CUInt", "id")
     ,("FlShortcut", "id")
+    ,("When", "cFromEnum")
     ]
 outMarshallMap =
     [
@@ -165,6 +201,7 @@ outMarshallMap =
     ,("Labeltype", "cToEnum")
     ,("Color", "cToColor")
     ,("Font", "cToFont")
+    ,("When", "cToEnum")
     ,("FlShortcut", "id")
     ,("AlignType", "cToEnum")
     ]
@@ -181,6 +218,7 @@ simpleTypeMap =
     ,("uchar", "Word8")
     ,("float*", "Ptr CFloat")
     ,("unsigned", "Int")
+    ,("unsigned int", "Int")
     ,("Fl_Boxtype", "Boxtype")
     ,("fl_Widget", "Ptr ()")
     ,("fl_Window", "Ptr ()")
@@ -208,6 +246,16 @@ simpleTypeMap =
     ,("fl_Event_Dispatch*", "Ptr (FunPtr EventDispatchPrim)")
     ,("Fl_Shortcut", "CUInt")
     ,("fl_Atclose_Handler*", "Ptr (FunPtr AtCloseHandler)")
+    ,("fl_When", "When")
+    ,("fl_Gl_Window", "GlWindow")
+    ]
+haskellEquivalent =
+    [
+     ("fl_Widget", "Widget"),
+     ("fl_Window", "Window"),
+     ("fl_Group", "Group"),
+     ("fl_Gl_Window", "GlWindow"),
+     ("fl_Image" , "Image")
     ]
 upcase = map toUpper
 makeArgument className argType argName =
@@ -337,17 +385,19 @@ parseAndProcess parser input f =
     case parse parser "" input of
       Right output -> f output
       Left err -> error (show err)
-data ParseOutputType = Haskell (String,String,(String,String),[(String,String)]) |
+data ParseOutputType = Haskell (Maybe String, String, String,(String,String),[(String, (String,String))]) |
                        CPP (FunctionName, [Argument]) deriving Show
 
 main = do (argType:arg:args) <- getArgs
           case argType of
             "string" ->
                 parseAndProcess parseTypeSignature arg (putStrLn . outputDefaultImplementation)
-            "haskell" ->
-                parseAndProcess parseTypeSignature arg (printHaskell . toHaskell)
+            "" ->
+                parseAndProcess parseTypeSignature arg (printHaskell . (toHaskell Nothing))
+            prefix ->
+                parseAndProcess parseTypeSignature arg (printHaskell . (toHaskell (Just prefix)))
 testHaskellName input =
-                parseAndProcess parseTypeSignature input (printHaskell . toHaskell)
+                parseAndProcess parseTypeSignature input (printHaskell . (toHaskell (Just "test")))
 generateFunctionPointers :: [([Argument],FunctionName)] -> String
 generateFunctionPointers impls = printf "struct blah {\n%s\n};" (intercalate ";\n" (map generateFunctionPointer impls))
 generateFunctionPointer :: ([Argument], FunctionName) -> String

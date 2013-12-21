@@ -5,7 +5,6 @@ module Graphics.UI.FLTK.LowLevel.Fl_Types where
 import Foreign
 import Foreign.C hiding (CClock)
 import Graphics.UI.FLTK.LowLevel.Fl_Enumerations
-
 #c
   enum BrowserType {
     NormalBrowserType = FL_NORMAL_BROWSER,
@@ -427,12 +426,22 @@ type XBMImage a           = Image (CXBMImage a)
 data CXPMImage a          = CXPMImage
 type XPMImage a           = Image (CXPMImage a)
 
-type Callback             = IO ()
-type CallbackPrim 	  = Ptr () -> Ptr () -> IO ()
-type TextBufferCallback   = FunPtr (Ptr () -> IO ())
-type UnfinishedStyleCb    = FunPtr (CInt -> Ptr () -> IO ())
-type FileChooserCallback  = FunPtr (Ptr () -> Ptr () -> IO())
-type SharedImageHandler   = FunPtr (CString -> CUChar -> CInt -> Ptr ())
+type Callback                 = IO ()
+type CallbackWithUserDataPrim = Ptr () -> Ptr () -> IO ()
+type CallbackPrim             = Ptr () -> IO ()
+type RectangleF               = Rectangle -> IO ()
+type RectangleFPrim           = Ptr () -> CInt -> CInt -> CInt -> CInt -> IO ()
+type GetWindowF               = IO (Maybe (Window ()))
+type GetPointerF              = Ptr () -> IO (Ptr ())
+type GetGlWindowF             = IO (Maybe (GlWindow ()))
+type GetGroupF                = IO (Maybe (Group ()))
+type GlobalEventHandlerPrim   = CInt -> IO CInt
+type EventHandlerF            = Event -> IO Int
+type WidgetEventHandlerPrim   = Ptr () -> CInt -> IO CInt
+type TextBufferCallback       = FunPtr (Ptr () -> IO ())
+type UnfinishedStyleCb        = FunPtr (CInt -> Ptr () -> IO ())
+type FileChooserCallback      = FunPtr (Ptr () -> Ptr () -> IO())
+type SharedImageHandler       = FunPtr (CString -> CUChar -> CInt -> Ptr ())
 {#pointer *Style_Table_Entry as StyleTableEntryPtr foreign -> StyleTableEntry #}
 data StyleTableEntry = StyleTableEntry {
       color :: Color,
@@ -440,6 +449,22 @@ data StyleTableEntry = StyleTableEntry {
       size :: FontSize,
       attr :: FontAttribute
     }
+{-
+      widgetDraw_ :: FunPtr (WidgetPtr -> IO ())
+    , widgetHandle_ :: FunPtr (WidgetPtr -> Event -> IO CInt)
+    , widgetResize_ :: FunPtr (WidgetPtr ->
+                               CInt ->
+			       CInt ->
+			       CInt ->
+			       CInt ->
+			       IO ())
+    , widgetShow_ :: FunPtr (WidgetPtr -> IO ())
+    , widgetHide_ :: FunPtr (WidgetPtr -> IO ())
+    , widgetAsWindow_ :: FunPtr (WidgetPtr -> IO WindowPtr)
+    , widgetAsGlWindow_ :: FunPtr (WidgetPtr -> IO GlWindowPtr)
+    , widgetAsGroup_ :: FunPtr (WidgetPtr -> IO Group)
+    , widgetDestroyData_ :: FunPtr (WidgetPtr -> IO ())
+-}
 
 {-
 instance Storable StyleTableEntry where
@@ -875,9 +900,27 @@ data ScreenLocation = Intersect Rectangle
                     | ScreenNumber Int
                     | ScreenPosition Position
 
-withWidget ::  Widget a -> (Ptr () -> IO b) -> IO b
-withWidget (Object ptr) f = f (castPtr ptr)
-withWidget (Managed fptr) f = withForeignPtr fptr $ (\p -> f (castPtr p))
+toRectangle :: (Int,Int,Int,Int) -> Rectangle
+toRectangle (x_pos, y_pos, width, height) =
+    Rectangle (Position
+               (X x_pos)
+               (Y y_pos))
+              (RectangleSize
+               (Width width)
+               (Height height))
 
-toWidget ::  Ptr () -> Object a
-toWidget p = Object (castPtr p)
+fromRectangle ::  Rectangle -> (Int,Int,Int,Int)
+fromRectangle (Rectangle (Position
+                          (X x_pos)
+                          (Y y_pos))
+                         (RectangleSize
+                          (Width width)
+                          (Height height))) =
+              (x_pos, y_pos, width, height)
+withObject ::  Object a -> (Ptr () -> IO b) -> IO b
+withObject (Object ptr) f = f (castPtr ptr)
+withObject (Managed fptr) f = withForeignPtr fptr $ (\p -> f (castPtr p))
+
+toObject ::  Ptr () -> Maybe (Object a)
+toObject p | p /= nullPtr = Just $ Object (castPtr p)
+           | otherwise = Nothing
