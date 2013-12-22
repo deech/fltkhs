@@ -144,7 +144,7 @@ printHaskell (Haskell (prefix, oldName, name, returnType, haskellArgs)) =
         cppNameToHaskellName = map toLower
         nameToPtrName n = (cppNameToHaskellName n) ++ "Ptr"
         haskellFunction hArg = if ((fst . snd $ hArg) == "Ptr ()")
-                               then ("withObject" ++ (cppNameToHaskellName (fst hArg))
+                               then ("withObject " ++ (cppNameToHaskellName (fst hArg))
                                                    ++ " $ \\" ++ (nameToPtrName (fst hArg)) ++ " -> ")
                                else ""
         toHaskellType arg = case (lookup arg haskellEquivalent) of

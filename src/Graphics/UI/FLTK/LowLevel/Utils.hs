@@ -69,3 +69,13 @@ toGetGroupFPrim :: GetGroupF -> IO (FunPtr GetPointerF)
 toGetGroupFPrim f = mkGetPointerPtr (\_ -> f >>= ptrOrNull)
 orNullPtr :: (a -> IO (FunPtr b)) -> Maybe a -> IO (FunPtr b)
 orNullPtr = maybe (return nullFunPtr)
+arrayToObjects:: (Ptr (Ptr ())) -> Int -> IO [Maybe (Object a)]
+arrayToObjects arrayPtr numElements =
+    go arrayPtr numElements []
+    where
+      go _ 0 accum =  return accum
+      go currPtr numLeft accum = do
+        curr <- peek currPtr
+        go (currPtr `plusPtr` (sizeOf (undefined :: Ptr())))
+           (numLeft - 1)
+           ([toObject curr] ++ accum)
