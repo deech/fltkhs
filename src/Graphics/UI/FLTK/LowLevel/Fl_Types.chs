@@ -206,7 +206,7 @@ type FlIntPtr             = {#type fl_intptr_t #}
 type FlUIntPtr            = {#type fl_uintptr_t#}
 type ID                   = {#type ID#}
 data Object a             = Object !(Ptr a)
-                          | Managed !(ForeignPtr (TManagedPtr a))
+                          | Managed !(ForeignPtr (TManagedPtr a)) deriving Show
 type TManagedPtr a        = CManagedPtr a
 data CManagedPtr a        = CManagedPtr
 data CWidget a            = CWidget
@@ -426,18 +426,20 @@ type XBMImage a           = Image (CXBMImage a)
 data CXPMImage a          = CXPMImage
 type XPMImage a           = Image (CXPMImage a)
 
-type Callback                 = IO ()
+type GlobalCallback           = IO ()
 type CallbackWithUserDataPrim = Ptr () -> Ptr () -> IO ()
 type CallbackPrim             = Ptr () -> IO ()
-type RectangleF               = Rectangle -> IO ()
+type WidgetCallback a         = Widget a -> IO ()
+type RectangleF a             = Widget a -> Rectangle -> IO ()
 type RectangleFPrim           = Ptr () -> CInt -> CInt -> CInt -> CInt -> IO ()
-type GetWindowF               = IO (Maybe (Window ()))
+type GetWindowF a             = Widget a -> IO (Maybe (Window ()))
 type GetPointerF              = Ptr () -> IO (Ptr ())
-type GetGlWindowF             = IO (Maybe (GlWindow ()))
-type GetGroupF                = IO (Maybe (Group ()))
-type GlobalEventHandlerPrim   = CInt -> IO CInt
-type EventHandlerF            = Event -> IO Int
+type GetGlWindowF a           = Widget a -> IO (Maybe (GlWindow ()))
+type GetGroupF a              = Widget a -> IO (Maybe (Group ()))
 type WidgetEventHandlerPrim   = Ptr () -> CInt -> IO CInt
+type WidgetEventHandler a     = Widget a -> Event -> IO Int
+type GlobalEventHandlerPrim   = CInt -> IO CInt
+type GlobalEventHandlerF      = Event -> IO Int
 type TextBufferCallback       = FunPtr (Ptr () -> IO ())
 type UnfinishedStyleCb        = FunPtr (CInt -> Ptr () -> IO ())
 type FileChooserCallback      = FunPtr (Ptr () -> Ptr () -> IO())
@@ -894,18 +896,19 @@ newtype X = X Int
 newtype Y = Y Int
 data Position = Position X Y
 data DPI = DPI Float Float
-data Rectangle = Rectangle Position RectangleSize
-data RectangleSize = RectangleSize Width Height
+data Rectangle = Rectangle Position Size  
+data Size = Size Width Height
 data ScreenLocation = Intersect Rectangle
                     | ScreenNumber Int
                     | ScreenPosition Position
-
+data PositionSpec a = ByPosition Position
+                    | ByWidget (Widget a)
 toRectangle :: (Int,Int,Int,Int) -> Rectangle
 toRectangle (x_pos, y_pos, width, height) =
     Rectangle (Position
                (X x_pos)
                (Y y_pos))
-              (RectangleSize
+              (Size
                (Width width)
                (Height height))
 
@@ -913,7 +916,7 @@ fromRectangle ::  Rectangle -> (Int,Int,Int,Int)
 fromRectangle (Rectangle (Position
                           (X x_pos)
                           (Y y_pos))
-                         (RectangleSize
+                         (Size
                           (Width width)
                           (Height height))) =
               (x_pos, y_pos, width, height)

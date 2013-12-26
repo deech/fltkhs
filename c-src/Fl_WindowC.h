@@ -6,6 +6,45 @@
                           // Fl_Widget is included transitively and needed for
                           // the callback mechanism included below to work.
 #include "Fl_CallbackC.h"
+class Fl_DerivedWindow : public Fl_Window {
+  fl_Window_Virtual_Funcs* overriddenFuncs;
+  void* other_data;
+public:
+  void* get_other_data();
+  void set_other_data(void*);
+  void destroy_data();
+  void draw_box();
+  void draw_box(Fl_Boxtype t, Fl_Color c);
+  void draw_box(Fl_Boxtype t, int x,int y,int w,int h, Fl_Color c);
+  void draw_backdrop();
+  void draw_focus();
+  void draw_focus(Fl_Boxtype t, int x,int y,int w,int h);
+  void draw_label();
+  void draw_label(int x,int y,int w,int h,Fl_Align alignment);
+  void draw_super();
+  void flush_super();
+  void show_super();
+  virtual void draw();
+  virtual int handle(int event);
+  virtual Fl_Group* as_group();
+  virtual void resize(int x, int y, int w, int h);
+  virtual void show();
+  virtual void show(int,char**);
+  virtual void hide();
+  virtual void flush();
+  virtual Fl_Window* as_window();
+  virtual Fl_Gl_Window* as_gl_window();
+  void draw_child(Fl_Widget* widget);
+  void draw_children();
+  void draw_outside_label(Fl_Widget* widget);
+  void update_child(Fl_Widget* widget);
+  int* sizes();
+  Fl_DerivedWindow(int X, int Y, int W, int H, const char *l, fl_Window_Virtual_Funcs* funcs);
+  Fl_DerivedWindow(int X, int Y, int W, int H, fl_Window_Virtual_Funcs* funcs);
+  Fl_DerivedWindow(int W, int H, const char *l, fl_Window_Virtual_Funcs* funcs);
+  Fl_DerivedWindow(int W, int H, fl_Window_Virtual_Funcs* funcs);
+  ~Fl_DerivedWindow();
+};
 EXPORT {
 #endif
   /* Inherited from Fl_Widget */
@@ -130,45 +169,18 @@ EXPORT {
   FL_EXPORT_C(fl_Widget,    Fl_Window_child)(fl_Window self, int n);
   FL_EXPORT_C(void,         Fl_Window_forms_end)(fl_Window self);
   /* FL_EXPORT_C(void,         Fl_Window_forms_end)(fl_Window win); */
-#ifdef __cplusplus
-  class Fl_DerivedWindow : public Fl_Window {
-    fl_Window_Virtual_Funcs* overriddenFuncs;
-    void* other_data;
-  public:
-    void* get_other_data();
-    void set_other_data(void*);
-    void destroy_data();
-    void draw_box();
-    void draw_box(Fl_Boxtype t, Fl_Color c);
-    void draw_box(Fl_Boxtype t, int x,int y,int w,int h, Fl_Color c);
-    void draw_backdrop();
-    void draw_focus();
-    void draw_focus(Fl_Boxtype t, int x,int y,int w,int h);
-    void draw_label();
-    void draw_label(int x,int y,int w,int h,Fl_Align alignment);
-    virtual void draw();
-    virtual int handle(int event);
-    virtual void resize(int x, int y, int w, int h);
-    virtual void show();
-    virtual void show(int,char**);
-    virtual void hide();
-    virtual void flush();
-    virtual Fl_Window* as_window();
-    virtual Fl_Gl_Window* as_gl_window();
-    void draw_child(Fl_Widget* widget);
-    void draw_children();
-    void draw_outside_label(Fl_Widget* widget);
-    void update_child(Fl_Widget* widget);
-    int* sizes();
-    Fl_DerivedWindow(int X, int Y, int W, int H, const char *l, fl_Window_Virtual_Funcs* funcs);
-    Fl_DerivedWindow(int X, int Y, int W, int H, fl_Window_Virtual_Funcs* funcs);
-    Fl_DerivedWindow(int W, int H, const char *l, fl_Window_Virtual_Funcs* funcs);
-    Fl_DerivedWindow(int W, int H, fl_Window_Virtual_Funcs* funcs);
-    ~Fl_DerivedWindow();
-  };
-#endif
   /* Fl_Window specific */
   FL_EXPORT_C(fl_Window_Virtual_Funcs*, Fl_Window_default_virtual_funcs)();
+  FL_EXPORT_C(void, Fl_Window_draw_super)(fl_Window window);
+  FL_EXPORT_C(int,  Fl_Window_handle_super)(fl_Window window, int event);
+  FL_EXPORT_C(fl_Group, Fl_Window_as_group_super)(fl_Window window);
+  FL_EXPORT_C(void, Fl_Window_resize_super)(fl_Window window, int x, int y, int w, int h);
+  FL_EXPORT_C(void, Fl_Window_show_super)(fl_Window window);
+  FL_EXPORT_C(void, Fl_Window_hide_super)(fl_Window window);
+  FL_EXPORT_C(void, Fl_Window_flush_super)(fl_Window window);
+  FL_EXPORT_C(fl_Window, Fl_Window_as_window_super)(fl_Window window);
+  FL_EXPORT_C(fl_Gl_Window, Fl_Window_as_gl_window_super)(fl_Window window);
+  FL_EXPORT_C(fl_Window, Fl_Window_as_window)(fl_Window window);
   FL_EXPORT_C(unsigned int, Fl_Window_changed)(fl_Window win);
   FL_EXPORT_C(void,         Fl_Window_fullscreen)(fl_Window win);
   FL_EXPORT_C(void,         Fl_Window_fullscreen_off)(fl_Window win);

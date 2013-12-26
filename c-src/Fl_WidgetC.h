@@ -68,10 +68,10 @@ EXPORT {
   FL_EXPORT_C(void,         Fl_Widget_set_labeltype)(fl_Widget widget, Fl_Labeltype a);
   FL_EXPORT_C(Fl_Color,     Fl_Widget_labelcolor)(fl_Widget widget);
   FL_EXPORT_C(void,         Fl_Widget_set_labelcolor)(fl_Widget widget, Fl_Color c);
-  FL_EXPORT_C(Fl_Font,      Fl_Widget_item_labelfont)(fl_Widget widget);
-  FL_EXPORT_C(void,         Fl_Widget_set_item_labelfont)(fl_Widget widget, Fl_Font c);
-  FL_EXPORT_C(Fl_Fontsize,  Fl_Widget_item_labelsize)(fl_Widget widget);
-  FL_EXPORT_C(void,         Fl_Widget_set_item_labelsize)(fl_Widget widget, Fl_Fontsize pix);
+  FL_EXPORT_C(Fl_Font,      Fl_Widget_labelfont)(fl_Widget widget);
+  FL_EXPORT_C(void,         Fl_Widget_set_labelfont)(fl_Widget widget, Fl_Font c);
+  FL_EXPORT_C(Fl_Fontsize,  Fl_Widget_labelsize)(fl_Widget widget);
+  FL_EXPORT_C(void,         Fl_Widget_set_labelsize)(fl_Widget widget, Fl_Fontsize pix);
   FL_EXPORT_C(fl_Image,     Fl_Widget_image)(fl_Widget widget);
   FL_EXPORT_C(void,         Fl_Widget_set_image)(fl_Widget widget, fl_Image pix);
   FL_EXPORT_C(fl_Image,     Fl_Widget_deimage)(fl_Widget widget);

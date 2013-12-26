@@ -28,10 +28,10 @@ module Graphics.UI.FLTK.LowLevel.Fl_Group
      groupSetLabeltype,
      groupLabelcolor,
      groupSetLabelcolor,
-     groupItemLabelfont,
-     groupSetItemLabelfont,
-     groupItemLabelsize,
-     groupSetItemLabelsize,
+     groupLabelfont,
+     groupSetLabelfont,
+     groupLabelsize,
+     groupSetLabelsize,
      groupImage,
      groupSetImage,
      groupDeimage,
@@ -219,20 +219,20 @@ groupSetLabelcolor :: Group a  -> Color ->  IO (())
 groupSetLabelcolor = widgetSetLabelcolor
 
 
-groupItemLabelfont :: Group a  ->  IO (Font)
-groupItemLabelfont = widgetItemLabelfont
+groupLabelfont :: Group a  ->  IO (Font)
+groupLabelfont = widgetLabelfont
 
 
-groupSetItemLabelfont :: Group a  -> Font ->  IO (())
-groupSetItemLabelfont = widgetSetItemLabelfont
+groupSetLabelfont :: Group a  -> Font ->  IO (())
+groupSetLabelfont = widgetSetLabelfont
 
 
-groupItemLabelsize :: Group a  ->  IO (FontSize)
-groupItemLabelsize = widgetItemLabelsize
+groupLabelsize :: Group a  ->  IO (FontSize)
+groupLabelsize = widgetLabelsize
 
 
-groupSetItemLabelsize :: Group a  -> FontSize ->  IO (())
-groupSetItemLabelsize = widgetSetItemLabelsize
+groupSetLabelsize :: Group a  -> FontSize ->  IO (())
+groupSetLabelsize = widgetSetLabelsize
 
 
 groupImage :: Group a  ->  IO (Maybe (Image ()))
@@ -399,7 +399,7 @@ groupDamageInsideWidget :: Group a  -> Word8 -> Rectangle ->  IO (())
 groupDamageInsideWidget = widgetDamageInsideWidget
 
 
-groupMeasureLabel :: Group a  -> IO (RectangleSize)
+groupMeasureLabel :: Group a  -> IO (Size)
 groupMeasureLabel = widgetMeasureLabel
 
 
@@ -439,88 +439,88 @@ groupResize :: Group a  -> Rectangle -> IO (())
 groupResize = widgetResize
 
 
-groupSetCallback :: Group a -> Callback -> IO (())
+groupSetCallback :: Group a -> (WidgetCallback b) -> IO (())
 groupSetCallback = widgetSetCallback
 
-{# fun unsafe Fl_Group_begin as begin' { id `Ptr ()' } -> `()' #}
+{# fun Fl_Group_begin as begin' { id `Ptr ()' } -> `()' #}
 groupBegin :: Group a  ->  IO (())
 groupBegin group = withObject group $ \groupPtr -> begin' groupPtr
 
-{# fun unsafe Fl_Group_end as end' { id `Ptr ()' } -> `()' #}
+{# fun Fl_Group_end as end' { id `Ptr ()' } -> `()' #}
 groupEnd :: Group a  ->  IO (())
 groupEnd group = withObject group $ \groupPtr -> end' groupPtr
 
-{# fun unsafe Fl_Group_find as find' { id `Ptr ()',id `Ptr ()' } -> `Int' #}
+{# fun Fl_Group_find as find' { id `Ptr ()',id `Ptr ()' } -> `Int' #}
 groupFind :: Group a  -> Widget a  ->  IO (Int)
 groupFind group w = withObject group $ \groupPtr -> withObject w $ \wPtr -> find' groupPtr wPtr
 
-{# fun unsafe Fl_Group_add as add' { id `Ptr ()',id `Ptr ()' } -> `()' #}
+{# fun Fl_Group_add as add' { id `Ptr ()',id `Ptr ()' } -> `()' #}
 groupAdd :: Group a  -> Widget a  ->  IO (())
 groupAdd group w = withObject group $ \groupPtr -> withObject w $ \wPtr -> add' groupPtr wPtr
 
-{# fun unsafe Fl_Group_insert as insert' { id `Ptr ()',id `Ptr ()',`Int' } -> `()' #}
+{# fun Fl_Group_insert as insert' { id `Ptr ()',id `Ptr ()',`Int' } -> `()' #}
 groupInsert :: Group a  -> Widget a  -> Int ->  IO (())
 groupInsert group w i = withObject group $ \groupPtr -> withObject w $ \wPtr -> insert' groupPtr wPtr i
 
-{# fun unsafe Fl_Group_remove_index as removeIndex' { id `Ptr ()',`Int' } -> `()' #}
+{# fun Fl_Group_remove_index as removeIndex' { id `Ptr ()',`Int' } -> `()' #}
 groupRemoveIndex :: Group a  -> Int ->  IO (())
 groupRemoveIndex group index = withObject group $ \groupPtr -> removeIndex' groupPtr index
 
-{# fun unsafe Fl_Group_remove_widget as removeWidget' { id `Ptr ()',id `Ptr ()' } -> `()' #}
+{# fun Fl_Group_remove_widget as removeWidget' { id `Ptr ()',id `Ptr ()' } -> `()' #}
 groupRemoveWidget :: Group a  -> Widget a  ->  IO (())
 groupRemoveWidget group w = withObject group $ \groupPtr -> withObject w $ \wPtr -> removeWidget' groupPtr wPtr
 
-{# fun unsafe Fl_Group_clear as clear' { id `Ptr ()' } -> `()' #}
+{# fun Fl_Group_clear as clear' { id `Ptr ()' } -> `()' #}
 groupClear :: Group a  ->  IO (())
 groupClear group = withObject group $ \groupPtr -> clear' groupPtr
 
-{# fun unsafe Fl_Group_set_resizable as setResizable' { id `Ptr ()',id `Ptr ()' } -> `()' #}
+{# fun Fl_Group_set_resizable as setResizable' { id `Ptr ()',id `Ptr ()' } -> `()' #}
 groupSetResizable :: Group a  -> Widget a  ->  IO (())
 groupSetResizable group o = withObject group $ \groupPtr -> withObject o $ \oPtr -> setResizable' groupPtr oPtr
 
-{# fun unsafe Fl_Group_resizable as resizable' { id `Ptr ()' } -> `Ptr ()' id #}
+{# fun Fl_Group_resizable as resizable' { id `Ptr ()' } -> `Ptr ()' id #}
 groupResizable :: Group a  ->  IO (Maybe (Widget ()))
 groupResizable group = withObject group $ \groupPtr -> resizable' groupPtr >>= return . toObject
 
-{# fun unsafe Fl_Group_add_resizable as addResizable' { id `Ptr ()',id `Ptr ()' } -> `()' #}
+{# fun Fl_Group_add_resizable as addResizable' { id `Ptr ()',id `Ptr ()' } -> `()' #}
 groupAddResizable :: Group a  -> Widget a  ->  IO (())
 groupAddResizable group o = withObject group $ \groupPtr -> withObject o $ \oPtr -> addResizable' groupPtr oPtr
 
-{# fun unsafe Fl_Group_init_sizes as initSizes' { id `Ptr ()' } -> `()' #}
+{# fun Fl_Group_init_sizes as initSizes' { id `Ptr ()' } -> `()' #}
 groupInitSizes :: Group a  ->  IO (())
 groupInitSizes group = withObject group $ \groupPtr -> initSizes' groupPtr
 
-{# fun unsafe Fl_Group_children as children' { id `Ptr ()' } -> `Int' #}
+{# fun Fl_Group_children as children' { id `Ptr ()' } -> `Int' #}
 groupChildren :: Group a  ->  IO (Int)
 groupChildren group = withObject group $ \groupPtr -> children' groupPtr
 
-{# fun unsafe Fl_Group_set_clip_children as setClipChildren' { id `Ptr ()',`Int' } -> `()' #}
+{# fun Fl_Group_set_clip_children as setClipChildren' { id `Ptr ()',`Int' } -> `()' #}
 groupSetClipChildren :: Group a  -> Int ->  IO (())
 groupSetClipChildren group c = withObject group $ \groupPtr -> setClipChildren' groupPtr c
 
-{# fun unsafe Fl_Group_clip_children as clipChildren' { id `Ptr ()' } -> `Int' #}
+{# fun Fl_Group_clip_children as clipChildren' { id `Ptr ()' } -> `Int' #}
 groupClipChildren :: Group a  ->  IO (Int)
 groupClipChildren group = withObject group $ \groupPtr -> clipChildren' groupPtr
 
-{# fun unsafe Fl_Group_focus as focus' { id `Ptr ()',id `Ptr ()' } -> `()' #}
+{# fun Fl_Group_focus as focus' { id `Ptr ()',id `Ptr ()' } -> `()' #}
 groupFocus :: Group a  -> Widget a  ->  IO (())
 groupFocus group w = withObject group $ \groupPtr -> withObject w $ \wPtr -> focus' groupPtr wPtr
 
-{# fun unsafe Fl_Group__ddfdesign_kludge as ddfdesignKludge' { id `Ptr ()' } -> `Ptr ()' id #}
+{# fun Fl_Group__ddfdesign_kludge as ddfdesignKludge' { id `Ptr ()' } -> `Ptr ()' id #}
 groupDdfdesignKludge :: Group a  ->  IO (Maybe (Widget ()))
 groupDdfdesignKludge group = withObject group $ \groupPtr -> ddfdesignKludge' groupPtr >>= return . toObject
 
-{# fun unsafe Fl_Group_insert_with_before as insertWithBefore' { id `Ptr ()',id `Ptr ()',id `Ptr ()' } -> `()' #}
+{# fun Fl_Group_insert_with_before as insertWithBefore' { id `Ptr ()',id `Ptr ()',id `Ptr ()' } -> `()' #}
 groupInsertWithBefore :: Group a  -> Widget a  -> Widget a  ->  IO (())
 groupInsertWithBefore self w before = withObject self $ \selfPtr -> withObject w $ \wPtr -> withObject before $ \beforePtr -> insertWithBefore' selfPtr wPtr beforePtr
 
-{# fun unsafe Fl_Group_array as array' { id `Ptr ()' } -> `Ptr (Ptr ())' id#}
+{# fun Fl_Group_array as array' { id `Ptr ()' } -> `Ptr (Ptr ())' id#}
 groupArray :: Group a  ->  IO [Maybe (Widget ())]
 groupArray group = withObject group $ \groupPtr -> do
                     childArrayPtr <- array' groupPtr
                     numChildren <- groupChildren group
                     arrayToObjects childArrayPtr numChildren
 
-{# fun unsafe Fl_Group_child as child' { id `Ptr ()',`Int' } -> `Ptr ()' id #}
+{# fun Fl_Group_child as child' { id `Ptr ()',`Int' } -> `Ptr ()' id #}
 groupChild :: Group a  -> Int ->  IO (Maybe (Widget ()))
 groupChild self n = withObject self $ \selfPtr -> child' selfPtr n >>= return . toObject

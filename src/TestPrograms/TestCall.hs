@@ -4,13 +4,25 @@ import Graphics.UI.FLTK.LowLevel.FL
 import Graphics.UI.FLTK.LowLevel.Fl_Enumerations
 import Graphics.UI.FLTK.LowLevel.Fl_Types
 
+windowCallback ::  (Show a) => a -> Widget b -> IO ()
+windowCallback a _ = print a
 callback ::  (Show a) => a -> IO ()
 callback a = print a
-
+showOverride :: Window () -> IO ()
+showOverride wptr = do
+  print "showOverride"
+  windowShowSuper wptr
+drawOverride :: Window () -> IO ()
+drawOverride wptr = do
+  print "my draw function"
+  windowDrawSuper wptr
 addWindow :: IO (Window ())
 addWindow = do
-  window <- windowNewWithLabel 100 100 "Test"
-  windowSetCallback window (callback "window's callback data")
+  window <- windowNew (Size (Width 100) (Height 100))
+                      Nothing
+                      (Just "Test")
+                      (Just (defaultWindowFuncs {windowDrawOverride = (Just drawOverride)}))
+  windowSetCallback window (windowCallback "window's callback data")
   windowShow window
   return window
 
@@ -81,14 +93,14 @@ globalEventHandler e =
 
 main :: IO ()
 main = do
-  win <- addWindow
+  _ <- addWindow
   print "added Window"
-  _ <- addAwakeHandler (callback "awake handler's callback data")
+  _ <- addAwakeHandler (print "awake handler's callback data")
   print "added awake handler"
   _ <- runAwakeHandler
-  _ <- setEventDispatch eventIntercept
-  f <- eventDispatch
-  _ <- f DndDrag win
+  -- _ <- setEventDispatch eventIntercept
+  -- f <- eventDispatch
+  -- _ <- f DndDrag win
   _ <- setHandler globalEventHandler
   print "ran awake handler"
   _ <- run

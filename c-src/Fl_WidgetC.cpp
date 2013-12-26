@@ -224,6 +224,9 @@ FL_EXPORT_C(void, Fl_Widget_draw_label)(fl_Widget Widget){
   FL_EXPORT_C(void,Fl_Widget_set_labeltype)(fl_Widget widget,Fl_Labeltype a){
     (static_cast<Fl_DerivedWidget*>(widget))->labeltype(a);
   }
+  FL_EXPORT_C(Fl_Color,Fl_Widget_labelcolor)(fl_Widget widget){
+    return (static_cast<Fl_DerivedWidget*>(widget))->labelcolor();
+  }
   FL_EXPORT_C(void,Fl_Widget_set_labelcolor)(fl_Widget widget,Fl_Color c){
     (static_cast<Fl_DerivedWidget*>(widget))->labelcolor(c);
   }
@@ -361,6 +364,9 @@ FL_EXPORT_C(void, Fl_Widget_draw_label)(fl_Widget Widget){
   }
   FL_EXPORT_C(void,Fl_Widget_set_visible_focus)(fl_Widget widget){
     (static_cast<Fl_DerivedWidget*>(widget))->visible_focus();
+  }
+  FL_EXPORT_C(void,Fl_Widget_set_visible)(fl_Widget widget){
+    (static_cast<Fl_DerivedWidget*>(widget))->set_visible();
   }
   FL_EXPORT_C(void,Fl_Widget_clear_visible_focus)(fl_Widget widget){
     (static_cast<Fl_DerivedWidget*>(widget))->clear_visible_focus();
