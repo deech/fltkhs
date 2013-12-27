@@ -332,6 +332,9 @@ EXPORT {
     Fl_Group* g = new Fl_Group(x,y,w,h,t);
     return (fl_Group)g;
   }
+  FL_EXPORT_C(void, Fl_Group_Destroy)(fl_Group group){
+    delete (static_cast<Fl_Group*>(group));
+  }
 #ifdef __cplusplus
 }
 #endif

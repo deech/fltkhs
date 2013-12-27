@@ -5,6 +5,7 @@ module Graphics.UI.FLTK.LowLevel.Fl_Widget
      defaultWidgetFuncs,
      -- * Constructor
      widgetNew,
+     widgetDestroy,
      -- * Fl_Widget specific
      widgetHandle,
      widgetParent,
@@ -142,22 +143,24 @@ defaultWidgetFuncs = WidgetFuncs Nothing Nothing Nothing Nothing Nothing Nothing
 widgetNew :: Rectangle -> Maybe String -> Maybe (WidgetFuncs a) -> IO (Widget ())
 widgetNew rectangle l' funcs' =
     let (x_pos, y_pos, width, height) = fromRectangle rectangle
-        objectOrError = \p -> maybe (error "windowNewWithLabel : object construction returned a null pointer")
-                              return
-                              (toObject $ castPtr p)
+        makeObject = objectOrError " widgetNew : object construction returned a null pointer"
     in case (l', funcs') of
         (Nothing,Nothing) -> widgetNew' x_pos y_pos width height >>=
-                             objectOrError
+                             makeObject
         ((Just l), Nothing) -> widgetNewWithLabel' x_pos y_pos width height l >>=
-                               objectOrError
+                               makeObject
         ((Just l), (Just fs)) -> do
                                ptr <- widgetFunctionStruct fs
                                overriddenWidgetNewWithLabel' x_pos y_pos width height l (castPtr ptr) >>=
-                                                             objectOrError
+                                                             makeObject
         (Nothing, (Just fs)) -> do
                                ptr <- widgetFunctionStruct fs
                                overriddenWidgetNew' x_pos y_pos width height (castPtr ptr) >>=
-                                                    objectOrError
+                                                    makeObject
+
+{# fun Fl_Widget_Destroy as widgetDestroy' { id `Ptr ()' } -> `()' #}
+widgetDestroy :: Widget a -> IO ()
+widgetDestroy win = withObject win $ \winPtr -> widgetDestroy' winPtr
 
 {#fun Fl_Widget_handle as widgetHandle'
       { id `Ptr ()', id `CInt' } -> `Int' #}

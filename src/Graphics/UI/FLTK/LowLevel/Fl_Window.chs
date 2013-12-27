@@ -4,7 +4,9 @@ module Graphics.UI.FLTK.LowLevel.Fl_Window
      WindowFuncs(..),
      OptionalSizeRangeArgs(..),
      defaultWindowFuncs,
+     defaultOptionalSizeRangeArgs,
      windowNew,
+     windowDestroy,
      windowDrawSuper,
      windowHandleSuper,
      windowResizeSuper,
@@ -239,26 +241,27 @@ defaultWindowFuncs = WindowFuncs Nothing Nothing Nothing Nothing Nothing Nothing
 {# fun Fl_OverriddenWindow_New_WithLabel as overriddenWindowNewWithLabel' { `Int',`Int', `String', id `Ptr ()'} -> `Ptr ()' id #}
 windowNew :: Size -> Maybe Position -> Maybe String -> Maybe (WindowFuncs a) -> IO (Window ())
 windowNew (Size (Width w) (Height h)) position title funcs' =
-    let objectOrError = \p -> maybe (error "windowNewWithLabel : object construction returned a null pointer")
-                              return
-                              (toObject $ castPtr p)
+    let makeObject = objectOrError "windowNewWithLabel : object construction returned a null pointer"
     in case (position, title, funcs') of
-         (Nothing,Nothing,Nothing) -> windowNew' w h >>= objectOrError
-         (Just (Position (X x) (Y y)), Nothing, Nothing) ->  windowNewXY' x y w h >>= objectOrError
-         (Just (Position (X x) (Y y)), (Just l'), Nothing) -> windowNewXYWithLabel' x y w h l' >>= objectOrError
-         (Nothing, (Just l'), Nothing) -> windowNewWithLabel' w h l' >>= objectOrError
+         (Nothing,Nothing,Nothing) -> windowNew' w h >>= makeObject
+         (Just (Position (X x) (Y y)), Nothing, Nothing) ->  windowNewXY' x y w h >>= makeObject
+         (Just (Position (X x) (Y y)), (Just l'), Nothing) -> windowNewXYWithLabel' x y w h l' >>= makeObject
+         (Nothing, (Just l'), Nothing) -> windowNewWithLabel' w h l' >>= makeObject
          (Nothing,Nothing,(Just fs')) -> do
                                         p <- windowFunctionStruct fs'
-                                        overriddenWindowNew' w h p >>= objectOrError
+                                        overriddenWindowNew' w h p >>= makeObject
          (Just (Position (X x) (Y y)), Nothing, (Just fs')) ->  do
                                         p <- windowFunctionStruct fs'
-                                        overriddenWindowNewXY' x y w h p >>= objectOrError
+                                        overriddenWindowNewXY' x y w h p >>= makeObject
          (Just (Position (X x) (Y y)), (Just l'), (Just fs')) -> do
                                         p <- windowFunctionStruct fs'
-                                        overriddenWindowNewXYWithLabel' x y w h l' p >>= objectOrError
+                                        overriddenWindowNewXYWithLabel' x y w h l' p >>= makeObject
          (Nothing, (Just l'), (Just fs')) -> do
                                         p <- windowFunctionStruct fs'
-                                        overriddenWindowNewWithLabel' w h l' p >>= objectOrError
+                                        overriddenWindowNewWithLabel' w h l' p >>= makeObject
+{# fun Fl_Window_Destroy as windowDestroy' { id `Ptr ()' } -> `()' #}
+windowDestroy :: Window a -> IO ()
+windowDestroy win = withObject win $ \winPtr -> windowDestroy' winPtr
 
 {# fun Fl_Window_draw_super as drawSuper' { id `Ptr ()' } -> `()' #}
 windowDrawSuper :: Window a  ->  IO (())

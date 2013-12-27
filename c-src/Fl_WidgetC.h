@@ -137,6 +137,7 @@ EXPORT {
   FL_EXPORT_C(fl_Widget,    Fl_Widget_New_WithLabel)(int X, int Y, int W, int H, const char* label);
   FL_EXPORT_C(fl_Widget,    Fl_OverriddenWidget_New)(int X, int Y, int W, int H,fl_Widget_Virtual_Funcs* fs);
   FL_EXPORT_C(fl_Widget,    Fl_OverriddenWidget_New_WithLabel)(int X, int Y, int W, int H, const char* label, fl_Widget_Virtual_Funcs* fs);
+  FL_EXPORT_C(void,         Fl_Widget_Destroy)(fl_Widget widget);
 #ifdef __cplusplus
 }
 #endif

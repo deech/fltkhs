@@ -1,6 +1,8 @@
 {-# LANGUAGE CPP #-}
 module Graphics.UI.FLTK.LowLevel.Fl_Group
     (
+     groupNew,
+     groupDestroy,
      -- * Inherited from Fl_Widget
      groupHandle,
      groupParent,
@@ -117,6 +119,19 @@ import Graphics.UI.FLTK.LowLevel.Fl_Enumerations
 import Graphics.UI.FLTK.LowLevel.Fl_Widget
 import Graphics.UI.FLTK.LowLevel.Fl_Types
 import Graphics.UI.FLTK.LowLevel.Utils
+{# fun Fl_Group_New as groupNew' {  `Int',`Int', `Int', `Int'} -> `Ptr ()' id #}
+{# fun Fl_Group_New_WithLabel as groupNewWithLabel' { `Int',`Int',`Int',`Int',`String'} -> `Ptr ()' id #}
+groupNew :: Rectangle -> Maybe String -> IO (Group ())
+groupNew rectangle label' =
+    let (x_pos, y_pos, width, height) = fromRectangle rectangle
+    in case label' of
+        (Just l') -> groupNewWithLabel' x_pos y_pos width height l' >>=
+                     objectOrError "groupNew : object construction returned a null pointer"
+        Nothing -> groupNew' x_pos y_pos width height >>=
+                   objectOrError "groupNew : object construction returned a null pointer"
+{# fun Fl_Group_Destroy as groupDestroy' { id `Ptr ()' } -> `()' #}
+groupDestroy :: Group a -> IO ()
+groupDestroy group = withObject group $ \groupPtr -> groupDestroy' groupPtr
 groupHandle :: Group a -> Event -> IO Int
 groupHandle = widgetHandle
 

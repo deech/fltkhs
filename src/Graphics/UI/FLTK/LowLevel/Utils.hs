@@ -107,3 +107,8 @@ arrayToObjects arrayPtr numElements =
         go (currPtr `plusPtr` (sizeOf (undefined :: Ptr())))
            (numLeft - 1)
            ([toObject curr] ++ accum)
+
+objectOrError :: String -> Ptr a -> IO (Object b)
+objectOrError errorMessage p = maybe (error errorMessage)
+                                     return
+                                     (toObject $ castPtr p)

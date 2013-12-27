@@ -129,6 +129,7 @@ EXPORT {
   FL_EXPORT_C(fl_Widget,    Fl_Group_child)(fl_Group self, int n);
   FL_EXPORT_C(fl_Group,     Fl_Group_New)(int x, int y, int w, int h);
   FL_EXPORT_C(fl_Group,     Fl_Group_New_WithLabel)(int x, int y, int w, int h, const char* t);
+  FL_EXPORT_C(void,         Fl_Group_Destroy)(fl_Group group);
 #ifdef __cplusplus
 }
 #endif

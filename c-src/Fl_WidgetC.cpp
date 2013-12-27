@@ -455,6 +455,9 @@ FL_EXPORT_C(void, Fl_Widget_draw_label)(fl_Widget Widget){
     Fl_DerivedWidget* w = new Fl_DerivedWidget(X,Y,W,H,label,fs);
     return (fl_Widget)w;
   }
+  FL_EXPORT_C(void, Fl_Widget_Destroy)(fl_Widget widget){
+    delete (static_cast<Fl_DerivedWidget*>(widget));
+  }
 #ifdef __cplusplus
  }
 #endif
