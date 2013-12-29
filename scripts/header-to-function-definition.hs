@@ -194,6 +194,7 @@ inMarshallMap =
     ,("CUInt", "id")
     ,("FlShortcut", "id")
     ,("When", "cFromEnum")
+    ,("MOde", "cFromEnum")
     ]
 outMarshallMap =
     [
@@ -204,6 +205,7 @@ outMarshallMap =
     ,("When", "cToEnum")
     ,("FlShortcut", "id")
     ,("AlignType", "cToEnum")
+    ,("Mode", "cToEnum")
     ]
 simpleTypeMap =
     [
@@ -220,6 +222,7 @@ simpleTypeMap =
     ,("unsigned", "Int")
     ,("unsigned int", "Int")
     ,("Fl_Boxtype", "Boxtype")
+    ,("Fl_Mode", "Mode")
     ,("fl_Widget", "Ptr ()")
     ,("fl_Window", "Ptr ()")
     ,("fl_Group", "Ptr ()")
@@ -247,7 +250,7 @@ simpleTypeMap =
     ,("Fl_Shortcut", "CUInt")
     ,("fl_Atclose_Handler*", "Ptr (FunPtr AtCloseHandler)")
     ,("fl_When", "When")
-    ,("fl_Gl_Window", "GlWindow")
+    ,("fl_Gl_Window", "Ptr ()")
     ]
 haskellEquivalent =
     [

@@ -74,6 +74,9 @@ void Fl_DerivedGl_Window::resize(int x, int y, int w, int h){
     Fl_Gl_Window::resize(x,y,w,h);
   }
 }
+void Fl_DerivedGl_Window::resize_super(int x, int y, int w, int h){
+  Fl_Gl_Window::resize(x,y,w,h);
+}
 
 void Fl_DerivedGl_Window::flush(){
   if (this->overriddenFuncs->flush != NULL) {
@@ -83,6 +86,9 @@ void Fl_DerivedGl_Window::flush(){
     Fl_Gl_Window::flush();
   }
 }
+void Fl_DerivedGl_Window::flush_super(){
+  Fl_Gl_Window::flush();
+}
 
 void Fl_DerivedGl_Window::show(){
   if (this->overriddenFuncs->show != NULL) {
@@ -91,6 +97,9 @@ void Fl_DerivedGl_Window::show(){
   else {
     Fl_Gl_Window::show();
   }
+}
+void Fl_DerivedGl_Window::show_super(){
+  Fl_Gl_Window::show();
 }
 void Fl_DerivedGl_Window::show(int argc, char** argv){
   Fl_Gl_Window::show(argc,argv);
@@ -114,6 +123,19 @@ void Fl_DerivedGl_Window::draw(){
 void Fl_DerivedGl_Window::draw_super(){
   Fl_Gl_Window::draw();
 }
+Fl_Group* Fl_DerivedGl_Window::as_group(){
+  Fl_Group* grp;
+  if (this->overriddenFuncs->as_gl_window != NULL) {
+    grp = (static_cast<Fl_Group*>(this->overriddenFuncs->as_group((fl_Gl_Window) this)));
+  }
+  else {
+    grp = Fl_Gl_Window::as_group();
+  }
+  return grp;
+}
+Fl_Group* Fl_DerivedGl_Window::as_group_super(){
+  return  Fl_Gl_Window::as_group();
+}
 Fl_Window* Fl_DerivedGl_Window::as_window(){
   Fl_Window* win;
   if (this->overriddenFuncs->as_gl_window != NULL) {
@@ -124,6 +146,9 @@ Fl_Window* Fl_DerivedGl_Window::as_window(){
   }
   return win;
 }
+Fl_Window* Fl_DerivedGl_Window::as_window_super(){
+  return Fl_Gl_Window::as_window();
+}
 Fl_Gl_Window* Fl_DerivedGl_Window::as_gl_window(){
   Fl_Gl_Window* win;
   if (this->overriddenFuncs->as_gl_window != NULL) {
@@ -133,6 +158,9 @@ Fl_Gl_Window* Fl_DerivedGl_Window::as_gl_window(){
     win = Fl_Gl_Window::as_gl_window();
   }
   return win;
+}
+Fl_Gl_Window* Fl_DerivedGl_Window::as_gl_window_super(){
+  return Fl_Gl_Window::as_gl_window();
 }
 EXPORT {
 #endif
@@ -423,8 +451,20 @@ FL_EXPORT_C(void, Fl_Gl_Window_draw_label)(fl_Gl_Window Gl_Window){
   FL_EXPORT_C(fl_Group,Fl_Gl_Window_as_group)(fl_Gl_Window win){
     return (fl_Group) (static_cast<Fl_DerivedGl_Window*>(win))->as_group();
   }
+  FL_EXPORT_C(fl_Group,Fl_Gl_Window_as_group_super)(fl_Gl_Window win){
+    return (fl_Group) (static_cast<Fl_DerivedGl_Window*>(win))->as_group_super();
+  }
+  FL_EXPORT_C(fl_Gl_Window,Fl_Gl_Window_as_window)(fl_Gl_Window win){
+    return (fl_Gl_Window) (static_cast<Fl_DerivedGl_Window*>(win))->as_window();
+  }
+  FL_EXPORT_C(fl_Gl_Window,Fl_Gl_Window_as_window_super)(fl_Gl_Window win){
+    return (fl_Gl_Window) (static_cast<Fl_DerivedGl_Window*>(win))->as_window_super();
+  }
   FL_EXPORT_C(fl_Gl_Window,Fl_Gl_Window_as_gl_window)(fl_Gl_Window win){
     return (fl_Gl_Window) (static_cast<Fl_DerivedGl_Window*>(win))->as_gl_window();
+  }
+  FL_EXPORT_C(fl_Gl_Window,Fl_Gl_Window_as_gl_window_super)(fl_Gl_Window win){
+    return (fl_Gl_Window) (static_cast<Fl_DerivedGl_Window*>(win))->as_gl_window_super();
   }
   FL_EXPORT_C(fl_Gl_Window,    Fl_Gl_Window_window)(fl_Gl_Window gl_window){
     return (fl_Gl_Window) (static_cast<Fl_DerivedGl_Window*>(gl_window))->window();
@@ -562,14 +602,29 @@ FL_EXPORT_C(fl_Gl_Window, Fl_OverriddenGl_Window_NewXY_WithLabel)(int x, int y, 
   FL_EXPORT_C(void,Fl_Gl_Window_hide)(fl_Gl_Window win){
     (static_cast<Fl_DerivedGl_Window*>(win))->hide();
   }
+  FL_EXPORT_C(void,Fl_Gl_Window_hide_super)(fl_Gl_Window win){
+    (static_cast<Fl_DerivedGl_Window*>(win))->hide_super();
+  }
+  FL_EXPORT_C(void,Fl_Gl_Window_flush)(fl_Gl_Window win){
+    (static_cast<Fl_DerivedGl_Window*>(win))->flush();
+  }
+  FL_EXPORT_C(void,Fl_Gl_Window_flush_super)(fl_Gl_Window win){
+    (static_cast<Fl_DerivedGl_Window*>(win))->flush_super();
+  }
   FL_EXPORT_C(void,Fl_Gl_Window_show)(fl_Gl_Window win){
     (static_cast<Fl_DerivedGl_Window*>(win))->show();
+  }
+  FL_EXPORT_C(void,Fl_Gl_Window_show_super)(fl_Gl_Window win){
+    (static_cast<Fl_DerivedGl_Window*>(win))->show_super();
   }
   FL_EXPORT_C(void,Fl_Gl_Window_show_with_args)(fl_Gl_Window win,int argc,char** argv){
     (static_cast<Fl_DerivedGl_Window*>(win))->show(argc,argv);
   }
   FL_EXPORT_C(void,Fl_Gl_Window_resize)(fl_Gl_Window win,int X,int Y,int W,int H){
     (static_cast<Fl_DerivedGl_Window*>(win))->resize(X,Y,W,H);
+  }
+  FL_EXPORT_C(void,Fl_Gl_Window_resize_super)(fl_Gl_Window win,int X,int Y,int W,int H){
+    (static_cast<Fl_DerivedGl_Window*>(win))->resize_super(X,Y,W,H);
   }
   FL_EXPORT_C(void,Fl_Gl_Window_iconize)(fl_Gl_Window win){
     (static_cast<Fl_DerivedGl_Window*>(win))->iconize();
@@ -749,8 +804,8 @@ FL_EXPORT_C(fl_Gl_Window, Fl_OverriddenGl_Window_NewXY_WithLabel)(int x, int y, 
   FL_EXPORT_C(void,Fl_Gl_Window_set_context)(fl_Gl_Window win,void* context){
     (static_cast<Fl_DerivedGl_Window*>(win))->context(context);
   }
-  FL_EXPORT_C(void,Fl_Gl_Window_set_context_with_destroy_flag)(fl_Gl_Window win,void* context){
-    (static_cast<Fl_DerivedGl_Window*>(win))->context(context);
+  FL_EXPORT_C(void,Fl_Gl_Window_set_context_with_destroy_flag)(fl_Gl_Window win,void* context, int flag){
+    (static_cast<Fl_DerivedGl_Window*>(win))->context(context, flag);
   }
   FL_EXPORT_C(void,Fl_Gl_Window_swap_buffers)(fl_Gl_Window win){
     (static_cast<Fl_DerivedGl_Window*>(win))->swap_buffers();

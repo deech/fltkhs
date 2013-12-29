@@ -91,6 +91,7 @@ EXPORT {
   FL_EXPORT_C(void,         Fl_Overlay_Window_measure_label)(fl_Overlay_Window win, int* ww , int* hh);
   FL_EXPORT_C(fl_Group,     Fl_Overlay_Window_as_group)(fl_Overlay_Window win);
   FL_EXPORT_C(fl_Gl_Window, Fl_Overlay_Window_as_gl_window)(fl_Overlay_Window win);
+  FL_EXPORT_C(fl_Window, Fl_Overlay_Window_as_window)(fl_Overlay_Window win);
   FL_EXPORT_C(fl_Window,    Fl_Overlay_Window_window)(fl_Overlay_Window double_window);
   FL_EXPORT_C(fl_Window,    Fl_Overlay_Window_top_window)(fl_Overlay_Window double_window);
   FL_EXPORT_C(fl_Window ,   Fl_Overlay_Window_top_window_offset)(fl_Overlay_Window double_window, int* xoff, int* yoff);
@@ -123,10 +124,6 @@ EXPORT {
   FL_EXPORT_C(void,         Fl_Overlay_Window_fullscreen)(fl_Overlay_Window win);
   FL_EXPORT_C(void,         Fl_Overlay_Window_fullscreen_off)(fl_Overlay_Window win);
   FL_EXPORT_C(void,         Fl_Overlay_Window_fullscreen_off_with_resize)(fl_Overlay_Window win,int X,int Y,int W,int H);
-  FL_EXPORT_C(fl_Overlay_Window,    Fl_Overlay_Window_New_WithLabel)(int w, int h, const char* title);
-  FL_EXPORT_C(fl_Overlay_Window,    Fl_Overlay_Window_New)(int w, int h);
-  FL_EXPORT_C(fl_Overlay_Window,    Fl_Overlay_Window_NewXY_WithLabel)(int x, int y, int w, int h, const char* title);
-  FL_EXPORT_C(fl_Overlay_Window,    Fl_Overlay_Window_NewXY)(int x, int y, int w, int h);
   FL_EXPORT_C(void,         Fl_Overlay_Window_iconize)(fl_Overlay_Window win);
 
   FL_EXPORT_C(int ,Fl_Overlay_Window_handle)(fl_Overlay_Window win, int event);

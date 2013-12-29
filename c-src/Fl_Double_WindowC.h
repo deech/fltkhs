@@ -249,7 +249,7 @@ EXPORT {
   FL_EXPORT_C(void,		Fl_Double_Window_show_super)(fl_Double_Window win);
   FL_EXPORT_C(void,		Fl_Double_Window_show)(fl_Double_Window win);
   FL_EXPORT_C(void,		Fl_Double_Window_show_with_args)(fl_Double_Window win, int argc, char** argv);
-  FL_EXPORT_C(void,		Fl_Double_Window_destroy)(fl_Double_Window win);
+  FL_EXPORT_C(void,		Fl_Double_Window_Destroy)(fl_Double_Window win);
   FL_EXPORT_C(void,		Fl_Double_Window_flush_super)(fl_Double_Window win);
   FL_EXPORT_C(void,		Fl_Double_Window_flush)(fl_Double_Window win);
   FL_EXPORT_C(void,		Fl_Double_Window_resize_super)(fl_Double_Window win, int X, int Y, int W, int H);

@@ -233,7 +233,7 @@ doubleWindowNew (Size (Width w) (Height h)) position title funcs' =
                                         p <- doubleWindowFunctionStruct fs'
                                         overriddenWindowNewWithLabel' w h l' p >>= makeObject
 
-{# fun Fl_Double_Window_destroy as windowDestroy' { id `Ptr ()' } -> `()' #}
+{# fun Fl_Double_Window_Destroy as windowDestroy' { id `Ptr ()' } -> `()' #}
 doubleWindowDestroy :: DoubleWindow a -> IO ()
 doubleWindowDestroy win = withObject win $ \winPtr -> windowDestroy' winPtr
 

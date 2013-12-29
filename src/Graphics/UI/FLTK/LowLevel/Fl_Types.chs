@@ -209,6 +209,7 @@ data Object a             = Object !(Ptr a)
                           | Managed !(ForeignPtr (TManagedPtr a)) deriving Show
 type TManagedPtr a        = CManagedPtr a
 data CManagedPtr a        = CManagedPtr
+type GlContext            = Object ()
 data CWidget a            = CWidget
 type Widget a             = Object (CWidget a)
 data CGroup a             = CGroup
@@ -896,7 +897,7 @@ newtype X = X Int
 newtype Y = Y Int
 data Position = Position X Y
 data DPI = DPI Float Float
-data Rectangle = Rectangle Position Size  
+data Rectangle = Rectangle Position Size
 data Size = Size Width Height
 data ScreenLocation = Intersect Rectangle
                     | ScreenNumber Int
