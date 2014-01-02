@@ -259,6 +259,10 @@ singleWindowShowSuper window = withObject window $ \windowPtr -> showSuper' wind
 singleWindowHideSuper :: SingleWindow a  ->  IO (())
 singleWindowHideSuper window = withObject window $ \windowPtr -> hideSuper' windowPtr
 
+{# fun Fl_Single_Window_hide as hide' { id `Ptr ()' } -> `()' #}
+singleWindowHide :: Window a  ->  IO (())
+singleWindowHide window = withObject window $ \windowPtr -> hide' windowPtr
+
 {# fun Fl_Single_Window_flush_super as flushSuper' { id `Ptr ()' } -> `()' #}
 singleWindowFlushSuper :: SingleWindow a  ->  IO (())
 singleWindowFlushSuper window = withObject window $ \windowPtr -> flushSuper' windowPtr
@@ -377,8 +381,6 @@ singleWindowVisible :: Group a  ->  IO (Int)
 singleWindowVisible = windowVisible
 singleWindowVisibleR :: Group a  ->  IO (Int)
 singleWindowVisibleR = windowVisibleR
-singleWindowHide :: Window a  ->  IO (())
-singleWindowHide = windowHide
 singleWindowSetVisible :: Group a  ->  IO (())
 singleWindowSetVisible = windowSetVisible
 singleWindowClearVisible :: Group a  ->  IO (())

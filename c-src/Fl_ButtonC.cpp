@@ -439,6 +439,9 @@ FL_EXPORT_C(void, Fl_Button_draw_label)(fl_Button Button){
   FL_EXPORT_C(fl_Group,Fl_Button_as_group)(fl_Button button){
     return (fl_Group) (static_cast<Fl_DerivedButton*>(button))->as_group();
   }
+  FL_EXPORT_C(fl_Group,Fl_Button_as_group_super)(fl_Button button){
+    return (fl_Group) (static_cast<Fl_Button*>(button))->as_group();
+  }
   FL_EXPORT_C(void*, Fl_Button_other_data)(fl_Button button){
     return (static_cast<Fl_DerivedButton*>(button))->get_other_data();
   }

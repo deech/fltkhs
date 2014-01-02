@@ -1,5 +1,6 @@
 module Graphics.UI.FLTK.LowLevel.Utils where
 import Graphics.UI.FLTK.LowLevel.Fl_Types
+import Graphics.UI.FLTK.LowLevel.Fl_Enumerations
 import Foreign
 import Foreign.C
 import Debug.Trace
@@ -112,3 +113,6 @@ objectOrError :: String -> Ptr a -> IO (Object b)
 objectOrError errorMessage p = maybe (error errorMessage)
                                      return
                                      (toObject $ castPtr p)
+
+toShortcut :: [KeyboardCode] -> FlShortcut
+toShortcut = fromIntegral . sum . (map fromEnum)

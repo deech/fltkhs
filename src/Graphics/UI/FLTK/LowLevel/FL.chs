@@ -153,7 +153,6 @@ import Graphics.UI.FLTK.LowLevel.Fl_Enumerations
 import Graphics.UI.FLTK.LowLevel.Fl_Types
 import Graphics.UI.FLTK.LowLevel.Utils
 import System.IO.Unsafe (unsafePerformIO)
-import Foreign.Marshal.Utils
 #c
  enum Option {
    ArrowFocus = OPTION_ARROW_FOCUS,
@@ -450,7 +449,7 @@ eventInsideWidget wp =
                       eventNum <- eventInsideWidget' (castPtr ptr)
                       return $ toEnum eventNum)
 {# fun Fl_test_shortcut as testShortcut
-       { id `FlShortcut' } -> `Int' #}
+       { id `FlShortcut' } -> `Bool' toBool #}
 {# fun Fl_handle as handle'
        { `Int',id `Ptr ()' } -> `Int' #}
 handle :: Event -> Window a -> IO Int

@@ -156,7 +156,6 @@ where
 #include "Fl_C.h"
 #include "Fl_Double_WindowC.h"
 import Foreign
-import Foreign.Marshal.Utils
 import Foreign.C
 import Graphics.UI.FLTK.LowLevel.Fl_Types
 import Graphics.UI.FLTK.LowLevel.Fl_Enumerations
@@ -258,6 +257,10 @@ doubleWindowShowSuper window = withObject window $ \windowPtr -> showSuper' wind
 {# fun Fl_Double_Window_hide_super as hideSuper' { id `Ptr ()' } -> `()' #}
 doubleWindowHideSuper :: DoubleWindow a  ->  IO (())
 doubleWindowHideSuper window = withObject window $ \windowPtr -> hideSuper' windowPtr
+
+{# fun Fl_Double_Window_hide as hide' { id `Ptr ()' } -> `()' #}
+doubleWindowHide :: DoubleWindow a  ->  IO (())
+doubleWindowHide doubleWindow = withObject doubleWindow $ \doubleWindowPtr -> hide' doubleWindowPtr
 
 {# fun Fl_Double_Window_flush_super as flushSuper' { id `Ptr ()' } -> `()' #}
 doubleWindowFlushSuper :: DoubleWindow a  ->  IO (())
@@ -377,8 +380,6 @@ doubleWindowVisible :: Group a  ->  IO (Int)
 doubleWindowVisible = windowVisible
 doubleWindowVisibleR :: Group a  ->  IO (Int)
 doubleWindowVisibleR = windowVisibleR
-doubleWindowHide :: Window a  ->  IO (())
-doubleWindowHide = windowHide
 doubleWindowSetVisible :: Group a  ->  IO (())
 doubleWindowSetVisible = windowSetVisible
 doubleWindowClearVisible :: Group a  ->  IO (())

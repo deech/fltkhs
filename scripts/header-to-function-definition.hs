@@ -226,6 +226,7 @@ simpleTypeMap =
     ,("fl_Widget", "Ptr ()")
     ,("fl_Window", "Ptr ()")
     ,("fl_Group", "Ptr ()")
+    ,("fl_Button", "Ptr ()")
     ,("Fl_Color", "Color")
     ,("Fl_Font", "Font")
     ,("Fl_Align", "AlignType")
@@ -258,7 +259,8 @@ haskellEquivalent =
      ("fl_Window", "Window"),
      ("fl_Group", "Group"),
      ("fl_Gl_Window", "GlWindow"),
-     ("fl_Image" , "Image")
+     ("fl_Image" , "Image"),
+     ("fl_Button", "Button")
     ]
 upcase = map toUpper
 makeArgument className argType argName =
