@@ -35,11 +35,8 @@ addWindow = do
   button1 <- addButton 10 30 "button 1"
   button2 <- addButton 10 70 "button 2"
   buttonSetCallback button1 (\btn -> buttonSetLabel btn "New Label")
-  buttonSetCallback button2 (\_ ->
-                                 (nullObject button1
-                                             buttonDestroy
-                                             (\_ -> print "button1 already deleted")) >>
-                                 redraw
+  buttonSetCallback button2 (\_ -> buttonDestroy button1 >>
+                                   redraw
                             )
   windowSetCallback window (windowCallback "window's callback data")
   windowShow window
