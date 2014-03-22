@@ -112,6 +112,9 @@ void Fl_DerivedGl_Window::hide(){
     Fl_Gl_Window::hide();
   }
 }
+void Fl_DerivedGl_Window::hide_super(){
+  Fl_Gl_Window::hide();
+}
 void Fl_DerivedGl_Window::draw(){
   if (this->overriddenFuncs->draw != NULL) {
     this->overriddenFuncs->draw((fl_Gl_Window) this);

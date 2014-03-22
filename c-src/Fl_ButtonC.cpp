@@ -472,6 +472,9 @@ FL_EXPORT_C(void, Fl_Button_draw_label)(fl_Button Button){
   FL_EXPORT_C(char,Fl_Button_value)(fl_Button b){
     return (static_cast<Fl_DerivedButton*>(b))->value();
   }
+  FL_EXPORT_C(int,Fl_Button_set)(fl_Button b){
+    return (static_cast<Fl_DerivedButton*>(b))->set();
+  }
   FL_EXPORT_C(int,Fl_Button_set_value)(fl_Button b,int v){
     return (static_cast<Fl_DerivedButton*>(b))->value(v);
   }

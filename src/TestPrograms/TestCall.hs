@@ -3,7 +3,8 @@ import Graphics.UI.FLTK.LowLevel.Fl_Window
 import Graphics.UI.FLTK.LowLevel.FL
 import Graphics.UI.FLTK.LowLevel.Fl_Enumerations
 import Graphics.UI.FLTK.LowLevel.Fl_Types
-
+import Graphics.UI.FLTK.LowLevel.Fl_Button
+import Debug.Trace
 windowCallback ::  (Show a) => a -> Widget b -> IO ()
 windowCallback a _ = print a
 callback ::  (Show a) => a -> IO ()
@@ -16,12 +17,30 @@ drawOverride :: Window () -> IO ()
 drawOverride wptr = do
   print "my draw function"
   windowDrawSuper wptr
+buttonCallback :: (Show a) => a -> Button b -> IO ()
+buttonCallback a _ = print a
+addButton :: Int -> Int -> String -> IO (Button ())
+addButton x_pos y_pos label = do
+  button <- buttonNew
+              (Rectangle (Position (X x_pos) (Y y_pos)) (Size (Width 80) (Height 30)) )
+              (Just label)
+              Nothing
+  return button
 addWindow :: IO (Window ())
 addWindow = do
   window <- windowNew (Size (Width 100) (Height 100))
                       Nothing
                       (Just "Test")
                       (Just (defaultWindowFuncs {windowDrawOverride = (Just drawOverride)}))
+  button1 <- addButton 10 30 "button 1"
+  button2 <- addButton 10 70 "button 2"
+  buttonSetCallback button1 (\btn -> buttonSetLabel btn "New Label")
+  buttonSetCallback button2 (\_ ->
+                                 (nullObject button1
+                                             buttonDestroy
+                                             (\_ -> print "button1 already deleted")) >>
+                                 redraw
+                            )
   windowSetCallback window (windowCallback "window's callback data")
   windowShow window
   return window
