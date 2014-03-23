@@ -15,7 +15,6 @@ showOverride wptr = do
   windowShowSuper wptr
 drawOverride :: Window () -> IO ()
 drawOverride wptr = do
-  print "my draw function"
   windowDrawSuper wptr
 buttonCallback :: (Show a) => a -> Button b -> IO ()
 buttonCallback a _ = print a
@@ -26,6 +25,7 @@ addButton x_pos y_pos label = do
               (Just label)
               Nothing
   return button
+destroyButton b = \_ -> buttonDestroy b >> redraw
 addWindow :: IO (Window ())
 addWindow = do
   window <- windowNew (Size (Width 100) (Height 100))
@@ -35,9 +35,7 @@ addWindow = do
   button1 <- addButton 10 30 "button 1"
   button2 <- addButton 10 70 "button 2"
   buttonSetCallback button1 (\btn -> buttonSetLabel btn "New Label")
-  buttonSetCallback button2 (\_ -> buttonDestroy button1 >>
-                                   redraw
-                            )
+  buttonSetCallback button2 (destroyButton button1) 
   windowSetCallback window (windowCallback "window's callback data")
   windowShow window
   return window

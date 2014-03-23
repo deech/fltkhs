@@ -99,6 +99,7 @@ import Foreign.C.Types
 import Graphics.UI.FLTK.LowLevel.Fl_Enumerations
 import Graphics.UI.FLTK.LowLevel.Fl_Types
 import Graphics.UI.FLTK.LowLevel.Utils
+import Debug.Trace
 
 data WidgetFuncs a =
     WidgetFuncs
@@ -143,24 +144,25 @@ defaultWidgetFuncs = WidgetFuncs Nothing Nothing Nothing Nothing Nothing Nothing
 widgetNew :: Rectangle -> Maybe String -> Maybe (WidgetFuncs a) -> IO (Widget ())
 widgetNew rectangle l' funcs' =
     let (x_pos, y_pos, width, height) = fromRectangle rectangle
-        makeObject = objectOrError " widgetNew : object construction returned a null pointer"
     in case (l', funcs') of
         (Nothing,Nothing) -> widgetNew' x_pos y_pos width height >>=
-                             makeObject
+                             toObject
         ((Just l), Nothing) -> widgetNewWithLabel' x_pos y_pos width height l >>=
-                               makeObject
+                               toObject
         ((Just l), (Just fs)) -> do
                                ptr <- widgetFunctionStruct fs
                                overriddenWidgetNewWithLabel' x_pos y_pos width height l (castPtr ptr) >>=
-                                                             makeObject
+                                                             toObject
         (Nothing, (Just fs)) -> do
                                ptr <- widgetFunctionStruct fs
                                overriddenWidgetNew' x_pos y_pos width height (castPtr ptr) >>=
-                                                    makeObject
+                                                    toObject
 
 {# fun Fl_Widget_Destroy as widgetDestroy' { id `Ptr ()' } -> `()' #}
 widgetDestroy :: Widget a -> IO ()
-widgetDestroy win = withObject win $ \winPtr -> widgetDestroy' winPtr
+widgetDestroy win = swapObject win $ \winPtr -> do
+                                        widgetDestroy' winPtr
+                                        return nullPtr
 
 {#fun Fl_Widget_handle as widgetHandle'
       { id `Ptr ()', id `CInt' } -> `Int' #}
@@ -169,8 +171,8 @@ widgetHandle widget event = withObject widget (\p -> widgetHandle' p (fromIntegr
 
 {#fun Fl_Widget_parent as widgetParent'
       { id `Ptr ()'} -> `Ptr ()' id #}
-widgetParent :: Widget a -> IO (Maybe (Group ()))
-widgetParent widget = withObject widget widgetParent' >>= return . toObject
+widgetParent :: Widget a -> IO (Group ())
+widgetParent widget = withObject widget widgetParent' >>= toObject
 
 {#fun Fl_Widget_set_parent as widgetSetParent'
       { id `Ptr ()', id `Ptr ()' } -> `()' #}
@@ -267,14 +269,14 @@ widgetLabelsize widget = withObject widget $ \widgetPtr -> labelsize' widgetPtr 
 {# fun Fl_Widget_set_labelsize as setLabelsize' { id `Ptr ()',id `CInt' } -> `()' #}
 widgetSetLabelsize :: Widget a  -> FontSize ->  IO (())
 widgetSetLabelsize widget (FontSize pix) = withObject widget $ \widgetPtr -> setLabelsize' widgetPtr pix
-{# fun Fl_Widget_image as image' { id `Ptr ()' } -> `Maybe (Image ())' toObject #}
-widgetImage :: Widget a  ->  IO (Maybe (Image ()))
+{# fun Fl_Widget_image as image' { id `Ptr ()' } -> `(Image ())' unsafeToObject #}
+widgetImage :: Widget a  ->  IO (Image ())
 widgetImage widget = withObject widget $ \widgetPtr -> image' widgetPtr
 {# fun Fl_Widget_set_image as setImage' { id `Ptr ()',id `Ptr ()'} -> `()' #}
 widgetSetImage :: Widget a  -> Image b ->  IO (())
 widgetSetImage widget pix = withObject widget $ \widgetPtr -> withObject pix $ \pixPtr -> setImage' widgetPtr pixPtr
-{# fun Fl_Widget_deimage as deimage' { id `Ptr ()' } -> `Maybe (Image ())' toObject #}
-widgetDeimage :: Widget a  ->  IO (Maybe (Image ()))
+{# fun Fl_Widget_deimage as deimage' { id `Ptr ()' } -> `(Image ())' unsafeToObject #}
+widgetDeimage :: Widget a  ->  IO (Image ())
 widgetDeimage widget = withObject widget $ \widgetPtr -> deimage' widgetPtr
 {# fun Fl_Widget_set_deimage as setDeimage' { id `Ptr ()',id `Ptr ()'} -> `()' #}
 widgetSetDeimage :: Widget a  -> Image b ->  IO (())
@@ -396,25 +398,25 @@ widgetDamageInsideWidget widget c rectangle = withObject widget $ \widgetPtr -> 
 widgetMeasureLabel :: Widget a  -> IO (Size)
 widgetMeasureLabel widget = withObject widget $ \widgetPtr -> measureLabel' widgetPtr >>= \(width, height) -> return $ Size (Width width) (Height height)
 {# fun Fl_Widget_window as window' { id `Ptr ()' } -> `Ptr ()' id #}
-widgetWindow :: Widget a  ->  IO (Maybe (Window ()))
-widgetWindow widget = withObject widget $ \widgetPtr -> window' widgetPtr >>= return . toObject
+widgetWindow :: Widget a  ->  IO (Window ())
+widgetWindow widget = withObject widget $ \widgetPtr -> window' widgetPtr >>= toObject
 {# fun Fl_Widget_top_window as topWindow' { id `Ptr ()' } -> `Ptr ()' id #}
-widgetTopWindow :: Widget a  ->  IO (Maybe (Window ()))
-widgetTopWindow widget = withObject widget $ \widgetPtr -> (topWindow' widgetPtr) >>= return . toObject
+widgetTopWindow :: Widget a  ->  IO (Window ())
+widgetTopWindow widget = withObject widget $ \widgetPtr -> (topWindow' widgetPtr) >>= toObject
 {# fun Fl_Widget_top_window_offset as topWindowOffset' { id `Ptr ()',alloca- `Int' peekIntConv*,alloca- `Int' peekIntConv* } -> `()' #}
 widgetTopWindowOffset :: Widget a -> IO (Position)
 widgetTopWindowOffset widget = withObject widget $ \widgetPtr -> topWindowOffset' widgetPtr >>= \(x_pos,y_pos) -> return $ Position (X x_pos) (Y y_pos)
 {# fun Fl_Widget_as_group_super as asGroupSuper' { id `Ptr ()' } -> `Ptr ()' id #}
-widgetAsGroupSuper :: Widget a  ->  IO (Maybe (Group ()))
-widgetAsGroupSuper widget = withObject widget $ \widgetPtr -> asGroupSuper' widgetPtr >>= return . toObject
+widgetAsGroupSuper :: Widget a  ->  IO (Group ())
+widgetAsGroupSuper widget = withObject widget $ \widgetPtr -> asGroupSuper' widgetPtr >>= toObject
 {# fun Fl_Widget_as_group as asGroup' { id `Ptr ()' } -> `Ptr ()' id #}
-widgetAsGroup :: Widget a  ->  IO (Maybe (Group ()))
-widgetAsGroup widget = withObject widget $ \widgetPtr -> asGroup' widgetPtr >>= return . toObject
-{# fun Fl_Widget_as_gl_window_super as asGlWindowSuper' { id `Ptr ()' } -> `Maybe (GlWindow ())' toObject #}
-widgetAsGlWindowSuper :: Widget a  ->  IO (Maybe (GlWindow ()))
+widgetAsGroup :: Widget a  ->  IO (Group ())
+widgetAsGroup widget = withObject widget $ \widgetPtr -> asGroup' widgetPtr >>= toObject
+{# fun Fl_Widget_as_gl_window_super as asGlWindowSuper' { id `Ptr ()' } -> `(GlWindow ())' unsafeToObject #}
+widgetAsGlWindowSuper :: Widget a  ->  IO (GlWindow ())
 widgetAsGlWindowSuper widget = withObject widget $ \widgetPtr -> asGlWindowSuper' widgetPtr
-{# fun Fl_Widget_as_gl_window as asGlWindow' { id `Ptr ()' } -> `Maybe (GlWindow ())' toObject #}
-widgetAsGlWindow :: Widget a  ->  IO (Maybe (GlWindow ()))
+{# fun Fl_Widget_as_gl_window as asGlWindow' { id `Ptr ()' } -> `(GlWindow ())' unsafeToObject #}
+widgetAsGlWindow :: Widget a  ->  IO (GlWindow ())
 widgetAsGlWindow widget = withObject widget $ \widgetPtr -> asGlWindow' widgetPtr
 {# fun Fl_Widget_resize_super as resizeSuper' { id `Ptr ()',`Int',`Int',`Int',`Int' } -> `()' #}
 widgetResizeSuper :: Widget a  -> Rectangle ->  IO (())

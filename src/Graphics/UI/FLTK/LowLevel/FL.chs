@@ -302,7 +302,7 @@ setScheme sch = withCString sch $ \str -> {#call Fl_set_scheme as fl_set_scheme 
 {# fun Fl_set_wait as setWait
        { `Double' } -> `Double' #}
 {# fun Fl_readqueue as readqueue
-       {  } -> `Maybe (Widget ())' toObject #}
+       {  } -> `Widget ()' unsafeToObject #}
 {# fun Fl_add_timeout as addTimeout
        { `Double', unsafeToCallbackPrim `GlobalCallback' } -> `()' #}
 {# fun Fl_repeat_timeout as repeatTimeout
@@ -330,21 +330,21 @@ setScheme sch = withCString sch $ \str -> {#call Fl_set_scheme as fl_set_scheme 
 {# fun Fl_flush as flush
        {  } -> `()' #}
 {# fun Fl_first_window as firstWindow
-       {  } -> `Maybe (Window ())' toObject #}
+       {  } -> `Window ()' unsafeToObject #}
 {# fun Fl_set_first_window as setFirstWindow'
        { id `Ptr ()' } -> `()' #}
 setFirstWindow :: Window a -> IO ()
 setFirstWindow wp =
     withObject wp setFirstWindow'
 {# fun Fl_next_window as nextWindow'
-       { id `Ptr ()' } -> `Maybe (Window ())' toObject #}
-nextWindow :: Window a -> IO (Maybe (Window ()))
+       { id `Ptr ()' } -> `Window ()' unsafeToObject #}
+nextWindow :: Window a -> IO (Window ())
 nextWindow currWindow =
     withObject currWindow nextWindow'
 {# fun Fl_modal as modal
-       {  } -> `Maybe (Window ())' toObject #}
+       {  } -> `Window ()' unsafeToObject #}
 {# fun Fl_grab as grab
-       {  } -> `Maybe (Window ())' toObject #}
+       {  } -> `Window ()' unsafeToObject #}
 {# fun Fl_set_grab as setGrab'
        { id `Ptr ()' } -> `()' #}
 setGrab :: Window a -> IO ()
@@ -461,19 +461,19 @@ handle_ :: Event -> Window a -> IO Int
 handle_ e wp =
     withObject wp (handle_' (cFromEnum e))
 {# fun Fl_belowmouse as belowmouse
-       {  } -> `Maybe (Widget ())' toObject #}
+       {  } -> `Widget ()' unsafeToObject #}
 {# fun Fl_set_belowmouse as setBelowmouse'
        { id `Ptr ()' } -> `()' #}
 setBelowmouse :: Widget a -> IO ()
 setBelowmouse wp = withObject wp setBelowmouse'
 {# fun Fl_pushed as pushed
-       {  } -> `Maybe (Widget ())' toObject #}
+       {  } -> `Widget ()' unsafeToObject #}
 {# fun Fl_set_pushed as setPushed'
        { id `Ptr ()' } -> `()' #}
 setPushed :: Widget a -> IO ()
 setPushed wp = withObject wp setPushed'
 {# fun Fl_focus as focus
-       {  } -> `Maybe (Widget ())' toObject #}
+       {  } -> `Widget ()' unsafeToObject #}
 {# fun Fl_set_focus as setFocus'
        { id `Ptr ()' } -> `()' #}
 setFocus :: Widget a -> IO ()
@@ -516,10 +516,10 @@ setEventDispatch ed = do
     do
       let toPrim = (\e ptr ->
                       let eventEnum = toEnum $ fromIntegral e
-                      in
-                        maybe (error "Null pointer passed in to event dispatch function")
-                              (\p -> ed eventEnum p  >>= return . fromIntegral)
-                              (toObject (castPtr ptr))
+                      in do
+                      obj <- toObject ptr
+                      result <- ed eventEnum obj
+                      return $ fromIntegral result
                     )
       callbackPtr <-  wrapEventDispatchPrim toPrim
       ptrToCallbackPtr <- new callbackPtr
@@ -715,17 +715,17 @@ setLabeltype label drawF measureF =
                                                       fromIntegral wPrim,
                                                       fromIntegral hPrim)
                              alignType = cToEnum alignPrim
-                         in
-                           maybe (error "Null pointer passed in to label drawing function")
-                                 (\p -> drawF p rectangle alignType)
-                                 (toObject rawPtr))
+                         in do
+                         obj <- toObject rawPtr
+                         drawF obj rectangle alignType
+                     )
         measureFPrim = (\rawPtr wPtr hPtr ->
-                            maybe (error "Null pointer passed to label measuring function ")
-                                  (\p -> do
-                                     (Size (Width width) (Height height)) <- measureF p
-                                     poke wPtr (fromIntegral width)
-                                     poke hPtr (fromIntegral height))
-                                  (toObject (castPtr rawPtr)))
+                          do
+                           obj <- toObject rawPtr
+                           (Size (Width width) (Height height)) <- measureF obj
+                           poke wPtr (fromIntegral width)
+                           poke hPtr (fromIntegral height)
+                       )
     in
       do
         wrappedDrawFPrim <- wrapLabelDrawFPrim drawFPrim

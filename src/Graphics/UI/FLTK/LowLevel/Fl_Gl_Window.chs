@@ -232,39 +232,38 @@ defaultGlWindowFuncs = GlWindowFuncs Nothing Nothing Nothing Nothing Nothing Not
 {# fun Fl_OverriddenGl_Window_New_WithLabel as overriddenWindowNewWithLabel' { `Int',`Int', `String', id `Ptr ()'} -> `Ptr ()' id #}
 glWindowNew :: Size -> Maybe Position -> Maybe String -> Maybe (GlWindowFuncs a) -> IO (Window ())
 glWindowNew (Size (Width w) (Height h)) position title funcs' =
-    let makeObject = objectOrError "glWindowNew: object construction returned a null pointer"
-    in case (position, title, funcs') of
-         (Nothing,Nothing,Nothing) -> windowNew' w h >>= makeObject
-         (Just (Position (X x) (Y y)), Nothing, Nothing) ->  windowNewXY' x y w h >>= makeObject
-         (Just (Position (X x) (Y y)), (Just l'), Nothing) -> windowNewXYWithLabel' x y w h l' >>= makeObject
-         (Nothing, (Just l'), Nothing) -> windowNewWithLabel' w h l' >>= makeObject
+    case (position, title, funcs') of
+         (Nothing,Nothing,Nothing) -> windowNew' w h >>= toObject 
+         (Just (Position (X x) (Y y)), Nothing, Nothing) ->  windowNewXY' x y w h >>= toObject 
+         (Just (Position (X x) (Y y)), (Just l'), Nothing) -> windowNewXYWithLabel' x y w h l' >>= toObject 
+         (Nothing, (Just l'), Nothing) -> windowNewWithLabel' w h l' >>= toObject 
          (Nothing,Nothing,(Just fs')) -> do
                                         p <- glWindowFunctionStruct fs'
-                                        overriddenWindowNew' w h p >>= makeObject
+                                        overriddenWindowNew' w h p >>= toObject 
          (Just (Position (X x) (Y y)), Nothing, (Just fs')) ->  do
                                         p <- glWindowFunctionStruct fs'
-                                        overriddenWindowNewXY' x y w h p >>= makeObject
+                                        overriddenWindowNewXY' x y w h p >>= toObject 
          (Just (Position (X x) (Y y)), (Just l'), (Just fs')) -> do
                                         p <- glWindowFunctionStruct fs'
-                                        overriddenWindowNewXYWithLabel' x y w h l' p >>= makeObject
+                                        overriddenWindowNewXYWithLabel' x y w h l' p >>= toObject 
          (Nothing, (Just l'), (Just fs')) -> do
                                         p <- glWindowFunctionStruct fs'
-                                        overriddenWindowNewWithLabel' w h l' p >>= makeObject
+                                        overriddenWindowNewWithLabel' w h l' p >>= toObject 
 
 {# fun unsafe Fl_Gl_Window_draw_super as drawSuper' { id `Ptr ()' } -> `()' #}
 glWindowDrawSuper :: GlWindow a  ->  IO (())
 glWindowDrawSuper self = withObject self $ \selfPtr -> drawSuper' selfPtr
 
-{# fun unsafe Fl_Gl_Window_as_group_super as asGroupSuper' { id `Ptr ()' } -> `Maybe (Group ())' toObject #}
-glWindowAsGroupSuper :: GlWindow a  ->  IO (Maybe (Group ()))
+{# fun unsafe Fl_Gl_Window_as_group_super as asGroupSuper' { id `Ptr ()' } -> `Group ()' unsafeToObject #}
+glWindowAsGroupSuper :: GlWindow a  ->  IO (Group ())
 glWindowAsGroupSuper win = withObject win $ \winPtr -> asGroupSuper' winPtr
 
-{# fun unsafe Fl_Gl_Window_as_window_super as asWindowSuper' { id `Ptr ()' } -> `Maybe (Window ())' toObject #}
-glWindowAsWindowSuper :: GlWindow a  ->  IO (Maybe (Window ()))
+{# fun unsafe Fl_Gl_Window_as_window_super as asWindowSuper' { id `Ptr ()' } -> `Window ()' unsafeToObject #}
+glWindowAsWindowSuper :: GlWindow a  ->  IO (Window ())
 glWindowAsWindowSuper win = withObject win $ \winPtr -> asWindowSuper' winPtr
 
-{# fun unsafe Fl_Gl_Window_as_gl_window_super as asGlWindowSuper' { id `Ptr ()' } -> `Maybe (GlWindow ())' toObject #}
-glWindowAsGlWindowSuper :: GlWindow a  ->  IO (Maybe (GlWindow ()))
+{# fun unsafe Fl_Gl_Window_as_gl_window_super as asGlWindowSuper' { id `Ptr ()' } -> `GlWindow ()' unsafeToObject #}
+glWindowAsGlWindowSuper :: GlWindow a  ->  IO (GlWindow ())
 glWindowAsGlWindowSuper win = withObject win $ \winPtr -> asGlWindowSuper' winPtr
 
 {# fun unsafe Fl_Gl_Window_hide_super as hideSuper' { id `Ptr ()' } -> `()' #}
@@ -303,16 +302,16 @@ glWindowResize win x y w h = withObject win $ \winPtr -> resize' winPtr x y w h
 glWindowHandle :: GlWindow a  -> Int ->  IO (Int)
 glWindowHandle self event = withObject self $ \selfPtr -> handle' selfPtr event
 
-{# fun unsafe Fl_Gl_Window_as_group as asGroup' { id `Ptr ()' } -> `Maybe (Group ())' toObject #}
-glWindowAsGroup :: GlWindow a  ->  IO (Maybe (Group ()))
+{# fun unsafe Fl_Gl_Window_as_group as asGroup' { id `Ptr ()' } -> `Group ()' unsafeToObject #}
+glWindowAsGroup :: GlWindow a  ->  IO (Group ())
 glWindowAsGroup win = withObject win $ \winPtr -> asGroup' winPtr
 
-{# fun unsafe Fl_Gl_Window_as_window as asWindow' { id `Ptr ()' } -> `Maybe (Window ())' toObject #}
-glWindowAsWindow :: GlWindow a  ->  IO (Maybe (Window ()))
+{# fun unsafe Fl_Gl_Window_as_window as asWindow' { id `Ptr ()' } -> `Window ()' unsafeToObject #}
+glWindowAsWindow :: GlWindow a  ->  IO (Window ())
 glWindowAsWindow win = withObject win $ \winPtr -> asWindow' winPtr
 
-{# fun unsafe Fl_Gl_Window_as_gl_window as asGlWindow' { id `Ptr ()' } -> `Maybe (GlWindow ())' toObject #}
-glWindowAsGlWindow :: GlWindow a  ->  IO (Maybe (GlWindow ()))
+{# fun unsafe Fl_Gl_Window_as_gl_window as asGlWindow' { id `Ptr ()' } -> `GlWindow ()' unsafeToObject #}
+glWindowAsGlWindow :: GlWindow a  ->  IO (GlWindow ())
 glWindowAsGlWindow win = withObject win $ \winPtr -> asGlWindow' winPtr
 
 {# fun unsafe Fl_Gl_Window_handle_super as handleSuper' { id `Ptr ()',`Int' } -> `Int' #}
@@ -360,8 +359,8 @@ glWindowMode win = withObject win $ \winPtr -> mode' winPtr
 glWindowSetMode :: GlWindow a  -> Int ->  IO (Int)
 glWindowSetMode win a = withObject win $ \winPtr -> setMode' winPtr a
 
-{# fun unsafe Fl_Gl_Window_context as context' { id `Ptr ()' } -> `Maybe GlContext' toObject #}
-glWindowContext :: GlWindow a  ->  IO (Maybe GlContext)
+{# fun unsafe Fl_Gl_Window_context as context' { id `Ptr ()' } -> `GlContext' unsafeToObject #}
+glWindowContext :: GlWindow a  ->  IO GlContext
 glWindowContext win = withObject win $ \winPtr -> context' winPtr
 
 {# fun unsafe Fl_Gl_Window_set_context as setContext' { id `Ptr ()',id `Ptr ()' } -> `()' #}
@@ -398,7 +397,7 @@ glWindowMakeOverlayCurrent win = withObject win $ \winPtr -> makeOverlayCurrent'
 
 glWindowSetCallback :: Window a -> WidgetCallback b -> IO ()
 glWindowSetCallback = doubleWindowSetCallback
-glWindowParent :: Group a -> IO (Maybe (Group ()))
+glWindowParent :: Group a -> IO (Group ())
 glWindowParent = doubleWindowParent
 glWindowSetParent :: Group a -> Group b -> IO ()
 glWindowSetParent = doubleWindowSetParent
@@ -450,11 +449,11 @@ glWindowLabelsize :: Group a  ->  IO (FontSize)
 glWindowLabelsize = doubleWindowLabelsize
 glWindowSetLabelsize :: Group a  -> FontSize ->  IO (())
 glWindowSetLabelsize = doubleWindowSetLabelsize
-glWindowImage :: Group a  ->  IO (Maybe (Image ()))
+glWindowImage :: Group a  ->  IO (Image ())
 glWindowImage = doubleWindowImage
 glWindowSetImage :: Group a  -> Image b ->  IO (())
 glWindowSetImage = doubleWindowSetImage
-glWindowDeimage :: Group a  ->  IO (Maybe (Image ()))
+glWindowDeimage :: Group a  ->  IO (Image ())
 glWindowDeimage = doubleWindowDeimage
 glWindowSetDeimage :: Group a  -> Image b ->  IO (())
 glWindowSetDeimage = doubleWindowSetDeimage
@@ -526,9 +525,9 @@ glWindowDamageInsideWidget :: Group a  -> Word8 -> Rectangle ->  IO (())
 glWindowDamageInsideWidget = doubleWindowDamageInsideWidget
 glWindowMeasureLabel :: Group a  -> IO (Size)
 glWindowMeasureLabel = doubleWindowMeasureLabel
-glWindowWindow :: Group a  ->  IO (Maybe (Window ()))
+glWindowWindow :: Group a  ->  IO (Window ())
 glWindowWindow = doubleWindowWindow
-glWindowTopWindow :: Group a  ->  IO (Maybe (Window ()))
+glWindowTopWindow :: Group a  ->  IO (Window ())
 glWindowTopWindow = doubleWindowTopWindow
 glWindowTopWindowOffset :: Group a -> IO (Position)
 glWindowTopWindowOffset = doubleWindowTopWindowOffset
@@ -550,7 +549,7 @@ glWindowClear :: Group a  ->  IO (())
 glWindowClear = doubleWindowClear
 glWindowSetResizable :: Group a  -> Widget a  ->  IO (())
 glWindowSetResizable = doubleWindowSetResizable
-glWindowResizable :: Group a  ->  IO (Maybe (Widget ()))
+glWindowResizable :: Group a  ->  IO (Widget ())
 glWindowResizable = doubleWindowResizable
 glWindowAddResizable :: Group a  -> Widget a  ->  IO (())
 glWindowAddResizable = doubleWindowAddResizable
@@ -564,13 +563,13 @@ glWindowClipChildren :: Group a  ->  IO (Int)
 glWindowClipChildren = doubleWindowClipChildren
 glWindowFocus :: Group a  -> Widget a  ->  IO (())
 glWindowFocus = doubleWindowFocus
-glWindowDdfdesignKludge :: Group a  ->  IO (Maybe (Widget ()))
+glWindowDdfdesignKludge :: Group a  ->  IO (Widget ())
 glWindowDdfdesignKludge = doubleWindowDdfdesignKludge
 glWindowInsertWithBefore :: Group a  -> Widget a  -> Widget a  ->  IO (())
 glWindowInsertWithBefore = doubleWindowInsertWithBefore
-glWindowArray :: Group a  ->  IO [Maybe (Widget ())]
+glWindowArray :: Group a  ->  IO [(Widget ())]
 glWindowArray = doubleWindowArray
-glWindowChild :: Group a  -> Int ->  IO (Maybe (Widget ()))
+glWindowChild :: Group a  -> Int ->  IO (Widget ())
 glWindowChild = doubleWindowChild
 glWindowChanged :: Window a  ->  IO (Int)
 glWindowChanged = doubleWindowChanged

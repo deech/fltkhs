@@ -213,24 +213,23 @@ defaultDoubleWindowFuncs = DoubleWindowFuncs Nothing Nothing Nothing Nothing Not
 {# fun Fl_OverriddenDouble_Window_New_WithLabel as overriddenWindowNewWithLabel' { `Int',`Int', `String', id `Ptr ()'} -> `Ptr ()' id #}
 doubleWindowNew :: Size -> Maybe Position -> Maybe String -> Maybe (DoubleWindowFuncs a) -> IO (Window ())
 doubleWindowNew (Size (Width w) (Height h)) position title funcs' =
-    let makeObject = objectOrError "doubleWindowNew: object construction returned a null pointer"
-    in case (position, title, funcs') of
-         (Nothing,Nothing,Nothing) -> windowNew' w h >>= makeObject
-         (Just (Position (X x) (Y y)), Nothing, Nothing) ->  windowNewXY' x y w h >>= makeObject
-         (Just (Position (X x) (Y y)), (Just l'), Nothing) -> windowNewXYWithLabel' x y w h l' >>= makeObject
-         (Nothing, (Just l'), Nothing) -> windowNewWithLabel' w h l' >>= makeObject
+    case (position, title, funcs') of
+         (Nothing,Nothing,Nothing) -> windowNew' w h >>= toObject 
+         (Just (Position (X x) (Y y)), Nothing, Nothing) ->  windowNewXY' x y w h >>= toObject 
+         (Just (Position (X x) (Y y)), (Just l'), Nothing) -> windowNewXYWithLabel' x y w h l' >>= toObject 
+         (Nothing, (Just l'), Nothing) -> windowNewWithLabel' w h l' >>= toObject 
          (Nothing,Nothing,(Just fs')) -> do
                                         p <- doubleWindowFunctionStruct fs'
-                                        overriddenWindowNew' w h p >>= makeObject
+                                        overriddenWindowNew' w h p >>= toObject 
          (Just (Position (X x) (Y y)), Nothing, (Just fs')) ->  do
                                         p <- doubleWindowFunctionStruct fs'
-                                        overriddenWindowNewXY' x y w h p >>= makeObject
+                                        overriddenWindowNewXY' x y w h p >>= toObject 
          (Just (Position (X x) (Y y)), (Just l'), (Just fs')) -> do
                                         p <- doubleWindowFunctionStruct fs'
-                                        overriddenWindowNewXYWithLabel' x y w h l' p >>= makeObject
+                                        overriddenWindowNewXYWithLabel' x y w h l' p >>= toObject 
          (Nothing, (Just l'), (Just fs')) -> do
                                         p <- doubleWindowFunctionStruct fs'
-                                        overriddenWindowNewWithLabel' w h l' p >>= makeObject
+                                        overriddenWindowNewWithLabel' w h l' p >>= toObject 
 
 {# fun Fl_Double_Window_Destroy as windowDestroy' { id `Ptr ()' } -> `()' #}
 doubleWindowDestroy :: DoubleWindow a -> IO ()
@@ -266,16 +265,16 @@ doubleWindowHide doubleWindow = withObject doubleWindow $ \doubleWindowPtr -> hi
 doubleWindowFlushSuper :: DoubleWindow a  ->  IO (())
 doubleWindowFlushSuper window = withObject window $ \windowPtr -> flushSuper' windowPtr
 
-{# fun Fl_Double_Window_as_window_super as asWindowSuper' { id `Ptr ()' } -> `Maybe (Window ())' toObject #}
-doubleWindowAsWindowSuper :: DoubleWindow a  ->  IO (Maybe (Window ()))
+{# fun Fl_Double_Window_as_window_super as asWindowSuper' { id `Ptr ()' } -> `Window ()' unsafeToObject #}
+doubleWindowAsWindowSuper :: DoubleWindow a  ->  IO (Window ())
 doubleWindowAsWindowSuper window = withObject window $ \windowPtr -> asWindowSuper' windowPtr
 
-{# fun Fl_Double_Window_as_gl_window_super as asGlWindowSuper' { id `Ptr ()' } -> `Maybe (GlWindow ())'toObject #}
-doubleWindowAsGlWindowSuper :: DoubleWindow a  ->  IO (Maybe (GlWindow ()))
+{# fun Fl_Double_Window_as_gl_window_super as asGlWindowSuper' { id `Ptr ()' } -> `GlWindow ()' unsafeToObject #}
+doubleWindowAsGlWindowSuper :: DoubleWindow a  ->  IO (GlWindow ())
 doubleWindowAsGlWindowSuper window = withObject window $ \windowPtr -> asGlWindowSuper' windowPtr
 
-{# fun Fl_Double_Window_as_group_super as asGroupSuper' { id `Ptr ()' } -> `Maybe (Group ())' toObject #}
-doubleWindowAsGroupSuper :: DoubleWindow a  ->  IO (Maybe (Group ()))
+{# fun Fl_Double_Window_as_group_super as asGroupSuper' { id `Ptr ()' } -> `Group ()' unsafeToObject #}
+doubleWindowAsGroupSuper :: DoubleWindow a  ->  IO (Group ())
 doubleWindowAsGroupSuper window = withObject window $ \windowPtr -> asGroupSuper' windowPtr
 
 {# fun Fl_Double_Window_show as windowShow' {id `Ptr ()'} -> `()' #}
@@ -293,20 +292,20 @@ doubleWindowResize window rectangle = withObject window $ \windowPtr -> do
                                  let (x_pos,y_pos,w_pos,h_pos) = fromRectangle rectangle
                                  resize' windowPtr x_pos y_pos w_pos h_pos
 
-{# fun Fl_Double_Window_as_window as asWindow' { id `Ptr ()' } -> `Maybe (Window ())' toObject #}
-doubleWindowAsWindow :: DoubleWindow a  ->  IO (Maybe (Window ()))
+{# fun Fl_Double_Window_as_window as asWindow' { id `Ptr ()' } -> `Window ()' unsafeToObject #}
+doubleWindowAsWindow :: DoubleWindow a  ->  IO (Window ())
 doubleWindowAsWindow window = withObject window $ \windowPtr -> asWindow' windowPtr
 
-{# fun Fl_Double_Window_as_gl_window as asGlWindow' { id `Ptr ()' } -> `Maybe (GlWindow ())' toObject #}
-doubleWindowAsGlWindow :: DoubleWindow a  ->  IO (Maybe (GlWindow()))
+{# fun Fl_Double_Window_as_gl_window as asGlWindow' { id `Ptr ()' } -> `GlWindow ()' unsafeToObject #}
+doubleWindowAsGlWindow :: DoubleWindow a  ->  IO (GlWindow())
 doubleWindowAsGlWindow window = withObject window $ \windowPtr -> asGlWindow' windowPtr
 
-{# fun Fl_Double_Window_as_group as asGroup' { id `Ptr ()' } -> `Maybe (Group ())' toObject #}
-doubleWindowAsGroup :: DoubleWindow a  ->  IO (Maybe (Group ()))
+{# fun Fl_Double_Window_as_group as asGroup' { id `Ptr ()' } -> `Group ()' unsafeToObject #}
+doubleWindowAsGroup :: DoubleWindow a  ->  IO (Group ())
 doubleWindowAsGroup window = withObject window $ \windowPtr -> asGroup' windowPtr
 doubleWindowSetCallback :: Window a -> WidgetCallback b -> IO ()
 doubleWindowSetCallback = windowSetCallback
-doubleWindowParent :: Group a -> IO (Maybe (Group ()))
+doubleWindowParent :: Group a -> IO (Group ())
 doubleWindowParent = windowParent
 doubleWindowSetParent :: Group a -> Group b -> IO ()
 doubleWindowSetParent = windowSetParent
@@ -358,11 +357,11 @@ doubleWindowLabelsize :: Group a  ->  IO (FontSize)
 doubleWindowLabelsize = windowLabelsize
 doubleWindowSetLabelsize :: Group a  -> FontSize ->  IO (())
 doubleWindowSetLabelsize = windowSetLabelsize
-doubleWindowImage :: Group a  ->  IO (Maybe (Image ()))
+doubleWindowImage :: Group a  ->  IO (Image ())
 doubleWindowImage = windowImage
 doubleWindowSetImage :: Group a  -> Image b ->  IO (())
 doubleWindowSetImage = windowSetImage
-doubleWindowDeimage :: Group a  ->  IO (Maybe (Image ()))
+doubleWindowDeimage :: Group a  ->  IO (Image ())
 doubleWindowDeimage = windowDeimage
 doubleWindowSetDeimage :: Group a  -> Image b ->  IO (())
 doubleWindowSetDeimage = windowSetDeimage
@@ -434,9 +433,9 @@ doubleWindowDamageInsideWidget :: Group a  -> Word8 -> Rectangle ->  IO (())
 doubleWindowDamageInsideWidget = windowDamageInsideWidget
 doubleWindowMeasureLabel :: Group a  -> IO (Size)
 doubleWindowMeasureLabel = windowMeasureLabel
-doubleWindowWindow :: Group a  ->  IO (Maybe (Window ()))
+doubleWindowWindow :: Group a  ->  IO (Window ())
 doubleWindowWindow = windowWindow
-doubleWindowTopWindow :: Group a  ->  IO (Maybe (Window ()))
+doubleWindowTopWindow :: Group a  ->  IO (Window ())
 doubleWindowTopWindow = windowTopWindow
 doubleWindowTopWindowOffset :: Group a -> IO (Position)
 doubleWindowTopWindowOffset = windowTopWindowOffset
@@ -458,7 +457,7 @@ doubleWindowClear :: Group a  ->  IO (())
 doubleWindowClear = windowClear
 doubleWindowSetResizable :: Group a  -> Widget a  ->  IO (())
 doubleWindowSetResizable = windowSetResizable
-doubleWindowResizable :: Group a  ->  IO (Maybe (Widget ()))
+doubleWindowResizable :: Group a  ->  IO (Widget ())
 doubleWindowResizable = windowResizable
 doubleWindowAddResizable :: Group a  -> Widget a  ->  IO (())
 doubleWindowAddResizable = windowAddResizable
@@ -472,13 +471,13 @@ doubleWindowClipChildren :: Group a  ->  IO (Int)
 doubleWindowClipChildren = windowClipChildren
 doubleWindowFocus :: Group a  -> Widget a  ->  IO (())
 doubleWindowFocus = windowFocus
-doubleWindowDdfdesignKludge :: Group a  ->  IO (Maybe (Widget ()))
+doubleWindowDdfdesignKludge :: Group a  ->  IO (Widget ())
 doubleWindowDdfdesignKludge = windowDdfdesignKludge
 doubleWindowInsertWithBefore :: Group a  -> Widget a  -> Widget a  ->  IO (())
 doubleWindowInsertWithBefore = windowInsertWithBefore
-doubleWindowArray :: Group a  ->  IO [Maybe (Widget ())]
+doubleWindowArray :: Group a  ->  IO [(Widget ())]
 doubleWindowArray = windowArray
-doubleWindowChild :: Group a  -> Int ->  IO (Maybe (Widget ()))
+doubleWindowChild :: Group a  -> Int ->  IO (Widget ())
 doubleWindowChild = windowChild
 doubleWindowChanged :: Window a  ->  IO (Int)
 doubleWindowChanged = windowChanged

@@ -5,6 +5,9 @@ module Graphics.UI.FLTK.LowLevel.Fl_Types where
 import Foreign
 import Foreign.C hiding (CClock)
 import Graphics.UI.FLTK.LowLevel.Fl_Enumerations
+import Control.Concurrent (MVar(..))
+import Debug.Trace
+import Control.Exception
 #c
   enum BrowserType {
     NormalBrowserType = FL_NORMAL_BROWSER,
@@ -205,8 +208,7 @@ type RGB                  = (Int, Int, Int)
 type FlIntPtr             = {#type fl_intptr_t #}
 type FlUIntPtr            = {#type fl_uintptr_t#}
 type ID                   = {#type ID#}
-data Object a             = Object !(Ptr a)
-                          | Managed !(ForeignPtr (TManagedPtr a)) deriving Show
+data Object a             = Object !(ForeignPtr (Ptr a)) deriving Show
 type TManagedPtr a        = CManagedPtr a
 data CManagedPtr a        = CManagedPtr
 type GlContext            = Object ()
@@ -433,10 +435,10 @@ type CallbackPrim             = Ptr () -> IO ()
 type WidgetCallback a         = Widget a -> IO ()
 type RectangleF a             = Widget a -> Rectangle -> IO ()
 type RectangleFPrim           = Ptr () -> CInt -> CInt -> CInt -> CInt -> IO ()
-type GetWindowF a             = Widget a -> IO (Maybe (Window ()))
+type GetWindowF a             = Widget a -> IO (Window ())
 type GetPointerF              = Ptr () -> IO (Ptr ())
-type GetGlWindowF a           = Widget a -> IO (Maybe (GlWindow ()))
-type GetGroupF a              = Widget a -> IO (Maybe (Group ()))
+type GetGlWindowF a           = Widget a -> IO (GlWindow ())
+type GetGroupF a              = Widget a -> IO (Group ())
 type WidgetEventHandlerPrim   = Ptr () -> CInt -> IO CInt
 type WidgetEventHandler a     = Widget a -> Event -> IO Int
 type GlobalEventHandlerPrim   = CInt -> IO CInt
@@ -921,10 +923,28 @@ fromRectangle (Rectangle (Position
                           (Width width)
                           (Height height))) =
               (x_pos, y_pos, width, height)
-withObject ::  Object a -> (Ptr () -> IO b) -> IO b
-withObject (Object ptr) f = f (castPtr ptr)
-withObject (Managed fptr) f = withForeignPtr fptr $ (\p -> f (castPtr p))
 
-toObject ::  Ptr () -> Maybe (Object a)
-toObject p | p /= nullPtr = Just $ Object (castPtr p)
-           | otherwise = Nothing
+throwStackOnError f =
+  f `catch` throwStack
+  where
+  throwStack :: SomeException -> IO b
+  throwStack e = traceStack (show e) $ error ""
+
+withObject :: Object a -> (Ptr b -> IO c) -> IO c
+withObject (Object fptr) f =
+   throwStackOnError $
+     withForeignPtr fptr
+       (\ptrToObjPtr -> do
+           objPtr <- peek ptrToObjPtr
+           if (objPtr == nullPtr)
+            then error "Object does not exist."
+            else f (castPtr objPtr)
+       )
+
+swapObject :: Object a -> (Ptr b -> IO (Ptr a)) -> IO ()
+swapObject obj@(Object fptr) f = do
+   result <- withObject obj f
+   withForeignPtr fptr $ \p -> poke p result
+
+wrapObject :: ForeignPtr (Ptr ()) -> Object a
+wrapObject = Object . castForeignPtr

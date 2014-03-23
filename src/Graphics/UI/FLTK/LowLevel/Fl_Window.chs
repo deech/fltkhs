@@ -168,6 +168,7 @@ import Graphics.UI.FLTK.LowLevel.Fl_Types
 import Graphics.UI.FLTK.LowLevel.Fl_Enumerations
 import Graphics.UI.FLTK.LowLevel.Utils
 import Graphics.UI.FLTK.LowLevel.Fl_Group
+import Debug.Trace
 import C2HS hiding (cFromEnum, unsafePerformIO, toBool,cToEnum)
 
 data WindowFuncs a =
@@ -241,24 +242,23 @@ defaultWindowFuncs = WindowFuncs Nothing Nothing Nothing Nothing Nothing Nothing
 {# fun Fl_OverriddenWindow_New_WithLabel as overriddenWindowNewWithLabel' { `Int',`Int', `String', id `Ptr ()'} -> `Ptr ()' id #}
 windowNew :: Size -> Maybe Position -> Maybe String -> Maybe (WindowFuncs a) -> IO (Window ())
 windowNew (Size (Width w) (Height h)) position title funcs' =
-    let makeObject = objectOrError "windowNewWithLabel : object construction returned a null pointer"
-    in case (position, title, funcs') of
-         (Nothing,Nothing,Nothing) -> windowNew' w h >>= makeObject
-         (Just (Position (X x) (Y y)), Nothing, Nothing) ->  windowNewXY' x y w h >>= makeObject
-         (Just (Position (X x) (Y y)), (Just l'), Nothing) -> windowNewXYWithLabel' x y w h l' >>= makeObject
-         (Nothing, (Just l'), Nothing) -> windowNewWithLabel' w h l' >>= makeObject
+    case (position, title, funcs') of
+         (Nothing,Nothing,Nothing) -> windowNew' w h >>= toObject
+         (Just (Position (X x) (Y y)), Nothing, Nothing) ->  windowNewXY' x y w h >>= toObject
+         (Just (Position (X x) (Y y)), (Just l'), Nothing) -> windowNewXYWithLabel' x y w h l' >>= toObject
+         (Nothing, (Just l'), Nothing) -> windowNewWithLabel' w h l' >>= toObject
          (Nothing,Nothing,(Just fs')) -> do
                                         p <- windowFunctionStruct fs'
-                                        overriddenWindowNew' w h p >>= makeObject
+                                        overriddenWindowNew' w h p >>= toObject
          (Just (Position (X x) (Y y)), Nothing, (Just fs')) ->  do
                                         p <- windowFunctionStruct fs'
-                                        overriddenWindowNewXY' x y w h p >>= makeObject
+                                        overriddenWindowNewXY' x y w h p >>= toObject
          (Just (Position (X x) (Y y)), (Just l'), (Just fs')) -> do
                                         p <- windowFunctionStruct fs'
-                                        overriddenWindowNewXYWithLabel' x y w h l' p >>= makeObject
+                                        overriddenWindowNewXYWithLabel' x y w h l' p >>= toObject
          (Nothing, (Just l'), (Just fs')) -> do
                                         p <- windowFunctionStruct fs'
-                                        overriddenWindowNewWithLabel' w h l' p >>= makeObject
+                                        overriddenWindowNewWithLabel' w h l' p >>= toObject
 {# fun Fl_Window_Destroy as windowDestroy' { id `Ptr ()' } -> `()' #}
 windowDestroy :: Window a -> IO ()
 windowDestroy win = withObject win $ \winPtr -> windowDestroy' winPtr
@@ -289,21 +289,21 @@ windowHideSuper window = withObject window $ \windowPtr -> hideSuper' windowPtr
 windowFlushSuper :: Window a  ->  IO (())
 windowFlushSuper window = withObject window $ \windowPtr -> flushSuper' windowPtr
 
-{# fun Fl_Window_as_window_super as asWindowSuper' { id `Ptr ()' } -> `Maybe (Window ())' toObject #}
-windowAsWindowSuper :: Window a  ->  IO (Maybe (Window ()))
+{# fun Fl_Window_as_window_super as asWindowSuper' { id `Ptr ()' } -> `(Window ())' unsafeToObject #}
+windowAsWindowSuper :: Window a  ->  IO (Window ())
 windowAsWindowSuper window = withObject window $ \windowPtr -> asWindowSuper' windowPtr
 
-{# fun Fl_Window_as_gl_window_super as asGlWindowSuper' { id `Ptr ()' } -> `Maybe (GlWindow ())'toObject #}
-windowAsGlWindowSuper :: Window a  ->  IO (Maybe (GlWindow ()))
+{# fun Fl_Window_as_gl_window_super as asGlWindowSuper' { id `Ptr ()' } -> `(GlWindow ())' unsafeToObject #}
+windowAsGlWindowSuper :: Window a  ->  IO (GlWindow ())
 windowAsGlWindowSuper window = withObject window $ \windowPtr -> asGlWindowSuper' windowPtr
 
-{# fun Fl_Window_as_group_super as asGroupSuper' { id `Ptr ()' } -> `Maybe (Group ())' toObject #}
-windowAsGroupSuper :: Window a  ->  IO (Maybe (Group ()))
+{# fun Fl_Window_as_group_super as asGroupSuper' { id `Ptr ()' } -> `(Group ())' unsafeToObject #}
+windowAsGroupSuper :: Window a  ->  IO (Group ())
 windowAsGroupSuper window = withObject window $ \windowPtr -> asGroupSuper' windowPtr
 
 {# fun Fl_Window_show as windowShow' {id `Ptr ()'} -> `()' #}
 windowShow :: Window a -> IO ()
-windowShow window = withObject window $ (\p -> windowShow' p)
+windowShow window = withObject window (\p -> windowShow' p)
 
 {#fun Fl_Window_handle as windowHandle'
       { id `Ptr ()', id `CInt' } -> `Int' #}
@@ -316,16 +316,16 @@ windowResize window rectangle = withObject window $ \windowPtr -> do
                                  let (x_pos,y_pos,w_pos,h_pos) = fromRectangle rectangle
                                  resize' windowPtr x_pos y_pos w_pos h_pos
 
-{# fun Fl_Window_as_window as asWindow' { id `Ptr ()' } -> `Maybe (Window ())' toObject #}
-windowAsWindow :: Window a  ->  IO (Maybe (Window ()))
+{# fun Fl_Window_as_window as asWindow' { id `Ptr ()' } -> `(Window ())' unsafeToObject #}
+windowAsWindow :: Window a  ->  IO (Window ())
 windowAsWindow window = withObject window $ \windowPtr -> asWindow' windowPtr
 
-{# fun Fl_Window_as_gl_window as asGlWindow' { id `Ptr ()' } -> `Maybe (GlWindow ())' toObject #}
-windowAsGlWindow :: Window a  ->  IO (Maybe (GlWindow()))
+{# fun Fl_Window_as_gl_window as asGlWindow' { id `Ptr ()' } -> `(GlWindow ())' unsafeToObject #}
+windowAsGlWindow :: Window a  ->  IO (GlWindow())
 windowAsGlWindow window = withObject window $ \windowPtr -> asGlWindow' windowPtr
 
-{# fun Fl_Window_as_group as asGroup' { id `Ptr ()' } -> `Maybe (Group ())' toObject #}
-windowAsGroup :: Window a  ->  IO (Maybe (Group ()))
+{# fun Fl_Window_as_group as asGroup' { id `Ptr ()' } -> `(Group ())' unsafeToObject #}
+windowAsGroup :: Window a  ->  IO (Group ())
 windowAsGroup window = withObject window $ \windowPtr -> asGroup' windowPtr
 
 {# fun Fl_Window_set_callback as
@@ -336,7 +336,7 @@ windowSetCallback window callback =
    withObject window $ (\p -> do
                                callbackPtr <- toWidgetCallbackPrim callback
                                windowSetCallback' (castPtr p) callbackPtr)
-windowParent :: Group a -> IO (Maybe (Group ()))
+windowParent :: Group a -> IO (Group ())
 windowParent  = groupParent
 
 windowSetParent :: Group a -> Group b -> IO ()
@@ -414,13 +414,13 @@ windowLabelsize  = groupLabelsize
 windowSetLabelsize :: Group a  -> FontSize ->  IO (())
 windowSetLabelsize  = groupSetLabelsize
 
-windowImage :: Group a  ->  IO (Maybe (Image ()))
+windowImage :: Group a  ->  IO (Image ())
 windowImage  = groupImage
 
 windowSetImage :: Group a  -> Image b ->  IO (())
 windowSetImage  = groupSetImage
 
-windowDeimage :: Group a  ->  IO (Maybe (Image ()))
+windowDeimage :: Group a  ->  IO (Image ())
 windowDeimage  = groupDeimage
 
 windowSetDeimage :: Group a  -> Image b ->  IO (())
@@ -532,10 +532,10 @@ windowDamageInsideWidget  = groupDamageInsideWidget
 windowMeasureLabel :: Group a  -> IO (Size)
 windowMeasureLabel  = groupMeasureLabel
 
-windowWindow :: Group a  ->  IO (Maybe (Window ()))
+windowWindow :: Group a  ->  IO (Window ())
 windowWindow  = groupWindow
 
-windowTopWindow :: Group a  ->  IO (Maybe (Window ()))
+windowTopWindow :: Group a  ->  IO (Window ())
 windowTopWindow  = groupTopWindow
 
 windowTopWindowOffset :: Group a -> IO (Position)
@@ -568,7 +568,7 @@ windowClear  = groupClear
 windowSetResizable :: Group a  -> Widget a  ->  IO (())
 windowSetResizable  = groupSetResizable
 
-windowResizable :: Group a  ->  IO (Maybe (Widget ()))
+windowResizable :: Group a  ->  IO (Widget ())
 windowResizable  = groupResizable
 
 windowAddResizable :: Group a  -> Widget a  ->  IO (())
@@ -589,16 +589,16 @@ windowClipChildren  = groupClipChildren
 windowFocus :: Group a  -> Widget a  ->  IO (())
 windowFocus  = groupFocus
 
-windowDdfdesignKludge :: Group a  ->  IO (Maybe (Widget ()))
+windowDdfdesignKludge :: Group a  ->  IO (Widget ())
 windowDdfdesignKludge  = groupDdfdesignKludge
 
 windowInsertWithBefore :: Group a  -> Widget a  -> Widget a  ->  IO (())
 windowInsertWithBefore  = groupInsertWithBefore
 
-windowArray :: Group a  ->  IO [Maybe (Widget ())]
+windowArray :: Group a  ->  IO [(Widget ())]
 windowArray  = groupArray
 
-windowChild :: Group a  -> Int ->  IO (Maybe (Widget ()))
+windowChild :: Group a  -> Int ->  IO (Widget ())
 windowChild  = groupChild
 
 {# fun Fl_Window_changed as changed' { id `Ptr ()' } -> `Int' #}

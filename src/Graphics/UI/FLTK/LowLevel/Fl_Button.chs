@@ -116,7 +116,7 @@ import Graphics.UI.FLTK.LowLevel.Fl_Widget
 import Graphics.UI.FLTK.LowLevel.Fl_Enumerations
 import Graphics.UI.FLTK.LowLevel.Fl_Types
 import Graphics.UI.FLTK.LowLevel.Utils
-
+import Debug.Trace
 data ButtonFuncs a =
     ButtonFuncs
     {
@@ -160,24 +160,26 @@ defaultButtonFuncs = ButtonFuncs Nothing Nothing Nothing Nothing Nothing Nothing
 buttonNew :: Rectangle -> Maybe String -> Maybe (ButtonFuncs a) -> IO (Button ())
 buttonNew rectangle l' funcs' =
     let (x_pos, y_pos, width, height) = fromRectangle rectangle
-        makeObject = objectOrError " widgetNew : object construction returned a null pointer"
     in case (l', funcs') of
         (Nothing,Nothing) -> widgetNew' x_pos y_pos width height >>=
-                             makeObject
+                             toObject
         ((Just l), Nothing) -> widgetNewWithLabel' x_pos y_pos width height l >>=
-                               makeObject
+                               toObject
         ((Just l), (Just fs)) -> do
                                ptr <- buttonFunctionStruct fs
                                overriddenWidgetNewWithLabel' x_pos y_pos width height l (castPtr ptr) >>=
-                                                             makeObject
+                                                             toObject
         (Nothing, (Just fs)) -> do
                                ptr <- buttonFunctionStruct fs
                                overriddenWidgetNew' x_pos y_pos width height (castPtr ptr) >>=
-                                                    makeObject
+                                                    toObject
 
 {# fun Fl_Button_Destroy as widgetDestroy' { id `Ptr ()' } -> `()' #}
-buttonDestroy :: Widget a -> IO ()
-buttonDestroy win = withObject win $ \winPtr -> widgetDestroy' winPtr
+buttonDestroy :: Button a -> IO ()
+buttonDestroy button = swapObject button $
+                          \buttonPtr ->
+                             widgetDestroy' buttonPtr >>
+                             return nullPtr
 {# fun Fl_Button_draw_super as drawSuper' { id `Ptr ()' } -> `()' #}
 buttonDrawSuper :: Button a  ->  IO (())
 buttonDrawSuper button = withObject button $ \buttonPtr -> drawSuper' buttonPtr
@@ -188,22 +190,22 @@ buttonHandleSuper button event = withObject button $ \buttonPtr -> handleSuper' 
       { id `Ptr ()', id `CInt' } -> `Int' #}
 buttonHandle :: Button a -> Event -> IO Int
 buttonHandle button event = withObject button (\p -> buttonHandle' p (fromIntegral . fromEnum $ event))
-{# fun Fl_Button_as_group_super as asGroupSuper' { id `Ptr ()' } -> `Maybe (Group ())' toObject #}
-buttonAsGroupSuper :: Button a  ->  IO (Maybe (Group ()))
+{# fun Fl_Button_as_group_super as asGroupSuper' { id `Ptr ()' } -> `Group ()' unsafeToObject #}
+buttonAsGroupSuper :: Button a  ->  IO (Group ())
 buttonAsGroupSuper button = withObject button $ \buttonPtr -> asGroupSuper' buttonPtr
-{# fun Fl_Button_as_group as asGroup' { id `Ptr ()' } -> `Maybe (Group ())' toObject #}
-buttonAsGroup :: Button a  ->  IO (Maybe (Group ()))
+{# fun Fl_Button_as_group as asGroup' { id `Ptr ()' } -> `Group ()' unsafeToObject #}
+buttonAsGroup :: Button a  ->  IO (Group ())
 buttonAsGroup button = withObject button $ \buttonPtr -> asGroup' buttonPtr
-buttonAsGlWindowSuper :: Widget a  ->  IO (Maybe (GlWindow ()))
+buttonAsGlWindowSuper :: Widget a  ->  IO (GlWindow ())
 buttonAsGlWindowSuper = widgetAsGlWindowSuper
-{# fun Fl_Button_as_gl_window as asGlWindow' { id `Ptr ()' } -> `Maybe (GlWindow ())' toObject #}
-buttonAsGlWindow :: Button a  ->  IO (Maybe (GlWindow()))
+{# fun Fl_Button_as_gl_window as asGlWindow' { id `Ptr ()' } -> `GlWindow ()' unsafeToObject #}
+buttonAsGlWindow :: Button a  ->  IO (GlWindow())
 buttonAsGlWindow button = withObject button $ \buttonPtr -> asGlWindow' buttonPtr
-{# fun Fl_Button_as_window_super as asWindowSuper' { id `Ptr ()' } -> `Maybe (Window ())' toObject #}
-buttonAsWindowSuper :: Window a  ->  IO (Maybe (Window ()))
+{# fun Fl_Button_as_window_super as asWindowSuper' { id `Ptr ()' } -> `Window ()' unsafeToObject #}
+buttonAsWindowSuper :: Window a  ->  IO (Window ())
 buttonAsWindowSuper window = withObject window $ \windowPtr -> asWindowSuper' windowPtr
-{# fun Fl_Button_as_window as asWindow' { id `Ptr ()' } -> `Maybe (Window ())' toObject #}
-buttonAsWindow :: Button a  ->  IO (Maybe (Window()))
+{# fun Fl_Button_as_window as asWindow' { id `Ptr ()' } -> `Window ()' unsafeToObject #}
+buttonAsWindow :: Button a  ->  IO (Window())
 buttonAsWindow button = withObject button $ \buttonPtr -> asWindow' buttonPtr
 {# fun Fl_Button_resize_super as resizeSuper' { id `Ptr ()',`Int',`Int',`Int',`Int' } -> `()' #}
 buttonResizeSuper :: Button a  -> Rectangle -> IO (())
@@ -230,7 +232,7 @@ buttonShow button = withObject button $ (\p -> buttonShow' p)
 
 buttonSetCallback :: Widget a -> (WidgetCallback b) -> IO (())
 buttonSetCallback = widgetSetCallback
-buttonParent :: Widget a -> IO (Maybe (Group ()))
+buttonParent :: Widget a -> IO (Group ())
 buttonParent = widgetParent
 buttonSetParent :: Widget a -> Group b -> IO ()
 buttonSetParent = widgetSetParent
@@ -288,11 +290,11 @@ buttonLabelsize :: Widget a  ->  IO (FontSize)
 buttonLabelsize = widgetLabelsize
 buttonSetLabelsize :: Widget a  -> FontSize ->  IO (())
 buttonSetLabelsize = widgetSetLabelsize
-buttonImage :: Widget a  ->  IO (Maybe (Image ()))
+buttonImage :: Widget a  ->  IO (Image ())
 buttonImage = widgetImage
 buttonSetImage :: Widget a  -> Image b ->  IO (())
 buttonSetImage = widgetSetImage
-buttonDeimage :: Widget a  ->  IO (Maybe (Image ()))
+buttonDeimage :: Widget a  ->  IO (Image ())
 buttonDeimage = widgetDeimage
 buttonSetDeimage :: Widget a  -> Image b ->  IO (())
 buttonSetDeimage = widgetSetDeimage
@@ -364,9 +366,9 @@ buttonDamageInsideWidget :: Widget a  -> Word8 -> Rectangle ->  IO (())
 buttonDamageInsideWidget = widgetDamageInsideWidget
 buttonMeasureLabel :: Widget a  -> IO (Size)
 buttonMeasureLabel = widgetMeasureLabel
-buttonWindow :: Widget a  ->  IO (Maybe (Window ()))
+buttonWindow :: Widget a  ->  IO (Window ())
 buttonWindow = widgetWindow
-buttonTopWindow :: Widget a  ->  IO (Maybe (Window ()))
+buttonTopWindow :: Widget a  ->  IO (Window ())
 buttonTopWindow = widgetTopWindow
 buttonTopWindowOffset :: Widget a -> IO (Position)
 buttonTopWindowOffset = widgetTopWindowOffset

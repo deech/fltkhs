@@ -125,17 +125,15 @@ groupNew :: Rectangle -> Maybe String -> IO (Group ())
 groupNew rectangle label' =
     let (x_pos, y_pos, width, height) = fromRectangle rectangle
     in case label' of
-        (Just l') -> groupNewWithLabel' x_pos y_pos width height l' >>=
-                     objectOrError "groupNew : object construction returned a null pointer"
-        Nothing -> groupNew' x_pos y_pos width height >>=
-                   objectOrError "groupNew : object construction returned a null pointer"
+        (Just l') -> groupNewWithLabel' x_pos y_pos width height l' >>= toObject
+        Nothing -> groupNew' x_pos y_pos width height >>= toObject
 {# fun Fl_Group_Destroy as groupDestroy' { id `Ptr ()' } -> `()' #}
 groupDestroy :: Group a -> IO ()
 groupDestroy group = withObject group $ \groupPtr -> groupDestroy' groupPtr
 groupHandle :: Group a -> Event -> IO Int
 groupHandle = widgetHandle
 
-groupParent :: Group a -> IO (Maybe (Group ()))
+groupParent :: Group a -> IO (Group ())
 groupParent = widgetParent
 
 
@@ -250,7 +248,7 @@ groupSetLabelsize :: Group a  -> FontSize ->  IO (())
 groupSetLabelsize = widgetSetLabelsize
 
 
-groupImage :: Group a  ->  IO (Maybe (Image ()))
+groupImage :: Group a  ->  IO (Image ())
 groupImage = widgetImage
 
 
@@ -258,7 +256,7 @@ groupSetImage :: Group a  -> Image b ->  IO (())
 groupSetImage = widgetSetImage
 
 
-groupDeimage :: Group a  ->  IO (Maybe (Image ()))
+groupDeimage :: Group a  ->  IO (Image ())
 groupDeimage = widgetDeimage
 
 
@@ -418,11 +416,11 @@ groupMeasureLabel :: Group a  -> IO (Size)
 groupMeasureLabel = widgetMeasureLabel
 
 
-groupWindow :: Group a  ->  IO (Maybe (Window ()))
+groupWindow :: Group a  ->  IO (Window ())
 groupWindow = widgetWindow
 
 
-groupTopWindow :: Group a  ->  IO (Maybe (Window ()))
+groupTopWindow :: Group a  ->  IO (Window ())
 groupTopWindow = widgetTopWindow
 
 
@@ -430,19 +428,19 @@ groupTopWindowOffset :: Group a -> IO (Position)
 groupTopWindowOffset = widgetTopWindowOffset
 
 
-groupAsGroupSuper :: Group a  ->  IO (Maybe (Group ()))
+groupAsGroupSuper :: Group a  ->  IO (Group ())
 groupAsGroupSuper = widgetAsGroupSuper
 
 
-groupAsGroup :: Group a  ->  IO (Maybe (Group ()))
+groupAsGroup :: Group a  ->  IO (Group ())
 groupAsGroup = widgetAsGroup
 
 
-groupAsGlWindowSuper :: Group a  ->  IO (Maybe (GlWindow ()))
+groupAsGlWindowSuper :: Group a  ->  IO (GlWindow ())
 groupAsGlWindowSuper = widgetAsGlWindowSuper
 
 
-groupAsGlWindow :: Group a  ->  IO (Maybe (GlWindow ()))
+groupAsGlWindow :: Group a  ->  IO (GlWindow ())
 groupAsGlWindow = widgetAsGlWindow
 
 
@@ -494,8 +492,8 @@ groupSetResizable :: Group a  -> Widget a  ->  IO (())
 groupSetResizable group o = withObject group $ \groupPtr -> withObject o $ \oPtr -> setResizable' groupPtr oPtr
 
 {# fun Fl_Group_resizable as resizable' { id `Ptr ()' } -> `Ptr ()' id #}
-groupResizable :: Group a  ->  IO (Maybe (Widget ()))
-groupResizable group = withObject group $ \groupPtr -> resizable' groupPtr >>= return . toObject
+groupResizable :: Group a  ->  IO (Widget ())
+groupResizable group = withObject group $ \groupPtr -> resizable' groupPtr >>= toObject
 
 {# fun Fl_Group_add_resizable as addResizable' { id `Ptr ()',id `Ptr ()' } -> `()' #}
 groupAddResizable :: Group a  -> Widget a  ->  IO (())
@@ -522,20 +520,20 @@ groupFocus :: Group a  -> Widget a  ->  IO (())
 groupFocus group w = withObject group $ \groupPtr -> withObject w $ \wPtr -> focus' groupPtr wPtr
 
 {# fun Fl_Group__ddfdesign_kludge as ddfdesignKludge' { id `Ptr ()' } -> `Ptr ()' id #}
-groupDdfdesignKludge :: Group a  ->  IO (Maybe (Widget ()))
-groupDdfdesignKludge group = withObject group $ \groupPtr -> ddfdesignKludge' groupPtr >>= return . toObject
+groupDdfdesignKludge :: Group a  ->  IO (Widget ())
+groupDdfdesignKludge group = withObject group $ \groupPtr -> ddfdesignKludge' groupPtr >>= toObject
 
 {# fun Fl_Group_insert_with_before as insertWithBefore' { id `Ptr ()',id `Ptr ()',id `Ptr ()' } -> `()' #}
 groupInsertWithBefore :: Group a  -> Widget a  -> Widget a  ->  IO (())
 groupInsertWithBefore self w before = withObject self $ \selfPtr -> withObject w $ \wPtr -> withObject before $ \beforePtr -> insertWithBefore' selfPtr wPtr beforePtr
 
 {# fun Fl_Group_array as array' { id `Ptr ()' } -> `Ptr (Ptr ())' id#}
-groupArray :: Group a  ->  IO [Maybe (Widget ())]
+groupArray :: Group a  ->  IO [Widget ()]
 groupArray group = withObject group $ \groupPtr -> do
                     childArrayPtr <- array' groupPtr
                     numChildren <- groupChildren group
                     arrayToObjects childArrayPtr numChildren
 
 {# fun Fl_Group_child as child' { id `Ptr ()',`Int' } -> `Ptr ()' id #}
-groupChild :: Group a  -> Int ->  IO (Maybe (Widget ()))
-groupChild self n = withObject self $ \selfPtr -> child' selfPtr n >>= return . toObject
+groupChild :: Group a  -> Int ->  IO (Widget ())
+groupChild self n = withObject self $ \selfPtr -> child' selfPtr n >>= toObject

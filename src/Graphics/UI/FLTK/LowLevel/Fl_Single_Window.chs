@@ -214,24 +214,23 @@ defaultSingleWindowFuncs = SingleWindowFuncs Nothing Nothing Nothing Nothing Not
 {# fun Fl_OverriddenSingle_Window_New_WithLabel as overriddenWindowNewWithLabel' { `Int',`Int', `String', id `Ptr ()'} -> `Ptr ()' id #}
 singleWindowNew :: Size -> Maybe Position -> Maybe String -> Maybe (SingleWindowFuncs a) -> IO (Window ())
 singleWindowNew (Size (Width w) (Height h)) position title funcs' =
-    let makeObject = objectOrError "singleWindowNew: object construction returned a null pointer"
-    in case (position, title, funcs') of
-         (Nothing,Nothing,Nothing) -> windowNew' w h >>= makeObject
-         (Just (Position (X x) (Y y)), Nothing, Nothing) ->  windowNewXY' x y w h >>= makeObject
-         (Just (Position (X x) (Y y)), (Just l'), Nothing) -> windowNewXYWithLabel' x y w h l' >>= makeObject
-         (Nothing, (Just l'), Nothing) -> windowNewWithLabel' w h l' >>= makeObject
+    case (position, title, funcs') of
+         (Nothing,Nothing,Nothing) -> windowNew' w h >>= toObject 
+         (Just (Position (X x) (Y y)), Nothing, Nothing) ->  windowNewXY' x y w h >>= toObject 
+         (Just (Position (X x) (Y y)), (Just l'), Nothing) -> windowNewXYWithLabel' x y w h l' >>= toObject 
+         (Nothing, (Just l'), Nothing) -> windowNewWithLabel' w h l' >>= toObject 
          (Nothing,Nothing,(Just fs')) -> do
                                         p <- singleWindowFunctionStruct fs'
-                                        overriddenWindowNew' w h p >>= makeObject
+                                        overriddenWindowNew' w h p >>= toObject 
          (Just (Position (X x) (Y y)), Nothing, (Just fs')) ->  do
                                         p <- singleWindowFunctionStruct fs'
-                                        overriddenWindowNewXY' x y w h p >>= makeObject
+                                        overriddenWindowNewXY' x y w h p >>= toObject 
          (Just (Position (X x) (Y y)), (Just l'), (Just fs')) -> do
                                         p <- singleWindowFunctionStruct fs'
-                                        overriddenWindowNewXYWithLabel' x y w h l' p >>= makeObject
+                                        overriddenWindowNewXYWithLabel' x y w h l' p >>= toObject 
          (Nothing, (Just l'), (Just fs')) -> do
                                         p <- singleWindowFunctionStruct fs'
-                                        overriddenWindowNewWithLabel' w h l' p >>= makeObject
+                                        overriddenWindowNewWithLabel' w h l' p >>= toObject 
 
 {# fun Fl_Single_Window_Destroy as windowDestroy' { id `Ptr ()' } -> `()' #}
 singleWindowDestroy :: SingleWindow a -> IO ()
@@ -267,16 +266,16 @@ singleWindowHide window = withObject window $ \windowPtr -> hide' windowPtr
 singleWindowFlushSuper :: SingleWindow a  ->  IO (())
 singleWindowFlushSuper window = withObject window $ \windowPtr -> flushSuper' windowPtr
 
-{# fun Fl_Single_Window_as_window_super as asWindowSuper' { id `Ptr ()' } -> `Maybe (Window ())' toObject #}
-singleWindowAsWindowSuper :: SingleWindow a  ->  IO (Maybe (Window ()))
+{# fun Fl_Single_Window_as_window_super as asWindowSuper' { id `Ptr ()' } -> `Window ()' unsafeToObject #}
+singleWindowAsWindowSuper :: SingleWindow a  ->  IO (Window ())
 singleWindowAsWindowSuper window = withObject window $ \windowPtr -> asWindowSuper' windowPtr
 
-{# fun Fl_Single_Window_as_gl_window_super as asGlWindowSuper' { id `Ptr ()' } -> `Maybe (GlWindow ())'toObject #}
-singleWindowAsGlWindowSuper :: SingleWindow a  ->  IO (Maybe (GlWindow ()))
+{# fun Fl_Single_Window_as_gl_window_super as asGlWindowSuper' { id `Ptr ()' } -> `GlWindow ()' unsafeToObject #}
+singleWindowAsGlWindowSuper :: SingleWindow a  ->  IO (GlWindow ())
 singleWindowAsGlWindowSuper window = withObject window $ \windowPtr -> asGlWindowSuper' windowPtr
 
-{# fun Fl_Single_Window_as_group_super as asGroupSuper' { id `Ptr ()' } -> `Maybe (Group ())' toObject #}
-singleWindowAsGroupSuper :: SingleWindow a  ->  IO (Maybe (Group ()))
+{# fun Fl_Single_Window_as_group_super as asGroupSuper' { id `Ptr ()' } -> `Group ()' unsafeToObject #}
+singleWindowAsGroupSuper :: SingleWindow a  ->  IO (Group ())
 singleWindowAsGroupSuper window = withObject window $ \windowPtr -> asGroupSuper' windowPtr
 
 {# fun Fl_Single_Window_show as windowShow' {id `Ptr ()'} -> `()' #}
@@ -294,20 +293,20 @@ singleWindowResize window rectangle = withObject window $ \windowPtr -> do
                                  let (x_pos,y_pos,w_pos,h_pos) = fromRectangle rectangle
                                  resize' windowPtr x_pos y_pos w_pos h_pos
 
-{# fun Fl_Single_Window_as_window as asWindow' { id `Ptr ()' } -> `Maybe (Window ())' toObject #}
-singleWindowAsWindow :: SingleWindow a  ->  IO (Maybe (Window ()))
+{# fun Fl_Single_Window_as_window as asWindow' { id `Ptr ()' } -> `Window ()' unsafeToObject #}
+singleWindowAsWindow :: SingleWindow a  ->  IO (Window ())
 singleWindowAsWindow window = withObject window $ \windowPtr -> asWindow' windowPtr
 
-{# fun Fl_Single_Window_as_gl_window as asGlWindow' { id `Ptr ()' } -> `Maybe (GlWindow ())' toObject #}
-singleWindowAsGlWindow :: SingleWindow a  ->  IO (Maybe (GlWindow()))
+{# fun Fl_Single_Window_as_gl_window as asGlWindow' { id `Ptr ()' } -> `GlWindow ()' unsafeToObject #}
+singleWindowAsGlWindow :: SingleWindow a  ->  IO (GlWindow())
 singleWindowAsGlWindow window = withObject window $ \windowPtr -> asGlWindow' windowPtr
 
-{# fun Fl_Single_Window_as_group as asGroup' { id `Ptr ()' } -> `Maybe (Group ())' toObject #}
-singleWindowAsGroup :: SingleWindow a  ->  IO (Maybe (Group ()))
+{# fun Fl_Single_Window_as_group as asGroup' { id `Ptr ()' } -> `Group ()' unsafeToObject #}
+singleWindowAsGroup :: SingleWindow a  ->  IO (Group ())
 singleWindowAsGroup window = withObject window $ \windowPtr -> asGroup' windowPtr
 singleWindowSetCallback :: Window a -> WidgetCallback b -> IO ()
 singleWindowSetCallback = windowSetCallback
-singleWindowParent :: Group a -> IO (Maybe (Group ()))
+singleWindowParent :: Group a -> IO (Group ())
 singleWindowParent = windowParent
 singleWindowSetParent :: Group a -> Group b -> IO ()
 singleWindowSetParent = windowSetParent
@@ -359,11 +358,11 @@ singleWindowLabelsize :: Group a  ->  IO (FontSize)
 singleWindowLabelsize = windowLabelsize
 singleWindowSetLabelsize :: Group a  -> FontSize ->  IO (())
 singleWindowSetLabelsize = windowSetLabelsize
-singleWindowImage :: Group a  ->  IO (Maybe (Image ()))
+singleWindowImage :: Group a  ->  IO (Image ())
 singleWindowImage = windowImage
 singleWindowSetImage :: Group a  -> Image b ->  IO (())
 singleWindowSetImage = windowSetImage
-singleWindowDeimage :: Group a  ->  IO (Maybe (Image ()))
+singleWindowDeimage :: Group a  ->  IO (Image ())
 singleWindowDeimage = windowDeimage
 singleWindowSetDeimage :: Group a  -> Image b ->  IO (())
 singleWindowSetDeimage = windowSetDeimage
@@ -435,9 +434,9 @@ singleWindowDamageInsideWidget :: Group a  -> Word8 -> Rectangle ->  IO (())
 singleWindowDamageInsideWidget = windowDamageInsideWidget
 singleWindowMeasureLabel :: Group a  -> IO (Size)
 singleWindowMeasureLabel = windowMeasureLabel
-singleWindowWindow :: Group a  ->  IO (Maybe (Window ()))
+singleWindowWindow :: Group a  ->  IO (Window ())
 singleWindowWindow = windowWindow
-singleWindowTopWindow :: Group a  ->  IO (Maybe (Window ()))
+singleWindowTopWindow :: Group a  ->  IO (Window ())
 singleWindowTopWindow = windowTopWindow
 singleWindowTopWindowOffset :: Group a -> IO (Position)
 singleWindowTopWindowOffset = windowTopWindowOffset
@@ -459,7 +458,7 @@ singleWindowClear :: Group a  ->  IO (())
 singleWindowClear = windowClear
 singleWindowSetResizable :: Group a  -> Widget a  ->  IO (())
 singleWindowSetResizable = windowSetResizable
-singleWindowResizable :: Group a  ->  IO (Maybe (Widget ()))
+singleWindowResizable :: Group a  ->  IO (Widget ())
 singleWindowResizable = windowResizable
 singleWindowAddResizable :: Group a  -> Widget a  ->  IO (())
 singleWindowAddResizable = windowAddResizable
@@ -473,13 +472,13 @@ singleWindowClipChildren :: Group a  ->  IO (Int)
 singleWindowClipChildren = windowClipChildren
 singleWindowFocus :: Group a  -> Widget a  ->  IO (())
 singleWindowFocus = windowFocus
-singleWindowDdfdesignKludge :: Group a  ->  IO (Maybe (Widget ()))
+singleWindowDdfdesignKludge :: Group a  ->  IO (Widget ())
 singleWindowDdfdesignKludge = windowDdfdesignKludge
 singleWindowInsertWithBefore :: Group a  -> Widget a  -> Widget a  ->  IO (())
 singleWindowInsertWithBefore = windowInsertWithBefore
-singleWindowArray :: Group a  ->  IO [Maybe (Widget ())]
+singleWindowArray :: Group a  ->  IO [(Widget ())]
 singleWindowArray = windowArray
-singleWindowChild :: Group a  -> Int ->  IO (Maybe (Widget ()))
+singleWindowChild :: Group a  -> Int ->  IO (Widget ())
 singleWindowChild = windowChild
 singleWindowChanged :: Window a  ->  IO (Int)
 singleWindowChanged = windowChanged
