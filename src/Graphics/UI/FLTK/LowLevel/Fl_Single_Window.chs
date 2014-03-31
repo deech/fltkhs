@@ -232,11 +232,11 @@ singleWindowNew (Size (Width w) (Height h)) position title funcs' =
                                         p <- singleWindowFunctionStruct fs'
                                         overriddenWindowNewWithLabel' w h l' p >>= toObject 
 
-{# fun Fl_Single_Window_Destroy as windowDestroy' { id `Ptr ()' } -> `()' #}
+{# fun Fl_Single_Window_Destroy as windowDestroy' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
 singleWindowDestroy :: SingleWindow a -> IO ()
 singleWindowDestroy win = withObject win $ \winPtr -> windowDestroy' winPtr
 
-{# fun Fl_Single_Window_draw_super as drawSuper' { id `Ptr ()' } -> `()' #}
+{# fun Fl_Single_Window_draw_super as drawSuper' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
 singleWindowDrawSuper :: SingleWindow a  ->  IO (())
 singleWindowDrawSuper window = withObject window $ \windowPtr -> drawSuper' windowPtr
 
@@ -244,25 +244,25 @@ singleWindowDrawSuper window = withObject window $ \windowPtr -> drawSuper' wind
 singleWindowHandleSuper :: SingleWindow a  -> Int ->  IO (Int)
 singleWindowHandleSuper window event = withObject window $ \windowPtr -> handleSuper' windowPtr event
 
-{# fun Fl_Single_Window_resize_super as resizeSuper' { id `Ptr ()',`Int',`Int',`Int',`Int' } -> `()' #}
+{# fun Fl_Single_Window_resize_super as resizeSuper' { id `Ptr ()',`Int',`Int',`Int',`Int' } -> `()' supressWarningAboutRes #}
 singleWindowResizeSuper :: SingleWindow a  -> Rectangle -> IO (())
 singleWindowResizeSuper window rectangle =
     let (x_pos, y_pos, width, height) = fromRectangle rectangle
     in withObject window $ \windowPtr -> resizeSuper' windowPtr x_pos y_pos width height
 
-{# fun Fl_Single_Window_show_super as showSuper' { id `Ptr ()' } -> `()' #}
+{# fun Fl_Single_Window_show_super as showSuper' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
 singleWindowShowSuper :: SingleWindow a  ->  IO (())
 singleWindowShowSuper window = withObject window $ \windowPtr -> showSuper' windowPtr
 
-{# fun Fl_Single_Window_hide_super as hideSuper' { id `Ptr ()' } -> `()' #}
+{# fun Fl_Single_Window_hide_super as hideSuper' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
 singleWindowHideSuper :: SingleWindow a  ->  IO (())
 singleWindowHideSuper window = withObject window $ \windowPtr -> hideSuper' windowPtr
 
-{# fun Fl_Single_Window_hide as hide' { id `Ptr ()' } -> `()' #}
+{# fun Fl_Single_Window_hide as hide' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
 singleWindowHide :: Window a  ->  IO (())
 singleWindowHide window = withObject window $ \windowPtr -> hide' windowPtr
 
-{# fun Fl_Single_Window_flush_super as flushSuper' { id `Ptr ()' } -> `()' #}
+{# fun Fl_Single_Window_flush_super as flushSuper' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
 singleWindowFlushSuper :: SingleWindow a  ->  IO (())
 singleWindowFlushSuper window = withObject window $ \windowPtr -> flushSuper' windowPtr
 
@@ -278,7 +278,7 @@ singleWindowAsGlWindowSuper window = withObject window $ \windowPtr -> asGlWindo
 singleWindowAsGroupSuper :: SingleWindow a  ->  IO (Group ())
 singleWindowAsGroupSuper window = withObject window $ \windowPtr -> asGroupSuper' windowPtr
 
-{# fun Fl_Single_Window_show as windowShow' {id `Ptr ()'} -> `()' #}
+{# fun Fl_Single_Window_show as windowShow' {id `Ptr ()'} -> `()' supressWarningAboutRes #}
 singleWindowShow :: SingleWindow a -> IO ()
 singleWindowShow window = withObject window $ (\p -> windowShow' p)
 
@@ -287,7 +287,7 @@ singleWindowShow window = withObject window $ (\p -> windowShow' p)
 singleWindowHandle :: SingleWindow a -> Event -> IO Int
 singleWindowHandle window event = withObject window (\p -> windowHandle' p (fromIntegral . fromEnum $ event))
 
-{# fun Fl_Single_Window_resize as resize' { id `Ptr ()',`Int',`Int',`Int',`Int' } -> `()' #}
+{# fun Fl_Single_Window_resize as resize' { id `Ptr ()',`Int',`Int',`Int',`Int' } -> `()' supressWarningAboutRes #}
 singleWindowResize :: SingleWindow a  -> Rectangle -> IO (())
 singleWindowResize window rectangle = withObject window $ \windowPtr -> do
                                  let (x_pos,y_pos,w_pos,h_pos) = fromRectangle rectangle

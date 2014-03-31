@@ -138,3 +138,6 @@ toObject ptr = throwStackOnError $
                     return $ result
 unsafeToObject :: Ptr () -> (Object a)
 unsafeToObject = unsafePerformIO . toObject
+
+supressWarningAboutRes :: a -> ()
+supressWarningAboutRes _ = ()

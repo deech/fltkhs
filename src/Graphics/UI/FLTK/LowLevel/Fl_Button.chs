@@ -174,13 +174,13 @@ buttonNew rectangle l' funcs' =
                                overriddenWidgetNew' x_pos y_pos width height (castPtr ptr) >>=
                                                     toObject
 
-{# fun Fl_Button_Destroy as widgetDestroy' { id `Ptr ()' } -> `()' #}
+{# fun Fl_Button_Destroy as widgetDestroy' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
 buttonDestroy :: Button a -> IO ()
 buttonDestroy button = swapObject button $
                           \buttonPtr ->
                              widgetDestroy' buttonPtr >>
                              return nullPtr
-{# fun Fl_Button_draw_super as drawSuper' { id `Ptr ()' } -> `()' #}
+{# fun Fl_Button_draw_super as drawSuper' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
 buttonDrawSuper :: Button a  ->  IO (())
 buttonDrawSuper button = withObject button $ \buttonPtr -> drawSuper' buttonPtr
 {# fun Fl_Button_handle_super as handleSuper' { id `Ptr ()',`Int' } -> `Int' #}
@@ -207,26 +207,26 @@ buttonAsWindowSuper window = withObject window $ \windowPtr -> asWindowSuper' wi
 {# fun Fl_Button_as_window as asWindow' { id `Ptr ()' } -> `Window ()' unsafeToObject #}
 buttonAsWindow :: Button a  ->  IO (Window())
 buttonAsWindow button = withObject button $ \buttonPtr -> asWindow' buttonPtr
-{# fun Fl_Button_resize_super as resizeSuper' { id `Ptr ()',`Int',`Int',`Int',`Int' } -> `()' #}
+{# fun Fl_Button_resize_super as resizeSuper' { id `Ptr ()',`Int',`Int',`Int',`Int' } -> `()' supressWarningAboutRes #}
 buttonResizeSuper :: Button a  -> Rectangle -> IO (())
 buttonResizeSuper button rectangle =
     let (x_pos, y_pos, width, height) = fromRectangle rectangle
     in withObject button $ \buttonPtr -> resizeSuper' buttonPtr x_pos y_pos width height
-{# fun Fl_Button_resize as resize' { id `Ptr ()',`Int',`Int',`Int',`Int' } -> `()' #}
+{# fun Fl_Button_resize as resize' { id `Ptr ()',`Int',`Int',`Int',`Int' } -> `()' supressWarningAboutRes #}
 buttonResize :: Button a  -> Rectangle -> IO (())
 buttonResize button rectangle = withObject button $ \buttonPtr -> do
                                  let (x_pos,y_pos,w_pos,h_pos) = fromRectangle rectangle
                                  resize' buttonPtr x_pos y_pos w_pos h_pos
-{# fun Fl_Button_hide_super as hideSuper' { id `Ptr ()' } -> `()' #}
+{# fun Fl_Button_hide_super as hideSuper' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
 buttonHideSuper :: Button a  ->  IO (())
 buttonHideSuper button = withObject button $ \buttonPtr -> hideSuper' buttonPtr
-{# fun Fl_Button_hide as hide' { id `Ptr ()' } -> `()' #}
+{# fun Fl_Button_hide as hide' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
 buttonHide :: Button a  ->  IO (())
 buttonHide button = withObject button $ \buttonPtr -> hide' buttonPtr
-{# fun Fl_Button_show_super as showSuper' { id `Ptr ()' } -> `()' #}
+{# fun Fl_Button_show_super as showSuper' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
 buttonShowSuper :: Button a  ->  IO (())
 buttonShowSuper button = withObject button $ \buttonPtr -> showSuper' buttonPtr
-{# fun Fl_Button_show as buttonShow' {id `Ptr ()'} -> `()' #}
+{# fun Fl_Button_show as buttonShow' {id `Ptr ()'} -> `()' supressWarningAboutRes #}
 buttonShow :: Button a -> IO ()
 buttonShow button = withObject button $ (\p -> buttonShow' p)
 
@@ -389,7 +389,7 @@ buttonSet b = withObject b $ \bPtr -> set' bPtr
 buttonClear :: Button a  ->  IO (Bool)
 buttonClear b = withObject b $ \bPtr -> clear' bPtr
 
-{# fun unsafe Fl_Button_setonly as setonly' { id `Ptr ()' } -> `()' #}
+{# fun unsafe Fl_Button_setonly as setonly' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
 buttonSetonly :: Button a  ->  IO (())
 buttonSetonly b = withObject b $ \bPtr -> setonly' bPtr
 
@@ -397,7 +397,7 @@ buttonSetonly b = withObject b $ \bPtr -> setonly' bPtr
 buttonGetShortcut :: Button a  ->  IO (FlShortcut)
 buttonGetShortcut b = withObject b $ \bPtr -> getShortcut' bPtr
 
-{# fun unsafe Fl_Button_set_shortcut as setShortcut' { id `Ptr ()',fromIntegral `Int' } -> `()' #}
+{# fun unsafe Fl_Button_set_shortcut as setShortcut' { id `Ptr ()',fromIntegral `Int' } -> `()' supressWarningAboutRes #}
 buttonSetShortcut :: Button a  -> Int ->  IO (())
 buttonSetShortcut b s = withObject b $ \bPtr -> setShortcut' bPtr s
 
@@ -405,7 +405,7 @@ buttonSetShortcut b s = withObject b $ \bPtr -> setShortcut' bPtr s
 buttonDownBox :: Button a  ->  IO (Boxtype)
 buttonDownBox b = withObject b $ \bPtr -> downBox' bPtr
 
-{# fun unsafe Fl_Button_set_down_box as setDownBox' { id `Ptr ()',cFromEnum `Boxtype' } -> `()' #}
+{# fun unsafe Fl_Button_set_down_box as setDownBox' { id `Ptr ()',cFromEnum `Boxtype' } -> `()' supressWarningAboutRes #}
 buttonSetDownBox :: Button a  -> Boxtype ->  IO (())
 buttonSetDownBox b boxtype = withObject b $ \bPtr -> setDownBox' bPtr boxtype
 
@@ -413,6 +413,6 @@ buttonSetDownBox b boxtype = withObject b $ \bPtr -> setDownBox' bPtr boxtype
 buttonDownColor :: Button a  ->  IO (Color)
 buttonDownColor b = withObject b $ \bPtr -> downColor' bPtr
 
-{# fun unsafe Fl_Button_set_down_color as setDownColor' { id `Ptr ()',cFromColor `Color' } -> `()' #}
+{# fun unsafe Fl_Button_set_down_color as setDownColor' { id `Ptr ()',cFromColor `Color' } -> `()' supressWarningAboutRes #}
 buttonSetDownColor :: Button a  -> Color ->  IO (())
 buttonSetDownColor b c = withObject b $ \bPtr -> setDownColor' bPtr c

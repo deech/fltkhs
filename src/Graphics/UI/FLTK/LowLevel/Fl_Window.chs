@@ -259,11 +259,11 @@ windowNew (Size (Width w) (Height h)) position title funcs' =
          (Nothing, (Just l'), (Just fs')) -> do
                                         p <- windowFunctionStruct fs'
                                         overriddenWindowNewWithLabel' w h l' p >>= toObject
-{# fun Fl_Window_Destroy as windowDestroy' { id `Ptr ()' } -> `()' #}
+{# fun Fl_Window_Destroy as windowDestroy' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
 windowDestroy :: Window a -> IO ()
 windowDestroy win = withObject win $ \winPtr -> windowDestroy' winPtr
 
-{# fun Fl_Window_draw_super as drawSuper' { id `Ptr ()' } -> `()' #}
+{# fun Fl_Window_draw_super as drawSuper' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
 windowDrawSuper :: Window a  ->  IO (())
 windowDrawSuper window = withObject window $ \windowPtr -> drawSuper' windowPtr
 
@@ -271,21 +271,21 @@ windowDrawSuper window = withObject window $ \windowPtr -> drawSuper' windowPtr
 windowHandleSuper :: Window a  -> Int ->  IO (Int)
 windowHandleSuper window event = withObject window $ \windowPtr -> handleSuper' windowPtr event
 
-{# fun Fl_Window_resize_super as resizeSuper' { id `Ptr ()',`Int',`Int',`Int',`Int' } -> `()' #}
+{# fun Fl_Window_resize_super as resizeSuper' { id `Ptr ()',`Int',`Int',`Int',`Int' } -> `()' supressWarningAboutRes #}
 windowResizeSuper :: Window a  -> Rectangle -> IO (())
 windowResizeSuper window rectangle =
     let (x_pos, y_pos, width, height) = fromRectangle rectangle
     in withObject window $ \windowPtr -> resizeSuper' windowPtr x_pos y_pos width height
 
-{# fun Fl_Window_show_super as showSuper' { id `Ptr ()' } -> `()' #}
+{# fun Fl_Window_show_super as showSuper' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
 windowShowSuper :: Window a  ->  IO (())
 windowShowSuper window = withObject window $ \windowPtr -> showSuper' windowPtr
 
-{# fun Fl_Window_hide_super as hideSuper' { id `Ptr ()' } -> `()' #}
+{# fun Fl_Window_hide_super as hideSuper' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
 windowHideSuper :: Window a  ->  IO (())
 windowHideSuper window = withObject window $ \windowPtr -> hideSuper' windowPtr
 
-{# fun Fl_Window_flush_super as flushSuper' { id `Ptr ()' } -> `()' #}
+{# fun Fl_Window_flush_super as flushSuper' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
 windowFlushSuper :: Window a  ->  IO (())
 windowFlushSuper window = withObject window $ \windowPtr -> flushSuper' windowPtr
 
@@ -301,7 +301,7 @@ windowAsGlWindowSuper window = withObject window $ \windowPtr -> asGlWindowSuper
 windowAsGroupSuper :: Window a  ->  IO (Group ())
 windowAsGroupSuper window = withObject window $ \windowPtr -> asGroupSuper' windowPtr
 
-{# fun Fl_Window_show as windowShow' {id `Ptr ()'} -> `()' #}
+{# fun Fl_Window_show as windowShow' {id `Ptr ()'} -> `()' supressWarningAboutRes #}
 windowShow :: Window a -> IO ()
 windowShow window = withObject window (\p -> windowShow' p)
 
@@ -310,7 +310,7 @@ windowShow window = withObject window (\p -> windowShow' p)
 windowHandle :: Window a -> Event -> IO Int
 windowHandle window event = withObject window (\p -> windowHandle' p (fromIntegral . fromEnum $ event))
 
-{# fun Fl_Window_resize as resize' { id `Ptr ()',`Int',`Int',`Int',`Int' } -> `()' #}
+{# fun Fl_Window_resize as resize' { id `Ptr ()',`Int',`Int',`Int',`Int' } -> `()' supressWarningAboutRes #}
 windowResize :: Window a  -> Rectangle -> IO (())
 windowResize window rectangle = withObject window $ \windowPtr -> do
                                  let (x_pos,y_pos,w_pos,h_pos) = fromRectangle rectangle
@@ -330,7 +330,7 @@ windowAsGroup window = withObject window $ \windowPtr -> asGroup' windowPtr
 
 {# fun Fl_Window_set_callback as
               windowSetCallback' {id `Ptr ()' , id `FunPtr CallbackWithUserDataPrim'}
-              -> `()' #}
+              -> `()' supressWarningAboutRes #}
 windowSetCallback :: Window a -> WidgetCallback b -> IO ()
 windowSetCallback window callback =
    withObject window $ (\p -> do
@@ -447,7 +447,7 @@ windowVisible  = groupVisible
 windowVisibleR :: Group a  ->  IO (Int)
 windowVisibleR  = groupVisibleR
 
-{# fun Fl_Window_hide as hide' { id `Ptr ()' } -> `()' #}
+{# fun Fl_Window_hide as hide' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
 windowHide :: Window a  ->  IO (())
 windowHide window = withObject window $ \windowPtr -> hide' windowPtr
 
@@ -605,12 +605,12 @@ windowChild  = groupChild
 windowChanged :: Window a  ->  IO (Int)
 windowChanged win = withObject win $ \winPtr -> changed' winPtr
 
-{# fun Fl_Window_fullscreen as fullscreen' { id `Ptr ()' } -> `()' #}
+{# fun Fl_Window_fullscreen as fullscreen' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
 windowFullscreen :: Window a  ->  IO (())
 windowFullscreen win = withObject win $ \winPtr -> fullscreen' winPtr
 
-{# fun Fl_Window_fullscreen_off as fullscreenOff' { id `Ptr ()' } -> `()' #}
-{# fun Fl_Window_fullscreen_off_with_resize as fullscreenOffWithResize' { id `Ptr ()',`Int',`Int',`Int',`Int' } -> `()' #}
+{# fun Fl_Window_fullscreen_off as fullscreenOff' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
+{# fun Fl_Window_fullscreen_off_with_resize as fullscreenOffWithResize' { id `Ptr ()',`Int',`Int',`Int',`Int' } -> `()' supressWarningAboutRes #}
 windowFullscreenOff :: Window a -> Maybe Rectangle ->  IO (())
 windowFullscreenOff win (Just rectangle) =
     withObject win $ \winPtr ->
@@ -619,11 +619,11 @@ windowFullscreenOff win (Just rectangle) =
 windowFullscreenOff win Nothing =
     withObject win $ \winPtr -> fullscreenOff' winPtr
 
-{# fun Fl_Window_set_border as setBorder' { id `Ptr ()', fromBool `Bool' } -> `()' #}
+{# fun Fl_Window_set_border as setBorder' { id `Ptr ()', fromBool `Bool' } -> `()' supressWarningAboutRes #}
 windowSetBorder :: Window a  -> Bool ->  IO (())
 windowSetBorder win b = withObject win $ \winPtr -> setBorder' winPtr b
 
-{# fun Fl_Window_clear_border as clearBorder' { id `Ptr ()' } -> `()' #}
+{# fun Fl_Window_clear_border as clearBorder' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
 windowClearBorder :: Window a  ->  IO (())
 windowClearBorder win = withObject win $ \winPtr -> clearBorder' winPtr
 
@@ -631,7 +631,7 @@ windowClearBorder win = withObject win $ \winPtr -> clearBorder' winPtr
 windowBorder :: Window a  ->  IO (Bool)
 windowBorder win = withObject win $ \winPtr -> border' winPtr
 
-{# fun Fl_Window_set_override as setOverride' { id `Ptr ()' } -> `()' #}
+{# fun Fl_Window_set_override as setOverride' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
 windowSetOverride :: Window a  ->  IO (())
 windowSetOverride win = withObject win $ \winPtr -> setOverride' winPtr
 
@@ -639,7 +639,7 @@ windowSetOverride win = withObject win $ \winPtr -> setOverride' winPtr
 windowOverride :: Window a  ->  IO (Bool)
 windowOverride win = withObject win $ \winPtr -> override' winPtr
 
-{# fun Fl_Window_set_modal as setModal' { id `Ptr ()' } -> `()' #}
+{# fun Fl_Window_set_modal as setModal' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
 windowSetModal :: Window a  ->  IO (())
 windowSetModal win = withObject win $ \winPtr -> setModal' winPtr
 
@@ -647,7 +647,7 @@ windowSetModal win = withObject win $ \winPtr -> setModal' winPtr
 windowModal :: Window a  ->  IO (Bool)
 windowModal win = withObject win $ \winPtr -> modal' winPtr
 
-{# fun Fl_Window_set_non_modal as setNonModal' { id `Ptr ()' } -> `()' #}
+{# fun Fl_Window_set_non_modal as setNonModal' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
 windowSetNonModal :: Window a  ->  IO (())
 windowSetNonModal win = withObject win $ \winPtr -> setNonModal' winPtr
 
@@ -655,7 +655,7 @@ windowSetNonModal win = withObject win $ \winPtr -> setNonModal' winPtr
 windowNonModal :: Window a  ->  IO (Bool)
 windowNonModal win = withObject win $ \winPtr -> nonModal' winPtr
 
-{# fun Fl_Window_set_menu_window as setMenuWindow' { id `Ptr ()' } -> `()' #}
+{# fun Fl_Window_set_menu_window as setMenuWindow' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
 windowSetMenuWindow :: Window a  ->  IO (())
 windowSetMenuWindow win = withObject win $ \winPtr -> setMenuWindow' winPtr
 
@@ -663,7 +663,7 @@ windowSetMenuWindow win = withObject win $ \winPtr -> setMenuWindow' winPtr
 windowMenuWindow :: Window a  ->  IO (Bool)
 windowMenuWindow win = withObject win $ \winPtr -> menuWindow' winPtr
 
-{# fun Fl_Window_set_tooltip_window as setTooltipWindow' { id `Ptr ()' } -> `()' #}
+{# fun Fl_Window_set_tooltip_window as setTooltipWindow' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
 windowSetTooltipWindow :: Window a  ->  IO (())
 windowSetTooltipWindow win = withObject win $ \winPtr -> setTooltipWindow' winPtr
 
@@ -671,10 +671,10 @@ windowSetTooltipWindow win = withObject win $ \winPtr -> setTooltipWindow' winPt
 windowTooltipWindow :: Window a  ->  IO (Bool)
 windowTooltipWindow win = withObject win $ \winPtr -> tooltipWindow' winPtr
 
-{# fun Fl_Window_hotspot_with_x_y as hotspotWithXY' { id `Ptr ()',`Int',`Int' } -> `()' #}
-{# fun Fl_Window_hotspot_with_x_y_with_offscreen as hotspotWithXYWithOffscreen' { id `Ptr ()',`Int',`Int', fromBool `Bool' } -> `()' #}
-{# fun Fl_Window_hotspot_with_widget as hotspotWithWidget' { id `Ptr ()',id `Ptr ()' } -> `()' #}
-{# fun Fl_Window_hotspot_with_widget_with_offscreen as hotspotWithWidgetWithOffscreen' { id `Ptr ()',id `Ptr ()',fromBool `Bool' } -> `()' #}
+{# fun Fl_Window_hotspot_with_x_y as hotspotWithXY' { id `Ptr ()',`Int',`Int' } -> `()' supressWarningAboutRes #}
+{# fun Fl_Window_hotspot_with_x_y_with_offscreen as hotspotWithXYWithOffscreen' { id `Ptr ()',`Int',`Int', fromBool `Bool' } -> `()' supressWarningAboutRes #}
+{# fun Fl_Window_hotspot_with_widget as hotspotWithWidget' { id `Ptr ()',id `Ptr ()' } -> `()' supressWarningAboutRes #}
+{# fun Fl_Window_hotspot_with_widget_with_offscreen as hotspotWithWidgetWithOffscreen' { id `Ptr ()',id `Ptr ()',fromBool `Bool' } -> `()' supressWarningAboutRes #}
 windowHotSpot :: Window a -> PositionSpec b -> Maybe Bool -> IO ()
 windowHotSpot win positionSpec offscreen =
     withObject win $ \winPtr ->
@@ -688,12 +688,12 @@ windowHotSpot win positionSpec offscreen =
               ((ByWidget templateWidget), Nothing) ->
                   withObject templateWidget $ \templatePtr ->
                       hotspotWithWidget' winPtr templatePtr
-{# fun Fl_Window_free_position as freePosition' { id `Ptr ()' } -> `()' #}
+{# fun Fl_Window_free_position as freePosition' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
 windowFreePosition :: Window a  ->  IO (())
 windowFreePosition win = withObject win $ \winPtr -> freePosition' winPtr
 
-{# fun Fl_Window_size_range as sizeRange' { id `Ptr ()',`Int',`Int' } -> `()' #}
-{# fun Fl_Window_size_range_with_args as sizeRangeWithArgs' { id `Ptr ()',`Int',`Int', id `Ptr ()' } -> `()' #}
+{# fun Fl_Window_size_range as sizeRange' { id `Ptr ()',`Int',`Int' } -> `()' supressWarningAboutRes #}
+{# fun Fl_Window_size_range_with_args as sizeRangeWithArgs' { id `Ptr ()',`Int',`Int', id `Ptr ()' } -> `()' supressWarningAboutRes #}
 windowSizeRange :: Window a  -> Int -> Int -> IO (())
 windowSizeRange win minw' minh' =
     withObject win $ \winPtr -> sizeRange' winPtr minw' minh'
@@ -711,23 +711,23 @@ windowLabel win = withObject win $ \winPtr -> label' winPtr
 windowIconlabel :: Window a  ->  IO (String)
 windowIconlabel win = withObject win $ \winPtr -> iconlabel' winPtr
 
-{# fun Fl_Window_set_label as setLabel' { id `Ptr ()',`String' } -> `()' #}
+{# fun Fl_Window_set_label as setLabel' { id `Ptr ()',`String' } -> `()' supressWarningAboutRes #}
 windowSetLabel :: Window a  -> String ->  IO (())
 windowSetLabel win l' = withObject win $ \winPtr -> setLabel' winPtr l'
 
-{# fun Fl_Window_set_iconlabel as setIconlabel' { id `Ptr ()',`String' } -> `()' #}
+{# fun Fl_Window_set_iconlabel as setIconlabel' { id `Ptr ()',`String' } -> `()' supressWarningAboutRes #}
 windowSetIconlabel :: Window a  -> String ->  IO (())
 windowSetIconlabel win l' = withObject win $ \winPtr -> setIconlabel' winPtr l'
 
-{# fun Fl_Window_set_label_with_iconlabel as setLabelWithIconlabel' { id `Ptr ()',`String',`String' } -> `()' #}
+{# fun Fl_Window_set_label_with_iconlabel as setLabelWithIconlabel' { id `Ptr ()',`String',`String' } -> `()' supressWarningAboutRes #}
 windowSetLabelWithIconlabel :: Window a  -> String -> String ->  IO (())
 windowSetLabelWithIconlabel win label iconlabel = withObject win $ \winPtr -> setLabelWithIconlabel' winPtr label iconlabel
 
-{# fun Fl_Window_copy_label as copyLabel' { id `Ptr ()',`String' } -> `()' #}
+{# fun Fl_Window_copy_label as copyLabel' { id `Ptr ()',`String' } -> `()' supressWarningAboutRes #}
 windowCopyLabel :: Window a  -> String ->  IO (())
 windowCopyLabel win a = withObject win $ \winPtr -> copyLabel' winPtr a
 
-{# fun Fl_Window_set_default_xclass as setDefaultXclass' { `String' } -> `()' #}
+{# fun Fl_Window_set_default_xclass as setDefaultXclass' { `String' } -> `()' supressWarningAboutRes #}
 windowSetDefaultXclass :: String ->  IO (())
 windowSetDefaultXclass label = setDefaultXclass' label
 
@@ -739,7 +739,7 @@ windowDefaultXclass  = defaultXclass'
 windowXclass :: Window a  ->  IO (String)
 windowXclass win = withObject win $ \winPtr -> xclass' winPtr
 
-{# fun Fl_Window_set_xclass as setXclass' { id `Ptr ()',`String' } -> `()' #}
+{# fun Fl_Window_set_xclass as setXclass' { id `Ptr ()',`String' } -> `()' supressWarningAboutRes #}
 windowSetXclass :: Window a  -> String ->  IO (())
 windowSetXclass win c = withObject win $ \winPtr -> setXclass' winPtr c
 
@@ -747,7 +747,7 @@ windowSetXclass win c = withObject win $ \winPtr -> setXclass' winPtr c
 windowIcon :: Window a  ->  IO (Ptr ())
 windowIcon win = withObject win $ \winPtr -> icon' winPtr
 
-{# fun Fl_Window_set_icon as setIcon' { id `Ptr ()', id `Ptr ()' } -> `()' #}
+{# fun Fl_Window_set_icon as setIcon' { id `Ptr ()', id `Ptr ()' } -> `()' supressWarningAboutRes #}
 windowSetIcon :: Window a  -> Ptr () ->  IO (())
 windowSetIcon win bitmap = withObject win $ \winPtr -> setIcon' winPtr bitmap
 
@@ -755,7 +755,7 @@ windowSetIcon win bitmap = withObject win $ \winPtr -> setIcon' winPtr bitmap
 windowShown :: Window a  ->  IO (Bool)
 windowShown win = withObject win $ \winPtr -> shown' winPtr
 
-{# fun Fl_Window_iconize as iconize' { id `Ptr ()' } -> `()' #}
+{# fun Fl_Window_iconize as iconize' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
 windowIconize :: Window a  ->  IO (())
 windowIconize win = withObject win $ \winPtr -> iconize' winPtr
 
@@ -771,14 +771,14 @@ windowYRoot win = withObject win $ \winPtr -> yRoot' winPtr
 windowCurrent ::  IO (Ptr ())
 windowCurrent  = current'
 
-{# fun Fl_Window_make_current as makeCurrent' { id `Ptr ()' } -> `()' #}
+{# fun Fl_Window_make_current as makeCurrent' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
 windowMakeCurrent :: Window a  ->  IO (())
 windowMakeCurrent win = withObject win $ \winPtr -> makeCurrent' winPtr
 
-{# fun Fl_Window_set_cursor_with_bg as setCursorWithBg' { id `Ptr ()',cFromEnum `CursorType',cFromColor `Color' } -> `()' #}
-{# fun Fl_Window_set_cursor_with_fg as setCursorWithFg' { id `Ptr ()',cFromEnum `CursorType',cFromColor `Color' } -> `()' #}
-{# fun Fl_Window_set_cursor_with_fg_bg as setCursorWithFgBg' { id `Ptr ()',cFromEnum `CursorType',cFromColor `Color',cFromColor `Color' } -> `()' #}
-{# fun Fl_Window_set_cursor as setCursor' { id `Ptr ()',cFromEnum `CursorType' } -> `()' #}
+{# fun Fl_Window_set_cursor_with_bg as setCursorWithBg' { id `Ptr ()',cFromEnum `CursorType',cFromColor `Color' } -> `()' supressWarningAboutRes #}
+{# fun Fl_Window_set_cursor_with_fg as setCursorWithFg' { id `Ptr ()',cFromEnum `CursorType',cFromColor `Color' } -> `()' supressWarningAboutRes #}
+{# fun Fl_Window_set_cursor_with_fg_bg as setCursorWithFgBg' { id `Ptr ()',cFromEnum `CursorType',cFromColor `Color',cFromColor `Color' } -> `()' supressWarningAboutRes #}
+{# fun Fl_Window_set_cursor as setCursor' { id `Ptr ()',cFromEnum `CursorType' } -> `()' supressWarningAboutRes #}
 windowSetCursor :: Window a -> CursorType -> IO ()
 windowSetCursor win cursor =  withObject win $ \winPtr -> setCursor' winPtr cursor
 windowSetCursorWithFgBg :: Window a  -> CursorType -> (Maybe Color, Maybe Color) ->  IO (())
@@ -789,10 +789,10 @@ windowSetCursorWithFgBg win cursor fgbg =
       ((Just fg), Nothing)  -> withObject win $ \winPtr -> setCursorWithFg' winPtr cursor fg
       (Nothing, Nothing)    -> withObject win $ \winPtr -> setCursor' winPtr cursor
 
-{# fun Fl_Window_set_default_cursor_with_bg as setDefaultCursorWithBg' { id `Ptr ()',cFromEnum `CursorType',cFromColor `Color' } -> `()' #}
-{# fun Fl_Window_set_default_cursor_with_fg as setDefaultCursorWithFg' { id `Ptr ()',cFromEnum `CursorType',cFromColor `Color' } -> `()' #}
-{# fun Fl_Window_set_default_cursor_with_fg_bg as setDefaultCursorWithFgBg' { id `Ptr ()',cFromEnum `CursorType',cFromColor `Color',cFromColor `Color' } -> `()' #}
-{# fun Fl_Window_set_default_cursor as setDefaultCursor' { id `Ptr ()',cFromEnum `CursorType' } -> `()' #}
+{# fun Fl_Window_set_default_cursor_with_bg as setDefaultCursorWithBg' { id `Ptr ()',cFromEnum `CursorType',cFromColor `Color' } -> `()' supressWarningAboutRes #}
+{# fun Fl_Window_set_default_cursor_with_fg as setDefaultCursorWithFg' { id `Ptr ()',cFromEnum `CursorType',cFromColor `Color' } -> `()' supressWarningAboutRes #}
+{# fun Fl_Window_set_default_cursor_with_fg_bg as setDefaultCursorWithFgBg' { id `Ptr ()',cFromEnum `CursorType',cFromColor `Color',cFromColor `Color' } -> `()' supressWarningAboutRes #}
+{# fun Fl_Window_set_default_cursor as setDefaultCursor' { id `Ptr ()',cFromEnum `CursorType' } -> `()' supressWarningAboutRes #}
 windowSetDefaultCursor :: Window a  -> CursorType ->  IO (())
 windowSetDefaultCursor win cursor = withObject win $ \winPtr -> setDefaultCursor' winPtr cursor
 windowSetDefaultCursorWithFgBg:: Window a  -> CursorType -> (Maybe Color, Maybe Color) ->  IO (())

@@ -304,35 +304,35 @@ setScheme sch = withCString sch $ \str -> {#call Fl_set_scheme as fl_set_scheme 
 {# fun Fl_readqueue as readqueue
        {  } -> `Widget ()' unsafeToObject #}
 {# fun Fl_add_timeout as addTimeout
-       { `Double', unsafeToCallbackPrim `GlobalCallback' } -> `()' #}
+       { `Double', unsafeToCallbackPrim `GlobalCallback' } -> `()' supressWarningAboutRes #}
 {# fun Fl_repeat_timeout as repeatTimeout
-      { `Double',unsafeToCallbackPrim `GlobalCallback' } -> `()' #}
+      { `Double',unsafeToCallbackPrim `GlobalCallback' } -> `()' supressWarningAboutRes #}
 {# fun Fl_has_timeout as hasTimeout
        { unsafeToCallbackPrim `GlobalCallback' } -> `Int' #}
 {# fun Fl_remove_timeout as removeTimeout
-       { unsafeToCallbackPrim `GlobalCallback' } -> `()' #}
+       { unsafeToCallbackPrim `GlobalCallback' } -> `()' supressWarningAboutRes #}
 {# fun Fl_add_check as addCheck
-       { unsafeToCallbackPrim `GlobalCallback' } -> `()' #}
+       { unsafeToCallbackPrim `GlobalCallback' } -> `()' supressWarningAboutRes #}
 {# fun Fl_has_check as hasCheck
        { unsafeToCallbackPrim `GlobalCallback' } -> `Int' #}
 {# fun Fl_remove_check as removeCheck
-       { unsafeToCallbackPrim `GlobalCallback' } -> `()' #}
+       { unsafeToCallbackPrim `GlobalCallback' } -> `()' supressWarningAboutRes #}
 {# fun Fl_add_idle as addIdle
-       { unsafeToCallbackPrim `GlobalCallback' } -> `()' #}
+       { unsafeToCallbackPrim `GlobalCallback' } -> `()' supressWarningAboutRes #}
 {# fun Fl_has_idle as hasIdle
        { unsafeToCallbackPrim `GlobalCallback' } -> `Int' #}
 {# fun Fl_remove_idle as removeIdle
-       { unsafeToCallbackPrim `GlobalCallback' } -> `()' #}
+       { unsafeToCallbackPrim `GlobalCallback' } -> `()' supressWarningAboutRes #}
 {# fun Fl_damage as damage
        {  } -> `Int' #}
 {# fun Fl_redraw as redraw
-       {  } -> `()' #}
+       {  } -> `()' supressWarningAboutRes #}
 {# fun Fl_flush as flush
-       {  } -> `()' #}
+       {  } -> `()' supressWarningAboutRes #}
 {# fun Fl_first_window as firstWindow
        {  } -> `Window ()' unsafeToObject #}
 {# fun Fl_set_first_window as setFirstWindow'
-       { id `Ptr ()' } -> `()' #}
+       { id `Ptr ()' } -> `()' supressWarningAboutRes #}
 setFirstWindow :: Window a -> IO ()
 setFirstWindow wp =
     withObject wp setFirstWindow'
@@ -346,7 +346,7 @@ nextWindow currWindow =
 {# fun Fl_grab as grab
        {  } -> `Window ()' unsafeToObject #}
 {# fun Fl_set_grab as setGrab'
-       { id `Ptr ()' } -> `()' #}
+       { id `Ptr ()' } -> `()' supressWarningAboutRes #}
 setGrab :: Window a -> IO ()
 setGrab wp = withObject wp setGrab'
 {# fun Fl_event as event
@@ -375,11 +375,11 @@ getMouse = do
 {# fun Fl_event_clicks as eventClicks
        {  } -> `Int'#}
 {# fun Fl_set_event_clicks as setEventClicks
-       { `Int' } -> `()' #}
+       { `Int' } -> `()' supressWarningAboutRes #}
 {# fun Fl_event_is_click as eventIsClick
        {  } -> `Bool' toBool #}
 {# fun Fl_set_event_is_click as setEventIsClick
-       { `Int' } -> `()' #}
+       { `Int' } -> `()' supressWarningAboutRes #}
 {# fun Fl_event_button as eventButton
        {  } -> `MouseButton' cToEnum #}
 validKeyboardStates :: [KeyboardCode]
@@ -427,7 +427,7 @@ unmaskKeysyms = extractModifiers validKeyboardStates
 {# fun Fl_compose as compose
        { alloca- `Int' peekIntConv* } -> `Bool' toBool #}
 {# fun Fl_compose_reset as composeReset
-       {  } -> `()' #}
+       {  } -> `()' supressWarningAboutRes #}
 {# fun Fl_event_inside_region as eventInsideRegion'
        { `Int',`Int',`Int',`Int' } -> `Int' #}
 eventInsideRegion :: Rectangle -> IO Event
@@ -463,25 +463,25 @@ handle_ e wp =
 {# fun Fl_belowmouse as belowmouse
        {  } -> `Widget ()' unsafeToObject #}
 {# fun Fl_set_belowmouse as setBelowmouse'
-       { id `Ptr ()' } -> `()' #}
+       { id `Ptr ()' } -> `()' supressWarningAboutRes #}
 setBelowmouse :: Widget a -> IO ()
 setBelowmouse wp = withObject wp setBelowmouse'
 {# fun Fl_pushed as pushed
        {  } -> `Widget ()' unsafeToObject #}
 {# fun Fl_set_pushed as setPushed'
-       { id `Ptr ()' } -> `()' #}
+       { id `Ptr ()' } -> `()' supressWarningAboutRes #}
 setPushed :: Widget a -> IO ()
 setPushed wp = withObject wp setPushed'
 {# fun Fl_focus as focus
        {  } -> `Widget ()' unsafeToObject #}
 {# fun Fl_set_focus as setFocus'
-       { id `Ptr ()' } -> `()' #}
+       { id `Ptr ()' } -> `()' supressWarningAboutRes #}
 setFocus :: Widget a -> IO ()
 setFocus wp = withObject wp setFocus'
 {# fun Fl_add_handler as addHandler'
-       { id `FunPtr GlobalEventHandlerPrim' } -> `()' #}
+       { id `FunPtr GlobalEventHandlerPrim' } -> `()' supressWarningAboutRes #}
 {# fun Fl_remove_handler as removeHandler'
-       { id `FunPtr GlobalEventHandlerPrim' } -> `()' #}
+       { id `FunPtr GlobalEventHandlerPrim' } -> `()' supressWarningAboutRes #}
 setHandler :: GlobalEventHandlerF -> IO ()
 setHandler eh = do
   newGlobalEventHandler <- toGlobalEventHandlerPrim eh
@@ -493,7 +493,7 @@ setHandler eh = do
   addHandler' newGlobalEventHandler
 
 {# fun Fl_set_event_dispatch as setEventDispatch'
-       { id `Ptr (FunPtr EventDispatchPrim)' } -> `()' #}
+       { id `Ptr (FunPtr EventDispatchPrim)' } -> `()' supressWarningAboutRes #}
 {# fun Fl_event_dispatch as eventDispatch'
        {  } -> `FunPtr EventDispatchPrim' id #}
 eventDispatch :: IO (EventDispatchF a)
@@ -526,11 +526,11 @@ setEventDispatch ed = do
       poke ptrToCallbackPtr callbackPtr
       setEventDispatch' ptrToCallbackPtr
 {# fun Fl_copy as copy
-       { `String',`Int' } -> `()' #}
+       { `String',`Int' } -> `()' supressWarningAboutRes #}
 {# fun Fl_copy_with_destination as copyWithDestination
-       { `String',`Int',`Int' } -> `()' #}
+       { `String',`Int',`Int' } -> `()' supressWarningAboutRes #}
 {# fun Fl_paste_with_source as pasteWithSource
-       { id `Ptr ()',`Int' } -> `()' #}
+       { id `Ptr ()',`Int' } -> `()' supressWarningAboutRes #}
 paste :: Widget a -> Maybe Int -> IO ()
 paste widget (Just clipboard) = withObject widget ((flip pasteWithSource) clipboard)
 paste widget Nothing          = withObject widget ((flip pasteWithSource) 0)
@@ -554,7 +554,7 @@ paste widget Nothing          = withObject widget ((flip pasteWithSource) 0)
          alloca- `Int' peekIntConv* ,
          alloca- `Int' peekIntConv* ,
          alloca- `Int' peekIntConv*
-       } -> `()' #}
+       } -> `()'  #}
 {# fun Fl_screen_xywh_with_mxmy as screenXYWYWithMXMY
        {
          alloca- `Int' peekIntConv* ,
@@ -563,7 +563,7 @@ paste widget Nothing          = withObject widget ((flip pasteWithSource) 0)
          alloca- `Int' peekIntConv* ,
          `Int',
          `Int'
-       } -> `()' #}
+       } -> `()'  #}
 {# fun Fl_screen_xywh_with_n as screenXYWNWithN
        {
          alloca- `Int' peekIntConv* ,
@@ -571,7 +571,7 @@ paste widget Nothing          = withObject widget ((flip pasteWithSource) 0)
          alloca- `Int' peekIntConv* ,
          alloca- `Int' peekIntConv* ,
          `Int'
-       } -> `()' #}
+       } -> `()'  #}
 {# fun Fl_screen_xywh_with_mxmymwmh as screenXYWHWithNMXMYMWMH
        {
          alloca- `Int' peekIntConv* ,
@@ -660,7 +660,7 @@ setColorRgb c r g b = {#call Fl_set_color_rgb as fl_set_color_rgb #}
                         (fromIntegral g)
                         (fromIntegral b)
 {# fun Fl_set_color as setColor
-       { cFromColor `Color',`Int' } -> `()' #}
+       { cFromColor `Color',`Int' } -> `()' supressWarningAboutRes #}
 {# fun Fl_get_color as getColor
        { cFromColor `Color' } -> `Int' #}
 {# fun Fl_get_color_rgb as getColorRgb
@@ -669,11 +669,11 @@ setColorRgb c r g b = {#call Fl_set_color_rgb as fl_set_color_rgb #}
          alloca- `Word8' peekIntConv*,
          alloca- `Word8' peekIntConv*,
          alloca- `Word8' peekIntConv*
-       } -> `()' #}
+       } -> `()' supressWarningAboutRes #}
 {# fun Fl_free_color as freeColor'
-      { cFromColor `Color' } -> `()' #}
+      { cFromColor `Color' } -> `()' supressWarningAboutRes #}
 {# fun Fl_free_color_with_overlay as freeColorWithOverlay'
-       { cFromColor `Color', `Int' } -> `()' #}
+       { cFromColor `Color', `Int' } -> `()' supressWarningAboutRes #}
 removeFromColormap :: Maybe Int -> Color -> IO ()
 removeFromColormap (Just overlay) c = freeColorWithOverlay' c overlay
 removeFromColormap Nothing c = freeColor' c
@@ -691,9 +691,9 @@ getFontName f = getFontNameWithAttributes' f
 {# fun Fl_get_font_sizes as getFontSizes
        { cFromFont `Font', alloca- `Int' peekIntConv* } -> `Int' #}
 {# fun Fl_set_font_by_string as setFontByString
-       { cFromFont `Font',`String' } -> `()' #}
+       { cFromFont `Font',`String' } -> `()' supressWarningAboutRes #}
 {# fun Fl_set_font_by_font as setFontByFont
-       { cFromFont `Font',cFromFont `Font' } -> `()' #}
+       { cFromFont `Font',cFromFont `Font' } -> `()' supressWarningAboutRes #}
 {# fun Fl_set_fonts as setFonts
        {  } -> `Font' cToFont #}
 {# fun Fl_set_fonts_with_string as setFontsWithString
@@ -703,7 +703,7 @@ getFontName f = getFontNameWithAttributes' f
          cFromEnum `Labeltype',
          id `FunPtr LabelDrawFPrim',
          id `FunPtr LabelMeasureFPrim'
-       } -> `()' #}
+       } -> `()' supressWarningAboutRes #}
 setLabeltype :: Labeltype ->
                 LabelDrawF a ->
                 LabelMeasureF a ->
@@ -771,12 +771,12 @@ getBoxtype bt = do
          `Word8',
          `Word8',
          `Word8'
-       } -> `()' #}
+       } -> `()' supressWarningAboutRes #}
 {# fun Fl_set_boxtype_by_boxtype as setBoxtypeByBoxtype'
        {
          cFromEnum `Boxtype',
          cFromEnum `Boxtype'
-       } -> `()' #}
+       } -> `()' supressWarningAboutRes #}
 
 data BoxtypeSpec = FromSpec BoxDrawF Word8 Word8 Word8 Word8
                  | FromBoxtype Boxtype

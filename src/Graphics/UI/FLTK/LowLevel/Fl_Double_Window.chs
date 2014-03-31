@@ -231,11 +231,11 @@ doubleWindowNew (Size (Width w) (Height h)) position title funcs' =
                                         p <- doubleWindowFunctionStruct fs'
                                         overriddenWindowNewWithLabel' w h l' p >>= toObject 
 
-{# fun Fl_Double_Window_Destroy as windowDestroy' { id `Ptr ()' } -> `()' #}
+{# fun Fl_Double_Window_Destroy as windowDestroy' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
 doubleWindowDestroy :: DoubleWindow a -> IO ()
 doubleWindowDestroy win = withObject win $ \winPtr -> windowDestroy' winPtr
 
-{# fun Fl_Double_Window_draw_super as drawSuper' { id `Ptr ()' } -> `()' #}
+{# fun Fl_Double_Window_draw_super as drawSuper' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
 doubleWindowDrawSuper :: DoubleWindow a  ->  IO (())
 doubleWindowDrawSuper window = withObject window $ \windowPtr -> drawSuper' windowPtr
 
@@ -243,25 +243,25 @@ doubleWindowDrawSuper window = withObject window $ \windowPtr -> drawSuper' wind
 doubleWindowHandleSuper :: DoubleWindow a  -> Int ->  IO (Int)
 doubleWindowHandleSuper window event = withObject window $ \windowPtr -> handleSuper' windowPtr event
 
-{# fun Fl_Double_Window_resize_super as resizeSuper' { id `Ptr ()',`Int',`Int',`Int',`Int' } -> `()' #}
+{# fun Fl_Double_Window_resize_super as resizeSuper' { id `Ptr ()',`Int',`Int',`Int',`Int' } -> `()' supressWarningAboutRes #}
 doubleWindowResizeSuper :: DoubleWindow a  -> Rectangle -> IO (())
 doubleWindowResizeSuper window rectangle =
     let (x_pos, y_pos, width, height) = fromRectangle rectangle
     in withObject window $ \windowPtr -> resizeSuper' windowPtr x_pos y_pos width height
 
-{# fun Fl_Double_Window_show_super as showSuper' { id `Ptr ()' } -> `()' #}
+{# fun Fl_Double_Window_show_super as showSuper' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
 doubleWindowShowSuper :: DoubleWindow a  ->  IO (())
 doubleWindowShowSuper window = withObject window $ \windowPtr -> showSuper' windowPtr
 
-{# fun Fl_Double_Window_hide_super as hideSuper' { id `Ptr ()' } -> `()' #}
+{# fun Fl_Double_Window_hide_super as hideSuper' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
 doubleWindowHideSuper :: DoubleWindow a  ->  IO (())
 doubleWindowHideSuper window = withObject window $ \windowPtr -> hideSuper' windowPtr
 
-{# fun Fl_Double_Window_hide as hide' { id `Ptr ()' } -> `()' #}
+{# fun Fl_Double_Window_hide as hide' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
 doubleWindowHide :: DoubleWindow a  ->  IO (())
 doubleWindowHide doubleWindow = withObject doubleWindow $ \doubleWindowPtr -> hide' doubleWindowPtr
 
-{# fun Fl_Double_Window_flush_super as flushSuper' { id `Ptr ()' } -> `()' #}
+{# fun Fl_Double_Window_flush_super as flushSuper' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
 doubleWindowFlushSuper :: DoubleWindow a  ->  IO (())
 doubleWindowFlushSuper window = withObject window $ \windowPtr -> flushSuper' windowPtr
 
@@ -277,7 +277,7 @@ doubleWindowAsGlWindowSuper window = withObject window $ \windowPtr -> asGlWindo
 doubleWindowAsGroupSuper :: DoubleWindow a  ->  IO (Group ())
 doubleWindowAsGroupSuper window = withObject window $ \windowPtr -> asGroupSuper' windowPtr
 
-{# fun Fl_Double_Window_show as windowShow' {id `Ptr ()'} -> `()' #}
+{# fun Fl_Double_Window_show as windowShow' {id `Ptr ()'} -> `()' supressWarningAboutRes #}
 doubleWindowShow :: DoubleWindow a -> IO ()
 doubleWindowShow window = withObject window $ (\p -> windowShow' p)
 
@@ -286,7 +286,7 @@ doubleWindowShow window = withObject window $ (\p -> windowShow' p)
 doubleWindowHandle :: DoubleWindow a -> Event -> IO Int
 doubleWindowHandle window event = withObject window (\p -> windowHandle' p (fromIntegral . fromEnum $ event))
 
-{# fun Fl_Double_Window_resize as resize' { id `Ptr ()',`Int',`Int',`Int',`Int' } -> `()' #}
+{# fun Fl_Double_Window_resize as resize' { id `Ptr ()',`Int',`Int',`Int',`Int' } -> `()' supressWarningAboutRes #}
 doubleWindowResize :: DoubleWindow a  -> Rectangle -> IO (())
 doubleWindowResize window rectangle = withObject window $ \windowPtr -> do
                                  let (x_pos,y_pos,w_pos,h_pos) = fromRectangle rectangle

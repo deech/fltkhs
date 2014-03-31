@@ -250,7 +250,7 @@ glWindowNew (Size (Width w) (Height h)) position title funcs' =
                                         p <- glWindowFunctionStruct fs'
                                         overriddenWindowNewWithLabel' w h l' p >>= toObject 
 
-{# fun unsafe Fl_Gl_Window_draw_super as drawSuper' { id `Ptr ()' } -> `()' #}
+{# fun unsafe Fl_Gl_Window_draw_super as drawSuper' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
 glWindowDrawSuper :: GlWindow a  ->  IO (())
 glWindowDrawSuper self = withObject self $ \selfPtr -> drawSuper' selfPtr
 
@@ -266,35 +266,35 @@ glWindowAsWindowSuper win = withObject win $ \winPtr -> asWindowSuper' winPtr
 glWindowAsGlWindowSuper :: GlWindow a  ->  IO (GlWindow ())
 glWindowAsGlWindowSuper win = withObject win $ \winPtr -> asGlWindowSuper' winPtr
 
-{# fun unsafe Fl_Gl_Window_hide_super as hideSuper' { id `Ptr ()' } -> `()' #}
+{# fun unsafe Fl_Gl_Window_hide_super as hideSuper' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
 glWindowHideSuper :: GlWindow a  ->  IO (())
 glWindowHideSuper win = withObject win $ \winPtr -> hideSuper' winPtr
 
-{# fun unsafe Fl_Gl_Window_flush_super as flushSuper' { id `Ptr ()' } -> `()' #}
+{# fun unsafe Fl_Gl_Window_flush_super as flushSuper' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
 glWindowFlushSuper :: GlWindow a  ->  IO (())
 glWindowFlushSuper win = withObject win $ \winPtr -> flushSuper' winPtr
 
-{# fun unsafe Fl_Gl_Window_flush as flush' { id `Ptr ()' } -> `()' #}
+{# fun unsafe Fl_Gl_Window_flush as flush' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
 glWindowFlush :: GlWindow a  ->  IO (())
 glWindowFlush win = withObject win $ \winPtr -> flush' winPtr
 
-{# fun unsafe Fl_Gl_Window_show_super as showSuper' { id `Ptr ()' } -> `()' #}
+{# fun unsafe Fl_Gl_Window_show_super as showSuper' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
 glWindowShowSuper :: GlWindow a  ->  IO (())
 glWindowShowSuper win = withObject win $ \winPtr -> showSuper' winPtr
 
-{# fun unsafe Fl_Gl_Window_resize_super as resizeSuper' { id `Ptr ()',`Int',`Int',`Int',`Int' } -> `()' #}
+{# fun unsafe Fl_Gl_Window_resize_super as resizeSuper' { id `Ptr ()',`Int',`Int',`Int',`Int' } -> `()' supressWarningAboutRes #}
 glWindowResizeSuper :: GlWindow a  -> Int -> Int -> Int -> Int ->  IO (())
 glWindowResizeSuper win x y w h = withObject win $ \winPtr -> resizeSuper' winPtr x y w h
 
-{# fun unsafe Fl_Gl_Window_hide as hide' { id `Ptr ()' } -> `()' #}
+{# fun unsafe Fl_Gl_Window_hide as hide' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
 glWindowHide :: GlWindow a  ->  IO (())
 glWindowHide win = withObject win $ \winPtr -> hide' winPtr
 
-{# fun unsafe Fl_Gl_Window_show as show' { id `Ptr ()' } -> `()' #}
+{# fun unsafe Fl_Gl_Window_show as show' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
 glWindowShow :: GlWindow a  ->  IO (())
 glWindowShow win = withObject win $ \winPtr -> show' winPtr
 
-{# fun unsafe Fl_Gl_Window_resize as resize' { id `Ptr ()',`Int',`Int',`Int',`Int' } -> `()' #}
+{# fun unsafe Fl_Gl_Window_resize as resize' { id `Ptr ()',`Int',`Int',`Int',`Int' } -> `()' supressWarningAboutRes #}
 glWindowResize :: GlWindow a  -> Int -> Int -> Int -> Int ->  IO (())
 glWindowResize win x y w h = withObject win $ \winPtr -> resize' winPtr x y w h
 
@@ -318,7 +318,7 @@ glWindowAsGlWindow win = withObject win $ \winPtr -> asGlWindow' winPtr
 glWindowHandleSuper :: GlWindow a  -> Int ->  IO (Int)
 glWindowHandleSuper self event = withObject self $ \selfPtr -> handleSuper' selfPtr event
 
-{# fun Fl_Gl_Window_Destroy as windowDestroy' { id `Ptr ()' } -> `()' #}
+{# fun Fl_Gl_Window_Destroy as windowDestroy' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
 glWindowDestroy :: GlWindow a -> IO ()
 glWindowDestroy win = withObject win $ \winPtr -> windowDestroy' winPtr
 
@@ -327,11 +327,11 @@ glWindowValid :: GlWindow a  ->  IO (Bool)
 glWindowValid win = withObject win $ \winPtr -> valid' winPtr
 
 
-{# fun unsafe Fl_Gl_Window_set_valid as setValid' { `Bool' } -> `()' #}
+{# fun unsafe Fl_Gl_Window_set_valid as setValid' { `Bool' } -> `()' supressWarningAboutRes #}
 glWindowSetValid :: Bool ->  IO (())
 glWindowSetValid v = setValid' v
 
-{# fun unsafe Fl_Gl_Window_invalidate as invalidate' { id `Ptr ()' } -> `()' #}
+{# fun unsafe Fl_Gl_Window_invalidate as invalidate' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
 glWindowInvalidate :: GlWindow a  ->  IO (())
 glWindowInvalidate win = withObject win $ \winPtr -> invalidate' winPtr
 
@@ -339,7 +339,7 @@ glWindowInvalidate win = withObject win $ \winPtr -> invalidate' winPtr
 glWindowContextValid :: GlWindow a  ->  IO (Bool)
 glWindowContextValid win = withObject win $ \winPtr -> contextValid' winPtr
 
-{# fun unsafe Fl_Gl_Window_set_context_valid as setContextValid' { id `Ptr ()', fromBool `Bool' } -> `()' #}
+{# fun unsafe Fl_Gl_Window_set_context_valid as setContextValid' { id `Ptr ()', fromBool `Bool' } -> `()' supressWarningAboutRes #}
 glWindowSetContextValid :: GlWindow a  -> Bool ->  IO (())
 glWindowSetContextValid win v = withObject win $ \winPtr -> setContextValid' winPtr v
 
@@ -363,19 +363,19 @@ glWindowSetMode win a = withObject win $ \winPtr -> setMode' winPtr a
 glWindowContext :: GlWindow a  ->  IO GlContext
 glWindowContext win = withObject win $ \winPtr -> context' winPtr
 
-{# fun unsafe Fl_Gl_Window_set_context as setContext' { id `Ptr ()',id `Ptr ()' } -> `()' #}
+{# fun unsafe Fl_Gl_Window_set_context as setContext' { id `Ptr ()',id `Ptr ()' } -> `()' supressWarningAboutRes #}
 glWindowSetContext :: GlWindow a  -> GlContext ->  IO (())
 glWindowSetContext win context = withObject win $ \winPtr -> withObject context $ \contextPtr -> setContext' winPtr contextPtr
 
-{# fun unsafe Fl_Gl_Window_set_context_with_destroy_flag as setContextWithDestroyFlag' { id `Ptr ()',id `Ptr ()', fromBool `Bool'} -> `()' #}
+{# fun unsafe Fl_Gl_Window_set_context_with_destroy_flag as setContextWithDestroyFlag' { id `Ptr ()',id `Ptr ()', fromBool `Bool'} -> `()' supressWarningAboutRes #}
 glWindowSetContextWithDestroyFlag :: GlWindow a  -> GlContext ->  Bool -> IO (())
 glWindowSetContextWithDestroyFlag win context destroyFlag= withObject win $ \winPtr -> withObject context $ \contextPtr -> setContextWithDestroyFlag' winPtr contextPtr destroyFlag
 
-{# fun unsafe Fl_Gl_Window_swap_buffers as swapBuffers' { id `Ptr ()' } -> `()' #}
+{# fun unsafe Fl_Gl_Window_swap_buffers as swapBuffers' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
 glWindowSwapBuffers :: GlWindow a  ->  IO (())
 glWindowSwapBuffers win = withObject win $ \winPtr -> swapBuffers' winPtr
 
-{# fun unsafe Fl_Gl_Window_ortho as ortho' { id `Ptr ()' } -> `()' #}
+{# fun unsafe Fl_Gl_Window_ortho as ortho' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
 glWindowOrtho :: GlWindow a  ->  IO (())
 glWindowOrtho win = withObject win $ \winPtr -> ortho' winPtr
 
@@ -383,15 +383,15 @@ glWindowOrtho win = withObject win $ \winPtr -> ortho' winPtr
 glWindowCanDoOverlay :: GlWindow a  ->  IO (Int)
 glWindowCanDoOverlay win = withObject win $ \winPtr -> canDoOverlay' winPtr
 
-{# fun unsafe Fl_Gl_Window_redraw_overlay as redrawOverlay' { id `Ptr ()' } -> `()' #}
+{# fun unsafe Fl_Gl_Window_redraw_overlay as redrawOverlay' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
 glWindowRedrawOverlay :: GlWindow a  ->  IO (())
 glWindowRedrawOverlay win = withObject win $ \winPtr -> redrawOverlay' winPtr
 
-{# fun unsafe Fl_Gl_Window_hide_overlay as hideOverlay' { id `Ptr ()' } -> `()' #}
+{# fun unsafe Fl_Gl_Window_hide_overlay as hideOverlay' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
 glWindowHideOverlay :: GlWindow a  ->  IO (())
 glWindowHideOverlay win = withObject win $ \winPtr -> hideOverlay' winPtr
 
-{# fun unsafe Fl_Gl_Window_make_overlay_current as makeOverlayCurrent' { id `Ptr ()' } -> `()' #}
+{# fun unsafe Fl_Gl_Window_make_overlay_current as makeOverlayCurrent' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
 glWindowMakeOverlayCurrent :: GlWindow a  ->  IO (())
 glWindowMakeOverlayCurrent win = withObject win $ \winPtr -> makeOverlayCurrent' winPtr
 
