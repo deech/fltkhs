@@ -20,6 +20,12 @@ library
                    Graphics.UI.FLTK.LowLevel.Fl_Window
                    Graphics.UI.FLTK.LowLevel.Fl_Double_Window
                    Graphics.UI.FLTK.LowLevel.Fl_Button
+                   Graphics.UI.FLTK.LowLevel.Fl_Light_Button
+                   Graphics.UI.FLTK.LowLevel.Fl_Check_Button
+                   Graphics.UI.FLTK.LowLevel.Fl_Return_Button
+                   Graphics.UI.FLTK.LowLevel.Fl_Round_Button
+                   Graphics.UI.FLTK.LowLevel.Fl_Repeat_Button
+                   Graphics.UI.FLTK.LowLevel.Fl_Toggle_Button
                    Graphics.UI.FLTK.LowLevel.Fl_Enumerations
                    Graphics.UI.FLTK.LowLevel.Fl_Types
                    Graphics.UI.FLTK.LowLevel.Fl_Group
@@ -36,6 +42,15 @@ library
 
 Executable test_call
   Main-Is: TestCall.hs
+  Hs-Source-Dirs: src/TestPrograms
+  include-dirs: ./object_files ./lib
+  ghc-Options: -Wall -threaded -lHSfltkhs-0.1.0.0 -lfltkc -lfltk -lfltk_images -lpng -lz -ljpeg -lfltk_gl  -lGLU -lGL -lXfixes -lXext -lXft -lfontconfig -lXinerama -lpthread -ldl -lm  -lX11 -lstdc++ -prof -fprof-auto
+  Build-Depends:
+    base,
+    fltkhs
+
+Executable buttons 
+  Main-Is: Buttons.hs
   Hs-Source-Dirs: src/TestPrograms
   include-dirs: ./object_files ./lib
   ghc-Options: -Wall -threaded -lHSfltkhs-0.1.0.0 -lfltkc -lfltk -lfltk_images -lpng -lz -ljpeg -lfltk_gl  -lGLU -lGL -lXfixes -lXext -lXft -lfontconfig -lXinerama -lpthread -ldl -lm  -lX11 -lstdc++ -prof -fprof-auto

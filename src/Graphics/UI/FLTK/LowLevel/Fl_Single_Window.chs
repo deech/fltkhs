@@ -156,7 +156,6 @@ where
 #include "Fl_C.h"
 #include "Fl_Single_WindowC.h"
 import Foreign
-import Foreign.Marshal.Utils
 import Foreign.C
 import Graphics.UI.FLTK.LowLevel.Fl_Types
 import Graphics.UI.FLTK.LowLevel.Fl_Enumerations

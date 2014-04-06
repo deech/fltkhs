@@ -53,7 +53,6 @@ wrapNonNull :: Ptr a -> String -> IO (ForeignPtr (Ptr a))
 wrapNonNull ptr msg = if (ptr == nullPtr)
                       then error msg
                       else do
-                        trace "not null" (return ())
                         pptr <- malloc
                         poke pptr ptr
                         FC.newForeignPtr pptr (return ())

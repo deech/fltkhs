@@ -116,7 +116,6 @@ import Graphics.UI.FLTK.LowLevel.Fl_Widget
 import Graphics.UI.FLTK.LowLevel.Fl_Enumerations
 import Graphics.UI.FLTK.LowLevel.Fl_Types
 import Graphics.UI.FLTK.LowLevel.Utils
-import Debug.Trace
 data ButtonFuncs a =
     ButtonFuncs
     {
