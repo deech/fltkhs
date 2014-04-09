@@ -154,7 +154,11 @@ module Graphics.UI.FLTK.LowLevel.Fl_Window
      windowSetDefaultCursor,
      windowSetDefaultCursorWithFgBg,
      windowDecoratedW,
-     windowDecoratedH
+     windowDecoratedH,
+     windowDrawBox,
+     windowDrawBoxWithBoxtype,
+     windowDrawBackdrop,
+     windowDrawFocus
     )
 where
 #include "Fl_C.h"
@@ -810,3 +814,29 @@ windowDecoratedW win = withObject win $ \winPtr -> decoratedW' winPtr
 {# fun Fl_Window_decorated_h as decoratedH' { id `Ptr ()' } -> `Int' #}
 windowDecoratedH :: Window a  ->  IO (Int)
 windowDecoratedH win = withObject win $ \winPtr -> decoratedH' winPtr
+
+{# fun Fl_Window_draw_box as windowDrawBox' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
+{# fun Fl_Window_draw_box_with_tc as windowDrawBoxWithTC' { id `Ptr ()', cFromEnum `Boxtype', cFromColor`Color' } -> `()' supressWarningAboutRes #}
+{# fun Fl_Window_draw_box_with_txywhc as windowDrawBoxWithTXywhC' { id `Ptr ()', cFromEnum `Boxtype', `Int',`Int',`Int',`Int', cFromColor `Color' } -> `()' supressWarningAboutRes #}
+windowDrawBox :: Window a -> IO ()
+windowDrawBox window = withObject window $ \windowPtr -> windowDrawBox' windowPtr
+windowDrawBoxWithBoxtype :: Window a -> Boxtype -> Color -> Maybe Rectangle -> IO ()
+windowDrawBoxWithBoxtype window bx c Nothing =
+              withObject window $ \windowPtr -> windowDrawBoxWithTC' windowPtr bx c
+windowDrawBoxWithBoxtype window bx c (Just r) =
+              withObject window $ \windowPtr -> do
+                let (x_pos,y_pos,w_pos,h_pos) = fromRectangle r
+                windowDrawBoxWithTXywhC' windowPtr bx x_pos y_pos w_pos h_pos c
+{# fun Fl_Window_draw_backdrop as windowDrawBackdrop' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
+windowDrawBackdrop :: Window a -> IO ()
+windowDrawBackdrop window = withObject window $ \windowPtr -> windowDrawBackdrop' windowPtr
+
+{# fun Fl_Window_draw_focus as windowDrawFocus' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
+{# fun Fl_Window_draw_focus_with_txywh as windowDrawFocusWithTXywh' { id `Ptr ()', cFromEnum `Boxtype', `Int', `Int', `Int', `Int' } -> `()' supressWarningAboutRes #}
+windowDrawFocus :: Window a -> Maybe (Boxtype, Rectangle) -> IO ()
+windowDrawFocus window Nothing =
+                withObject window $ \ windowPtr -> windowDrawFocus' windowPtr
+windowDrawFocus window (Just (bx, r)) =
+                withObject window $ \windowPtr -> do
+                  let (x_pos,y_pos,w_pos,h_pos) = fromRectangle r
+                  windowDrawFocusWithTXywh' windowPtr bx x_pos y_pos w_pos h_pos

@@ -4,7 +4,6 @@ import Graphics.UI.FLTK.LowLevel.FL
 import Graphics.UI.FLTK.LowLevel.Fl_Enumerations
 import Graphics.UI.FLTK.LowLevel.Fl_Types
 import Graphics.UI.FLTK.LowLevel.Fl_Button
-import Debug.Trace
 windowCallback ::  (Show a) => a -> Widget b -> IO ()
 windowCallback a _ = print a
 callback ::  (Show a) => a -> IO ()
@@ -25,6 +24,7 @@ addButton x_pos y_pos label = do
               (Just label)
               Nothing
   return button
+destroyButton :: Button a -> b -> IO ()
 destroyButton b = \_ -> buttonDestroy b >> redraw
 addWindow :: IO (Window ())
 addWindow = do
@@ -35,7 +35,7 @@ addWindow = do
   button1 <- addButton 10 30 "button 1"
   button2 <- addButton 10 70 "button 2"
   buttonSetCallback button1 (\btn -> buttonSetLabel btn "New Label")
-  buttonSetCallback button2 (destroyButton button1) 
+  buttonSetCallback button2 (destroyButton button1)
   windowSetCallback window (windowCallback "window's callback data")
   windowShow window
   return window

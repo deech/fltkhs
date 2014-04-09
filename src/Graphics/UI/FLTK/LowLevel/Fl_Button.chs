@@ -103,7 +103,11 @@ module Graphics.UI.FLTK.LowLevel.Fl_Button
      buttonDownBox,
      buttonSetDownBox,
      buttonDownColor,
-     buttonSetDownColor
+     buttonSetDownColor,
+     buttonDrawBox,
+     buttonDrawBoxWithBoxtype,
+     buttonDrawBackdrop,
+     buttonDrawFocus
     )
 where
 #include "Fl_ExportMacros.h"
@@ -415,3 +419,28 @@ buttonDownColor b = withObject b $ \bPtr -> downColor' bPtr
 {# fun unsafe Fl_Button_set_down_color as setDownColor' { id `Ptr ()',cFromColor `Color' } -> `()' supressWarningAboutRes #}
 buttonSetDownColor :: Button a  -> Color ->  IO (())
 buttonSetDownColor b c = withObject b $ \bPtr -> setDownColor' bPtr c
+{# fun Fl_Button_draw_box as buttonDrawBox' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
+{# fun Fl_Button_draw_box_with_tc as buttonDrawBoxWithTC' { id `Ptr ()', cFromEnum `Boxtype', cFromColor`Color' } -> `()' supressWarningAboutRes #}
+{# fun Fl_Button_draw_box_with_txywhc as buttonDrawBoxWithTXywhC' { id `Ptr ()', cFromEnum `Boxtype', `Int',`Int',`Int',`Int', cFromColor `Color' } -> `()' supressWarningAboutRes #}
+buttonDrawBox :: Button a -> IO ()
+buttonDrawBox button = withObject button $ \buttonPtr -> buttonDrawBox' buttonPtr
+buttonDrawBoxWithBoxtype :: Button a -> Boxtype -> Color -> Maybe Rectangle -> IO ()
+buttonDrawBoxWithBoxtype button bx c Nothing =
+              withObject button $ \buttonPtr -> buttonDrawBoxWithTC' buttonPtr bx c
+buttonDrawBoxWithBoxtype button bx c (Just r) =
+              withObject button $ \buttonPtr -> do
+                let (x_pos,y_pos,w_pos,h_pos) = fromRectangle r
+                buttonDrawBoxWithTXywhC' buttonPtr bx x_pos y_pos w_pos h_pos c
+{# fun Fl_Button_draw_backdrop as buttonDrawBackdrop' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
+buttonDrawBackdrop :: Button a -> IO ()
+buttonDrawBackdrop button = withObject button $ \buttonPtr -> buttonDrawBackdrop' buttonPtr
+
+{# fun Fl_Button_draw_focus as buttonDrawFocus' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
+{# fun Fl_Button_draw_focus_with_txywh as buttonDrawFocusWithTXywh' { id `Ptr ()', cFromEnum `Boxtype', `Int', `Int', `Int', `Int' } -> `()' supressWarningAboutRes #}
+buttonDrawFocus :: Button a -> Maybe (Boxtype, Rectangle) -> IO ()
+buttonDrawFocus button Nothing =
+                withObject button $ \ buttonPtr -> buttonDrawFocus' buttonPtr
+buttonDrawFocus button (Just (bx, r)) =
+                withObject button $ \buttonPtr -> do
+                  let (x_pos,y_pos,w_pos,h_pos) = fromRectangle r
+                  buttonDrawFocusWithTXywh' buttonPtr bx x_pos y_pos w_pos h_pos

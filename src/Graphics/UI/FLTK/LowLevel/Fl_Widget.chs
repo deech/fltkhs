@@ -89,6 +89,10 @@ module Graphics.UI.FLTK.LowLevel.Fl_Widget
      widgetResizeSuper,
      widgetResize,
      widgetSetCallback,
+     widgetDrawBox,
+     widgetDrawBoxWithBoxtype,
+     widgetDrawBackdrop,
+     widgetDrawFocus
     )
 where
 #include "Fl_ExportMacros.h"
@@ -433,3 +437,29 @@ widgetSetCallback :: Widget a -> (WidgetCallback b) -> IO (())
 widgetSetCallback widget callback = withObject widget $ \widgetPtr -> do
                                 ptr <- toWidgetCallbackPrim callback
                                 setCallback' widgetPtr (castFunPtr ptr)
+
+{# fun Fl_Widget_draw_box as widgetDrawBox' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
+{# fun Fl_Widget_draw_box_with_tc as widgetDrawBoxWithTC' { id `Ptr ()', cFromEnum `Boxtype', cFromColor`Color' } -> `()' supressWarningAboutRes #}
+{# fun Fl_Widget_draw_box_with_txywhc as widgetDrawBoxWithTXywhC' { id `Ptr ()', cFromEnum `Boxtype', `Int',`Int',`Int',`Int', cFromColor `Color' } -> `()' supressWarningAboutRes #}
+widgetDrawBox :: Widget a -> IO ()
+widgetDrawBox widget = withObject widget $ \widgetPtr -> widgetDrawBox' widgetPtr
+widgetDrawBoxWithBoxtype :: Widget a -> Boxtype -> Color -> Maybe Rectangle -> IO ()
+widgetDrawBoxWithBoxtype widget bx c Nothing =
+              withObject widget $ \widgetPtr -> widgetDrawBoxWithTC' widgetPtr bx c
+widgetDrawBoxWithBoxtype widget bx c (Just r) =
+              withObject widget $ \widgetPtr -> do
+                let (x_pos,y_pos,w_pos,h_pos) = fromRectangle r
+                widgetDrawBoxWithTXywhC' widgetPtr bx x_pos y_pos w_pos h_pos c
+{# fun Fl_Widget_draw_backdrop as widgetDrawBackdrop' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
+widgetDrawBackdrop :: Widget a -> IO ()
+widgetDrawBackdrop widget = withObject widget $ \widgetPtr -> widgetDrawBackdrop' widgetPtr
+
+{# fun Fl_Widget_draw_focus as widgetDrawFocus' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
+{# fun Fl_Widget_draw_focus_with_txywh as widgetDrawFocusWithTXywh' { id `Ptr ()', cFromEnum `Boxtype', `Int', `Int', `Int', `Int' } -> `()' supressWarningAboutRes #}
+widgetDrawFocus :: Widget a -> Maybe (Boxtype, Rectangle) -> IO ()
+widgetDrawFocus widget Nothing =
+                withObject widget $ \ widgetPtr -> widgetDrawFocus' widgetPtr
+widgetDrawFocus widget (Just (bx, r)) =
+                withObject widget $ \widgetPtr -> do
+                  let (x_pos,y_pos,w_pos,h_pos) = fromRectangle r
+                  widgetDrawFocusWithTXywh' widgetPtr bx x_pos y_pos w_pos h_pos

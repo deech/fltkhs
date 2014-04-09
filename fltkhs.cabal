@@ -30,6 +30,7 @@ library
                    Graphics.UI.FLTK.LowLevel.Fl_Types
                    Graphics.UI.FLTK.LowLevel.Fl_Group
                    Graphics.UI.FLTK.LowLevel.Fl_Widget
+                   Graphics.UI.FLTK.LowLevel.Fl_Valuator
                    Graphics.UI.FLTK.LowLevel.FL
                    Graphics.UI.FLTK.LowLevel.Utils
   build-depends: base, containers, stm
