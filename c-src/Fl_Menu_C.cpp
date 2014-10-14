@@ -408,8 +408,16 @@ FL_EXPORT_C(void, Fl_Menu__draw_label)(fl_Menu_ Menu_){
     Fl_DerivedMenu_* menu_ = new Fl_DerivedMenu_(x,y,w,h,label,funcs);
     return (static_cast<fl_Menu_>(menu_));
   }
+  FL_EXPORT_C(fl_Menu_, Fl_OverriddenMenu__New_WithLabel)(int x, int y, int w, int h, const char* label, fl_Menu__Virtual_Funcs* funcs) {
+    Fl_DerivedMenu_* box = new Fl_DerivedMenu_(x,y,w,h,label,funcs);
+    return (static_cast<fl_Menu_>(box));
+  }
   FL_EXPORT_C(fl_Menu_, Fl_Menu__New)(int x, int y, int w, int h) {
     fl_Menu__Virtual_Funcs* funcs = Fl_Menu__default_virtual_funcs();
+    Fl_DerivedMenu_* menu_ = new Fl_DerivedMenu_(x,y,w,h,0,funcs);
+    return (fl_Menu_)menu_;
+  }
+  FL_EXPORT_C(fl_Menu_   , Fl_OverriddenMenu__New)(int x, int y, int w, int h, fl_Menu__Virtual_Funcs* funcs){
     Fl_DerivedMenu_* menu_ = new Fl_DerivedMenu_(x,y,w,h,0,funcs);
     return (fl_Menu_)menu_;
   }

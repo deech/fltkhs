@@ -4,58 +4,58 @@
 EXPORT {
 #endif
   FL_EXPORT_C(fl_Menu_Item,Fl_Menu_Item_next_with_step)(fl_Menu_Item menu_item,int step){
-  return (fl_Menu_Item)(static_cast<Fl_Menu_Item*>(menu_item))->next(step);
-}
+    return (fl_Menu_Item)(static_cast<Fl_Menu_Item*>(menu_item))->next(step);
+  }
   FL_EXPORT_C(fl_Menu_Item,Fl_Menu_Item_next)(fl_Menu_Item menu_item){
-  return (fl_Menu_Item)(static_cast<Fl_Menu_Item*>(menu_item))->next();
-}
+    return (fl_Menu_Item)(static_cast<Fl_Menu_Item*>(menu_item))->next();
+  }
   FL_EXPORT_C(fl_Menu_Item,Fl_Menu_Item_first)(fl_Menu_Item menu_item){
-  return (fl_Menu_Item)(static_cast<Fl_Menu_Item*>(menu_item))->first();
-}
+    return (fl_Menu_Item)(static_cast<Fl_Menu_Item*>(menu_item))->first();
+  }
   FL_EXPORT_C(const char*,Fl_Menu_Item_label)(fl_Menu_Item menu_item){
-  return (static_cast<Fl_Menu_Item*>(menu_item))->label();
-}
+    return (static_cast<Fl_Menu_Item*>(menu_item))->label();
+  }
   FL_EXPORT_C(void,Fl_Menu_Item_set_label)(fl_Menu_Item menu_item,const char* a){
-  return (static_cast<Fl_Menu_Item*>(menu_item))->label(a);
-}
+    return (static_cast<Fl_Menu_Item*>(menu_item))->label(a);
+  }
   FL_EXPORT_C(void,Fl_Menu_Item_set_label_with_labeltype)(fl_Menu_Item menu_item,Fl_Labeltype labeltype,const char* b){
-  return (static_cast<Fl_Menu_Item*>(menu_item))->label(labeltype,b);
-}
+    return (static_cast<Fl_Menu_Item*>(menu_item))->label(labeltype,b);
+  }
   FL_EXPORT_C(Fl_Labeltype,Fl_Menu_Item_labeltype)(fl_Menu_Item menu_item){
-  return (static_cast<Fl_Menu_Item*>(menu_item))->labeltype();
-}
+    return (static_cast<Fl_Menu_Item*>(menu_item))->labeltype();
+  }
   FL_EXPORT_C(void,Fl_Menu_Item_set_labeltype)(fl_Menu_Item menu_item,Fl_Labeltype a){
-  return (static_cast<Fl_Menu_Item*>(menu_item))->labeltype(a);
-}
+    return (static_cast<Fl_Menu_Item*>(menu_item))->labeltype(a);
+  }
   FL_EXPORT_C(Fl_Color,Fl_Menu_Item_labelcolor)(fl_Menu_Item menu_item){
-  return (static_cast<Fl_Menu_Item*>(menu_item))->labelcolor();
-}
+    return (static_cast<Fl_Menu_Item*>(menu_item))->labelcolor();
+  }
   FL_EXPORT_C(void,Fl_Menu_Item_set_labelcolor)(fl_Menu_Item menu_item,Fl_Color a){
-  return (static_cast<Fl_Menu_Item*>(menu_item))->labelcolor(a);
-}
+    return (static_cast<Fl_Menu_Item*>(menu_item))->labelcolor(a);
+  }
   FL_EXPORT_C(Fl_Font,Fl_Menu_Item_labelfont)(fl_Menu_Item menu_item){
-  return (static_cast<Fl_Menu_Item*>(menu_item))->labelfont();
-}
+    return (static_cast<Fl_Menu_Item*>(menu_item))->labelfont();
+  }
   FL_EXPORT_C(void,Fl_Menu_Item_set_labelfont)(fl_Menu_Item menu_item,Fl_Font a){
-  return (static_cast<Fl_Menu_Item*>(menu_item))->labelfont(a);
-}
+    return (static_cast<Fl_Menu_Item*>(menu_item))->labelfont(a);
+  }
   FL_EXPORT_C(Fl_Fontsize,Fl_Menu_Item_labelsize)(fl_Menu_Item menu_item){
-  return (static_cast<Fl_Menu_Item*>(menu_item))->labelsize();
-}
+    return (static_cast<Fl_Menu_Item*>(menu_item))->labelsize();
+  }
   FL_EXPORT_C(void,Fl_Menu_Item_set_labelsize)(fl_Menu_Item menu_item,Fl_Fontsize a){
-  return (static_cast<Fl_Menu_Item*>(menu_item))->labelsize(a);
-}
+    return (static_cast<Fl_Menu_Item*>(menu_item))->labelsize(a);
+  }
   FL_EXPORT_C(void,Fl_Menu_Item_set_callback_with_user_data)(fl_Menu_Item menu_item,fl_Callback* c,void* user_data){
-  C_to_Fl_Callback* callback = new C_to_Fl_Callback(c, user_data);
-  callback->set_callback(static_cast<Fl_Menu_Item*>(menu_item));
-}
+    C_to_Fl_Callback* callback = new C_to_Fl_Callback(c, user_data);
+    callback->set_callback(static_cast<Fl_Menu_Item*>(menu_item));
+  }
   FL_EXPORT_C(void,Fl_Menu_Item_set_callback)(fl_Menu_Item menu_item,fl_Callback* c){
-  C_to_Fl_Callback* callback = new C_to_Fl_Callback(c);
-  callback->set_callback(static_cast<Fl_Menu_Item*>(menu_item));
-}
+    C_to_Fl_Callback* callback = new C_to_Fl_Callback(c);
+    callback->set_callback(static_cast<Fl_Menu_Item*>(menu_item));
+  }
   FL_EXPORT_C(void*,Fl_Menu_Item_user_data)(fl_Menu_Item menu_item){
-  return (static_cast<Fl_Menu_Item*>(menu_item))->user_data();
-}
+    return (static_cast<Fl_Menu_Item*>(menu_item))->user_data();
+  }
   FL_EXPORT_C(void,Fl_Menu_Item_set_user_data)(fl_Menu_Item menu_item,void* v){
     C_to_Fl_Callback* stored_cb = (static_cast<C_to_Fl_Callback*>((static_cast<Fl_Menu_Item*>(menu_item))->user_data()));
     if (stored_cb) {
@@ -67,11 +67,11 @@ EXPORT {
     }
   }
   FL_EXPORT_C(long,Fl_Menu_Item_argument)(fl_Menu_Item menu_item){
-  return (static_cast<Fl_Menu_Item*>(menu_item))->argument();
-}
+    return (static_cast<Fl_Menu_Item*>(menu_item))->argument();
+  }
   FL_EXPORT_C(void,Fl_Menu_Item_set_argument)(fl_Menu_Item menu_item,long v){
-  return (static_cast<Fl_Menu_Item*>(menu_item))->argument(v);
-}
+    return (static_cast<Fl_Menu_Item*>(menu_item))->argument(v);
+  }
   FL_EXPORT_C(int,Fl_Menu_Item_shortcut)(fl_Menu_Item menu_item){
     return (static_cast<Fl_Menu_Item*>(menu_item))->shortcut();
   }
@@ -141,32 +141,18 @@ EXPORT {
   FL_EXPORT_C(char*, Fl_Menu_Item_text)(fl_Menu_Item menu_item){
     return (char*)(static_cast<Fl_Menu_Item*>(menu_item))->text;
   }
-  FL_EXPORT_C(popup_args*, Fl_Menu_Item_default_popup_args)(){
-    popup_args* ptr = (popup_args*)malloc(sizeof(popup_args));
-    ptr->title = 0;
-    ptr->picked = 0;
-    ptr->menu = 0;
-    return ptr;
-  }
-  FL_EXPORT_C(pulldown_args*, Fl_Menu_Item_default_pulldown_args)(){
-    pulldown_args* ptr = (pulldown_args*)malloc(sizeof(pulldown_args));
-    ptr->picked = 0;
-    ptr->menu = 0;
-    ptr->title = 0;
-    ptr->menubar = 0;
-    return ptr;
-  }
   FL_EXPORT_C(fl_Menu_Item,Fl_Menu_Item_popup)(fl_Menu_Item menu_item,int X,int Y){
     return (fl_Menu_Item)(static_cast<Fl_Menu_Item*>(menu_item))->popup(X,Y);
   }
   FL_EXPORT_C(fl_Menu_Item,Fl_Menu_Item_pulldown)(fl_Menu_Item menu_item,int X,int Y,int W,int H){
     return (fl_Menu_Item)(static_cast<Fl_Menu_Item*>(menu_item))->pulldown(X,Y,W,H);
   }
-  FL_EXPORT_C(fl_Menu_Item,Fl_Menu_Item_popup_with_args)(fl_Menu_Item menu_item,int X,int Y,popup_args* args){
-    return (fl_Menu_Item)(static_cast<Fl_Menu_Item*>(menu_item))->popup(X,Y,args->title, (static_cast<Fl_Menu_Item*>(args->picked)), (static_cast<Fl_Menu_*>(args->menu)));
+  
+  FL_EXPORT_C(fl_Menu_Item,Fl_Menu_Item_popup_with_args)(fl_Menu_Item menu_item,int X,int Y, char* title, fl_Menu_Item picked, fl_Menu_ menu){
+    return (fl_Menu_Item)(static_cast<Fl_Menu_Item*>(menu_item))->popup(X,Y,title, (static_cast<Fl_Menu_Item*>(picked)), (static_cast<Fl_Menu_*>(menu)));
   }
-  FL_EXPORT_C(fl_Menu_Item,Fl_Menu_Item_pulldown_with_args)(fl_Menu_Item menu_item,int X,int Y,int W, int H, pulldown_args* args){
-    return (fl_Menu_Item)(static_cast<Fl_Menu_Item*>(menu_item))->pulldown(X,Y,W,H,(static_cast<Fl_Menu_Item*>(args->picked)), (static_cast<Fl_Menu_*>(args->menu)), (static_cast<Fl_Menu_Item*>(args->title)), args->menubar);
+  FL_EXPORT_C(fl_Menu_Item,Fl_Menu_Item_pulldown_with_args)(fl_Menu_Item menu_item,int X,int Y,int W, int H, fl_Menu_Item picked, fl_Menu_ menu, fl_Menu_Item title, int menubar){
+    return (fl_Menu_Item)(static_cast<Fl_Menu_Item*>(menu_item))->pulldown(X,Y,W,H,(static_cast<Fl_Menu_Item*>(picked)), (static_cast<Fl_Menu_*>(menu)), (static_cast<Fl_Menu_Item*>(title)), menubar);
   }
   FL_EXPORT_C(fl_Menu_Item,Fl_Menu_Item_test_shortcut)(fl_Menu_Item menu_item){
     return (fl_Menu_Item)(static_cast<Fl_Menu_Item*>(menu_item))->test_shortcut();

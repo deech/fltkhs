@@ -89,7 +89,24 @@ module Graphics.UI.FLTK.LowLevel.Fl_Valuator
      valuatorDrawBox,
      valuatorDrawBoxWithBoxtype,
      valuatorDrawBackdrop,
-     valuatorDrawFocus
+     valuatorDrawFocus,
+     valuatorBounds, 
+     valuatorMinimum, 
+     valuatorSetMinimum, 
+     valuatorMaximum, 
+     valuatorSetMaximum, 
+     valuatorRange, 
+     valuatorSetStep, 
+     valuatorSetStepWithAB, 
+     valuatorStepWithS, 
+     valuatorStep, 
+     valuatorPrecision, 
+     valuatorValue, 
+     valuatorSetValue, 
+     valuatorFormat, 
+     valuatorRound, 
+     valuatorClamp, 
+     valuatorIncrement
     )
 where
 #include "Fl_ExportMacros.h"
@@ -420,6 +437,57 @@ valuatorSetCallback :: Valuator a -> (WidgetCallback b) -> IO (())
 valuatorSetCallback valuator callback = withObject valuator $ \valuatorPtr -> do
                                 ptr <- toWidgetCallbackPrim callback
                                 setCallback' valuatorPtr (castFunPtr ptr)
+{# fun unsafe Fl_Valuator_bounds as bounds' { id `Ptr ()',`Double',`Double' } -> `()' supressWarningAboutRes #}
+valuatorBounds :: Valuator a  -> Double -> Double ->  IO (())
+valuatorBounds valuator a b = withObject valuator $ \valuatorPtr -> bounds' valuatorPtr a b
+{# fun unsafe Fl_Valuator_minimum as minimum' { id `Ptr ()' } -> `Double' #}
+valuatorMinimum :: Valuator a  ->  IO (Double)
+valuatorMinimum valuator = withObject valuator $ \valuatorPtr -> minimum' valuatorPtr
+{# fun unsafe Fl_Valuator_set_minimum as setMinimum' { id `Ptr ()',`Double' } -> `()' supressWarningAboutRes #}
+valuatorSetMinimum :: Valuator a  -> Double ->  IO (())
+valuatorSetMinimum valuator a = withObject valuator $ \valuatorPtr -> setMinimum' valuatorPtr a
+{# fun unsafe Fl_Valuator_maximum as maximum' { id `Ptr ()' } -> `Double' #}
+valuatorMaximum :: Valuator a  ->  IO (Double)
+valuatorMaximum valuator = withObject valuator $ \valuatorPtr -> maximum' valuatorPtr
+{# fun unsafe Fl_Valuator_set_maximum as setMaximum' { id `Ptr ()',`Double' } -> `()' supressWarningAboutRes #}
+valuatorSetMaximum :: Valuator a  -> Double ->  IO (())
+valuatorSetMaximum valuator a = withObject valuator $ \valuatorPtr -> setMaximum' valuatorPtr a
+{# fun unsafe Fl_Valuator_range as range' { id `Ptr ()',`Double',`Double' } -> `()' supressWarningAboutRes #}
+valuatorRange :: Valuator a  -> Double -> Double ->  IO (())
+valuatorRange valuator a b = withObject valuator $ \valuatorPtr -> range' valuatorPtr a b
+{# fun unsafe Fl_Valuator_set_step as setStep' { id `Ptr ()',`Int' } -> `()' supressWarningAboutRes #}
+valuatorSetStep :: Valuator a  -> Int ->  IO (())
+valuatorSetStep valuator a = withObject valuator $ \valuatorPtr -> setStep' valuatorPtr a
+{# fun unsafe Fl_Valuator_set_step_with_a_b as setStepWithAB' { id `Ptr ()',`Double',`Int' } -> `()' supressWarningAboutRes #}
+valuatorSetStepWithAB :: Valuator a  -> Double -> Int ->  IO (())
+valuatorSetStepWithAB valuator a b = withObject valuator $ \valuatorPtr -> setStepWithAB' valuatorPtr a b
+{# fun unsafe Fl_Valuator_step_with_s as stepWithS' { id `Ptr ()',`Double' } -> `()' supressWarningAboutRes #}
+valuatorStepWithS :: Valuator a  -> Double ->  IO (())
+valuatorStepWithS valuator s = withObject valuator $ \valuatorPtr -> stepWithS' valuatorPtr s
+{# fun unsafe Fl_Valuator_step as step' { id `Ptr ()' } -> `Double' #}
+valuatorStep :: Valuator a  ->  IO (Double)
+valuatorStep valuator = withObject valuator $ \valuatorPtr -> step' valuatorPtr
+{# fun unsafe Fl_Valuator_precision as precision' { id `Ptr ()',`Int' } -> `()' supressWarningAboutRes #}
+valuatorPrecision :: Valuator a  -> Int ->  IO (())
+valuatorPrecision valuator precision = withObject valuator $ \valuatorPtr -> precision' valuatorPtr precision
+{# fun unsafe Fl_Valuator_value as value' { id `Ptr ()' } -> `Double' #}
+valuatorValue :: Valuator a  ->  IO (Double)
+valuatorValue valuator = withObject valuator $ \valuatorPtr -> value' valuatorPtr
+{# fun unsafe Fl_Valuator_set_value as setValue' { id `Ptr ()',`Double' } -> `Int' #}
+valuatorSetValue :: Valuator a  -> Double ->  IO (Int)
+valuatorSetValue valuator v = withObject valuator $ \valuatorPtr -> setValue' valuatorPtr v
+{# fun unsafe Fl_Valuator_format as format' { id `Ptr ()',`String' } -> `Int' #}
+valuatorFormat :: Valuator a  -> String ->  IO (Int)
+valuatorFormat valuator format = withObject valuator $ \valuatorPtr -> format' valuatorPtr format
+{# fun unsafe Fl_Valuator_round as round' { id `Ptr ()',`Double' } -> `Double' #}
+valuatorRound :: Valuator a  -> Double ->  IO (Double)
+valuatorRound valuator v = withObject valuator $ \valuatorPtr -> round' valuatorPtr v
+{# fun unsafe Fl_Valuator_clamp as clamp' { id `Ptr ()',`Double' } -> `Double' #}
+valuatorClamp :: Valuator a  -> Double ->  IO (Double)
+valuatorClamp valuator v = withObject valuator $ \valuatorPtr -> clamp' valuatorPtr v
+{# fun unsafe Fl_Valuator_increment as increment' { id `Ptr ()',`Double',`Int' } -> `Double' #}
+valuatorIncrement :: Valuator a  -> Double -> Int ->  IO (Double)
+valuatorIncrement valuator v n = withObject valuator $ \valuatorPtr -> increment' valuatorPtr v n
 
 {# fun Fl_Valuator_draw_box as valuatorDrawBox' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
 {# fun Fl_Valuator_draw_box_with_tc as valuatorDrawBoxWithTC' { id `Ptr ()', cFromEnum `Boxtype', cFromColor`Color' } -> `()' supressWarningAboutRes #}

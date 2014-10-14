@@ -31,9 +31,14 @@ library
                    Graphics.UI.FLTK.LowLevel.Fl_Group
                    Graphics.UI.FLTK.LowLevel.Fl_Widget
                    Graphics.UI.FLTK.LowLevel.Fl_Valuator
+                   Graphics.UI.FLTK.LowLevel.Fl_Slider
+                   Graphics.UI.FLTK.LowLevel.Fl_Menu_Item
+                   Graphics.UI.FLTK.LowLevel.Fl_Menu_
+                   Graphics.UI.FLTK.LowLevel.Fl_Image
+                   Graphics.UI.FLTK.LowLevel.Fl_Draw
                    Graphics.UI.FLTK.LowLevel.FL
                    Graphics.UI.FLTK.LowLevel.Utils
-  build-depends: base, containers, stm
+  build-depends: base, containers, stm, bytestring
   build-tools: c2hs
   extensions: ForeignFunctionInterface
   hs-source-dirs: src

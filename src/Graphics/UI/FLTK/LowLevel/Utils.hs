@@ -4,9 +4,11 @@ import Graphics.UI.FLTK.LowLevel.Fl_Enumerations
 import Foreign
 import qualified Foreign.Concurrent as FC
 import Foreign.C
+import Foreign.Marshal.Utils
 import Control.Monad
 import Debug.Trace
 import Control.Exception
+import Data.ByteString.Internal
 
 foreign import ccall "wrapper"
         mkWidgetCallbackPtr :: CallbackWithUserDataPrim -> IO (FunPtr CallbackWithUserDataPrim)
@@ -111,6 +113,7 @@ toGetGroupFPrim :: GetGroupF a -> IO (FunPtr GetPointerF)
 toGetGroupFPrim f = mkGetPointerPtr (\ptr -> runPointerF f ptr "Null pointer: toGetGroupFPrim")
 orNullFunPtr :: (a -> IO (FunPtr b)) -> Maybe a -> IO (FunPtr b)
 orNullFunPtr = maybe (return nullFunPtr)
+
 arrayToObjects:: (Ptr (Ptr ())) -> Int -> IO [(Object a)]
 arrayToObjects arrayPtr numElements =
     go arrayPtr numElements []
@@ -135,8 +138,23 @@ toObject ptr = throwStackOnError $
                     pp <- wrapNonNull ptr "Null Pointer Error"
                     let result = wrapObject pp
                     return $ result
+
 unsafeToObject :: Ptr () -> (Object a)
 unsafeToObject = unsafePerformIO . toObject
 
 supressWarningAboutRes :: a -> ()
 supressWarningAboutRes _ = ()
+
+foldl1WithDefault :: a -> (a -> a -> a) -> [a] -> a
+foldl1WithDefault emptyCase _ [] = emptyCase
+foldl1WithDefault _ f as = foldl1 f as
+
+-- byteStringToPCChar ::ByteString -> IO (Ptr CChar)
+-- byteStringToPCChar bs =
+--   let chars = unpack bs
+--       cchars = map castCharToCChar chars
+--   in
+--    newArray cchars
+
+-- pixMapToPPChar :: [ByteString] -> IO (Ptr (Ptr CChar))
+-- pixMapToPPChar bss = sequence (map byteStringToPCChar bss) >>= newArray

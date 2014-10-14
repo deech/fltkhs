@@ -355,8 +355,8 @@ glWindowCanDo win = withObject win $ \winPtr -> canDo' winPtr
 glWindowMode :: GlWindow a  ->  IO (Mode)
 glWindowMode win = withObject win $ \winPtr -> mode' winPtr
 
-{# fun unsafe Fl_Gl_Window_set_mode as setMode' { id `Ptr ()',`Int' } -> `Int' #}
-glWindowSetMode :: GlWindow a  -> Int ->  IO (Int)
+{# fun unsafe Fl_Gl_Window_set_mode as setMode' { id `Ptr ()',cFromEnum `Mode' } -> `Int' #}
+glWindowSetMode :: GlWindow a  -> Mode ->  IO (Int)
 glWindowSetMode win a = withObject win $ \winPtr -> setMode' winPtr a
 
 {# fun unsafe Fl_Gl_Window_context as context' { id `Ptr ()' } -> `GlContext' unsafeToObject #}

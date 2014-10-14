@@ -67,6 +67,8 @@ withFltkc op pd =
   in
     pd {library = Just lib'}
 
+removeExecutables pd = pd {executables = []}
+
 getHaskellObjects :: Library -> LocalBuildInfo
                   -> FilePath -> String -> Bool -> IO [FilePath]
 getHaskellObjects lib lbi pref wanted_obj_ext allow_split_objs
@@ -103,14 +105,14 @@ myBuildHook pkg_descr local_bld_info user_hooks bld_flags =
            rawSystemExit normal "make" ["src"]
       else
           return ()
-      let new_pkg_descr = (addIncludeDirs . (withFltkc (++)) $ pkg_descr)
+      let new_pkg_descr = (removeExecutables . addIncludeDirs . (withFltkc (++)) $ pkg_descr)
           new_local_bld_info = local_bld_info { localPkgDescr = new_pkg_descr }
           (libs, nonlibs) = partition
                                (\c -> case c of
-                                        CLibName -> True
+                                        (CLibName,_,_) -> True
                                         _ -> False)
-                               (compBuildOrder new_local_bld_info)
-          lib_lbi = new_local_bld_info {compBuildOrder = libs}
+                               (componentsConfigs new_local_bld_info)
+          lib_lbi = new_local_bld_info {componentsConfigs = libs}
       buildHook simpleUserHooks new_pkg_descr lib_lbi user_hooks bld_flags
       -- recreate the archive
       let verbosity = fromFlag (buildVerbosity bld_flags)
@@ -118,15 +120,14 @@ myBuildHook pkg_descr local_bld_info user_hooks bld_flags =
       let pref = buildDir local_bld_info
           verbosity = fromFlag (buildVerbosity bld_flags)
       cobjs <- getObjectFileDirContents >>= return . map (\f -> combine objectFileDir f) . filter (\f -> takeExtension f == ".o")
-      withComponentsLBI pkg_descr local_bld_info $ \comp clbi ->
+      withAllComponentsInBuildOrder pkg_descr local_bld_info $ \comp clbi ->
           case comp of
             (CLib lib) -> do
                       hobjs <- getHaskellObjects lib local_bld_info pref objExtension True
                       let staticObjectFiles = cobjs ++ hobjs
                       (arProg, _) <- requireProgram verbosity arProgram (withPrograms local_bld_info)
-                      let pkgid = packageId pkg_descr
-                          vanillaLibFilePath = pref </> mkLibName pkgid
-                      Ar.createArLibArchive verbosity arProg vanillaLibFilePath staticObjectFiles
+                      let vanillaLibFilePath = pref </> (show . pkgName . package) pkg_descr
+                      Ar.createArLibArchive verbosity local_bld_info vanillaLibFilePath staticObjectFiles
             _ -> return ()
 
       -- reuse the inplace package database that has already been created
@@ -138,7 +139,7 @@ myBuildHook pkg_descr local_bld_info user_hooks bld_flags =
       -- don't need the handle
       hClose tempFileHandle
       copyFile dbFile tempFilePath
-      let exe_lbi = new_local_bld_info {withPackageDB = withPackageDB new_local_bld_info ++ [SpecificPackageDB tempFilePath], compBuildOrder = nonlibs}
+      let exe_lbi = new_local_bld_info {withPackageDB = withPackageDB new_local_bld_info ++ [SpecificPackageDB tempFilePath], componentsConfigs = nonlibs}
           exe_pkg_descr = new_pkg_descr {extraTmpFiles = extraTmpFiles new_pkg_descr ++ [tempFilePath]}
       buildHook simpleUserHooks exe_pkg_descr exe_lbi user_hooks bld_flags
 

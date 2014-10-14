@@ -128,7 +128,17 @@ withMarshaller marshaller a =
     then (Just "id")
     else
         lookup a marshaller
-
+type Arg = (String, (String,String))
+data RectangleOrStandalone = Rectangle Arg Arg Arg Arg
+                           | StandAlone Arg
+                           | Position Arg Arg
+                           | ByX Arg
+                           | ByY Arg
+                           | ByXY Arg Arg
+                           | ReturnSize Arg Arg
+                           | ReturnRectangle Arg Arg Arg Arg
+                           | RGB Arg Arg Arg
+                           | Style Arg
 printHaskell (Haskell (prefix, oldName, name, returnType, haskellArgs)) =
     let addInMarshaller arg =
             case withMarshaller inMarshallMap arg of
@@ -143,10 +153,11 @@ printHaskell (Haskell (prefix, oldName, name, returnType, haskellArgs)) =
                               else ""
         cppNameToHaskellName = map toLower
         nameToPtrName n = (cppNameToHaskellName n) ++ "Ptr"
-        haskellFunction hArg = if ((fst . snd $ hArg) == "Ptr ()")
-                               then ("withObject " ++ (cppNameToHaskellName (fst hArg))
-                                                   ++ " $ \\" ++ (nameToPtrName (fst hArg)) ++ " -> ")
-                               else ""
+        haskellFunction hArg =
+            if ((fst . snd $ hArg) == "Ptr ()")
+            then ("withObject " ++ (cppNameToHaskellName (fst hArg))
+                                    ++ " $ \\" ++ (nameToPtrName (fst hArg)) ++ " -> ")
+            else ""
         toHaskellType arg = case (lookup arg haskellEquivalent) of
                               Just a -> a ++ " a "
                               Nothing -> case (lookup arg simpleTypeMap) of
@@ -155,30 +166,196 @@ printHaskell (Haskell (prefix, oldName, name, returnType, haskellArgs)) =
         haskellFunctionName = case prefix of
                                (Just p) -> p ++ [(toUpper . head $ name)] ++ (tail name)
                                Nothing -> name
+        detectRectangleOrPosition (x@("X",(_,"int*")):y@("Y",(_,"int*")):w@("W",(_,"int*")):h@("H",(_,"int*")):args) =
+           [ReturnRectangle x y w h] ++ detectRectangleOrPosition args
+        detectRectangleOrPosition (x@("x",(_,"int*")):y@("y",(_,"int*")):w@("w",(_,"int*")):h@("h",(_,"int*")):args) =
+           [ReturnRectangle x y w h] ++ detectRectangleOrPosition args
+        detectRectangleOrPosition (x@("dx",(_,"int*")):y@("dy",(_,"int*")):w@("w",(_,"int*")):h@("h",(_,"int*")):args) =
+           [ReturnRectangle x y w h] ++ detectRectangleOrPosition args
+        detectRectangleOrPosition (w@("w",(_,"int*")):h@("h",(_,"int*")):args) =
+           [ReturnSize w h] ++ detectRectangleOrPosition args
+        detectRectangleOrPosition (w@("x",(_,"int*")):h@("y",(_,"int*")):args) =
+           [ReturnSize w h] ++ detectRectangleOrPosition args
+        detectRectangleOrPosition (x@("X",(_,_)):y@("Y",(_,_)):w@("W",(_,_)):h@("H",(_,_)):args) =
+           [Rectangle x y w h] ++ detectRectangleOrPosition args
+        detectRectangleOrPosition (x@("x",(_,_)):y@("y",(_,_)):w@("w",(_,_)):h@("h",(_,_)):args) =
+           [Rectangle x y w h] ++ detectRectangleOrPosition args
+        detectRectangleOrPosition (x@("x",(_,"int")):y@("y",(_,"int")):args) =
+           [Position x y] ++ detectRectangleOrPosition args
+        detectRectangleOrPosition (x@("X",(_,"int")):y@("Y",(_,"int")):args) =
+           [Position x y] ++ detectRectangleOrPosition args
+        detectRectangleOrPosition (x@("x",(_,"double")):y@("y",(_,"double")):args) =
+           [ByXY x y] ++ detectRectangleOrPosition args
+        detectRectangleOrPosition (x@("X",(_,"double")):y@("Y",(_,"double")):args) =
+           [ByXY x y] ++ detectRectangleOrPosition args
+        detectRectangleOrPosition (x@("x",(_,"double")):args) =
+           [ByX x] ++ detectRectangleOrPosition args
+        detectRectangleOrPosition (x@("X",(_,"double")):args) =
+           [ByX x] ++ detectRectangleOrPosition args
+        detectRectangleOrPosition (y@("y",(_,"double")):args) =
+           [ByY y] ++ detectRectangleOrPosition args
+        detectRectangleOrPosition (y@("Y",(_,"double")):args) =
+           [ByY y] ++ detectRectangleOrPosition args
+        detectRectangleOrPosition (r@("r",(_,"uchar")):g@("g",(_,"uchar")):b@("b", (_, "uchar")):args) =
+           [RGB r g b] ++ detectRectangleOrPosition args
+        detectRectangleOrPosition (style@("style",(_,"int")):args) =
+           [Style style] ++ detectRectangleOrPosition args
+        detectRectangleOrPosition (arg:args) = [StandAlone arg] ++ detectRectangleOrPosition args
+        detectRectangleOrPosition [] = []
+        parsedArgs = detectRectangleOrPosition haskellArgs
+        addRectangle ((Rectangle x y w h):args) = "let (x_pos', y_pos', width', height') = fromRectangle rectangle in\n"
+        addRectangle _ = ""
+        hasAllocated =
+            any
+             (\a -> case a of
+                        ReturnRectangle _ _ _ _ -> True
+                        ReturnSize _ _ -> True
+                        _ -> False)
+             parsedArgs
+        allocatedReturn =
+            (concat
+             (map
+              (\a -> case a of
+                       ReturnRectangle _ _ _ _ -> ["Rectangle"]
+                       ReturnSize _ _ -> ["Size"]
+                       _ -> [])
+              parsedArgs
+             )
+            )
     in
     printf "{# fun unsafe %s as %s { %s } -> %s #}\n%s\n%s"
-           oldName (name ++ "'")
-           (intercalate "," (map (\(_,(hArg,_)) -> (addInMarshaller hArg))
-                                 haskellArgs))
+           oldName
+           (name ++ "'")
+           (intercalate ","
+            (concat
+              (map
+                (\a -> case a of
+                         StandAlone (_,(hArg,_)) -> [(addInMarshaller hArg)]
+                         Position (_,(hArg1,_)) (_,(hArg2,_)) -> [(addInMarshaller hArg1),
+                                                                  (addInMarshaller hArg2)]
+                         RGB (_,(hArg1,_)) (_,(hArg2,_))(_,(hArg3,_))
+                             -> [(addInMarshaller hArg1),
+                                 (addInMarshaller hArg2),
+                                 (addInMarshaller hArg3)]
+                         Style (_, (style,_))
+                             -> [(addInMarshaller style)]
+                         ByX (_,(hArg,_)) -> [(addInMarshaller hArg)]
+                         ByY (_,(hArg,_)) -> [(addInMarshaller hArg)]
+                         ByXY (_,(hArg1,_)) (_,(hArg2,_)) ->
+                             [(addInMarshaller hArg1),
+                              (addInMarshaller hArg2)]
+                         Rectangle (_,(hArg1,_))(_,(hArg2,_))(_,(hArg3,_))(_,(hArg4,_)) ->
+                             [(addInMarshaller hArg1),
+                              (addInMarshaller hArg2),
+                              (addInMarshaller hArg3),
+                              (addInMarshaller hArg4)]
+                         ReturnSize _ _ ->
+                             [("alloca- `Int' peekIntConv*"),
+                              ("alloca- `Int' peekIntConv*")]
+                         ReturnRectangle _ _ _ _ ->
+                             [("alloca- `Int' peekIntConv*"),
+                              ("alloca- `Int' peekIntConv*"),
+                              ("alloca- `Int' peekIntConv*"),
+                              ("alloca- `Int' peekIntConv*")]
+
+                )
+               parsedArgs
+              )
+            )
+           )
            (addOutMarshaller (fst returnType))
-           -- (intercalate " -> " ((map (snd . snd) haskellArgs) ++ [(snd returnType)]))
            (haskellFunctionName ++
             " :: " ++
             (intercalate
              " -> "
-             ((map (toHaskellType . snd . snd) haskellArgs)
-              ++ [" IO (" ++ (fst returnType) ++ ")"])))
+             ((map
+               (
+                \a -> case a of
+                        StandAlone arg -> (toHaskellType . snd . snd) $ arg
+                        Position _ _ -> "Position"
+                        ByX _ -> "ByX"
+                        ByY _ -> "ByY"
+                        ByXY _ _ -> "ByXY"
+                        Rectangle _ _ _ _ -> "Rectangle"
+                        Style _ -> "LineStyle"
+                        RGB _ _ _ -> "RGB"
+                        ReturnSize _ _ -> ""
+                        ReturnRectangle _ _ _ _ -> ""
+               )
+               parsedArgs) ++
+              [" IO (" ++
+               (intercalate
+                ","
+                (if (fst returnType == "()")
+                 then allocatedReturn
+                 else [(fst returnType)] ++ allocatedReturn)
+               ) ++
+               ")"
+              ]
+             )
+            )
+           )
            (haskellFunctionName
             ++ " "
-            ++ (intercalate " " (map (cppNameToHaskellName . fst) haskellArgs))
+            ++ (intercalate " " (map
+                                 (
+                                  \a -> case a of
+                                          StandAlone arg -> (cppNameToHaskellName . fst) arg
+                                          Position _ _ -> "(Position (X x_pos') (Y y_pos'))"
+                                          ByX _ -> "(ByX by_x')"
+                                          ByY _ -> "(ByY by_y')"
+                                          ByXY _ _ -> "(ByXY by_x' by_y')"
+                                          RGB _ _ _ -> "(r', g' , b')"
+                                          Style _ -> "style"
+                                          ReturnSize _ _ -> ""
+                                          ReturnRectangle _ _ _ _ -> ""
+                                          Rectangle x y w h -> "rectangle"
+                                 )
+                                 parsedArgs))
             ++ " = "
+            ++ (concat (map
+                        (\a -> case a of
+                                 Rectangle _ _ _ _ -> "let (x_pos', y_pos', width', height') = fromRectangle rectangle in "
+                                 _ -> ""
+                        )
+                        parsedArgs))
             ++ (concat (map haskellFunction haskellArgs))
             ++ (name ++ "'") ++ " "
-            ++ (intercalate " " (map (\hArg -> if ((fst . snd $ hArg) == "Ptr ()")
-                                               then (nameToPtrName (fst hArg))
-                                               else (cppNameToHaskellName (fst hArg)))
-                                 haskellArgs
+            ++ (intercalate " " (map
+                                 (
+                                  \hArg -> case hArg of
+                                             StandAlone arg ->
+                                                 if ((fst . snd $ arg) == "Ptr ()")
+                                                 then (nameToPtrName (fst arg))
+                                                 else (cppNameToHaskellName (fst arg))
+                                             ByX _ -> "by_x'"
+                                             ByY _ -> "by_y'"
+                                             ByXY _ _ -> "by_x' by_y'"
+                                             Position _ _ -> "x_pos' y_pos'"
+                                             Style _ -> ""
+                                             RGB _ _ _ -> "r' g' b'"
+                                             ReturnSize _ _ -> ""
+                                             ReturnRectangle _ _ _ _ -> ""
+                                             Rectangle _ _ _ _ -> "x_pos' y_pos' width' height'"
+                                 )
+                                 parsedArgs
                                 )
+               )
+            ++ (
+                if hasAllocated
+                then
+                    let allocatedArgs =
+                            map (\a -> case a of
+                                         "Rectangle" -> ("rectangle'", "toRectangle")
+                                         "Size" -> ("size'", "toSize")
+                                         _ -> ("","")
+                                )
+                            allocatedReturn
+                    in
+                    if (fst returnType == "()")
+                    then ">>= \\(" ++ (intercalate "," (map fst allocatedArgs)) ++ ") -> return $ (" ++ (intercalate "," (map (\a -> (snd a) ++ " " ++ (fst a)) allocatedArgs)) ++ ")"
+                    else ">>= \\(result, " ++ (intercalate "," (map fst allocatedArgs)) ++ ") -> return $ (result, " ++ (intercalate "," (map (\a -> (snd a) ++ " " ++ (fst a)) allocatedArgs)) ++ ")"
+                else ""
                )
            )
 
@@ -190,11 +367,15 @@ inMarshallMap =
     ,("Labeltype", "cFromEnum")
     ,("AlignType", "cFromEnum")
     ,("Color", "cFromColor")
-    ,("Font", "cFromFont")
     ,("CUInt", "id")
     ,("FlShortcut", "id")
     ,("When", "cFromEnum")
-    ,("MOde", "cFromEnum")
+    ,("Mode", "cFromEnum")
+    ,("Cursor", "cFromEnum")
+    ,("LineStyle", "cFromEnum")
+    ,("Font", "cFromFont")
+    ,("FontAttribute", "cFromFontAttribute")
+    ,("Fontsize", "cFromFontsize")
     ]
 outMarshallMap =
     [
@@ -202,10 +383,15 @@ outMarshallMap =
     ,("Labeltype", "cToEnum")
     ,("Color", "cToColor")
     ,("Font", "cToFont")
+    ,("FontAttribute", "cToFontAttribute")
+    ,("Fontsize", "cToFontsize")
     ,("When", "cToEnum")
     ,("FlShortcut", "id")
     ,("AlignType", "cToEnum")
     ,("Mode", "cToEnum")
+    ,("Cursor", "cToEnum")
+    ,("LineStyle", "cToEnum")
+    ,("Region", "unsafeToObject")
     ]
 simpleTypeMap =
     [
@@ -216,20 +402,31 @@ simpleTypeMap =
     ,("int*", "Ptr CInt")
     ,("char*", "String")
     ,("const char*", "String")
+    ,("char* const*", "String")
+    ,("const char* const*", "String")
     ,("float", "Float")
     ,("uchar", "Word8")
     ,("float*", "Ptr CFloat")
     ,("unsigned", "Int")
     ,("unsigned int", "Int")
+    ,("fl_Region", "Ptr ()")
     ,("Fl_Boxtype", "Boxtype")
     ,("Fl_Mode", "Mode")
     ,("fl_Widget", "Ptr ()")
     ,("fl_Window", "Ptr ()")
     ,("fl_Group", "Ptr ()")
     ,("fl_Button", "Ptr ()")
+    ,("fl_Valuator", "Ptr ()")
+    ,("fl_Slider", "Ptr ()")
+    ,("fl_Menu_Item", "Ptr ()")
+    ,("fl_Menu_", "Ptr ()")
+    ,("fl_Image", "Ptr ()")
     ,("Fl_Color", "Color")
     ,("Fl_Font", "Font")
+    ,("Fl_Fontsize", "Fontsize")
+    ,("Fl_FontAttribute", "FontAttribute")
     ,("Fl_Align", "AlignType")
+    ,("Fl_Cursor", "Cursor")
     ,("Fl_Shortcut", "FlShortcut")
     ,("Fl_Labeltype", "Labeltype")
     ,("fl_Label_Draw_F*", "FunPtr LabelDrawFPrim")
@@ -255,12 +452,18 @@ simpleTypeMap =
     ]
 haskellEquivalent =
     [
-     ("fl_Widget", "Widget"),
-     ("fl_Window", "Window"),
-     ("fl_Group", "Group"),
-     ("fl_Gl_Window", "GlWindow"),
-     ("fl_Image" , "Image"),
-     ("fl_Button", "Button")
+     ("fl_Region"    , "Region"),
+     ("fl_Widget"    , "Widget"),
+     ("fl_Window"    , "Window"),
+     ("fl_Group"     , "Group"),
+     ("fl_Gl_Window" , "GlWindow"),
+     ("fl_Image"     , "Image"),
+     ("fl_Button"    , "Button"),
+     ("fl_Valuator"  , "Valuator"),
+     ("fl_Slider"    , "Slider"),
+     ("fl_Image"     , "Image"),
+     ("fl_Menu_Item" , "MenuItem"),
+     ("fl_Menu_"     , "MenuPrim")
     ]
 upcase = map toUpper
 makeArgument className argType argName =
@@ -299,7 +502,9 @@ parseTypeName = do string exportMacro
                    let realName =  if ((not $ isInfixOf "New" functionName) &&
                                         isPrefixOf className functionName)
                                    then
-                                       drop (length $ className ++ "_") functionName
+                                       if (length className == 0)
+                                       then functionName
+                                       else drop (length $ className ++ "_") functionName
                                    else functionName
                    return $ FunctionName realName
                                          className
@@ -450,124 +655,3 @@ generateDerivedMethod impl =
 printImplementation sig =  case parse parseTypeSignature "" sig of
                              Right output ->  outputDefaultImplementation output
                              Left err -> show err
-
-test = mapM_ (\a -> putStrLn $ printImplementation a) testSet
-
-testSet = [  "FL_EXPORT_C(fl_Align,     Fl_Window_align)(fl_Window win);",
-  "FL_EXPORT_C(void,         Fl_Window_position)(fl_Window win, int X, int Y);",
-  "FL_EXPORT_C(size,         Fl_Window_size)(fl_Window win, int W, int H);",
-  "FL_EXPORT_C(int,          Fl_Window_x)(fl_Window win);",
-  "FL_EXPORT_C(int,          Fl_Window_y)(fl_Window win);",
-  "FL_EXPORT_C(int,          Fl_Window_w)(fl_Window win);",
-  "FL_EXPORT_C(int,          Fl_Window_h)(fl_Window win);",
-  "FL_EXPORT_C(void,         Fl_Window_set_box)(fl_Window win, fl_Boxtype new_box);",
-  "FL_EXPORT_C(fl_Boxtype,   Fl_Window_box)(fl_Window win);",
-  "FL_EXPORT_C(void,         Fl_Window_set_type)(fl_Window win, uchar t);",
-  "FL_EXPORT_C(void,         Fl_Window_set_color)(fl_Window win, fl_Color bg);",
-  "FL_EXPORT_C(fl_Color,     Fl_Window_color)(fl_Window win);",
-  "FL_EXPORT_C(void,         Fl_Window_set_selection_color)(fl_Window win, fl_Color a);",
-  "FL_EXPORT_C(fl_Color,     Fl_Window_selection_color)(fl_Window win);",
-  "FL_EXPORT_C(void,         Fl_Window_set_background_and_selection_color)(fl_Window win,fl_Color bg, fl_Color a);",
-  "FL_EXPORT_C(const char*,  Fl_Window_label)(fl_Window win);",
-  "FL_EXPORT_C(const char*,  Fl_Window_set_label)(fl_Window win, const char* text);",
-  "FL_EXPORT_C(const char*,  Fl_Window_set_text_and_type_label)(fl_Window win, fl_Labeltype a, const char* b);",
-  "FL_EXPORT_C(fl_Labeltype, Fl_Window_labeltype)(fl_Window win);",
-  "FL_EXPORT_C(void,         Fl_Window_set_labeltype)(fl_Window win, fl_Labeltype a);",
-  "FL_EXPORT_C(fl_Color,     Fl_Window_labelcolor)(fl_Window win);",
-  "FL_EXPORT_C(void,         Fl_Window_set_labelcolor)(fl_Window win, fl_Color c);",
-  "FL_EXPORT_C(fl_Font,      Fl_Window_labelfont)(fl_Window win);",
-  "FL_EXPORT_C(void,         Fl_Window_set_labelfont)(fl_Window win, fl_Font c);",
-  "FL_EXPORT_C(fl_Fontsize,  Fl_Window_labelsize)(fl_Window win);",
-  "FL_EXPORT_C(void,         Fl_Window_set_labelsize)(fl_Window win, fl_Fontsize pix);",
-  "FL_EXPORT_C(void,         Fl_Window_copy_label)(fl_Window win, const char* new_label);",
-  "FL_EXPORT_C(fl_Image,     Fl_Window_image)(fl_Window win);",
-  "FL_EXPORT_C(void,         Fl_Window_set_image)(fl_Window win, fl_Image pix);",
-  "FL_EXPORT_C(uchar,        Fl_Window_type)(fl_Window win);",
-  "FL_EXPORT_C(fl_Image,     Fl_Window_deimage)(fl_Window win);",
-  "FL_EXPORT_C(void,         Fl_Window_set_deimage)(fl_Window win, fl_Image pix);",
-  "FL_EXPORT_C(const char*,  Fl_Window_tooltip)(fl_Window win);",
-  "FL_EXPORT_C(void,         Fl_Window_set_tooltip)(fl_Window win, const char* text);",
-  "FL_EXPORT_C(void,         Fl_Window_copy_tooltip)(fl_Window win, const char* text);",
-  "FL_EXPORT_C(fl_Callback,  Fl_Window_callback)(fl_Window win);",
-  "FL_EXPORT_C(void,         Fl_Window_set_callback_and_user_data)(fl_Window win, fl_Callback cb, void* p);",
-  "FL_EXPORT_C(void,         Fl_Window_set_callback)(fl_Window win, fl_Callback cb);",
-  "FL_EXPORT_C(void*,        Fl_Window_user_data)(fl_Window win);",
-  "FL_EXPORT_C(void,         Fl_Window_set_user_data)(fl_Window win, void* v);",
-  "FL_EXPORT_C(long,         Fl_Window_argument)(fl_Window win);",
-  "FL_EXPORT_C(void,         Fl_Window_set_argument)(fl_Window win, long v);",
-  "FL_EXPORT_C(fl_When,      Fl_Window_when)(fl_Window win);",
-  "FL_EXPORT_C(void,         Fl_Window_set_when)(fl_Window win, uchar i);",
-  "FL_EXPORT_C(unsigned int, Fl_Window_visible)(fl_Window win);",
-  "FL_EXPORT_C(int,          Fl_Window_visible_r)(fl_Window win);",
-  "FL_EXPORT_C(void,         Fl_Window_set_visible)(fl_Window win);",
-  "FL_EXPORT_C(void,         Fl_Window_clear_visible)(fl_Window win);",
-  "FL_EXPORT_C(unsigned int, Fl_Window_active)(fl_Window win);",
-  "FL_EXPORT_C(int,          Fl_Window_active_r)(fl_Window win);",
-  "FL_EXPORT_C(void,         Fl_Window_activate)(fl_Window win);",
-  "FL_EXPORT_C(void,         Fl_Window_deactivate)(fl_Window win);",
-  "FL_EXPORT_C(unsigned int, Fl_Window_output)(fl_Window win);",
-  "FL_EXPORT_C(void,         Fl_Window_set_output)(fl_Window win);",
-  "FL_EXPORT_C(void,         Fl_Window_clear_output)(fl_Window win);",
-  "FL_EXPORT_C(unsigned int, Fl_Window_takesevents)(fl_Window win);",
-  "FL_EXPORT_C(void,         Fl_Window_set_changed)(fl_Window win);",
-  "FL_EXPORT_C(void,         Fl_Window_clear_changed)(fl_Window win);",
-  "FL_EXPORT_C(int,          Fl_Window_take_focus)(fl_Window win);",
-  "FL_EXPORT_C(void,         Fl_Window_set_visible_focus)(fl_Window win);",
-  "FL_EXPORT_C(void,         Fl_Window_clear_visible_focus)(fl_Window win);",
-  "FL_EXPORT_C(void,         Fl_Window_modify_visible_focus)(fl_Window win, int v);",
-  "FL_EXPORT_C(unsigned int, Fl_Window_visible_focus)(fl_Window win);",
-  "FL_EXPORT_C(void,         Fl_Window_do_callback)(fl_Window win);",
-  "FL_EXPORT_C(void,         Fl_Window_do_callback_with_widget_and_user_data)(fl_Window win, fl_Widget w, long arg);",
-  "FL_EXPORT_C(void,         Fl_Window_do_callback_with_widget_and_default_user_data)(fl_Window win, fl_Widget w);",
-  "FL_EXPORT_C(int,          Fl_Window_contains)(fl_Window win, fl_Widget w);",
-  "FL_EXPORT_C(int,          Fl_Window_inside)(fl_Window win, fl_Widget w);",
-  "FL_EXPORT_C(void,         Fl_Window_redraw)(fl_Window win);",
-  "FL_EXPORT_C(void,         Fl_Window_redraw_label)(fl_Window win);",
-  "FL_EXPORT_C(uchar,        Fl_Window_damage)(fl_Window win);",
-  "FL_EXPORT_C(uchar,        Fl_Window_clear_damage)(fl_Window win);",
-  "FL_EXPORT_C(void,         Fl_Window_clear_damage_with_bitmask)(fl_Window win, uchar c);",
-  "FL_EXPORT_C(void,         Fl_Window_clear_damage)(fl_Window win);",
-  "FL_EXPORT_C(void,         Fl_Window_damage_with_text)(fl_Window win, uchar c);",
-  "FL_EXPORT_C(void,         Fl_Window_damage_inside_widget)(fl_Window win, uchar c, int x , int y , int w, int h);",
-  "FL_EXPORT_C(void,         Fl_Window_draw_label)(fl_Window win, int x , int y , int w, int h, fl_Align alignment);",
-  "FL_EXPORT_C(void,         Fl_Window_measure_label)(fl_Window win, int& ww , int& hh);",
-  "FL_EXPORT_C(fl_Group,     Fl_Window_as_group)(fl_Window win);",
-  "FL_EXPORT_C(fl_Gl_Window, Fl_Window_as_gl_window)(fl_Window win);",
-  "FL_EXPORT_C(unsigned int, Fl_Window_changed)(fl_Window win);",
-  "FL_EXPORT_C(fl_Group,     Fl_Window_parent)(fl_Window win);",
-  "FL_EXPORT_C(void,         Fl_Window_set_parent)(fl_Window win, fl_Group win);",
-  "FL_EXPORT_C(void,         Fl_Window_fullscreen)(fl_Window win);",
-  "FL_EXPORT_C(void,         Fl_Window_fullscreen_off)(fl_Window win);",
-  "FL_EXPORT_C(void,         Fl_Window_fullscreen_off_with_resize)(fl_Window win,int X,int Y,int W,int H);",
-  "FL_EXPORT_C(fl_Window,    Fl_Window_New_WithLabel)(int x, int y, const char* title);",
-  "FL_EXPORT_C(fl_Window,    Fl_Window_New)(int x, int y);",
-  "FL_EXPORT_C(fl_Window,    Fl_Window_NewWH_WithTitle)(int x, int y, int w, int h, const char* title);",
-  "FL_EXPORT_C(fl_Window,    Fl_Window_NewWH)(int x, int y, int w, int h);",
-  "FL_EXPORT_C(void,         Fl_Window_hide)(fl_Window win);",
-  "FL_EXPORT_C(void,         Fl_Window_show)(fl_Window win);",
-  "FL_EXPORT_C(void,         Fl_Window_show_with_args)(fl_Window win, int argc, char** argv);",
-  "FL_EXPORT_C(void,         Fl_Window_destroy)(fl_Window win);",
-  "FL_EXPORT_C(void,         Fl_Window_resize)(fl_Window win, int X, int Y, int W, int H);",
-  "FL_EXPORT_C(void,         Fl_Window_iconize)(fl_Window win);"]
-testSet1 =
-  ["FL_EXPORT_C(fl_Group,Fl_Table_parent)(fl_Table table){ \
-    \return (static_cast<Fl_DerivedTable*>(table))->parent(); \
-  \}",
-  "FL_EXPORT_C(void,Fl_Table_set_parent)(fl_Table table,fl_Group grp){ \
-    \(static_cast<Fl_DerivedTable*>(table))->parent((static_cast<Fl_Group*>(grp)));\
-  \}",
-  "FL_EXPORT_C(void,Fl_Table_do_callback)(fl_Table table, TableContextC tableContext, int row, int col){ \
-    \Fl_Table::TableContext c = (Fl_Table::TableContext)-1;\
-    \switch(tableContext){\
-    \case CONTEXT_NONEC:      {c = Fl_Table::CONTEXT_NONE;      break;}\
-    \case CONTEXT_STARTPAGEC: {c = Fl_Table::CONTEXT_STARTPAGE; break;}\
-    \case CONTEXT_ENDPAGEC:   {c = Fl_Table::CONTEXT_ENDPAGE;   break;}\
-    \case CONTEXT_ROW_HEADERC:{c = Fl_Table::CONTEXT_ROW_HEADER;break;}\
-    \case CONTEXT_COL_HEADERC:{c = Fl_Table::CONTEXT_COL_HEADER;break;}\
-    \case CONTEXT_CELLC:      {c = Fl_Table::CONTEXT_CELL;      break;}\
-    \case CONTEXT_TABLEC:     {c = Fl_Table::CONTEXT_TABLE;     break;}\
-    \case CONTEXT_RC_RESIZEC: {c = Fl_Table::CONTEXT_RC_RESIZE; break;}\
-    \default:                 {c = (Fl_Table::TableContext)-1;  break;}\
-    \}\
-    \(static_cast<Fl_DerivedTable*>(table))->do_callback(c, row, col);\
-  \}"]

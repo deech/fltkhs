@@ -205,6 +205,8 @@ type FlColor              = {#type Fl_Color #}
 type FlFont               = {#type Fl_Font #}
 type FlAlign              = {#type Fl_Align #}
 type RGB                  = (Int, Int, Int)
+type LineDelta            = Maybe Int
+type Delta                = Maybe Int
 type FlIntPtr             = {#type fl_intptr_t #}
 type FlUIntPtr            = {#type fl_uintptr_t#}
 type ID                   = {#type ID#}
@@ -212,6 +214,7 @@ data Object a             = Object !(ForeignPtr (Ptr a)) deriving Show
 type TManagedPtr a        = CManagedPtr a
 data CManagedPtr a        = CManagedPtr
 type GlContext            = Object ()
+type Region               = Object ()
 data CWidget a            = CWidget
 type Widget a             = Object (CWidget a)
 data CGroup a             = CGroup
@@ -897,10 +900,22 @@ newtype Width = Width Int
 newtype Height = Height Int
 newtype X = X Int
 newtype Y = Y Int
+newtype ByX = ByX Double
+newtype ByY = ByY Double
 data Position = Position X Y
+data Measure = Measure Width Height
 data DPI = DPI Float Float
+newtype MenuItemIndex = MenuItemIndex Int
+data MenuItemPointer a = MenuItemPointer (MenuItem a)
+newtype MenuItemName = MenuItemName String
+data MenuItemReference a = MenuItemIndexReference MenuItemIndex | MenuItemPointerReference (MenuItemPointer a)
+data MenuItemLocator a = MenuItemPointerLocator (MenuItemPointer a) | MenuItemNameLocator MenuItemName
 data Rectangle = Rectangle Position Size
+data ByXY = ByXY ByX ByY
+data Intersection = Contained | Partial
 data Size = Size Width Height
+data ShortcutKeySequence = ShortcutKeySequence [KeyboardCode] (Maybe Char)
+data Shortcut = KeySequence ShortcutKeySequence | KeyFormat String
 data ScreenLocation = Intersect Rectangle
                     | ScreenNumber Int
                     | ScreenPosition Position
@@ -924,22 +939,53 @@ fromRectangle (Rectangle (Position
                           (Height height))) =
               (x_pos, y_pos, width, height)
 
+toSize :: (Int, Int) -> Size
+toSize (width', height') = Size (Width width') (Height height')
+
 throwStackOnError f =
   f `catch` throwStack
   where
   throwStack :: SomeException -> IO b
   throwStack e = traceStack (show e) $ error ""
 
+withForeignPtrs :: [ForeignPtr a] -> ([Ptr a] -> IO c) -> IO c
+withForeignPtrs fptrs io = do
+  let ptrs = map unsafeForeignPtrToPtr fptrs
+  r <- io ptrs
+  mapM_ touchForeignPtr fptrs
+  return r
+
+toObjectPtr :: Ptr (Ptr a) -> IO (Ptr a)
+toObjectPtr ptrToObjPtr = do
+  objPtr <- peek ptrToObjPtr
+  if (objPtr == nullPtr)
+   then error "Object does not exist"
+   else return objPtr
+
 withObject :: Object a -> (Ptr b -> IO c) -> IO c
 withObject (Object fptr) f =
    throwStackOnError $
      withForeignPtr fptr
        (\ptrToObjPtr -> do
-           objPtr <- peek ptrToObjPtr
-           if (objPtr == nullPtr)
-            then error "Object does not exist."
-            else f (castPtr objPtr)
+           objPtr <- toObjectPtr ptrToObjPtr
+           f (castPtr objPtr)
        )
+
+withObjects :: [Object a] -> (Ptr (Ptr b) -> IO c) -> IO c
+withObjects objs f =
+  throwStackOnError
+  $ withForeignPtrs
+        (map (\(Object fptr) -> fptr) objs)
+        (\ptrToObjPtrs -> do
+           objPtrs <- mapM toObjectPtr ptrToObjPtrs
+           arrayPtr <- newArray objPtrs
+           f (castPtr arrayPtr)
+        )
+
+withMaybeObject :: Maybe (Object a) -> (Ptr b -> IO c) -> IO c
+withMaybeObject (Just o) f = withObject o f
+withMaybeObject Nothing f = f (castPtr nullPtr)
+
 
 swapObject :: Object a -> (Ptr b -> IO (Ptr a)) -> IO ()
 swapObject obj@(Object fptr) f = do

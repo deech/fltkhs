@@ -153,6 +153,9 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Image_draw_with_cy)(fl_Image image,int X,int Y,int W,int H,int cy){
     return (static_cast<Fl_DerivedImage*>(image))->draw(X,Y,W,H,0,cy);
   }
+  FL_EXPORT_C(void,Fl_Image_draw_with)(fl_Image image,int X,int Y,int W,int H){
+    return (static_cast<Fl_DerivedImage*>(image))->draw(X,Y,W,H);
+  }
   FL_EXPORT_C(void,Fl_Image_draw)(fl_Image image,int X,int Y){
     return (static_cast<Fl_Image*>(image))->draw(X,Y);
   }

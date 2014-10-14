@@ -439,17 +439,17 @@ enum Cursor {
  CursorNW      = FL_CURSOR_NW
 };
 enum Mode {
- RGB         = FL_RGB,
- Index       = FL_INDEX,
- Double      = FL_DOUBLE,
- Accum       = FL_ACCUM,
- Alpha       = FL_ALPHA,
- Depth       = FL_DEPTH,
- Stencil     = FL_STENCIL,
- RGB8        = FL_RGB8,
- Multisample = FL_MULTISAMPLE,
- Stereo      = FL_STEREO,
- FakeSingle  = FL_FAKE_SINGLE
+ ModeRGB         = FL_RGB,
+ ModeIndex       = FL_INDEX,
+ ModeDouble      = FL_DOUBLE,
+ ModeAccum       = FL_ACCUM,
+ ModeAlpha       = FL_ALPHA,
+ ModeDepth       = FL_DEPTH,
+ ModeStencil     = FL_STENCIL,
+ ModeRGB8        = FL_RGB8,
+ ModeMultisample = FL_MULTISAMPLE,
+ ModeStereo      = FL_STEREO,
+ ModeFakeSingle  = FL_FAKE_SINGLE
 };
 enum AlignType {
  AlignCenter          = 0,
@@ -811,7 +811,7 @@ newtype FontSize = FontSize CInt
 -- Fl_Mode Aliases
 
 single :: Mode
-single = RGB
+single = ModeRGB
 
 
 -- Fl_LabelType
