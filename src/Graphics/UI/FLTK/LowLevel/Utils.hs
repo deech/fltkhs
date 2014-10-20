@@ -8,7 +8,9 @@ import Foreign.Marshal.Utils
 import Control.Monad
 import Debug.Trace
 import Control.Exception
-import Data.ByteString.Internal
+import Data.Monoid
+import Data.ByteString.Lazy.Builder
+import qualified Data.ByteString as B 
 
 foreign import ccall "wrapper"
         mkWidgetCallbackPtr :: CallbackWithUserDataPrim -> IO (FunPtr CallbackWithUserDataPrim)
@@ -21,6 +23,9 @@ foreign import ccall "wrapper"
 
 foreign import ccall "wrapper"
         mkGlobalEventHandlerPtr :: GlobalEventHandlerPrim -> IO (FunPtr GlobalEventHandlerPrim)
+
+foreign import ccall "wrapper"
+        mkDrawCallbackPrimPtr :: DrawCallbackPrim -> IO (FunPtr DrawCallbackPrim)
 
 foreign import ccall "wrapper"
         mkFinalizer :: (Ptr a -> IO ()) -> IO (FinalizerPtr a)
@@ -99,6 +104,12 @@ toWidgetCallbackPrim f = mkWidgetCallbackPtr
                          (\ptr _ -> wrapNonNull ptr "Null pointer: toWidgetCallbackPrim" >>=
                                     \pp -> f (wrapObject pp)
                          )
+toDrawCallback :: DrawCallback -> IO (FunPtr DrawCallbackPrim)
+toDrawCallback f = mkDrawCallbackPrimPtr
+                   (\string' length' x' y' -> do
+                      str' <- peekCStringLen (string', fromIntegral length')
+                      f str' (Position (X (fromIntegral x')) (Y (fromIntegral y'))))
+
 runPointerF :: (Object a -> IO (Object b)) -> Ptr () -> String -> IO (Ptr c)
 runPointerF f ptr msg = do
    pp <- wrapNonNull ptr msg
@@ -149,12 +160,8 @@ foldl1WithDefault :: a -> (a -> a -> a) -> [a] -> a
 foldl1WithDefault emptyCase _ [] = emptyCase
 foldl1WithDefault _ f as = foldl1 f as
 
--- byteStringToPCChar ::ByteString -> IO (Ptr CChar)
--- byteStringToPCChar bs =
---   let chars = unpack bs
---       cchars = map castCharToCChar chars
---   in
---    newArray cchars
-
--- pixMapToPPChar :: [ByteString] -> IO (Ptr (Ptr CChar))
--- pixMapToPPChar bss = sequence (map byteStringToPCChar bss) >>= newArray
+withPixmap :: PixmapHs -> ((Ptr (Ptr CChar)) -> IO a) -> IO a 
+withPixmap (PixmapHs pixmap) f =
+    B.useAsCString
+      (foldl1 B.append pixmap)
+      (\ptr -> new ptr >>= f)

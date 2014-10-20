@@ -62,6 +62,7 @@ module Graphics.UI.FLTK.LowLevel.Fl_Enumerations
      Font(..),
      FontAttribute(..),
      FontSize(..),
+     PixmapHs(..),
      -- ** (Un-)marshalling
      cFromFont,
      cToFont,
@@ -146,6 +147,7 @@ module Graphics.UI.FLTK.LowLevel.Fl_Enumerations
     )
 where
 import C2HS
+import Data.ByteString
 #c
 enum VersionInfo {
   AbiVersion = FLTK_ABI_VERSION,
@@ -807,7 +809,7 @@ numBlue :: Color
 numBlue = Color 5
 
 newtype FontSize = FontSize CInt
-
+newtype PixmapHs = PixmapHs [ByteString]
 -- Fl_Mode Aliases
 
 single :: Mode

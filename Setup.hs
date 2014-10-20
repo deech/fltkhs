@@ -1,6 +1,7 @@
 import Data.Maybe(fromJust)
 import Data.List(partition, isPrefixOf)
 import Distribution.Simple.Compiler
+import Distribution.Simple.Build
 import Distribution.Simple.Configure
 import Distribution.Simple.LocalBuildInfo
 import Distribution.PackageDescription
@@ -9,6 +10,8 @@ import Distribution.Simple.Setup
 import Distribution.Simple.Utils
 import Distribution.Verbosity
 import Distribution.Simple.Program(requireProgram, arProgram)
+import Distribution.Simple.BuildPaths(mkLibName)
+import Distribution.Simple.PreProcess
 import System.IO.Unsafe (unsafePerformIO)
 import qualified Distribution.Simple.Program.Ar    as Ar
 import qualified Distribution.ModuleName as ModuleName
@@ -18,6 +21,13 @@ import System.FilePath ( (</>), (<.>), takeExtension,
                          takeDirectory, replaceExtension, splitExtension, combine, takeBaseName)
 import System.IO
 import Debug.Trace
+import Data.Graph
+import qualified Distribution.Simple.GHC  as GHC
+import qualified Distribution.Simple.JHC  as JHC
+import qualified Distribution.Simple.LHC  as LHC
+import qualified Distribution.Simple.NHC  as NHC
+import qualified Distribution.Simple.Hugs as Hugs
+import qualified Distribution.Simple.UHC  as UHC
 
 main = defaultMainWithHooks autoconfUserHooks {
          buildHook = myBuildHook,
@@ -96,6 +106,19 @@ createInternalPackageDB distPref = do
     writeFile dbFile "[]"
     return packageDB
 
+buildExe :: Verbosity -> Distribution.Simple.Setup.Flag (Maybe Int)
+                      -> PackageDescription -> LocalBuildInfo
+                      -> Executable         -> ComponentLocalBuildInfo -> IO ()
+buildExe verbosity numJobs pkg_descr lbi exe clbi =
+  case compilerFlavor (compiler lbi) of
+    GHC  -> GHC.buildExe  verbosity numJobs pkg_descr lbi exe clbi
+    JHC  -> JHC.buildExe  verbosity         pkg_descr lbi exe clbi
+    LHC  -> LHC.buildExe  verbosity         pkg_descr lbi exe clbi
+    Hugs -> Hugs.buildExe verbosity         pkg_descr lbi exe clbi
+    NHC  -> NHC.buildExe  verbosity         pkg_descr lbi exe clbi
+    UHC  -> UHC.buildExe  verbosity         pkg_descr lbi exe clbi
+    _    -> die "Building is not supported with this compiler."
+
 myBuildHook pkg_descr local_bld_info user_hooks bld_flags =
     do
       fltkcBuilt <- doesDirectoryExist fltkcdir
@@ -114,34 +137,44 @@ myBuildHook pkg_descr local_bld_info user_hooks bld_flags =
                                (componentsConfigs new_local_bld_info)
           lib_lbi = new_local_bld_info {componentsConfigs = libs}
       buildHook simpleUserHooks new_pkg_descr lib_lbi user_hooks bld_flags
-      -- recreate the archive
-      let verbosity = fromFlag (buildVerbosity bld_flags)
-      info verbosity "Relinking archive ..."
-      let pref = buildDir local_bld_info
-          verbosity = fromFlag (buildVerbosity bld_flags)
-      cobjs <- getObjectFileDirContents >>= return . map (\f -> combine objectFileDir f) . filter (\f -> takeExtension f == ".o")
-      withAllComponentsInBuildOrder pkg_descr local_bld_info $ \comp clbi ->
-          case comp of
-            (CLib lib) -> do
-                      hobjs <- getHaskellObjects lib local_bld_info pref objExtension True
-                      let staticObjectFiles = cobjs ++ hobjs
-                      (arProg, _) <- requireProgram verbosity arProgram (withPrograms local_bld_info)
-                      let vanillaLibFilePath = pref </> (show . pkgName . package) pkg_descr
-                      Ar.createArLibArchive verbosity local_bld_info vanillaLibFilePath staticObjectFiles
-            _ -> return ()
-
       -- reuse the inplace package database that has already been created
-      let distPref  = fromFlag (buildDistPref bld_flags)
-          dbFile = distPref </> "package.conf.inplace"
+      let distPref = fromFlag (buildDistPref bld_flags)
+      let dbFile = distPref </> "package.conf.inplace"
       -- copy the temporarily created database into a temp file and add to the list of databases
       -- add that file to the list of files to clean up after the installation is done
       (tempFilePath, tempFileHandle) <- openTempFile distPref "package.conf"
       -- don't need the handle
       hClose tempFileHandle
       copyFile dbFile tempFilePath
-      let exe_lbi = new_local_bld_info {withPackageDB = withPackageDB new_local_bld_info ++ [SpecificPackageDB tempFilePath], componentsConfigs = nonlibs}
-          exe_pkg_descr = new_pkg_descr {extraTmpFiles = extraTmpFiles new_pkg_descr ++ [tempFilePath]}
-      buildHook simpleUserHooks exe_pkg_descr exe_lbi user_hooks bld_flags
+      -- recreate the archive
+      let verbosity = fromFlag (buildVerbosity bld_flags)
+      info verbosity "Relinking archive ..."
+      let pref = buildDir local_bld_info
+          verbosity = fromFlag (buildVerbosity bld_flags)
+      cobjs <- getObjectFileDirContents >>= return . map (\f -> combine objectFileDir f) . filter (\f -> takeExtension f == ".o")
+      let with_in_place =  local_bld_info {withPackageDB = withPackageDB local_bld_info ++ [SpecificPackageDB dbFile], componentsConfigs = libs ++ nonlibs}
+      let new_pkg_descr = pkg_descr {extraTmpFiles = extraTmpFiles new_pkg_descr ++ [tempFilePath]}
+      withAllComponentsInBuildOrder new_pkg_descr with_in_place $ \comp clbi ->
+          case comp of
+            (CLib lib) -> do
+                      info verbosity "Lib ..."
+                      hobjs <- getHaskellObjects lib with_in_place pref objExtension True
+                      let staticObjectFiles = cobjs ++ hobjs
+                      (arProg, _) <- requireProgram verbosity arProgram (withPrograms with_in_place)
+                      let vanillaLibFilePath = pref </> (mkLibName $ head $ componentLibraries clbi)
+                      Ar.createArLibArchive verbosity with_in_place vanillaLibFilePath staticObjectFiles
+                      -- let exe_lbi = new_local_bld_info {withPackageDB = withPackageDB new_local_bld_info ++ [SpecificPackageDB tempFilePath], componentsConfigs = nonlibs}
+                      --     exe_pkg_descr = pkg_descr {extraTmpFiles = extraTmpFiles new_pkg_descr ++ [tempFilePath]}
+                      -- buildHook simpleUserHooks exe_pkg_descr exe_lbi user_hooks bld_flags exe_pkg_descr exe_lbi user_hooks bld_flags
+            (CExe exe) -> do
+                      info verbosity "Exe ..."
+                      preprocessComponent new_pkg_descr comp with_in_place False verbosity []
+                      info verbosity $ "Building executable " ++ exeName exe ++ "..."
+                      info verbosity $ show $ clbi
+                      info verbosity $ show $ withPackageDB with_in_place
+                      info verbosity $ show clbi
+                      buildExe verbosity (buildNumJobs bld_flags) new_pkg_descr with_in_place exe clbi
+            _ -> return ()
 
 myCleanHook pd _ uh cf = do
   rawSystemExit normal "make" ["clean"]

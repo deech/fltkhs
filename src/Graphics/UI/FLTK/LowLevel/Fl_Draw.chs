@@ -14,9 +14,6 @@ module Graphics.UI.FLTK.LowLevel.Fl_Draw
        flcSetClipRegion,
        flcClipRegion,
        flcPoint,
-       flcLineStyleWithWidthDashes,
-       flcLineStyleWithDashes,
-       flcLineStyleWithWidth,
        flcLineStyle,
        flcRect,
        flcRectWithColor,
@@ -89,11 +86,7 @@ module Graphics.UI.FLTK.LowLevel.Fl_Draw
        flcDrawWithNAngle,
        flcRtlDraw,
        flcMeasure,
-       flcMeasureWithDrawSymbols,
-       flcDrawWithImgDrawSymbols,
-       flcDrawWithImg,
-       flcDrawWithDrawSymbols,
-       flcDrawWithAlign,
+       flcDrawInBoundingBox,
        flcFrame,
        flcFrame2,
        flcDrawBox,
@@ -108,7 +101,6 @@ module Graphics.UI.FLTK.LowLevel.Fl_Draw
        flcMeasurePixmap,
        flcMeasurePixmapWithCdata,
        flcShortcutLabel,
-       flcShortcutLabelWithEom,
        flcOldShortcut,
        flcOverlayRect,
        flcOverlayClear,
@@ -116,26 +108,41 @@ module Graphics.UI.FLTK.LowLevel.Fl_Draw
        flcCursorWithFg,
        flcCursorWithBg,
        flcCursor,
-       flcExpandTextWithDrawSymbols,
-       flcExpandText,
        flcSetStatus,
        flcSetSpotWithWin,
        flcSetSpot,
        flcResetSpot,
        flcDrawSymbol
     )
-where    
+where
 #include "Fl_C.h"
 #include "Fl_DrawC.h"
 import C2HS hiding (cFromEnum, unsafePerformIO, cFromBool, cToBool,cToEnum)
-import Foreign
 import Foreign.C
-import Foreign.C.String
-import Foreign.Marshal.Array
 import Graphics.UI.FLTK.LowLevel.Fl_Types
 import Graphics.UI.FLTK.LowLevel.Fl_Enumerations
 import Graphics.UI.FLTK.LowLevel.Utils
+import Data.ByteString
 import Data.ByteString.Unsafe
+
+#c
+enum LineStyle {
+  SolidLineStyle  = FL_SOLID,
+  SolidDash       = FL_DASH,
+  SolidDot        = FL_DOT,
+  SolidDashDot    = FL_DASHDOT,
+  SolidDashDotDot = FL_DASHDOTDOT,
+
+  SolidCapFlat    = FL_CAP_FLAT,
+  SolidCapRound   = FL_CAP_ROUND,
+  SolidCapSquare  = FL_CAP_SQUARE,
+
+  SolidJoinMiter  = FL_JOIN_MITER,
+  SolidJoinRound  = FL_JOIN_ROUND,
+  SolidJoinBevel  = FL_JOIN_BEVEL
+};
+#endc
+{#enum LineStyle {} deriving (Show) #}
 
 {# fun unsafe flc_set_color as flcSetColor' { cFromColor `Color' } -> `()' #}
 flcSetColor :: Color ->  IO ()
@@ -171,14 +178,19 @@ flcNotClipped rectangle = let (x_pos', y_pos', width', height') = fromRectangle 
 
 {# fun unsafe flc_clip_box as flcClipBox' { `Int',`Int',`Int',`Int',alloca- `Int' peekIntConv*,alloca- `Int' peekIntConv*,alloca- `Int' peekIntConv*,alloca- `Int' peekIntConv* } -> `Int' #}
 flcClipBox :: Rectangle ->  IO (Int,Rectangle)
-flcClipBox rectangle  = let (x_pos', y_pos', width', height') = fromRectangle rectangle in flcClipBox' x_pos' y_pos' width' height' >>= \(result, rectangle') -> return $ (result, toRectangle rectangle')
+flcClipBox rectangle  =
+    let (x_pos', y_pos', width', height') = fromRectangle rectangle
+    in
+      do
+        (result, _x', _y', _w', _h') <- flcClipBox' x_pos' y_pos' width' height'
+        return $ (result, toRectangle (_x', _y', _w', _h'))
 
 {# fun unsafe flc_restore_clip as flcRestoreClip' {  } -> `()' #}
 flcRestoreClip ::  IO ()
 flcRestoreClip  = flcRestoreClip'
 
 {# fun unsafe flc_set_clip_region as flcSetClipRegion' { id `Ptr ()' } -> `()' #}
-flcSetClipRegion :: Region a  ->  IO ()
+flcSetClipRegion :: Region ->  IO ()
 flcSetClipRegion r = withObject r $ \rPtr -> flcSetClipRegion' rPtr
 
 {# fun unsafe flc_clip_region as flcClipRegion' {  } -> `Ptr ()' id #}
@@ -189,21 +201,12 @@ flcClipRegion  = flcClipRegion'
 flcPoint :: Position ->  IO ()
 flcPoint (Position (X x_pos') (Y y_pos')) = flcPoint' x_pos' y_pos'
 
-{# fun unsafe flc_line_style_with_width_dashes as flcLineStyleWithWidthDashes' { `Int',`Int',`String' } -> `()' #}
-flcLineStyleWithWidthDashes :: LineStyle -> Int -> String ->  IO ()
-flcLineStyleWithWidthDashes style width dashes = flcLineStyleWithWidthDashes'  width dashes
-
-{# fun unsafe flc_line_style_with_dashes as flcLineStyleWithDashes' { `Int',`String' } -> `()' #}
-flcLineStyleWithDashes :: LineStyle -> String ->  IO ()
-flcLineStyleWithDashes style dashes = flcLineStyleWithDashes'  dashes
-
-{# fun unsafe flc_line_style_with_width as flcLineStyleWithWidth' { `Int',`Int' } -> `()' #}
-flcLineStyleWithWidth :: LineStyle -> Int ->  IO ()
-flcLineStyleWithWidth style width = flcLineStyleWithWidth'  width
-
-{# fun unsafe flc_line_style as flcLineStyle' { `Int' } -> `()' #}
-flcLineStyle :: LineStyle ->  IO ()
-flcLineStyle style = flcLineStyle'
+{# fun unsafe flc_line_style_with_width_dashes as flcLineStyleWithWidthDashes' {cFromEnum `LineStyle', `Int', id `Ptr CChar' } -> `()' #}
+flcLineStyle :: LineStyle -> Maybe Int -> Maybe String -> IO ()
+flcLineStyle style width' dashes' = do
+  let _width = maybe 0 id width'
+  _dashes <- maybe (return nullPtr) newCString dashes'
+  flcLineStyleWithWidthDashes' style _width _dashes
 
 {# fun unsafe flc_rect as flcRect' { `Int',`Int',`Int',`Int' } -> `()' #}
 flcRect :: Rectangle ->  IO ()
@@ -291,7 +294,7 @@ flcPopMatrix  = flcPopMatrix'
 
 {# fun unsafe flc_scale_with_y as flcScaleWithY' { `Double',`Double' } -> `()' #}
 flcScaleWithY :: ByXY ->  IO ()
-flcScaleWithY (ByXY by_x' by_y') = flcScaleWithY' by_x' by_y'
+flcScaleWithY (ByXY (ByX by_x') (ByY by_y')) = flcScaleWithY' by_x' by_y'
 
 {# fun unsafe flc_scale as flcScale' { `Double' } -> `()' #}
 flcScale :: ByX ->  IO ()
@@ -299,7 +302,7 @@ flcScale (ByX by_x') = flcScale' by_x'
 
 {# fun unsafe flc_translate as flcTranslate' { `Double',`Double' } -> `()' #}
 flcTranslate :: ByXY ->  IO ()
-flcTranslate (ByXY by_x' by_y') = flcTranslate' by_x' by_y'
+flcTranslate (ByXY (ByX by_x') (ByY by_y')) = flcTranslate' by_x' by_y'
 
 {# fun unsafe flc_rotate as flcRotate' { `Double' } -> `()' #}
 flcRotate :: Double ->  IO ()
@@ -307,7 +310,7 @@ flcRotate d = flcRotate' d
 
 {# fun unsafe flc_mult_matrix as flcMultMatrix' { `Double',`Double',`Double',`Double',`Double',`Double' } -> `()' #}
 flcMultMatrix :: Double -> Double -> Double -> Double -> ByXY ->  IO ()
-flcMultMatrix a b c d (ByXY by_x' by_y') = flcMultMatrix' a b c d by_x' by_y'
+flcMultMatrix a b c d (ByXY (ByX by_x') (ByY by_y')) = flcMultMatrix' a b c d by_x' by_y'
 
 {# fun unsafe flc_begin_points as flcBeginPoints' {  } -> `()' #}
 flcBeginPoints ::  IO ()
@@ -327,7 +330,7 @@ flcBeginPolygon  = flcBeginPolygon'
 
 {# fun unsafe flc_vertex as flcVertex' { `Double',`Double' } -> `()' #}
 flcVertex :: ByXY ->  IO ()
-flcVertex (ByXY by_x' by_y') = flcVertex' by_x' by_y'
+flcVertex (ByXY (ByX by_x') (ByY by_y')) = flcVertex' by_x' by_y'
 
 {# fun unsafe flc_curve as flcCurve' { `Double',`Double',`Double',`Double',`Double',`Double',`Double',`Double' } -> `()' #}
 flcCurve :: Double -> Double -> Double -> Double -> Double -> Double -> Double -> Double ->  IO ()
@@ -335,11 +338,11 @@ flcCurve x0 y0 x1 y1 x2 y2 x3 y3 = flcCurve' x0 y0 x1 y1 x2 y2 x3 y3
 
 {# fun unsafe flc_arc_by_radius as flcArcByRadius' { `Double',`Double',`Double',`Double',`Double' } -> `()' #}
 flcArcByRadius :: ByXY -> Double -> Double -> Double ->  IO ()
-flcArcByRadius (ByXY by_x' by_y') r start end = flcArcByRadius' by_x' by_y' r start end
+flcArcByRadius (ByXY (ByX by_x') (ByY by_y')) r start end = flcArcByRadius' by_x' by_y' r start end
 
 {# fun unsafe flc_circle as flcCircle' { `Double',`Double',`Double' } -> `()' #}
 flcCircle :: ByXY -> Double ->  IO ()
-flcCircle (ByXY by_x' by_y') r = flcCircle' by_x' by_y' r
+flcCircle (ByXY (ByX by_x') (ByY by_y')) r = flcCircle' by_x' by_y' r
 
 {# fun unsafe flc_end_points as flcEndPoints' {  } -> `()' #}
 flcEndPoints ::  IO ()
@@ -371,35 +374,35 @@ flcEndComplexPolygon  = flcEndComplexPolygon'
 
 {# fun unsafe flc_transform_x as flcTransformX' { `Double',`Double' } -> `Double' #}
 flcTransformX :: ByXY ->  IO (Double)
-flcTransformX (ByXY by_x' by_y') = flcTransformX' by_x' by_y'
+flcTransformX (ByXY (ByX by_x') (ByY by_y')) = flcTransformX' by_x' by_y'
 
 {# fun unsafe flc_transform_y as flcTransformY' { `Double',`Double' } -> `Double' #}
 flcTransformY :: ByXY ->  IO (Double)
-flcTransformY (ByXY by_x' by_y') = flcTransformY' by_x' by_y'
+flcTransformY (ByXY (ByX by_x') (ByY by_y')) = flcTransformY' by_x' by_y'
 
 {# fun unsafe flc_transform_dx as flcTransformDx' { `Double',`Double' } -> `Double' #}
 flcTransformDx :: ByXY ->  IO (Double)
-flcTransformDx (ByXY by_x' by_y') = flcTransformDx' by_x' by_y'
+flcTransformDx (ByXY (ByX by_x') (ByY by_y')) = flcTransformDx' by_x' by_y'
 
 {# fun unsafe flc_transform_dy as flcTransformDy' { `Double',`Double' } -> `Double' #}
 flcTransformDy :: ByXY ->  IO (Double)
-flcTransformDy (ByXY by_x' by_y') = flcTransformDy' by_x' by_y'
+flcTransformDy (ByXY (ByX by_x') (ByY by_y')) = flcTransformDy' by_x' by_y'
 
 {# fun unsafe flc_transformed_vertex as flcTransformedVertex' { `Double',`Double' } -> `()' #}
 flcTransformedVertex :: Double -> Double ->  IO ()
 flcTransformedVertex xf yf = flcTransformedVertex' xf yf
 
-{# fun unsafe flc_set_font as flcSetFont' { cFromFont `Font',cFromFontsize `Fontsize' } -> `()' #}
-flcSetFont :: Font -> Fontsize ->  IO ()
-flcSetFont face fsize = flcSetFont' face fsize
+{# fun unsafe flc_set_font as flcSetFont' { cFromFont `Font',id `CInt' } -> `()' #}
+flcSetFont :: Font -> FontSize ->  IO ()
+flcSetFont face (FontSize fsize) = flcSetFont' face fsize
 
 {# fun unsafe flc_font as flcFont' {  } -> `Font' cToFont #}
 flcFont ::  IO (Font)
 flcFont  = flcFont'
 
-{# fun unsafe flc_size as flcSize' {  } -> `Fontsize' cToFontsize #}
-flcSize ::  IO (Fontsize)
-flcSize  = flcSize'
+{# fun unsafe flc_size as flcSize' {  } -> `CInt' id #}
+flcSize ::  IO (FontSize)
+flcSize  = flcSize' >>= return . FontSize
 
 {# fun unsafe flc_height as flcHeight' {  } -> `Int' #}
 flcHeight ::  IO (Int)
@@ -407,7 +410,7 @@ flcHeight  = flcHeight'
 
 {# fun unsafe flc_set_height as flcSetHeight' { `Int',`Int' } -> `Int' #}
 flcSetHeight :: Int -> Int ->  IO (Int)
-flcSetHeight font size = flcSetHeight' font size
+flcSetHeight font' size' = flcSetHeight' font' size'
 
 {# fun unsafe flc_descent as flcDescent' {  } -> `Int' #}
 flcDescent ::  IO (Int)
@@ -485,39 +488,21 @@ flcDrawWithNAngle angle str n (Position (X x_pos') (Y y_pos')) = flcDrawWithNAng
 flcRtlDraw :: String -> Int -> Position ->  IO ()
 flcRtlDraw str n (Position (X x_pos') (Y y_pos')) = flcRtlDraw' str n x_pos' y_pos'
 
-{# fun unsafe flc_measure as flcMeasure' { `String',alloca- `Int' peekIntConv*,alloca- `Int' peekIntConv* } -> `()' #}
-flcMeasure :: String ->  IO (Size)
-flcMeasure str  = flcMeasure' str >>= \(size') -> return $ (toSize size')
-
 {# fun unsafe flc_measure_with_draw_symbols as flcMeasureWithDrawSymbols' { `String',alloca- `Int' peekIntConv*,alloca- `Int' peekIntConv*,`Int' } -> `()' #}
-flcMeasureWithDrawSymbols :: String -> Int ->  IO (Size)
-flcMeasureWithDrawSymbols str  draw_symbols = flcMeasureWithDrawSymbols' str  draw_symbols>>= \(size') -> return $ (toSize size')
+flcMeasure :: String -> Maybe Bool -> IO (Size)
+flcMeasure str draw_symbols =
+    let _draw_symbols = maybe 0 fromBool draw_symbols in
+    flcMeasureWithDrawSymbols' str _draw_symbols >>= \(size') -> return $ (toSize size')
 
-{# fun unsafe flc_draw_with_img_draw_symbols as flcDrawWithImgDrawSymbols' { `String',`Int',`Int',`Int',`Int',cFromEnum `AlignType',id `Ptr ()',`Int' } -> `()' #}
-flcDrawWithImgDrawSymbols :: String -> Rectangle -> AlignType -> Image a  -> Int ->  IO ()
-flcDrawWithImgDrawSymbols str rectangle align img draw_symbols =
-   let (x_pos', y_pos', width', height') = fromRectangle rectangle in
-   withObject img $ \imgPtr ->
-    flcDrawWithImgDrawSymbols' str x_pos' y_pos' width' height' align imgPtr draw_symbols
-
-{# fun unsafe flc_draw_with_img as flcDrawWithImg' { `String',`Int',`Int',`Int',`Int',cFromEnum `AlignType',id `Ptr ()' } -> `()' #}
-flcDrawWithImg :: String -> Rectangle -> AlignType -> Image a  ->  IO ()
-flcDrawWithImg str rectangle align img =
-  let (x_pos', y_pos', width', height') = fromRectangle rectangle in
-  withObject img $ \imgPtr -> flcDrawWithImg' str x_pos' y_pos' width' height' align imgPtr
-
-{# fun unsafe flc_draw_with_draw_symbols as flcDrawWithDrawSymbols' { `String',`Int',`Int',`Int',`Int',cFromEnum `AlignType',`Int' } -> `()' #}
-flcDrawWithDrawSymbols :: String -> Rectangle -> AlignType -> Int ->  IO ()
-flcDrawWithDrawSymbols str rectangle align draw_symbols = let (x_pos', y_pos', width', height') = fromRectangle rectangle in flcDrawWithDrawSymbols' str x_pos' y_pos' width' height' align draw_symbols
-
-{# fun unsafe flc_draw_with_align as flcDrawWithAlign' { `String',`Int',`Int',`Int',`Int',cFromEnum `AlignType' } -> `()' #}
-flcDrawWithAlign :: String -> Rectangle -> AlignType ->  IO ()
-flcDrawWithAlign str rectangle align = let (x_pos', y_pos', width', height') = fromRectangle rectangle in flcDrawWithAlign' str x_pos' y_pos' width' height' align
-
-  FL_EXPORT_C(void         , flc_draw_with_callthis_img_draw_symbols)(const char* str, int x, int y, int w, int h, Fl_Align align,void (*callthis)(const char* ,int,int,int), fl_Image img,int draw_symbols);
-  FL_EXPORT_C(void         , flc_draw_with_callthis_img)(const char* str, int x, int y, int w, int h, Fl_Align align,void (*callthis)(const char* ,int,int,int), fl_Image img);
-  FL_EXPORT_C(void         , flc_draw_with_callthis_draw_symbols)(const char* str, int x, int y, int w, int h, Fl_Align align,void (*callthis)(const char* ,int,int,int),int draw_symbols);
-  FL_EXPORT_C(void         , flc_draw_with_callthis)(const char* str, int x, int y, int w, int h, Fl_Align align, void (*callthis)(const char* ,int,int,int));
+{# fun unsafe flc_draw_with_callthis_img_draw_symbols as flcDrawWithCallthisImgDrawSymbols' { `String',`Int',`Int',`Int',`Int',cFromEnum `AlignType', id `FunPtr DrawCallbackPrim', id `Ptr ()',`Bool' } -> `()' #}
+flcDrawInBoundingBox :: String -> Rectangle -> AlignType -> Maybe DrawCallback -> Maybe (Image a) -> Maybe Bool -> IO ()
+flcDrawInBoundingBox string' rectangle' align' draw_callback' image' draw_flags'
+  = let (x_pos', y_pos', width', height') = fromRectangle rectangle'
+    in
+      withMaybeObject image' $ \image_ptr -> do
+          fptr <- orNullFunPtr toDrawCallback draw_callback'
+          flcDrawWithCallthisImgDrawSymbols'
+           string' x_pos' y_pos' width' height' align' fptr image_ptr (maybe False id draw_flags')
 
 {# fun unsafe flc_frame as flcFrame' { `String',`Int',`Int',`Int',`Int' } -> `()' #}
 flcFrame :: String -> Rectangle ->  IO ()
@@ -529,7 +514,7 @@ flcFrame2 s rectangle = let (x_pos', y_pos', width', height') = fromRectangle re
 
 {# fun unsafe flc_draw_box as flcDrawBox' { cFromEnum `Boxtype',`Int',`Int',`Int',`Int',cFromColor `Color' } -> `()' #}
 flcDrawBox :: Boxtype -> Rectangle -> Color ->  IO ()
-flcDrawBox boxtype rectangle color = let (x_pos', y_pos', width', height') = fromRectangle rectangle in flcDrawBox' boxtype x_pos' y_pos' width' height' color
+flcDrawBox boxtype rectangle color' = let (x_pos', y_pos', width', height') = fromRectangle rectangle in flcDrawBox' boxtype x_pos' y_pos' width' height' color'
 
 {# fun unsafe flc_draw_image_buf_with_d_l as flcDrawImageBufWithDL' { id `Ptr CUChar',`Int',`Int',`Int',`Int',`Int',`Int' } -> `()' #}
 flcDrawImageBuf :: ByteString -> Rectangle -> Delta -> LineDelta -> IO ()
@@ -537,7 +522,7 @@ flcDrawImageBuf buf rectangle d l =
   let (x_pos', y_pos', width', height') = fromRectangle rectangle
   in unsafeUseAsCString
        buf
-       (\ptr ->
+       (\cs ->
          case (d,l) of
            (Just d', Nothing) -> flcDrawImageBufWithDL' (castPtr cs) x_pos' y_pos' width' height' d' 0
            (Nothing, Just l') -> flcDrawImageBufWithDL' (castPtr cs) x_pos' y_pos' width' height' 0 l'
@@ -550,7 +535,7 @@ flcDrawImageMonoBuf buf rectangle d l =
   let (x_pos', y_pos', width', height') = fromRectangle rectangle
   in unsafeUseAsCString
        buf
-       (\ptr ->
+       (\cs ->
          case (d,l) of
            (Just d', Nothing) -> flcDrawImageMonoBufWithDL' (castPtr cs) x_pos' y_pos' width' height' d' 0
            (Nothing, Just l') -> flcDrawImageMonoBufWithDL' (castPtr cs) x_pos' y_pos' width' height' 0 l'
@@ -562,53 +547,55 @@ flcCanDoAlphaBlending ::  IO (Bool)
 flcCanDoAlphaBlending  = flcCanDoAlphaBlending'
 
 {# fun unsafe flc_read_image_with_alpha as flcReadImageWithAlpha' { id `Ptr CUChar', `Int',`Int',`Int',`Int',`Bool' } -> `Ptr CUChar' id #}
-{# fun unsafe flc_read_image as flcReadImage' { id `Ptr CUChar', `Int',`Int',`Int',`Bool' } -> `Ptr CUChar' id #}
 flcReadImage :: Rectangle -> Bool -> IO (ByteString)
 flcReadImage rectangle alpha =
   let (x_pos', y_pos', width', height') = fromRectangle rectangle
-      (buffer_size, buffer) =
-        (width' * height' * (if alpha then 4 else 3), flcReadImage' 0 x_pos' y_pos' width' height' alpha)
+      buffer_size = width' * height' * (if alpha then 4 else 3)
   in
-  buffer >>=
-  (
-   \b ->
-       return $ unsafePackCStringFinalizer
-                  (castPtr b)
-                  buffer_size
-                  (free b)
-  )
+    do
+      buffer <- flcReadImageWithAlpha' nullPtr x_pos' y_pos' width' height' alpha
+      bs <- packCStringLen ((castPtr buffer), buffer_size)
+      free buffer
+      return bs
 
 {# fun unsafe flc_draw_pixmap_with_color as flcDrawPixmapWithColor' { id `(Ptr (Ptr CChar))',`Int',`Int',cFromColor `Color' } -> `Int' #}
-flcDrawPixmapWithColor :: [ByteString] -> Position -> Color ->  IO (Int)
-flcDrawPixmapWithColor pixmap (Position (X x_pos') (Y y_pos')) color = pixmapToPP pixmap >>= \p -> flcDrawPixmapWithColor' p x_pos' y_pos' color
+flcDrawPixmapWithColor :: PixmapHs -> Position -> Color ->  IO (Int)
+flcDrawPixmapWithColor pixmap (Position (X x_pos') (Y y_pos')) color' =
+    withPixmap pixmap $ \pptr -> flcDrawPixmapWithColor' pptr x_pos' y_pos' color'
 
 {# fun unsafe flc_draw_pixmap as flcDrawPixmap' { id `(Ptr(Ptr CChar))',`Int',`Int' } -> `Int' #}
-flcDrawPixmap :: [ByteString] -> Position ->  IO (Int)
-flcDrawPixmap pixmap (Position (X x_pos') (Y y_pos')) = flcDrawPixmap' (byteStringToPPChar pixmap) x_pos' y_pos'
+flcDrawPixmap :: PixmapHs -> Position ->  IO (Int)
+flcDrawPixmap pixmap (Position (X x_pos') (Y y_pos')) =
+    withPixmap pixmap $ \pptr -> flcDrawPixmap' pptr x_pos' y_pos'
 
 {# fun unsafe flc_draw_pixmap_with_cdata_color as flcDrawPixmapWithCdataColor' { id `(Ptr (Ptr CChar))',`Int',`Int',cFromColor `Color' } -> `Int' #}
-flcDrawPixmapWithCdataColor :: [ByteString] -> Position -> Color ->  IO (Int)
-flcDrawPixmapWithCdataColor cdata (Position (X x_pos') (Y y_pos')) color = pixmapToPP cdata >>= \p -> flcDrawPixmapWithCdataColor' p x_pos' y_pos' color
+flcDrawPixmapWithCdataColor :: PixmapHs -> Position -> Color ->  IO (Int)
+flcDrawPixmapWithCdataColor pixmap (Position (X x_pos') (Y y_pos')) color' =
+    withPixmap pixmap $ \pptr -> flcDrawPixmapWithCdataColor' pptr x_pos' y_pos' color'
 
 {# fun unsafe flc_draw_pixmap_with_cdata as flcDrawPixmapWithCdata' { id `(Ptr (Ptr CChar))',`Int',`Int' } -> `Int' #}
-flcDrawPixmapWithCdata :: [ByteString] -> Position ->  IO (Int)
-flcDrawPixmapWithCdata cdata (Position (X x_pos') (Y y_pos')) = pixmapToPP cdata >>= \p -> flcDrawPixmapWithCdata' p x_pos' y_pos'
+flcDrawPixmapWithCdata :: PixmapHs -> Position ->  IO (Int)
+flcDrawPixmapWithCdata pixmap (Position (X x_pos') (Y y_pos')) =
+    withPixmap pixmap $ \pptr -> flcDrawPixmapWithCdata' pptr x_pos' y_pos'
 
 {# fun unsafe flc_measure_pixmap as flcMeasurePixmap' { id `(Ptr (Ptr CChar))',alloca- `Int' peekIntConv*,alloca- `Int' peekIntConv* } -> `Int' #}
-flcMeasurePixmap :: [ByteString] ->  IO (Int,Size)
-flcMeasurePixmap pixmap = pixmapToPP pixmap >>= \p -> flcMeasurePixmap' p >>= \(result, size') -> return $ (result, toSize size')
+flcMeasurePixmap :: PixmapHs ->  IO (Int,Size)
+flcMeasurePixmap pixmap =
+    withPixmap pixmap $ \pptr ->
+        flcMeasurePixmap' pptr >>= \(result, width', height') ->
+            return $ (result, toSize (width', height'))
 
 {# fun unsafe flc_measure_pixmap_with_cdata as flcMeasurePixmapWithCdata' { id `(Ptr (Ptr CChar))',alloca- `Int' peekIntConv*,alloca- `Int' peekIntConv* } -> `Int' #}
-flcMeasurePixmapWithCdata :: [ByteString] ->  IO (Int,Size)
-flcMeasurePixmapWithCdata cdata  = pixmap cdata >>= \p -> flcMeasurePixmapWithCdata' p >>= \(result, size') -> return $ (result, toSize size')
+flcMeasurePixmapWithCdata :: PixmapHs ->  IO (Int,Size)
+flcMeasurePixmapWithCdata pixmap  =
+    withPixmap pixmap (\pptr -> do
+                         (result, width', height') <- flcMeasurePixmapWithCdata' pptr
+                         return (result, toSize (width', height'))
+                      )
 
 {# fun unsafe flc_shortcut_label as flcShortcutLabel' { `Int' } -> `String' #}
 flcShortcutLabel :: Int ->  IO (String)
 flcShortcutLabel shortcut = flcShortcutLabel' shortcut
-
-{# fun unsafe flc_shortcut_label_with_eom as flcShortcutLabelWithEom' { `Int',id `(Ptr (Ptr CChar))' } -> `String' #}
-flcShortcutLabelWithEom :: Int -> [ByteString] ->  IO (String)
-flcShortcutLabelWithEom shortcut eom = byteStringToPPChar eom >>= \eom' -> flcShortcutLabelWithEom' shortcut eom'
 
 {# fun unsafe flc_old_shortcut as flcOldShortcut' { `String' } -> `Int' #}
 flcOldShortcut :: String -> IO (Int)
@@ -638,25 +625,17 @@ flcCursorWithBg cursor bg = flcCursorWithBg' cursor bg
 flcCursor :: Cursor ->  IO ()
 flcCursor cursor = flcCursor' cursor
 
-{# fun unsafe flc_expand_text_with_draw_symbols as flcExpandTextWithDrawSymbols' { `String',`String',`Int',`Double',id `Ptr CInt',id `Ptr CDouble',`Int',`Int' } -> `String' #}
-flcExpandTextWithDrawSymbols :: String -> String -> Int -> Double -> Ptr CInt -> Double -> Int -> Int ->  IO (String)
-flcExpandTextWithDrawSymbols from buf maxbuf maxw n width wrap draw_symbols = flcExpandTextWithDrawSymbols' from buf maxbuf maxw n width wrap draw_symbols
-
-{# fun unsafe flc_expand_text as flcExpandText' { `String',`String',`Int',`Double',id `Ptr CInt',`Double',`Int' } -> `String' #}
-flcExpandText :: String -> String -> Int -> Double -> Ptr CInt -> Double -> Int ->  IO (String)
-flcExpandText from buf maxbuf maxw n width wrap = flcExpandText' from buf maxbuf maxw n width wrap
-
 {# fun unsafe flc_set_status as flcSetStatus' { `Int',`Int',`Int',`Int' } -> `()' #}
 flcSetStatus :: Rectangle ->  IO ()
 flcSetStatus rectangle = let (x_pos', y_pos', width', height') = fromRectangle rectangle in flcSetStatus' x_pos' y_pos' width' height'
 
 {# fun unsafe flc_set_spot_with_win as flcSetSpotWithWin' { `Int',`Int',`Int',`Int',`Int',`Int',id `Ptr ()' } -> `()' #}
 flcSetSpotWithWin :: Int -> Int -> Rectangle -> Window a  ->  IO ()
-flcSetSpotWithWin font size rectangle win = let (x_pos', y_pos', width', height') = fromRectangle rectangle in withObject win $ \winPtr -> flcSetSpotWithWin' font size x_pos' y_pos' width' height' winPtr
+flcSetSpotWithWin font' size' rectangle win = let (x_pos', y_pos', width', height') = fromRectangle rectangle in withObject win $ \winPtr -> flcSetSpotWithWin' font' size' x_pos' y_pos' width' height' winPtr
 
 {# fun unsafe flc_set_spot as flcSetSpot' { `Int',`Int',`Int',`Int',`Int',`Int' } -> `()' #}
 flcSetSpot :: Int -> Int -> Rectangle ->  IO ()
-flcSetSpot font size rectangle = let (x_pos', y_pos', width', height') = fromRectangle rectangle in flcSetSpot' font size x_pos' y_pos' width' height'
+flcSetSpot font' size' rectangle = let (x_pos', y_pos', width', height') = fromRectangle rectangle in flcSetSpot' font' size' x_pos' y_pos' width' height'
 
 {# fun unsafe flc_reset_spot as flcResetSpot' {  } -> `()' #}
 flcResetSpot ::  IO ()
@@ -664,4 +643,4 @@ flcResetSpot  = flcResetSpot'
 
 {# fun unsafe flc_draw_symbol as flcDrawSymbol' { `String',`Int',`Int',`Int',`Int',cFromColor `Color' } -> `Int' #}
 flcDrawSymbol :: String -> Rectangle -> Color ->  IO (Int)
-flcDrawSymbol label rectangle color = let (x_pos', y_pos', width', height') = fromRectangle rectangle in flcDrawSymbol' label x_pos' y_pos' width' height' color
+flcDrawSymbol label rectangle color' = let (x_pos', y_pos', width', height') = fromRectangle rectangle in flcDrawSymbol' label x_pos' y_pos' width' height' color'

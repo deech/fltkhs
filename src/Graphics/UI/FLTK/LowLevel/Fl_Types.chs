@@ -204,7 +204,7 @@ type FlShortcut           = {#type Fl_Shortcut #}
 type FlColor              = {#type Fl_Color #}
 type FlFont               = {#type Fl_Font #}
 type FlAlign              = {#type Fl_Align #}
-type RGB                  = (Int, Int, Int)
+type RGB                  = (Word8, Word8, Word8)
 type LineDelta            = Maybe Int
 type Delta                = Maybe Int
 type FlIntPtr             = {#type fl_intptr_t #}
@@ -446,17 +446,19 @@ type WidgetEventHandlerPrim   = Ptr () -> CInt -> IO CInt
 type WidgetEventHandler a     = Widget a -> Event -> IO Int
 type GlobalEventHandlerPrim   = CInt -> IO CInt
 type GlobalEventHandlerF      = Event -> IO Int
+type DrawCallback             = String -> Position -> IO () 
+type DrawCallbackPrim         = CString -> CInt -> CInt -> CInt -> IO ()
 type TextBufferCallback       = FunPtr (Ptr () -> IO ())
 type UnfinishedStyleCb        = FunPtr (CInt -> Ptr () -> IO ())
 type FileChooserCallback      = FunPtr (Ptr () -> Ptr () -> IO())
 type SharedImageHandler       = FunPtr (CString -> CUChar -> CInt -> Ptr ())
-{#pointer *Style_Table_Entry as StyleTableEntryPtr foreign -> StyleTableEntry #}
-data StyleTableEntry = StyleTableEntry {
-      color :: Color,
-      font :: Font,
-      size :: FontSize,
-      attr :: FontAttribute
-    }
+-- {#pointer *Style_Table_Entry as StyleTableEntryPtr foreign -> StyleTableEntry #}
+-- data StyleTableEntry = StyleTableEntry {
+--       color :: Color,
+--       font :: Font,
+--       size :: FontSize,
+--       attr :: FontAttribute
+--     }
 {-
       widgetDraw_ :: FunPtr (WidgetPtr -> IO ())
     , widgetHandle_ :: FunPtr (WidgetPtr -> Event -> IO CInt)
@@ -942,6 +944,7 @@ fromRectangle (Rectangle (Position
 toSize :: (Int, Int) -> Size
 toSize (width', height') = Size (Width width') (Height height')
 
+throwStackOnError :: IO a -> IO a
 throwStackOnError f =
   f `catch` throwStack
   where
@@ -985,7 +988,6 @@ withObjects objs f =
 withMaybeObject :: Maybe (Object a) -> (Ptr b -> IO c) -> IO c
 withMaybeObject (Just o) f = withObject o f
 withMaybeObject Nothing f = f (castPtr nullPtr)
-
 
 swapObject :: Object a -> (Ptr b -> IO (Ptr a)) -> IO ()
 swapObject obj@(Object fptr) f = do
