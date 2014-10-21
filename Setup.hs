@@ -99,13 +99,8 @@ getHaskellObjects lib lbi pref wanted_obj_ext allow_split_objs
         return [ pref </> ModuleName.toFilePath x <.> wanted_obj_ext
                | x <- libModules lib ]
 
-createInternalPackageDB :: FilePath -> IO PackageDB
-createInternalPackageDB distPref = do
-    let dbFile = distPref </> "package.conf.inplace"
-        packageDB = SpecificPackageDB dbFile
-    writeFile dbFile "[]"
-    return packageDB
-
+-- This copy-pasta is required because Distribution.Simple.Build does
+-- not export buildExe.
 buildExe :: Verbosity -> Distribution.Simple.Setup.Flag (Maybe Int)
                       -> PackageDescription -> LocalBuildInfo
                       -> Executable         -> ComponentLocalBuildInfo -> IO ()
@@ -137,42 +132,26 @@ myBuildHook pkg_descr local_bld_info user_hooks bld_flags =
                                (componentsConfigs new_local_bld_info)
           lib_lbi = new_local_bld_info {componentsConfigs = libs}
       buildHook simpleUserHooks new_pkg_descr lib_lbi user_hooks bld_flags
-      -- reuse the inplace package database that has already been created
+
       let distPref = fromFlag (buildDistPref bld_flags)
-      let dbFile = distPref </> "package.conf.inplace"
-      -- copy the temporarily created database into a temp file and add to the list of databases
-      -- add that file to the list of files to clean up after the installation is done
-      (tempFilePath, tempFileHandle) <- openTempFile distPref "package.conf"
-      -- don't need the handle
-      hClose tempFileHandle
-      copyFile dbFile tempFilePath
-      -- recreate the archive
-      let verbosity = fromFlag (buildVerbosity bld_flags)
-      info verbosity "Relinking archive ..."
-      let pref = buildDir local_bld_info
+          dbFile = distPref </> "package.conf.inplace"
           verbosity = fromFlag (buildVerbosity bld_flags)
-      cobjs <- getObjectFileDirContents >>= return . map (\f -> combine objectFileDir f) . filter (\f -> takeExtension f == ".o")
-      let with_in_place =  local_bld_info {withPackageDB = withPackageDB local_bld_info ++ [SpecificPackageDB dbFile], componentsConfigs = libs ++ nonlibs}
-      let new_pkg_descr = pkg_descr {extraTmpFiles = extraTmpFiles new_pkg_descr ++ [tempFilePath]}
-      withAllComponentsInBuildOrder new_pkg_descr with_in_place $ \comp clbi ->
+          with_in_place =  local_bld_info {withPackageDB = withPackageDB local_bld_info ++ [SpecificPackageDB dbFile]}
+          pref = buildDir local_bld_info
+      withAllComponentsInBuildOrder pkg_descr with_in_place $ \comp clbi ->
           case comp of
             (CLib lib) -> do
-                      info verbosity "Lib ..."
+                      cobjs <- getObjectFileDirContents >>=
+                               return
+                                . map (\f -> combine objectFileDir f)
+                                . filter (\f -> takeExtension f == ".o")
                       hobjs <- getHaskellObjects lib with_in_place pref objExtension True
                       let staticObjectFiles = cobjs ++ hobjs
                       (arProg, _) <- requireProgram verbosity arProgram (withPrograms with_in_place)
                       let vanillaLibFilePath = pref </> (mkLibName $ head $ componentLibraries clbi)
                       Ar.createArLibArchive verbosity with_in_place vanillaLibFilePath staticObjectFiles
-                      -- let exe_lbi = new_local_bld_info {withPackageDB = withPackageDB new_local_bld_info ++ [SpecificPackageDB tempFilePath], componentsConfigs = nonlibs}
-                      --     exe_pkg_descr = pkg_descr {extraTmpFiles = extraTmpFiles new_pkg_descr ++ [tempFilePath]}
-                      -- buildHook simpleUserHooks exe_pkg_descr exe_lbi user_hooks bld_flags exe_pkg_descr exe_lbi user_hooks bld_flags
             (CExe exe) -> do
-                      info verbosity "Exe ..."
                       preprocessComponent new_pkg_descr comp with_in_place False verbosity []
-                      info verbosity $ "Building executable " ++ exeName exe ++ "..."
-                      info verbosity $ show $ clbi
-                      info verbosity $ show $ withPackageDB with_in_place
-                      info verbosity $ show clbi
                       buildExe verbosity (buildNumJobs bld_flags) new_pkg_descr with_in_place exe clbi
             _ -> return ()
 
