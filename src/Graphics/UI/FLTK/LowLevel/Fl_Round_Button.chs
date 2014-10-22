@@ -135,147 +135,147 @@ roundButtonHide :: RoundButton a  ->  IO (())
 roundButtonHide = buttonHide
 roundButtonShow :: RoundButton a -> IO ()
 roundButtonShow= buttonShow
-roundButtonSetCallback :: Widget a -> (WidgetCallback b) -> IO (())
+roundButtonSetCallback :: RoundButton a -> (WidgetCallback b) -> IO (())
 roundButtonSetCallback= buttonSetCallback
-roundButtonParent :: Widget a -> IO (Group ())
+roundButtonParent :: RoundButton a -> IO (Group ())
 roundButtonParent= buttonParent
-roundButtonSetParent :: Widget a -> Group b -> IO ()
+roundButtonSetParent :: RoundButton a -> Group b -> IO ()
 roundButtonSetParent= buttonSetParent
-roundButtonType_ :: Widget a  ->  IO (Word8)
+roundButtonType_ :: RoundButton a  ->  IO (Word8)
 roundButtonType_= buttonType_
-roundButtonSetType :: Widget a  -> Word8 ->  IO (())
+roundButtonSetType :: RoundButton a  -> Word8 ->  IO (())
 roundButtonSetType= buttonSetType
-roundButtonDrawLabel :: Widget a  -> Maybe (Rectangle,AlignType)->  IO (())
+roundButtonDrawLabel :: RoundButton a  -> Maybe (Rectangle,AlignType)->  IO (())
 roundButtonDrawLabel= buttonDrawLabel
-roundButtonX :: Widget a  ->  IO (Int)
+roundButtonX :: RoundButton a  ->  IO (Int)
 roundButtonX= buttonX
-roundButtonY :: Widget a  ->  IO (Int)
+roundButtonY :: RoundButton a  ->  IO (Int)
 roundButtonY= buttonY
-roundButtonW :: Widget a  ->  IO (Int)
+roundButtonW :: RoundButton a  ->  IO (Int)
 roundButtonW= buttonW
-roundButtonH :: Widget a  ->  IO (Int)
+roundButtonH :: RoundButton a  ->  IO (Int)
 roundButtonH= buttonH
-roundButtonSetAlign :: Widget a  -> AlignType ->  IO (())
+roundButtonSetAlign :: RoundButton a  -> AlignType ->  IO (())
 roundButtonSetAlign= buttonSetAlign
-roundButtonAlign :: Widget a  ->  IO (AlignType)
+roundButtonAlign :: RoundButton a  ->  IO (AlignType)
 roundButtonAlign= buttonAlign
-roundButtonBox :: Widget a  ->  IO (Boxtype)
+roundButtonBox :: RoundButton a  ->  IO (Boxtype)
 roundButtonBox= buttonBox
-roundButtonSetBox :: Widget a  -> Boxtype ->  IO (())
+roundButtonSetBox :: RoundButton a  -> Boxtype ->  IO (())
 roundButtonSetBox= buttonSetBox
-roundButtonColor :: Widget a  ->  IO (Color)
+roundButtonColor :: RoundButton a  ->  IO (Color)
 roundButtonColor= buttonColor
-roundButtonSetColor :: Widget a  -> Color ->  IO (())
+roundButtonSetColor :: RoundButton a  -> Color ->  IO (())
 roundButtonSetColor= buttonSetColor
-roundButtonSetColorWithBgSel :: Widget a  -> Color -> Color ->  IO (())
+roundButtonSetColorWithBgSel :: RoundButton a  -> Color -> Color ->  IO (())
 roundButtonSetColorWithBgSel= buttonSetColorWithBgSel
-roundButtonSelectionColor :: Widget a  ->  IO (Color)
+roundButtonSelectionColor :: RoundButton a  ->  IO (Color)
 roundButtonSelectionColor= buttonSelectionColor
-roundButtonSetSelectionColor :: Widget a  -> Color ->  IO (())
+roundButtonSetSelectionColor :: RoundButton a  -> Color ->  IO (())
 roundButtonSetSelectionColor= buttonSetSelectionColor
-roundButtonLabel :: Widget a  ->  IO (String)
+roundButtonLabel :: RoundButton a  ->  IO (String)
 roundButtonLabel= buttonLabel
-roundButtonCopyLabel :: Widget a  -> String ->  IO (())
+roundButtonCopyLabel :: RoundButton a  -> String ->  IO (())
 roundButtonCopyLabel= buttonCopyLabel
-roundButtonSetLabel :: Widget a  -> String ->  IO (())
+roundButtonSetLabel :: RoundButton a  -> String ->  IO (())
 roundButtonSetLabel= buttonSetLabel
-roundButtonLabeltype :: Widget a  ->  IO (Labeltype)
+roundButtonLabeltype :: RoundButton a  ->  IO (Labeltype)
 roundButtonLabeltype= buttonLabeltype
-roundButtonSetLabeltype :: Widget a  -> Labeltype ->  IO (())
+roundButtonSetLabeltype :: RoundButton a  -> Labeltype ->  IO (())
 roundButtonSetLabeltype= buttonSetLabeltype
-roundButtonLabelcolor :: Widget a  ->  IO (Color)
+roundButtonLabelcolor :: RoundButton a  ->  IO (Color)
 roundButtonLabelcolor= buttonLabelcolor
-roundButtonSetLabelcolor :: Widget a  -> Color ->  IO (())
+roundButtonSetLabelcolor :: RoundButton a  -> Color ->  IO (())
 roundButtonSetLabelcolor= buttonSetLabelcolor
-roundButtonLabelfont :: Widget a  ->  IO (Font)
+roundButtonLabelfont :: RoundButton a  ->  IO (Font)
 roundButtonLabelfont= buttonLabelfont
-roundButtonSetLabelfont :: Widget a  -> Font ->  IO (())
+roundButtonSetLabelfont :: RoundButton a  -> Font ->  IO (())
 roundButtonSetLabelfont= buttonSetLabelfont
-roundButtonLabelsize :: Widget a  ->  IO (FontSize)
+roundButtonLabelsize :: RoundButton a  ->  IO (FontSize)
 roundButtonLabelsize= buttonLabelsize
-roundButtonSetLabelsize :: Widget a  -> FontSize ->  IO (())
+roundButtonSetLabelsize :: RoundButton a  -> FontSize ->  IO (())
 roundButtonSetLabelsize= buttonSetLabelsize
-roundButtonImage :: Widget a  ->  IO (Image ())
+roundButtonImage :: RoundButton a  ->  IO (Image ())
 roundButtonImage= buttonImage
-roundButtonSetImage :: Widget a  -> Image b ->  IO (())
+roundButtonSetImage :: RoundButton a  -> Image b ->  IO (())
 roundButtonSetImage= buttonSetImage
-roundButtonDeimage :: Widget a  ->  IO (Image ())
+roundButtonDeimage :: RoundButton a  ->  IO (Image ())
 roundButtonDeimage= buttonDeimage
-roundButtonSetDeimage :: Widget a  -> Image b ->  IO (())
+roundButtonSetDeimage :: RoundButton a  -> Image b ->  IO (())
 roundButtonSetDeimage= buttonSetDeimage
-roundButtonTooltip :: Widget a  ->  IO (String)
+roundButtonTooltip :: RoundButton a  ->  IO (String)
 roundButtonTooltip= buttonTooltip
-roundButtonCopyTooltip :: Widget a  -> String ->  IO (())
+roundButtonCopyTooltip :: RoundButton a  -> String ->  IO (())
 roundButtonCopyTooltip= buttonCopyTooltip
-roundButtonSetTooltip :: Widget a  -> String ->  IO (())
+roundButtonSetTooltip :: RoundButton a  -> String ->  IO (())
 roundButtonSetTooltip= buttonSetTooltip
-roundButtonWhen :: Widget a  ->  IO (When)
+roundButtonWhen :: RoundButton a  ->  IO (When)
 roundButtonWhen= buttonWhen
-roundButtonSetWhen :: Widget a  -> Word8 ->  IO (())
+roundButtonSetWhen :: RoundButton a  -> Word8 ->  IO (())
 roundButtonSetWhen= buttonSetWhen
-roundButtonVisible :: Widget a  ->  IO (Int)
+roundButtonVisible :: RoundButton a  ->  IO (Int)
 roundButtonVisible= buttonVisible
-roundButtonVisibleR :: Widget a  ->  IO (Int)
+roundButtonVisibleR :: RoundButton a  ->  IO (Int)
 roundButtonVisibleR= buttonVisibleR
-roundButtonSetVisible :: Widget a  ->  IO (())
+roundButtonSetVisible :: RoundButton a  ->  IO (())
 roundButtonSetVisible= buttonSetVisible
-roundButtonClearVisible :: Widget a  ->  IO (())
+roundButtonClearVisible :: RoundButton a  ->  IO (())
 roundButtonClearVisible= buttonClearVisible
-roundButtonActive :: Widget a  ->  IO (Int)
+roundButtonActive :: RoundButton a  ->  IO (Int)
 roundButtonActive= buttonActive
-roundButtonActiveR :: Widget a  ->  IO (Int)
+roundButtonActiveR :: RoundButton a  ->  IO (Int)
 roundButtonActiveR= buttonActiveR
-roundButtonActivate :: Widget a  ->  IO (())
+roundButtonActivate :: RoundButton a  ->  IO (())
 roundButtonActivate= buttonActivate
-roundButtonDeactivate :: Widget a  ->  IO (())
+roundButtonDeactivate :: RoundButton a  ->  IO (())
 roundButtonDeactivate= buttonDeactivate
-roundButtonOutput :: Widget a  ->  IO (Int)
+roundButtonOutput :: RoundButton a  ->  IO (Int)
 roundButtonOutput= buttonOutput
-roundButtonSetOutput :: Widget a  ->  IO (())
+roundButtonSetOutput :: RoundButton a  ->  IO (())
 roundButtonSetOutput= buttonSetOutput
-roundButtonClearOutput :: Widget a  ->  IO (())
+roundButtonClearOutput :: RoundButton a  ->  IO (())
 roundButtonClearOutput= buttonClearOutput
-roundButtonTakesevents :: Widget a  ->  IO (Int)
+roundButtonTakesevents :: RoundButton a  ->  IO (Int)
 roundButtonTakesevents= buttonTakesevents
-roundButtonSetChanged :: Widget a  ->  IO (())
+roundButtonSetChanged :: RoundButton a  ->  IO (())
 roundButtonSetChanged= buttonSetChanged
-roundButtonClearChanged :: Widget a  ->  IO (())
+roundButtonClearChanged :: RoundButton a  ->  IO (())
 roundButtonClearChanged= buttonClearChanged
-roundButtonTakeFocus :: Widget a  ->  IO (Int)
+roundButtonTakeFocus :: RoundButton a  ->  IO (Int)
 roundButtonTakeFocus= buttonTakeFocus
-roundButtonSetVisibleFocus :: Widget a  ->  IO (())
+roundButtonSetVisibleFocus :: RoundButton a  ->  IO (())
 roundButtonSetVisibleFocus= buttonSetVisibleFocus
-roundButtonClearVisibleFocus :: Widget a  ->  IO (())
+roundButtonClearVisibleFocus :: RoundButton a  ->  IO (())
 roundButtonClearVisibleFocus= buttonClearVisibleFocus
-roundButtonModifyVisibleFocus :: Widget a  -> Int ->  IO (())
+roundButtonModifyVisibleFocus :: RoundButton a  -> Int ->  IO (())
 roundButtonModifyVisibleFocus= buttonModifyVisibleFocus
-roundButtonVisibleFocus :: Widget a  ->  IO (Int)
+roundButtonVisibleFocus :: RoundButton a  ->  IO (Int)
 roundButtonVisibleFocus= buttonVisibleFocus
-roundButtonContains :: Widget a  -> Widget a  ->  IO (Int)
+roundButtonContains :: RoundButton a  -> RoundButton a  ->  IO (Int)
 roundButtonContains= buttonContains
-roundButtonInside :: Widget a  -> Widget a  ->  IO (Int)
+roundButtonInside :: RoundButton a  -> RoundButton a  ->  IO (Int)
 roundButtonInside= buttonInside
-roundButtonRedraw :: Widget a  ->  IO (())
+roundButtonRedraw :: RoundButton a  ->  IO (())
 roundButtonRedraw= buttonRedraw
-roundButtonRedrawLabel :: Widget a  ->  IO (())
+roundButtonRedrawLabel :: RoundButton a  ->  IO (())
 roundButtonRedrawLabel= buttonRedrawLabel
-roundButtonDamage :: Widget a  ->  IO (Word8)
+roundButtonDamage :: RoundButton a  ->  IO (Word8)
 roundButtonDamage= buttonDamage
-roundButtonClearDamageWithBitmask :: Widget a  -> Word8 ->  IO (())
+roundButtonClearDamageWithBitmask :: RoundButton a  -> Word8 ->  IO (())
 roundButtonClearDamageWithBitmask= buttonClearDamageWithBitmask
-roundButtonClearDamage :: Widget a  ->  IO (())
+roundButtonClearDamage :: RoundButton a  ->  IO (())
 roundButtonClearDamage= buttonClearDamage
-roundButtonDamageWithText :: Widget a  -> Word8 ->  IO (())
+roundButtonDamageWithText :: RoundButton a  -> Word8 ->  IO (())
 roundButtonDamageWithText= buttonDamageWithText
-roundButtonDamageInsideWidget :: Widget a  -> Word8 -> Rectangle ->  IO (())
+roundButtonDamageInsideWidget :: RoundButton a  -> Word8 -> Rectangle ->  IO (())
 roundButtonDamageInsideWidget= buttonDamageInsideWidget
-roundButtonMeasureLabel :: Widget a  -> IO (Size)
+roundButtonMeasureLabel :: RoundButton a  -> IO (Size)
 roundButtonMeasureLabel= buttonMeasureLabel
-roundButtonWindow :: Widget a  ->  IO (Window ())
+roundButtonWindow :: RoundButton a  ->  IO (Window ())
 roundButtonWindow= buttonWindow
-roundButtonTopWindow :: Widget a  ->  IO (Window ())
+roundButtonTopWindow :: RoundButton a  ->  IO (Window ())
 roundButtonTopWindow= buttonTopWindow
-roundButtonTopWindowOffset :: Widget a -> IO (Position)
+roundButtonTopWindowOffset :: RoundButton a -> IO (Position)
 roundButtonTopWindowOffset= buttonTopWindowOffset
 roundButtonValue :: RoundButton a  ->  IO (Bool)
 roundButtonValue= buttonValue

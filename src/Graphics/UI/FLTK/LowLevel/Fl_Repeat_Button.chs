@@ -135,147 +135,147 @@ repeatButtonHide :: RepeatButton a  ->  IO (())
 repeatButtonHide = buttonHide
 repeatButtonShow :: RepeatButton a -> IO ()
 repeatButtonShow= buttonShow
-repeatButtonSetCallback :: Widget a -> (WidgetCallback b) -> IO (())
+repeatButtonSetCallback :: RepeatButton a -> (WidgetCallback b) -> IO (())
 repeatButtonSetCallback= buttonSetCallback
-repeatButtonParent :: Widget a -> IO (Group ())
+repeatButtonParent :: RepeatButton a -> IO (Group ())
 repeatButtonParent= buttonParent
-repeatButtonSetParent :: Widget a -> Group b -> IO ()
+repeatButtonSetParent :: RepeatButton a -> Group b -> IO ()
 repeatButtonSetParent= buttonSetParent
-repeatButtonType_ :: Widget a  ->  IO (Word8)
+repeatButtonType_ :: RepeatButton a  ->  IO (Word8)
 repeatButtonType_= buttonType_
-repeatButtonSetType :: Widget a  -> Word8 ->  IO (())
+repeatButtonSetType :: RepeatButton a  -> Word8 ->  IO (())
 repeatButtonSetType= buttonSetType
-repeatButtonDrawLabel :: Widget a  -> Maybe (Rectangle,AlignType)->  IO (())
+repeatButtonDrawLabel :: RepeatButton a  -> Maybe (Rectangle,AlignType)->  IO (())
 repeatButtonDrawLabel= buttonDrawLabel
-repeatButtonX :: Widget a  ->  IO (Int)
+repeatButtonX :: RepeatButton a  ->  IO (Int)
 repeatButtonX= buttonX
-repeatButtonY :: Widget a  ->  IO (Int)
+repeatButtonY :: RepeatButton a  ->  IO (Int)
 repeatButtonY= buttonY
-repeatButtonW :: Widget a  ->  IO (Int)
+repeatButtonW :: RepeatButton a  ->  IO (Int)
 repeatButtonW= buttonW
-repeatButtonH :: Widget a  ->  IO (Int)
+repeatButtonH :: RepeatButton a  ->  IO (Int)
 repeatButtonH= buttonH
-repeatButtonSetAlign :: Widget a  -> AlignType ->  IO (())
+repeatButtonSetAlign :: RepeatButton a  -> AlignType ->  IO (())
 repeatButtonSetAlign= buttonSetAlign
-repeatButtonAlign :: Widget a  ->  IO (AlignType)
+repeatButtonAlign :: RepeatButton a  ->  IO (AlignType)
 repeatButtonAlign= buttonAlign
-repeatButtonBox :: Widget a  ->  IO (Boxtype)
+repeatButtonBox :: RepeatButton a  ->  IO (Boxtype)
 repeatButtonBox= buttonBox
-repeatButtonSetBox :: Widget a  -> Boxtype ->  IO (())
+repeatButtonSetBox :: RepeatButton a  -> Boxtype ->  IO (())
 repeatButtonSetBox= buttonSetBox
-repeatButtonColor :: Widget a  ->  IO (Color)
+repeatButtonColor :: RepeatButton a  ->  IO (Color)
 repeatButtonColor= buttonColor
-repeatButtonSetColor :: Widget a  -> Color ->  IO (())
+repeatButtonSetColor :: RepeatButton a  -> Color ->  IO (())
 repeatButtonSetColor= buttonSetColor
-repeatButtonSetColorWithBgSel :: Widget a  -> Color -> Color ->  IO (())
+repeatButtonSetColorWithBgSel :: RepeatButton a  -> Color -> Color ->  IO (())
 repeatButtonSetColorWithBgSel= buttonSetColorWithBgSel
-repeatButtonSelectionColor :: Widget a  ->  IO (Color)
+repeatButtonSelectionColor :: RepeatButton a  ->  IO (Color)
 repeatButtonSelectionColor= buttonSelectionColor
-repeatButtonSetSelectionColor :: Widget a  -> Color ->  IO (())
+repeatButtonSetSelectionColor :: RepeatButton a  -> Color ->  IO (())
 repeatButtonSetSelectionColor= buttonSetSelectionColor
-repeatButtonLabel :: Widget a  ->  IO (String)
+repeatButtonLabel :: RepeatButton a  ->  IO (String)
 repeatButtonLabel= buttonLabel
-repeatButtonCopyLabel :: Widget a  -> String ->  IO (())
+repeatButtonCopyLabel :: RepeatButton a  -> String ->  IO (())
 repeatButtonCopyLabel= buttonCopyLabel
-repeatButtonSetLabel :: Widget a  -> String ->  IO (())
+repeatButtonSetLabel :: RepeatButton a  -> String ->  IO (())
 repeatButtonSetLabel= buttonSetLabel
-repeatButtonLabeltype :: Widget a  ->  IO (Labeltype)
+repeatButtonLabeltype :: RepeatButton a  ->  IO (Labeltype)
 repeatButtonLabeltype= buttonLabeltype
-repeatButtonSetLabeltype :: Widget a  -> Labeltype ->  IO (())
+repeatButtonSetLabeltype :: RepeatButton a  -> Labeltype ->  IO (())
 repeatButtonSetLabeltype= buttonSetLabeltype
-repeatButtonLabelcolor :: Widget a  ->  IO (Color)
+repeatButtonLabelcolor :: RepeatButton a  ->  IO (Color)
 repeatButtonLabelcolor= buttonLabelcolor
-repeatButtonSetLabelcolor :: Widget a  -> Color ->  IO (())
+repeatButtonSetLabelcolor :: RepeatButton a  -> Color ->  IO (())
 repeatButtonSetLabelcolor= buttonSetLabelcolor
-repeatButtonLabelfont :: Widget a  ->  IO (Font)
+repeatButtonLabelfont :: RepeatButton a  ->  IO (Font)
 repeatButtonLabelfont= buttonLabelfont
-repeatButtonSetLabelfont :: Widget a  -> Font ->  IO (())
+repeatButtonSetLabelfont :: RepeatButton a  -> Font ->  IO (())
 repeatButtonSetLabelfont= buttonSetLabelfont
-repeatButtonLabelsize :: Widget a  ->  IO (FontSize)
+repeatButtonLabelsize :: RepeatButton a  ->  IO (FontSize)
 repeatButtonLabelsize= buttonLabelsize
-repeatButtonSetLabelsize :: Widget a  -> FontSize ->  IO (())
+repeatButtonSetLabelsize :: RepeatButton a  -> FontSize ->  IO (())
 repeatButtonSetLabelsize= buttonSetLabelsize
-repeatButtonImage :: Widget a  ->  IO (Image ())
+repeatButtonImage :: RepeatButton a  ->  IO (Image ())
 repeatButtonImage= buttonImage
-repeatButtonSetImage :: Widget a  -> Image b ->  IO (())
+repeatButtonSetImage :: RepeatButton a  -> Image b ->  IO (())
 repeatButtonSetImage= buttonSetImage
-repeatButtonDeimage :: Widget a  ->  IO (Image ())
+repeatButtonDeimage :: RepeatButton a  ->  IO (Image ())
 repeatButtonDeimage= buttonDeimage
-repeatButtonSetDeimage :: Widget a  -> Image b ->  IO (())
+repeatButtonSetDeimage :: RepeatButton a  -> Image b ->  IO (())
 repeatButtonSetDeimage= buttonSetDeimage
-repeatButtonTooltip :: Widget a  ->  IO (String)
+repeatButtonTooltip :: RepeatButton a  ->  IO (String)
 repeatButtonTooltip= buttonTooltip
-repeatButtonCopyTooltip :: Widget a  -> String ->  IO (())
+repeatButtonCopyTooltip :: RepeatButton a  -> String ->  IO (())
 repeatButtonCopyTooltip= buttonCopyTooltip
-repeatButtonSetTooltip :: Widget a  -> String ->  IO (())
+repeatButtonSetTooltip :: RepeatButton a  -> String ->  IO (())
 repeatButtonSetTooltip= buttonSetTooltip
-repeatButtonWhen :: Widget a  ->  IO (When)
+repeatButtonWhen :: RepeatButton a  ->  IO (When)
 repeatButtonWhen= buttonWhen
-repeatButtonSetWhen :: Widget a  -> Word8 ->  IO (())
+repeatButtonSetWhen :: RepeatButton a  -> Word8 ->  IO (())
 repeatButtonSetWhen= buttonSetWhen
-repeatButtonVisible :: Widget a  ->  IO (Int)
+repeatButtonVisible :: RepeatButton a  ->  IO (Int)
 repeatButtonVisible= buttonVisible
-repeatButtonVisibleR :: Widget a  ->  IO (Int)
+repeatButtonVisibleR :: RepeatButton a  ->  IO (Int)
 repeatButtonVisibleR= buttonVisibleR
-repeatButtonSetVisible :: Widget a  ->  IO (())
+repeatButtonSetVisible :: RepeatButton a  ->  IO (())
 repeatButtonSetVisible= buttonSetVisible
-repeatButtonClearVisible :: Widget a  ->  IO (())
+repeatButtonClearVisible :: RepeatButton a  ->  IO (())
 repeatButtonClearVisible= buttonClearVisible
-repeatButtonActive :: Widget a  ->  IO (Int)
+repeatButtonActive :: RepeatButton a  ->  IO (Int)
 repeatButtonActive= buttonActive
-repeatButtonActiveR :: Widget a  ->  IO (Int)
+repeatButtonActiveR :: RepeatButton a  ->  IO (Int)
 repeatButtonActiveR= buttonActiveR
-repeatButtonActivate :: Widget a  ->  IO (())
+repeatButtonActivate :: RepeatButton a  ->  IO (())
 repeatButtonActivate= buttonActivate
-repeatButtonDeactivate :: Widget a  ->  IO (())
+repeatButtonDeactivate :: RepeatButton a  ->  IO (())
 repeatButtonDeactivate= buttonDeactivate
-repeatButtonOutput :: Widget a  ->  IO (Int)
+repeatButtonOutput :: RepeatButton a  ->  IO (Int)
 repeatButtonOutput= buttonOutput
-repeatButtonSetOutput :: Widget a  ->  IO (())
+repeatButtonSetOutput :: RepeatButton a  ->  IO (())
 repeatButtonSetOutput= buttonSetOutput
-repeatButtonClearOutput :: Widget a  ->  IO (())
+repeatButtonClearOutput :: RepeatButton a  ->  IO (())
 repeatButtonClearOutput= buttonClearOutput
-repeatButtonTakesevents :: Widget a  ->  IO (Int)
+repeatButtonTakesevents :: RepeatButton a  ->  IO (Int)
 repeatButtonTakesevents= buttonTakesevents
-repeatButtonSetChanged :: Widget a  ->  IO (())
+repeatButtonSetChanged :: RepeatButton a  ->  IO (())
 repeatButtonSetChanged= buttonSetChanged
-repeatButtonClearChanged :: Widget a  ->  IO (())
+repeatButtonClearChanged :: RepeatButton a  ->  IO (())
 repeatButtonClearChanged= buttonClearChanged
-repeatButtonTakeFocus :: Widget a  ->  IO (Int)
+repeatButtonTakeFocus :: RepeatButton a  ->  IO (Int)
 repeatButtonTakeFocus= buttonTakeFocus
-repeatButtonSetVisibleFocus :: Widget a  ->  IO (())
+repeatButtonSetVisibleFocus :: RepeatButton a  ->  IO (())
 repeatButtonSetVisibleFocus= buttonSetVisibleFocus
-repeatButtonClearVisibleFocus :: Widget a  ->  IO (())
+repeatButtonClearVisibleFocus :: RepeatButton a  ->  IO (())
 repeatButtonClearVisibleFocus= buttonClearVisibleFocus
-repeatButtonModifyVisibleFocus :: Widget a  -> Int ->  IO (())
+repeatButtonModifyVisibleFocus :: RepeatButton a  -> Int ->  IO (())
 repeatButtonModifyVisibleFocus= buttonModifyVisibleFocus
-repeatButtonVisibleFocus :: Widget a  ->  IO (Int)
+repeatButtonVisibleFocus :: RepeatButton a  ->  IO (Int)
 repeatButtonVisibleFocus= buttonVisibleFocus
-repeatButtonContains :: Widget a  -> Widget a  ->  IO (Int)
+repeatButtonContains :: RepeatButton a  -> RepeatButton a  ->  IO (Int)
 repeatButtonContains= buttonContains
-repeatButtonInside :: Widget a  -> Widget a  ->  IO (Int)
+repeatButtonInside :: RepeatButton a  -> RepeatButton a  ->  IO (Int)
 repeatButtonInside= buttonInside
-repeatButtonRedraw :: Widget a  ->  IO (())
+repeatButtonRedraw :: RepeatButton a  ->  IO (())
 repeatButtonRedraw= buttonRedraw
-repeatButtonRedrawLabel :: Widget a  ->  IO (())
+repeatButtonRedrawLabel :: RepeatButton a  ->  IO (())
 repeatButtonRedrawLabel= buttonRedrawLabel
-repeatButtonDamage :: Widget a  ->  IO (Word8)
+repeatButtonDamage :: RepeatButton a  ->  IO (Word8)
 repeatButtonDamage= buttonDamage
-repeatButtonClearDamageWithBitmask :: Widget a  -> Word8 ->  IO (())
+repeatButtonClearDamageWithBitmask :: RepeatButton a  -> Word8 ->  IO (())
 repeatButtonClearDamageWithBitmask= buttonClearDamageWithBitmask
-repeatButtonClearDamage :: Widget a  ->  IO (())
+repeatButtonClearDamage :: RepeatButton a  ->  IO (())
 repeatButtonClearDamage= buttonClearDamage
-repeatButtonDamageWithText :: Widget a  -> Word8 ->  IO (())
+repeatButtonDamageWithText :: RepeatButton a  -> Word8 ->  IO (())
 repeatButtonDamageWithText= buttonDamageWithText
-repeatButtonDamageInsideWidget :: Widget a  -> Word8 -> Rectangle ->  IO (())
+repeatButtonDamageInsideWidget :: RepeatButton a  -> Word8 -> Rectangle ->  IO (())
 repeatButtonDamageInsideWidget= buttonDamageInsideWidget
-repeatButtonMeasureLabel :: Widget a  -> IO (Size)
+repeatButtonMeasureLabel :: RepeatButton a  -> IO (Size)
 repeatButtonMeasureLabel= buttonMeasureLabel
-repeatButtonWindow :: Widget a  ->  IO (Window ())
+repeatButtonWindow :: RepeatButton a  ->  IO (Window ())
 repeatButtonWindow= buttonWindow
-repeatButtonTopWindow :: Widget a  ->  IO (Window ())
+repeatButtonTopWindow :: RepeatButton a  ->  IO (Window ())
 repeatButtonTopWindow= buttonTopWindow
-repeatButtonTopWindowOffset :: Widget a -> IO (Position)
+repeatButtonTopWindowOffset :: RepeatButton a -> IO (Position)
 repeatButtonTopWindowOffset= buttonTopWindowOffset
 repeatButtonValue :: RepeatButton a  ->  IO (Bool)
 repeatButtonValue= buttonValue

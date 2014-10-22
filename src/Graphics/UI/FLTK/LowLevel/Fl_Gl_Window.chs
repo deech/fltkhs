@@ -179,7 +179,6 @@ import Foreign.C
 import Graphics.UI.FLTK.LowLevel.Fl_Types
 import Graphics.UI.FLTK.LowLevel.Fl_Enumerations
 import Graphics.UI.FLTK.LowLevel.Utils
-import Graphics.UI.FLTK.LowLevel.Fl_Double_Window
 import Graphics.UI.FLTK.LowLevel.Fl_Window
 import C2HS hiding (cFromEnum, unsafePerformIO, toBool,cToEnum)
 data GlWindowFuncs a =
@@ -395,265 +394,265 @@ glWindowHideOverlay win = withObject win $ \winPtr -> hideOverlay' winPtr
 glWindowMakeOverlayCurrent :: GlWindow a  ->  IO (())
 glWindowMakeOverlayCurrent win = withObject win $ \winPtr -> makeOverlayCurrent' winPtr
 
-glWindowSetCallback :: Window a -> WidgetCallback b -> IO ()
-glWindowSetCallback = doubleWindowSetCallback
-glWindowParent :: Group a -> IO (Group ())
-glWindowParent = doubleWindowParent
-glWindowSetParent :: Group a -> Group b -> IO ()
-glWindowSetParent = doubleWindowSetParent
-glWindowType_ :: Group a  ->  IO (Word8)
-glWindowType_ = doubleWindowType_
-glWindowSetType :: Group a  -> Word8 ->  IO (())
-glWindowSetType = doubleWindowSetType
-glWindowDrawLabel :: Group a  -> Maybe (Rectangle,AlignType)->  IO (())
-glWindowDrawLabel = doubleWindowDrawLabel
-glWindowX :: Group a  ->  IO (Int)
-glWindowX = doubleWindowX
-glWindowY :: Group a  ->  IO (Int)
-glWindowY = doubleWindowY
-glWindowW :: Group a  ->  IO (Int)
-glWindowW = doubleWindowW
-glWindowH :: Group a  ->  IO (Int)
-glWindowH = doubleWindowH
-glWindowSetAlign :: Group a  -> AlignType ->  IO (())
-glWindowSetAlign = doubleWindowSetAlign
-glWindowAlign :: Group a  ->  IO (AlignType)
-glWindowAlign = doubleWindowAlign
-glWindowBox :: Group a  ->  IO (Boxtype)
-glWindowBox = doubleWindowBox
-glWindowSetBox :: Group a  -> Boxtype ->  IO (())
-glWindowSetBox = doubleWindowSetBox
-glWindowColor :: Group a  ->  IO (Color)
-glWindowColor = doubleWindowColor
-glWindowSetColor :: Group a  -> Color ->  IO (())
-glWindowSetColor = doubleWindowSetColor
-glWindowSetColorWithBgSel :: Group a  -> Color -> Color ->  IO (())
-glWindowSetColorWithBgSel = doubleWindowSetColorWithBgSel
-glWindowSelectionColor :: Group a  ->  IO (Color)
-glWindowSelectionColor = doubleWindowSelectionColor
-glWindowSetSelectionColor :: Group a  -> Color ->  IO (())
-glWindowSetSelectionColor = doubleWindowSetSelectionColor
-glWindowLabeltype :: Group a  ->  IO (Labeltype)
-glWindowLabeltype = doubleWindowLabeltype
-glWindowSetLabeltype :: Group a  -> Labeltype ->  IO (())
-glWindowSetLabeltype = doubleWindowSetLabeltype
-glWindowLabelcolor :: Group a  ->  IO (Color)
-glWindowLabelcolor = doubleWindowLabelcolor
-glWindowSetLabelcolor :: Group a  -> Color ->  IO (())
-glWindowSetLabelcolor = doubleWindowSetLabelcolor
-glWindowLabelfont :: Group a  ->  IO (Font)
-glWindowLabelfont = doubleWindowLabelfont
-glWindowSetLabelfont :: Group a  -> Font ->  IO (())
-glWindowSetLabelfont = doubleWindowSetLabelfont
-glWindowLabelsize :: Group a  ->  IO (FontSize)
-glWindowLabelsize = doubleWindowLabelsize
-glWindowSetLabelsize :: Group a  -> FontSize ->  IO (())
-glWindowSetLabelsize = doubleWindowSetLabelsize
-glWindowImage :: Group a  ->  IO (Image ())
-glWindowImage = doubleWindowImage
-glWindowSetImage :: Group a  -> Image b ->  IO (())
-glWindowSetImage = doubleWindowSetImage
-glWindowDeimage :: Group a  ->  IO (Image ())
-glWindowDeimage = doubleWindowDeimage
-glWindowSetDeimage :: Group a  -> Image b ->  IO (())
-glWindowSetDeimage = doubleWindowSetDeimage
-glWindowTooltip :: Group a  ->  IO (String)
-glWindowTooltip = doubleWindowTooltip
-glWindowCopyTooltip :: Group a  -> String ->  IO (())
-glWindowCopyTooltip = doubleWindowCopyTooltip
-glWindowSetTooltip :: Group a  -> String ->  IO (())
-glWindowSetTooltip = doubleWindowSetTooltip
-glWindowWhen :: Group a  ->  IO (When)
-glWindowWhen = doubleWindowWhen
-glWindowSetWhen :: Group a  -> Word8 ->  IO (())
-glWindowSetWhen = doubleWindowSetWhen
-glWindowVisible :: Group a  ->  IO (Int)
-glWindowVisible = doubleWindowVisible
-glWindowVisibleR :: Group a  ->  IO (Int)
-glWindowVisibleR = doubleWindowVisibleR
-glWindowSetVisible :: Group a  ->  IO (())
-glWindowSetVisible = doubleWindowSetVisible
-glWindowClearVisible :: Group a  ->  IO (())
-glWindowClearVisible = doubleWindowClearVisible
-glWindowActive :: Group a  ->  IO (Int)
-glWindowActive = doubleWindowActive
-glWindowActiveR :: Group a  ->  IO (Int)
-glWindowActiveR = doubleWindowActiveR
-glWindowActivate :: Group a  ->  IO (())
-glWindowActivate = doubleWindowActivate
-glWindowDeactivate :: Group a  ->  IO (())
-glWindowDeactivate = doubleWindowDeactivate
-glWindowOutput :: Group a  ->  IO (Int)
-glWindowOutput = doubleWindowOutput
-glWindowSetOutput :: Group a  ->  IO (())
-glWindowSetOutput = doubleWindowSetOutput
-glWindowClearOutput :: Group a  ->  IO (())
-glWindowClearOutput = doubleWindowClearOutput
-glWindowTakesevents :: Group a  ->  IO (Int)
-glWindowTakesevents = doubleWindowTakesevents
-glWindowSetChanged :: Group a  ->  IO (())
-glWindowSetChanged = doubleWindowSetChanged
-glWindowClearChanged :: Group a  ->  IO (())
-glWindowClearChanged = doubleWindowClearChanged
-glWindowTakeFocus :: Group a  ->  IO (Int)
-glWindowTakeFocus = doubleWindowTakeFocus
-glWindowSetVisibleFocus :: Group a  ->  IO (())
-glWindowSetVisibleFocus = doubleWindowSetVisibleFocus
-glWindowClearVisibleFocus :: Group a  ->  IO (())
-glWindowClearVisibleFocus = doubleWindowClearVisibleFocus
-glWindowModifyVisibleFocus :: Group a  -> Int ->  IO (())
-glWindowModifyVisibleFocus = doubleWindowModifyVisibleFocus
-glWindowVisibleFocus :: Group a  ->  IO (Int)
-glWindowVisibleFocus = doubleWindowVisibleFocus
-glWindowContains :: Group a  -> Group a  ->  IO (Int)
-glWindowContains = doubleWindowContains
-glWindowInside :: Group a  -> Group a  ->  IO (Int)
-glWindowInside = doubleWindowInside
-glWindowRedraw :: Group a  ->  IO (())
-glWindowRedraw = doubleWindowRedraw
-glWindowRedrawLabel :: Group a  ->  IO (())
-glWindowRedrawLabel = doubleWindowRedrawLabel
-glWindowDamage :: Group a  ->  IO (Word8)
-glWindowDamage = doubleWindowDamage
-glWindowClearDamageWithBitmask :: Group a  -> Word8 ->  IO (())
-glWindowClearDamageWithBitmask = doubleWindowClearDamageWithBitmask
-glWindowClearDamage :: Group a  ->  IO (())
-glWindowClearDamage = doubleWindowClearDamage
-glWindowDamageWithText :: Group a  -> Word8 ->  IO (())
-glWindowDamageWithText = doubleWindowDamageWithText
-glWindowDamageInsideWidget :: Group a  -> Word8 -> Rectangle ->  IO (())
-glWindowDamageInsideWidget = doubleWindowDamageInsideWidget
-glWindowMeasureLabel :: Group a  -> IO (Size)
-glWindowMeasureLabel = doubleWindowMeasureLabel
-glWindowWindow :: Group a  ->  IO (Window ())
-glWindowWindow = doubleWindowWindow
-glWindowTopWindow :: Group a  ->  IO (Window ())
-glWindowTopWindow = doubleWindowTopWindow
-glWindowTopWindowOffset :: Group a -> IO (Position)
-glWindowTopWindowOffset = doubleWindowTopWindowOffset
-glWindowBegin :: Group a  ->  IO (())
-glWindowBegin = doubleWindowBegin
-glWindowEnd :: Group a  ->  IO (())
-glWindowEnd = doubleWindowEnd
-glWindowFind :: Group a  -> Widget a  ->  IO (Int)
-glWindowFind = doubleWindowFind
-glWindowAdd :: Group a  -> Widget a  ->  IO (())
-glWindowAdd = doubleWindowAdd
-glWindowInsert :: Group a  -> Widget a  -> Int ->  IO (())
-glWindowInsert = doubleWindowInsert
-glWindowRemoveIndex :: Group a  -> Int ->  IO (())
-glWindowRemoveIndex = doubleWindowRemoveIndex
-glWindowRemoveWidget :: Group a  -> Widget a  ->  IO (())
-glWindowRemoveWidget = doubleWindowRemoveWidget
-glWindowClear :: Group a  ->  IO (())
-glWindowClear = doubleWindowClear
-glWindowSetResizable :: Group a  -> Widget a  ->  IO (())
-glWindowSetResizable = doubleWindowSetResizable
-glWindowResizable :: Group a  ->  IO (Widget ())
-glWindowResizable = doubleWindowResizable
-glWindowAddResizable :: Group a  -> Widget a  ->  IO (())
-glWindowAddResizable = doubleWindowAddResizable
-glWindowInitSizes :: Group a  ->  IO (())
-glWindowInitSizes = doubleWindowInitSizes
-glWindowChildren :: Group a  ->  IO (Int)
-glWindowChildren = doubleWindowChildren
-glWindowSetClipChildren :: Group a  -> Int ->  IO (())
-glWindowSetClipChildren = doubleWindowSetClipChildren
-glWindowClipChildren :: Group a  ->  IO (Int)
-glWindowClipChildren = doubleWindowClipChildren
-glWindowFocus :: Group a  -> Widget a  ->  IO (())
-glWindowFocus = doubleWindowFocus
-glWindowDdfdesignKludge :: Group a  ->  IO (Widget ())
-glWindowDdfdesignKludge = doubleWindowDdfdesignKludge
-glWindowInsertWithBefore :: Group a  -> Widget a  -> Widget a  ->  IO (())
-glWindowInsertWithBefore = doubleWindowInsertWithBefore
-glWindowArray :: Group a  ->  IO [(Widget ())]
-glWindowArray = doubleWindowArray
-glWindowChild :: Group a  -> Int ->  IO (Widget ())
-glWindowChild = doubleWindowChild
-glWindowChanged :: Window a  ->  IO (Int)
-glWindowChanged = doubleWindowChanged
-glWindowFullscreen :: Window a  ->  IO (())
-glWindowFullscreen = doubleWindowFullscreen
-glWindowFullscreenOff :: Window a -> Maybe Rectangle ->  IO (())
-glWindowFullscreenOff = doubleWindowFullscreenOff
-glWindowSetBorder :: Window a  -> Bool ->  IO (())
-glWindowSetBorder = doubleWindowSetBorder
-glWindowClearBorder :: Window a  ->  IO (())
-glWindowClearBorder = doubleWindowClearBorder
-glWindowBorder :: Window a  ->  IO (Bool)
-glWindowBorder = doubleWindowBorder
-glWindowSetOverride :: Window a  ->  IO (())
-glWindowSetOverride = doubleWindowSetOverride
-glWindowOverride :: Window a  ->  IO (Bool)
-glWindowOverride = doubleWindowOverride
-glWindowSetModal :: Window a  ->  IO (())
-glWindowSetModal = doubleWindowSetModal
-glWindowModal :: Window a  ->  IO (Bool)
-glWindowModal = doubleWindowModal
-glWindowSetNonModal :: Window a  ->  IO (())
-glWindowSetNonModal = doubleWindowSetNonModal
-glWindowNonModal :: Window a  ->  IO (Bool)
-glWindowNonModal = doubleWindowNonModal
-glWindowSetMenuWindow :: Window a  ->  IO (())
-glWindowSetMenuWindow = doubleWindowSetMenuWindow
-glWindowMenuWindow :: Window a  ->  IO (Bool)
-glWindowMenuWindow = doubleWindowMenuWindow
-glWindowSetTooltipWindow :: Window a  ->  IO (())
-glWindowSetTooltipWindow = doubleWindowSetTooltipWindow
-glWindowTooltipWindow :: Window a  ->  IO (Bool)
-glWindowTooltipWindow = doubleWindowTooltipWindow
-glWindowHotSpot :: Window a -> PositionSpec b -> Maybe Bool -> IO ()
-glWindowHotSpot = doubleWindowHotSpot
-glWindowFreePosition :: Window a  ->  IO (())
-glWindowFreePosition = doubleWindowFreePosition
-glWindowSizeRange :: Window a  -> Int -> Int -> IO (())
-glWindowSizeRange = doubleWindowSizeRange
-glWindowSizeRangeWithArgs :: Window a  -> Int -> Int -> OptionalSizeRangeArgs ->  IO (())
-glWindowSizeRangeWithArgs = doubleWindowSizeRangeWithArgs
-glWindowLabel :: Window a  ->  IO (String)
-glWindowLabel = doubleWindowLabel
-glWindowIconlabel :: Window a  ->  IO (String)
-glWindowIconlabel = doubleWindowIconlabel
-glWindowSetLabel :: Window a  -> String ->  IO (())
-glWindowSetLabel = doubleWindowSetLabel
-glWindowSetIconlabel :: Window a  -> String ->  IO (())
-glWindowSetIconlabel = doubleWindowSetIconlabel
-glWindowSetLabelWithIconlabel :: Window a  -> String -> String ->  IO (())
-glWindowSetLabelWithIconlabel = doubleWindowSetLabelWithIconlabel
-glWindowCopyLabel :: Window a  -> String ->  IO (())
-glWindowCopyLabel = doubleWindowCopyLabel
+glWindowSetCallback :: GlWindow a -> WidgetCallback b -> IO ()
+glWindowSetCallback = windowSetCallback
+glWindowParent :: GlWindow a -> IO (Group ())
+glWindowParent = windowParent
+glWindowSetParent :: GlWindow a -> Group b -> IO ()
+glWindowSetParent = windowSetParent
+glWindowType_ :: GlWindow a  ->  IO (Word8)
+glWindowType_ = windowType_
+glWindowSetType :: GlWindow a  -> Word8 ->  IO (())
+glWindowSetType = windowSetType
+glWindowDrawLabel :: GlWindow a  -> Maybe (Rectangle,AlignType)->  IO (())
+glWindowDrawLabel = windowDrawLabel
+glWindowX :: GlWindow a  ->  IO (Int)
+glWindowX = windowX
+glWindowY :: GlWindow a  ->  IO (Int)
+glWindowY = windowY
+glWindowW :: GlWindow a  ->  IO (Int)
+glWindowW = windowW
+glWindowH :: GlWindow a  ->  IO (Int)
+glWindowH = windowH
+glWindowSetAlign :: GlWindow a  -> AlignType ->  IO (())
+glWindowSetAlign = windowSetAlign
+glWindowAlign :: GlWindow a  ->  IO (AlignType)
+glWindowAlign = windowAlign
+glWindowBox :: GlWindow a  ->  IO (Boxtype)
+glWindowBox = windowBox
+glWindowSetBox :: GlWindow a  -> Boxtype ->  IO (())
+glWindowSetBox = windowSetBox
+glWindowColor :: GlWindow a  ->  IO (Color)
+glWindowColor = windowColor
+glWindowSetColor :: GlWindow a  -> Color ->  IO (())
+glWindowSetColor = windowSetColor
+glWindowSetColorWithBgSel :: GlWindow a  -> Color -> Color ->  IO (())
+glWindowSetColorWithBgSel = windowSetColorWithBgSel
+glWindowSelectionColor :: GlWindow a  ->  IO (Color)
+glWindowSelectionColor = windowSelectionColor
+glWindowSetSelectionColor :: GlWindow a  -> Color ->  IO (())
+glWindowSetSelectionColor = windowSetSelectionColor
+glWindowLabeltype :: GlWindow a  ->  IO (Labeltype)
+glWindowLabeltype = windowLabeltype
+glWindowSetLabeltype :: GlWindow a  -> Labeltype ->  IO (())
+glWindowSetLabeltype = windowSetLabeltype
+glWindowLabelcolor :: GlWindow a  ->  IO (Color)
+glWindowLabelcolor = windowLabelcolor
+glWindowSetLabelcolor :: GlWindow a  -> Color ->  IO (())
+glWindowSetLabelcolor = windowSetLabelcolor
+glWindowLabelfont :: GlWindow a  ->  IO (Font)
+glWindowLabelfont = windowLabelfont
+glWindowSetLabelfont :: GlWindow a  -> Font ->  IO (())
+glWindowSetLabelfont = windowSetLabelfont
+glWindowLabelsize :: GlWindow a  ->  IO (FontSize)
+glWindowLabelsize = windowLabelsize
+glWindowSetLabelsize :: GlWindow a  -> FontSize ->  IO (())
+glWindowSetLabelsize = windowSetLabelsize
+glWindowImage :: GlWindow a  ->  IO (Image ())
+glWindowImage = windowImage
+glWindowSetImage :: GlWindow a  -> Image b ->  IO (())
+glWindowSetImage = windowSetImage
+glWindowDeimage :: GlWindow a  ->  IO (Image ())
+glWindowDeimage = windowDeimage
+glWindowSetDeimage :: GlWindow a  -> Image b ->  IO (())
+glWindowSetDeimage = windowSetDeimage
+glWindowTooltip :: GlWindow a  ->  IO (String)
+glWindowTooltip = windowTooltip
+glWindowCopyTooltip :: GlWindow a  -> String ->  IO (())
+glWindowCopyTooltip = windowCopyTooltip
+glWindowSetTooltip :: GlWindow a  -> String ->  IO (())
+glWindowSetTooltip = windowSetTooltip
+glWindowWhen :: GlWindow a  ->  IO (When)
+glWindowWhen = windowWhen
+glWindowSetWhen :: GlWindow a  -> Word8 ->  IO (())
+glWindowSetWhen = windowSetWhen
+glWindowVisible :: GlWindow a  ->  IO (Int)
+glWindowVisible = windowVisible
+glWindowVisibleR :: GlWindow a  ->  IO (Int)
+glWindowVisibleR = windowVisibleR
+glWindowSetVisible :: GlWindow a  ->  IO (())
+glWindowSetVisible = windowSetVisible
+glWindowClearVisible :: GlWindow a  ->  IO (())
+glWindowClearVisible = windowClearVisible
+glWindowActive :: GlWindow a  ->  IO (Int)
+glWindowActive = windowActive
+glWindowActiveR :: GlWindow a  ->  IO (Int)
+glWindowActiveR = windowActiveR
+glWindowActivate :: GlWindow a  ->  IO (())
+glWindowActivate = windowActivate
+glWindowDeactivate :: GlWindow a  ->  IO (())
+glWindowDeactivate = windowDeactivate
+glWindowOutput :: GlWindow a  ->  IO (Int)
+glWindowOutput = windowOutput
+glWindowSetOutput :: GlWindow a  ->  IO (())
+glWindowSetOutput = windowSetOutput
+glWindowClearOutput :: GlWindow a  ->  IO (())
+glWindowClearOutput = windowClearOutput
+glWindowTakesevents :: GlWindow a  ->  IO (Int)
+glWindowTakesevents = windowTakesevents
+glWindowSetChanged :: GlWindow a  ->  IO (())
+glWindowSetChanged = windowSetChanged
+glWindowClearChanged :: GlWindow a  ->  IO (())
+glWindowClearChanged = windowClearChanged
+glWindowTakeFocus :: GlWindow a  ->  IO (Int)
+glWindowTakeFocus = windowTakeFocus
+glWindowSetVisibleFocus :: GlWindow a  ->  IO (())
+glWindowSetVisibleFocus = windowSetVisibleFocus
+glWindowClearVisibleFocus :: GlWindow a  ->  IO (())
+glWindowClearVisibleFocus = windowClearVisibleFocus
+glWindowModifyVisibleFocus :: GlWindow a  -> Int ->  IO (())
+glWindowModifyVisibleFocus = windowModifyVisibleFocus
+glWindowVisibleFocus :: GlWindow a  ->  IO (Int)
+glWindowVisibleFocus = windowVisibleFocus
+glWindowContains :: GlWindow a  -> Group a  ->  IO (Int)
+glWindowContains = windowContains
+glWindowInside :: GlWindow a  -> Group a  ->  IO (Int)
+glWindowInside = windowInside
+glWindowRedraw :: GlWindow a  ->  IO (())
+glWindowRedraw = windowRedraw
+glWindowRedrawLabel :: GlWindow a  ->  IO (())
+glWindowRedrawLabel = windowRedrawLabel
+glWindowDamage :: GlWindow a  ->  IO (Word8)
+glWindowDamage = windowDamage
+glWindowClearDamageWithBitmask :: GlWindow a  -> Word8 ->  IO (())
+glWindowClearDamageWithBitmask = windowClearDamageWithBitmask
+glWindowClearDamage :: GlWindow a  ->  IO (())
+glWindowClearDamage = windowClearDamage
+glWindowDamageWithText :: GlWindow a  -> Word8 ->  IO (())
+glWindowDamageWithText = windowDamageWithText
+glWindowDamageInsideWidget :: GlWindow a  -> Word8 -> Rectangle ->  IO (())
+glWindowDamageInsideWidget = windowDamageInsideWidget
+glWindowMeasureLabel :: GlWindow a  -> IO (Size)
+glWindowMeasureLabel = windowMeasureLabel
+glWindowWindow :: GlWindow a  ->  IO (Window ())
+glWindowWindow = windowWindow
+glWindowTopWindow :: GlWindow a  ->  IO (Window ())
+glWindowTopWindow = windowTopWindow
+glWindowTopWindowOffset :: GlWindow a -> IO (Position)
+glWindowTopWindowOffset = windowTopWindowOffset
+glWindowBegin :: GlWindow a  ->  IO (())
+glWindowBegin = windowBegin
+glWindowEnd :: GlWindow a  ->  IO (())
+glWindowEnd = windowEnd
+glWindowFind :: GlWindow a  -> Widget a  ->  IO (Int)
+glWindowFind = windowFind
+glWindowAdd :: GlWindow a  -> Widget a  ->  IO (())
+glWindowAdd = windowAdd
+glWindowInsert :: GlWindow a  -> Widget a  -> Int ->  IO (())
+glWindowInsert = windowInsert
+glWindowRemoveIndex :: GlWindow a  -> Int ->  IO (())
+glWindowRemoveIndex = windowRemoveIndex
+glWindowRemoveWidget :: GlWindow a  -> Widget a  ->  IO (())
+glWindowRemoveWidget = windowRemoveWidget
+glWindowClear :: GlWindow a  ->  IO (())
+glWindowClear = windowClear
+glWindowSetResizable :: GlWindow a  -> Widget a  ->  IO (())
+glWindowSetResizable = windowSetResizable
+glWindowResizable :: GlWindow a  ->  IO (Widget ())
+glWindowResizable = windowResizable
+glWindowAddResizable :: GlWindow a  -> Widget a  ->  IO (())
+glWindowAddResizable = windowAddResizable
+glWindowInitSizes :: GlWindow a  ->  IO (())
+glWindowInitSizes = windowInitSizes
+glWindowChildren :: GlWindow a  ->  IO (Int)
+glWindowChildren = windowChildren
+glWindowSetClipChildren :: GlWindow a  -> Int ->  IO (())
+glWindowSetClipChildren = windowSetClipChildren
+glWindowClipChildren :: GlWindow a  ->  IO (Int)
+glWindowClipChildren = windowClipChildren
+glWindowFocus :: GlWindow a  -> Widget a  ->  IO (())
+glWindowFocus = windowFocus
+glWindowDdfdesignKludge :: GlWindow a  ->  IO (Widget ())
+glWindowDdfdesignKludge = windowDdfdesignKludge
+glWindowInsertWithBefore :: GlWindow a  -> Widget b  -> Widget c  ->  IO (())
+glWindowInsertWithBefore = windowInsertWithBefore
+glWindowArray :: GlWindow a  ->  IO [(Widget ())]
+glWindowArray = windowArray
+glWindowChild :: GlWindow a  -> Int ->  IO (Widget ())
+glWindowChild = windowChild
+glWindowChanged :: GlWindow a  ->  IO (Int)
+glWindowChanged = windowChanged
+glWindowFullscreen :: GlWindow a  ->  IO (())
+glWindowFullscreen = windowFullscreen
+glWindowFullscreenOff :: GlWindow a -> Maybe Rectangle ->  IO (())
+glWindowFullscreenOff = windowFullscreenOff
+glWindowSetBorder :: GlWindow a  -> Bool ->  IO (())
+glWindowSetBorder = windowSetBorder
+glWindowClearBorder :: GlWindow a  ->  IO (())
+glWindowClearBorder = windowClearBorder
+glWindowBorder :: GlWindow a  ->  IO (Bool)
+glWindowBorder = windowBorder
+glWindowSetOverride :: GlWindow a  ->  IO (())
+glWindowSetOverride = windowSetOverride
+glWindowOverride :: GlWindow a  ->  IO (Bool)
+glWindowOverride = windowOverride
+glWindowSetModal :: GlWindow a  ->  IO (())
+glWindowSetModal = windowSetModal
+glWindowModal :: GlWindow a  ->  IO (Bool)
+glWindowModal = windowModal
+glWindowSetNonModal :: GlWindow a  ->  IO (())
+glWindowSetNonModal = windowSetNonModal
+glWindowNonModal :: GlWindow a  ->  IO (Bool)
+glWindowNonModal = windowNonModal
+glWindowSetMenuWindow :: GlWindow a  ->  IO (())
+glWindowSetMenuWindow = windowSetMenuWindow
+glWindowMenuWindow :: GlWindow a  ->  IO (Bool)
+glWindowMenuWindow = windowMenuWindow
+glWindowSetTooltipWindow :: GlWindow a  ->  IO (())
+glWindowSetTooltipWindow = windowSetTooltipWindow
+glWindowTooltipWindow :: GlWindow a  ->  IO (Bool)
+glWindowTooltipWindow = windowTooltipWindow
+glWindowHotSpot :: GlWindow a -> PositionSpec b -> Maybe Bool -> IO ()
+glWindowHotSpot = windowHotSpot
+glWindowFreePosition :: GlWindow a  ->  IO (())
+glWindowFreePosition = windowFreePosition
+glWindowSizeRange :: GlWindow a  -> Int -> Int -> IO (())
+glWindowSizeRange = windowSizeRange
+glWindowSizeRangeWithArgs :: GlWindow a  -> Int -> Int -> OptionalSizeRangeArgs ->  IO (())
+glWindowSizeRangeWithArgs = windowSizeRangeWithArgs
+glWindowLabel :: GlWindow a  ->  IO (String)
+glWindowLabel = windowLabel
+glWindowIconlabel :: GlWindow a  ->  IO (String)
+glWindowIconlabel = windowIconlabel
+glWindowSetLabel :: GlWindow a  -> String ->  IO (())
+glWindowSetLabel = windowSetLabel
+glWindowSetIconlabel :: GlWindow a  -> String ->  IO (())
+glWindowSetIconlabel = windowSetIconlabel
+glWindowSetLabelWithIconlabel :: GlWindow a  -> String -> String ->  IO (())
+glWindowSetLabelWithIconlabel = windowSetLabelWithIconlabel
+glWindowCopyLabel :: GlWindow a  -> String ->  IO (())
+glWindowCopyLabel = windowCopyLabel
 glWindowSetDefaultXclass :: String ->  IO (())
-glWindowSetDefaultXclass = doubleWindowSetDefaultXclass
+glWindowSetDefaultXclass = windowSetDefaultXclass
 glWindowDefaultXclass ::  IO (String)
-glWindowDefaultXclass = doubleWindowDefaultXclass
-glWindowXclass :: Window a  ->  IO (String)
-glWindowXclass = doubleWindowXclass
-glWindowSetXclass :: Window a  -> String ->  IO (())
-glWindowSetXclass = doubleWindowSetXclass
-glWindowIcon :: Window a  ->  IO (Ptr ())
-glWindowIcon = doubleWindowIcon
-glWindowSetIcon :: Window a  -> Ptr () ->  IO (())
-glWindowSetIcon = doubleWindowSetIcon
-glWindowShown :: Window a  ->  IO (Bool)
-glWindowShown = doubleWindowShown
-glWindowIconize :: Window a  ->  IO (())
-glWindowIconize = doubleWindowIconize
-glWindowXRoot :: Window a  ->  IO (Int)
-glWindowXRoot = doubleWindowXRoot
-glWindowYRoot :: Window a  ->  IO (Int)
-glWindowYRoot = doubleWindowYRoot
+glWindowDefaultXclass = windowDefaultXclass
+glWindowXclass :: GlWindow a  ->  IO (String)
+glWindowXclass = windowXclass
+glWindowSetXclass :: GlWindow a  -> String ->  IO (())
+glWindowSetXclass = windowSetXclass
+glWindowIcon :: GlWindow a  ->  IO (Ptr ())
+glWindowIcon = windowIcon
+glWindowSetIcon :: GlWindow a  -> Ptr () ->  IO (())
+glWindowSetIcon = windowSetIcon
+glWindowShown :: GlWindow a  ->  IO (Bool)
+glWindowShown = windowShown
+glWindowIconize :: GlWindow a  ->  IO (())
+glWindowIconize = windowIconize
+glWindowXRoot :: GlWindow a  ->  IO (Int)
+glWindowXRoot = windowXRoot
+glWindowYRoot :: GlWindow a  ->  IO (Int)
+glWindowYRoot = windowYRoot
 glWindowCurrent ::  IO (Ptr ())
-glWindowCurrent = doubleWindowCurrent
-glWindowMakeCurrent :: Window a  ->  IO (())
-glWindowMakeCurrent = doubleWindowMakeCurrent
-glWindowSetCursor :: Window a -> CursorType -> IO ()
-glWindowSetCursor = doubleWindowSetCursor
-glWindowSetCursorWithFgBg :: Window a  -> CursorType -> (Maybe Color, Maybe Color) ->  IO (())
-glWindowSetCursorWithFgBg = doubleWindowSetCursorWithFgBg
-glWindowSetDefaultCursor :: Window a  -> CursorType ->  IO (())
-glWindowSetDefaultCursor = doubleWindowSetDefaultCursor
-glWindowDecoratedW :: Window a  ->  IO (Int)
-glWindowDecoratedW = doubleWindowDecoratedW
-glWindowDecoratedH :: Window a  ->  IO (Int)
-glWindowDecoratedH = doubleWindowDecoratedH
+glWindowCurrent = windowCurrent
+glWindowMakeCurrent :: GlWindow a  ->  IO (())
+glWindowMakeCurrent = windowMakeCurrent
+glWindowSetCursor :: GlWindow a -> CursorType -> IO ()
+glWindowSetCursor = windowSetCursor
+glWindowSetCursorWithFgBg :: GlWindow a  -> CursorType -> (Maybe Color, Maybe Color) ->  IO (())
+glWindowSetCursorWithFgBg = windowSetCursorWithFgBg
+glWindowSetDefaultCursor :: GlWindow a  -> CursorType ->  IO (())
+glWindowSetDefaultCursor = windowSetDefaultCursor
+glWindowDecoratedW :: GlWindow a  ->  IO (Int)
+glWindowDecoratedW = windowDecoratedW
+glWindowDecoratedH :: GlWindow a  ->  IO (Int)
+glWindowDecoratedH = windowDecoratedH

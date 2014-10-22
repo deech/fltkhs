@@ -103,7 +103,6 @@ import Foreign.C.Types
 import Graphics.UI.FLTK.LowLevel.Fl_Enumerations
 import Graphics.UI.FLTK.LowLevel.Fl_Types
 import Graphics.UI.FLTK.LowLevel.Utils
-import Debug.Trace
 
 data WidgetFuncs a =
     WidgetFuncs
@@ -370,10 +369,10 @@ widgetModifyVisibleFocus widget v = withObject widget $ \widgetPtr -> modifyVisi
 widgetVisibleFocus :: Widget a  ->  IO (Int)
 widgetVisibleFocus widget = withObject widget $ \widgetPtr -> visibleFocus' widgetPtr
 {# fun Fl_Widget_contains as contains' { id `Ptr ()',id `Ptr ()' } -> `Int' #}
-widgetContains :: Widget a  -> Widget a  ->  IO (Int)
+widgetContains :: Widget a  -> Widget b  ->  IO (Int)
 widgetContains widget otherWidget = withObject widget $ \widgetPtr -> withObject otherWidget $ \otherWidgetPtr -> contains' widgetPtr otherWidgetPtr
 {# fun Fl_Widget_inside as inside' { id `Ptr ()',id `Ptr ()' } -> `Int' #}
-widgetInside :: Widget a  -> Widget a  ->  IO (Int)
+widgetInside :: Widget a -> Widget b  ->  IO (Int)
 widgetInside widget otherWidget = withObject widget $ \widgetPtr -> withObject otherWidget $ \otherWidgetPtr -> inside' widgetPtr otherWidgetPtr
 {# fun Fl_Widget_redraw as redraw' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
 widgetRedraw :: Widget a  ->  IO (())

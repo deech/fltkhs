@@ -135,147 +135,147 @@ returnButtonHide :: ReturnButton a  ->  IO (())
 returnButtonHide = buttonHide
 returnButtonShow :: ReturnButton a -> IO ()
 returnButtonShow= buttonShow
-returnButtonSetCallback :: Widget a -> (WidgetCallback b) -> IO (())
+returnButtonSetCallback :: ReturnButton a -> (WidgetCallback b) -> IO (())
 returnButtonSetCallback= buttonSetCallback
-returnButtonParent :: Widget a -> IO (Group ())
+returnButtonParent :: ReturnButton a -> IO (Group ())
 returnButtonParent= buttonParent
-returnButtonSetParent :: Widget a -> Group b -> IO ()
+returnButtonSetParent :: ReturnButton a -> Group b -> IO ()
 returnButtonSetParent= buttonSetParent
-returnButtonType_ :: Widget a  ->  IO (Word8)
+returnButtonType_ :: ReturnButton a  ->  IO (Word8)
 returnButtonType_= buttonType_
-returnButtonSetType :: Widget a  -> Word8 ->  IO (())
+returnButtonSetType :: ReturnButton a  -> Word8 ->  IO (())
 returnButtonSetType= buttonSetType
-returnButtonDrawLabel :: Widget a  -> Maybe (Rectangle,AlignType)->  IO (())
+returnButtonDrawLabel :: ReturnButton a  -> Maybe (Rectangle,AlignType)->  IO (())
 returnButtonDrawLabel= buttonDrawLabel
-returnButtonX :: Widget a  ->  IO (Int)
+returnButtonX :: ReturnButton a  ->  IO (Int)
 returnButtonX= buttonX
-returnButtonY :: Widget a  ->  IO (Int)
+returnButtonY :: ReturnButton a  ->  IO (Int)
 returnButtonY= buttonY
-returnButtonW :: Widget a  ->  IO (Int)
+returnButtonW :: ReturnButton a  ->  IO (Int)
 returnButtonW= buttonW
-returnButtonH :: Widget a  ->  IO (Int)
+returnButtonH :: ReturnButton a  ->  IO (Int)
 returnButtonH= buttonH
-returnButtonSetAlign :: Widget a  -> AlignType ->  IO (())
+returnButtonSetAlign :: ReturnButton a  -> AlignType ->  IO (())
 returnButtonSetAlign= buttonSetAlign
-returnButtonAlign :: Widget a  ->  IO (AlignType)
+returnButtonAlign :: ReturnButton a  ->  IO (AlignType)
 returnButtonAlign= buttonAlign
-returnButtonBox :: Widget a  ->  IO (Boxtype)
+returnButtonBox :: ReturnButton a  ->  IO (Boxtype)
 returnButtonBox= buttonBox
-returnButtonSetBox :: Widget a  -> Boxtype ->  IO (())
+returnButtonSetBox :: ReturnButton a  -> Boxtype ->  IO (())
 returnButtonSetBox= buttonSetBox
-returnButtonColor :: Widget a  ->  IO (Color)
+returnButtonColor :: ReturnButton a  ->  IO (Color)
 returnButtonColor= buttonColor
-returnButtonSetColor :: Widget a  -> Color ->  IO (())
+returnButtonSetColor :: ReturnButton a  -> Color ->  IO (())
 returnButtonSetColor= buttonSetColor
-returnButtonSetColorWithBgSel :: Widget a  -> Color -> Color ->  IO (())
+returnButtonSetColorWithBgSel :: ReturnButton a  -> Color -> Color ->  IO (())
 returnButtonSetColorWithBgSel= buttonSetColorWithBgSel
-returnButtonSelectionColor :: Widget a  ->  IO (Color)
+returnButtonSelectionColor :: ReturnButton a  ->  IO (Color)
 returnButtonSelectionColor= buttonSelectionColor
-returnButtonSetSelectionColor :: Widget a  -> Color ->  IO (())
+returnButtonSetSelectionColor :: ReturnButton a  -> Color ->  IO (())
 returnButtonSetSelectionColor= buttonSetSelectionColor
-returnButtonLabel :: Widget a  ->  IO (String)
+returnButtonLabel :: ReturnButton a  ->  IO (String)
 returnButtonLabel= buttonLabel
-returnButtonCopyLabel :: Widget a  -> String ->  IO (())
+returnButtonCopyLabel :: ReturnButton a  -> String ->  IO (())
 returnButtonCopyLabel= buttonCopyLabel
-returnButtonSetLabel :: Widget a  -> String ->  IO (())
+returnButtonSetLabel :: ReturnButton a  -> String ->  IO (())
 returnButtonSetLabel= buttonSetLabel
-returnButtonLabeltype :: Widget a  ->  IO (Labeltype)
+returnButtonLabeltype :: ReturnButton a  ->  IO (Labeltype)
 returnButtonLabeltype= buttonLabeltype
-returnButtonSetLabeltype :: Widget a  -> Labeltype ->  IO (())
+returnButtonSetLabeltype :: ReturnButton a  -> Labeltype ->  IO (())
 returnButtonSetLabeltype= buttonSetLabeltype
-returnButtonLabelcolor :: Widget a  ->  IO (Color)
+returnButtonLabelcolor :: ReturnButton a  ->  IO (Color)
 returnButtonLabelcolor= buttonLabelcolor
-returnButtonSetLabelcolor :: Widget a  -> Color ->  IO (())
+returnButtonSetLabelcolor :: ReturnButton a  -> Color ->  IO (())
 returnButtonSetLabelcolor= buttonSetLabelcolor
-returnButtonLabelfont :: Widget a  ->  IO (Font)
+returnButtonLabelfont :: ReturnButton a  ->  IO (Font)
 returnButtonLabelfont= buttonLabelfont
-returnButtonSetLabelfont :: Widget a  -> Font ->  IO (())
+returnButtonSetLabelfont :: ReturnButton a  -> Font ->  IO (())
 returnButtonSetLabelfont= buttonSetLabelfont
-returnButtonLabelsize :: Widget a  ->  IO (FontSize)
+returnButtonLabelsize :: ReturnButton a  ->  IO (FontSize)
 returnButtonLabelsize= buttonLabelsize
-returnButtonSetLabelsize :: Widget a  -> FontSize ->  IO (())
+returnButtonSetLabelsize :: ReturnButton a  -> FontSize ->  IO (())
 returnButtonSetLabelsize= buttonSetLabelsize
-returnButtonImage :: Widget a  ->  IO (Image ())
+returnButtonImage :: ReturnButton a  ->  IO (Image ())
 returnButtonImage= buttonImage
-returnButtonSetImage :: Widget a  -> Image b ->  IO (())
+returnButtonSetImage :: ReturnButton a  -> Image b ->  IO (())
 returnButtonSetImage= buttonSetImage
-returnButtonDeimage :: Widget a  ->  IO (Image ())
+returnButtonDeimage :: ReturnButton a  ->  IO (Image ())
 returnButtonDeimage= buttonDeimage
-returnButtonSetDeimage :: Widget a  -> Image b ->  IO (())
+returnButtonSetDeimage :: ReturnButton a  -> Image b ->  IO (())
 returnButtonSetDeimage= buttonSetDeimage
-returnButtonTooltip :: Widget a  ->  IO (String)
+returnButtonTooltip :: ReturnButton a  ->  IO (String)
 returnButtonTooltip= buttonTooltip
-returnButtonCopyTooltip :: Widget a  -> String ->  IO (())
+returnButtonCopyTooltip :: ReturnButton a  -> String ->  IO (())
 returnButtonCopyTooltip= buttonCopyTooltip
-returnButtonSetTooltip :: Widget a  -> String ->  IO (())
+returnButtonSetTooltip :: ReturnButton a  -> String ->  IO (())
 returnButtonSetTooltip= buttonSetTooltip
-returnButtonWhen :: Widget a  ->  IO (When)
+returnButtonWhen :: ReturnButton a  ->  IO (When)
 returnButtonWhen= buttonWhen
-returnButtonSetWhen :: Widget a  -> Word8 ->  IO (())
+returnButtonSetWhen :: ReturnButton a  -> Word8 ->  IO (())
 returnButtonSetWhen= buttonSetWhen
-returnButtonVisible :: Widget a  ->  IO (Int)
+returnButtonVisible :: ReturnButton a  ->  IO (Int)
 returnButtonVisible= buttonVisible
-returnButtonVisibleR :: Widget a  ->  IO (Int)
+returnButtonVisibleR :: ReturnButton a  ->  IO (Int)
 returnButtonVisibleR= buttonVisibleR
-returnButtonSetVisible :: Widget a  ->  IO (())
+returnButtonSetVisible :: ReturnButton a  ->  IO (())
 returnButtonSetVisible= buttonSetVisible
-returnButtonClearVisible :: Widget a  ->  IO (())
+returnButtonClearVisible :: ReturnButton a  ->  IO (())
 returnButtonClearVisible= buttonClearVisible
-returnButtonActive :: Widget a  ->  IO (Int)
+returnButtonActive :: ReturnButton a  ->  IO (Int)
 returnButtonActive= buttonActive
-returnButtonActiveR :: Widget a  ->  IO (Int)
+returnButtonActiveR :: ReturnButton a  ->  IO (Int)
 returnButtonActiveR= buttonActiveR
-returnButtonActivate :: Widget a  ->  IO (())
+returnButtonActivate :: ReturnButton a  ->  IO (())
 returnButtonActivate= buttonActivate
-returnButtonDeactivate :: Widget a  ->  IO (())
+returnButtonDeactivate :: ReturnButton a  ->  IO (())
 returnButtonDeactivate= buttonDeactivate
-returnButtonOutput :: Widget a  ->  IO (Int)
+returnButtonOutput :: ReturnButton a  ->  IO (Int)
 returnButtonOutput= buttonOutput
-returnButtonSetOutput :: Widget a  ->  IO (())
+returnButtonSetOutput :: ReturnButton a  ->  IO (())
 returnButtonSetOutput= buttonSetOutput
-returnButtonClearOutput :: Widget a  ->  IO (())
+returnButtonClearOutput :: ReturnButton a  ->  IO (())
 returnButtonClearOutput= buttonClearOutput
-returnButtonTakesevents :: Widget a  ->  IO (Int)
+returnButtonTakesevents :: ReturnButton a  ->  IO (Int)
 returnButtonTakesevents= buttonTakesevents
-returnButtonSetChanged :: Widget a  ->  IO (())
+returnButtonSetChanged :: ReturnButton a  ->  IO (())
 returnButtonSetChanged= buttonSetChanged
-returnButtonClearChanged :: Widget a  ->  IO (())
+returnButtonClearChanged :: ReturnButton a  ->  IO (())
 returnButtonClearChanged= buttonClearChanged
-returnButtonTakeFocus :: Widget a  ->  IO (Int)
+returnButtonTakeFocus :: ReturnButton a  ->  IO (Int)
 returnButtonTakeFocus= buttonTakeFocus
-returnButtonSetVisibleFocus :: Widget a  ->  IO (())
+returnButtonSetVisibleFocus :: ReturnButton a  ->  IO (())
 returnButtonSetVisibleFocus= buttonSetVisibleFocus
-returnButtonClearVisibleFocus :: Widget a  ->  IO (())
+returnButtonClearVisibleFocus :: ReturnButton a  ->  IO (())
 returnButtonClearVisibleFocus= buttonClearVisibleFocus
-returnButtonModifyVisibleFocus :: Widget a  -> Int ->  IO (())
+returnButtonModifyVisibleFocus :: ReturnButton a  -> Int ->  IO (())
 returnButtonModifyVisibleFocus= buttonModifyVisibleFocus
-returnButtonVisibleFocus :: Widget a  ->  IO (Int)
+returnButtonVisibleFocus :: ReturnButton a  ->  IO (Int)
 returnButtonVisibleFocus= buttonVisibleFocus
-returnButtonContains :: Widget a  -> Widget a  ->  IO (Int)
+returnButtonContains :: ReturnButton a  -> ReturnButton a  ->  IO (Int)
 returnButtonContains= buttonContains
-returnButtonInside :: Widget a  -> Widget a  ->  IO (Int)
+returnButtonInside :: ReturnButton a  -> ReturnButton a  ->  IO (Int)
 returnButtonInside= buttonInside
-returnButtonRedraw :: Widget a  ->  IO (())
+returnButtonRedraw :: ReturnButton a  ->  IO (())
 returnButtonRedraw= buttonRedraw
-returnButtonRedrawLabel :: Widget a  ->  IO (())
+returnButtonRedrawLabel :: ReturnButton a  ->  IO (())
 returnButtonRedrawLabel= buttonRedrawLabel
-returnButtonDamage :: Widget a  ->  IO (Word8)
+returnButtonDamage :: ReturnButton a  ->  IO (Word8)
 returnButtonDamage= buttonDamage
-returnButtonClearDamageWithBitmask :: Widget a  -> Word8 ->  IO (())
+returnButtonClearDamageWithBitmask :: ReturnButton a  -> Word8 ->  IO (())
 returnButtonClearDamageWithBitmask= buttonClearDamageWithBitmask
-returnButtonClearDamage :: Widget a  ->  IO (())
+returnButtonClearDamage :: ReturnButton a  ->  IO (())
 returnButtonClearDamage= buttonClearDamage
-returnButtonDamageWithText :: Widget a  -> Word8 ->  IO (())
+returnButtonDamageWithText :: ReturnButton a  -> Word8 ->  IO (())
 returnButtonDamageWithText= buttonDamageWithText
-returnButtonDamageInsideWidget :: Widget a  -> Word8 -> Rectangle ->  IO (())
+returnButtonDamageInsideWidget :: ReturnButton a  -> Word8 -> Rectangle ->  IO (())
 returnButtonDamageInsideWidget= buttonDamageInsideWidget
-returnButtonMeasureLabel :: Widget a  -> IO (Size)
+returnButtonMeasureLabel :: ReturnButton a  -> IO (Size)
 returnButtonMeasureLabel= buttonMeasureLabel
-returnButtonWindow :: Widget a  ->  IO (Window ())
+returnButtonWindow :: ReturnButton a  ->  IO (Window ())
 returnButtonWindow= buttonWindow
-returnButtonTopWindow :: Widget a  ->  IO (Window ())
+returnButtonTopWindow :: ReturnButton a  ->  IO (Window ())
 returnButtonTopWindow= buttonTopWindow
-returnButtonTopWindowOffset :: Widget a -> IO (Position)
+returnButtonTopWindowOffset :: ReturnButton a -> IO (Position)
 returnButtonTopWindowOffset= buttonTopWindowOffset
 returnButtonValue :: ReturnButton a  ->  IO (Bool)
 returnButtonValue= buttonValue

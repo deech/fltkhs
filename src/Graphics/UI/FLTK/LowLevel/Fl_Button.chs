@@ -233,147 +233,147 @@ buttonShowSuper button = withObject button $ \buttonPtr -> showSuper' buttonPtr
 buttonShow :: Button a -> IO ()
 buttonShow button = withObject button $ (\p -> buttonShow' p)
 
-buttonSetCallback :: Widget a -> (WidgetCallback b) -> IO (())
+buttonSetCallback :: Button a -> (WidgetCallback b) -> IO (())
 buttonSetCallback = widgetSetCallback
-buttonParent :: Widget a -> IO (Group ())
+buttonParent :: Button a -> IO (Group ())
 buttonParent = widgetParent
-buttonSetParent :: Widget a -> Group b -> IO ()
+buttonSetParent :: Button a -> Group b -> IO ()
 buttonSetParent = widgetSetParent
-buttonType_ :: Widget a  ->  IO (Word8)
+buttonType_ :: Button a  ->  IO (Word8)
 buttonType_ = widgetType_
-buttonSetType :: Widget a  -> Word8 ->  IO (())
+buttonSetType :: Button a  -> Word8 ->  IO (())
 buttonSetType = widgetSetType
-buttonDrawLabel :: Widget a  -> Maybe (Rectangle,AlignType)->  IO (())
+buttonDrawLabel :: Button a  -> Maybe (Rectangle,AlignType)->  IO (())
 buttonDrawLabel = widgetDrawLabel
-buttonX :: Widget a  ->  IO (Int)
+buttonX :: Button a  ->  IO (Int)
 buttonX = widgetX
-buttonY :: Widget a  ->  IO (Int)
+buttonY :: Button a  ->  IO (Int)
 buttonY = widgetY
-buttonW :: Widget a  ->  IO (Int)
+buttonW :: Button a  ->  IO (Int)
 buttonW = widgetW
-buttonH :: Widget a  ->  IO (Int)
+buttonH :: Button a  ->  IO (Int)
 buttonH = widgetH
-buttonSetAlign :: Widget a  -> AlignType ->  IO (())
+buttonSetAlign :: Button a  -> AlignType ->  IO (())
 buttonSetAlign = widgetSetAlign
-buttonAlign :: Widget a  ->  IO (AlignType)
+buttonAlign :: Button a  ->  IO (AlignType)
 buttonAlign = widgetAlign
-buttonBox :: Widget a  ->  IO (Boxtype)
+buttonBox :: Button a  ->  IO (Boxtype)
 buttonBox = widgetBox
-buttonSetBox :: Widget a  -> Boxtype ->  IO (())
+buttonSetBox :: Button a  -> Boxtype ->  IO (())
 buttonSetBox = widgetSetBox
-buttonColor :: Widget a  ->  IO (Color)
+buttonColor :: Button a  ->  IO (Color)
 buttonColor = widgetColor
-buttonSetColor :: Widget a  -> Color ->  IO (())
+buttonSetColor :: Button a  -> Color ->  IO (())
 buttonSetColor = widgetSetColor
-buttonSetColorWithBgSel :: Widget a  -> Color -> Color ->  IO (())
+buttonSetColorWithBgSel :: Button a  -> Color -> Color ->  IO (())
 buttonSetColorWithBgSel = widgetSetColorWithBgSel
-buttonSelectionColor :: Widget a  ->  IO (Color)
+buttonSelectionColor :: Button a  ->  IO (Color)
 buttonSelectionColor = widgetSelectionColor
-buttonSetSelectionColor :: Widget a  -> Color ->  IO (())
+buttonSetSelectionColor :: Button a  -> Color ->  IO (())
 buttonSetSelectionColor = widgetSetSelectionColor
-buttonLabel :: Widget a  ->  IO (String)
+buttonLabel :: Button a  ->  IO (String)
 buttonLabel = widgetLabel
-buttonCopyLabel :: Widget a  -> String ->  IO (())
+buttonCopyLabel :: Button a  -> String ->  IO (())
 buttonCopyLabel = widgetCopyLabel
-buttonSetLabel :: Widget a  -> String ->  IO (())
+buttonSetLabel :: Button a  -> String ->  IO (())
 buttonSetLabel = widgetSetLabel
-buttonLabeltype :: Widget a  ->  IO (Labeltype)
+buttonLabeltype :: Button a  ->  IO (Labeltype)
 buttonLabeltype = widgetLabeltype
-buttonSetLabeltype :: Widget a  -> Labeltype ->  IO (())
+buttonSetLabeltype :: Button a  -> Labeltype ->  IO (())
 buttonSetLabeltype = widgetSetLabeltype
-buttonLabelcolor :: Widget a  ->  IO (Color)
+buttonLabelcolor :: Button a  ->  IO (Color)
 buttonLabelcolor = widgetLabelcolor
-buttonSetLabelcolor :: Widget a  -> Color ->  IO (())
+buttonSetLabelcolor :: Button a  -> Color ->  IO (())
 buttonSetLabelcolor = widgetSetLabelcolor
-buttonLabelfont :: Widget a  ->  IO (Font)
+buttonLabelfont :: Button a  ->  IO (Font)
 buttonLabelfont = widgetLabelfont
-buttonSetLabelfont :: Widget a  -> Font ->  IO (())
+buttonSetLabelfont :: Button a  -> Font ->  IO (())
 buttonSetLabelfont = widgetSetLabelfont
-buttonLabelsize :: Widget a  ->  IO (FontSize)
+buttonLabelsize :: Button a  ->  IO (FontSize)
 buttonLabelsize = widgetLabelsize
-buttonSetLabelsize :: Widget a  -> FontSize ->  IO (())
+buttonSetLabelsize :: Button a  -> FontSize ->  IO (())
 buttonSetLabelsize = widgetSetLabelsize
-buttonImage :: Widget a  ->  IO (Image ())
+buttonImage :: Button a  ->  IO (Image ())
 buttonImage = widgetImage
-buttonSetImage :: Widget a  -> Image b ->  IO (())
+buttonSetImage :: Button a  -> Image b ->  IO (())
 buttonSetImage = widgetSetImage
-buttonDeimage :: Widget a  ->  IO (Image ())
+buttonDeimage :: Button a  ->  IO (Image ())
 buttonDeimage = widgetDeimage
-buttonSetDeimage :: Widget a  -> Image b ->  IO (())
+buttonSetDeimage :: Button a  -> Image b ->  IO (())
 buttonSetDeimage = widgetSetDeimage
-buttonTooltip :: Widget a  ->  IO (String)
+buttonTooltip :: Button a  ->  IO (String)
 buttonTooltip = widgetTooltip
-buttonCopyTooltip :: Widget a  -> String ->  IO (())
+buttonCopyTooltip :: Button a  -> String ->  IO (())
 buttonCopyTooltip = widgetCopyTooltip
-buttonSetTooltip :: Widget a  -> String ->  IO (())
+buttonSetTooltip :: Button a  -> String ->  IO (())
 buttonSetTooltip = widgetSetTooltip
-buttonWhen :: Widget a  ->  IO (When)
+buttonWhen :: Button a  ->  IO (When)
 buttonWhen = widgetWhen
-buttonSetWhen :: Widget a  -> Word8 ->  IO (())
+buttonSetWhen :: Button a  -> Word8 ->  IO (())
 buttonSetWhen = widgetSetWhen
-buttonVisible :: Widget a  ->  IO (Int)
+buttonVisible :: Button a  ->  IO (Int)
 buttonVisible = widgetVisible
-buttonVisibleR :: Widget a  ->  IO (Int)
+buttonVisibleR :: Button a  ->  IO (Int)
 buttonVisibleR = widgetVisibleR
-buttonSetVisible :: Widget a  ->  IO (())
+buttonSetVisible :: Button a  ->  IO (())
 buttonSetVisible = widgetSetVisible
-buttonClearVisible :: Widget a  ->  IO (())
+buttonClearVisible :: Button a  ->  IO (())
 buttonClearVisible = widgetClearVisible
-buttonActive :: Widget a  ->  IO (Int)
+buttonActive :: Button a  ->  IO (Int)
 buttonActive = widgetActive
-buttonActiveR :: Widget a  ->  IO (Int)
+buttonActiveR :: Button a  ->  IO (Int)
 buttonActiveR = widgetActiveR
-buttonActivate :: Widget a  ->  IO (())
+buttonActivate :: Button a  ->  IO (())
 buttonActivate = widgetActivate
-buttonDeactivate :: Widget a  ->  IO (())
+buttonDeactivate :: Button a  ->  IO (())
 buttonDeactivate = widgetDeactivate
-buttonOutput :: Widget a  ->  IO (Int)
+buttonOutput :: Button a  ->  IO (Int)
 buttonOutput = widgetOutput
-buttonSetOutput :: Widget a  ->  IO (())
+buttonSetOutput :: Button a  ->  IO (())
 buttonSetOutput = widgetSetOutput
-buttonClearOutput :: Widget a  ->  IO (())
+buttonClearOutput :: Button a  ->  IO (())
 buttonClearOutput = widgetClearOutput
-buttonTakesevents :: Widget a  ->  IO (Int)
+buttonTakesevents :: Button a  ->  IO (Int)
 buttonTakesevents = widgetTakesevents
-buttonSetChanged :: Widget a  ->  IO (())
+buttonSetChanged :: Button a  ->  IO (())
 buttonSetChanged = widgetSetChanged
-buttonClearChanged :: Widget a  ->  IO (())
+buttonClearChanged :: Button a  ->  IO (())
 buttonClearChanged = widgetClearChanged
-buttonTakeFocus :: Widget a  ->  IO (Int)
+buttonTakeFocus :: Button a  ->  IO (Int)
 buttonTakeFocus = widgetTakeFocus
-buttonSetVisibleFocus :: Widget a  ->  IO (())
+buttonSetVisibleFocus :: Button a  ->  IO (())
 buttonSetVisibleFocus = widgetSetVisibleFocus
-buttonClearVisibleFocus :: Widget a  ->  IO (())
+buttonClearVisibleFocus :: Button a  ->  IO (())
 buttonClearVisibleFocus = widgetClearVisibleFocus
-buttonModifyVisibleFocus :: Widget a  -> Int ->  IO (())
+buttonModifyVisibleFocus :: Button a  -> Int ->  IO (())
 buttonModifyVisibleFocus = widgetModifyVisibleFocus
-buttonVisibleFocus :: Widget a  ->  IO (Int)
+buttonVisibleFocus :: Button a  ->  IO (Int)
 buttonVisibleFocus = widgetVisibleFocus
-buttonContains :: Widget a  -> Widget a  ->  IO (Int)
+buttonContains :: Button a  -> Button a  ->  IO (Int)
 buttonContains = widgetContains
-buttonInside :: Widget a  -> Widget a  ->  IO (Int)
+buttonInside :: Button a  -> Button a  ->  IO (Int)
 buttonInside = widgetInside
-buttonRedraw :: Widget a  ->  IO (())
+buttonRedraw :: Button a  ->  IO (())
 buttonRedraw = widgetRedraw
-buttonRedrawLabel :: Widget a  ->  IO (())
+buttonRedrawLabel :: Button a  ->  IO (())
 buttonRedrawLabel = widgetRedrawLabel
-buttonDamage :: Widget a  ->  IO (Word8)
+buttonDamage :: Button a  ->  IO (Word8)
 buttonDamage = widgetDamage
-buttonClearDamageWithBitmask :: Widget a  -> Word8 ->  IO (())
+buttonClearDamageWithBitmask :: Button a  -> Word8 ->  IO (())
 buttonClearDamageWithBitmask = widgetClearDamageWithBitmask
-buttonClearDamage :: Widget a  ->  IO (())
+buttonClearDamage :: Button a  ->  IO (())
 buttonClearDamage = widgetClearDamage
-buttonDamageWithText :: Widget a  -> Word8 ->  IO (())
+buttonDamageWithText :: Button a  -> Word8 ->  IO (())
 buttonDamageWithText = widgetDamageWithText
-buttonDamageInsideWidget :: Widget a  -> Word8 -> Rectangle ->  IO (())
+buttonDamageInsideWidget :: Button a  -> Word8 -> Rectangle ->  IO (())
 buttonDamageInsideWidget = widgetDamageInsideWidget
-buttonMeasureLabel :: Widget a  -> IO (Size)
+buttonMeasureLabel :: Button a  -> IO (Size)
 buttonMeasureLabel = widgetMeasureLabel
-buttonWindow :: Widget a  ->  IO (Window ())
+buttonWindow :: Button a  ->  IO (Window ())
 buttonWindow = widgetWindow
-buttonTopWindow :: Widget a  ->  IO (Window ())
+buttonTopWindow :: Button a  ->  IO (Window ())
 buttonTopWindow = widgetTopWindow
-buttonTopWindowOffset :: Widget a -> IO (Position)
+buttonTopWindowOffset :: Button a -> IO (Position)
 buttonTopWindowOffset = widgetTopWindowOffset
 
 {# fun unsafe Fl_Button_value as value' { id `Ptr ()' } -> `Bool' cToBool #}

@@ -4,12 +4,6 @@ import Graphics.UI.FLTK.LowLevel.Fl_Enumerations
 import Foreign
 import qualified Foreign.Concurrent as FC
 import Foreign.C
-import Foreign.Marshal.Utils
-import Control.Monad
-import Debug.Trace
-import Control.Exception
-import Data.Monoid
-import Data.ByteString.Lazy.Builder
 import qualified Data.ByteString as B 
 
 foreign import ccall "wrapper"

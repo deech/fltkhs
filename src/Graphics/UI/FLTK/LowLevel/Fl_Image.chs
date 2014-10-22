@@ -26,7 +26,6 @@ import Foreign.C.Types
 import Graphics.UI.FLTK.LowLevel.Fl_Enumerations
 import Graphics.UI.FLTK.LowLevel.Fl_Types
 import Graphics.UI.FLTK.LowLevel.Utils
-import Debug.Trace
 
 data ImageFuncs a =
   ImageFuncs
@@ -90,8 +89,6 @@ imageLabelWithMenuItem image m = withObject image $ \imagePtr -> withObject m $ 
 
 imageDrawResize :: Image a -> Position -> Size -> Maybe ByX -> Maybe ByY -> IO ()
 imageDrawResize image (Position (X x) (Y y)) (Size (Width w) (Height h)) xOffset yOffset =
-  let double2Int = fromIntegral . toInteger
-  in
   case (xOffset, yOffset) of
     (Just (ByX xOff), Just (ByY yOff)) ->
       withObject image $ \imagePtr -> drawWithCxCy' imagePtr x y w h (truncate xOff) (truncate yOff)

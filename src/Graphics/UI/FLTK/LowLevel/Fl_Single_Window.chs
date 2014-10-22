@@ -258,7 +258,7 @@ singleWindowHideSuper :: SingleWindow a  ->  IO (())
 singleWindowHideSuper window = withObject window $ \windowPtr -> hideSuper' windowPtr
 
 {# fun Fl_Single_Window_hide as hide' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
-singleWindowHide :: Window a  ->  IO (())
+singleWindowHide :: SingleWindow a  ->  IO (())
 singleWindowHide window = withObject window $ \windowPtr -> hide' windowPtr
 
 {# fun Fl_Single_Window_flush_super as flushSuper' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
@@ -303,265 +303,265 @@ singleWindowAsGlWindow window = withObject window $ \windowPtr -> asGlWindow' wi
 {# fun Fl_Single_Window_as_group as asGroup' { id `Ptr ()' } -> `Group ()' unsafeToObject #}
 singleWindowAsGroup :: SingleWindow a  ->  IO (Group ())
 singleWindowAsGroup window = withObject window $ \windowPtr -> asGroup' windowPtr
-singleWindowSetCallback :: Window a -> WidgetCallback b -> IO ()
+singleWindowSetCallback :: SingleWindow a -> WidgetCallback b -> IO ()
 singleWindowSetCallback = windowSetCallback
-singleWindowParent :: Group a -> IO (Group ())
+singleWindowParent :: SingleWindow a -> IO (Group ())
 singleWindowParent = windowParent
-singleWindowSetParent :: Group a -> Group b -> IO ()
+singleWindowSetParent :: SingleWindow a -> Group b -> IO ()
 singleWindowSetParent = windowSetParent
-singleWindowType_ :: Group a  ->  IO (Word8)
+singleWindowType_ :: SingleWindow a  ->  IO (Word8)
 singleWindowType_ = windowType_
-singleWindowSetType :: Group a  -> Word8 ->  IO (())
+singleWindowSetType :: SingleWindow a  -> Word8 ->  IO (())
 singleWindowSetType = windowSetType
-singleWindowDrawLabel :: Group a  -> Maybe (Rectangle,AlignType)->  IO (())
+singleWindowDrawLabel :: SingleWindow a  -> Maybe (Rectangle,AlignType)->  IO (())
 singleWindowDrawLabel = windowDrawLabel
-singleWindowX :: Group a  ->  IO (Int)
+singleWindowX :: SingleWindow a  ->  IO (Int)
 singleWindowX = windowX
-singleWindowY :: Group a  ->  IO (Int)
+singleWindowY :: SingleWindow a  ->  IO (Int)
 singleWindowY = windowY
-singleWindowW :: Group a  ->  IO (Int)
+singleWindowW :: SingleWindow a  ->  IO (Int)
 singleWindowW = windowW
-singleWindowH :: Group a  ->  IO (Int)
+singleWindowH :: SingleWindow a  ->  IO (Int)
 singleWindowH = windowH
-singleWindowSetAlign :: Group a  -> AlignType ->  IO (())
+singleWindowSetAlign :: SingleWindow a  -> AlignType ->  IO (())
 singleWindowSetAlign = windowSetAlign
-singleWindowAlign :: Group a  ->  IO (AlignType)
+singleWindowAlign :: SingleWindow a  ->  IO (AlignType)
 singleWindowAlign = windowAlign
-singleWindowBox :: Group a  ->  IO (Boxtype)
+singleWindowBox :: SingleWindow a  ->  IO (Boxtype)
 singleWindowBox = windowBox
-singleWindowSetBox :: Group a  -> Boxtype ->  IO (())
+singleWindowSetBox :: SingleWindow a  -> Boxtype ->  IO (())
 singleWindowSetBox = windowSetBox
-singleWindowColor :: Group a  ->  IO (Color)
+singleWindowColor :: SingleWindow a  ->  IO (Color)
 singleWindowColor = windowColor
-singleWindowSetColor :: Group a  -> Color ->  IO (())
+singleWindowSetColor :: SingleWindow a  -> Color ->  IO (())
 singleWindowSetColor = windowSetColor
-singleWindowSetColorWithBgSel :: Group a  -> Color -> Color ->  IO (())
+singleWindowSetColorWithBgSel :: SingleWindow a  -> Color -> Color ->  IO (())
 singleWindowSetColorWithBgSel = windowSetColorWithBgSel
-singleWindowSelectionColor :: Group a  ->  IO (Color)
+singleWindowSelectionColor :: SingleWindow a  ->  IO (Color)
 singleWindowSelectionColor = windowSelectionColor
-singleWindowSetSelectionColor :: Group a  -> Color ->  IO (())
+singleWindowSetSelectionColor :: SingleWindow a  -> Color ->  IO (())
 singleWindowSetSelectionColor = windowSetSelectionColor
-singleWindowLabeltype :: Group a  ->  IO (Labeltype)
+singleWindowLabeltype :: SingleWindow a  ->  IO (Labeltype)
 singleWindowLabeltype = windowLabeltype
-singleWindowSetLabeltype :: Group a  -> Labeltype ->  IO (())
+singleWindowSetLabeltype :: SingleWindow a  -> Labeltype ->  IO (())
 singleWindowSetLabeltype = windowSetLabeltype
-singleWindowLabelcolor :: Group a  ->  IO (Color)
+singleWindowLabelcolor :: SingleWindow a  ->  IO (Color)
 singleWindowLabelcolor = windowLabelcolor
-singleWindowSetLabelcolor :: Group a  -> Color ->  IO (())
+singleWindowSetLabelcolor :: SingleWindow a  -> Color ->  IO (())
 singleWindowSetLabelcolor = windowSetLabelcolor
-singleWindowLabelfont :: Group a  ->  IO (Font)
+singleWindowLabelfont :: SingleWindow a  ->  IO (Font)
 singleWindowLabelfont = windowLabelfont
-singleWindowSetLabelfont :: Group a  -> Font ->  IO (())
+singleWindowSetLabelfont :: SingleWindow a  -> Font ->  IO (())
 singleWindowSetLabelfont = windowSetLabelfont
-singleWindowLabelsize :: Group a  ->  IO (FontSize)
+singleWindowLabelsize :: SingleWindow a  ->  IO (FontSize)
 singleWindowLabelsize = windowLabelsize
-singleWindowSetLabelsize :: Group a  -> FontSize ->  IO (())
+singleWindowSetLabelsize :: SingleWindow a  -> FontSize ->  IO (())
 singleWindowSetLabelsize = windowSetLabelsize
-singleWindowImage :: Group a  ->  IO (Image ())
+singleWindowImage :: SingleWindow a  ->  IO (Image ())
 singleWindowImage = windowImage
-singleWindowSetImage :: Group a  -> Image b ->  IO (())
+singleWindowSetImage :: SingleWindow a  -> Image b ->  IO (())
 singleWindowSetImage = windowSetImage
-singleWindowDeimage :: Group a  ->  IO (Image ())
+singleWindowDeimage :: SingleWindow a  ->  IO (Image ())
 singleWindowDeimage = windowDeimage
-singleWindowSetDeimage :: Group a  -> Image b ->  IO (())
+singleWindowSetDeimage :: SingleWindow a  -> Image b ->  IO (())
 singleWindowSetDeimage = windowSetDeimage
-singleWindowTooltip :: Group a  ->  IO (String)
+singleWindowTooltip :: SingleWindow a  ->  IO (String)
 singleWindowTooltip = windowTooltip
-singleWindowCopyTooltip :: Group a  -> String ->  IO (())
+singleWindowCopyTooltip :: SingleWindow a  -> String ->  IO (())
 singleWindowCopyTooltip = windowCopyTooltip
-singleWindowSetTooltip :: Group a  -> String ->  IO (())
+singleWindowSetTooltip :: SingleWindow a  -> String ->  IO (())
 singleWindowSetTooltip = windowSetTooltip
-singleWindowWhen :: Group a  ->  IO (When)
+singleWindowWhen :: SingleWindow a  ->  IO (When)
 singleWindowWhen = windowWhen
-singleWindowSetWhen :: Group a  -> Word8 ->  IO (())
+singleWindowSetWhen :: SingleWindow a  -> Word8 ->  IO (())
 singleWindowSetWhen = windowSetWhen
-singleWindowVisible :: Group a  ->  IO (Int)
+singleWindowVisible :: SingleWindow a  ->  IO (Int)
 singleWindowVisible = windowVisible
-singleWindowVisibleR :: Group a  ->  IO (Int)
+singleWindowVisibleR :: SingleWindow a  ->  IO (Int)
 singleWindowVisibleR = windowVisibleR
-singleWindowSetVisible :: Group a  ->  IO (())
+singleWindowSetVisible :: SingleWindow a  ->  IO (())
 singleWindowSetVisible = windowSetVisible
-singleWindowClearVisible :: Group a  ->  IO (())
+singleWindowClearVisible :: SingleWindow a  ->  IO (())
 singleWindowClearVisible = windowClearVisible
-singleWindowActive :: Group a  ->  IO (Int)
+singleWindowActive :: SingleWindow a  ->  IO (Int)
 singleWindowActive = windowActive
-singleWindowActiveR :: Group a  ->  IO (Int)
+singleWindowActiveR :: SingleWindow a  ->  IO (Int)
 singleWindowActiveR = windowActiveR
-singleWindowActivate :: Group a  ->  IO (())
+singleWindowActivate :: SingleWindow a  ->  IO (())
 singleWindowActivate = windowActivate
-singleWindowDeactivate :: Group a  ->  IO (())
+singleWindowDeactivate :: SingleWindow a  ->  IO (())
 singleWindowDeactivate = windowDeactivate
-singleWindowOutput :: Group a  ->  IO (Int)
+singleWindowOutput :: SingleWindow a  ->  IO (Int)
 singleWindowOutput = windowOutput
-singleWindowSetOutput :: Group a  ->  IO (())
+singleWindowSetOutput :: SingleWindow a  ->  IO (())
 singleWindowSetOutput = windowSetOutput
-singleWindowClearOutput :: Group a  ->  IO (())
+singleWindowClearOutput :: SingleWindow a  ->  IO (())
 singleWindowClearOutput = windowClearOutput
-singleWindowTakesevents :: Group a  ->  IO (Int)
+singleWindowTakesevents :: SingleWindow a  ->  IO (Int)
 singleWindowTakesevents = windowTakesevents
-singleWindowSetChanged :: Group a  ->  IO (())
+singleWindowSetChanged :: SingleWindow a  ->  IO (())
 singleWindowSetChanged = windowSetChanged
-singleWindowClearChanged :: Group a  ->  IO (())
+singleWindowClearChanged :: SingleWindow a  ->  IO (())
 singleWindowClearChanged = windowClearChanged
-singleWindowTakeFocus :: Group a  ->  IO (Int)
+singleWindowTakeFocus :: SingleWindow a  ->  IO (Int)
 singleWindowTakeFocus = windowTakeFocus
-singleWindowSetVisibleFocus :: Group a  ->  IO (())
+singleWindowSetVisibleFocus :: SingleWindow a  ->  IO (())
 singleWindowSetVisibleFocus = windowSetVisibleFocus
-singleWindowClearVisibleFocus :: Group a  ->  IO (())
+singleWindowClearVisibleFocus :: SingleWindow a  ->  IO (())
 singleWindowClearVisibleFocus = windowClearVisibleFocus
-singleWindowModifyVisibleFocus :: Group a  -> Int ->  IO (())
+singleWindowModifyVisibleFocus :: SingleWindow a  -> Int ->  IO (())
 singleWindowModifyVisibleFocus = windowModifyVisibleFocus
-singleWindowVisibleFocus :: Group a  ->  IO (Int)
+singleWindowVisibleFocus :: SingleWindow a  ->  IO (Int)
 singleWindowVisibleFocus = windowVisibleFocus
-singleWindowContains :: Group a  -> Group a  ->  IO (Int)
+singleWindowContains :: SingleWindow a  -> Group a  ->  IO (Int)
 singleWindowContains = windowContains
-singleWindowInside :: Group a  -> Group a  ->  IO (Int)
+singleWindowInside :: SingleWindow a  -> Group a  ->  IO (Int)
 singleWindowInside = windowInside
-singleWindowRedraw :: Group a  ->  IO (())
+singleWindowRedraw :: SingleWindow a  ->  IO (())
 singleWindowRedraw = windowRedraw
-singleWindowRedrawLabel :: Group a  ->  IO (())
+singleWindowRedrawLabel :: SingleWindow a  ->  IO (())
 singleWindowRedrawLabel = windowRedrawLabel
-singleWindowDamage :: Group a  ->  IO (Word8)
+singleWindowDamage :: SingleWindow a  ->  IO (Word8)
 singleWindowDamage = windowDamage
-singleWindowClearDamageWithBitmask :: Group a  -> Word8 ->  IO (())
+singleWindowClearDamageWithBitmask :: SingleWindow a  -> Word8 ->  IO (())
 singleWindowClearDamageWithBitmask = windowClearDamageWithBitmask
-singleWindowClearDamage :: Group a  ->  IO (())
+singleWindowClearDamage :: SingleWindow a  ->  IO (())
 singleWindowClearDamage = windowClearDamage
-singleWindowDamageWithText :: Group a  -> Word8 ->  IO (())
+singleWindowDamageWithText :: SingleWindow a  -> Word8 ->  IO (())
 singleWindowDamageWithText = windowDamageWithText
-singleWindowDamageInsideWidget :: Group a  -> Word8 -> Rectangle ->  IO (())
+singleWindowDamageInsideWidget :: SingleWindow a  -> Word8 -> Rectangle ->  IO (())
 singleWindowDamageInsideWidget = windowDamageInsideWidget
-singleWindowMeasureLabel :: Group a  -> IO (Size)
+singleWindowMeasureLabel :: SingleWindow a  -> IO (Size)
 singleWindowMeasureLabel = windowMeasureLabel
-singleWindowWindow :: Group a  ->  IO (Window ())
+singleWindowWindow :: SingleWindow a  ->  IO (Window ())
 singleWindowWindow = windowWindow
-singleWindowTopWindow :: Group a  ->  IO (Window ())
+singleWindowTopWindow :: SingleWindow a  ->  IO (Window ())
 singleWindowTopWindow = windowTopWindow
-singleWindowTopWindowOffset :: Group a -> IO (Position)
+singleWindowTopWindowOffset :: SingleWindow a -> IO (Position)
 singleWindowTopWindowOffset = windowTopWindowOffset
-singleWindowBegin :: Group a  ->  IO (())
+singleWindowBegin :: SingleWindow a  ->  IO (())
 singleWindowBegin = windowBegin
-singleWindowEnd :: Group a  ->  IO (())
+singleWindowEnd :: SingleWindow a  ->  IO (())
 singleWindowEnd = windowEnd
-singleWindowFind :: Group a  -> Widget a  ->  IO (Int)
+singleWindowFind :: SingleWindow a -> Widget b  ->  IO (Int)
 singleWindowFind = windowFind
-singleWindowAdd :: Group a  -> Widget a  ->  IO (())
+singleWindowAdd :: SingleWindow a -> Widget b  ->  IO (())
 singleWindowAdd = windowAdd
-singleWindowInsert :: Group a  -> Widget a  -> Int ->  IO (())
+singleWindowInsert :: SingleWindow a -> Widget b  -> Int ->  IO (())
 singleWindowInsert = windowInsert
-singleWindowRemoveIndex :: Group a  -> Int ->  IO (())
+singleWindowRemoveIndex :: SingleWindow a  -> Int ->  IO (())
 singleWindowRemoveIndex = windowRemoveIndex
-singleWindowRemoveWidget :: Group a  -> Widget a  ->  IO (())
+singleWindowRemoveWidget :: SingleWindow a -> Widget b  ->  IO (())
 singleWindowRemoveWidget = windowRemoveWidget
-singleWindowClear :: Group a  ->  IO (())
+singleWindowClear :: SingleWindow a  ->  IO (())
 singleWindowClear = windowClear
-singleWindowSetResizable :: Group a  -> Widget a  ->  IO (())
+singleWindowSetResizable :: SingleWindow a -> Widget b  ->  IO (())
 singleWindowSetResizable = windowSetResizable
-singleWindowResizable :: Group a  ->  IO (Widget ())
+singleWindowResizable :: SingleWindow a  ->  IO (Widget ())
 singleWindowResizable = windowResizable
-singleWindowAddResizable :: Group a  -> Widget a  ->  IO (())
+singleWindowAddResizable :: SingleWindow a -> Widget b  ->  IO (())
 singleWindowAddResizable = windowAddResizable
-singleWindowInitSizes :: Group a  ->  IO (())
+singleWindowInitSizes :: SingleWindow a  ->  IO (())
 singleWindowInitSizes = windowInitSizes
-singleWindowChildren :: Group a  ->  IO (Int)
+singleWindowChildren :: SingleWindow a  ->  IO (Int)
 singleWindowChildren = windowChildren
-singleWindowSetClipChildren :: Group a  -> Int ->  IO (())
+singleWindowSetClipChildren :: SingleWindow a  -> Int ->  IO (())
 singleWindowSetClipChildren = windowSetClipChildren
-singleWindowClipChildren :: Group a  ->  IO (Int)
+singleWindowClipChildren :: SingleWindow a  ->  IO (Int)
 singleWindowClipChildren = windowClipChildren
-singleWindowFocus :: Group a  -> Widget a  ->  IO (())
+singleWindowFocus :: SingleWindow a -> Widget b  ->  IO (())
 singleWindowFocus = windowFocus
-singleWindowDdfdesignKludge :: Group a  ->  IO (Widget ())
+singleWindowDdfdesignKludge :: SingleWindow a  ->  IO (Widget ())
 singleWindowDdfdesignKludge = windowDdfdesignKludge
-singleWindowInsertWithBefore :: Group a  -> Widget a  -> Widget a  ->  IO (())
+singleWindowInsertWithBefore :: SingleWindow a -> Widget b  -> Widget c  ->  IO (())
 singleWindowInsertWithBefore = windowInsertWithBefore
-singleWindowArray :: Group a  ->  IO [(Widget ())]
+singleWindowArray :: SingleWindow a  ->  IO [(Widget ())]
 singleWindowArray = windowArray
-singleWindowChild :: Group a  -> Int ->  IO (Widget ())
+singleWindowChild :: SingleWindow a  -> Int ->  IO (Widget ())
 singleWindowChild = windowChild
-singleWindowChanged :: Window a  ->  IO (Int)
+singleWindowChanged :: SingleWindow a  ->  IO (Int)
 singleWindowChanged = windowChanged
-singleWindowFullscreen :: Window a  ->  IO (())
+singleWindowFullscreen :: SingleWindow a  ->  IO (())
 singleWindowFullscreen = windowFullscreen
-singleWindowFullscreenOff :: Window a -> Maybe Rectangle ->  IO (())
+singleWindowFullscreenOff :: SingleWindow a -> Maybe Rectangle ->  IO (())
 singleWindowFullscreenOff = windowFullscreenOff
-singleWindowSetBorder :: Window a  -> Bool ->  IO (())
+singleWindowSetBorder :: SingleWindow a  -> Bool ->  IO (())
 singleWindowSetBorder = windowSetBorder
-singleWindowClearBorder :: Window a  ->  IO (())
+singleWindowClearBorder :: SingleWindow a  ->  IO (())
 singleWindowClearBorder = windowClearBorder
-singleWindowBorder :: Window a  ->  IO (Bool)
+singleWindowBorder :: SingleWindow a  ->  IO (Bool)
 singleWindowBorder = windowBorder
-singleWindowSetOverride :: Window a  ->  IO (())
+singleWindowSetOverride :: SingleWindow a  ->  IO (())
 singleWindowSetOverride = windowSetOverride
-singleWindowOverride :: Window a  ->  IO (Bool)
+singleWindowOverride :: SingleWindow a  ->  IO (Bool)
 singleWindowOverride = windowOverride
-singleWindowSetModal :: Window a  ->  IO (())
+singleWindowSetModal :: SingleWindow a  ->  IO (())
 singleWindowSetModal = windowSetModal
-singleWindowModal :: Window a  ->  IO (Bool)
+singleWindowModal :: SingleWindow a  ->  IO (Bool)
 singleWindowModal = windowModal
-singleWindowSetNonModal :: Window a  ->  IO (())
+singleWindowSetNonModal :: SingleWindow a  ->  IO (())
 singleWindowSetNonModal = windowSetNonModal
-singleWindowNonModal :: Window a  ->  IO (Bool)
+singleWindowNonModal :: SingleWindow a  ->  IO (Bool)
 singleWindowNonModal = windowNonModal
-singleWindowSetMenuWindow :: Window a  ->  IO (())
+singleWindowSetMenuWindow :: SingleWindow a  ->  IO (())
 singleWindowSetMenuWindow = windowSetMenuWindow
-singleWindowMenuWindow :: Window a  ->  IO (Bool)
+singleWindowMenuWindow :: SingleWindow a  ->  IO (Bool)
 singleWindowMenuWindow = windowMenuWindow
-singleWindowSetTooltipWindow :: Window a  ->  IO (())
+singleWindowSetTooltipWindow :: SingleWindow a  ->  IO (())
 singleWindowSetTooltipWindow = windowSetTooltipWindow
-singleWindowTooltipWindow :: Window a  ->  IO (Bool)
+singleWindowTooltipWindow :: SingleWindow a  ->  IO (Bool)
 singleWindowTooltipWindow = windowTooltipWindow
-singleWindowHotSpot :: Window a -> PositionSpec b -> Maybe Bool -> IO ()
+singleWindowHotSpot :: SingleWindow a -> PositionSpec b -> Maybe Bool -> IO ()
 singleWindowHotSpot = windowHotSpot
-singleWindowFreePosition :: Window a  ->  IO (())
+singleWindowFreePosition :: SingleWindow a  ->  IO (())
 singleWindowFreePosition = windowFreePosition
-singleWindowSizeRange :: Window a  -> Int -> Int -> IO (())
+singleWindowSizeRange :: SingleWindow a  -> Int -> Int -> IO (())
 singleWindowSizeRange = windowSizeRange
-singleWindowSizeRangeWithArgs :: Window a  -> Int -> Int -> OptionalSizeRangeArgs ->  IO (())
+singleWindowSizeRangeWithArgs :: SingleWindow a  -> Int -> Int -> OptionalSizeRangeArgs ->  IO (())
 singleWindowSizeRangeWithArgs = windowSizeRangeWithArgs
-singleWindowLabel :: Window a  ->  IO (String)
+singleWindowLabel :: SingleWindow a  ->  IO (String)
 singleWindowLabel = windowLabel
-singleWindowIconlabel :: Window a  ->  IO (String)
+singleWindowIconlabel :: SingleWindow a  ->  IO (String)
 singleWindowIconlabel = windowIconlabel
-singleWindowSetLabel :: Window a  -> String ->  IO (())
+singleWindowSetLabel :: SingleWindow a  -> String ->  IO (())
 singleWindowSetLabel = windowSetLabel
-singleWindowSetIconlabel :: Window a  -> String ->  IO (())
+singleWindowSetIconlabel :: SingleWindow a  -> String ->  IO (())
 singleWindowSetIconlabel = windowSetIconlabel
-singleWindowSetLabelWithIconlabel :: Window a  -> String -> String ->  IO (())
+singleWindowSetLabelWithIconlabel :: SingleWindow a  -> String -> String ->  IO (())
 singleWindowSetLabelWithIconlabel = windowSetLabelWithIconlabel
-singleWindowCopyLabel :: Window a  -> String ->  IO (())
+singleWindowCopyLabel :: SingleWindow a  -> String ->  IO (())
 singleWindowCopyLabel = windowCopyLabel
 singleWindowSetDefaultXclass :: String ->  IO (())
 singleWindowSetDefaultXclass = windowSetDefaultXclass
 singleWindowDefaultXclass ::  IO (String)
 singleWindowDefaultXclass = windowDefaultXclass
-singleWindowXclass :: Window a  ->  IO (String)
+singleWindowXclass :: SingleWindow a  ->  IO (String)
 singleWindowXclass = windowXclass
-singleWindowSetXclass :: Window a  -> String ->  IO (())
+singleWindowSetXclass :: SingleWindow a  -> String ->  IO (())
 singleWindowSetXclass = windowSetXclass
-singleWindowIcon :: Window a  ->  IO (Ptr ())
+singleWindowIcon :: SingleWindow a  ->  IO (Ptr ())
 singleWindowIcon = windowIcon
-singleWindowSetIcon :: Window a  -> Ptr () ->  IO (())
+singleWindowSetIcon :: SingleWindow a  -> Ptr () ->  IO (())
 singleWindowSetIcon = windowSetIcon
-singleWindowShown :: Window a  ->  IO (Bool)
+singleWindowShown :: SingleWindow a  ->  IO (Bool)
 singleWindowShown = windowShown
-singleWindowIconize :: Window a  ->  IO (())
+singleWindowIconize :: SingleWindow a  ->  IO (())
 singleWindowIconize = windowIconize
-singleWindowXRoot :: Window a  ->  IO (Int)
+singleWindowXRoot :: SingleWindow a  ->  IO (Int)
 singleWindowXRoot = windowXRoot
-singleWindowYRoot :: Window a  ->  IO (Int)
+singleWindowYRoot :: SingleWindow a  ->  IO (Int)
 singleWindowYRoot = windowYRoot
 singleWindowCurrent ::  IO (Ptr ())
 singleWindowCurrent = windowCurrent
-singleWindowMakeCurrent :: Window a  ->  IO (())
+singleWindowMakeCurrent :: SingleWindow a  ->  IO (())
 singleWindowMakeCurrent = windowMakeCurrent
-singleWindowSetCursor :: Window a -> CursorType -> IO ()
+singleWindowSetCursor :: SingleWindow a -> CursorType -> IO ()
 singleWindowSetCursor = windowSetCursor
-singleWindowSetCursorWithFgBg :: Window a  -> CursorType -> (Maybe Color, Maybe Color) ->  IO (())
+singleWindowSetCursorWithFgBg :: SingleWindow a  -> CursorType -> (Maybe Color, Maybe Color) ->  IO (())
 singleWindowSetCursorWithFgBg = windowSetCursorWithFgBg
-singleWindowSetDefaultCursor :: Window a  -> CursorType ->  IO (())
+singleWindowSetDefaultCursor :: SingleWindow a  -> CursorType ->  IO (())
 singleWindowSetDefaultCursor = windowSetDefaultCursor
-singleWindowDecoratedW :: Window a  ->  IO (Int)
+singleWindowDecoratedW :: SingleWindow a  ->  IO (Int)
 singleWindowDecoratedW = windowDecoratedW
-singleWindowDecoratedH :: Window a  ->  IO (Int)
+singleWindowDecoratedH :: SingleWindow a  ->  IO (Int)
 singleWindowDecoratedH = windowDecoratedH

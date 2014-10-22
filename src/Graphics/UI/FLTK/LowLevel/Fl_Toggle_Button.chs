@@ -135,147 +135,147 @@ toggleButtonHide :: ToggleButton a  ->  IO (())
 toggleButtonHide = buttonHide
 toggleButtonShow :: ToggleButton a -> IO ()
 toggleButtonShow= buttonShow
-toggleButtonSetCallback :: Widget a -> (WidgetCallback b) -> IO (())
+toggleButtonSetCallback :: ToggleButton a -> (WidgetCallback b) -> IO (())
 toggleButtonSetCallback= buttonSetCallback
-toggleButtonParent :: Widget a -> IO (Group ())
+toggleButtonParent :: ToggleButton a -> IO (Group ())
 toggleButtonParent= buttonParent
-toggleButtonSetParent :: Widget a -> Group b -> IO ()
+toggleButtonSetParent :: ToggleButton a -> Group b -> IO ()
 toggleButtonSetParent= buttonSetParent
-toggleButtonType_ :: Widget a  ->  IO (Word8)
+toggleButtonType_ :: ToggleButton a  ->  IO (Word8)
 toggleButtonType_= buttonType_
-toggleButtonSetType :: Widget a  -> Word8 ->  IO (())
+toggleButtonSetType :: ToggleButton a  -> Word8 ->  IO (())
 toggleButtonSetType= buttonSetType
-toggleButtonDrawLabel :: Widget a  -> Maybe (Rectangle,AlignType)->  IO (())
+toggleButtonDrawLabel :: ToggleButton a  -> Maybe (Rectangle,AlignType)->  IO (())
 toggleButtonDrawLabel= buttonDrawLabel
-toggleButtonX :: Widget a  ->  IO (Int)
+toggleButtonX :: ToggleButton a  ->  IO (Int)
 toggleButtonX= buttonX
-toggleButtonY :: Widget a  ->  IO (Int)
+toggleButtonY :: ToggleButton a  ->  IO (Int)
 toggleButtonY= buttonY
-toggleButtonW :: Widget a  ->  IO (Int)
+toggleButtonW :: ToggleButton a  ->  IO (Int)
 toggleButtonW= buttonW
-toggleButtonH :: Widget a  ->  IO (Int)
+toggleButtonH :: ToggleButton a  ->  IO (Int)
 toggleButtonH= buttonH
-toggleButtonSetAlign :: Widget a  -> AlignType ->  IO (())
+toggleButtonSetAlign :: ToggleButton a  -> AlignType ->  IO (())
 toggleButtonSetAlign= buttonSetAlign
-toggleButtonAlign :: Widget a  ->  IO (AlignType)
+toggleButtonAlign :: ToggleButton a  ->  IO (AlignType)
 toggleButtonAlign= buttonAlign
-toggleButtonBox :: Widget a  ->  IO (Boxtype)
+toggleButtonBox :: ToggleButton a  ->  IO (Boxtype)
 toggleButtonBox= buttonBox
-toggleButtonSetBox :: Widget a  -> Boxtype ->  IO (())
+toggleButtonSetBox :: ToggleButton a  -> Boxtype ->  IO (())
 toggleButtonSetBox= buttonSetBox
-toggleButtonColor :: Widget a  ->  IO (Color)
+toggleButtonColor :: ToggleButton a  ->  IO (Color)
 toggleButtonColor= buttonColor
-toggleButtonSetColor :: Widget a  -> Color ->  IO (())
+toggleButtonSetColor :: ToggleButton a  -> Color ->  IO (())
 toggleButtonSetColor= buttonSetColor
-toggleButtonSetColorWithBgSel :: Widget a  -> Color -> Color ->  IO (())
+toggleButtonSetColorWithBgSel :: ToggleButton a  -> Color -> Color ->  IO (())
 toggleButtonSetColorWithBgSel= buttonSetColorWithBgSel
-toggleButtonSelectionColor :: Widget a  ->  IO (Color)
+toggleButtonSelectionColor :: ToggleButton a  ->  IO (Color)
 toggleButtonSelectionColor= buttonSelectionColor
-toggleButtonSetSelectionColor :: Widget a  -> Color ->  IO (())
+toggleButtonSetSelectionColor :: ToggleButton a  -> Color ->  IO (())
 toggleButtonSetSelectionColor= buttonSetSelectionColor
-toggleButtonLabel :: Widget a  ->  IO (String)
+toggleButtonLabel :: ToggleButton a  ->  IO (String)
 toggleButtonLabel= buttonLabel
-toggleButtonCopyLabel :: Widget a  -> String ->  IO (())
+toggleButtonCopyLabel :: ToggleButton a  -> String ->  IO (())
 toggleButtonCopyLabel= buttonCopyLabel
-toggleButtonSetLabel :: Widget a  -> String ->  IO (())
+toggleButtonSetLabel :: ToggleButton a  -> String ->  IO (())
 toggleButtonSetLabel= buttonSetLabel
-toggleButtonLabeltype :: Widget a  ->  IO (Labeltype)
+toggleButtonLabeltype :: ToggleButton a  ->  IO (Labeltype)
 toggleButtonLabeltype= buttonLabeltype
-toggleButtonSetLabeltype :: Widget a  -> Labeltype ->  IO (())
+toggleButtonSetLabeltype :: ToggleButton a  -> Labeltype ->  IO (())
 toggleButtonSetLabeltype= buttonSetLabeltype
-toggleButtonLabelcolor :: Widget a  ->  IO (Color)
+toggleButtonLabelcolor :: ToggleButton a  ->  IO (Color)
 toggleButtonLabelcolor= buttonLabelcolor
-toggleButtonSetLabelcolor :: Widget a  -> Color ->  IO (())
+toggleButtonSetLabelcolor :: ToggleButton a  -> Color ->  IO (())
 toggleButtonSetLabelcolor= buttonSetLabelcolor
-toggleButtonLabelfont :: Widget a  ->  IO (Font)
+toggleButtonLabelfont :: ToggleButton a  ->  IO (Font)
 toggleButtonLabelfont= buttonLabelfont
-toggleButtonSetLabelfont :: Widget a  -> Font ->  IO (())
+toggleButtonSetLabelfont :: ToggleButton a  -> Font ->  IO (())
 toggleButtonSetLabelfont= buttonSetLabelfont
-toggleButtonLabelsize :: Widget a  ->  IO (FontSize)
+toggleButtonLabelsize :: ToggleButton a  ->  IO (FontSize)
 toggleButtonLabelsize= buttonLabelsize
-toggleButtonSetLabelsize :: Widget a  -> FontSize ->  IO (())
+toggleButtonSetLabelsize :: ToggleButton a  -> FontSize ->  IO (())
 toggleButtonSetLabelsize= buttonSetLabelsize
-toggleButtonImage :: Widget a  ->  IO (Image ())
+toggleButtonImage :: ToggleButton a  ->  IO (Image ())
 toggleButtonImage= buttonImage
-toggleButtonSetImage :: Widget a  -> Image b ->  IO (())
+toggleButtonSetImage :: ToggleButton a  -> Image b ->  IO (())
 toggleButtonSetImage= buttonSetImage
-toggleButtonDeimage :: Widget a  ->  IO (Image ())
+toggleButtonDeimage :: ToggleButton a  ->  IO (Image ())
 toggleButtonDeimage= buttonDeimage
-toggleButtonSetDeimage :: Widget a  -> Image b ->  IO (())
+toggleButtonSetDeimage :: ToggleButton a  -> Image b ->  IO (())
 toggleButtonSetDeimage= buttonSetDeimage
-toggleButtonTooltip :: Widget a  ->  IO (String)
+toggleButtonTooltip :: ToggleButton a  ->  IO (String)
 toggleButtonTooltip= buttonTooltip
-toggleButtonCopyTooltip :: Widget a  -> String ->  IO (())
+toggleButtonCopyTooltip :: ToggleButton a  -> String ->  IO (())
 toggleButtonCopyTooltip= buttonCopyTooltip
-toggleButtonSetTooltip :: Widget a  -> String ->  IO (())
+toggleButtonSetTooltip :: ToggleButton a  -> String ->  IO (())
 toggleButtonSetTooltip= buttonSetTooltip
-toggleButtonWhen :: Widget a  ->  IO (When)
+toggleButtonWhen :: ToggleButton a  ->  IO (When)
 toggleButtonWhen= buttonWhen
-toggleButtonSetWhen :: Widget a  -> Word8 ->  IO (())
+toggleButtonSetWhen :: ToggleButton a  -> Word8 ->  IO (())
 toggleButtonSetWhen= buttonSetWhen
-toggleButtonVisible :: Widget a  ->  IO (Int)
+toggleButtonVisible :: ToggleButton a  ->  IO (Int)
 toggleButtonVisible= buttonVisible
-toggleButtonVisibleR :: Widget a  ->  IO (Int)
+toggleButtonVisibleR :: ToggleButton a  ->  IO (Int)
 toggleButtonVisibleR= buttonVisibleR
-toggleButtonSetVisible :: Widget a  ->  IO (())
+toggleButtonSetVisible :: ToggleButton a  ->  IO (())
 toggleButtonSetVisible= buttonSetVisible
-toggleButtonClearVisible :: Widget a  ->  IO (())
+toggleButtonClearVisible :: ToggleButton a  ->  IO (())
 toggleButtonClearVisible= buttonClearVisible
-toggleButtonActive :: Widget a  ->  IO (Int)
+toggleButtonActive :: ToggleButton a  ->  IO (Int)
 toggleButtonActive= buttonActive
-toggleButtonActiveR :: Widget a  ->  IO (Int)
+toggleButtonActiveR :: ToggleButton a  ->  IO (Int)
 toggleButtonActiveR= buttonActiveR
-toggleButtonActivate :: Widget a  ->  IO (())
+toggleButtonActivate :: ToggleButton a  ->  IO (())
 toggleButtonActivate= buttonActivate
-toggleButtonDeactivate :: Widget a  ->  IO (())
+toggleButtonDeactivate :: ToggleButton a  ->  IO (())
 toggleButtonDeactivate= buttonDeactivate
-toggleButtonOutput :: Widget a  ->  IO (Int)
+toggleButtonOutput :: ToggleButton a  ->  IO (Int)
 toggleButtonOutput= buttonOutput
-toggleButtonSetOutput :: Widget a  ->  IO (())
+toggleButtonSetOutput :: ToggleButton a  ->  IO (())
 toggleButtonSetOutput= buttonSetOutput
-toggleButtonClearOutput :: Widget a  ->  IO (())
+toggleButtonClearOutput :: ToggleButton a  ->  IO (())
 toggleButtonClearOutput= buttonClearOutput
-toggleButtonTakesevents :: Widget a  ->  IO (Int)
+toggleButtonTakesevents :: ToggleButton a  ->  IO (Int)
 toggleButtonTakesevents= buttonTakesevents
-toggleButtonSetChanged :: Widget a  ->  IO (())
+toggleButtonSetChanged :: ToggleButton a  ->  IO (())
 toggleButtonSetChanged= buttonSetChanged
-toggleButtonClearChanged :: Widget a  ->  IO (())
+toggleButtonClearChanged :: ToggleButton a  ->  IO (())
 toggleButtonClearChanged= buttonClearChanged
-toggleButtonTakeFocus :: Widget a  ->  IO (Int)
+toggleButtonTakeFocus :: ToggleButton a  ->  IO (Int)
 toggleButtonTakeFocus= buttonTakeFocus
-toggleButtonSetVisibleFocus :: Widget a  ->  IO (())
+toggleButtonSetVisibleFocus :: ToggleButton a  ->  IO (())
 toggleButtonSetVisibleFocus= buttonSetVisibleFocus
-toggleButtonClearVisibleFocus :: Widget a  ->  IO (())
+toggleButtonClearVisibleFocus :: ToggleButton a  ->  IO (())
 toggleButtonClearVisibleFocus= buttonClearVisibleFocus
-toggleButtonModifyVisibleFocus :: Widget a  -> Int ->  IO (())
+toggleButtonModifyVisibleFocus :: ToggleButton a  -> Int ->  IO (())
 toggleButtonModifyVisibleFocus= buttonModifyVisibleFocus
-toggleButtonVisibleFocus :: Widget a  ->  IO (Int)
+toggleButtonVisibleFocus :: ToggleButton a  ->  IO (Int)
 toggleButtonVisibleFocus= buttonVisibleFocus
-toggleButtonContains :: Widget a  -> Widget a  ->  IO (Int)
+toggleButtonContains :: ToggleButton a  -> ToggleButton a  ->  IO (Int)
 toggleButtonContains= buttonContains
-toggleButtonInside :: Widget a  -> Widget a  ->  IO (Int)
+toggleButtonInside :: ToggleButton a  -> ToggleButton a  ->  IO (Int)
 toggleButtonInside= buttonInside
-toggleButtonRedraw :: Widget a  ->  IO (())
+toggleButtonRedraw :: ToggleButton a  ->  IO (())
 toggleButtonRedraw= buttonRedraw
-toggleButtonRedrawLabel :: Widget a  ->  IO (())
+toggleButtonRedrawLabel :: ToggleButton a  ->  IO (())
 toggleButtonRedrawLabel= buttonRedrawLabel
-toggleButtonDamage :: Widget a  ->  IO (Word8)
+toggleButtonDamage :: ToggleButton a  ->  IO (Word8)
 toggleButtonDamage= buttonDamage
-toggleButtonClearDamageWithBitmask :: Widget a  -> Word8 ->  IO (())
+toggleButtonClearDamageWithBitmask :: ToggleButton a  -> Word8 ->  IO (())
 toggleButtonClearDamageWithBitmask= buttonClearDamageWithBitmask
-toggleButtonClearDamage :: Widget a  ->  IO (())
+toggleButtonClearDamage :: ToggleButton a  ->  IO (())
 toggleButtonClearDamage= buttonClearDamage
-toggleButtonDamageWithText :: Widget a  -> Word8 ->  IO (())
+toggleButtonDamageWithText :: ToggleButton a  -> Word8 ->  IO (())
 toggleButtonDamageWithText= buttonDamageWithText
-toggleButtonDamageInsideWidget :: Widget a  -> Word8 -> Rectangle ->  IO (())
+toggleButtonDamageInsideWidget :: ToggleButton a  -> Word8 -> Rectangle ->  IO (())
 toggleButtonDamageInsideWidget= buttonDamageInsideWidget
-toggleButtonMeasureLabel :: Widget a  -> IO (Size)
+toggleButtonMeasureLabel :: ToggleButton a  -> IO (Size)
 toggleButtonMeasureLabel= buttonMeasureLabel
-toggleButtonWindow :: Widget a  ->  IO (Window ())
+toggleButtonWindow :: ToggleButton a  ->  IO (Window ())
 toggleButtonWindow= buttonWindow
-toggleButtonTopWindow :: Widget a  ->  IO (Window ())
+toggleButtonTopWindow :: ToggleButton a  ->  IO (Window ())
 toggleButtonTopWindow= buttonTopWindow
-toggleButtonTopWindowOffset :: Widget a -> IO (Position)
+toggleButtonTopWindowOffset :: ToggleButton a -> IO (Position)
 toggleButtonTopWindowOffset= buttonTopWindowOffset
 toggleButtonValue :: ToggleButton a  ->  IO (Bool)
 toggleButtonValue= buttonValue

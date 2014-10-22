@@ -166,13 +166,11 @@ where
 #include "Fl_WidgetC.h"
 #include "Fl_GroupC.h"
 import Foreign
-import Foreign.Marshal.Utils
 import Foreign.C
 import Graphics.UI.FLTK.LowLevel.Fl_Types
 import Graphics.UI.FLTK.LowLevel.Fl_Enumerations
 import Graphics.UI.FLTK.LowLevel.Utils
 import Graphics.UI.FLTK.LowLevel.Fl_Group
-import Debug.Trace
 import C2HS hiding (cFromEnum, unsafePerformIO, toBool,cToEnum)
 
 data WindowFuncs a =
@@ -340,269 +338,269 @@ windowSetCallback window callback =
    withObject window $ (\p -> do
                                callbackPtr <- toWidgetCallbackPrim callback
                                windowSetCallback' (castPtr p) callbackPtr)
-windowParent :: Group a -> IO (Group ())
+windowParent :: Window a -> IO (Group ())
 windowParent  = groupParent
 
-windowSetParent :: Group a -> Group b -> IO ()
+windowSetParent :: Window a -> Group b -> IO ()
 windowSetParent  = groupSetParent
 
-windowType_ :: Group a  ->  IO (Word8)
+windowType_ :: Window a  ->  IO (Word8)
 windowType_  = groupType_
 
-windowSetType :: Group a  -> Word8 ->  IO (())
+windowSetType :: Window a  -> Word8 ->  IO (())
 windowSetType  = groupSetType
 
-windowDrawLabel :: Group a  -> Maybe (Rectangle,AlignType)->  IO (())
+windowDrawLabel :: Window a  -> Maybe (Rectangle,AlignType)->  IO (())
 windowDrawLabel  = groupDrawLabel
 
-windowX :: Group a  ->  IO (Int)
+windowX :: Window a  ->  IO (Int)
 windowX  = groupX
 
-windowY :: Group a  ->  IO (Int)
+windowY :: Window a  ->  IO (Int)
 windowY  = groupY
 
-windowW :: Group a  ->  IO (Int)
+windowW :: Window a  ->  IO (Int)
 windowW  = groupW
 
-windowH :: Group a  ->  IO (Int)
+windowH :: Window a  ->  IO (Int)
 windowH  = groupH
 
-windowSetAlign :: Group a  -> AlignType ->  IO (())
+windowSetAlign :: Window a  -> AlignType ->  IO (())
 windowSetAlign  = groupSetAlign
 
-windowAlign :: Group a  ->  IO (AlignType)
+windowAlign :: Window a  ->  IO (AlignType)
 windowAlign  = groupAlign
 
-windowBox :: Group a  ->  IO (Boxtype)
+windowBox :: Window a  ->  IO (Boxtype)
 windowBox  = groupBox
 
-windowSetBox :: Group a  -> Boxtype ->  IO (())
+windowSetBox :: Window a  -> Boxtype ->  IO (())
 windowSetBox  = groupSetBox
 
-windowColor :: Group a  ->  IO (Color)
+windowColor :: Window a  ->  IO (Color)
 windowColor  = groupColor
 
-windowSetColor :: Group a  -> Color ->  IO (())
+windowSetColor :: Window a  -> Color ->  IO (())
 windowSetColor  = groupSetColor
 
-windowSetColorWithBgSel :: Group a  -> Color -> Color ->  IO (())
+windowSetColorWithBgSel :: Window a  -> Color -> Color ->  IO (())
 windowSetColorWithBgSel  = groupSetColorWithBgSel
 
-windowSelectionColor :: Group a  ->  IO (Color)
+windowSelectionColor :: Window a  ->  IO (Color)
 windowSelectionColor  = groupSelectionColor
 
-windowSetSelectionColor :: Group a  -> Color ->  IO (())
+windowSetSelectionColor :: Window a  -> Color ->  IO (())
 windowSetSelectionColor  = groupSetSelectionColor
 
-windowLabeltype :: Group a  ->  IO (Labeltype)
+windowLabeltype :: Window a  ->  IO (Labeltype)
 windowLabeltype  = groupLabeltype
 
-windowSetLabeltype :: Group a  -> Labeltype ->  IO (())
+windowSetLabeltype :: Window a  -> Labeltype ->  IO (())
 windowSetLabeltype  = groupSetLabeltype
 
-windowLabelcolor :: Group a  ->  IO (Color)
+windowLabelcolor :: Window a  ->  IO (Color)
 windowLabelcolor  = groupLabelcolor
 
-windowSetLabelcolor :: Group a  -> Color ->  IO (())
+windowSetLabelcolor :: Window a  -> Color ->  IO (())
 windowSetLabelcolor  = groupSetLabelcolor
 
-windowLabelfont :: Group a  ->  IO (Font)
+windowLabelfont :: Window a  ->  IO (Font)
 windowLabelfont  = groupLabelfont
 
-windowSetLabelfont :: Group a  -> Font ->  IO (())
+windowSetLabelfont :: Window a  -> Font ->  IO (())
 windowSetLabelfont  = groupSetLabelfont
 
-windowLabelsize :: Group a  ->  IO (FontSize)
+windowLabelsize :: Window a  ->  IO (FontSize)
 windowLabelsize  = groupLabelsize
 
-windowSetLabelsize :: Group a  -> FontSize ->  IO (())
+windowSetLabelsize :: Window a  -> FontSize ->  IO (())
 windowSetLabelsize  = groupSetLabelsize
 
-windowImage :: Group a  ->  IO (Image ())
+windowImage :: Window a  ->  IO (Image ())
 windowImage  = groupImage
 
-windowSetImage :: Group a  -> Image b ->  IO (())
+windowSetImage :: Window a  -> Image b ->  IO (())
 windowSetImage  = groupSetImage
 
-windowDeimage :: Group a  ->  IO (Image ())
+windowDeimage :: Window a  ->  IO (Image ())
 windowDeimage  = groupDeimage
 
-windowSetDeimage :: Group a  -> Image b ->  IO (())
+windowSetDeimage :: Window a  -> Image b ->  IO (())
 windowSetDeimage  = groupSetDeimage
 
-windowTooltip :: Group a  ->  IO (String)
+windowTooltip :: Window a  ->  IO (String)
 windowTooltip  = groupTooltip
 
-windowCopyTooltip :: Group a  -> String ->  IO (())
+windowCopyTooltip :: Window a  -> String ->  IO (())
 windowCopyTooltip  = groupCopyTooltip
 
-windowSetTooltip :: Group a  -> String ->  IO (())
+windowSetTooltip :: Window a  -> String ->  IO (())
 windowSetTooltip  = groupSetTooltip
 
-windowWhen :: Group a  ->  IO (When)
+windowWhen :: Window a  ->  IO (When)
 windowWhen  = groupWhen
 
-windowSetWhen :: Group a  -> Word8 ->  IO (())
+windowSetWhen :: Window a  -> Word8 ->  IO (())
 windowSetWhen  = groupSetWhen
 
-windowVisible :: Group a  ->  IO (Int)
+windowVisible :: Window a  ->  IO (Int)
 windowVisible  = groupVisible
 
-windowVisibleR :: Group a  ->  IO (Int)
+windowVisibleR :: Window a  ->  IO (Int)
 windowVisibleR  = groupVisibleR
 
 {# fun Fl_Window_hide as hide' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
 windowHide :: Window a  ->  IO (())
 windowHide window = withObject window $ \windowPtr -> hide' windowPtr
 
-windowSetVisible :: Group a  ->  IO (())
+windowSetVisible :: Window a  ->  IO (())
 windowSetVisible  = groupSetVisible
 
-windowClearVisible :: Group a  ->  IO (())
+windowClearVisible :: Window a  ->  IO (())
 windowClearVisible  = groupClearVisible
 
-windowActive :: Group a  ->  IO (Int)
+windowActive :: Window a  ->  IO (Int)
 windowActive  = groupActive
 
-windowActiveR :: Group a  ->  IO (Int)
+windowActiveR :: Window a  ->  IO (Int)
 windowActiveR  = groupActiveR
 
-windowActivate :: Group a  ->  IO (())
+windowActivate :: Window a  ->  IO (())
 windowActivate  = groupActivate
 
-windowDeactivate :: Group a  ->  IO (())
+windowDeactivate :: Window a  ->  IO (())
 windowDeactivate  = groupDeactivate
 
-windowOutput :: Group a  ->  IO (Int)
+windowOutput :: Window a  ->  IO (Int)
 windowOutput  = groupOutput
 
-windowSetOutput :: Group a  ->  IO (())
+windowSetOutput :: Window a  ->  IO (())
 windowSetOutput  = groupSetOutput
 
-windowClearOutput :: Group a  ->  IO (())
+windowClearOutput :: Window a  ->  IO (())
 windowClearOutput  = groupClearOutput
 
-windowTakesevents :: Group a  ->  IO (Int)
+windowTakesevents :: Window a  ->  IO (Int)
 windowTakesevents  = groupTakesevents
 
-windowSetChanged :: Group a  ->  IO (())
+windowSetChanged :: Window a  ->  IO (())
 windowSetChanged  = groupSetChanged
 
-windowClearChanged :: Group a  ->  IO (())
+windowClearChanged :: Window a  ->  IO (())
 windowClearChanged  = groupClearChanged
 
-windowTakeFocus :: Group a  ->  IO (Int)
+windowTakeFocus :: Window a  ->  IO (Int)
 windowTakeFocus  = groupTakeFocus
 
-windowSetVisibleFocus :: Group a  ->  IO (())
+windowSetVisibleFocus :: Window a  ->  IO (())
 windowSetVisibleFocus  = groupSetVisibleFocus
 
-windowClearVisibleFocus :: Group a  ->  IO (())
+windowClearVisibleFocus :: Window a  ->  IO (())
 windowClearVisibleFocus  = groupClearVisibleFocus
 
-windowModifyVisibleFocus :: Group a  -> Int ->  IO (())
+windowModifyVisibleFocus :: Window a  -> Int ->  IO (())
 windowModifyVisibleFocus  = groupModifyVisibleFocus
 
-windowVisibleFocus :: Group a  ->  IO (Int)
+windowVisibleFocus :: Window a  ->  IO (Int)
 windowVisibleFocus  = groupVisibleFocus
 
-windowContains :: Group a  -> Group a  ->  IO (Int)
+windowContains :: Window a  -> Group b  ->  IO (Int)
 windowContains  = groupContains
 
-windowInside :: Group a  -> Group a  ->  IO (Int)
+windowInside :: Window a  -> Group b  ->  IO (Int)
 windowInside  = groupInside
 
-windowRedraw :: Group a  ->  IO (())
+windowRedraw :: Window a  ->  IO (())
 windowRedraw  = groupRedraw
 
-windowRedrawLabel :: Group a  ->  IO (())
+windowRedrawLabel :: Window a  ->  IO (())
 windowRedrawLabel  = groupRedrawLabel
 
-windowDamage :: Group a  ->  IO (Word8)
+windowDamage :: Window a  ->  IO (Word8)
 windowDamage  = groupDamage
 
-windowClearDamageWithBitmask :: Group a  -> Word8 ->  IO (())
+windowClearDamageWithBitmask :: Window a  -> Word8 ->  IO (())
 windowClearDamageWithBitmask  = groupClearDamageWithBitmask
 
-windowClearDamage :: Group a  ->  IO (())
+windowClearDamage :: Window a  ->  IO (())
 windowClearDamage  = groupClearDamage
 
-windowDamageWithText :: Group a  -> Word8 ->  IO (())
+windowDamageWithText :: Window a  -> Word8 ->  IO (())
 windowDamageWithText  = groupDamageWithText
 
-windowDamageInsideWidget :: Group a  -> Word8 -> Rectangle ->  IO (())
+windowDamageInsideWidget :: Window a  -> Word8 -> Rectangle ->  IO (())
 windowDamageInsideWidget  = groupDamageInsideWidget
 
-windowMeasureLabel :: Group a  -> IO (Size)
+windowMeasureLabel :: Window a  -> IO (Size)
 windowMeasureLabel  = groupMeasureLabel
 
-windowWindow :: Group a  ->  IO (Window ())
+windowWindow :: Window a  ->  IO (Window ())
 windowWindow  = groupWindow
 
-windowTopWindow :: Group a  ->  IO (Window ())
+windowTopWindow :: Window a  ->  IO (Window ())
 windowTopWindow  = groupTopWindow
 
-windowTopWindowOffset :: Group a -> IO (Position)
+windowTopWindowOffset :: Window a -> IO (Position)
 windowTopWindowOffset  = groupTopWindowOffset
 
-windowBegin :: Group a  ->  IO (())
+windowBegin :: Window a  ->  IO (())
 windowBegin  = groupBegin
 
-windowEnd :: Group a  ->  IO (())
+windowEnd :: Window b  ->  IO (())
 windowEnd  = groupEnd
 
-windowFind :: Group a  -> Widget a  ->  IO (Int)
+windowFind :: Window b  -> Widget a  ->  IO (Int)
 windowFind  = groupFind
 
-windowAdd :: Group a  -> Widget a  ->  IO (())
+windowAdd :: Window b  -> Widget a  ->  IO (())
 windowAdd  = groupAdd
 
-windowInsert :: Group a  -> Widget a  -> Int ->  IO (())
+windowInsert :: Window b  -> Widget a  -> Int ->  IO (())
 windowInsert  = groupInsert
 
-windowRemoveIndex :: Group a  -> Int ->  IO (())
+windowRemoveIndex :: Window a  -> Int ->  IO (())
 windowRemoveIndex  = groupRemoveIndex
 
-windowRemoveWidget :: Group a  -> Widget a  ->  IO (())
+windowRemoveWidget :: Window b  -> Widget a  ->  IO (())
 windowRemoveWidget  = groupRemoveWidget
 
-windowClear :: Group a  ->  IO (())
+windowClear :: Window a  ->  IO (())
 windowClear  = groupClear
 
-windowSetResizable :: Group a  -> Widget a  ->  IO (())
+windowSetResizable :: Window b  -> Widget a  ->  IO (())
 windowSetResizable  = groupSetResizable
 
-windowResizable :: Group a  ->  IO (Widget ())
+windowResizable :: Window a  ->  IO (Widget ())
 windowResizable  = groupResizable
 
-windowAddResizable :: Group a  -> Widget a  ->  IO (())
+windowAddResizable :: Window b  -> Widget a  ->  IO (())
 windowAddResizable  = groupAddResizable
 
-windowInitSizes :: Group a  ->  IO (())
+windowInitSizes :: Window a  ->  IO (())
 windowInitSizes  = groupInitSizes
 
-windowChildren :: Group a  ->  IO (Int)
+windowChildren :: Window a  ->  IO (Int)
 windowChildren  = groupChildren
 
-windowSetClipChildren :: Group a  -> Int ->  IO (())
+windowSetClipChildren :: Window a  -> Int ->  IO (())
 windowSetClipChildren  = groupSetClipChildren
 
-windowClipChildren :: Group a  ->  IO (Int)
+windowClipChildren :: Window a  ->  IO (Int)
 windowClipChildren  = groupClipChildren
 
-windowFocus :: Group a  -> Widget a  ->  IO (())
+windowFocus :: Window b  -> Widget a  ->  IO (())
 windowFocus  = groupFocus
 
-windowDdfdesignKludge :: Group a  ->  IO (Widget ())
+windowDdfdesignKludge :: Window a  ->  IO (Widget ())
 windowDdfdesignKludge  = groupDdfdesignKludge
 
-windowInsertWithBefore :: Group a  -> Widget a  -> Widget a  ->  IO (())
+windowInsertWithBefore :: Window b  -> Widget a  -> Widget c  ->  IO (())
 windowInsertWithBefore  = groupInsertWithBefore
 
-windowArray :: Group a  ->  IO [(Widget ())]
+windowArray :: Window a  ->  IO [(Widget ())]
 windowArray  = groupArray
 
-windowChild :: Group a  -> Int ->  IO (Widget ())
+windowChild :: Window a  -> Int ->  IO (Widget ())
 windowChild  = groupChild
 
 {# fun Fl_Window_changed as changed' { id `Ptr ()' } -> `Int' #}

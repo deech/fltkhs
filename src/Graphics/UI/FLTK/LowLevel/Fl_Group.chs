@@ -376,11 +376,11 @@ groupVisibleFocus :: Group a  ->  IO (Int)
 groupVisibleFocus = widgetVisibleFocus
 
 
-groupContains :: Group a  -> Group a  ->  IO (Int)
+groupContains :: Group a  -> Group b  ->  IO (Int)
 groupContains = widgetContains
 
 
-groupInside :: Group a  -> Group a  ->  IO (Int)
+groupInside :: Group a  -> Group b  ->  IO (Int)
 groupInside = widgetInside
 
 
@@ -464,15 +464,15 @@ groupEnd :: Group a  ->  IO (())
 groupEnd group = withObject group $ \groupPtr -> end' groupPtr
 
 {# fun Fl_Group_find as find' { id `Ptr ()',id `Ptr ()' } -> `Int' #}
-groupFind :: Group a  -> Widget a  ->  IO (Int)
+groupFind :: Group b -> Widget a  ->  IO (Int)
 groupFind group w = withObject group $ \groupPtr -> withObject w $ \wPtr -> find' groupPtr wPtr
 
 {# fun Fl_Group_add as add' { id `Ptr ()',id `Ptr ()' } -> `()' supressWarningAboutRes #}
-groupAdd :: Group a  -> Widget a  ->  IO (())
+groupAdd :: Group b -> Widget a  ->  IO (())
 groupAdd group w = withObject group $ \groupPtr -> withObject w $ \wPtr -> add' groupPtr wPtr
 
 {# fun Fl_Group_insert as insert' { id `Ptr ()',id `Ptr ()',`Int' } -> `()' supressWarningAboutRes #}
-groupInsert :: Group a  -> Widget a  -> Int ->  IO (())
+groupInsert :: Group b -> Widget a  -> Int ->  IO (())
 groupInsert group w i = withObject group $ \groupPtr -> withObject w $ \wPtr -> insert' groupPtr wPtr i
 
 {# fun Fl_Group_remove_index as removeIndex' { id `Ptr ()',`Int' } -> `()' supressWarningAboutRes #}
@@ -480,7 +480,7 @@ groupRemoveIndex :: Group a  -> Int ->  IO (())
 groupRemoveIndex group index = withObject group $ \groupPtr -> removeIndex' groupPtr index
 
 {# fun Fl_Group_remove_widget as removeWidget' { id `Ptr ()',id `Ptr ()' } -> `()' supressWarningAboutRes #}
-groupRemoveWidget :: Group a  -> Widget a  ->  IO (())
+groupRemoveWidget :: Group b -> Widget a  ->  IO (())
 groupRemoveWidget group w = withObject group $ \groupPtr -> withObject w $ \wPtr -> removeWidget' groupPtr wPtr
 
 {# fun Fl_Group_clear as clear' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
@@ -488,7 +488,7 @@ groupClear :: Group a  ->  IO (())
 groupClear group = withObject group $ \groupPtr -> clear' groupPtr
 
 {# fun Fl_Group_set_resizable as setResizable' { id `Ptr ()',id `Ptr ()' } -> `()' supressWarningAboutRes #}
-groupSetResizable :: Group a  -> Widget a  ->  IO (())
+groupSetResizable :: Group b -> Widget a  ->  IO (())
 groupSetResizable group o = withObject group $ \groupPtr -> withObject o $ \oPtr -> setResizable' groupPtr oPtr
 
 {# fun Fl_Group_resizable as resizable' { id `Ptr ()' } -> `Ptr ()' id #}
@@ -496,7 +496,7 @@ groupResizable :: Group a  ->  IO (Widget ())
 groupResizable group = withObject group $ \groupPtr -> resizable' groupPtr >>= toObject
 
 {# fun Fl_Group_add_resizable as addResizable' { id `Ptr ()',id `Ptr ()' } -> `()' supressWarningAboutRes #}
-groupAddResizable :: Group a  -> Widget a  ->  IO (())
+groupAddResizable :: Group b  -> Widget a  ->  IO (())
 groupAddResizable group o = withObject group $ \groupPtr -> withObject o $ \oPtr -> addResizable' groupPtr oPtr
 
 {# fun Fl_Group_init_sizes as initSizes' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
@@ -516,7 +516,7 @@ groupClipChildren :: Group a  ->  IO (Int)
 groupClipChildren group = withObject group $ \groupPtr -> clipChildren' groupPtr
 
 {# fun Fl_Group_focus as focus' { id `Ptr ()',id `Ptr ()' } -> `()' supressWarningAboutRes #}
-groupFocus :: Group a  -> Widget a  ->  IO (())
+groupFocus :: Group b -> Widget a  ->  IO (())
 groupFocus group w = withObject group $ \groupPtr -> withObject w $ \wPtr -> focus' groupPtr wPtr
 
 {# fun Fl_Group__ddfdesign_kludge as ddfdesignKludge' { id `Ptr ()' } -> `Ptr ()' id #}
@@ -524,7 +524,7 @@ groupDdfdesignKludge :: Group a  ->  IO (Widget ())
 groupDdfdesignKludge group = withObject group $ \groupPtr -> ddfdesignKludge' groupPtr >>= toObject
 
 {# fun Fl_Group_insert_with_before as insertWithBefore' { id `Ptr ()',id `Ptr ()',id `Ptr ()' } -> `()' supressWarningAboutRes #}
-groupInsertWithBefore :: Group a  -> Widget a  -> Widget a  ->  IO (())
+groupInsertWithBefore :: Group b -> Widget a  -> Widget c  ->  IO (())
 groupInsertWithBefore self w before = withObject self $ \selfPtr -> withObject w $ \wPtr -> withObject before $ \beforePtr -> insertWithBefore' selfPtr wPtr beforePtr
 
 {# fun Fl_Group_array as array' { id `Ptr ()' } -> `Ptr (Ptr ())' id#}

@@ -5,7 +5,7 @@ module Graphics.UI.FLTK.LowLevel.Fl_Types where
 import Foreign
 import Foreign.C hiding (CClock)
 import Graphics.UI.FLTK.LowLevel.Fl_Enumerations
-import Control.Concurrent (MVar(..))
+import qualified Foreign.ForeignPtr.Unsafe as Unsafe
 import Debug.Trace
 import Control.Exception
 #c
@@ -446,7 +446,7 @@ type WidgetEventHandlerPrim   = Ptr () -> CInt -> IO CInt
 type WidgetEventHandler a     = Widget a -> Event -> IO Int
 type GlobalEventHandlerPrim   = CInt -> IO CInt
 type GlobalEventHandlerF      = Event -> IO Int
-type DrawCallback             = String -> Position -> IO () 
+type DrawCallback             = String -> Position -> IO ()
 type DrawCallbackPrim         = CString -> CInt -> CInt -> CInt -> IO ()
 type TextBufferCallback       = FunPtr (Ptr () -> IO ())
 type UnfinishedStyleCb        = FunPtr (CInt -> Ptr () -> IO ())
@@ -953,7 +953,7 @@ throwStackOnError f =
 
 withForeignPtrs :: [ForeignPtr a] -> ([Ptr a] -> IO c) -> IO c
 withForeignPtrs fptrs io = do
-  let ptrs = map unsafeForeignPtrToPtr fptrs
+  let ptrs = map Unsafe.unsafeForeignPtrToPtr fptrs
   r <- io ptrs
   mapM_ touchForeignPtr fptrs
   return r

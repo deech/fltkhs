@@ -117,7 +117,6 @@ import Foreign.C.Types
 import Graphics.UI.FLTK.LowLevel.Fl_Enumerations
 import Graphics.UI.FLTK.LowLevel.Fl_Types
 import Graphics.UI.FLTK.LowLevel.Utils
-import Debug.Trace
 
 data ValuatorFuncs a =
     ValuatorFuncs

@@ -303,265 +303,265 @@ doubleWindowAsGlWindow window = withObject window $ \windowPtr -> asGlWindow' wi
 {# fun Fl_Double_Window_as_group as asGroup' { id `Ptr ()' } -> `Group ()' unsafeToObject #}
 doubleWindowAsGroup :: DoubleWindow a  ->  IO (Group ())
 doubleWindowAsGroup window = withObject window $ \windowPtr -> asGroup' windowPtr
-doubleWindowSetCallback :: Window a -> WidgetCallback b -> IO ()
+doubleWindowSetCallback :: DoubleWindow a -> WidgetCallback b -> IO ()
 doubleWindowSetCallback = windowSetCallback
-doubleWindowParent :: Group a -> IO (Group ())
+doubleWindowParent :: DoubleWindow a -> IO (Group ())
 doubleWindowParent = windowParent
-doubleWindowSetParent :: Group a -> Group b -> IO ()
+doubleWindowSetParent :: DoubleWindow a -> Group b -> IO ()
 doubleWindowSetParent = windowSetParent
-doubleWindowType_ :: Group a  ->  IO (Word8)
+doubleWindowType_ :: DoubleWindow a  ->  IO (Word8)
 doubleWindowType_ = windowType_
-doubleWindowSetType :: Group a  -> Word8 ->  IO (())
+doubleWindowSetType :: DoubleWindow a  -> Word8 ->  IO (())
 doubleWindowSetType = windowSetType
-doubleWindowDrawLabel :: Group a  -> Maybe (Rectangle,AlignType)->  IO (())
+doubleWindowDrawLabel :: DoubleWindow a  -> Maybe (Rectangle,AlignType)->  IO (())
 doubleWindowDrawLabel = windowDrawLabel
-doubleWindowX :: Group a  ->  IO (Int)
+doubleWindowX :: DoubleWindow a  ->  IO (Int)
 doubleWindowX = windowX
-doubleWindowY :: Group a  ->  IO (Int)
+doubleWindowY :: DoubleWindow a  ->  IO (Int)
 doubleWindowY = windowY
-doubleWindowW :: Group a  ->  IO (Int)
+doubleWindowW :: DoubleWindow a  ->  IO (Int)
 doubleWindowW = windowW
-doubleWindowH :: Group a  ->  IO (Int)
+doubleWindowH :: DoubleWindow a  ->  IO (Int)
 doubleWindowH = windowH
-doubleWindowSetAlign :: Group a  -> AlignType ->  IO (())
+doubleWindowSetAlign :: DoubleWindow a  -> AlignType ->  IO (())
 doubleWindowSetAlign = windowSetAlign
-doubleWindowAlign :: Group a  ->  IO (AlignType)
+doubleWindowAlign :: DoubleWindow a  ->  IO (AlignType)
 doubleWindowAlign = windowAlign
-doubleWindowBox :: Group a  ->  IO (Boxtype)
+doubleWindowBox :: DoubleWindow a  ->  IO (Boxtype)
 doubleWindowBox = windowBox
-doubleWindowSetBox :: Group a  -> Boxtype ->  IO (())
+doubleWindowSetBox :: DoubleWindow a  -> Boxtype ->  IO (())
 doubleWindowSetBox = windowSetBox
-doubleWindowColor :: Group a  ->  IO (Color)
+doubleWindowColor :: DoubleWindow a  ->  IO (Color)
 doubleWindowColor = windowColor
-doubleWindowSetColor :: Group a  -> Color ->  IO (())
+doubleWindowSetColor :: DoubleWindow a  -> Color ->  IO (())
 doubleWindowSetColor = windowSetColor
-doubleWindowSetColorWithBgSel :: Group a  -> Color -> Color ->  IO (())
+doubleWindowSetColorWithBgSel :: DoubleWindow a  -> Color -> Color ->  IO (())
 doubleWindowSetColorWithBgSel = windowSetColorWithBgSel
-doubleWindowSelectionColor :: Group a  ->  IO (Color)
+doubleWindowSelectionColor :: DoubleWindow a  ->  IO (Color)
 doubleWindowSelectionColor = windowSelectionColor
-doubleWindowSetSelectionColor :: Group a  -> Color ->  IO (())
+doubleWindowSetSelectionColor :: DoubleWindow a  -> Color ->  IO (())
 doubleWindowSetSelectionColor = windowSetSelectionColor
-doubleWindowLabeltype :: Group a  ->  IO (Labeltype)
+doubleWindowLabeltype :: DoubleWindow a  ->  IO (Labeltype)
 doubleWindowLabeltype = windowLabeltype
-doubleWindowSetLabeltype :: Group a  -> Labeltype ->  IO (())
+doubleWindowSetLabeltype :: DoubleWindow a  -> Labeltype ->  IO (())
 doubleWindowSetLabeltype = windowSetLabeltype
-doubleWindowLabelcolor :: Group a  ->  IO (Color)
+doubleWindowLabelcolor :: DoubleWindow a  ->  IO (Color)
 doubleWindowLabelcolor = windowLabelcolor
-doubleWindowSetLabelcolor :: Group a  -> Color ->  IO (())
+doubleWindowSetLabelcolor :: DoubleWindow a  -> Color ->  IO (())
 doubleWindowSetLabelcolor = windowSetLabelcolor
-doubleWindowLabelfont :: Group a  ->  IO (Font)
+doubleWindowLabelfont :: DoubleWindow a  ->  IO (Font)
 doubleWindowLabelfont = windowLabelfont
-doubleWindowSetLabelfont :: Group a  -> Font ->  IO (())
+doubleWindowSetLabelfont :: DoubleWindow a  -> Font ->  IO (())
 doubleWindowSetLabelfont = windowSetLabelfont
-doubleWindowLabelsize :: Group a  ->  IO (FontSize)
+doubleWindowLabelsize :: DoubleWindow a  ->  IO (FontSize)
 doubleWindowLabelsize = windowLabelsize
-doubleWindowSetLabelsize :: Group a  -> FontSize ->  IO (())
+doubleWindowSetLabelsize :: DoubleWindow a  -> FontSize ->  IO (())
 doubleWindowSetLabelsize = windowSetLabelsize
-doubleWindowImage :: Group a  ->  IO (Image ())
+doubleWindowImage :: DoubleWindow a  ->  IO (Image ())
 doubleWindowImage = windowImage
-doubleWindowSetImage :: Group a  -> Image b ->  IO (())
+doubleWindowSetImage :: DoubleWindow a  -> Image b ->  IO (())
 doubleWindowSetImage = windowSetImage
-doubleWindowDeimage :: Group a  ->  IO (Image ())
+doubleWindowDeimage :: DoubleWindow a  ->  IO (Image ())
 doubleWindowDeimage = windowDeimage
-doubleWindowSetDeimage :: Group a  -> Image b ->  IO (())
+doubleWindowSetDeimage :: DoubleWindow a  -> Image b ->  IO (())
 doubleWindowSetDeimage = windowSetDeimage
-doubleWindowTooltip :: Group a  ->  IO (String)
+doubleWindowTooltip :: DoubleWindow a  ->  IO (String)
 doubleWindowTooltip = windowTooltip
-doubleWindowCopyTooltip :: Group a  -> String ->  IO (())
+doubleWindowCopyTooltip :: DoubleWindow a  -> String ->  IO (())
 doubleWindowCopyTooltip = windowCopyTooltip
-doubleWindowSetTooltip :: Group a  -> String ->  IO (())
+doubleWindowSetTooltip :: DoubleWindow a  -> String ->  IO (())
 doubleWindowSetTooltip = windowSetTooltip
-doubleWindowWhen :: Group a  ->  IO (When)
+doubleWindowWhen :: DoubleWindow a  ->  IO (When)
 doubleWindowWhen = windowWhen
-doubleWindowSetWhen :: Group a  -> Word8 ->  IO (())
+doubleWindowSetWhen :: DoubleWindow a  -> Word8 ->  IO (())
 doubleWindowSetWhen = windowSetWhen
-doubleWindowVisible :: Group a  ->  IO (Int)
+doubleWindowVisible :: DoubleWindow a  ->  IO (Int)
 doubleWindowVisible = windowVisible
-doubleWindowVisibleR :: Group a  ->  IO (Int)
+doubleWindowVisibleR :: DoubleWindow a  ->  IO (Int)
 doubleWindowVisibleR = windowVisibleR
-doubleWindowSetVisible :: Group a  ->  IO (())
+doubleWindowSetVisible :: DoubleWindow a  ->  IO (())
 doubleWindowSetVisible = windowSetVisible
-doubleWindowClearVisible :: Group a  ->  IO (())
+doubleWindowClearVisible :: DoubleWindow a  ->  IO (())
 doubleWindowClearVisible = windowClearVisible
-doubleWindowActive :: Group a  ->  IO (Int)
+doubleWindowActive :: DoubleWindow a  ->  IO (Int)
 doubleWindowActive = windowActive
-doubleWindowActiveR :: Group a  ->  IO (Int)
+doubleWindowActiveR :: DoubleWindow a  ->  IO (Int)
 doubleWindowActiveR = windowActiveR
-doubleWindowActivate :: Group a  ->  IO (())
+doubleWindowActivate :: DoubleWindow a  ->  IO (())
 doubleWindowActivate = windowActivate
-doubleWindowDeactivate :: Group a  ->  IO (())
+doubleWindowDeactivate :: DoubleWindow a  ->  IO (())
 doubleWindowDeactivate = windowDeactivate
-doubleWindowOutput :: Group a  ->  IO (Int)
+doubleWindowOutput :: DoubleWindow a  ->  IO (Int)
 doubleWindowOutput = windowOutput
-doubleWindowSetOutput :: Group a  ->  IO (())
+doubleWindowSetOutput :: DoubleWindow a  ->  IO (())
 doubleWindowSetOutput = windowSetOutput
-doubleWindowClearOutput :: Group a  ->  IO (())
+doubleWindowClearOutput :: DoubleWindow a  ->  IO (())
 doubleWindowClearOutput = windowClearOutput
-doubleWindowTakesevents :: Group a  ->  IO (Int)
+doubleWindowTakesevents :: DoubleWindow a  ->  IO (Int)
 doubleWindowTakesevents = windowTakesevents
-doubleWindowSetChanged :: Group a  ->  IO (())
+doubleWindowSetChanged :: DoubleWindow a  ->  IO (())
 doubleWindowSetChanged = windowSetChanged
-doubleWindowClearChanged :: Group a  ->  IO (())
+doubleWindowClearChanged :: DoubleWindow a  ->  IO (())
 doubleWindowClearChanged = windowClearChanged
-doubleWindowTakeFocus :: Group a  ->  IO (Int)
+doubleWindowTakeFocus :: DoubleWindow a  ->  IO (Int)
 doubleWindowTakeFocus = windowTakeFocus
-doubleWindowSetVisibleFocus :: Group a  ->  IO (())
+doubleWindowSetVisibleFocus :: DoubleWindow a  ->  IO (())
 doubleWindowSetVisibleFocus = windowSetVisibleFocus
-doubleWindowClearVisibleFocus :: Group a  ->  IO (())
+doubleWindowClearVisibleFocus :: DoubleWindow a  ->  IO (())
 doubleWindowClearVisibleFocus = windowClearVisibleFocus
-doubleWindowModifyVisibleFocus :: Group a  -> Int ->  IO (())
+doubleWindowModifyVisibleFocus :: DoubleWindow a  -> Int ->  IO (())
 doubleWindowModifyVisibleFocus = windowModifyVisibleFocus
-doubleWindowVisibleFocus :: Group a  ->  IO (Int)
+doubleWindowVisibleFocus :: DoubleWindow a  ->  IO (Int)
 doubleWindowVisibleFocus = windowVisibleFocus
-doubleWindowContains :: Group a  -> Group a  ->  IO (Int)
+doubleWindowContains :: DoubleWindow a  -> Group a  ->  IO (Int)
 doubleWindowContains = windowContains
-doubleWindowInside :: Group a  -> Group a  ->  IO (Int)
+doubleWindowInside :: DoubleWindow a  -> Group a  ->  IO (Int)
 doubleWindowInside = windowInside
-doubleWindowRedraw :: Group a  ->  IO (())
+doubleWindowRedraw :: DoubleWindow a  ->  IO (())
 doubleWindowRedraw = windowRedraw
-doubleWindowRedrawLabel :: Group a  ->  IO (())
+doubleWindowRedrawLabel :: DoubleWindow a  ->  IO (())
 doubleWindowRedrawLabel = windowRedrawLabel
-doubleWindowDamage :: Group a  ->  IO (Word8)
+doubleWindowDamage :: DoubleWindow a  ->  IO (Word8)
 doubleWindowDamage = windowDamage
-doubleWindowClearDamageWithBitmask :: Group a  -> Word8 ->  IO (())
+doubleWindowClearDamageWithBitmask :: DoubleWindow a  -> Word8 ->  IO (())
 doubleWindowClearDamageWithBitmask = windowClearDamageWithBitmask
-doubleWindowClearDamage :: Group a  ->  IO (())
+doubleWindowClearDamage :: DoubleWindow a  ->  IO (())
 doubleWindowClearDamage = windowClearDamage
-doubleWindowDamageWithText :: Group a  -> Word8 ->  IO (())
+doubleWindowDamageWithText :: DoubleWindow a  -> Word8 ->  IO (())
 doubleWindowDamageWithText = windowDamageWithText
-doubleWindowDamageInsideWidget :: Group a  -> Word8 -> Rectangle ->  IO (())
+doubleWindowDamageInsideWidget :: DoubleWindow a  -> Word8 -> Rectangle ->  IO (())
 doubleWindowDamageInsideWidget = windowDamageInsideWidget
-doubleWindowMeasureLabel :: Group a  -> IO (Size)
+doubleWindowMeasureLabel :: DoubleWindow a  -> IO (Size)
 doubleWindowMeasureLabel = windowMeasureLabel
-doubleWindowWindow :: Group a  ->  IO (Window ())
+doubleWindowWindow :: DoubleWindow a  ->  IO (Window ())
 doubleWindowWindow = windowWindow
-doubleWindowTopWindow :: Group a  ->  IO (Window ())
+doubleWindowTopWindow :: DoubleWindow a  ->  IO (Window ())
 doubleWindowTopWindow = windowTopWindow
-doubleWindowTopWindowOffset :: Group a -> IO (Position)
+doubleWindowTopWindowOffset :: DoubleWindow a -> IO (Position)
 doubleWindowTopWindowOffset = windowTopWindowOffset
-doubleWindowBegin :: Group a  ->  IO (())
+doubleWindowBegin :: DoubleWindow a  ->  IO (())
 doubleWindowBegin = windowBegin
-doubleWindowEnd :: Group a  ->  IO (())
+doubleWindowEnd :: DoubleWindow a  ->  IO (())
 doubleWindowEnd = windowEnd
-doubleWindowFind :: Group a  -> Widget a  ->  IO (Int)
+doubleWindowFind :: DoubleWindow a -> Widget b  ->  IO (Int)
 doubleWindowFind = windowFind
-doubleWindowAdd :: Group a  -> Widget a  ->  IO (())
+doubleWindowAdd :: DoubleWindow a -> Widget b  ->  IO (())
 doubleWindowAdd = windowAdd
-doubleWindowInsert :: Group a  -> Widget a  -> Int ->  IO (())
+doubleWindowInsert :: DoubleWindow a -> Widget b  -> Int ->  IO (())
 doubleWindowInsert = windowInsert
-doubleWindowRemoveIndex :: Group a  -> Int ->  IO (())
+doubleWindowRemoveIndex :: DoubleWindow a  -> Int ->  IO (())
 doubleWindowRemoveIndex = windowRemoveIndex
-doubleWindowRemoveWidget :: Group a  -> Widget a  ->  IO (())
+doubleWindowRemoveWidget :: DoubleWindow a -> Widget b  ->  IO (())
 doubleWindowRemoveWidget = windowRemoveWidget
-doubleWindowClear :: Group a  ->  IO (())
+doubleWindowClear :: DoubleWindow a  ->  IO (())
 doubleWindowClear = windowClear
-doubleWindowSetResizable :: Group a  -> Widget a  ->  IO (())
+doubleWindowSetResizable :: DoubleWindow a -> Widget b  ->  IO (())
 doubleWindowSetResizable = windowSetResizable
-doubleWindowResizable :: Group a  ->  IO (Widget ())
+doubleWindowResizable :: DoubleWindow a  ->  IO (Widget ())
 doubleWindowResizable = windowResizable
-doubleWindowAddResizable :: Group a  -> Widget a  ->  IO (())
+doubleWindowAddResizable :: DoubleWindow a -> Widget b  ->  IO (())
 doubleWindowAddResizable = windowAddResizable
-doubleWindowInitSizes :: Group a  ->  IO (())
+doubleWindowInitSizes :: DoubleWindow a  ->  IO (())
 doubleWindowInitSizes = windowInitSizes
-doubleWindowChildren :: Group a  ->  IO (Int)
+doubleWindowChildren :: DoubleWindow a  ->  IO (Int)
 doubleWindowChildren = windowChildren
-doubleWindowSetClipChildren :: Group a  -> Int ->  IO (())
+doubleWindowSetClipChildren :: DoubleWindow a  -> Int ->  IO (())
 doubleWindowSetClipChildren = windowSetClipChildren
-doubleWindowClipChildren :: Group a  ->  IO (Int)
+doubleWindowClipChildren :: DoubleWindow a  ->  IO (Int)
 doubleWindowClipChildren = windowClipChildren
-doubleWindowFocus :: Group a  -> Widget a  ->  IO (())
+doubleWindowFocus :: DoubleWindow a -> Widget b  ->  IO (())
 doubleWindowFocus = windowFocus
-doubleWindowDdfdesignKludge :: Group a  ->  IO (Widget ())
+doubleWindowDdfdesignKludge :: DoubleWindow a  ->  IO (Widget ())
 doubleWindowDdfdesignKludge = windowDdfdesignKludge
-doubleWindowInsertWithBefore :: Group a  -> Widget a  -> Widget a  ->  IO (())
+doubleWindowInsertWithBefore :: DoubleWindow a -> Widget b  -> Widget c  ->  IO (())
 doubleWindowInsertWithBefore = windowInsertWithBefore
-doubleWindowArray :: Group a  ->  IO [(Widget ())]
+doubleWindowArray :: DoubleWindow a  ->  IO [(Widget ())]
 doubleWindowArray = windowArray
-doubleWindowChild :: Group a  -> Int ->  IO (Widget ())
+doubleWindowChild :: DoubleWindow a  -> Int ->  IO (Widget ())
 doubleWindowChild = windowChild
-doubleWindowChanged :: Window a  ->  IO (Int)
+doubleWindowChanged :: DoubleWindow a  ->  IO (Int)
 doubleWindowChanged = windowChanged
-doubleWindowFullscreen :: Window a  ->  IO (())
+doubleWindowFullscreen :: DoubleWindow a  ->  IO (())
 doubleWindowFullscreen = windowFullscreen
-doubleWindowFullscreenOff :: Window a -> Maybe Rectangle ->  IO (())
+doubleWindowFullscreenOff :: DoubleWindow a -> Maybe Rectangle ->  IO (())
 doubleWindowFullscreenOff = windowFullscreenOff
-doubleWindowSetBorder :: Window a  -> Bool ->  IO (())
+doubleWindowSetBorder :: DoubleWindow a  -> Bool ->  IO (())
 doubleWindowSetBorder = windowSetBorder
-doubleWindowClearBorder :: Window a  ->  IO (())
+doubleWindowClearBorder :: DoubleWindow a  ->  IO (())
 doubleWindowClearBorder = windowClearBorder
-doubleWindowBorder :: Window a  ->  IO (Bool)
+doubleWindowBorder :: DoubleWindow a  ->  IO (Bool)
 doubleWindowBorder = windowBorder
-doubleWindowSetOverride :: Window a  ->  IO (())
+doubleWindowSetOverride :: DoubleWindow a  ->  IO (())
 doubleWindowSetOverride = windowSetOverride
-doubleWindowOverride :: Window a  ->  IO (Bool)
+doubleWindowOverride :: DoubleWindow a  ->  IO (Bool)
 doubleWindowOverride = windowOverride
-doubleWindowSetModal :: Window a  ->  IO (())
+doubleWindowSetModal :: DoubleWindow a  ->  IO (())
 doubleWindowSetModal = windowSetModal
-doubleWindowModal :: Window a  ->  IO (Bool)
+doubleWindowModal :: DoubleWindow a  ->  IO (Bool)
 doubleWindowModal = windowModal
-doubleWindowSetNonModal :: Window a  ->  IO (())
+doubleWindowSetNonModal :: DoubleWindow a  ->  IO (())
 doubleWindowSetNonModal = windowSetNonModal
-doubleWindowNonModal :: Window a  ->  IO (Bool)
+doubleWindowNonModal :: DoubleWindow a  ->  IO (Bool)
 doubleWindowNonModal = windowNonModal
-doubleWindowSetMenuWindow :: Window a  ->  IO (())
+doubleWindowSetMenuWindow :: DoubleWindow a  ->  IO (())
 doubleWindowSetMenuWindow = windowSetMenuWindow
-doubleWindowMenuWindow :: Window a  ->  IO (Bool)
+doubleWindowMenuWindow :: DoubleWindow a  ->  IO (Bool)
 doubleWindowMenuWindow = windowMenuWindow
-doubleWindowSetTooltipWindow :: Window a  ->  IO (())
+doubleWindowSetTooltipWindow :: DoubleWindow a  ->  IO (())
 doubleWindowSetTooltipWindow = windowSetTooltipWindow
-doubleWindowTooltipWindow :: Window a  ->  IO (Bool)
+doubleWindowTooltipWindow :: DoubleWindow a  ->  IO (Bool)
 doubleWindowTooltipWindow = windowTooltipWindow
-doubleWindowHotSpot :: Window a -> PositionSpec b -> Maybe Bool -> IO ()
+doubleWindowHotSpot :: DoubleWindow a -> PositionSpec b -> Maybe Bool -> IO ()
 doubleWindowHotSpot = windowHotSpot
-doubleWindowFreePosition :: Window a  ->  IO (())
+doubleWindowFreePosition :: DoubleWindow a  ->  IO (())
 doubleWindowFreePosition = windowFreePosition
-doubleWindowSizeRange :: Window a  -> Int -> Int -> IO (())
+doubleWindowSizeRange :: DoubleWindow a  -> Int -> Int -> IO (())
 doubleWindowSizeRange = windowSizeRange
-doubleWindowSizeRangeWithArgs :: Window a  -> Int -> Int -> OptionalSizeRangeArgs ->  IO (())
+doubleWindowSizeRangeWithArgs :: DoubleWindow a  -> Int -> Int -> OptionalSizeRangeArgs ->  IO (())
 doubleWindowSizeRangeWithArgs = windowSizeRangeWithArgs
-doubleWindowLabel :: Window a  ->  IO (String)
+doubleWindowLabel :: DoubleWindow a  ->  IO (String)
 doubleWindowLabel = windowLabel
-doubleWindowIconlabel :: Window a  ->  IO (String)
+doubleWindowIconlabel :: DoubleWindow a  ->  IO (String)
 doubleWindowIconlabel = windowIconlabel
-doubleWindowSetLabel :: Window a  -> String ->  IO (())
+doubleWindowSetLabel :: DoubleWindow a  -> String ->  IO (())
 doubleWindowSetLabel = windowSetLabel
-doubleWindowSetIconlabel :: Window a  -> String ->  IO (())
+doubleWindowSetIconlabel :: DoubleWindow a  -> String ->  IO (())
 doubleWindowSetIconlabel = windowSetIconlabel
-doubleWindowSetLabelWithIconlabel :: Window a  -> String -> String ->  IO (())
+doubleWindowSetLabelWithIconlabel :: DoubleWindow a  -> String -> String ->  IO (())
 doubleWindowSetLabelWithIconlabel = windowSetLabelWithIconlabel
-doubleWindowCopyLabel :: Window a  -> String ->  IO (())
+doubleWindowCopyLabel :: DoubleWindow a  -> String ->  IO (())
 doubleWindowCopyLabel = windowCopyLabel
 doubleWindowSetDefaultXclass :: String ->  IO (())
 doubleWindowSetDefaultXclass = windowSetDefaultXclass
 doubleWindowDefaultXclass ::  IO (String)
 doubleWindowDefaultXclass = windowDefaultXclass
-doubleWindowXclass :: Window a  ->  IO (String)
+doubleWindowXclass :: DoubleWindow a  ->  IO (String)
 doubleWindowXclass = windowXclass
-doubleWindowSetXclass :: Window a  -> String ->  IO (())
+doubleWindowSetXclass :: DoubleWindow a  -> String ->  IO (())
 doubleWindowSetXclass = windowSetXclass
-doubleWindowIcon :: Window a  ->  IO (Ptr ())
+doubleWindowIcon :: DoubleWindow a  ->  IO (Ptr ())
 doubleWindowIcon = windowIcon
-doubleWindowSetIcon :: Window a  -> Ptr () ->  IO (())
+doubleWindowSetIcon :: DoubleWindow a  -> Ptr () ->  IO (())
 doubleWindowSetIcon = windowSetIcon
-doubleWindowShown :: Window a  ->  IO (Bool)
+doubleWindowShown :: DoubleWindow a  ->  IO (Bool)
 doubleWindowShown = windowShown
-doubleWindowIconize :: Window a  ->  IO (())
+doubleWindowIconize :: DoubleWindow a  ->  IO (())
 doubleWindowIconize = windowIconize
-doubleWindowXRoot :: Window a  ->  IO (Int)
+doubleWindowXRoot :: DoubleWindow a  ->  IO (Int)
 doubleWindowXRoot = windowXRoot
-doubleWindowYRoot :: Window a  ->  IO (Int)
+doubleWindowYRoot :: DoubleWindow a  ->  IO (Int)
 doubleWindowYRoot = windowYRoot
 doubleWindowCurrent ::  IO (Ptr ())
 doubleWindowCurrent = windowCurrent
-doubleWindowMakeCurrent :: Window a  ->  IO (())
+doubleWindowMakeCurrent :: DoubleWindow a  ->  IO (())
 doubleWindowMakeCurrent = windowMakeCurrent
-doubleWindowSetCursor :: Window a -> CursorType -> IO ()
+doubleWindowSetCursor :: DoubleWindow a -> CursorType -> IO ()
 doubleWindowSetCursor = windowSetCursor
-doubleWindowSetCursorWithFgBg :: Window a  -> CursorType -> (Maybe Color, Maybe Color) ->  IO (())
+doubleWindowSetCursorWithFgBg :: DoubleWindow a  -> CursorType -> (Maybe Color, Maybe Color) ->  IO (())
 doubleWindowSetCursorWithFgBg = windowSetCursorWithFgBg
-doubleWindowSetDefaultCursor :: Window a  -> CursorType ->  IO (())
+doubleWindowSetDefaultCursor :: DoubleWindow a  -> CursorType ->  IO (())
 doubleWindowSetDefaultCursor = windowSetDefaultCursor
-doubleWindowDecoratedW :: Window a  ->  IO (Int)
+doubleWindowDecoratedW :: DoubleWindow a  ->  IO (Int)
 doubleWindowDecoratedW = windowDecoratedW
-doubleWindowDecoratedH :: Window a  ->  IO (Int)
+doubleWindowDecoratedH :: DoubleWindow a  ->  IO (Int)
 doubleWindowDecoratedH = windowDecoratedH

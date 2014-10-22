@@ -135,147 +135,147 @@ lightButtonHide :: LightButton a  ->  IO (())
 lightButtonHide = buttonHide
 lightButtonShow :: LightButton a -> IO ()
 lightButtonShow= buttonShow
-lightButtonSetCallback :: Widget a -> (WidgetCallback b) -> IO (())
+lightButtonSetCallback :: LightButton a -> (WidgetCallback b) -> IO (())
 lightButtonSetCallback= buttonSetCallback
-lightButtonParent :: Widget a -> IO (Group ())
+lightButtonParent :: LightButton a -> IO (Group ())
 lightButtonParent= buttonParent
-lightButtonSetParent :: Widget a -> Group b -> IO ()
+lightButtonSetParent :: LightButton a -> Group b -> IO ()
 lightButtonSetParent= buttonSetParent
-lightButtonType_ :: Widget a  ->  IO (Word8)
+lightButtonType_ :: LightButton a  ->  IO (Word8)
 lightButtonType_= buttonType_
-lightButtonSetType :: Widget a  -> Word8 ->  IO (())
+lightButtonSetType :: LightButton a  -> Word8 ->  IO (())
 lightButtonSetType= buttonSetType
-lightButtonDrawLabel :: Widget a  -> Maybe (Rectangle,AlignType)->  IO (())
+lightButtonDrawLabel :: LightButton a  -> Maybe (Rectangle,AlignType)->  IO (())
 lightButtonDrawLabel= buttonDrawLabel
-lightButtonX :: Widget a  ->  IO (Int)
+lightButtonX :: LightButton a  ->  IO (Int)
 lightButtonX= buttonX
-lightButtonY :: Widget a  ->  IO (Int)
+lightButtonY :: LightButton a  ->  IO (Int)
 lightButtonY= buttonY
-lightButtonW :: Widget a  ->  IO (Int)
+lightButtonW :: LightButton a  ->  IO (Int)
 lightButtonW= buttonW
-lightButtonH :: Widget a  ->  IO (Int)
+lightButtonH :: LightButton a  ->  IO (Int)
 lightButtonH= buttonH
-lightButtonSetAlign :: Widget a  -> AlignType ->  IO (())
+lightButtonSetAlign :: LightButton a  -> AlignType ->  IO (())
 lightButtonSetAlign= buttonSetAlign
-lightButtonAlign :: Widget a  ->  IO (AlignType)
+lightButtonAlign :: LightButton a  ->  IO (AlignType)
 lightButtonAlign= buttonAlign
-lightButtonBox :: Widget a  ->  IO (Boxtype)
+lightButtonBox :: LightButton a  ->  IO (Boxtype)
 lightButtonBox= buttonBox
-lightButtonSetBox :: Widget a  -> Boxtype ->  IO (())
+lightButtonSetBox :: LightButton a  -> Boxtype ->  IO (())
 lightButtonSetBox= buttonSetBox
-lightButtonColor :: Widget a  ->  IO (Color)
+lightButtonColor :: LightButton a  ->  IO (Color)
 lightButtonColor= buttonColor
-lightButtonSetColor :: Widget a  -> Color ->  IO (())
+lightButtonSetColor :: LightButton a  -> Color ->  IO (())
 lightButtonSetColor= buttonSetColor
-lightButtonSetColorWithBgSel :: Widget a  -> Color -> Color ->  IO (())
+lightButtonSetColorWithBgSel :: LightButton a  -> Color -> Color ->  IO (())
 lightButtonSetColorWithBgSel= buttonSetColorWithBgSel
-lightButtonSelectionColor :: Widget a  ->  IO (Color)
+lightButtonSelectionColor :: LightButton a  ->  IO (Color)
 lightButtonSelectionColor= buttonSelectionColor
-lightButtonSetSelectionColor :: Widget a  -> Color ->  IO (())
+lightButtonSetSelectionColor :: LightButton a  -> Color ->  IO (())
 lightButtonSetSelectionColor= buttonSetSelectionColor
-lightButtonLabel :: Widget a  ->  IO (String)
+lightButtonLabel :: LightButton a  ->  IO (String)
 lightButtonLabel= buttonLabel
-lightButtonCopyLabel :: Widget a  -> String ->  IO (())
+lightButtonCopyLabel :: LightButton a  -> String ->  IO (())
 lightButtonCopyLabel= buttonCopyLabel
-lightButtonSetLabel :: Widget a  -> String ->  IO (())
+lightButtonSetLabel :: LightButton a  -> String ->  IO (())
 lightButtonSetLabel= buttonSetLabel
-lightButtonLabeltype :: Widget a  ->  IO (Labeltype)
+lightButtonLabeltype :: LightButton a  ->  IO (Labeltype)
 lightButtonLabeltype= buttonLabeltype
-lightButtonSetLabeltype :: Widget a  -> Labeltype ->  IO (())
+lightButtonSetLabeltype :: LightButton a  -> Labeltype ->  IO (())
 lightButtonSetLabeltype= buttonSetLabeltype
-lightButtonLabelcolor :: Widget a  ->  IO (Color)
+lightButtonLabelcolor :: LightButton a  ->  IO (Color)
 lightButtonLabelcolor= buttonLabelcolor
-lightButtonSetLabelcolor :: Widget a  -> Color ->  IO (())
+lightButtonSetLabelcolor :: LightButton a  -> Color ->  IO (())
 lightButtonSetLabelcolor= buttonSetLabelcolor
-lightButtonLabelfont :: Widget a  ->  IO (Font)
+lightButtonLabelfont :: LightButton a  ->  IO (Font)
 lightButtonLabelfont= buttonLabelfont
-lightButtonSetLabelfont :: Widget a  -> Font ->  IO (())
+lightButtonSetLabelfont :: LightButton a  -> Font ->  IO (())
 lightButtonSetLabelfont= buttonSetLabelfont
-lightButtonLabelsize :: Widget a  ->  IO (FontSize)
+lightButtonLabelsize :: LightButton a  ->  IO (FontSize)
 lightButtonLabelsize= buttonLabelsize
-lightButtonSetLabelsize :: Widget a  -> FontSize ->  IO (())
+lightButtonSetLabelsize :: LightButton a  -> FontSize ->  IO (())
 lightButtonSetLabelsize= buttonSetLabelsize
-lightButtonImage :: Widget a  ->  IO (Image ())
+lightButtonImage :: LightButton a  ->  IO (Image ())
 lightButtonImage= buttonImage
-lightButtonSetImage :: Widget a  -> Image b ->  IO (())
+lightButtonSetImage :: LightButton a  -> Image b ->  IO (())
 lightButtonSetImage= buttonSetImage
-lightButtonDeimage :: Widget a  ->  IO (Image ())
+lightButtonDeimage :: LightButton a  ->  IO (Image ())
 lightButtonDeimage= buttonDeimage
-lightButtonSetDeimage :: Widget a  -> Image b ->  IO (())
+lightButtonSetDeimage :: LightButton a  -> Image b ->  IO (())
 lightButtonSetDeimage= buttonSetDeimage
-lightButtonTooltip :: Widget a  ->  IO (String)
+lightButtonTooltip :: LightButton a  ->  IO (String)
 lightButtonTooltip= buttonTooltip
-lightButtonCopyTooltip :: Widget a  -> String ->  IO (())
+lightButtonCopyTooltip :: LightButton a  -> String ->  IO (())
 lightButtonCopyTooltip= buttonCopyTooltip
-lightButtonSetTooltip :: Widget a  -> String ->  IO (())
+lightButtonSetTooltip :: LightButton a  -> String ->  IO (())
 lightButtonSetTooltip= buttonSetTooltip
-lightButtonWhen :: Widget a  ->  IO (When)
+lightButtonWhen :: LightButton a  ->  IO (When)
 lightButtonWhen= buttonWhen
-lightButtonSetWhen :: Widget a  -> Word8 ->  IO (())
+lightButtonSetWhen :: LightButton a  -> Word8 ->  IO (())
 lightButtonSetWhen= buttonSetWhen
-lightButtonVisible :: Widget a  ->  IO (Int)
+lightButtonVisible :: LightButton a  ->  IO (Int)
 lightButtonVisible= buttonVisible
-lightButtonVisibleR :: Widget a  ->  IO (Int)
+lightButtonVisibleR :: LightButton a  ->  IO (Int)
 lightButtonVisibleR= buttonVisibleR
-lightButtonSetVisible :: Widget a  ->  IO (())
+lightButtonSetVisible :: LightButton a  ->  IO (())
 lightButtonSetVisible= buttonSetVisible
-lightButtonClearVisible :: Widget a  ->  IO (())
+lightButtonClearVisible :: LightButton a  ->  IO (())
 lightButtonClearVisible= buttonClearVisible
-lightButtonActive :: Widget a  ->  IO (Int)
+lightButtonActive :: LightButton a  ->  IO (Int)
 lightButtonActive= buttonActive
-lightButtonActiveR :: Widget a  ->  IO (Int)
+lightButtonActiveR :: LightButton a  ->  IO (Int)
 lightButtonActiveR= buttonActiveR
-lightButtonActivate :: Widget a  ->  IO (())
+lightButtonActivate :: LightButton a  ->  IO (())
 lightButtonActivate= buttonActivate
-lightButtonDeactivate :: Widget a  ->  IO (())
+lightButtonDeactivate :: LightButton a  ->  IO (())
 lightButtonDeactivate= buttonDeactivate
-lightButtonOutput :: Widget a  ->  IO (Int)
+lightButtonOutput :: LightButton a  ->  IO (Int)
 lightButtonOutput= buttonOutput
-lightButtonSetOutput :: Widget a  ->  IO (())
+lightButtonSetOutput :: LightButton a  ->  IO (())
 lightButtonSetOutput= buttonSetOutput
-lightButtonClearOutput :: Widget a  ->  IO (())
+lightButtonClearOutput :: LightButton a  ->  IO (())
 lightButtonClearOutput= buttonClearOutput
-lightButtonTakesevents :: Widget a  ->  IO (Int)
+lightButtonTakesevents :: LightButton a  ->  IO (Int)
 lightButtonTakesevents= buttonTakesevents
-lightButtonSetChanged :: Widget a  ->  IO (())
+lightButtonSetChanged :: LightButton a  ->  IO (())
 lightButtonSetChanged= buttonSetChanged
-lightButtonClearChanged :: Widget a  ->  IO (())
+lightButtonClearChanged :: LightButton a  ->  IO (())
 lightButtonClearChanged= buttonClearChanged
-lightButtonTakeFocus :: Widget a  ->  IO (Int)
+lightButtonTakeFocus :: LightButton a  ->  IO (Int)
 lightButtonTakeFocus= buttonTakeFocus
-lightButtonSetVisibleFocus :: Widget a  ->  IO (())
+lightButtonSetVisibleFocus :: LightButton a  ->  IO (())
 lightButtonSetVisibleFocus= buttonSetVisibleFocus
-lightButtonClearVisibleFocus :: Widget a  ->  IO (())
+lightButtonClearVisibleFocus :: LightButton a  ->  IO (())
 lightButtonClearVisibleFocus= buttonClearVisibleFocus
-lightButtonModifyVisibleFocus :: Widget a  -> Int ->  IO (())
+lightButtonModifyVisibleFocus :: LightButton a  -> Int ->  IO (())
 lightButtonModifyVisibleFocus= buttonModifyVisibleFocus
-lightButtonVisibleFocus :: Widget a  ->  IO (Int)
+lightButtonVisibleFocus :: LightButton a  ->  IO (Int)
 lightButtonVisibleFocus= buttonVisibleFocus
-lightButtonContains :: Widget a  -> Widget a  ->  IO (Int)
+lightButtonContains :: LightButton a  -> LightButton a  ->  IO (Int)
 lightButtonContains= buttonContains
-lightButtonInside :: Widget a  -> Widget a  ->  IO (Int)
+lightButtonInside :: LightButton a  -> LightButton a  ->  IO (Int)
 lightButtonInside= buttonInside
-lightButtonRedraw :: Widget a  ->  IO (())
+lightButtonRedraw :: LightButton a  ->  IO (())
 lightButtonRedraw= buttonRedraw
-lightButtonRedrawLabel :: Widget a  ->  IO (())
+lightButtonRedrawLabel :: LightButton a  ->  IO (())
 lightButtonRedrawLabel= buttonRedrawLabel
-lightButtonDamage :: Widget a  ->  IO (Word8)
+lightButtonDamage :: LightButton a  ->  IO (Word8)
 lightButtonDamage= buttonDamage
-lightButtonClearDamageWithBitmask :: Widget a  -> Word8 ->  IO (())
+lightButtonClearDamageWithBitmask :: LightButton a  -> Word8 ->  IO (())
 lightButtonClearDamageWithBitmask= buttonClearDamageWithBitmask
-lightButtonClearDamage :: Widget a  ->  IO (())
+lightButtonClearDamage :: LightButton a  ->  IO (())
 lightButtonClearDamage= buttonClearDamage
-lightButtonDamageWithText :: Widget a  -> Word8 ->  IO (())
+lightButtonDamageWithText :: LightButton a  -> Word8 ->  IO (())
 lightButtonDamageWithText= buttonDamageWithText
-lightButtonDamageInsideWidget :: Widget a  -> Word8 -> Rectangle ->  IO (())
+lightButtonDamageInsideWidget :: LightButton a  -> Word8 -> Rectangle ->  IO (())
 lightButtonDamageInsideWidget= buttonDamageInsideWidget
-lightButtonMeasureLabel :: Widget a  -> IO (Size)
+lightButtonMeasureLabel :: LightButton a  -> IO (Size)
 lightButtonMeasureLabel= buttonMeasureLabel
-lightButtonWindow :: Widget a  ->  IO (Window ())
+lightButtonWindow :: LightButton a  ->  IO (Window ())
 lightButtonWindow= buttonWindow
-lightButtonTopWindow :: Widget a  ->  IO (Window ())
+lightButtonTopWindow :: LightButton a  ->  IO (Window ())
 lightButtonTopWindow= buttonTopWindow
-lightButtonTopWindowOffset :: Widget a -> IO (Position)
+lightButtonTopWindowOffset :: LightButton a -> IO (Position)
 lightButtonTopWindowOffset= buttonTopWindowOffset
 lightButtonValue :: LightButton a  ->  IO (Bool)
 lightButtonValue= buttonValue
