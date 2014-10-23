@@ -28,6 +28,7 @@ EXPORT {
   FL_EXPORT_C(void, Fl_Bitmap_draw_with_cx_cy)(fl_Bitmap bitmap,int X, int Y, int W, int H, int cx, int cy);
   FL_EXPORT_C(void, Fl_Bitmap_draw_with_cx)(fl_Bitmap bitmap,int X, int Y, int W, int H, int cx);
   FL_EXPORT_C(void, Fl_Bitmap_draw_with_cy)(fl_Bitmap bitmap,int X, int Y, int W, int H, int cy);
+  FL_EXPORT_C(void, Fl_Bitmap_draw_with)(fl_Bitmap bitmap,int X,int Y,int W,int H);
   FL_EXPORT_C(void, Fl_Bitmap_draw)(fl_Bitmap bitmap,int X, int Y);
   FL_EXPORT_C(void, Fl_Bitmap_uncache)(fl_Bitmap bitmap);
 #ifdef __cplusplus

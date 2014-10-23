@@ -13,9 +13,7 @@ module Graphics.UI.FLTK.LowLevel.Fl_Bitmap
   bitmapDesaturate,
   bitmapLabel,
   bitmapLabelWithMenuItem,
-  bitmapDrawWithCxCy,
-  bitmapDrawWithCx,
-  bitmapDrawWithCy,
+  bitmapDrawResize,
   bitmapDraw,
   bitmapUncache
   )
@@ -69,17 +67,24 @@ bitmapLabel bitmap w = withObject bitmap $ \bitmapPtr -> withObject w $ \wPtr ->
 bitmapLabelWithMenuItem :: Bitmap a  -> MenuItem a  ->  IO ()
 bitmapLabelWithMenuItem bitmap m = withObject bitmap $ \bitmapPtr -> withObject m $ \mPtr -> labelWithMenuItem' bitmapPtr mPtr
 {# fun unsafe Fl_Bitmap_draw_with_cx_cy as drawWithCxCy' { id `Ptr ()',`Int',`Int',`Int',`Int',`Int',`Int' } -> `()' #}
-bitmapDrawWithCxCy :: Bitmap a  -> Rectangle -> Int -> Int ->  IO ()
-bitmapDrawWithCxCy bitmap rectangle cx cy = let (x_pos', y_pos', width', height') = fromRectangle rectangle in withObject bitmap $ \bitmapPtr -> drawWithCxCy' bitmapPtr x_pos' y_pos' width' height' cx cy
 {# fun unsafe Fl_Bitmap_draw_with_cx as drawWithCx' { id `Ptr ()',`Int',`Int',`Int',`Int',`Int' } -> `()' #}
-bitmapDrawWithCx :: Bitmap a  -> Rectangle -> Int ->  IO ()
-bitmapDrawWithCx bitmap rectangle cx = let (x_pos', y_pos', width', height') = fromRectangle rectangle in withObject bitmap $ \bitmapPtr -> drawWithCx' bitmapPtr x_pos' y_pos' width' height' cx
 {# fun unsafe Fl_Bitmap_draw_with_cy as drawWithCy' { id `Ptr ()',`Int',`Int',`Int',`Int',`Int' } -> `()' #}
-bitmapDrawWithCy :: Bitmap a  -> Rectangle -> Int ->  IO ()
-bitmapDrawWithCy bitmap rectangle cy = let (x_pos', y_pos', width', height') = fromRectangle rectangle in withObject bitmap $ \bitmapPtr -> drawWithCy' bitmapPtr x_pos' y_pos' width' height' cy
+{# fun unsafe Fl_Bitmap_draw_with as drawWith' { id `Ptr ()',`Int',`Int',`Int',`Int' } -> `()' #}
+bitmapDrawResize :: Bitmap a -> Position -> Size -> Maybe ByX -> Maybe ByY -> IO ()
+bitmapDrawResize image (Position (X x) (Y y)) (Size (Width w) (Height h)) xOffset yOffset =
+  case (xOffset, yOffset) of
+    (Just (ByX xOff), Just (ByY yOff)) ->
+      withObject image $ \imagePtr -> drawWithCxCy' imagePtr x y w h (truncate xOff) (truncate yOff)
+    (Just (ByX xOff), Nothing) ->
+      withObject image $ \imagePtr -> drawWithCx' imagePtr x y w h (truncate xOff)
+    (Nothing, Just (ByY yOff)) ->
+      withObject image $ \imagePtr -> drawWithCy' imagePtr x y w h (truncate yOff)
+    (Nothing, Nothing) ->
+      withObject image $ \imagePtr -> drawWith' imagePtr x y w h
+
 {# fun unsafe Fl_Bitmap_draw as draw' { id `Ptr ()',`Int',`Int' } -> `()' #}
 bitmapDraw :: Bitmap a  -> Position ->  IO ()
-bitmapDraw bitmap (Position (X x_pos') (Y y_pos')) = withObject bitmap $ \bitmapPtr -> draw' bitmapPtr x_pos' y_pos'
+bitmapDraw image (Position (X x_pos') (Y y_pos')) = withObject image $ \imagePtr -> draw' imagePtr x_pos' y_pos'
 {# fun unsafe Fl_Bitmap_uncache as uncache' { id `Ptr ()' } -> `()' #}
 bitmapUncache :: Bitmap a  ->  IO ()
 bitmapUncache bitmap = withObject bitmap $ \bitmapPtr -> uncache' bitmapPtr

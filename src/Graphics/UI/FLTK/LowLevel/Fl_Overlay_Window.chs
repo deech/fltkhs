@@ -12,7 +12,7 @@ import Graphics.UI.FLTK.LowLevel.Utils
 import Graphics.UI.FLTK.LowLevel.Fl_Window
 import C2HS hiding (cFromEnum, unsafePerformIO, toBool,cToEnum)
 
-{# fun Fl_Overlay_Window_destroy as windowDestroy' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
+{# fun Fl_Overlay_Window_Destroy as windowDestroy' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
 overlayWindowDestroy :: OverlayWindow a -> IO ()
 overlayWindowDestroy win = withObject win $ \winPtr -> windowDestroy' winPtr
 

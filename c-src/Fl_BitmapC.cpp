@@ -55,6 +55,9 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Bitmap_draw_with_cy)(fl_Bitmap bitmap,int X,int Y,int W,int H,int cy){
     return (static_cast<Fl_Bitmap*>(bitmap))->draw(X,Y,W,H,0,cy);
   }
+  FL_EXPORT_C(void,Fl_Bitmap_draw_with)(fl_Bitmap bitmap,int X,int Y,int W,int H){
+    return (static_cast<Fl_Bitmap*>(bitmap))->draw(X,Y,W,H);
+  }
   FL_EXPORT_C(void,Fl_Bitmap_draw)(fl_Bitmap bitmap,int X,int Y){
     return (static_cast<Fl_Bitmap*>(bitmap))->draw(X,Y);
   }
