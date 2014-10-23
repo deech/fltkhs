@@ -523,8 +523,8 @@ EXPORT {
   }
   FL_EXPORT_C(fl_Overlay_Window, Fl_Overlay_Window_New_WithLabel)(int w, int h, const char* title,void (*draw_overlay_fp)(fl_Overlay_Window)) {
   Fl_DerivedOverlay_Window* window = new Fl_DerivedOverlay_Window(w,h,title, draw_overlay_fp);
-    return (static_cast<fl_Overlay_Window>(window));
-  }
+  return (static_cast<fl_Overlay_Window>(window));
+}
   FL_EXPORT_C(fl_Overlay_Window, Fl_Overlay_Window_New)(int w, int h,void (*draw_overlay_fp)(fl_Overlay_Window)) {
   Fl_DerivedOverlay_Window* window = new Fl_DerivedOverlay_Window(w,h,0,draw_overlay_fp);
   return (fl_Overlay_Window)window;
@@ -535,8 +535,8 @@ EXPORT {
   }
   FL_EXPORT_C(fl_Overlay_Window, Fl_Overlay_Window_NewXY)(int x, int y, int w, int h,void (*draw_overlay_fp)(fl_Overlay_Window)) {
   Fl_DerivedOverlay_Window* window = new Fl_DerivedOverlay_Window(x,y,w,h,0,draw_overlay_fp);
-    return (fl_Overlay_Window)window;
-  }
+  return (fl_Overlay_Window)window;
+}
 #ifdef __cplusplus
 }
 #endif
