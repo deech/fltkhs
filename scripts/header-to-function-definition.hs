@@ -421,6 +421,7 @@ simpleTypeMap =
     ,("fl_Menu_Item", "Ptr ()")
     ,("fl_Menu_", "Ptr ()")
     ,("fl_Image", "Ptr ()")
+    ,("fl_Bitmap", "Ptr ()")
     ,("Fl_Color", "Color")
     ,("Fl_Font", "Font")
     ,("Fl_Fontsize", "Fontsize")
@@ -463,7 +464,8 @@ haskellEquivalent =
      ("fl_Slider"    , "Slider"),
      ("fl_Image"     , "Image"),
      ("fl_Menu_Item" , "MenuItem"),
-     ("fl_Menu_"     , "MenuPrim")
+     ("fl_Menu_"     , "MenuPrim"),
+     ("fl_Bitmap"     , "Bitmap")
     ]
 upcase = map toUpper
 makeArgument className argType argName =

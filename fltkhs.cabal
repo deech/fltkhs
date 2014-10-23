@@ -36,6 +36,7 @@ library
                    Graphics.UI.FLTK.LowLevel.Fl_Menu_Item
                    Graphics.UI.FLTK.LowLevel.Fl_Menu_
                    Graphics.UI.FLTK.LowLevel.Fl_Image
+                   Graphics.UI.FLTK.LowLevel.Fl_Bitmap
                    Graphics.UI.FLTK.LowLevel.Fl_Draw
                    Graphics.UI.FLTK.LowLevel.FL
                    Graphics.UI.FLTK.LowLevel.Utils
