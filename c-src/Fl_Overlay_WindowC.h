@@ -176,16 +176,31 @@ EXPORT {
   FL_EXPORT_C(void, Fl_Overlay_Window_default_callback)(fl_Overlay_Window win, void* v);
   FL_EXPORT_C(int, Fl_Overlay_Window_decorated_w)(fl_Overlay_Window win);
   FL_EXPORT_C(int, Fl_Overlay_Window_decorated_h)(fl_Overlay_Window win);
-  /* Inherited from Fl_Double_Window */
+  /* Fl_Overlay_Window specific */
   FL_EXPORT_C(void,         Fl_Overlay_Window_show)(fl_Overlay_Window win);
   FL_EXPORT_C(void,         Fl_Overlay_Window_show_with_args)(fl_Overlay_Window win, int argc, char** argv);
-  FL_EXPORT_C(void,         Fl_Overlay_Window_destroy)(fl_Overlay_Window win);
   FL_EXPORT_C(void,         Fl_Overlay_Window_flush)(fl_Overlay_Window win);
   FL_EXPORT_C(void,         Fl_Overlay_Window_resize)(fl_Overlay_Window win, int X, int Y, int W, int H);
   FL_EXPORT_C(void,         Fl_Overlay_Window_hide)(fl_Overlay_Window win);
-  /* Fl_Overlay_Window specific */
   FL_EXPORT_C(int,          Fl_Overlay_Window_can_do_overlay)(fl_Overlay_Window win);
   FL_EXPORT_C(void,         Fl_Overlay_Window_redraw_overlay)(fl_Overlay_Window win);
+
+  class Fl_DerivedOverlay_Window : public Fl_Overlay_Window {
+  private:
+    void (*draw_overlay_fp)(fl_Overlay_Window);
+  public:
+    void draw_overlay();
+    Fl_DerivedOverlay_Window(int X, int Y, int W, int H, const char *l, void (*can_draw_fp)(fl_Overlay_Window));
+    Fl_DerivedOverlay_Window(int X, int Y, int W, int H, void (*can_draw_fp)(fl_Overlay_Window));
+    Fl_DerivedOverlay_Window(int W, int H, const char *l, void (*can_draw_fp)(fl_Overlay_Window));
+    Fl_DerivedOverlay_Window(int W, int H, void (*can_draw_fp)(fl_Overlay_Window));
+  
+  };
+  FL_EXPORT_C(fl_Overlay_Window,    Fl_Overlay_Window_New_WithLabel)(int w, int h, const char* title, void (*draw_overlay_fp)(fl_Overlay_Window));
+  FL_EXPORT_C(fl_Overlay_Window,    Fl_Overlay_Window_New)(int w, int h, void (*draw_overlay_fp)(fl_Overlay_Window));
+  FL_EXPORT_C(fl_Overlay_Window,    Fl_Overlay_Window_NewXY_WithLabel)(int x, int y, int w, int h, const char* title, void (*draw_overlay_fp)(fl_Overlay_Window));
+  FL_EXPORT_C(fl_Overlay_Window,    Fl_Overlay_Window_NewXY)(int x, int y, int w, int h, void (*draw_overlay_fp)(fl_Overlay_Window));
+  FL_EXPORT_C(void,         Fl_Overlay_Window_Destroy)(fl_Overlay_Window win);
 #ifdef __cplusplus
 }
 #endif

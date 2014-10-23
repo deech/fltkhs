@@ -229,7 +229,7 @@ defaultGlWindowFuncs = GlWindowFuncs Nothing Nothing Nothing Nothing Nothing Not
 {# fun Fl_OverriddenGl_Window_NewXY as overriddenWindowNewXY' {`Int',`Int', `Int', `Int', id `Ptr ()'} -> `Ptr ()' id #}
 {# fun Fl_OverriddenGl_Window_NewXY_WithLabel as overriddenWindowNewXYWithLabel' { `Int',`Int',`Int',`Int',`String', id `Ptr ()'} -> `Ptr ()' id #}
 {# fun Fl_OverriddenGl_Window_New_WithLabel as overriddenWindowNewWithLabel' { `Int',`Int', `String', id `Ptr ()'} -> `Ptr ()' id #}
-glWindowNew :: Size -> Maybe Position -> Maybe String -> Maybe (GlWindowFuncs a) -> IO (Window ())
+glWindowNew :: Size -> Maybe Position -> Maybe String -> Maybe (GlWindowFuncs a) -> IO (GlWindow ())
 glWindowNew (Size (Width w) (Height h)) position title funcs' =
     case (position, title, funcs') of
          (Nothing,Nothing,Nothing) -> windowNew' w h >>= toObject 

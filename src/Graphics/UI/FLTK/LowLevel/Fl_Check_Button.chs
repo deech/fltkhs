@@ -107,7 +107,7 @@ import Graphics.UI.FLTK.LowLevel.Utils
 
 {# fun Fl_Check_Button_New as widgetNew' { `Int',`Int',`Int',`Int' } -> `Ptr ()' id #}
 {# fun Fl_Check_Button_New_WithLabel as widgetNewWithLabel' { `Int',`Int',`Int',`Int',`String'} -> `Ptr ()' id #}
-checkButtonNew :: Rectangle -> Maybe String -> IO (Button ())
+checkButtonNew :: Rectangle -> Maybe String -> IO (CheckButton ())
 checkButtonNew rectangle l' =
     let (x_pos, y_pos, width, height) = fromRectangle rectangle
     in case l' of

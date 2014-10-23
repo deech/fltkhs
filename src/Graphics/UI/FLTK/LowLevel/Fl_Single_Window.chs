@@ -211,7 +211,7 @@ defaultSingleWindowFuncs = SingleWindowFuncs Nothing Nothing Nothing Nothing Not
 {# fun Fl_OverriddenSingle_Window_NewXY as overriddenWindowNewXY' {`Int',`Int', `Int', `Int', id `Ptr ()'} -> `Ptr ()' id #}
 {# fun Fl_OverriddenSingle_Window_NewXY_WithLabel as overriddenWindowNewXYWithLabel' { `Int',`Int',`Int',`Int',`String', id `Ptr ()'} -> `Ptr ()' id #}
 {# fun Fl_OverriddenSingle_Window_New_WithLabel as overriddenWindowNewWithLabel' { `Int',`Int', `String', id `Ptr ()'} -> `Ptr ()' id #}
-singleWindowNew :: Size -> Maybe Position -> Maybe String -> Maybe (SingleWindowFuncs a) -> IO (Window ())
+singleWindowNew :: Size -> Maybe Position -> Maybe String -> Maybe (SingleWindowFuncs a) -> IO (SingleWindow ())
 singleWindowNew (Size (Width w) (Height h)) position title funcs' =
     case (position, title, funcs') of
          (Nothing,Nothing,Nothing) -> windowNew' w h >>= toObject 

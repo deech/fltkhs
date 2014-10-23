@@ -19,6 +19,7 @@ library
                    Graphics.UI.FLTK.LowLevel.Fl_Single_Window
                    Graphics.UI.FLTK.LowLevel.Fl_Window
                    Graphics.UI.FLTK.LowLevel.Fl_Double_Window
+                   Graphics.UI.FLTK.LowLevel.Fl_Overlay_Window
                    Graphics.UI.FLTK.LowLevel.Fl_Button
                    Graphics.UI.FLTK.LowLevel.Fl_Light_Button
                    Graphics.UI.FLTK.LowLevel.Fl_Check_Button
