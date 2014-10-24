@@ -4,13 +4,19 @@ import Graphics.UI.FLTK.LowLevel.Fl_Enumerations
 import Foreign
 import qualified Foreign.Concurrent as FC
 import Foreign.C
-import qualified Data.ByteString as B 
+import qualified Data.ByteString as B
 
 foreign import ccall "wrapper"
         mkWidgetCallbackPtr :: CallbackWithUserDataPrim -> IO (FunPtr CallbackWithUserDataPrim)
 
 foreign import ccall "wrapper"
         mkCallbackPtr :: CallbackPrim -> IO (FunPtr CallbackPrim)
+
+foreign import ccall "wrapper"
+        mkColorAverageCallbackPtr :: ColorAverageCallbackPrim -> IO (FunPtr ColorAverageCallbackPrim)
+
+foreign import ccall "wrapper"
+        mkWidgetTransformCallbackPtr :: WidgetTransformCallbackPrim -> IO (FunPtr WidgetTransformCallbackPrim)
 
 foreign import ccall "wrapper"
         mkEventHandlerPtr :: WidgetEventHandlerPrim -> IO (FunPtr WidgetEventHandlerPrim)
@@ -20,6 +26,12 @@ foreign import ccall "wrapper"
 
 foreign import ccall "wrapper"
         mkDrawCallbackPrimPtr :: DrawCallbackPrim -> IO (FunPtr DrawCallbackPrim)
+
+foreign import ccall "wrapper"
+        mkImageDrawCallbackPrimPtr :: ImageDrawCallbackPrim -> IO (FunPtr ImageDrawCallbackPrim)
+
+foreign import ccall "wrapper"
+        mkImageCopyCallbackPrimPtr :: ImageCopyCallbackPrim -> IO (FunPtr ImageCopyCallbackPrim)
 
 foreign import ccall "wrapper"
         mkFinalizer :: (Ptr a -> IO ()) -> IO (FinalizerPtr a)
@@ -98,6 +110,48 @@ toWidgetCallbackPrim f = mkWidgetCallbackPtr
                          (\ptr _ -> wrapNonNull ptr "Null pointer: toWidgetCallbackPrim" >>=
                                     \pp -> f (wrapObject pp)
                          )
+toImageDrawCallbackPrim :: ImageDrawCallback a -> IO (FunPtr ImageDrawCallbackPrim)
+toImageDrawCallbackPrim f =
+    mkImageDrawCallbackPrimPtr
+    (\ptr x_pos' y_pos' width' height' x_offset' y_offset' ->
+       let _x_offset = fmap X $ integralToMaybe x_offset'
+           _y_offset = fmap Y $ integralToMaybe y_offset'
+           position' = Position (X $ fromIntegral x_pos')
+                                (Y $ fromIntegral y_pos')
+           size' = Size (Width $ fromIntegral width')
+                        (Height $ fromIntegral height')
+       in
+        toObject ptr >>= \objPtr -> f objPtr position' size' _x_offset _y_offset
+    )
+
+toColorAverageCallbackPrim :: ColorAverageCallback a -> IO (FunPtr ColorAverageCallbackPrim)
+toColorAverageCallbackPrim f =
+    mkColorAverageCallbackPtr
+    (\ptr cint cfloat ->
+         wrapNonNull ptr "Null pointer. toColorAverageCallbackPrim" >>= \pp ->
+         f (wrapObject pp) (Color (fromIntegral cint)) (realToFrac cfloat)
+    )
+
+toImageCopyCallbackPrim :: ImageCopyCallback a b -> IO (FunPtr ImageCopyCallbackPrim)
+toImageCopyCallbackPrim f =
+    mkImageCopyCallbackPrimPtr
+    (\ptr width' height' -> do
+         pp <- wrapNonNull ptr "Null pointer. toImageCopyCallbackPrim"
+         objPtr <- f (wrapObject pp) (Size (Width $ fromIntegral width')
+                                           (Height $ fromIntegral height'))
+         unsafeObjectToPtr objPtr
+    )
+
+toWidgetTransformCallbackPrim :: WidgetTransformCallback a b -> IO (FunPtr WidgetTransformCallbackPrim)
+toWidgetTransformCallbackPrim f =
+    mkWidgetTransformCallbackPtr
+    (\ptr ->
+         wrapNonNull ptr "Null pointer. toWidgetTransformCallbackPrim" >>= \pp ->
+         do
+           widget <- f (wrapObject pp)
+           unsafeObjectToPtr widget
+    )
+
 toDrawCallback :: DrawCallback -> IO (FunPtr DrawCallbackPrim)
 toDrawCallback f = mkDrawCallbackPrimPtr
                    (\string' length' x' y' -> do
@@ -154,7 +208,10 @@ foldl1WithDefault :: a -> (a -> a -> a) -> [a] -> a
 foldl1WithDefault emptyCase _ [] = emptyCase
 foldl1WithDefault _ f as = foldl1 f as
 
-withPixmap :: PixmapHs -> ((Ptr (Ptr CChar)) -> IO a) -> IO a 
+integralToMaybe :: (Integral a, Integral b) => a -> Maybe b
+integralToMaybe n = if (n == 0) then Nothing else (Just $ fromIntegral n)
+
+withPixmap :: PixmapHs -> ((Ptr (Ptr CChar)) -> IO a) -> IO a
 withPixmap (PixmapHs pixmap) f =
     B.useAsCString
       (foldl1 B.append pixmap)

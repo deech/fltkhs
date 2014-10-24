@@ -176,7 +176,7 @@ import C2HS hiding (cFromEnum, unsafePerformIO, toBool,cToEnum)
 data WindowFuncs a =
     WindowFuncs
     {
-     windowDrawOverride       :: Maybe (WidgetCallback a)
+     windowDrawOverride       :: Maybe (Window a -> IO ())
     ,windowHandleOverride     :: Maybe (WidgetEventHandler a)
     ,windowResizeOverride     :: Maybe (RectangleF a)
     ,windowShowOverride       :: Maybe (WidgetCallback a)

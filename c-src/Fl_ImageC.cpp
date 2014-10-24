@@ -47,22 +47,6 @@ void Fl_DerivedImage::desaturate(){
     Fl_Image::desaturate();
   }
 }
-void Fl_DerivedImage::label(Fl_Widget* w){
-  if (overriddenFuncs->label){
-    this->overriddenFuncs->label((fl_Image) this, (fl_Widget)w);
-  }
-  else {
-    Fl_Image::label(w);
-  }
-}
-void Fl_DerivedImage::label(Fl_Menu_Item* m){
-  if (overriddenFuncs->label_with_menu_item){
-    this->overriddenFuncs->label_with_menu_item((fl_Image) this, (fl_Menu_Item) m);
-  }
-  else {
-    Fl_Image::label(m);
-  }
-}
 void Fl_DerivedImage::draw(int X, int Y, int W, int H, int cx, int cy){
   if (overriddenFuncs->draw){
     this->overriddenFuncs->draw((fl_Image) this,X,Y,W,H,cx,cy);
@@ -87,8 +71,6 @@ EXPORT {
     ptr->color_average = NULL;
     ptr->copy = NULL;
     ptr->desaturate = NULL;
-    ptr->label = NULL;
-    ptr->label_with_menu_item = NULL;
     ptr->uncache = NULL;
     ptr->destroy_data = NULL;
     return ptr;
@@ -104,8 +86,8 @@ EXPORT {
     Fl_DerivedImage* d = new Fl_DerivedImage(W,H,D,fs);
     return (fl_Image)d;
   }
-  FL_EXPORT_C(fl_Image, Fl_OverriddenImage_New)(int W, int H, int D, fl_Image_Virtual_Funcs* fs){
-    Fl_DerivedImage* d = new Fl_DerivedImage(W,H,D,fs);
+  FL_EXPORT_C(fl_Image, Fl_OverriddenImage_New)(int W, int H, int D, fl_Image_Virtual_Funcs* funcs){
+    Fl_DerivedImage* d = new Fl_DerivedImage(W,H,D,funcs);
     return (fl_Image)d;
   }
   FL_EXPORT_C(int,Fl_Image_w)(fl_Image image){

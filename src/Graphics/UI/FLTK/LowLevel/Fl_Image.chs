@@ -2,6 +2,8 @@
 module Graphics.UI.FLTK.LowLevel.Fl_Image
        (
        ImageFuncs(..),
+       defaultImageFuncs,
+       imageNew,
        imageW,
        imageH,
        imageD,
@@ -11,8 +13,6 @@ module Graphics.UI.FLTK.LowLevel.Fl_Image
        imageColorAverage,
        imageInactive,
        imageDesaturate,
-       imageLabel,
-       imageLabelWithMenuItem,
        imageDrawResize,
        imageDraw,
        imageUncache
@@ -27,17 +27,43 @@ import Graphics.UI.FLTK.LowLevel.Fl_Enumerations
 import Graphics.UI.FLTK.LowLevel.Fl_Types
 import Graphics.UI.FLTK.LowLevel.Utils
 
-data ImageFuncs a =
+data ImageFuncs a b =
   ImageFuncs
   {
-    imageDrawOverride  :: Maybe (WidgetCallback a),
-    imageColorAverageOverride :: Maybe (Image a -> Color -> Float -> IO ()),
-    imageCopyOverride :: Maybe (Image a -> IO (Image a)),
+    imageDrawOverride  :: Maybe (ImageDrawCallback a),
+    imageColorAverageOverride :: Maybe (ColorAverageCallback a),
+    imageCopyOverride :: Maybe (ImageCopyCallback a b),
     imageDesaturateOverride :: Maybe (Image a -> IO ()),
-    imageLabelOverride :: Maybe (Image a -> Widget a -> IO ()),
-    imageLabelWithMenuItemOverride :: Maybe (Image a -> MenuItem a -> IO ()),
     imageUncacheOverride :: Maybe (Image a -> IO ())
   }
+imageFunctionStruct :: (ImageFuncs a b) -> IO (Ptr ())
+imageFunctionStruct funcs = do
+  p <- mallocBytes {# sizeof fl_Image_Virtual_Funcs #}
+  toImageDrawCallbackPrim `orNullFunPtr` (imageDrawOverride funcs) >>=
+                            {# set fl_Image_Virtual_Funcs->draw #} p
+  toColorAverageCallbackPrim `orNullFunPtr` (imageColorAverageOverride funcs) >>=
+                            {# set fl_Image_Virtual_Funcs->color_average #} p
+  toImageCopyCallbackPrim `orNullFunPtr` (imageCopyOverride funcs) >>=
+                            {# set fl_Image_Virtual_Funcs->copy #} p
+  toCallbackPrim `orNullFunPtr` (imageDesaturateOverride funcs) >>=
+                            {# set fl_Image_Virtual_Funcs->desaturate #} p
+  toCallbackPrim `orNullFunPtr` (imageUncacheOverride funcs) >>=
+                            {# set fl_Image_Virtual_Funcs->uncache #} p
+  return p
+
+defaultImageFuncs :: ImageFuncs a b
+defaultImageFuncs = ImageFuncs Nothing Nothing Nothing Nothing Nothing
+
+{# fun unsafe Fl_Image_New as flImageNew' { `Int',`Int',`Int' } -> `Ptr ()' id #}
+{# fun unsafe Fl_OverriddenImage_New as flOverriddenImageNew' { `Int',`Int',`Int', id `Ptr ()'} -> `Ptr ()' id #}
+imageNew :: Size -> Depth -> Maybe (ImageFuncs a b) -> IO (Image a)
+imageNew (Size (Width width') (Height height')) (Depth depth') funcs =
+  case funcs of
+    Just fs -> do
+            fptr <- imageFunctionStruct fs
+            obj <- flOverriddenImageNew' width' height' depth' (castPtr fptr)
+            toObject obj
+    Nothing -> flImageNew' width' height' depth' >>= toObject
 
 {# fun unsafe Fl_Image_w as w' { id `Ptr ()' } -> `Int' #}
 imageW :: Image a  ->  IO (Int)
@@ -74,28 +100,20 @@ imageInactive image = withObject image $ \imagePtr -> inactive' imagePtr
 imageDesaturate :: Image a  ->  IO ()
 imageDesaturate image = withObject image $ \imagePtr -> desaturate' imagePtr
 
-{# fun unsafe Fl_Image_label as label' { id `Ptr ()',id `Ptr ()' } -> `()' #}
-imageLabel :: Image a  -> Widget a  ->  IO ()
-imageLabel image w = withObject image $ \imagePtr -> withObject w $ \wPtr -> label' imagePtr wPtr
-
-{# fun unsafe Fl_Image_label_with_menu_item as labelWithMenuItem' { id `Ptr ()',id `Ptr ()' } -> `()' #}
-imageLabelWithMenuItem :: Image a  -> MenuItem a  ->  IO ()
-imageLabelWithMenuItem image m = withObject image $ \imagePtr -> withObject m $ \mPtr -> labelWithMenuItem' imagePtr mPtr
-
 {# fun unsafe Fl_Image_draw_with_cx_cy as drawWithCxCy' { id `Ptr ()',`Int',`Int',`Int',`Int',`Int',`Int' } -> `()' #}
 {# fun unsafe Fl_Image_draw_with_cx as drawWithCx' { id `Ptr ()',`Int',`Int',`Int',`Int',`Int' } -> `()' #}
 {# fun unsafe Fl_Image_draw_with_cy as drawWithCy' { id `Ptr ()',`Int',`Int',`Int',`Int',`Int' } -> `()' #}
 {# fun unsafe Fl_Image_draw_with as drawWith' { id `Ptr ()',`Int',`Int',`Int',`Int' } -> `()' #}
 
-imageDrawResize :: Image a -> Position -> Size -> Maybe ByX -> Maybe ByY -> IO ()
+imageDrawResize :: Image a -> Position -> Size -> Maybe X -> Maybe Y -> IO ()
 imageDrawResize image (Position (X x) (Y y)) (Size (Width w) (Height h)) xOffset yOffset =
   case (xOffset, yOffset) of
-    (Just (ByX xOff), Just (ByY yOff)) ->
-      withObject image $ \imagePtr -> drawWithCxCy' imagePtr x y w h (truncate xOff) (truncate yOff)
-    (Just (ByX xOff), Nothing) ->
-      withObject image $ \imagePtr -> drawWithCx' imagePtr x y w h (truncate xOff)
-    (Nothing, Just (ByY yOff)) ->
-      withObject image $ \imagePtr -> drawWithCy' imagePtr x y w h (truncate yOff)
+    (Just (X xOff), Just (Y yOff)) ->
+      withObject image $ \imagePtr -> drawWithCxCy' imagePtr x y w h (fromIntegral xOff) (fromIntegral yOff)
+    (Just (X xOff), Nothing) ->
+      withObject image $ \imagePtr -> drawWithCx' imagePtr x y w h (fromIntegral xOff)
+    (Nothing, Just (Y yOff)) ->
+      withObject image $ \imagePtr -> drawWithCy' imagePtr x y w h (fromIntegral yOff)
     (Nothing, Nothing) ->
       withObject image $ \imagePtr -> drawWith' imagePtr x y w h
 

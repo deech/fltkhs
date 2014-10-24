@@ -19,8 +19,6 @@ EXPORT {
     Fl_Image* copy();
     Fl_Image* copy(int W, int H);
     void desaturate();
-    void label(Fl_Widget* w);
-    void label(Fl_Menu_Item* m);
     void draw(int X, int Y, int W, int H, int cx=0, int cy=0);
     void uncache();
     void draw_box();
@@ -49,8 +47,6 @@ EXPORT {
   FL_EXPORT_C(void, Fl_Image_color_average)(fl_Image image,Fl_Color c, float i);
   FL_EXPORT_C(void, Fl_Image_inactive)(fl_Image image);
   FL_EXPORT_C(void, Fl_Image_desaturate)(fl_Image image);
-  FL_EXPORT_C(void, Fl_Image_label)(fl_Image image,fl_Widget w);
-  FL_EXPORT_C(void, Fl_Image_label_with_menu_item)(fl_Image image,fl_Menu_Item m);
   FL_EXPORT_C(void, Fl_Image_draw_with_cx_cy)(fl_Image image,int X, int Y, int W, int H, int cx, int cy);
   FL_EXPORT_C(void, Fl_Image_draw_with_cx)(fl_Image image,int X, int Y, int W, int H, int cx);
   FL_EXPORT_C(void, Fl_Image_draw_with_cy)(fl_Image image,int X, int Y, int W, int H, int cy);

@@ -432,26 +432,34 @@ type XBMImage a           = Image (CXBMImage a)
 data CXPMImage a          = CXPMImage
 type XPMImage a           = Image (CXPMImage a)
 
-type GlobalCallback           = IO ()
-type CallbackWithUserDataPrim = Ptr () -> Ptr () -> IO ()
-type CallbackPrim             = Ptr () -> IO ()
-type WidgetCallback a         = Widget a -> IO ()
-type RectangleF a             = Widget a -> Rectangle -> IO ()
-type RectangleFPrim           = Ptr () -> CInt -> CInt -> CInt -> CInt -> IO ()
-type GetWindowF a             = Widget a -> IO (Window ())
-type GetPointerF              = Ptr () -> IO (Ptr ())
-type GetGlWindowF a           = Widget a -> IO (GlWindow ())
-type GetGroupF a              = Widget a -> IO (Group ())
-type WidgetEventHandlerPrim   = Ptr () -> CInt -> IO CInt
-type WidgetEventHandler a     = Widget a -> Event -> IO Int
-type GlobalEventHandlerPrim   = CInt -> IO CInt
-type GlobalEventHandlerF      = Event -> IO Int
-type DrawCallback             = String -> Position -> IO ()
-type DrawCallbackPrim         = CString -> CInt -> CInt -> CInt -> IO ()
-type TextBufferCallback       = FunPtr (Ptr () -> IO ())
-type UnfinishedStyleCb        = FunPtr (CInt -> Ptr () -> IO ())
-type FileChooserCallback      = FunPtr (Ptr () -> Ptr () -> IO())
-type SharedImageHandler       = FunPtr (CString -> CUChar -> CInt -> Ptr ())
+type GlobalCallback              = IO ()
+type CallbackWithUserDataPrim    = Ptr () -> Ptr () -> IO ()
+type CallbackPrim                = Ptr () -> IO ()
+type ColorAverageCallback a      = Image a -> Color -> Float -> IO ()
+type ColorAverageCallbackPrim    = Ptr () -> CUInt -> CFloat -> IO ()
+type WidgetTransformCallback a b = Object a -> IO (Object b)
+type WidgetTransformCallbackPrim = Ptr () -> IO (Ptr ())
+type WidgetCallback a            = Object a -> IO ()
+type ImageDrawCallback a         = Image a -> Position -> Size -> Maybe X -> Maybe Y -> IO ()
+type ImageDrawCallbackPrim       = Ptr () -> CInt -> CInt -> CInt -> CInt -> CInt -> CInt -> IO ()
+type ImageCopyCallback a b       = Image a -> Size -> IO (Image b)
+type ImageCopyCallbackPrim       = Ptr () -> CInt -> CInt -> IO (Ptr ())
+type RectangleF a                = Widget a -> Rectangle -> IO ()
+type RectangleFPrim              = Ptr () -> CInt -> CInt -> CInt -> CInt -> IO ()
+type GetWindowF a                = Widget a -> IO (Window ())
+type GetPointerF                 = Ptr () -> IO (Ptr ())
+type GetGlWindowF a              = Widget a -> IO (GlWindow ())
+type GetGroupF a                 = Widget a -> IO (Group ())
+type WidgetEventHandlerPrim      = Ptr () -> CInt -> IO CInt
+type WidgetEventHandler a        = Widget a -> Event -> IO Int
+type GlobalEventHandlerPrim      = CInt -> IO CInt
+type GlobalEventHandlerF         = Event -> IO Int
+type DrawCallback                = String -> Position -> IO ()
+type DrawCallbackPrim            = CString -> CInt -> CInt -> CInt -> IO ()
+type TextBufferCallback          = FunPtr (Ptr () -> IO ())
+type UnfinishedStyleCb           = FunPtr (CInt -> Ptr () -> IO ())
+type FileChooserCallback         = FunPtr (Ptr () -> Ptr () -> IO())
+type SharedImageHandler          = FunPtr (CString -> CUChar -> CInt -> Ptr ())
 -- {#pointer *Style_Table_Entry as StyleTableEntryPtr foreign -> StyleTableEntry #}
 -- data StyleTableEntry = StyleTableEntry {
 --       color :: Color,
@@ -900,6 +908,7 @@ data SingleWindowVirtualFuncs = SingleWindowVirtualFuncs {
 -}
 newtype Width = Width Int
 newtype Height = Height Int
+newtype Depth = Depth Int
 newtype X = X Int
 newtype Y = Y Int
 newtype ByX = ByX Double
@@ -973,6 +982,12 @@ withObject (Object fptr) f =
            objPtr <- toObjectPtr ptrToObjPtr
            f (castPtr objPtr)
        )
+
+unsafeObjectToPtr :: Object a -> IO (Ptr ())
+unsafeObjectToPtr (Object fptr) =
+    throwStackOnError $ do
+      objPtr <- toObjectPtr $ Unsafe.unsafeForeignPtrToPtr fptr
+      return $ castPtr objPtr
 
 withObjects :: [Object a] -> (Ptr (Ptr b) -> IO c) -> IO c
 withObjects objs f =

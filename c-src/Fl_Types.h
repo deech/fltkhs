@@ -610,8 +610,6 @@ EXPORT {
     void      (*color_average)(fl_Image image, Fl_Color c, float i);
     fl_Image  (*copy         )(fl_Image image, int W, int H);
     void      (*desaturate   )(fl_Image image);
-    void      (*label        )(fl_Image image, fl_Widget w);
-    void      (*label_with_menu_item)(fl_Image image, fl_Menu_Item m);
     void      (*draw         )(fl_Image image, int X, int Y, int W, int H, int cx, int cy);
     void      (*uncache      )(fl_Image image);
     void      (*destroy_data )(fl_Image image);
