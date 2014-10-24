@@ -90,6 +90,9 @@ EXPORT {
     Fl_DerivedImage* d = new Fl_DerivedImage(W,H,D,funcs);
     return (fl_Image)d;
   }
+  FL_EXPORT_C(void, Fl_Image_Destroy)(fl_Image image) {
+    delete (static_cast<Fl_Image*>(image));
+  }
   FL_EXPORT_C(int,Fl_Image_w)(fl_Image image){
     return (static_cast<Fl_DerivedImage*>(image))->w();
   }

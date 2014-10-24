@@ -13,6 +13,7 @@ EXPORT {
   FL_EXPORT_C(void, Fl_Bitmap_set_other_data)(fl_Bitmap bitmap, void* v);
   FL_EXPORT_C(fl_Bitmap, Fl_Bitmap_New)(const char* bits, int H, int D);
   FL_EXPORT_C(fl_Bitmap, Fl_Bitmap_New_WithUchar)(const uchar* bits, int H, int D);
+  FL_EXPORT_C(void, Fl_Bitmap_Destroy)(fl_Bitmap bitmap);
   FL_EXPORT_C(int, Fl_Bitmap_w)(fl_Bitmap bitmap);
   FL_EXPORT_C(int, Fl_Bitmap_h)(fl_Bitmap bitmap);
   FL_EXPORT_C(int, Fl_Bitmap_d)(fl_Bitmap bitmap);

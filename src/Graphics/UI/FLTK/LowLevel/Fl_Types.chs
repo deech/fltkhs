@@ -8,6 +8,7 @@ import Graphics.UI.FLTK.LowLevel.Fl_Enumerations
 import qualified Foreign.ForeignPtr.Unsafe as Unsafe
 import Debug.Trace
 import Control.Exception
+import qualified Data.ByteString as B
 #c
   enum BrowserType {
     NormalBrowserType = FL_NORMAL_BROWSER,
@@ -460,6 +461,7 @@ type TextBufferCallback          = FunPtr (Ptr () -> IO ())
 type UnfinishedStyleCb           = FunPtr (CInt -> Ptr () -> IO ())
 type FileChooserCallback         = FunPtr (Ptr () -> Ptr () -> IO())
 type SharedImageHandler          = FunPtr (CString -> CUChar -> CInt -> Ptr ())
+
 -- {#pointer *Style_Table_Entry as StyleTableEntryPtr foreign -> StyleTableEntry #}
 -- data StyleTableEntry = StyleTableEntry {
 --       color :: Color,
@@ -932,6 +934,11 @@ data ScreenLocation = Intersect Rectangle
                     | ScreenPosition Position
 data PositionSpec a = ByPosition Position
                     | ByWidget (Widget a)
+
+newtype FontSize = FontSize CInt
+newtype PixmapHs = PixmapHs [B.ByteString]
+data BitmapHs = BitmapHs [B.ByteString] Size
+
 toRectangle :: (Int,Int,Int,Int) -> Rectangle
 toRectangle (x_pos, y_pos, width, height) =
     Rectangle (Position

@@ -7,9 +7,7 @@ where
 import Foreign
 import Foreign.C
 import Graphics.UI.FLTK.LowLevel.Fl_Types
-import Graphics.UI.FLTK.LowLevel.Fl_Enumerations
 import Graphics.UI.FLTK.LowLevel.Utils
-import Graphics.UI.FLTK.LowLevel.Fl_Window
 import C2HS hiding (cFromEnum, unsafePerformIO, toBool,cToEnum)
 
 {# fun Fl_Overlay_Window_Destroy as windowDestroy' { id `Ptr ()' } -> `()' supressWarningAboutRes #}

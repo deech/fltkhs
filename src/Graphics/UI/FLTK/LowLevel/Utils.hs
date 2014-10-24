@@ -5,6 +5,7 @@ import Foreign
 import qualified Foreign.Concurrent as FC
 import Foreign.C
 import qualified Data.ByteString as B
+import qualified System.IO.Unsafe as Unsafe
 
 foreign import ccall "wrapper"
         mkWidgetCallbackPtr :: CallbackWithUserDataPrim -> IO (FunPtr CallbackWithUserDataPrim)
@@ -199,7 +200,7 @@ toObject ptr = throwStackOnError $
                     return $ result
 
 unsafeToObject :: Ptr () -> (Object a)
-unsafeToObject = unsafePerformIO . toObject
+unsafeToObject = Unsafe.unsafePerformIO . toObject
 
 supressWarningAboutRes :: a -> ()
 supressWarningAboutRes _ = ()
@@ -216,3 +217,9 @@ withPixmap (PixmapHs pixmap) f =
     B.useAsCString
       (foldl1 B.append pixmap)
       (\ptr -> new ptr >>= f)
+
+withBitmap :: BitmapHs -> ((Ptr CChar) -> Int -> Int -> IO a) -> IO a
+withBitmap (BitmapHs bitmap (Size (Width width') (Height height'))) f =
+   B.useAsCString
+     (foldl1 B.append bitmap)
+     (\ptr -> f ptr width' height')

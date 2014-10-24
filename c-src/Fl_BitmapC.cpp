@@ -10,6 +10,9 @@ EXPORT {
     Fl_Bitmap* b = new Fl_Bitmap(bits,W,H);
     return (fl_Bitmap)b;
   }
+  FL_EXPORT_C(void, Fl_Bitmap_Destroy)(fl_Bitmap bitmap) {
+    delete (static_cast<Fl_Bitmap*>(bitmap));
+  }
   FL_EXPORT_C(int,Fl_Bitmap_w)(fl_Bitmap bitmap){
     return (static_cast<Fl_Bitmap*>(bitmap))->w();
   }

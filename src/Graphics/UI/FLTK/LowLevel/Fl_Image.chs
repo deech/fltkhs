@@ -4,6 +4,7 @@ module Graphics.UI.FLTK.LowLevel.Fl_Image
        ImageFuncs(..),
        defaultImageFuncs,
        imageNew,
+       imageDestroy,
        imageW,
        imageH,
        imageD,
@@ -65,6 +66,9 @@ imageNew (Size (Width width') (Height height')) (Depth depth') funcs =
             toObject obj
     Nothing -> flImageNew' width' height' depth' >>= toObject
 
+{# fun unsafe Fl_Image_Destroy as flImageDestroy' { id `Ptr ()' } -> `()' id #}
+imageDestroy :: Image a -> IO ()
+imageDestroy image = withObject image $ \imagePtr -> flImageDestroy' imagePtr                
 {# fun unsafe Fl_Image_w as w' { id `Ptr ()' } -> `Int' #}
 imageW :: Image a  ->  IO (Int)
 imageW image = withObject image $ \imagePtr -> w' imagePtr
