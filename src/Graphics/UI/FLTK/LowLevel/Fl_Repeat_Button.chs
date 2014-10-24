@@ -135,7 +135,7 @@ repeatButtonHide :: RepeatButton a  ->  IO (())
 repeatButtonHide = buttonHide
 repeatButtonShow :: RepeatButton a -> IO ()
 repeatButtonShow= buttonShow
-repeatButtonSetCallback :: RepeatButton a -> (WidgetCallback b) -> IO (())
+repeatButtonSetCallback :: RepeatButton a -> (RepeatButton b -> IO ()) -> IO (())
 repeatButtonSetCallback= buttonSetCallback
 repeatButtonParent :: RepeatButton a -> IO (Group ())
 repeatButtonParent= buttonParent

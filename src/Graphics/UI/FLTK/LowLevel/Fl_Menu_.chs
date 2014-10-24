@@ -262,7 +262,7 @@ menu_DrawBackdrop :: MenuPrim a -> IO ()
 menu_DrawBackdrop = widgetDrawBackdrop
 menu_DrawFocus :: MenuPrim a -> Maybe (Boxtype, Rectangle) -> IO ()
 menu_DrawFocus = widgetDrawFocus
-menu_SetCallback :: Widget a -> (WidgetCallback b) -> IO (())
+menu_SetCallback :: Widget a -> (MenuPrim b -> IO ()) -> IO (())
 menu_SetCallback = widgetSetCallback
 menu_Parent :: Widget a -> IO (Group ())
 menu_Parent = widgetParent
@@ -447,7 +447,7 @@ menu_Copy menu_ m = withObject menu_ $ \menu_Ptr -> withObject m $ \mPtr -> copy
 
 {# fun unsafe Fl_Menu__insert_with_flags as insertWithFlags' { id `Ptr ()',`Int',`String',`Int',id `FunPtr CallbackWithUserDataPrim',`Int'} -> `Int' #}
 {# fun unsafe Fl_Menu__insert_with_shortcutname_flags as insertWithShortcutnameFlags' { id `Ptr ()',`Int',`String',`String',id `FunPtr CallbackWithUserDataPrim',`Int' } -> `Int' #}
-menu_Insert :: MenuPrim a -> Int -> String -> Shortcut -> (WidgetCallback a) -> [MenuProps] -> IO (Int)
+menu_Insert :: MenuPrim a -> Int -> String -> Shortcut -> (MenuPrim a -> IO ()) -> [MenuProps] -> IO (Int)
 menu_Insert menu_ index name shortcut cb flags =
   withObject menu_ $ \menu_Ptr -> do
     let combinedFlags = foldl1WithDefault 0 (.|.) (map fromEnum flags)
@@ -476,7 +476,7 @@ menu_Insert menu_ index name shortcut cb flags =
 
 {# fun unsafe Fl_Menu__add_with_flags as addWithFlags' { id `Ptr ()',`String',`Int',id `FunPtr CallbackWithUserDataPrim',`Int' } -> `Int' #}
 {# fun unsafe Fl_Menu__add_with_shortcutname_flags as addWithShortcutnameFlags' { id `Ptr ()',`String',`String',id `FunPtr CallbackWithUserDataPrim',`Int' } -> `Int' #}
-menu_Add :: MenuItem a -> String -> Shortcut -> (WidgetCallback b) -> [MenuProps] -> IO (Int)
+menu_Add :: MenuItem a -> String -> Shortcut -> (MenuPrim b -> IO ()) -> [MenuProps] -> IO (Int)
 menu_Add menu_ name shortcut cb flags =
   withObject menu_ $ \menu_Ptr -> do
     let combinedFlags = foldl1WithDefault 0 (.|.) (map fromEnum flags)

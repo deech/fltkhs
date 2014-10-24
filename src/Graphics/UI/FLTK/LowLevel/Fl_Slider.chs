@@ -380,7 +380,7 @@ sliderResize slider rectangle = withObject slider $ \sliderPtr -> do
                                  let (x_pos,y_pos,w_pos,h_pos) = fromRectangle rectangle
                                  resize' sliderPtr x_pos y_pos w_pos h_pos
 {# fun Fl_Slider_set_callback as setCallback' { id `Ptr ()', id `FunPtr CallbackWithUserDataPrim'} -> `()' supressWarningAboutRes #}
-sliderSetCallback :: Slider a -> (WidgetCallback b) -> IO (())
+sliderSetCallback :: Slider a -> (Slider b -> IO ()) -> IO (())
 sliderSetCallback slider callback = withObject slider $ \sliderPtr -> do
                                 ptr <- toWidgetCallbackPrim callback
                                 setCallback' sliderPtr (castFunPtr ptr)

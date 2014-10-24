@@ -333,7 +333,7 @@ windowAsGroup window = withObject window $ \windowPtr -> asGroup' windowPtr
 {# fun Fl_Window_set_callback as
               windowSetCallback' {id `Ptr ()' , id `FunPtr CallbackWithUserDataPrim'}
               -> `()' supressWarningAboutRes #}
-windowSetCallback :: Window a -> WidgetCallback b -> IO ()
+windowSetCallback :: Window a -> (Window b -> IO ()) -> IO ()
 windowSetCallback window callback =
    withObject window $ (\p -> do
                                callbackPtr <- toWidgetCallbackPrim callback

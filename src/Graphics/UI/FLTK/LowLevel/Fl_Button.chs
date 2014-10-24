@@ -233,7 +233,7 @@ buttonShowSuper button = withObject button $ \buttonPtr -> showSuper' buttonPtr
 buttonShow :: Button a -> IO ()
 buttonShow button = withObject button $ (\p -> buttonShow' p)
 
-buttonSetCallback :: Button a -> (WidgetCallback b) -> IO (())
+buttonSetCallback :: Button a -> (Button b -> IO ()) -> IO (())
 buttonSetCallback = widgetSetCallback
 buttonParent :: Button a -> IO (Group ())
 buttonParent = widgetParent

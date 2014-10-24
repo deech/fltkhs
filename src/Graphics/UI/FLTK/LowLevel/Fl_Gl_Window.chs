@@ -394,7 +394,7 @@ glWindowHideOverlay win = withObject win $ \winPtr -> hideOverlay' winPtr
 glWindowMakeOverlayCurrent :: GlWindow a  ->  IO (())
 glWindowMakeOverlayCurrent win = withObject win $ \winPtr -> makeOverlayCurrent' winPtr
 
-glWindowSetCallback :: GlWindow a -> WidgetCallback b -> IO ()
+glWindowSetCallback :: GlWindow a -> (GlWindow b -> IO ()) -> IO ()
 glWindowSetCallback = windowSetCallback
 glWindowParent :: GlWindow a -> IO (Group ())
 glWindowParent = windowParent

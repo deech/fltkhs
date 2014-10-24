@@ -135,7 +135,7 @@ roundButtonHide :: RoundButton a  ->  IO (())
 roundButtonHide = buttonHide
 roundButtonShow :: RoundButton a -> IO ()
 roundButtonShow= buttonShow
-roundButtonSetCallback :: RoundButton a -> (WidgetCallback b) -> IO (())
+roundButtonSetCallback :: RoundButton a -> (RoundButton b -> IO()) -> IO (())
 roundButtonSetCallback= buttonSetCallback
 roundButtonParent :: RoundButton a -> IO (Group ())
 roundButtonParent= buttonParent

@@ -452,7 +452,7 @@ groupResize :: Group a  -> Rectangle -> IO (())
 groupResize = widgetResize
 
 
-groupSetCallback :: Group a -> (WidgetCallback b) -> IO (())
+groupSetCallback :: Group a -> (Group b -> IO ()) -> IO (())
 groupSetCallback = widgetSetCallback
 
 {# fun Fl_Group_begin as begin' { id `Ptr ()' } -> `()' supressWarningAboutRes #}

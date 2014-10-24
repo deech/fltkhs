@@ -414,6 +414,7 @@ simpleTypeMap =
     ,("Fl_Mode", "Mode")
     ,("fl_Widget", "Ptr ()")
     ,("fl_Window", "Ptr ()")
+    ,("fl_Overlay_Window", "Ptr ()")
     ,("fl_Group", "Ptr ()")
     ,("fl_Button", "Ptr ()")
     ,("fl_Valuator", "Ptr ()")
@@ -453,19 +454,20 @@ simpleTypeMap =
     ]
 haskellEquivalent =
     [
-     ("fl_Region"    , "Region"),
-     ("fl_Widget"    , "Widget"),
-     ("fl_Window"    , "Window"),
-     ("fl_Group"     , "Group"),
-     ("fl_Gl_Window" , "GlWindow"),
-     ("fl_Image"     , "Image"),
-     ("fl_Button"    , "Button"),
-     ("fl_Valuator"  , "Valuator"),
-     ("fl_Slider"    , "Slider"),
-     ("fl_Image"     , "Image"),
-     ("fl_Menu_Item" , "MenuItem"),
-     ("fl_Menu_"     , "MenuPrim"),
-     ("fl_Bitmap"     , "Bitmap")
+     ("fl_Region"         , "Region"),
+     ("fl_Widget"         , "Widget"),
+     ("fl_Window"         , "Window"),
+     ("fl_Overlay_Window" , "OverlayWindow"),
+     ("fl_Group"          , "Group"),
+     ("fl_Gl_Window"      , "GlWindow"),
+     ("fl_Image"          , "Image"),
+     ("fl_Button"         , "Button"),
+     ("fl_Valuator"       , "Valuator"),
+     ("fl_Slider"         , "Slider"),
+     ("fl_Image"          , "Image"),
+     ("fl_Menu_Item"      , "MenuItem"),
+     ("fl_Menu_"          , "MenuPrim"),
+     ("fl_Bitmap"         , "Bitmap")
     ]
 upcase = map toUpper
 makeArgument className argType argName =

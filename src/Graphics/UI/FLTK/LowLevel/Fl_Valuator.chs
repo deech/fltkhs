@@ -432,7 +432,7 @@ valuatorResize valuator rectangle = withObject valuator $ \valuatorPtr -> do
                                  let (x_pos,y_pos,w_pos,h_pos) = fromRectangle rectangle
                                  resize' valuatorPtr x_pos y_pos w_pos h_pos
 {# fun Fl_Valuator_set_callback as setCallback' { id `Ptr ()', id `FunPtr CallbackWithUserDataPrim'} -> `()' supressWarningAboutRes #}
-valuatorSetCallback :: Valuator a -> (WidgetCallback b) -> IO (())
+valuatorSetCallback :: Valuator a -> (Valuator b -> IO ()) -> IO (())
 valuatorSetCallback valuator callback = withObject valuator $ \valuatorPtr -> do
                                 ptr <- toWidgetCallbackPrim callback
                                 setCallback' valuatorPtr (castFunPtr ptr)

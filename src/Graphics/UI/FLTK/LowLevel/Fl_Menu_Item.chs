@@ -125,7 +125,7 @@ menuItemSetLabelsize :: MenuItem a  -> FontSize ->  IO ()
 menuItemSetLabelsize menu_item (FontSize pix) = withObject menu_item $ \menu_itemPtr -> setLabelsize' menu_itemPtr pix
 
 {# fun unsafe Fl_Menu_Item_set_callback as setCallback' { id `Ptr ()', id `FunPtr CallbackWithUserDataPrim'} -> `()' #}
-menuItemSetCallback :: MenuItem a  -> (WidgetCallback b) ->  IO ()
+menuItemSetCallback :: MenuItem a  -> (MenuItem b -> IO ()) ->  IO ()
 menuItemSetCallback menu_item c = withObject menu_item $ \menu_itemPtr -> do
                                     ptr <- toWidgetCallbackPrim c
                                     setCallback' menu_itemPtr (castFunPtr ptr)
@@ -262,7 +262,7 @@ menuItemDoCallback menu_item o = withObject menu_item $ \menu_itemPtr -> withObj
 {# fun unsafe Fl_Menu_Item_insert_with_flags as insertWithFlags' { id `Ptr ()',`Int',`String',`Int',id `FunPtr CallbackWithUserDataPrim',`Int'} -> `Int' #}
 {# fun unsafe Fl_Menu_Item_add_with_flags as addWithFlags' { id `Ptr ()',`String',`Int',id `FunPtr CallbackWithUserDataPrim',`Int'} -> `Int' #}
 {# fun unsafe Fl_Menu_Item_add_with_shortcutname_flags as addWithShortcutnameFlags' { id `Ptr ()',`String',`String',id `FunPtr CallbackWithUserDataPrim',`Int' } -> `Int' #}
-menuItemAdd :: MenuItem a -> String -> Shortcut -> (WidgetCallback b) -> [MenuProps] -> IO (Int)
+menuItemAdd :: MenuItem a -> String -> Shortcut -> (MenuItem b -> IO ()) -> [MenuProps] -> IO (Int)
 menuItemAdd menu_item name shortcut cb flags =
   withObject menu_item $ \menu_itemPtr -> do
     let combinedFlags = foldl1WithDefault 0 (.|.) (map fromEnum flags)
@@ -287,7 +287,7 @@ menuItemAdd menu_item name shortcut cb flags =
            combinedFlags
         else error "Shortcut format string cannot be empty"
 
-menuItemInsert :: MenuItem a -> Int -> String -> ShortcutKeySequence -> (WidgetCallback b) -> [MenuProps] -> IO (Int)
+menuItemInsert :: MenuItem a -> Int -> String -> ShortcutKeySequence -> (MenuItem b -> IO ()) -> [MenuProps] -> IO (Int)
 menuItemInsert menu_item index name (ShortcutKeySequence codes char) cb flags =
   withObject menu_item $ \menu_itemPtr ->
     if (not $ null codes) then do

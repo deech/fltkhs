@@ -135,7 +135,7 @@ toggleButtonHide :: ToggleButton a  ->  IO (())
 toggleButtonHide = buttonHide
 toggleButtonShow :: ToggleButton a -> IO ()
 toggleButtonShow= buttonShow
-toggleButtonSetCallback :: ToggleButton a -> (WidgetCallback b) -> IO (())
+toggleButtonSetCallback :: ToggleButton a -> (ToggleButton b -> IO()) -> IO (())
 toggleButtonSetCallback= buttonSetCallback
 toggleButtonParent :: ToggleButton a -> IO (Group ())
 toggleButtonParent= buttonParent

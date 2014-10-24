@@ -135,7 +135,7 @@ checkButtonHide :: CheckButton a  ->  IO (())
 checkButtonHide = buttonHide
 checkButtonShow :: CheckButton a -> IO ()
 checkButtonShow= buttonShow
-checkButtonSetCallback :: CheckButton a -> (WidgetCallback b) -> IO (())
+checkButtonSetCallback :: CheckButton a -> (CheckButton b -> IO ()) -> IO (())
 checkButtonSetCallback= buttonSetCallback
 checkButtonParent :: CheckButton a -> IO (Group ())
 checkButtonParent= buttonParent

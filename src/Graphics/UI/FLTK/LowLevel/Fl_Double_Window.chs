@@ -303,7 +303,7 @@ doubleWindowAsGlWindow window = withObject window $ \windowPtr -> asGlWindow' wi
 {# fun Fl_Double_Window_as_group as asGroup' { id `Ptr ()' } -> `Group ()' unsafeToObject #}
 doubleWindowAsGroup :: DoubleWindow a  ->  IO (Group ())
 doubleWindowAsGroup window = withObject window $ \windowPtr -> asGroup' windowPtr
-doubleWindowSetCallback :: DoubleWindow a -> WidgetCallback b -> IO ()
+doubleWindowSetCallback :: DoubleWindow a -> (DoubleWindow b -> IO()) -> IO ()
 doubleWindowSetCallback = windowSetCallback
 doubleWindowParent :: DoubleWindow a -> IO (Group ())
 doubleWindowParent = windowParent
@@ -413,9 +413,9 @@ doubleWindowModifyVisibleFocus :: DoubleWindow a  -> Int ->  IO (())
 doubleWindowModifyVisibleFocus = windowModifyVisibleFocus
 doubleWindowVisibleFocus :: DoubleWindow a  ->  IO (Int)
 doubleWindowVisibleFocus = windowVisibleFocus
-doubleWindowContains :: DoubleWindow a  -> Group a  ->  IO (Int)
+doubleWindowContains :: DoubleWindow a  -> Group b  ->  IO (Int)
 doubleWindowContains = windowContains
-doubleWindowInside :: DoubleWindow a  -> Group a  ->  IO (Int)
+doubleWindowInside :: DoubleWindow a  -> Group b  ->  IO (Int)
 doubleWindowInside = windowInside
 doubleWindowRedraw :: DoubleWindow a  ->  IO (())
 doubleWindowRedraw = windowRedraw

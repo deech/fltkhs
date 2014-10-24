@@ -303,7 +303,7 @@ singleWindowAsGlWindow window = withObject window $ \windowPtr -> asGlWindow' wi
 {# fun Fl_Single_Window_as_group as asGroup' { id `Ptr ()' } -> `Group ()' unsafeToObject #}
 singleWindowAsGroup :: SingleWindow a  ->  IO (Group ())
 singleWindowAsGroup window = withObject window $ \windowPtr -> asGroup' windowPtr
-singleWindowSetCallback :: SingleWindow a -> WidgetCallback b -> IO ()
+singleWindowSetCallback :: SingleWindow a -> (SingleWindow b -> IO ()) -> IO ()
 singleWindowSetCallback = windowSetCallback
 singleWindowParent :: SingleWindow a -> IO (Group ())
 singleWindowParent = windowParent

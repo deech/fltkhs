@@ -135,7 +135,7 @@ returnButtonHide :: ReturnButton a  ->  IO (())
 returnButtonHide = buttonHide
 returnButtonShow :: ReturnButton a -> IO ()
 returnButtonShow= buttonShow
-returnButtonSetCallback :: ReturnButton a -> (WidgetCallback b) -> IO (())
+returnButtonSetCallback :: ReturnButton a -> (ReturnButton b -> IO ()) -> IO (())
 returnButtonSetCallback= buttonSetCallback
 returnButtonParent :: ReturnButton a -> IO (Group ())
 returnButtonParent= buttonParent

@@ -135,7 +135,7 @@ lightButtonHide :: LightButton a  ->  IO (())
 lightButtonHide = buttonHide
 lightButtonShow :: LightButton a -> IO ()
 lightButtonShow= buttonShow
-lightButtonSetCallback :: LightButton a -> (WidgetCallback b) -> IO (())
+lightButtonSetCallback :: LightButton a -> (LightButton b -> IO ()) -> IO (())
 lightButtonSetCallback= buttonSetCallback
 lightButtonParent :: LightButton a -> IO (Group ())
 lightButtonParent= buttonParent
