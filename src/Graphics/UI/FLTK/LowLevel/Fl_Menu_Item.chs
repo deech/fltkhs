@@ -1,5 +1,54 @@
 {-# LANGUAGE CPP #-}
 module Graphics.UI.FLTK.LowLevel.Fl_Menu_Item
+  (
+   menuItemNew,
+   menuItemDestroy,
+   menuItemNextWithStep,
+   menuItemNext,
+   menuItemFirst,
+   menuItemLabel,
+   menuItemSetLabel,
+   menuItemSetLabelWithLabeltype,
+   menuItemLabeltype,
+   menuItemSetLabeltype,
+   menuItemLabelcolor,
+   menuItemSetLabelcolor,
+   menuItemLabelfont,
+   menuItemSetLabelfont,
+   menuItemLabelsize,
+   menuItemSetLabelsize,
+   menuItemSetCallback,
+   menuItemShortcut,
+   menuItemSetShortcut,
+   menuItemSubmenu,
+   menuItemCheckbox,
+   menuItemRadio,
+   menuItemValue,
+   menuItemSet,
+   menuItemClear,
+   menuItemSetonly,
+   menuItemVisible,
+   menuItemShow,
+   menuItemHide,
+   menuItemActive,
+   menuItemActivate,
+   menuItemDeactivate,
+   menuItemActivevisible,
+   menuItemMeasure,
+   menuItemDrawWithT,
+   menuItemDraw,
+   menuItemFlags,
+   menuItemSetFlags,
+   menuItemText,
+   menuItemPulldown,
+   menuItemPopup,
+   menuItemTestShortcut,
+   menuItemFindShortcut,
+   menuItemDoCallback,
+   menuItemAdd,
+   menuItemInsert,
+   menuItemSize
+  )
 where
 #include "Fl_ExportMacros.h"
 #include "Fl_Types.h"
@@ -9,6 +58,14 @@ import Foreign.C.Types
 import Graphics.UI.FLTK.LowLevel.Fl_Enumerations
 import Graphics.UI.FLTK.LowLevel.Fl_Types
 import Graphics.UI.FLTK.LowLevel.Utils
+
+{# fun unsafe Fl_Menu_Item_New as new' { } -> `Ptr ()' id #}
+menuItemNew :: IO (MenuItem a)
+menuItemNew = new' >>= toObject
+
+{# fun unsafe Fl_Menu_Item_Destroy as destroy' { id `Ptr ()' } -> `()' id #}
+menuItemDestroy :: MenuItem a -> IO ()
+menuItemDestroy menu_item = withObject menu_item $ \menu_itemPtr -> destroy' menu_itemPtr
 
 {# fun unsafe Fl_Menu_Item_next_with_step as nextWithStep' { id `Ptr ()',`Int' } -> `Ptr ()' id #}
 menuItemNextWithStep :: MenuItem a  -> Int ->  IO (MenuItem a)
