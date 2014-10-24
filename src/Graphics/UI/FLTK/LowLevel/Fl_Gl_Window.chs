@@ -184,15 +184,15 @@ import C2HS hiding (cFromEnum, unsafePerformIO, toBool,cToEnum)
 data GlWindowFuncs a =
     GlWindowFuncs
     {
-     glWindowDrawOverride       :: Maybe (WidgetCallback a)
-    ,glWindowHandleOverride     :: Maybe (WidgetEventHandler a)
-    ,glWindowResizeOverride     :: Maybe (RectangleF a)
-    ,glWindowShowOverride       :: Maybe (WidgetCallback a)
-    ,glWindowHideOverride       :: Maybe (WidgetCallback a)
-    ,glWindowAsWindowOverride   :: Maybe (GetWindowF a)
-    ,glWindowAsGlWindowOverride :: Maybe (GetGlWindowF a)
-    ,glWindowAsGroupOverride    :: Maybe (GetGroupF a)
-    ,glWindowFlushOverride      :: Maybe (WidgetCallback a)
+     glWindowDrawOverride       :: Maybe (GlWindow a -> IO ())
+    ,glWindowHandleOverride     :: Maybe (GlWindow a -> Event -> IO Int)
+    ,glWindowResizeOverride     :: Maybe (GlWindow a -> Rectangle -> IO ())
+    ,glWindowShowOverride       :: Maybe (GlWindow a -> IO ())
+    ,glWindowHideOverride       :: Maybe (GlWindow a -> IO ())
+    ,glWindowAsWindowOverride   :: Maybe (GlWindow a -> IO (Window ()))
+    ,glWindowAsGlWindowOverride :: Maybe (GlWindow a -> IO (GlWindow ()))
+    ,glWindowAsGroupOverride    :: Maybe (GlWindow a -> IO (Group ()))
+    ,glWindowFlushOverride      :: Maybe (GlWindow a -> IO ())
     }
 
 glWindowFunctionStruct :: GlWindowFuncs a -> IO (Ptr ())

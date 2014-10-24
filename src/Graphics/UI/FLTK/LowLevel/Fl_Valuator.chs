@@ -121,15 +121,15 @@ import Graphics.UI.FLTK.LowLevel.Utils
 data ValuatorFuncs a =
     ValuatorFuncs
     {
-     valuatorDrawOverride       :: Maybe (WidgetCallback a)
-    ,valuatorHandleOverride     :: Maybe (WidgetEventHandler a)
-    ,valuatorResizeOverride     :: Maybe (RectangleF a)
-    ,valuatorShowOverride       :: Maybe (WidgetCallback a)
-    ,valuatorHideOverride       :: Maybe (WidgetCallback a)
-    ,valuatorAsWindowOverride   :: Maybe (GetWindowF a)
-    ,valuatorAsGlWindowOverride :: Maybe (GetGlWindowF a)
-    }
-
+     valuatorDrawOverride       :: Maybe (Valuator a -> IO ())
+    ,valuatorHandleOverride     :: Maybe (Valuator a -> Event -> IO Int)
+    ,valuatorResizeOverride     :: Maybe (Valuator a -> Rectangle -> IO ())
+    ,valuatorShowOverride       :: Maybe (Valuator a -> IO ())
+    ,valuatorHideOverride       :: Maybe (Valuator a -> IO ())
+    ,valuatorAsWindowOverride   :: Maybe (Valuator a -> IO (Window ()))
+    ,valuatorAsGlWindowOverride :: Maybe (Valuator a -> IO (GlWindow ()))
+    }                              
+                                   
 valuatorFunctionStruct :: (ValuatorFuncs a) -> IO (Ptr ())
 valuatorFunctionStruct funcs = do
       p <- mallocBytes {#sizeof fl_Valuator_Virtual_Funcs #}

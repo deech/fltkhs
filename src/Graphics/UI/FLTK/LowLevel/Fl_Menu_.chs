@@ -147,14 +147,14 @@ import Graphics.UI.FLTK.LowLevel.Utils
 data Menu_Funcs a =
     Menu_Funcs
     {
-     menu_DrawOverride       :: Maybe (WidgetCallback a)
-    ,menu_HandleOverride     :: Maybe (WidgetEventHandler a)
-    ,menu_ResizeOverride     :: Maybe (RectangleF a)
-    ,menu_ShowOverride       :: Maybe (WidgetCallback a)
-    ,menu_HideOverride       :: Maybe (WidgetCallback a)
-    ,menu_AsWindowOverride   :: Maybe (GetWindowF a)
-    ,menu_AsGlWindowOverride :: Maybe (GetGlWindowF a)
-    ,menu_AsGroupOverride    :: Maybe (GetGroupF a)
+     menu_DrawOverride       :: Maybe (MenuPrim a -> IO ())
+    ,menu_HandleOverride     :: Maybe (MenuPrim a -> Event -> IO Int)
+    ,menu_ResizeOverride     :: Maybe (MenuPrim a -> Rectangle -> IO ())
+    ,menu_ShowOverride       :: Maybe (MenuPrim a -> IO ())
+    ,menu_HideOverride       :: Maybe (MenuPrim a -> IO ())
+    ,menu_AsWindowOverride   :: Maybe (MenuPrim a -> IO (Window ()))
+    ,menu_AsGlWindowOverride :: Maybe (MenuPrim a -> IO (GlWindow ()))
+    ,menu_AsGroupOverride    :: Maybe (MenuPrim a -> IO (Group ()))
     }
 
 menu_FunctionStruct :: (Menu_Funcs a) -> IO (Ptr ())

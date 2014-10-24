@@ -123,14 +123,14 @@ import Graphics.UI.FLTK.LowLevel.Utils
 data ButtonFuncs a =
     ButtonFuncs
     {
-     buttonDrawOverride       :: Maybe (WidgetCallback a)
-    ,buttonHandleOverride     :: Maybe (WidgetEventHandler a)
-    ,buttonResizeOverride     :: Maybe (RectangleF a)
-    ,buttonShowOverride       :: Maybe (WidgetCallback a)
-    ,buttonHideOverride       :: Maybe (WidgetCallback a)
-    ,buttonAsWindowOverride   :: Maybe (GetWindowF a)
-    ,buttonAsGlWindowOverride :: Maybe (GetGlWindowF a)
-    ,buttonAsGroupOverride    :: Maybe (GetGroupF a)
+     buttonDrawOverride       :: Maybe (Button a -> IO ())
+    ,buttonHandleOverride     :: Maybe (Button a -> Event -> IO Int)
+    ,buttonResizeOverride     :: Maybe (Button a -> Rectangle -> IO ())
+    ,buttonShowOverride       :: Maybe (Button a -> IO ())
+    ,buttonHideOverride       :: Maybe (Button a -> IO ())
+    ,buttonAsWindowOverride   :: Maybe (Button a -> IO (Window ()))
+    ,buttonAsGlWindowOverride :: Maybe (Button a -> IO (GlWindow ()))
+    ,buttonAsGroupOverride    :: Maybe (Button a -> IO (Group ()))
     }
 
 buttonFunctionStruct :: (ButtonFuncs a) -> IO (Ptr ())

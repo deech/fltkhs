@@ -177,14 +177,14 @@ data WindowFuncs a =
     WindowFuncs
     {
      windowDrawOverride       :: Maybe (Window a -> IO ())
-    ,windowHandleOverride     :: Maybe (WidgetEventHandler a)
-    ,windowResizeOverride     :: Maybe (RectangleF a)
-    ,windowShowOverride       :: Maybe (WidgetCallback a)
-    ,windowHideOverride       :: Maybe (WidgetCallback a)
-    ,windowAsWindowOverride   :: Maybe (GetWindowF a)
-    ,windowAsGlWindowOverride :: Maybe (GetGlWindowF a)
-    ,windowAsGroupOverride    :: Maybe (GetGroupF a)
-    ,windowFlushOverride      :: Maybe (WidgetCallback a)
+    ,windowHandleOverride     :: Maybe (Window a -> Event -> IO Int)
+    ,windowResizeOverride     :: Maybe (Window a -> Rectangle -> IO ())
+    ,windowShowOverride       :: Maybe (Window a -> IO ())
+    ,windowHideOverride       :: Maybe (Window a -> IO ())
+    ,windowAsWindowOverride   :: Maybe (Window a -> IO (Window ()))
+    ,windowAsGlWindowOverride :: Maybe (Window a -> IO (GlWindow ()))
+    ,windowAsGroupOverride    :: Maybe (Window a -> IO (Group ()))
+    ,windowFlushOverride      :: Maybe (Window a -> IO ())
     }
 
 data OptionalSizeRangeArgs = OptionalSizeRangeArgs {

@@ -166,15 +166,15 @@ import C2HS hiding (cFromEnum, unsafePerformIO, toBool,cToEnum)
 data SingleWindowFuncs a =
     SingleWindowFuncs
     {
-     singleWindowDrawOverride       :: Maybe (WidgetCallback a)
-    ,singleWindowHandleOverride     :: Maybe (WidgetEventHandler a)
-    ,singleWindowResizeOverride     :: Maybe (RectangleF a)
-    ,singleWindowShowOverride       :: Maybe (WidgetCallback a)
-    ,singleWindowHideOverride       :: Maybe (WidgetCallback a)
-    ,singleWindowAsWindowOverride   :: Maybe (GetWindowF a)
-    ,singleWindowAsGlWindowOverride :: Maybe (GetGlWindowF a)
-    ,singleWindowAsGroupOverride    :: Maybe (GetGroupF a)
-    ,singleWindowFlushOverride      :: Maybe (WidgetCallback a)
+     singleWindowDrawOverride       :: Maybe (SingleWindow a -> IO ())
+    ,singleWindowHandleOverride     :: Maybe (SingleWindow a -> Event -> IO Int)
+    ,singleWindowResizeOverride     :: Maybe (SingleWindow a -> Rectangle -> IO ())
+    ,singleWindowShowOverride       :: Maybe (SingleWindow a -> IO ())
+    ,singleWindowHideOverride       :: Maybe (SingleWindow a -> IO ())
+    ,singleWindowAsWindowOverride   :: Maybe (SingleWindow a -> IO (Window ()))
+    ,singleWindowAsGlWindowOverride :: Maybe (SingleWindow a -> IO (GlWindow ()))
+    ,singleWindowAsGroupOverride    :: Maybe (SingleWindow a -> IO (Group ()))
+    ,singleWindowFlushOverride      :: Maybe (SingleWindow a -> IO ())
     }
 
 singleWindowFunctionStruct :: SingleWindowFuncs a -> IO (Ptr ())

@@ -166,15 +166,15 @@ import C2HS hiding (cFromEnum, unsafePerformIO, toBool,cToEnum)
 data DoubleWindowFuncs a =
     DoubleWindowFuncs
     {
-     doubleWindowDrawOverride       :: Maybe (WidgetCallback a)
-    ,doubleWindowHandleOverride     :: Maybe (WidgetEventHandler a)
-    ,doubleWindowResizeOverride     :: Maybe (RectangleF a)
-    ,doubleWindowShowOverride       :: Maybe (WidgetCallback a)
-    ,doubleWindowHideOverride       :: Maybe (WidgetCallback a)
-    ,doubleWindowAsWindowOverride   :: Maybe (GetWindowF a)
-    ,doubleWindowAsGlWindowOverride :: Maybe (GetGlWindowF a)
-    ,doubleWindowAsGroupOverride    :: Maybe (GetGroupF a)
-    ,doubleWindowFlushOverride      :: Maybe (WidgetCallback a)
+     doubleWindowDrawOverride       :: Maybe (DoubleWindow a -> IO ())
+    ,doubleWindowHandleOverride     :: Maybe (DoubleWindow a -> Event -> IO Int)
+    ,doubleWindowResizeOverride     :: Maybe (DoubleWindow a -> Rectangle -> IO ())
+    ,doubleWindowShowOverride       :: Maybe (DoubleWindow a -> IO ())
+    ,doubleWindowHideOverride       :: Maybe (DoubleWindow a -> IO ())
+    ,doubleWindowAsWindowOverride   :: Maybe (DoubleWindow a -> IO (Window ()))
+    ,doubleWindowAsGlWindowOverride :: Maybe (DoubleWindow a -> IO (GlWindow ()))
+    ,doubleWindowAsGroupOverride    :: Maybe (DoubleWindow a -> IO (Group ()))
+    ,doubleWindowFlushOverride      :: Maybe (DoubleWindow a -> IO ())
     }
 
 doubleWindowFunctionStruct :: DoubleWindowFuncs a -> IO (Ptr ())
