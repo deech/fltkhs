@@ -151,7 +151,7 @@ import C2HS hiding (cFromEnum, unsafePerformIO, toBool,cToEnum)
 {# fun Fl_Overlay_Window_NewXY_WithLabel as windowNewWithXYLabel' { `Int', `Int', `Int', `Int', `String', id `FunPtr CallbackPrim' } -> `Ptr ()' id #}
 {# fun Fl_Overlay_Window_NewXY as windowNewWithXY' { `Int', `Int', `Int', `Int', id `FunPtr CallbackPrim' } -> `Ptr ()' id #}
 
-overlayWindowNew :: Size -> Maybe String -> Maybe Position -> WidgetCallback a -> IO (OverlayWindow a)
+overlayWindowNew :: Size -> Maybe String -> Maybe Position -> (OverlayWindow a -> IO ()) -> IO (OverlayWindow a)
 overlayWindowNew (Size (Width width') (Height height')) title' position' callback' =
     do
       fptr <- toCallbackPrim callback'
