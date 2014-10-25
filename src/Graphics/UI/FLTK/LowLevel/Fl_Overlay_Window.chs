@@ -132,7 +132,13 @@ module Graphics.UI.FLTK.LowLevel.Fl_Overlay_Window
      overlayWindowSetCursorWithFgBg,
      overlayWindowSetDefaultCursor,
      overlayWindowDecoratedW,
-     overlayWindowDecoratedH
+     overlayWindowDecoratedH,
+     overlayWindowShow,
+     overlayWindowFlush,
+     overlayWindowResize,
+     overlayWindowHide,
+     overlayWindowCanDoOverlay,
+     overlayWindowRedrawOverlay
     )
 where
 #include "Fl_C.h"
@@ -427,3 +433,21 @@ overlayWindowDecoratedW :: OverlayWindow a  ->  IO (Int)
 overlayWindowDecoratedW = doubleWindowDecoratedW
 overlayWindowDecoratedH :: OverlayWindow a  ->  IO (Int)
 overlayWindowDecoratedH = doubleWindowDecoratedH
+{# fun unsafe Fl_Overlay_Window_show as show' { id `Ptr ()' } -> `()' #}
+overlayWindowShow :: OverlayWindow a  ->  IO ()
+overlayWindowShow win = withObject win $ \winPtr -> show' winPtr
+{# fun unsafe Fl_Overlay_Window_flush as flush' { id `Ptr ()' } -> `()' #}
+overlayWindowFlush :: OverlayWindow a  ->  IO ()
+overlayWindowFlush win = withObject win $ \winPtr -> flush' winPtr
+{# fun unsafe Fl_Overlay_Window_resize as resize' { id `Ptr ()',`Int',`Int',`Int',`Int' } -> `()' #}
+overlayWindowResize :: OverlayWindow a  -> Rectangle ->  IO ()
+overlayWindowResize win rectangle = let (x_pos', y_pos', width', height') = fromRectangle rectangle in withObject win $ \winPtr -> resize' winPtr x_pos' y_pos' width' height'
+{# fun unsafe Fl_Overlay_Window_hide as hide' { id `Ptr ()' } -> `()' #}
+overlayWindowHide :: OverlayWindow a  ->  IO ()
+overlayWindowHide win = withObject win $ \winPtr -> hide' winPtr
+{# fun unsafe Fl_Overlay_Window_can_do_overlay as canDoOverlay' { id `Ptr ()' } -> `Int' #}
+overlayWindowCanDoOverlay :: OverlayWindow a  ->  IO (Int)
+overlayWindowCanDoOverlay win = withObject win $ \winPtr -> canDoOverlay' winPtr
+{# fun unsafe Fl_Overlay_Window_redraw_overlay as redrawOverlay' { id `Ptr ()' } -> `()' #}
+overlayWindowRedrawOverlay :: OverlayWindow a  ->  IO ()
+overlayWindowRedrawOverlay win = withObject win $ \winPtr -> redrawOverlay' winPtr
