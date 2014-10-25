@@ -1,6 +1,139 @@
 module Graphics.UI.FLTK.LowLevel.Fl_Overlay_Window
-  (
-  )
+    (
+     overlayWindowNew,
+     overlayWindowDestroy,
+     overlayWindowSetCallback,
+     overlayWindowParent,
+     overlayWindowSetParent,
+     overlayWindowType_,
+     overlayWindowSetType,
+     overlayWindowDrawLabel,
+     overlayWindowX,
+     overlayWindowY,
+     overlayWindowW,
+     overlayWindowH,
+     overlayWindowSetAlign,
+     overlayWindowAlign,
+     overlayWindowBox,
+     overlayWindowSetBox,
+     overlayWindowColor,
+     overlayWindowSetColor,
+     overlayWindowSetColorWithBgSel,
+     overlayWindowSelectionColor,
+     overlayWindowSetSelectionColor,
+     overlayWindowLabeltype,
+     overlayWindowSetLabeltype,
+     overlayWindowLabelcolor,
+     overlayWindowSetLabelcolor,
+     overlayWindowLabelfont,
+     overlayWindowSetLabelfont,
+     overlayWindowLabelsize,
+     overlayWindowSetLabelsize,
+     overlayWindowImage,
+     overlayWindowSetImage,
+     overlayWindowDeimage,
+     overlayWindowSetDeimage,
+     overlayWindowTooltip,
+     overlayWindowCopyTooltip,
+     overlayWindowSetTooltip,
+     overlayWindowWhen,
+     overlayWindowSetWhen,
+     overlayWindowVisible,
+     overlayWindowVisibleR,
+     overlayWindowSetVisible,
+     overlayWindowClearVisible,
+     overlayWindowActive,
+     overlayWindowActiveR,
+     overlayWindowActivate,
+     overlayWindowDeactivate,
+     overlayWindowOutput,
+     overlayWindowSetOutput,
+     overlayWindowClearOutput,
+     overlayWindowTakesevents,
+     overlayWindowSetChanged,
+     overlayWindowClearChanged,
+     overlayWindowTakeFocus,
+     overlayWindowSetVisibleFocus,
+     overlayWindowClearVisibleFocus,
+     overlayWindowModifyVisibleFocus,
+     overlayWindowVisibleFocus,
+     overlayWindowContains,
+     overlayWindowInside,
+     overlayWindowRedraw,
+     overlayWindowRedrawLabel,
+     overlayWindowDamage,
+     overlayWindowClearDamageWithBitmask,
+     overlayWindowClearDamage,
+     overlayWindowDamageWithText,
+     overlayWindowDamageInsideWidget,
+     overlayWindowMeasureLabel,
+     overlayWindowWindow,
+     overlayWindowTopWindow,
+     overlayWindowTopWindowOffset,
+     overlayWindowBegin,
+     overlayWindowEnd,
+     overlayWindowFind,
+     overlayWindowAdd,
+     overlayWindowInsert,
+     overlayWindowRemoveIndex,
+     overlayWindowRemoveWidget,
+     overlayWindowClear,
+     overlayWindowSetResizable,
+     overlayWindowResizable,
+     overlayWindowAddResizable,
+     overlayWindowInitSizes,
+     overlayWindowChildren,
+     overlayWindowSetClipChildren,
+     overlayWindowClipChildren,
+     overlayWindowFocus,
+     overlayWindowDdfdesignKludge,
+     overlayWindowInsertWithBefore,
+     overlayWindowArray,
+     overlayWindowChild,
+     overlayWindowChanged,
+     overlayWindowFullscreen,
+     overlayWindowFullscreenOff,
+     overlayWindowSetBorder,
+     overlayWindowClearBorder,
+     overlayWindowBorder,
+     overlayWindowSetOverride,
+     overlayWindowOverride,
+     overlayWindowSetModal,
+     overlayWindowModal,
+     overlayWindowSetNonModal,
+     overlayWindowNonModal,
+     overlayWindowSetMenuWindow,
+     overlayWindowMenuWindow,
+     overlayWindowSetTooltipWindow,
+     overlayWindowTooltipWindow,
+     overlayWindowHotSpot,
+     overlayWindowFreePosition,
+     overlayWindowSizeRange,
+     overlayWindowSizeRangeWithArgs,
+     overlayWindowLabel,
+     overlayWindowIconlabel,
+     overlayWindowSetLabel,
+     overlayWindowSetIconlabel,
+     overlayWindowSetLabelWithIconlabel,
+     overlayWindowCopyLabel,
+     overlayWindowSetDefaultXclass,
+     overlayWindowDefaultXclass,
+     overlayWindowXclass,
+     overlayWindowSetXclass,
+     overlayWindowIcon,
+     overlayWindowSetIcon,
+     overlayWindowShown,
+     overlayWindowIconize,
+     overlayWindowXRoot,
+     overlayWindowYRoot,
+     overlayWindowCurrent,
+     overlayWindowMakeCurrent,
+     overlayWindowSetCursor,
+     overlayWindowSetCursorWithFgBg,
+     overlayWindowSetDefaultCursor,
+     overlayWindowDecoratedW,
+     overlayWindowDecoratedH
+    )
 where
 #include "Fl_C.h"
 #include "Fl_Overlay_WindowC.h"
@@ -13,15 +146,33 @@ import Graphics.UI.FLTK.LowLevel.Utils
 import Graphics.UI.FLTK.LowLevel.Fl_Window
 import C2HS hiding (cFromEnum, unsafePerformIO, toBool,cToEnum)
 
+{# fun Fl_Overlay_Window_New_WithLabel as windowNewWithLabel' { `Int', `Int', `String', id `FunPtr CallbackPrim' } -> `Ptr ()' id #}
+{# fun Fl_Overlay_Window_New as windowNew' { `Int', `Int', id `FunPtr CallbackPrim' } -> `Ptr ()' id #}
+{# fun Fl_Overlay_Window_NewXY_WithLabel as windowNewWithXYLabel' { `Int', `Int', `Int', `Int', `String', id `FunPtr CallbackPrim' } -> `Ptr ()' id #}
+{# fun Fl_Overlay_Window_NewXY as windowNewWithXY' { `Int', `Int', `Int', `Int', id `FunPtr CallbackPrim' } -> `Ptr ()' id #}
 
-overlayeWindowSetCallback :: OverlayWindow a -> (OverlayWindow b -> IO()) -> IO ()
-overlayeWindowSetCallback = doubleWindowSetCallback
-overlayeWindowParent :: OverlayWindow a -> IO (Group ())
-overlayeWindowParent = doubleWindowParent
-overlayeWindowSetParent :: OverlayWindow a -> Group b -> IO ()
-overlayeWindowSetParent = doubleWindowSetParent
-overlayeWindowType_ :: OverlayWindow a  ->  IO (Word8)
-overlayeWindowType_ = doubleWindowType_
+overlayWindowNew :: Size -> Maybe String -> Maybe Position -> WidgetCallback a -> IO (OverlayWindow a)
+overlayWindowNew (Size (Width width') (Height height')) title' position' callback' =
+    do
+      fptr <- toCallbackPrim callback'
+      case (title', position') of
+        (Just t, Just (Position (X x') (Y y'))) -> windowNewWithXYLabel' width' height' x' y' t fptr >>= toObject
+        (Nothing, Just (Position (X x') (Y y'))) -> windowNewWithXY' width' height' x' y' fptr >>= toObject
+        (Just t, Nothing) -> windowNewWithLabel' width' height' t fptr >>= toObject
+        (Nothing, Nothing) -> windowNew' width' height' fptr >>= toObject
+
+{# fun Fl_Overlay_Window_Destroy as windowDestroy' { id `Ptr ()' } -> `()' #}
+overlayWindowDestroy :: OverlayWindow a -> IO ()
+overlayWindowDestroy window = withObject window $ \windowPtr -> windowDestroy' windowPtr
+
+overlayWindowSetCallback :: OverlayWindow a -> (OverlayWindow b -> IO()) -> IO ()
+overlayWindowSetCallback = doubleWindowSetCallback
+overlayWindowParent :: OverlayWindow a -> IO (Group ())
+overlayWindowParent = doubleWindowParent
+overlayWindowSetParent :: OverlayWindow a -> Group b -> IO ()
+overlayWindowSetParent = doubleWindowSetParent
+overlayWindowType_ :: OverlayWindow a  ->  IO (Word8)
+overlayWindowType_ = doubleWindowType_
 overlayWindowSetType :: OverlayWindow a  -> Word8 ->  IO (())
 overlayWindowSetType = doubleWindowSetType
 overlayWindowDrawLabel :: OverlayWindow a  -> Maybe (Rectangle,AlignType)->  IO (())

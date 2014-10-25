@@ -368,7 +368,7 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Overlay_Window_show_with_args)(fl_Overlay_Window win,int argc,char** argv){
     (static_cast<Fl_DerivedOverlay_Window*>(win))->show(argc,argv);
   }
-  FL_EXPORT_C(void,Fl_Overlay_Window_destroy)(fl_Overlay_Window win){
+  FL_EXPORT_C(void,Fl_Overlay_Window_Destroy)(fl_Overlay_Window win){
     delete (static_cast<Fl_DerivedOverlay_Window*>(win));
   }
   FL_EXPORT_C(void,Fl_Overlay_Window_resize)(fl_Overlay_Window win,int X,int Y,int W,int H){
