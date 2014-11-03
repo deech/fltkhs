@@ -35,11 +35,13 @@ FL_EXPORT_C(int,Fl_Graphics_Driver_descent)(fl_Graphics_Driver graphics_driver){
 FL_EXPORT_C(Fl_Color,Fl_Graphics_Driver_color)(fl_Graphics_Driver graphics_driver){
  return (static_cast<Fl_Graphics_Driver*>(graphics_driver))->color();
 }
-FL_EXPORT_C(Fl_Font_Descriptor*,Fl_Graphics_Driver_font_descriptor)(fl_Graphics_Driver graphics_driver){
- return (static_cast<Fl_Graphics_Driver*>(graphics_driver))->font_descriptor();
+FL_EXPORT_C(fl_Font_Descriptor,Fl_Graphics_Driver_font_descriptor)(fl_Graphics_Driver graphics_driver){
+ Fl_Font_Descriptor* _d = (static_cast<Fl_Graphics_Driver*>(graphics_driver))->font_descriptor();
+ return static_cast<Fl_Font_Descriptor*>(_d);
 }
-FL_EXPORT_C(void,Fl_Graphics_Driver_set_font_descriptor)(fl_Graphics_Driver graphics_driver,Fl_Font_Descriptor* d){
- return (static_cast<Fl_Graphics_Driver*>(graphics_driver))->font_descriptor(d);
+FL_EXPORT_C(void,Fl_Graphics_Driver_set_font_descriptor)(fl_Graphics_Driver graphics_driver,fl_Font_Descriptor d){
+  Fl_Font_Descriptor* _d = static_cast<Fl_Font_Descriptor*>(d);
+ return (static_cast<Fl_Graphics_Driver*>(graphics_driver))->font_descriptor(_d);
 }
 FL_EXPORT_C(void,Fl_Graphics_Driver_Destroy)(fl_Graphics_Driver graphics_driver){
  delete (static_cast<Fl_Graphics_Driver*>(graphics_driver));

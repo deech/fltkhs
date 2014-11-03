@@ -74,8 +74,10 @@ EXPORT {
   FL_EXPORT_C(int, Fl_args_with_handler)(int argc,char **argv,int i,fl_Args_Handler cb);
   FL_EXPORT_C(void, Fl_display)(const char* text);
   FL_EXPORT_C(int, Fl_visual)(int mode);
+#if !defined(__APPLE__)
   FL_EXPORT_C(int, Fl_gl_visual)(int mode);
   FL_EXPORT_C(int, Fl_gl_visual_with_alist)(int mode, int *alist);
+#endif
   FL_EXPORT_C(void, Fl_own_colormap)();
   FL_EXPORT_C(void, Fl_get_system_colors)();
   FL_EXPORT_C(void, Fl_foreground)(uchar r, uchar g, uchar b);
@@ -189,8 +191,10 @@ EXPORT {
   FL_EXPORT_C(void              ,Fl_set_color)(Fl_Color i,unsigned c);
   FL_EXPORT_C(unsigned          ,Fl_get_color)(Fl_Color i);
   FL_EXPORT_C(void              ,Fl_get_color_rgb)(Fl_Color i,uchar *red,uchar *green,uchar *blue);
+#if !defined(__APPLE__)
   FL_EXPORT_C(void              ,Fl_free_color)(Fl_Color i);
   FL_EXPORT_C(void              ,Fl_free_color_with_overlay)(Fl_Color i,int overlay);
+#endif
   FL_EXPORT_C(const char*       ,Fl_get_font)(Fl_Font font);
   FL_EXPORT_C(const char*       ,Fl_get_font_name)(Fl_Font font);
   FL_EXPORT_C(const char*       ,Fl_get_font_name_with_attributes)(Fl_Font font,int* attributes);

@@ -1,20 +1,18 @@
 #ifndef __FL_PREFERENCES_C__
 #define __FL_PREFERENCES_C__
+#ifdef __cplusplus
 // always include the FL/*.H headers before local headers
 // Fl_Widget is included transitively and needed for
 // the callback mechanism included below to work.
 #include "FL/Fl.H"
 #include "FL/Fl_Preferences.H"
 #include "Fl_CallbackC.h"
-#ifdef __cplusplus
 EXPORT {
 #endif
-#ifdef INTERNAL_LINKAGE
   typedef enum {
     SYSTEM=0,
     USER
   } Root;
-#endif
   FL_EXPORT_C(fl_Preferences, Fl_Preferences_With_Root)( Root root, const char *vendor, const char *application );
   FL_EXPORT_C(fl_Preferences, Fl_Preferences_With_Path)( const char* path, const char *vendor, const char *application );
   FL_EXPORT_C(fl_Preferences, Fl_Preferences_With_Parent_Group)( fl_Preferences parent, const char *group );

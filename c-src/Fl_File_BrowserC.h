@@ -5,10 +5,10 @@
 // Fl_Widget is included transitively and needed for
 // the callback mechanism included below to work.
 #include "FL/Fl.H"
-#include "FL/Fl_File_Browser.H"
 #include "Fl_CallbackC.h"
 EXPORT {
 #endif
+#include "filenameC.h"
 
   /* Inherited from Fl_Widget */
   FL_EXPORT_C(int ,         Fl_File_Browser_handle_super)(fl_File_Browser file_browser,int event);
@@ -127,8 +127,8 @@ EXPORT {
   FL_EXPORT_C(void,         Fl_File_Browser_forms_end)(fl_File_Browser self);
 
   /* Fl_File_Browser specific functions */
-  FL_EXPORT_C(fl_File_Browser, Fl_File_Browser_New_WithLabel)(int x, int y, int w, int h, const char* label); 
-  FL_EXPORT_C(fl_File_Browser, Fl_File_Browser_New)(int x, int y, int w, int h); 
+  FL_EXPORT_C(fl_File_Browser, Fl_File_Browser_New_WithLabel)(int x, int y, int w, int h, const char* label);
+  FL_EXPORT_C(fl_File_Browser, Fl_File_Browser_New)(int x, int y, int w, int h);
   FL_EXPORT_C(void,Fl_File_Browser_Destroy)(fl_File_Browser file_browser);
   FL_EXPORT_C(void,Fl_File_Browser_remove)(fl_File_Browser file_browser, int line);
   FL_EXPORT_C(void, Fl_File_Browser_add)(fl_File_Browser file_browser, const char* newtext);
@@ -174,23 +174,23 @@ EXPORT {
   FL_EXPORT_C(int, Fl_File_Browser_select_only_with_docallbacks)(fl_File_Browser file_browser,void *item,int docallbacks);
   FL_EXPORT_C(int, Fl_File_Browser_deselect)(fl_File_Browser file_browser);
   FL_EXPORT_C(int, Fl_File_Browser_deselect_with_docallbacks)(fl_File_Browser file_browser,int docallbacks);
-  FL_EXPORT_C(int, Fl_File_Browser_position)(fl_File_Browser file_browser); 
+  FL_EXPORT_C(int, Fl_File_Browser_position)(fl_File_Browser file_browser);
   FL_EXPORT_C(void, Fl_File_Browser_set_position)(fl_File_Browser file_browser,int pos); // scroll to here
-  FL_EXPORT_C(int, Fl_File_Browser_hposition)(fl_File_Browser file_browser); 
+  FL_EXPORT_C(int, Fl_File_Browser_hposition)(fl_File_Browser file_browser);
   FL_EXPORT_C(void, Fl_File_Browser_set_hposition)(fl_File_Browser file_browser,int); // pan to here
   FL_EXPORT_C(uchar, Fl_File_Browser_has_scrollbar)(fl_File_Browser file_browser);
-  FL_EXPORT_C(void, Fl_File_Browser_set_has_scrollbar)(fl_File_Browser file_browser,uchar mode); 
-  FL_EXPORT_C(Fl_Font, Fl_File_Browser_textfont)(fl_File_Browser file_browser); 
-  FL_EXPORT_C(void, Fl_File_Browser_set_textfont)(fl_File_Browser file_browser,Fl_Font font); 
-  FL_EXPORT_C(Fl_Fontsize, Fl_File_Browser_textsize)(fl_File_Browser file_browser);  
-  FL_EXPORT_C(void, Fl_File_Browser_set_textsize)(fl_File_Browser file_browser,Fl_Fontsize newSize); 
-  FL_EXPORT_C(Fl_Color, Fl_File_Browser_textcolor)(fl_File_Browser file_browser); 
-  FL_EXPORT_C(void, Fl_File_Browser_set_textcolor)(fl_File_Browser file_browser,Fl_Color col); 
-  FL_EXPORT_C(int, Fl_File_Browser_scrollbar_size)(fl_File_Browser file_browser); 
-  FL_EXPORT_C(void, Fl_File_Browser_set_scrollbar_size)(fl_File_Browser file_browser,int newSize); 
-  FL_EXPORT_C(int, Fl_File_Browser_scrollbar_width)(fl_File_Browser file_browser); 
-  FL_EXPORT_C(void, Fl_File_Browser_set_scrollbar_width)(fl_File_Browser file_browser,int width); 
-  FL_EXPORT_C(void, Fl_File_Browser_scrollbar_right)(fl_File_Browser file_browser); 
+  FL_EXPORT_C(void, Fl_File_Browser_set_has_scrollbar)(fl_File_Browser file_browser,uchar mode);
+  FL_EXPORT_C(Fl_Font, Fl_File_Browser_textfont)(fl_File_Browser file_browser);
+  FL_EXPORT_C(void, Fl_File_Browser_set_textfont)(fl_File_Browser file_browser,Fl_Font font);
+  FL_EXPORT_C(Fl_Fontsize, Fl_File_Browser_textsize)(fl_File_Browser file_browser);
+  FL_EXPORT_C(void, Fl_File_Browser_set_textsize)(fl_File_Browser file_browser,Fl_Fontsize newSize);
+  FL_EXPORT_C(Fl_Color, Fl_File_Browser_textcolor)(fl_File_Browser file_browser);
+  FL_EXPORT_C(void, Fl_File_Browser_set_textcolor)(fl_File_Browser file_browser,Fl_Color col);
+  FL_EXPORT_C(int, Fl_File_Browser_scrollbar_size)(fl_File_Browser file_browser);
+  FL_EXPORT_C(void, Fl_File_Browser_set_scrollbar_size)(fl_File_Browser file_browser,int newSize);
+  FL_EXPORT_C(int, Fl_File_Browser_scrollbar_width)(fl_File_Browser file_browser);
+  FL_EXPORT_C(void, Fl_File_Browser_set_scrollbar_width)(fl_File_Browser file_browser,int width);
+  FL_EXPORT_C(void, Fl_File_Browser_scrollbar_right)(fl_File_Browser file_browser);
   FL_EXPORT_C(void, Fl_File_Browser_set_scrollbar_left)(fl_File_Browser file_browser);
   FL_EXPORT_C(void, Fl_File_Browser_sort)(fl_File_Browser file_browser);
   FL_EXPORT_C(void, Fl_File_Browser_sort_with_flags)(fl_File_Browser file_browser,int flags);

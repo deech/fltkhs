@@ -4,10 +4,10 @@
 EXPORT {
 #endif
   FL_EXPORT_C(void,flc_beep)(){
-    fl_beep();
+    return fl_beep();
   }
   FL_EXPORT_C(void,flc_beep_with_type)(int type){
-    fl_beep(type);
+    return fl_beep(type);
   }
   FL_EXPORT_C(void,flc_message)(const char* message){
     return fl_message(message, NULL);

@@ -74,7 +74,7 @@ void C_to_Fl_Callback::runCallback() {
   (*text_buffer_callback)(user_data);
 }
 int C_to_Fl_Callback::runCallback(int key, DerivedText_Editor* editor){
-  int result;
+  int result = 0;
   if (c_key_func){
     result = (*c_key_func)(key, (fl_Text_Editor) editor);
   }

@@ -14,10 +14,10 @@ EXPORT {
   FL_EXPORT_C(int,Fl_Text_Selection_end)(fl_Text_Selection text_selection){
   return (static_cast<Fl_Text_Selection*>(text_selection))->end();
 }
-  FL_EXPORT_C(bool,Fl_Text_Selection_selected)(fl_Text_Selection text_selection){
+  FL_EXPORT_C(int,Fl_Text_Selection_selected)(fl_Text_Selection text_selection){
   return (static_cast<Fl_Text_Selection*>(text_selection))->selected();
 }
-  FL_EXPORT_C(void,Fl_Text_Selection_set_selected)(fl_Text_Selection text_selection,bool b){
+  FL_EXPORT_C(void,Fl_Text_Selection_set_selected)(fl_Text_Selection text_selection,int b){
   (static_cast<Fl_Text_Selection*>(text_selection))->selected(b);
 }
   FL_EXPORT_C(int,Fl_Text_Selection_includes)(fl_Text_Selection text_selection,int pos){
@@ -33,4 +33,3 @@ EXPORT {
 #ifdef __cplusplus
 }
 #endif
-  

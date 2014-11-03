@@ -57,7 +57,7 @@ EXPORT {
     gl_measure(str,x,y);
   }
 #ifdef __APPLE__
-  FL_EXPORT_C(void,flc_gl_texture_pile_height)(int max){
+  FL_EXPORT_C(void,flc_set_gl_texture_pile_height)(int max){
     gl_texture_pile_height(max);
   }
   FL_EXPORT_C(int,flc_gl_texture_pile_height)( ){
@@ -79,4 +79,3 @@ EXPORT {
 #ifdef __cplusplus
 }
 #endif
-  

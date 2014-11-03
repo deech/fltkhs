@@ -98,7 +98,7 @@ all: libfltkc.a
 .cpp.o:
 	test -d $(OBJECT_FILES) || mkdir $(OBJECT_FILES)
 	@echo "*** Compiling $<..."
-	$(CXXSTATIC) -c $^ -o $(OBJECT_FILES)/$@ -lfltk -lfltk_images -lfltk_gl
+	$(CXXSTATIC) -c $^ -o $(OBJECT_FILES)/$@
 libfltkc.a : $(OBJECTS)
 	test -d $(LIBDIR) || mkdir $(LIBDIR)
 	@echo "*** Linking $@..."

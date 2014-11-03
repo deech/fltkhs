@@ -3,14 +3,13 @@
 EXPORT {
 #endif
   FL_EXPORT_C(fl_Preferences, Fl_Preferences_With_Root)( Root root, const char* vendor, const char* application ){
-    Fl_Preferences::Root r;
-    if (root == SYSTEM) {
-      r = Fl_Preferences::SYSTEM;
+    Fl_Preferences* preferences = 0;
+    if (root == USER) {
+      preferences = new Fl_Preferences(Fl_Preferences::USER, vendor, application);
     }
-    else if (root == USER) {
-      r = Fl_Preferences::USER;
+    else {
+      preferences = new Fl_Preferences(Fl_Preferences::SYSTEM, vendor, application);
     }
-    Fl_Preferences* preferences = new Fl_Preferences(r, vendor, application);
     return (fl_Preferences) preferences;
   }
   FL_EXPORT_C(fl_Preferences, Fl_Preferences_With_Path)( const char* path, const char *vendor, const char *application ){

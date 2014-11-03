@@ -8,50 +8,49 @@
 EXPORT {
 #endif
 #ifndef INTERNAL_LINKAGE
-#define FLTK_ABI_VERSION        10300 
-#define FL_MAJOR_VERSION	1
-#define FL_MINOR_VERSION	3
-#define FL_PATCH_VERSION	0
-#define FL_VERSION		((double)FL_MAJOR_VERSION +		\
-				 (double)FL_MINOR_VERSION * 0.01 +	\
-				 (double)FL_PATCH_VERSION * 0.0001)
-  typedef enum Fl_Event {	// events
-    FL_NO_EVENT		= 0,
-    FL_PUSH		= 1,
-    FL_RELEASE		= 2,
-    FL_ENTER		= 3,
-    FL_LEAVE		= 4,
-    FL_DRAG		= 5,
-    FL_FOCUS		= 6,
-    FL_UNFOCUS		= 7,
-    FL_KEYDOWN		= 8,
-    FL_KEYBOARD		= 8,
-    FL_KEYUP		= 9,
-    FL_CLOSE		= 10,
-    FL_MOVE		= 11,
-    FL_SHORTCUT		= 12,
-    FL_DEACTIVATE		= 13,
-    FL_ACTIVATE		= 14,
-    FL_HIDE		= 15,
-    FL_SHOW		= 16,
-    FL_PASTE		= 17,
-    FL_SELECTIONCLEAR	= 18,
-    FL_MOUSEWHEEL		= 19,
-    FL_DND_ENTER		= 20,
-    FL_DND_DRAG		= 21,
-    FL_DND_LEAVE		= 22,
-    FL_DND_RELEASE	= 23,
+#define FL_MAJOR_VERSION        1
+#define FL_MINOR_VERSION        3
+#define FL_PATCH_VERSION        0
+#define FL_VERSION              ((double)FL_MAJOR_VERSION +             \
+                                 (double)FL_MINOR_VERSION * 0.01 +      \
+                                 (double)FL_PATCH_VERSION * 0.0001)
+  typedef enum Fl_Event {       // events
+    FL_NO_EVENT         = 0,
+    FL_PUSH             = 1,
+    FL_RELEASE          = 2,
+    FL_ENTER            = 3,
+    FL_LEAVE            = 4,
+    FL_DRAG             = 5,
+    FL_FOCUS            = 6,
+    FL_UNFOCUS          = 7,
+    FL_KEYDOWN          = 8,
+    FL_KEYBOARD         = 8,
+    FL_KEYUP            = 9,
+    FL_CLOSE            = 10,
+    FL_MOVE             = 11,
+    FL_SHORTCUT         = 12,
+    FL_DEACTIVATE               = 13,
+    FL_ACTIVATE         = 14,
+    FL_HIDE             = 15,
+    FL_SHOW             = 16,
+    FL_PASTE            = 17,
+    FL_SELECTIONCLEAR   = 18,
+    FL_MOUSEWHEEL               = 19,
+    FL_DND_ENTER                = 20,
+    FL_DND_DRAG         = 21,
+    FL_DND_LEAVE                = 22,
+    FL_DND_RELEASE      = 23,
     FL_SCREEN_CONFIGURATION_CHANGED = 24,
     FL_FULLSCREEN         = 25
   } Fl_Event;
 
   typedef enum Fl_When {
-    FL_WHEN_NEVER		= 0,
-    FL_WHEN_CHANGED	= 1,
-    FL_WHEN_NOT_CHANGED	= 2,
-    FL_WHEN_RELEASE	= 4,
+    FL_WHEN_NEVER               = 0,
+    FL_WHEN_CHANGED     = 1,
+    FL_WHEN_NOT_CHANGED = 2,
+    FL_WHEN_RELEASE     = 4,
     FL_WHEN_RELEASE_ALWAYS= 6,
-    FL_WHEN_ENTER_KEY	= 8,
+    FL_WHEN_ENTER_KEY   = 8,
     FL_WHEN_ENTER_KEY_ALWAYS=10,
     FL_WHEN_ENTER_KEY_CHANGED=11
   } Fl_When;
@@ -81,42 +80,42 @@ EXPORT {
     FL_TREE_ITEM_HEIGHT_FROM_WIDGET=2
   }Fl_Tree_Item_Draw_Mode;
 #endif /*FLTK_ABI_VERSION*/
-#define FL_Button	0xfee8
-#define FL_BackSpace	0xff08
-#define FL_Tab		0xff09
-#define FL_Iso_Key	0xff0c
-#define FL_Enter	0xff0d
-#define FL_Pause	0xff13
-#define FL_Scroll_Lock	0xff14
-#define FL_Escape	0xff1b
-#define FL_Home		0xff50
-#define FL_Left		0xff51
-#define FL_Up		0xff52
-#define FL_Right	0xff53
-#define FL_Down		0xff54
-#define FL_Page_Up	0xff55
-#define FL_Page_Down	0xff56
-#define FL_End		0xff57
-#define FL_Print	0xff61
-#define FL_Insert	0xff63
-#define FL_Menu		0xff67
-#define FL_Help		0xff68
-#define FL_Num_Lock	0xff7f
-#define FL_KP		0xff80
-#define FL_KP_Enter	0xff8d
-#define FL_KP_Last	0xffbd
-#define FL_F		0xffbd
-#define FL_F_Last	0xffe0
-#define FL_Shift_L	0xffe1
-#define FL_Shift_R	0xffe2
-#define FL_Control_L	0xffe3
-#define FL_Control_R	0xffe4
-#define FL_Caps_Lock	0xffe5
-#define FL_Meta_L	0xffe7
-#define FL_Meta_R	0xffe8
-#define FL_Alt_L	0xffe9
-#define FL_Alt_R	0xffea
-#define FL_Delete	0xffff
+#define FL_Button       0xfee8
+#define FL_BackSpace    0xff08
+#define FL_Tab          0xff09
+#define FL_Iso_Key      0xff0c
+#define FL_Enter        0xff0d
+#define FL_Pause        0xff13
+#define FL_Scroll_Lock  0xff14
+#define FL_Escape       0xff1b
+#define FL_Home         0xff50
+#define FL_Left         0xff51
+#define FL_Up           0xff52
+#define FL_Right        0xff53
+#define FL_Down         0xff54
+#define FL_Page_Up      0xff55
+#define FL_Page_Down    0xff56
+#define FL_End          0xff57
+#define FL_Print        0xff61
+#define FL_Insert       0xff63
+#define FL_Menu         0xff67
+#define FL_Help         0xff68
+#define FL_Num_Lock     0xff7f
+#define FL_KP           0xff80
+#define FL_KP_Enter     0xff8d
+#define FL_KP_Last      0xffbd
+#define FL_F            0xffbd
+#define FL_F_Last       0xffe0
+#define FL_Shift_L      0xffe1
+#define FL_Shift_R      0xffe2
+#define FL_Control_L    0xffe3
+#define FL_Control_R    0xffe4
+#define FL_Caps_Lock    0xffe5
+#define FL_Meta_L       0xffe7
+#define FL_Meta_R       0xffe8
+#define FL_Alt_L        0xffe9
+#define FL_Alt_R        0xffea
+#define FL_Delete       0xffff
 
 
 #define FL_Volume_Down  0xEF11
@@ -136,35 +135,35 @@ EXPORT {
 #define FL_Sleep        0xEF2F
 #define FL_Favorites    0xEF30
 
-#define FL_LEFT_MOUSE	1
-#define FL_MIDDLE_MOUSE	2
-#define FL_RIGHT_MOUSE	3
+#define FL_LEFT_MOUSE   1
+#define FL_MIDDLE_MOUSE 2
+#define FL_RIGHT_MOUSE  3
 
-#define FL_SHIFT	0x00010000
-#define FL_CAPS_LOCK	0x00020000
-#define FL_CTRL		0x00040000
-#define FL_ALT		0x00080000
-#define FL_NUM_LOCK	0x00100000
+#define FL_SHIFT        0x00010000
+#define FL_CAPS_LOCK    0x00020000
+#define FL_CTRL         0x00040000
+#define FL_ALT          0x00080000
+#define FL_NUM_LOCK     0x00100000
 
-#define FL_META		0x00400000
+#define FL_META         0x00400000
 
-#define FL_SCROLL_LOCK	0x00800000
+#define FL_SCROLL_LOCK  0x00800000
 
-#define FL_BUTTON1	0x01000000
-#define FL_BUTTON2	0x02000000
-#define FL_BUTTON3	0x04000000
-#define FL_BUTTONS	0x7f000000
-#define FL_BUTTON(n)	(0x00800000<<(n))
+#define FL_BUTTON1      0x01000000
+#define FL_BUTTON2      0x02000000
+#define FL_BUTTON3      0x04000000
+#define FL_BUTTONS      0x7f000000
+#define FL_BUTTON(n)    (0x00800000<<(n))
 
 #define FL_KEY_MASK 0x0000ffff
 
 
 #ifdef __APPLE__
-#  define FL_COMMAND	FL_META
-#  define FL_CONTROL 	FL_CTRL
+#  define FL_COMMAND    FL_META
+#  define FL_CONTROL    FL_CTRL
 #else
-#  define FL_COMMAND	FL_CTRL
-#  define FL_CONTROL	FL_META
+#  define FL_COMMAND    FL_CTRL
+#  define FL_CONTROL    FL_META
 #endif
   typedef enum Fl_Boxtype {
     FL_NO_BOX = 0,
@@ -255,7 +254,7 @@ EXPORT {
 #define FL_CIRCLE_BOX FL_ROUND_DOWN_BOX
 #define FL_DIAMOND_BOX FL_DIAMOND_DOWN_BOX
   typedef enum Fl_Labeltype {
-    FL_NORMAL_LABEL	= 0,
+    FL_NORMAL_LABEL     = 0,
     FL_NO_LABEL,
     _FL_SHADOW_LABEL,
     _FL_ENGRAVED_LABEL,
@@ -273,26 +272,26 @@ EXPORT {
 #define FL_EMBOSSED_LABEL fl_define_FL_EMBOSSED_LABELC()
 
   typedef unsigned Fl_Align;
-  Fl_Align FL_ALIGN_CENTER		= (Fl_Align)0;
-  Fl_Align FL_ALIGN_TOP			= (Fl_Align)1;
-  Fl_Align FL_ALIGN_BOTTOM		= (Fl_Align)2;
-  Fl_Align FL_ALIGN_LEFT		= (Fl_Align)4;
-  Fl_Align FL_ALIGN_RIGHT		= (Fl_Align)8;
-  Fl_Align FL_ALIGN_INSIDE		= (Fl_Align)16;
-  Fl_Align FL_ALIGN_TEXT_OVER_IMAGE	= (Fl_Align)0x0020;
-  Fl_Align FL_ALIGN_IMAGE_OVER_TEXT	= (Fl_Align)0x0000;
-  Fl_Align FL_ALIGN_CLIP		= (Fl_Align)64;
-  Fl_Align FL_ALIGN_WRAP		= (Fl_Align)128;
-  Fl_Align FL_ALIGN_IMAGE_NEXT_TO_TEXT	= (Fl_Align)0x0100;
-  Fl_Align FL_ALIGN_TEXT_NEXT_TO_IMAGE	= (Fl_Align)0x0120;
-  Fl_Align FL_ALIGN_IMAGE_BACKDROP	= (Fl_Align)0x0200;
-  Fl_Align FL_ALIGN_LEFT_TOP		= 0x0007;
-  Fl_Align FL_ALIGN_RIGHT_TOP		= 0x000b;
-  Fl_Align FL_ALIGN_LEFT_BOTTOM		= 0x000d;
-  Fl_Align FL_ALIGN_RIGHT_BOTTOM	= 0x000e;
-  Fl_Align FL_ALIGN_NOWRAP		= (Fl_Align)0;
-  Fl_Align FL_ALIGN_POSITION_MASK	= 0x000f;
-  Fl_Align FL_ALIGN_IMAGE_MASK		= 0x0320;
+  Fl_Align FL_ALIGN_CENTER             = (Fl_Align)0;
+  Fl_Align FL_ALIGN_TOP                = (Fl_Align)1;
+  Fl_Align FL_ALIGN_BOTTOM             = (Fl_Align)2;
+  Fl_Align FL_ALIGN_LEFT               = (Fl_Align)4;
+  Fl_Align FL_ALIGN_RIGHT              = (Fl_Align)8;
+  Fl_Align FL_ALIGN_INSIDE             = (Fl_Align)16;
+  Fl_Align FL_ALIGN_TEXT_OVER_IMAGE    = (Fl_Align)0x0020;
+  Fl_Align FL_ALIGN_IMAGE_OVER_TEXT    = (Fl_Align)0x0000;
+  Fl_Align FL_ALIGN_CLIP               = (Fl_Align)64;
+  Fl_Align FL_ALIGN_WRAP               = (Fl_Align)128;
+  Fl_Align FL_ALIGN_IMAGE_NEXT_TO_TEXT = (Fl_Align)0x0100;
+  Fl_Align FL_ALIGN_TEXT_NEXT_TO_IMAGE = (Fl_Align)0x0120;
+  Fl_Align FL_ALIGN_IMAGE_BACKDROP     = (Fl_Align)0x0200;
+  Fl_Align FL_ALIGN_LEFT_TOP           = 0x0007;
+  Fl_Align FL_ALIGN_RIGHT_TOP          = 0x000b;
+  Fl_Align FL_ALIGN_LEFT_BOTTOM        = 0x000d;
+  Fl_Align FL_ALIGN_RIGHT_BOTTOM       = 0x000e;
+  Fl_Align FL_ALIGN_NOWRAP             = (Fl_Align)0;
+  Fl_Align FL_ALIGN_POSITION_MASK      = 0x000f;
+  Fl_Align FL_ALIGN_IMAGE_MASK         = 0x0320;
 
   typedef int Fl_Font;
   Fl_Font FL_HELVETICA              = 0;
@@ -362,27 +361,27 @@ EXPORT {
 #define FL_NUM_BLUE       5
 
   typedef enum Fl_Cursor {
-    FL_CURSOR_DEFAULT	=  0,
-    FL_CURSOR_ARROW	= 35,
-    FL_CURSOR_CROSS	= 66,
-    FL_CURSOR_WAIT	= 76,
-    FL_CURSOR_INSERT	= 77,
-    FL_CURSOR_HAND	= 31,
-    FL_CURSOR_HELP	= 47,
-    FL_CURSOR_MOVE	= 27,
-    FL_CURSOR_NS	= 78,
-    FL_CURSOR_WE	= 79,
-    FL_CURSOR_NWSE	= 80,
-    FL_CURSOR_NESW	= 81,
-    FL_CURSOR_NONE	= 255,
-    FL_CURSOR_N		= 70,
-    FL_CURSOR_NE	= 69,
-    FL_CURSOR_E		= 49,
-    FL_CURSOR_SE	=  8,
-    FL_CURSOR_S		=  9,
-    FL_CURSOR_SW	=  7,
-    FL_CURSOR_W		= 36,
-    FL_CURSOR_NW	= 68
+    FL_CURSOR_DEFAULT   =  0,
+    FL_CURSOR_ARROW     = 35,
+    FL_CURSOR_CROSS     = 66,
+    FL_CURSOR_WAIT      = 76,
+    FL_CURSOR_INSERT    = 77,
+    FL_CURSOR_HAND      = 31,
+    FL_CURSOR_HELP      = 47,
+    FL_CURSOR_MOVE      = 27,
+    FL_CURSOR_NS        = 78,
+    FL_CURSOR_WE        = 79,
+    FL_CURSOR_NWSE      = 80,
+    FL_CURSOR_NESW      = 81,
+    FL_CURSOR_NONE      = 255,
+    FL_CURSOR_N         = 70,
+    FL_CURSOR_NE        = 69,
+    FL_CURSOR_E         = 49,
+    FL_CURSOR_SE        =  8,
+    FL_CURSOR_S         =  9,
+    FL_CURSOR_SW        =  7,
+    FL_CURSOR_W         = 36,
+    FL_CURSOR_NW        = 68
   } Fl_Cursor;
 
   enum {
@@ -392,18 +391,18 @@ EXPORT {
   };
 
   typedef enum Fl_Mode {
-    FL_RGB		= 0,
-    FL_INDEX		= 1,
-    FL_SINGLE		= 0,
-    FL_DOUBLE		= 2,
-    FL_ACCUM		= 4,
-    FL_ALPHA		= 8,
-    FL_DEPTH		= 16,
-    FL_STENCIL		= 32,
-    FL_RGB8		= 64,
-    FL_MULTISAMPLE	= 128,
-    FL_STEREO		= 256,
-    FL_FAKE_SINGLE	= 512
+    FL_RGB              = 0,
+    FL_INDEX            = 1,
+    FL_SINGLE           = 0,
+    FL_DOUBLE           = 2,
+    FL_ACCUM            = 4,
+    FL_ALPHA            = 8,
+    FL_DEPTH            = 16,
+    FL_STENCIL          = 32,
+    FL_RGB8             = 64,
+    FL_MULTISAMPLE      = 128,
+    FL_STEREO           = 256,
+    FL_FAKE_SINGLE      = 512
   } Fl_Mode;
 #define FL_IMAGE_WITH_ALPHA 0x40000000
 
@@ -419,10 +418,10 @@ EXPORT {
 
   // FLTK 1.0.x compatibility definitions...
 #  ifdef FLTK_1_0_COMPAT
-#    define contrast	fl_contrast
-#    define down	fl_down
-#    define frame	fl_frame
-#    define inactive	fl_inactive
+#    define contrast    fl_contrast
+#    define down        fl_down
+#    define frame       fl_frame
+#    define inactive    fl_inactive
 #  endif // FLTK_1_0_COMPAT
 #endif
   FL_EXPORT_C(Fl_Boxtype, fl_define_FL_ROUND_UP_BOXC)();

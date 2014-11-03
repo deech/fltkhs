@@ -86,12 +86,14 @@ EXPORT {
   FL_EXPORT_C(int,Fl_visual)(int mode){
     return Fl::visual(mode);
   }
+#if !defined(__APPLE__)
   FL_EXPORT_C(int,Fl_gl_visual)(int mode){
     return Fl::gl_visual(mode);
   }
   FL_EXPORT_C(int,Fl_gl_visual_with_alist)(int mode,int *alist){
     return Fl::gl_visual(mode,alist);
   }
+#endif
   FL_EXPORT_C(void,Fl_own_colormap)( ){
     Fl::own_colormap();
   }
@@ -430,12 +432,14 @@ EXPORT {
   FL_EXPORT_C(void,Fl_get_color_rgb)(Fl_Color i,uchar *red,uchar *green,uchar *blue){
     Fl::get_color(i,*red,*green,*blue);
   }
+#if !defined(__APPLE__)
   FL_EXPORT_C(void,Fl_free_color)(Fl_Color i){
     Fl::free_color(i);
   }
   FL_EXPORT_C(void,Fl_free_color_with_overlay)(Fl_Color i,int overlay){
     Fl::free_color(i,overlay);
   }
+#endif
   FL_EXPORT_C(const char*,Fl_get_font)(Fl_Font font){
     return Fl::get_font(font);
   }

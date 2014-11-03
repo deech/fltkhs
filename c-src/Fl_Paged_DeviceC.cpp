@@ -59,41 +59,41 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Paged_Device_untranslate)(fl_Paged_Device paged_device){
     (static_cast<Fl_Paged_Device*>(paged_device))->untranslate();
   }
-  FL_EXPORT_C(void,Fl_Paged_Device_print_widget)(fl_Paged_Device paged_device,Fl_Widget* widget){
-    (static_cast<Fl_Paged_Device*>(paged_device))->print_widget(widget);
+  FL_EXPORT_C(void,Fl_Paged_Device_print_widget)(fl_Paged_Device paged_device,fl_Widget widget){
+    (static_cast<Fl_Paged_Device*>(paged_device))->print_widget(static_cast<Fl_Widget*>(widget));
   }
-  FL_EXPORT_C(void,Fl_Paged_Device_print_widget_with_delta_x)(fl_Paged_Device paged_device,Fl_Widget* widget,int delta_x){
-    (static_cast<Fl_Paged_Device*>(paged_device))->print_widget(widget,delta_x);
+  FL_EXPORT_C(void,Fl_Paged_Device_print_widget_with_delta_x)(fl_Paged_Device paged_device,fl_Widget widget,int delta_x){
+    (static_cast<Fl_Paged_Device*>(paged_device))->print_widget(static_cast<Fl_Widget*>(widget),delta_x);
   }
-  FL_EXPORT_C(void,Fl_Paged_Device_print_widget_with_delta_y)(fl_Paged_Device paged_device,Fl_Widget* widget,int delta_y){
-    (static_cast<Fl_Paged_Device*>(paged_device))->print_widget(widget,0,delta_y);
+  FL_EXPORT_C(void,Fl_Paged_Device_print_widget_with_delta_y)(fl_Paged_Device paged_device,fl_Widget widget,int delta_y){
+    (static_cast<Fl_Paged_Device*>(paged_device))->print_widget(static_cast<Fl_Widget*>(widget),0,delta_y);
   }
-  FL_EXPORT_C(void,Fl_Paged_Device_print_widget_with_delta_x_delta_y)(fl_Paged_Device paged_device,Fl_Widget* widget,int delta_x,int delta_y){
-    (static_cast<Fl_Paged_Device*>(paged_device))->print_widget(widget,delta_x,delta_y);
+  FL_EXPORT_C(void,Fl_Paged_Device_print_widget_with_delta_x_delta_y)(fl_Paged_Device paged_device,fl_Widget widget,int delta_x,int delta_y){
+    (static_cast<Fl_Paged_Device*>(paged_device))->print_widget(static_cast<Fl_Widget*>(widget),delta_x,delta_y);
   }
-  FL_EXPORT_C(void,Fl_Paged_Device_print_window)(fl_Paged_Device paged_device,Fl_Window *win){
-    (static_cast<Fl_Paged_Device*>(paged_device))->print_window(win);
+  FL_EXPORT_C(void,Fl_Paged_Device_print_window)(fl_Paged_Device paged_device,fl_Window win){
+    (static_cast<Fl_Paged_Device*>(paged_device))->print_window(static_cast<Fl_Window*>(win));
   }
-  FL_EXPORT_C(void,Fl_Paged_Device_print_window_with_x_offset)(fl_Paged_Device paged_device,Fl_Window *win,int x_offset){
-    (static_cast<Fl_Paged_Device*>(paged_device))->print_window(win,x_offset);
+  FL_EXPORT_C(void,Fl_Paged_Device_print_window_with_x_offset)(fl_Paged_Device paged_device,fl_Window win,int x_offset){
+    (static_cast<Fl_Paged_Device*>(paged_device))->print_window(static_cast<Fl_Window*>(win),x_offset);
   }
-  FL_EXPORT_C(void,Fl_Paged_Device_print_window_with_y_offset)(fl_Paged_Device paged_device,Fl_Window *win,int y_offset){
-    (static_cast<Fl_Paged_Device*>(paged_device))->print_window(win,y_offset);
+  FL_EXPORT_C(void,Fl_Paged_Device_print_window_with_y_offset)(fl_Paged_Device paged_device,fl_Window win,int y_offset){
+    (static_cast<Fl_Paged_Device*>(paged_device))->print_window(static_cast<Fl_Window*>(win),y_offset);
   }
-  FL_EXPORT_C(void,Fl_Paged_Device_print_window_with_x_offset_y_offset)(fl_Paged_Device paged_device,Fl_Window *win,int x_offset,int y_offset){
-    (static_cast<Fl_Paged_Device*>(paged_device))->print_window(win,x_offset,y_offset);
+  FL_EXPORT_C(void,Fl_Paged_Device_print_window_with_x_offset_y_offset)(fl_Paged_Device paged_device,fl_Window win,int x_offset,int y_offset){
+    (static_cast<Fl_Paged_Device*>(paged_device))->print_window(static_cast<Fl_Window*>(win),x_offset,y_offset);
   }
-  FL_EXPORT_C(void,Fl_Paged_Device_print_window_part)(fl_Paged_Device paged_device,Fl_Window *win,int x,int y,int w,int h){
-    (static_cast<Fl_Paged_Device*>(paged_device))->print_window_part(win,x,y,w,h);
+  FL_EXPORT_C(void,Fl_Paged_Device_print_window_part)(fl_Paged_Device paged_device,fl_Window win,int x,int y,int w,int h){
+    (static_cast<Fl_Paged_Device*>(paged_device))->print_window_part(static_cast<Fl_Window*>(win),x,y,w,h);
   }
-  FL_EXPORT_C(void,Fl_Paged_Device_print_window_part_with_delta_x)(fl_Paged_Device paged_device,Fl_Window *win,int x,int y,int w,int h,int delta_x){
-    (static_cast<Fl_Paged_Device*>(paged_device))->print_window_part(win,x,y,w,h,delta_x);
+  FL_EXPORT_C(void,Fl_Paged_Device_print_window_part_with_delta_x)(fl_Paged_Device paged_device,fl_Window win,int x,int y,int w,int h,int delta_x){
+    (static_cast<Fl_Paged_Device*>(paged_device))->print_window_part(static_cast<Fl_Window*>(win),x,y,w,h,delta_x);
   }
-  FL_EXPORT_C(void,Fl_Paged_Device_print_window_part_with_delta_y)(fl_Paged_Device paged_device,Fl_Window *win,int x,int y,int w,int h,int delta_y){
-    (static_cast<Fl_Paged_Device*>(paged_device))->print_window_part(win,x,y,w,h,0,delta_y);
+  FL_EXPORT_C(void,Fl_Paged_Device_print_window_part_with_delta_y)(fl_Paged_Device paged_device,fl_Window win,int x,int y,int w,int h,int delta_y){
+    (static_cast<Fl_Paged_Device*>(paged_device))->print_window_part(static_cast<Fl_Window*>(win),x,y,w,h,0,delta_y);
   }
-  FL_EXPORT_C(void,Fl_Paged_Device_print_window_part_with_delta_xy)(fl_Paged_Device paged_device,Fl_Window *win,int x,int y,int w,int h,int delta_x,int delta_y){
-    (static_cast<Fl_Paged_Device*>(paged_device))->print_window_part(win,x,y,w,h,delta_x,delta_y);
+  FL_EXPORT_C(void,Fl_Paged_Device_print_window_part_with_delta_xy)(fl_Paged_Device paged_device,fl_Window win,int x,int y,int w,int h,int delta_x,int delta_y){
+    (static_cast<Fl_Paged_Device*>(paged_device))->print_window_part(static_cast<Fl_Window*>(win),x,y,w,h,delta_x,delta_y);
   }
   FL_EXPORT_C(int,Fl_Paged_Device_end_page)(fl_Paged_Device paged_device){
     return (static_cast<Fl_Paged_Device*>(paged_device))->end_page();

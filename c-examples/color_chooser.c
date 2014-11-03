@@ -9,11 +9,11 @@
 #include <Fl_GroupC.h>
 #include <Fl_AskC.h>
 #include <xC.h>
-#include <FL/Xutf8.h>
 
 #include <stdlib.h>
 #include <stdio.h>
 #if !defined(WIN32) && !defined(__APPLE__)
+#include <FL/Xutf8.h>
 #include "list_visuals.h"
 #endif
 
@@ -77,9 +77,7 @@ int main(int argc, char ** argv) {
   Fl_Button_set_callback_with_user_data(b1,cb1,&box);
   fl_Button b2 = (fl_Button)Fl_Button_New_WithLabel(140,160,120,30,"fl_choose_color");
   Fl_Button_set_callback_with_user_data(b2,cb2,&box);
-  (fl_Box) Fl_Box_New_WithLabel(140,200,120,120,0);
   make_image();
-  (fl_Box) Fl_Box_New_WithLabel(140,320,120,0,"Example of fl_draw_image()");
   fl_Box_Virtual_Funcs* funcs = Fl_Box_default_virtual_funcs();
   funcs->draw = &draw;
   fl_Box p = (fl_Box) Fl_OverriddenBox_New_WithLabel(80,200,3*8,120,"lines",funcs);

@@ -341,12 +341,11 @@ EXPORT {
   Fl_Glut_StrokeFont glutStrokeMonoRoman;
 #  define GLUT_STROKE_ROMAN		(&glutStrokeRoman)
 #  define GLUT_STROKE_MONO_ROMAN	(&glutStrokeMonoRoman)
+  typedef ulong Fl_Bitmask;
 #endif /* INTERNAL_LINKAGE */
   typedef void* ID;
   typedef void* fl_Window;
   typedef void* fl_Group;
-  typedef unsigned int Fl_Color;
-  typedef unsigned Fl_Align;
   typedef void* fl_Label;
   typedef void* fl_Adjuster;
   typedef void* fl_Bitmap;
@@ -470,7 +469,6 @@ EXPORT {
   typedef void* fl_Value_Output;
   typedef void* fl_Value_Slider;
   typedef void* fl_Widget;
-  typedef void* fl_Window;
   typedef void* fl_Wizard;
   typedef void* fl_XBM_Image;
   typedef void* fl_XPM_Image;
