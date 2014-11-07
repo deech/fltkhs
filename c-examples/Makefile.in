@@ -2,7 +2,7 @@ FLTKCONFIG=@FLTKCONFIG@
 CXX = $(shell $(FLTKCONFIG) --cxx) $(shell $(FLTKCONFIG) --cxxflags) -Wall -Werror -DINTERNAL_LINKAGE -g -Icpp
 LD = $(CXX) -shared
 CC = $(shell $(FLTKCONFIG) --cc) $(shell $(FLTKCONFIG) --cflags) -Wall -Werror -g -I../c-src -I../ -I./
-CXXLDFLAGS = $(shell $(FLTKCONFIG) --ldstaticflags @FLTKCONFIG_GL_FLAG@ @FLTKCONFIG_IMAGES_FLAG@ @FLTKCONFIG_CAIRO_FLAG@ @FLTKCONFIG_FORMS_FLAG@)
+CXXLDFLAGS = @FLTKCONFIGCOMMAND@
 ifeq '$(OS)' "Windows_NT"
 EXEEXT = .exe
 endif

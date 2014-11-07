@@ -131,7 +131,6 @@ EXPORT {
   FL_EXPORT_C(void, Fl_Tree_clear_children)(fl_Tree tree,fl_Tree_Item item);
   FL_EXPORT_C(fl_Tree_Item, Fl_Tree_find_item)(fl_Tree tree,const char *path);
   FL_EXPORT_C(int, Fl_Tree_item_pathname)(fl_Tree tree,char *pathname, int pathnamelen, const fl_Tree_Item item);
-  FL_EXPORT_C(fl_Tree_Item, Fl_Tree_find_clicked)(fl_Tree tree);
   FL_EXPORT_C(fl_Tree_Item, Fl_Tree_item_clicked)(fl_Tree tree);
   FL_EXPORT_C(fl_Tree_Item, Fl_Tree_first)(fl_Tree tree);
   FL_EXPORT_C(fl_Tree_Item, Fl_Tree_first_visible)(fl_Tree tree);

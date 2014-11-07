@@ -22,7 +22,7 @@ where
 #include "Fl_ExportMacros.h"
 #include "Fl_Types.h"
 #include "Fl_ImageC.h"
-import C2HS hiding (cFromEnum, unsafePerformIO, cFromBool, cToBool,cToEnum)
+import C2HS hiding (cFromEnum, cFromBool, cToBool,cToEnum)
 import Foreign.C.Types
 import Graphics.UI.FLTK.LowLevel.Fl_Enumerations
 import Graphics.UI.FLTK.LowLevel.Fl_Types
@@ -68,7 +68,7 @@ imageNew (Size (Width width') (Height height')) (Depth depth') funcs =
 
 {# fun unsafe Fl_Image_Destroy as flImageDestroy' { id `Ptr ()' } -> `()' id #}
 imageDestroy :: Image a -> IO ()
-imageDestroy image = withObject image $ \imagePtr -> flImageDestroy' imagePtr                
+imageDestroy image = withObject image $ \imagePtr -> flImageDestroy' imagePtr
 {# fun unsafe Fl_Image_w as w' { id `Ptr ()' } -> `Int' #}
 imageW :: Image a  ->  IO (Int)
 imageW image = withObject image $ \imagePtr -> w' imagePtr

@@ -90,29 +90,29 @@ module Graphics.UI.FLTK.LowLevel.Fl_Valuator
      valuatorDrawBoxWithBoxtype,
      valuatorDrawBackdrop,
      valuatorDrawFocus,
-     valuatorBounds, 
-     valuatorMinimum, 
-     valuatorSetMinimum, 
-     valuatorMaximum, 
-     valuatorSetMaximum, 
-     valuatorRange, 
-     valuatorSetStep, 
-     valuatorSetStepWithAB, 
-     valuatorStepWithS, 
-     valuatorStep, 
-     valuatorPrecision, 
-     valuatorValue, 
-     valuatorSetValue, 
-     valuatorFormat, 
-     valuatorRound, 
-     valuatorClamp, 
+     valuatorBounds,
+     valuatorMinimum,
+     valuatorSetMinimum,
+     valuatorMaximum,
+     valuatorSetMaximum,
+     valuatorRange,
+     valuatorSetStep,
+     valuatorSetStepWithAB,
+     valuatorStepWithS,
+     valuatorStep,
+     valuatorPrecision,
+     valuatorValue,
+     valuatorSetValue,
+     valuatorFormat,
+     valuatorRound,
+     valuatorClamp,
      valuatorIncrement
     )
 where
 #include "Fl_ExportMacros.h"
 #include "Fl_Types.h"
 #include "Fl_ValuatorC.h"
-import C2HS hiding (cFromEnum, unsafePerformIO, cFromBool, cToBool,cToEnum)
+import C2HS hiding (cFromEnum, cFromBool, cToBool,cToEnum)
 import Foreign.C.Types
 import Graphics.UI.FLTK.LowLevel.Fl_Enumerations
 import Graphics.UI.FLTK.LowLevel.Fl_Types
@@ -128,8 +128,8 @@ data ValuatorFuncs a =
     ,valuatorHideOverride       :: Maybe (Valuator a -> IO ())
     ,valuatorAsWindowOverride   :: Maybe (Valuator a -> IO (Window ()))
     ,valuatorAsGlWindowOverride :: Maybe (Valuator a -> IO (GlWindow ()))
-    }                              
-                                   
+    }
+
 valuatorFunctionStruct :: (ValuatorFuncs a) -> IO (Ptr ())
 valuatorFunctionStruct funcs = do
       p <- mallocBytes {#sizeof fl_Valuator_Virtual_Funcs #}

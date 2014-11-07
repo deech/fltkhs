@@ -346,9 +346,6 @@ EXPORT {
   FL_EXPORT_C(int,Fl_Tree_item_pathname)(fl_Tree tree,char *pathname,int pathnamelen,const fl_Tree_Item item){
     return (static_cast<Fl_Tree*>(tree))->item_pathname(pathname,pathnamelen,(static_cast<Fl_Tree_Item*>(item)));
   }
-  FL_EXPORT_C(fl_Tree_Item,Fl_Tree_find_clicked)(fl_Tree tree){
-    return (fl_Tree_Item)(static_cast<Fl_Tree*>(tree))->find_clicked();
-  }
   FL_EXPORT_C(fl_Tree_Item,Fl_Tree_item_clicked)(fl_Tree tree){
     return (static_cast<Fl_Tree*>(tree))->item_clicked();
   }

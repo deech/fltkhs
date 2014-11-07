@@ -11,10 +11,6 @@ module Graphics.UI.FLTK.LowLevel.Fl_Enumerations
      TreeSort(..),
      TreeConnector(..),
      TreeSelect(..),
-#if FLTK_ABI_VERSION >= 10302
-     TreeItemReselectMode(..),
-     TreeItemDrawMode(..),
-#endif /*FLTK_ABI_VERSION*/
      -- * Keyboard and mouse codes
      KeyboardCode(..),
      MouseButton(..),
@@ -147,7 +143,6 @@ where
 import C2HS
 #c
 enum VersionInfo {
-  AbiVersion = FLTK_ABI_VERSION,
   MajorVersion = FL_MAJOR_VERSION,
   MinorVersion = FL_MINOR_VERSION,
   PatchVersion = FL_PATCH_VERSION,
@@ -212,17 +207,6 @@ enum TreeSelect{
   TreeSelectSingle = FL_TREE_SELECT_SINGLE,
   TreeSelectMulti = FL_TREE_SELECT_MULTI
 };
-#if FLTK_ABI_VERSION >= 10302
-enum TreeItemReselectMode{
-  TreeSelectableOnce = FL_TREE_SELECTABLE_ONCE,
-  TreeSelectableAlways = FL_TREE_SELECTABLE_ALWAYS
-};
-enum Tree_Item_Draw_Mode{
-  TreeItemDrawDefault = FL_TREE_ITEM_DRAW_DEFAULT,
-  TreeItemDrawLabelAndWidget = FL_TREE_ITEM_DRAW_LABEL_AND_WIDGET,
-  TreeItemHeightFromWidget = FL_TREE_ITEM_HEIGHT_FROM_WIDGET
-};
-#endif /*FLTK_ABI_VERSION*/
 enum KeyboardCode {
   Button = FL_Button,
   Kb_Backspace = FL_BackSpace,
@@ -486,7 +470,7 @@ enum AlignType {
 kb_Command, kb_Control, kb_KpLast, kb_KeyMask :: KeyboardCode
 #ifdef __APPLE__
 kb_Command = Kb_Meta
-kb_Control = Kb_Control
+kb_Control = Kb_Ctrl
 #else
 kb_Command = Kb_Ctrl
 kb_Control = Kb_Meta

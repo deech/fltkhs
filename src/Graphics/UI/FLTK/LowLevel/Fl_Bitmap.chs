@@ -19,7 +19,7 @@ where
 #include "Fl_ExportMacros.h"
 #include "Fl_Types.h"
 #include "Fl_BitmapC.h"
-import C2HS hiding (cFromEnum, unsafePerformIO, cFromBool, cToBool,cToEnum)
+import C2HS hiding (cFromEnum, cFromBool, cToBool,cToEnum)
 import Foreign.C.Types
 import Graphics.UI.FLTK.LowLevel.Fl_Enumerations
 import Graphics.UI.FLTK.LowLevel.Fl_Types
@@ -30,7 +30,7 @@ bitmapNew :: BitmapHs -> IO (Bitmap a)
 bitmapNew bitmap = withBitmap bitmap (\ptr width' height' -> flBitmapNew' ptr width' height' >>= toObject)
 {# fun unsafe Fl_Bitmap_Destroy as flBitmapDestroy' { id `Ptr ()' } -> `()' id #}
 bitmapDestroy :: Bitmap a -> IO ()
-bitmapDestroy bitmap = withObject bitmap $ \bitmapPtr -> flBitmapDestroy' bitmapPtr                
+bitmapDestroy bitmap = withObject bitmap $ \bitmapPtr -> flBitmapDestroy' bitmapPtr
 {# fun unsafe Fl_Bitmap_w as w' { id `Ptr ()' } -> `Int' #}
 bitmapW :: Bitmap a  ->  IO (Int)
 bitmapW bitmap = withObject bitmap $ \bitmapPtr -> w' bitmapPtr

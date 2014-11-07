@@ -53,7 +53,7 @@ where
 #include "Fl_ExportMacros.h"
 #include "Fl_Types.h"
 #include "Fl_Menu_ItemC.h"
-import C2HS hiding (cFromEnum, unsafePerformIO, cFromBool, cToBool,cToEnum)
+import C2HS hiding (cFromEnum, cFromBool, cToBool,cToEnum)
 import Foreign.C.Types
 import Graphics.UI.FLTK.LowLevel.Fl_Enumerations
 import Graphics.UI.FLTK.LowLevel.Fl_Types

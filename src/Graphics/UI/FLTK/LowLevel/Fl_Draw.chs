@@ -117,7 +117,7 @@ module Graphics.UI.FLTK.LowLevel.Fl_Draw
 where
 #include "Fl_C.h"
 #include "Fl_DrawC.h"
-import C2HS hiding (cFromEnum, unsafePerformIO, cFromBool, cToBool,cToEnum)
+import C2HS hiding (cFromEnum, cFromBool, cToBool,cToEnum)
 import Foreign.C
 import Graphics.UI.FLTK.LowLevel.Fl_Types
 import Graphics.UI.FLTK.LowLevel.Fl_Enumerations

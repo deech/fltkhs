@@ -9,42 +9,12 @@
 /* Define to 1 if you have the `fltk' library (-lfltk). */
 #undef HAVE_LIBFLTK
 
-/* Define to 1 if you have the `fltk_gl' library (-lfltk_gl). */
-#undef HAVE_LIBFLTK_GL
-
-/* Define to 1 if you have the `fltk_images' library (-lfltk_images). */
-#undef HAVE_LIBFLTK_IMAGES
-
-/* Define to 1 if you have the `z' library (-lz). */
-#undef HAVE_LIBZ
+/* Define to 1 if you have the `fltk_forms' library (-lfltk_forms). */
+#undef HAVE_LIBFLTK_FORMS
 
 /* Define to 1 if your system has a GNU libc compatible `malloc' function, and
    to 0 otherwise. */
 #undef HAVE_MALLOC
-
-/*
- * USE_XFT
- *
- * Use the new Xft library to draw anti-aliased text.
- */
-
-#define USE_XFT 1
-
-/*
- * HAVE_XDBE:
- *
- * Do we have the X double-buffer extension?
- */
-
-#define HAVE_XDBE 1
-
-/*
- * USE_XDBE:
- *
- * Actually try to use the double-buffer extension?
- */
-
-#define USE_XDBE HAVE_XDBE
 
 /* Define to 1 if you have the <memory.h> header file. */
 #undef HAVE_MEMORY_H

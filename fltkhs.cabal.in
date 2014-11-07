@@ -52,16 +52,16 @@ Executable test_call
   Main-Is: TestCall.hs
   Hs-Source-Dirs: src/TestPrograms
   include-dirs: ./object_files ./lib
-  ghc-Options: -Wall -threaded -lHSfltkhs-0.1.0.0 -lfltkc -lfltk -lfltk_images -lpng -lz -ljpeg -lfltk_gl  -lGLU -lGL -lXfixes -lXext -lXft -lfontconfig -lXinerama -lpthread -ldl -lm  -lX11 -lstdc++
+  ghc-Options: -Wall -threaded -lHSfltkhs-0.1.0.0 -lstdc++ @FLTKCONFIGCOMMAND@
   Build-Depends:
     base,
     fltkhs
 
-Executable buttons 
+Executable buttons
   Main-Is: Buttons.hs
   Hs-Source-Dirs: src/TestPrograms
   include-dirs: ./object_files ./lib
-  ghc-Options: -Wall -threaded -lHSfltkhs-0.1.0.0 -lfltkc -lfltk -lfltk_images -lpng -lz -ljpeg -lfltk_gl  -lGLU -lGL -lXfixes -lXext -lXft -lfontconfig -lXinerama -lpthread -ldl -lm  -lX11 -lstdc++
+  ghc-Options: -Wall -threaded -lHSfltkhs-0.1.0.0 -lstdc++ @FLTKCONFIGCOMMAND@
   Build-Depends:
     base,
     fltkhs

@@ -83,34 +83,34 @@ module Graphics.UI.FLTK.LowLevel.Fl_Slider
      sliderResizeSuper,
      sliderResize,
      sliderSetCallback,
-     sliderBounds, 
-     sliderMinimum, 
-     sliderSetMinimum, 
-     sliderMaximum, 
-     sliderSetMaximum, 
-     sliderRange, 
-     sliderSetStep, 
-     sliderSetStepWithAB, 
-     sliderStepWithS, 
-     sliderStep, 
-     sliderPrecision, 
-     sliderValue, 
-     sliderSetValue, 
-     sliderFormat, 
-     sliderRound, 
-     sliderClamp, 
+     sliderBounds,
+     sliderMinimum,
+     sliderSetMinimum,
+     sliderMaximum,
+     sliderSetMaximum,
+     sliderRange,
+     sliderSetStep,
+     sliderSetStepWithAB,
+     sliderStepWithS,
+     sliderStep,
+     sliderPrecision,
+     sliderValue,
+     sliderSetValue,
+     sliderFormat,
+     sliderRound,
+     sliderClamp,
      sliderIncrement,
-     sliderScrollvalue, 
-     sliderSetSliderSize, 
-     sliderSliderSize, 
-     sliderSlider, 
-     sliderSetSlider, 
+     sliderScrollvalue,
+     sliderSetSliderSize,
+     sliderSliderSize,
+     sliderSlider,
+     sliderSetSlider,
     )
 where
 #include "Fl_ExportMacros.h"
 #include "Fl_Types.h"
 #include "Fl_SliderC.h"
-import C2HS hiding (cFromEnum, unsafePerformIO, cFromBool, cToBool,cToEnum)
+import C2HS hiding (cFromEnum, cFromBool, cToBool,cToEnum)
 import Foreign.C.Types
 import Graphics.UI.FLTK.LowLevel.Fl_Enumerations
 import Graphics.UI.FLTK.LowLevel.Fl_Types

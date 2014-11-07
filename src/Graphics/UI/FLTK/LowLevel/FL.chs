@@ -51,8 +51,10 @@ module Graphics.UI.FLTK.LowLevel.FL
      version,
      help,
      visual,
+#if !defined(__APPLE__)
      glVisual,
      glVisualWithAlist,
+#endif
      scheme,
      wait,
      setWait,
@@ -91,7 +93,9 @@ module Graphics.UI.FLTK.LowLevel.FL
      setColor,
      getColor,
      getColorRgb,
+#if !defined(__APPLE__)
      removeFromColormap,
+#endif
      setLabeltype,
      -- * Box
      BoxtypeSpec,
@@ -146,7 +150,7 @@ module Graphics.UI.FLTK.LowLevel.FL
     )
 where
 #include "Fl_C.h"
-import C2HS hiding (cFromEnum, unsafePerformIO, cToBool,cToEnum)
+import C2HS hiding (cFromEnum, cToBool,cToEnum)
 import Control.Concurrent.STM hiding (check)
 import Foreign.C.Types
 import Graphics.UI.FLTK.LowLevel.Fl_Enumerations
@@ -267,10 +271,12 @@ display :: String -> IO ()
 display text = withCString text $ \str -> {#call Fl_display as fl_display #} str
 {# fun Fl_visual as visual
   {cFromEnum `Mode'} -> `Int' #}
+#if !defined(__APPLE__)
 {# fun Fl_gl_visual as glVisual
   {cFromEnum `Mode'} -> `Int' #}
 {# fun Fl_gl_visual_with_alist as glVisualWithAlist
   {cFromEnum `Mode', id `Ptr CInt'} -> `Int' #}
+#endif
 
 ownColormap :: IO ()
 ownColormap = {#call Fl_own_colormap as fl_own_colormap #}
@@ -670,6 +676,8 @@ setColorRgb c r g b = {#call Fl_set_color_rgb as fl_set_color_rgb #}
          alloca- `Word8' peekIntConv*,
          alloca- `Word8' peekIntConv*
        } -> `()' supressWarningAboutRes #}
+
+#if !defined(__APPLE__)
 {# fun Fl_free_color as freeColor'
       { cFromColor `Color' } -> `()' supressWarningAboutRes #}
 {# fun Fl_free_color_with_overlay as freeColorWithOverlay'
@@ -677,6 +685,7 @@ setColorRgb c r g b = {#call Fl_set_color_rgb as fl_set_color_rgb #}
 removeFromColormap :: Maybe Int -> Color -> IO ()
 removeFromColormap (Just overlay) c = freeColorWithOverlay' c overlay
 removeFromColormap Nothing c = freeColor' c
+#endif
 {# fun Fl_get_font as getFont
        { cFromFont `Font' } -> `String' #}
 {# fun Fl_get_font_name_with_attributes as getFontNameWithAttributes'

@@ -171,7 +171,7 @@ import Graphics.UI.FLTK.LowLevel.Fl_Types
 import Graphics.UI.FLTK.LowLevel.Fl_Enumerations
 import Graphics.UI.FLTK.LowLevel.Utils
 import Graphics.UI.FLTK.LowLevel.Fl_Group
-import C2HS hiding (cFromEnum, unsafePerformIO, toBool,cToEnum)
+import C2HS hiding (cFromEnum, toBool,cToEnum)
 
 data WindowFuncs a =
     WindowFuncs
