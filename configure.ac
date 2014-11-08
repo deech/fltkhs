@@ -40,5 +40,5 @@ AC_FUNC_MALLOC
 AC_CHECK_FUNCS([select strdup strerror strrchr strtol])
 
 AC_SUBST([FLTKCONFIG],"fltk-config")
-AC_CONFIG_FILES([Makefile c-src/Makefile c-examples/Makefile fltkhs.cabal])
+AC_CONFIG_FILES([Makefile c-src/Makefile c-examples/Makefile fltkhs.buildinfo])
 AC_OUTPUT

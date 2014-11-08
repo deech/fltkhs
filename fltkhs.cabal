@@ -47,7 +47,6 @@ library
   other-modules: C2HS
   include-dirs: ./c-src
   ghc-options: -Wall -lfltkc -optl-static
-  ld-options: @FLTKCONFIGCOMMAND@ -lstdc++
 
 Executable test_call
   Main-Is: TestCall.hs
