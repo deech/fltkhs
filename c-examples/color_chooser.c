@@ -12,8 +12,8 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <fl_utf8C.h>
 #if !defined(WIN32) && !defined(__APPLE__)
-#include <FL/Xutf8.h>
 #include "list_visuals.h"
 #endif
 

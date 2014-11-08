@@ -9,6 +9,10 @@
 #include "Fl_CallbackC.h"
 EXPORT {
 #endif
+#if !defined(WIN32) && !defined(__APPLE__)
+# include <X11/Xlib.h>
+# include <X11/Xutil.h>
+#endif
  FL_EXPORT_C(void, flc_open_display)();
  FL_EXPORT_C(Fl_Bitmask, flc_create_bitmask)(int w, int h, const uchar *data);
  FL_EXPORT_C(Fl_Bitmask, flc_create_alphamask)(int w, int h, int d, int ld, const uchar *data);

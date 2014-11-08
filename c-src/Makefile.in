@@ -5,6 +5,7 @@ CXXSTATIC = $(CXX) -static
 
 CPPFILES= \
 	xC.cpp \
+	fl_utf8C.cpp \
 	glC.cpp \
 	glutC.cpp \
 	DerivedText_Editor.cpp \
