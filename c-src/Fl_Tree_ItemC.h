@@ -17,7 +17,6 @@ EXPORT {
   FL_EXPORT_C(int, Fl_Tree_Item_y)(fl_Tree_Item tree_item);
   FL_EXPORT_C(int, Fl_Tree_Item_w)(fl_Tree_Item tree_item);
   FL_EXPORT_C(int, Fl_Tree_Item_h)(fl_Tree_Item tree_item);
-  FL_EXPORT_C(int, Fl_Tree_Item_calc_item_height)(fl_Tree_Item tree_item,  fl_Tree_Prefs prefs);
   FL_EXPORT_C(void, Fl_Tree_Item_draw)(fl_Tree_Item tree_item, int X, int *Y, int W, fl_Widget tree, fl_Tree_Item itemfocus,  fl_Tree_Prefs prefs);
   FL_EXPORT_C(void, Fl_Tree_Item_draw_with_lastchild)(fl_Tree_Item tree_item, int X, int *Y, int W, fl_Widget tree, fl_Tree_Item itemfocus,  fl_Tree_Prefs prefs);
   FL_EXPORT_C(void, Fl_Tree_Item_show_self_with_indent)(fl_Tree_Item tree_item,  char* indent);

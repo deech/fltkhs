@@ -26,9 +26,6 @@ EXPORT {
   FL_EXPORT_C(int,Fl_Tree_Item_h)(fl_Tree_Item tree_item){
     return (static_cast<Fl_Tree_Item*>(tree_item))->h();
   }
-  FL_EXPORT_C(int,Fl_Tree_Item_calc_item_height)(fl_Tree_Item tree_item,fl_Tree_Prefs prefs){
-    return (static_cast<Fl_Tree_Item*>(tree_item))->calc_item_height(*(static_cast<Fl_Tree_Prefs*>(prefs)));
-  }
   FL_EXPORT_C(void,Fl_Tree_Item_draw)(fl_Tree_Item tree_item,int X,int *Y,int W,fl_Widget tree,fl_Tree_Item itemfocus,fl_Tree_Prefs prefs){
     (static_cast<Fl_Tree_Item*>(tree_item))->draw(X,*Y,W,(static_cast<Fl_Widget*>(tree)),(static_cast<Fl_Tree_Item*>(itemfocus)),(*(static_cast<Fl_Tree_Prefs*>(prefs))));
   }

@@ -10,6 +10,7 @@ module Graphics.UI.FLTK.LowLevel.Fl_Double_Window
     doubleWindowShowSuper,
     doubleWindowHideSuper,
     doubleWindowFlushSuper,
+    doubleWindowFlush,
     doubleWindowAsWindowSuper,
     doubleWindowAsGlWindowSuper,
     doubleWindowAsGroupSuper,
@@ -264,6 +265,10 @@ doubleWindowHide doubleWindow = withObject doubleWindow $ \doubleWindowPtr -> hi
 {# fun Fl_Double_Window_flush_super as flushSuper' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
 doubleWindowFlushSuper :: DoubleWindow a  ->  IO (())
 doubleWindowFlushSuper window = withObject window $ \windowPtr -> flushSuper' windowPtr
+
+{# fun Fl_Double_Window_flush as flush' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
+doubleWindowFlush :: DoubleWindow a  ->  IO (())
+doubleWindowFlush window = withObject window $ \windowPtr -> flush' windowPtr
 
 {# fun Fl_Double_Window_as_window_super as asWindowSuper' { id `Ptr ()' } -> `Window ()' unsafeToObject #}
 doubleWindowAsWindowSuper :: DoubleWindow a  ->  IO (Window ())

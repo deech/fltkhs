@@ -150,7 +150,7 @@ module Graphics.UI.FLTK.LowLevel.FL
     )
 where
 #include "Fl_C.h"
-import C2HS hiding (cFromEnum, cToBool,cToEnum)
+import C2HS hiding (cFromEnum, cToBool,cToEnum, unsafePerformIO)
 import Control.Concurrent.STM hiding (check)
 import Foreign.C.Types
 import Graphics.UI.FLTK.LowLevel.Fl_Enumerations
