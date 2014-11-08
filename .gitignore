@@ -4,6 +4,7 @@
 executables/*
 lib/*
 ./
+*~
 Makefile
 aclocal.m4
 autom4te.cache
@@ -13,6 +14,8 @@ config.status
 config.sub
 configure
 config.h
+config.h.in
+fltkhs.buildinfo
 autoscan.log
 object_files/*
 c-examples/Makefile

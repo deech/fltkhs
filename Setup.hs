@@ -29,9 +29,15 @@ import qualified Distribution.Simple.Hugs as Hugs
 import qualified Distribution.Simple.UHC  as UHC
 
 main = defaultMainWithHooks autoconfUserHooks {
+         preConf = myPreConf,
          buildHook = myBuildHook,
          cleanHook = myCleanHook
        }
+
+myPreConf args flags = do
+   putStrLn "Running autoconf ..."
+   rawSystemExit normal "autoconf" []
+   preConf autoconfUserHooks args flags
 
 fltkcdir = unsafePerformIO getCurrentDirectory ++ "/lib"
 fltkclib = "fltkc"
