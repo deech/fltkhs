@@ -4,6 +4,7 @@ LD = $(CXX) -shared
 CXXSTATIC = $(CXX) -static
 
 CPPFILES= \
+	Utils.cpp \
 	xC.cpp \
 	fl_utf8C.cpp \
 	glC.cpp \

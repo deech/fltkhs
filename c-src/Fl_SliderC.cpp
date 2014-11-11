@@ -105,6 +105,9 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Slider_set_labeltype)(fl_Slider slider,Fl_Labeltype a){
     (static_cast<Fl_Slider*>(slider))->labeltype(a);
   }
+  FL_EXPORT_C(Fl_Color,Fl_Slider_labelcolor)(fl_Slider slider){
+    return (static_cast<Fl_Slider*>(slider))->labelcolor();
+  }
   FL_EXPORT_C(void,Fl_Slider_set_labelcolor)(fl_Slider slider,Fl_Color c){
     (static_cast<Fl_Slider*>(slider))->labelcolor(c);
   }

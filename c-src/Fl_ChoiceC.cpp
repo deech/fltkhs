@@ -1,4 +1,5 @@
 #include "Fl_ChoiceC.h"
+#include "Utils.h"
 #ifdef __cplusplus
 EXPORT {
 #endif
@@ -104,6 +105,9 @@ EXPORT {
   }
   FL_EXPORT_C(void,Fl_Choice_set_labelcolor)(fl_Choice choice,Fl_Color c){
     (static_cast<Fl_Choice*>(choice))->labelcolor(c);
+  }
+  FL_EXPORT_C(Fl_Color ,Fl_Choice_labelcolor)(fl_Choice choice){
+    return (static_cast<Fl_Choice*>(choice))->labelcolor();
   }
   FL_EXPORT_C(Fl_Font,Fl_Choice_labelfont)(fl_Choice choice){
     return (static_cast<Fl_Choice*>(choice))->labelfont();
@@ -303,14 +307,6 @@ EXPORT {
   }
   FL_EXPORT_C(fl_Menu_Item,Fl_Choice_menu)(fl_Choice choice){
     return (fl_Menu_Item)(static_cast<Fl_Choice*>(choice))->menu();
-  }
-  FL_EXPORT_C(Fl_Menu_Item*,convert)(fl_Menu_Item* item, int size){
-    int i = 0;
-    Fl_Menu_Item* current = new Fl_Menu_Item[size];
-    for (;i<size;i++){
-      current[i] = *(static_cast<Fl_Menu_Item*>(*(item + i)));
-    }
-    return current;
   }
   FL_EXPORT_C(void,Fl_Choice_menu_with_m)(fl_Choice choice,fl_Menu_Item* item, int size){
     Fl_Menu_Item* converted = convert(item,size);

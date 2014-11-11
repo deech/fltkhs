@@ -1,4 +1,5 @@
 #include "Fl_Menu_BarC.h"
+#include "Utils.h"
 #ifdef __cplusplus
 Fl_DerivedMenu_Bar::Fl_DerivedMenu_Bar(int X, int Y, int W, int H, const char *l, fl_Menu_Bar_Virtual_Funcs* funcs) : Fl_Menu_Bar(X,Y,W,H,l){
     overriddenFuncs = funcs;
@@ -250,6 +251,9 @@ FL_EXPORT_C(void, Fl_Menu_Bar_draw_label)(fl_Menu_Bar Menu_Bar){
   FL_EXPORT_C(void,Fl_Menu_Bar_set_labelcolor)(fl_Menu_Bar menu_bar,Fl_Color c){
     (static_cast<Fl_DerivedMenu_Bar*>(menu_bar))->labelcolor(c);
   }
+  FL_EXPORT_C(Fl_Color ,Fl_Menu_Bar_labelcolor)(fl_Menu_Bar menu_bar){
+    return (static_cast<Fl_DerivedMenu_Bar*>(menu_bar))->labelcolor();
+  }
   FL_EXPORT_C(Fl_Font,Fl_Menu_Bar_labelfont)(fl_Menu_Bar menu_bar){
     return (static_cast<Fl_DerivedMenu_Bar*>(menu_bar))->labelfont();
   }
@@ -466,14 +470,6 @@ FL_EXPORT_C(void, Fl_Menu_Bar_draw_label)(fl_Menu_Bar Menu_Bar){
   }
   FL_EXPORT_C(fl_Menu_Item,Fl_Menu_Bar_menu)(fl_Menu_Bar menu_bar){
     return (fl_Menu_Item)(static_cast<Fl_Menu_Bar*>(menu_bar))->menu();
-  }
-  FL_EXPORT_C(Fl_Menu_Item*,convert)(fl_Menu_Item* item, int size){
-    int i = 0;
-    Fl_Menu_Item* current = new Fl_Menu_Item[size];
-    for (;i<size;i++){
-      current[i] = *(static_cast<Fl_Menu_Item*>(*(item + i)));
-    }
-    return current;
   }
   FL_EXPORT_C(void,Fl_Menu_Bar_menu_with_m)(fl_Menu_Bar menu_bar,fl_Menu_Item* item, int size){
     Fl_Menu_Item* converted = convert(item,size);

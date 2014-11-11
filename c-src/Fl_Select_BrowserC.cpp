@@ -75,6 +75,9 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Select_Browser_set_labelcolor)(fl_Select_Browser select_browser,Fl_Color c){
     (static_cast<Fl_Select_Browser*>(select_browser))->labelcolor(c);
   }
+  FL_EXPORT_C(Fl_Color ,Fl_Select_Browser_labelcolor)(fl_Select_Browser select_browser){
+    return (static_cast<Fl_Select_Browser*>(select_browser))->labelcolor();
+  }
   FL_EXPORT_C(Fl_Font,Fl_Select_Browser_labelfont)(fl_Select_Browser select_browser){
     return (static_cast<Fl_Select_Browser*>(select_browser))->labelfont();
   }

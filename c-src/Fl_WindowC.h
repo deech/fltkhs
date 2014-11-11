@@ -253,6 +253,7 @@ EXPORT {
   FL_EXPORT_C(void, Fl_Window_default_callback)(fl_Window win, void* v);
   FL_EXPORT_C(int, Fl_Window_decorated_w)(fl_Window win);
   FL_EXPORT_C(int, Fl_Window_decorated_h)(fl_Window win);
+  FL_EXPORT_C(void, Fl_Window_wait_for_expose)(fl_Window win);
 #ifdef __cplusplus
 }
 #endif

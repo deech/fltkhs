@@ -243,6 +243,9 @@ FL_EXPORT_C(void, Fl_Multi_Browser_draw_label)(fl_Multi_Browser Multi_Browser){
   FL_EXPORT_C(void,Fl_Multi_Browser_set_labelcolor)(fl_Multi_Browser multi_browser,Fl_Color c){
     (static_cast<Fl_DerivedMulti_Browser*>(multi_browser))->labelcolor(c);
   }
+  FL_EXPORT_C(Fl_Color ,Fl_Multi_Browser_labelcolor)(fl_Multi_Browser multi_browser){
+    return (static_cast<Fl_DerivedMulti_Browser*>(multi_browser))->labelcolor();
+  }
   FL_EXPORT_C(Fl_Font,Fl_Multi_Browser_labelfont)(fl_Multi_Browser multi_browser){
     return (static_cast<Fl_DerivedMulti_Browser*>(multi_browser))->labelfont();
   }

@@ -244,6 +244,9 @@ FL_EXPORT_C(void, Fl_Browser_draw_label)(fl_Browser Browser){
   FL_EXPORT_C(void,Fl_Browser_set_labelcolor)(fl_Browser browser,Fl_Color c){
     (static_cast<Fl_DerivedBrowser*>(browser))->labelcolor(c);
   }
+  FL_EXPORT_C(Fl_Color ,Fl_Browser_labelcolor)(fl_Browser browser){
+    return (static_cast<Fl_DerivedBrowser*>(browser))->labelcolor();
+  }
   FL_EXPORT_C(Fl_Font,Fl_Browser_labelfont)(fl_Browser browser){
     return (static_cast<Fl_DerivedBrowser*>(browser))->labelfont();
   }

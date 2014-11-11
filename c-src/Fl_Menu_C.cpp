@@ -1,4 +1,5 @@
 #include "Fl_Menu_C.h"
+#include "Utils.h"
 #ifdef __cplusplus
 Fl_DerivedMenu_::Fl_DerivedMenu_(int X, int Y, int W, int H, const char *l, fl_Menu__Virtual_Funcs* funcs) : Fl_Menu_(X,Y,W,H,l){
     overriddenFuncs = funcs;
@@ -75,6 +76,19 @@ Fl_Window* Fl_DerivedMenu_::as_window(){
   }
   return win;
 }
+Fl_Group* Fl_DerivedMenu_::as_group(){
+  Fl_Group* win;
+  if (this->overriddenFuncs->as_group != NULL) {
+    win = (static_cast<Fl_Group*>(this->overriddenFuncs->as_group((fl_Menu_) this)));
+  }
+  else {
+    win = Fl_Menu_::as_group();
+  }
+  return win;
+}
+Fl_Group* Fl_DerivedMenu_::as_group_super(){
+  return Fl_Menu_::as_group();
+}
 Fl_Gl_Window* Fl_DerivedMenu_::as_gl_window(){
   Fl_Gl_Window* win;
   if (this->overriddenFuncs->as_gl_window != NULL) {
@@ -100,37 +114,43 @@ EXPORT {
     return ptr;
   }
   FL_EXPORT_C(int,Fl_Menu__handle_super )(fl_Menu_ menu_,int event){
-    return (static_cast<Fl_DerivedMenu_*>(menu_))->handle(event);
+    return (static_cast<Fl_Menu_*>(menu_))->handle(event);
   }
   FL_EXPORT_C(int,Fl_Menu__handle )(fl_Menu_ menu_, int event){
     return (static_cast<Fl_DerivedMenu_*>(menu_))->handle(event);
   }
   FL_EXPORT_C(void,Fl_Menu__resize_super )(fl_Menu_ menu_,int x, int y, int w, int h){
-    (static_cast<Fl_DerivedMenu_*>(menu_))->resize(x,y,w,h);
+    (static_cast<Fl_Menu_*>(menu_))->resize(x,y,w,h);
   }
   FL_EXPORT_C(void,Fl_Menu__resize )(fl_Menu_ menu_,int x, int y, int w, int h){
     (static_cast<Fl_DerivedMenu_*>(menu_))->resize(x,y,w,h);
   }
   FL_EXPORT_C(void,Fl_Menu__show_super)(fl_Menu_ menu_){
-    (static_cast<Fl_DerivedMenu_*>(menu_))->show();
+    (static_cast<Fl_Menu_*>(menu_))->show();
   }
   FL_EXPORT_C(void,Fl_Menu__show )(fl_Menu_ menu_){
     (static_cast<Fl_DerivedMenu_*>(menu_))->show();
   }
   FL_EXPORT_C(void,Fl_Menu__hide_super)(fl_Menu_ menu_){
-    (static_cast<Fl_DerivedMenu_*>(menu_))->hide();
+    (static_cast<Fl_Menu_*>(menu_))->hide();
   }
   FL_EXPORT_C(void,Fl_Menu__hide )(fl_Menu_ menu_){
     (static_cast<Fl_DerivedMenu_*>(menu_))->hide();
   }
   FL_EXPORT_C(fl_Window,Fl_Menu__as_window_super)(fl_Menu_ menu_){
-    return (static_cast<Fl_DerivedMenu_*>(menu_))->as_window();
+    return (fl_Window)(static_cast<Fl_Menu_*>(menu_))->as_window();
   }
   FL_EXPORT_C(fl_Window,Fl_Menu__as_window )(fl_Menu_ menu_){
-    return (static_cast<Fl_DerivedMenu_*>(menu_))->as_window();
+    return (fl_Window)(static_cast<Fl_DerivedMenu_*>(menu_))->as_window();
+  }
+  FL_EXPORT_C(fl_Group,Fl_Menu__as_group_super)(fl_Menu_ menu_){
+    return (fl_Group)(static_cast<Fl_DerivedMenu_*>(menu_))->as_group_super();
+  }
+  FL_EXPORT_C(fl_Group,Fl_Menu__as_group )(fl_Menu_ menu_){
+    return (fl_Group)(static_cast<Fl_DerivedMenu_*>(menu_))->as_group();
   }
   FL_EXPORT_C(fl_Gl_Window,Fl_Menu__as_gl_window_super)(fl_Menu_ menu_){
-    return (fl_Gl_Window) (static_cast<Fl_DerivedMenu_*>(menu_))->as_gl_window();
+    return (fl_Gl_Window) (static_cast<Fl_Menu_*>(menu_))->as_gl_window();
   }
   FL_EXPORT_C(fl_Gl_Window,Fl_Menu__as_gl_window )(fl_Menu_ menu_){
     return (fl_Gl_Window) (static_cast<Fl_DerivedMenu_*>(menu_))->as_gl_window();
@@ -225,6 +245,9 @@ FL_EXPORT_C(void, Fl_Menu__draw_label)(fl_Menu_ Menu_){
   }
   FL_EXPORT_C(void,Fl_Menu__set_labelcolor)(fl_Menu_ menu_,Fl_Color c){
     (static_cast<Fl_DerivedMenu_*>(menu_))->labelcolor(c);
+  }
+  FL_EXPORT_C(Fl_Color ,Fl_Menu__labelcolor)(fl_Menu_ menu_){
+    return (static_cast<Fl_DerivedMenu_*>(menu_))->labelcolor();
   }
   FL_EXPORT_C(Fl_Font,Fl_Menu__labelfont)(fl_Menu_ menu_){
     return (static_cast<Fl_DerivedMenu_*>(menu_))->labelfont();
@@ -451,14 +474,6 @@ FL_EXPORT_C(void, Fl_Menu__draw_label)(fl_Menu_ Menu_){
   FL_EXPORT_C(fl_Menu_Item,Fl_Menu__menu)(fl_Menu_ menu_){
     return (fl_Menu_Item)(static_cast<Fl_DerivedMenu_*>(menu_))->menu();
   }
-  FL_EXPORT_C(Fl_Menu_Item*,convert)(fl_Menu_Item* item, int size){
-    int i = 0;
-    Fl_Menu_Item* current = new Fl_Menu_Item[size];
-    for (;i<size;i++){
-      current[i] = *(static_cast<Fl_Menu_Item*>(*(item + i)));
-    }
-    return current;
-  }
   FL_EXPORT_C(void,Fl_Menu__menu_with_m)(fl_Menu_ menu_,fl_Menu_Item* item, int size){
     Fl_Menu_Item* converted_item = convert(item, size);
     return (static_cast<Fl_DerivedMenu_*>(menu_))->menu(converted_item);
@@ -476,6 +491,14 @@ FL_EXPORT_C(void, Fl_Menu__draw_label)(fl_Menu_ Menu_){
   FL_EXPORT_C(int,Fl_Menu__insert_with_flags)(fl_Menu_ menu_,int index,char* name,int shortcut,fl_Callback* cb,int flags){
     C_to_Fl_Callback* callback_interceptor = new C_to_Fl_Callback(cb);
     return callback_interceptor->menu_insert((static_cast<Fl_DerivedMenu_*>(menu_)),index,name,shortcut, flags);
+  }
+  FL_EXPORT_C(int,Fl_Menu__insert_with_shortcutname)(fl_Menu_ menu_,int index,char* name,char* shortcut,fl_Callback* cb){
+    C_to_Fl_Callback* callback_interceptor = new C_to_Fl_Callback(cb);
+    return callback_interceptor->menu_insert((static_cast<Fl_DerivedMenu_*>(menu_)),index, name,shortcut,0);
+  }
+  FL_EXPORT_C(int,Fl_Menu__insert_with_shortcutname_flags)(fl_Menu_ menu_,int index,char* name,char* shortcut,fl_Callback* cb,int flags){
+    C_to_Fl_Callback* callback_interceptor = new C_to_Fl_Callback(cb);
+    return callback_interceptor->menu_insert((static_cast<Fl_DerivedMenu_*>(menu_)),index, name,shortcut,flags);
   }
   FL_EXPORT_C(int,Fl_Menu__insert_with_user_data_flags)(fl_Menu_ menu_,int index,char* name,int shortcut,fl_Callback* cb,void* user_data,int flags){
     C_to_Fl_Callback* callback_interceptor = new C_to_Fl_Callback(cb, user_data);

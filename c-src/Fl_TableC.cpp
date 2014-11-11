@@ -271,6 +271,9 @@ FL_EXPORT_C(void, Fl_Table_draw_label)(fl_Table Table){
   FL_EXPORT_C(void,Fl_Table_set_labelcolor)(fl_Table table,Fl_Color c){
     (static_cast<Fl_DerivedTable*>(table))->labelcolor(c);
   }
+  FL_EXPORT_C(Fl_Color ,Fl_Table_labelcolor)(fl_Table table){
+    return (static_cast<Fl_DerivedTable*>(table))->labelcolor();
+  }
   FL_EXPORT_C(Fl_Font,Fl_Table_labelfont)(fl_Table table){
     return (static_cast<Fl_DerivedTable*>(table))->labelfont();
   }

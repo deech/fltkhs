@@ -75,6 +75,9 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Tile_set_labelcolor)(fl_Tile tile,Fl_Color c){
     (static_cast<Fl_Tile*>(tile))->labelcolor(c);
   }
+  FL_EXPORT_C(Fl_Color ,Fl_Tile_labelcolor)(fl_Tile tile){
+    return (static_cast<Fl_Tile*>(tile))->labelcolor();
+  }
   FL_EXPORT_C(Fl_Font,Fl_Tile_labelfont)(fl_Tile tile){
     return (static_cast<Fl_Tile*>(tile))->labelfont();
   }

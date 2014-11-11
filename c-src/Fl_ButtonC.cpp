@@ -256,6 +256,9 @@ FL_EXPORT_C(void, Fl_Button_draw_label)(fl_Button Button){
   FL_EXPORT_C(void,Fl_Button_set_labelcolor)(fl_Button b,Fl_Color c){
     (static_cast<Fl_DerivedButton*>(b))->labelcolor(c);
   }
+  FL_EXPORT_C(Fl_Color ,Fl_Button_labelcolor)(fl_Button b){
+    return (static_cast<Fl_DerivedButton*>(b))->labelcolor();
+  }
   FL_EXPORT_C(Fl_Font,Fl_Button_labelfont)(fl_Button b){
     return (static_cast<Fl_DerivedButton*>(b))->labelfont();
   }

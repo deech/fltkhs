@@ -161,6 +161,15 @@ EXPORT {
   FL_EXPORT_C(fl_Window,Fl_Valuator_as_window )(fl_Valuator valuator){
     return (static_cast<Fl_DerivedValuator*>(valuator))->as_window();
   }
+  FL_EXPORT_C(fl_Window,    Fl_Valuator_window)(fl_Valuator widget){
+    return (fl_Window) (static_cast<Fl_DerivedValuator*>(widget))->window();
+  }
+  FL_EXPORT_C(fl_Window,    Fl_Valuator_top_window)(fl_Valuator widget){
+    return (fl_Window) (static_cast<Fl_DerivedValuator*>(widget))->top_window();
+  }
+  FL_EXPORT_C(fl_Window ,   Fl_Valuator_top_window_offset)(fl_Valuator widget, int* xoff, int* yoff){
+    return (fl_Window) (static_cast<Fl_DerivedValuator*>(widget))->top_window_offset(*xoff,*yoff);
+  }
   FL_EXPORT_C(fl_Gl_Window,Fl_Valuator_as_gl_window_super)(fl_Valuator valuator){
     return (fl_Gl_Window) (static_cast<Fl_DerivedValuator*>(valuator))->Fl_Valuator::as_gl_window();
   }
@@ -257,6 +266,9 @@ FL_EXPORT_C(void, Fl_Valuator_draw_label)(fl_Valuator Valuator){
   }
   FL_EXPORT_C(void,Fl_Valuator_set_labelcolor)(fl_Valuator valuator,Fl_Color c){
     (static_cast<Fl_DerivedValuator*>(valuator))->labelcolor(c);
+  }
+  FL_EXPORT_C(Fl_Color ,Fl_Valuator_labelcolor)(fl_Valuator valuator){
+    return (static_cast<Fl_DerivedValuator*>(valuator))->labelcolor();
   }
   FL_EXPORT_C(Fl_Font,Fl_Valuator_labelfont)(fl_Valuator valuator){
     return (static_cast<Fl_DerivedValuator*>(valuator))->labelfont();

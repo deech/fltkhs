@@ -75,6 +75,9 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Wizard_set_labelcolor)(fl_Wizard wizard,Fl_Color c){
     (static_cast<Fl_Wizard*>(wizard))->labelcolor(c);
   }
+  FL_EXPORT_C(Fl_Color ,Fl_Wizard_labelcolor)(fl_Wizard wizard){
+    return (static_cast<Fl_Wizard*>(wizard))->labelcolor();
+  }
   FL_EXPORT_C(Fl_Font,Fl_Wizard_labelfont)(fl_Wizard wizard){
     return (static_cast<Fl_Wizard*>(wizard))->labelfont();
   }

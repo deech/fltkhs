@@ -277,6 +277,9 @@ FL_EXPORT_C(void, Fl_Table_Row_draw_label)(fl_Table_Row Table_Row){
   FL_EXPORT_C(void,Fl_Table_Row_set_labelcolor)(fl_Table_Row table_row,Fl_Color c){
     (static_cast<Fl_DerivedTable_Row*>(table_row))->labelcolor(c);
   }
+  FL_EXPORT_C(Fl_Color ,Fl_Table_Row_labelcolor)(fl_Table_Row table_row){
+    return (static_cast<Fl_DerivedTable_Row*>(table_row))->labelcolor();
+  }
   FL_EXPORT_C(Fl_Font,Fl_Table_Row_labelfont)(fl_Table_Row table_row){
     return (static_cast<Fl_DerivedTable_Row*>(table_row))->labelfont();
   }

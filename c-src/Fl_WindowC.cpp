@@ -274,6 +274,9 @@ FL_EXPORT_C(void, Fl_Window_draw_label)(fl_Window Window){
   FL_EXPORT_C(void,Fl_Window_set_labelcolor)(fl_Window win,Fl_Color c){
     (static_cast<Fl_DerivedWindow*>(win))->labelcolor(c);
   }
+  FL_EXPORT_C(Fl_Color ,Fl_Window_labelcolor)(fl_Window win){
+    return (static_cast<Fl_DerivedWindow*>(win))->labelcolor();
+  }
   FL_EXPORT_C(Fl_Font,Fl_Window_labelfont)(fl_Window win){
     return (static_cast<Fl_DerivedWindow*>(win))->labelfont();
   }
@@ -787,6 +790,9 @@ FL_EXPORT_C(fl_Window, Fl_OverriddenWindow_NewXY_WithLabel)(int x, int y, int w,
   }
   FL_EXPORT_C(void, Fl_Window_default_callback)(fl_Window win, void* v){
     Fl_Window::default_callback((static_cast<Fl_DerivedWindow*>(win)), v);
+  }
+  FL_EXPORT_C(void, Fl_Window_wait_for_expose)(fl_Window win) {
+    return (static_cast<Fl_DerivedWindow*>(win))->wait_for_expose();
   }
 #ifdef __cplusplus
 }

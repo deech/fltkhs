@@ -75,6 +75,9 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Tree_set_labelcolor)(fl_Tree tree,Fl_Color c){
     (static_cast<Fl_Tree*>(tree))->labelcolor(c);
   }
+  FL_EXPORT_C(Fl_Color ,Fl_Tree_labelcolor)(fl_Tree tree){
+    return (static_cast<Fl_Tree*>(tree))->labelcolor();
+  }
   FL_EXPORT_C(fl_Image,Fl_Tree_image)(fl_Tree tree){
     return (static_cast<Fl_Tree*>(tree))->image();
   }

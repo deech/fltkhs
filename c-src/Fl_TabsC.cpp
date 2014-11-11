@@ -75,6 +75,9 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Tabs_set_labelcolor)(fl_Tabs tabs,Fl_Color c){
     (static_cast<Fl_Tabs*>(tabs))->labelcolor(c);
   }
+  FL_EXPORT_C(Fl_Color ,Fl_Tabs_labelcolor)(fl_Tabs tabs){
+    return (static_cast<Fl_Tabs*>(tabs))->labelcolor();
+  }
   FL_EXPORT_C(fl_Image,Fl_Tabs_image)(fl_Tabs tabs){
     return (static_cast<Fl_Tabs*>(tabs))->image();
   }

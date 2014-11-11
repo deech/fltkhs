@@ -237,6 +237,9 @@ FL_EXPORT_C(void, Fl_Int_Input_draw_label)(fl_Int_Input Int_Input){
   FL_EXPORT_C(void,Fl_Int_Input_set_labelcolor)(fl_Int_Input int_input,Fl_Color c){
     (static_cast<Fl_DerivedInt_Input*>(int_input))->labelcolor(c);
   }
+  FL_EXPORT_C(Fl_Color ,Fl_Int_Input_labelcolor)(fl_Int_Input int_input){
+    return (static_cast<Fl_DerivedInt_Input*>(int_input))->labelcolor();
+  }
   FL_EXPORT_C(Fl_Font,Fl_Int_Input_labelfont)(fl_Int_Input int_input){
     return (static_cast<Fl_DerivedInt_Input*>(int_input))->labelfont();
   }

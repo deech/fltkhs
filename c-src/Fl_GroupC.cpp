@@ -75,6 +75,9 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Group_set_labelcolor)(fl_Group win,Fl_Color c){
     (static_cast<Fl_Group*>(win))->labelcolor(c);
   }
+  FL_EXPORT_C(Fl_Color ,Fl_Group_labelcolor)(fl_Group win){
+    return (static_cast<Fl_Group*>(win))->labelcolor();
+  }
   FL_EXPORT_C(Fl_Font,Fl_Group_labelfont)(fl_Group win){
     return (static_cast<Fl_Group*>(win))->labelfont();
   }

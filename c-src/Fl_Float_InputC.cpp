@@ -74,8 +74,8 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Float_Input_set_labeltype)(fl_Float_Input float_input,Fl_Labeltype a){
     (static_cast<Fl_Float_Input*>(float_input))->labeltype(a);
   }
-  FL_EXPORT_C(void,Fl_Float_Input_set_labelcolor)(fl_Float_Input float_input,Fl_Color c){
-    (static_cast<Fl_Float_Input*>(float_input))->labelcolor(c);
+  FL_EXPORT_C(Fl_Color ,Fl_Float_Input_labelcolor)(fl_Float_Input float_input){
+    return (static_cast<Fl_Float_Input*>(float_input))->labelcolor();
   }
   FL_EXPORT_C(Fl_Font,Fl_Float_Input_labelfont)(fl_Float_Input float_input){
     return (static_cast<Fl_Float_Input*>(float_input))->labelfont();

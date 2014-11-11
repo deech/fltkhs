@@ -280,6 +280,9 @@ FL_EXPORT_C(void, Fl_Gl_Window_draw_label)(fl_Gl_Window Gl_Window){
   FL_EXPORT_C(void,Fl_Gl_Window_set_labelcolor)(fl_Gl_Window win,Fl_Color c){
     (static_cast<Fl_DerivedGl_Window*>(win))->labelcolor(c);
   }
+  FL_EXPORT_C(Fl_Color ,Fl_Gl_Window_labelcolor)(fl_Gl_Window win){
+    return (static_cast<Fl_DerivedGl_Window*>(win))->labelcolor();
+  }
   FL_EXPORT_C(Fl_Font,Fl_Gl_Window_labelfont)(fl_Gl_Window win){
     return (static_cast<Fl_DerivedGl_Window*>(win))->labelfont();
   }
@@ -779,6 +782,9 @@ FL_EXPORT_C(fl_Gl_Window, Fl_OverriddenGl_Window_NewXY_WithLabel)(int x, int y, 
   }
   FL_EXPORT_C(char,Fl_Gl_Window_valid)(fl_Gl_Window win){
     return (static_cast<Fl_DerivedGl_Window*>(win))->valid();
+  }
+  FL_EXPORT_C(void,Fl_Gl_Window_set_valid)(fl_Gl_Window win, char valid) {
+    (static_cast<Fl_DerivedGl_Window*>(win))->valid(valid);
   }
   FL_EXPORT_C(void,Fl_Gl_Window_invalidate)(fl_Gl_Window win){
     (static_cast<Fl_DerivedGl_Window*>(win))->invalidate();

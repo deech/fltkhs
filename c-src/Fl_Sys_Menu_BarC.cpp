@@ -1,4 +1,5 @@
 #include "Fl_Sys_Menu_BarC.h"
+#include "Utils.h"
 #ifdef __cplusplus
 EXPORT {
 #endif
@@ -203,6 +204,9 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Sys_Menu_Bar_set_labelcolor)(fl_Sys_Menu_Bar sys_menu_bar,Fl_Color c){
 #if defined(__APPLE__)
     (static_cast<Fl_Sys_Menu_Bar*>(sys_menu_bar))->labelcolor(c);
+  FL_EXPORT_C(Fl_Color ,Fl_Sys_Menu_Bar_labelcolor)(fl_Sys_Menu_Bar sys_menu_bar){
+return #if defined(__APPLE__)
+    (static_cast<Fl_Sys_Menu_Bar*>(sys_menu_bar))->labelcolor();
 #else
     (static_cast<Fl_Menu_Bar*>(sys_menu_bar))->labelcolor(c);
 #endif
@@ -675,14 +679,6 @@ EXPORT {
 #else
     return (fl_Menu_Item)(static_cast<Fl_Menu_Bar*>(sys_menu_bar))->menu();
 #endif
-  }
-  FL_EXPORT_C(Fl_Menu_Item*,convert)(fl_Menu_Item* item, int size){
-    int i = 0;
-    Fl_Menu_Item* current = new Fl_Menu_Item[size];
-    for (;i<size;i++){
-      current[i] = *(static_cast<Fl_Menu_Item*>(*(item + i)));
-    }
-    return current;
   }
   FL_EXPORT_C(void,Fl_Sys_Menu_Bar_menu_with_m)(fl_Sys_Menu_Bar sys_menu_bar,fl_Menu_Item* item, int size){
     Fl_Menu_Item* converted = convert(item,size);

@@ -2,44 +2,32 @@
 #ifdef __cplusplus
 EXPORT {
 #endif
-  FL_EXPORT_C(int,Fl_Image_w)(fl_Shared_Image shared_image){
+  FL_EXPORT_C(int,Fl_Shared_Image_w)(fl_Shared_Image shared_image){
     return (static_cast<DerivedShared_Image*>(shared_image))->w();
   }
-  FL_EXPORT_C(int,Fl_Image_h)(fl_Shared_Image shared_image){
+  FL_EXPORT_C(int,Fl_Shared_Image_h)(fl_Shared_Image shared_image){
     return (static_cast<DerivedShared_Image*>(shared_image))->h();
   }
-  FL_EXPORT_C(int,Fl_Image_d)(fl_Shared_Image shared_image){
+  FL_EXPORT_C(int,Fl_Shared_Image_d)(fl_Shared_Image shared_image){
     return (static_cast<DerivedShared_Image*>(shared_image))->d();
   }
-  FL_EXPORT_C(int,Fl_Image_ld)(fl_Shared_Image shared_image){
+  FL_EXPORT_C(int,Fl_Shared_Image_ld)(fl_Shared_Image shared_image){
     return (static_cast<DerivedShared_Image*>(shared_image))->ld();
   }
-  FL_EXPORT_C(int,Fl_Image_count)(fl_Shared_Image shared_image){
+  FL_EXPORT_C(int,Fl_Shared_Image_count)(fl_Shared_Image shared_image){
     return (static_cast<DerivedShared_Image*>(shared_image))->count();
   }
-  FL_EXPORT_C(fl_Image,Fl_Image_copy_with_w_h)(fl_Shared_Image shared_image,int W,int H){
+  FL_EXPORT_C(fl_Image,Fl_Shared_Image_copy_with_w_h)(fl_Shared_Image shared_image,int W,int H){
     return (fl_Image)(static_cast<DerivedShared_Image*>(shared_image))->copy(W,H);
   }
-  FL_EXPORT_C(fl_Image,Fl_Image_copy)(fl_Shared_Image shared_image){
-    return (fl_Image)(static_cast<DerivedShared_Image*>(shared_image))->copy();
-  }
-  FL_EXPORT_C(void,Fl_Image_color_average)(fl_Shared_Image shared_image,Fl_Color c,float i){
-    return (static_cast<DerivedShared_Image*>(shared_image))->color_average(c,i);
-  }
-  FL_EXPORT_C(void,Fl_Image_inactive)(fl_Shared_Image shared_image){
+  FL_EXPORT_C(void,Fl_Shared_Image_inactive)(fl_Shared_Image shared_image){
     return (static_cast<DerivedShared_Image*>(shared_image))->inactive();
   }
-  FL_EXPORT_C(void,Fl_Image_desaturate)(fl_Shared_Image shared_image){
-    return (static_cast<DerivedShared_Image*>(shared_image))->desaturate();
-  }
-  FL_EXPORT_C(void,Fl_Image_label)(fl_Shared_Image shared_image,fl_Widget w){
+  FL_EXPORT_C(void,Fl_Shared_Image_label)(fl_Shared_Image shared_image,fl_Widget w){
     return (static_cast<DerivedShared_Image*>(shared_image))->label((static_cast<Fl_Widget*>(w)));
   }
-  FL_EXPORT_C(void,Fl_Image_label_with_menu_item)(fl_Shared_Image shared_image,fl_Menu_Item m){
+  FL_EXPORT_C(void,Fl_Shared_Image_label_with_menu_item)(fl_Shared_Image shared_image,fl_Menu_Item m){
     return (static_cast<DerivedShared_Image*>(shared_image))->label((static_cast<Fl_Menu_Item*>(m)));
-  }
-  FL_EXPORT_C(void,Fl_Image_uncache)(fl_Shared_Image shared_image){
-    return (static_cast<DerivedShared_Image*>(shared_image))->uncache();
   }
   FL_EXPORT_C(const char*,Fl_Shared_Image_name)(fl_Shared_Image shared_image){
     return (static_cast<DerivedShared_Image*>(shared_image))->name();

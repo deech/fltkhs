@@ -27,11 +27,11 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Menu_Item_set_labeltype)(fl_Menu_Item menu_item,Fl_Labeltype a){
     return (static_cast<Fl_Menu_Item*>(menu_item))->labeltype(a);
   }
+  FL_EXPORT_C(void,Fl_Menu_Item_set_labelcolor)(fl_Menu_Item menu_item, Fl_Color c){
+    (static_cast<Fl_Menu_Item*>(menu_item))->labelcolor(c);
+  }
   FL_EXPORT_C(Fl_Color,Fl_Menu_Item_labelcolor)(fl_Menu_Item menu_item){
     return (static_cast<Fl_Menu_Item*>(menu_item))->labelcolor();
-  }
-  FL_EXPORT_C(void,Fl_Menu_Item_set_labelcolor)(fl_Menu_Item menu_item,Fl_Color a){
-    return (static_cast<Fl_Menu_Item*>(menu_item))->labelcolor(a);
   }
   FL_EXPORT_C(Fl_Font,Fl_Menu_Item_labelfont)(fl_Menu_Item menu_item){
     return (static_cast<Fl_Menu_Item*>(menu_item))->labelfont();
@@ -147,7 +147,7 @@ EXPORT {
   FL_EXPORT_C(fl_Menu_Item,Fl_Menu_Item_pulldown)(fl_Menu_Item menu_item,int X,int Y,int W,int H){
     return (fl_Menu_Item)(static_cast<Fl_Menu_Item*>(menu_item))->pulldown(X,Y,W,H);
   }
-  
+
   FL_EXPORT_C(fl_Menu_Item,Fl_Menu_Item_popup_with_args)(fl_Menu_Item menu_item,int X,int Y, char* title, fl_Menu_Item picked, fl_Menu_ menu){
     return (fl_Menu_Item)(static_cast<Fl_Menu_Item*>(menu_item))->popup(X,Y,title, (static_cast<Fl_Menu_Item*>(picked)), (static_cast<Fl_Menu_*>(menu)));
   }
@@ -216,6 +216,9 @@ EXPORT {
   FL_EXPORT_C(int,Fl_Menu_Item_add_with_shortcutname_user_data_flags)(fl_Menu_Item menu_item,char* name,char* shortcut,fl_Callback* cb,void* user_data,int flags){
     C_to_Fl_Callback* callback_interceptor = new C_to_Fl_Callback(cb, user_data);
     return callback_interceptor->menu_add((static_cast<Fl_Menu_Item*>(menu_item)),name,shortcut,flags);
+  }
+  FL_EXPORT_C(int, Fl_Menu_Item_size)(fl_Menu_Item menu_item){
+    return (static_cast<Fl_Menu_Item*>(menu_item))->size();
   }
   FL_EXPORT_C(fl_Menu_Item, Fl_Menu_Item_New)(){
     Fl_Menu_Item* i = new Fl_Menu_Item();

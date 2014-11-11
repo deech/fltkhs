@@ -31,6 +31,8 @@ EXPORT {
     virtual void hide();
     virtual Fl_Window* as_window();
     virtual Fl_Gl_Window* as_gl_window();
+    virtual Fl_Group* as_group();
+    virtual Fl_Group* as_group_super();
     Fl_DerivedMenu_(int X, int Y, int W, int H, const char *l, fl_Menu__Virtual_Funcs* funcs);
     Fl_DerivedMenu_(int X, int Y, int W, int H, fl_Menu__Virtual_Funcs* funcs);
     ~Fl_DerivedMenu_();
@@ -167,10 +169,8 @@ EXPORT {
   FL_EXPORT_C(int, Fl_Menu__insert_with_user_data)(fl_Menu_ menu_, int index,  char*, int shortcut, fl_Callback* cb, void* user_data);
   FL_EXPORT_C(int, Fl_Menu__insert_with_flags)(fl_Menu_ menu_, int index,  char* name, int shortcut, fl_Callback* cb, int flags);
   FL_EXPORT_C(int, Fl_Menu__insert_with_user_data_flags)(fl_Menu_ menu_, int index,  char* name, int shortcut, fl_Callback* cb, void* user_data, int flags);
-  FL_EXPORT_C(int, Fl_Menu__insert_with_shortcutname)(fl_Menu_ menu_, int index,  char* name, char* shortcut);
-  FL_EXPORT_C(int, Fl_Menu__insert_with_shortcutname_user_data)(fl_Menu_ menu_, int index,  char* name,   char* shortcut, fl_Callback* cb, void* user_data);
+  FL_EXPORT_C(int, Fl_Menu__insert_with_shortcutname)(fl_Menu_ menu_, int index,  char* name, char* shortcut, fl_Callback* cb);
   FL_EXPORT_C(int, Fl_Menu__insert_with_shortcutname_flags)(fl_Menu_ menu_, int index,  char* name,   char* shortcut, fl_Callback* cb, int flags);
-  FL_EXPORT_C(int, Fl_Menu__insert_with_shortcutname_user_data_flags)(fl_Menu_ menu_, int index,  char* name,   char* shortcut, fl_Callback* cb, void* user_data, int flags);
   FL_EXPORT_C(int, Fl_Menu__add)(fl_Menu_ menu_, char* name, int shortcut, fl_Callback);
   FL_EXPORT_C(int, Fl_Menu__add_with_user_data)(fl_Menu_ menu_, char* name, int shortcut, fl_Callback* cb, void* user_data);
   FL_EXPORT_C(int, Fl_Menu__add_with_flags)(fl_Menu_ menu_, char* name, int shortcut, fl_Callback* cb, int flags);

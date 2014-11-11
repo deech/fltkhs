@@ -77,6 +77,9 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Input_set_labelcolor)(fl_Input input,Fl_Color c){
     (static_cast<Fl_Input*>(input))->labelcolor(c);
   }
+  FL_EXPORT_C(Fl_Color ,Fl_Input_labelcolor)(fl_Input input){
+    return (static_cast<Fl_Input*>(input))->labelcolor();
+  }
   FL_EXPORT_C(Fl_Font,Fl_Input_labelfont)(fl_Input input){
     return (static_cast<Fl_Input*>(input))->labelfont();
   }

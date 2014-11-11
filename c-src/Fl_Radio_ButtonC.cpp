@@ -76,6 +76,9 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Radio_Button_set_labelcolor)(fl_Radio_Button b,Fl_Color c){
     (static_cast<Fl_Radio_Button*>(b))->labelcolor(c);
   }
+  FL_EXPORT_C(Fl_Color ,Fl_Radio_Button_labelcolor)(fl_Radio_Button b){
+    return (static_cast<Fl_Radio_Button*>(b))->labelcolor();
+  }
   FL_EXPORT_C(Fl_Font,Fl_Radio_Button_labelfont)(fl_Radio_Button b){
     return (static_cast<Fl_Radio_Button*>(b))->labelfont();
   }

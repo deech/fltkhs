@@ -102,6 +102,9 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Progress_set_labelcolor)(fl_Progress progress,Fl_Color c){
     (static_cast<Fl_Progress*>(progress))->labelcolor(c);
   }
+  FL_EXPORT_C(Fl_Color ,Fl_Progress_labelcolor)(fl_Progress progress){
+    return (static_cast<Fl_Progress*>(progress))->labelcolor();
+  }
   FL_EXPORT_C(Fl_Font,Fl_Progress_labelfont)(fl_Progress progress){
     return (static_cast<Fl_Progress*>(progress))->labelfont();
   }

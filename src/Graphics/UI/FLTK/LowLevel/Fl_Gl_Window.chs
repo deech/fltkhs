@@ -6,7 +6,7 @@ module Graphics.UI.FLTK.LowLevel.Fl_Gl_Window
      glWindowAsGroupSuper,
      glWindowAsWindowSuper,
      glWindowAsGlWindowSuper,
-     glWindowHideSuper,
+    glWindowHideSuper,
      glWindowFlushSuper,
      glWindowFlush,
      glWindowResizeSuper,
@@ -326,9 +326,9 @@ glWindowValid :: GlWindow a  ->  IO (Bool)
 glWindowValid win = withObject win $ \winPtr -> valid' winPtr
 
 
-{# fun unsafe Fl_Gl_Window_set_valid as setValid' { `Bool' } -> `()' supressWarningAboutRes #}
-glWindowSetValid :: Bool ->  IO (())
-glWindowSetValid v = setValid' v
+{# fun unsafe Fl_Gl_Window_set_valid as setValid' { id `Ptr ()', `Bool' } -> `()' supressWarningAboutRes #}
+glWindowSetValid :: GlWindow a -> Bool ->  IO (())
+glWindowSetValid win v = withObject win $ \winPtr -> setValid' winPtr v
 
 {# fun unsafe Fl_Gl_Window_invalidate as invalidate' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
 glWindowInvalidate :: GlWindow a  ->  IO (())

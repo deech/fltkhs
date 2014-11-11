@@ -281,6 +281,9 @@ return (fl_Window)(static_cast<Fl_DerivedSingle_Window*>(self))->as_window_super
   FL_EXPORT_C(void,Fl_Single_Window_set_labelcolor)(fl_Single_Window win,Fl_Color c){
     (static_cast<Fl_DerivedSingle_Window*>(win))->labelcolor(c);
   }
+  FL_EXPORT_C(Fl_Color ,Fl_Single_Window_labelcolor)(fl_Single_Window win){
+    return (static_cast<Fl_DerivedSingle_Window*>(win))->labelcolor();
+  }
   FL_EXPORT_C(Fl_Font,Fl_Single_Window_labelfont)(fl_Single_Window win){
     return (static_cast<Fl_DerivedSingle_Window*>(win))->labelfont();
   }
@@ -626,11 +629,17 @@ return (fl_Window)(static_cast<Fl_DerivedSingle_Window*>(self))->as_window_super
   FL_EXPORT_C(void,Fl_Single_Window_resize)(fl_Single_Window win,int X,int Y,int W,int H){
     (static_cast<Fl_DerivedSingle_Window*>(win))->resize(X,Y,W,H);
   }
+  FL_EXPORT_C(void,Fl_Single_Window_resize_super)(fl_Single_Window win,int X,int Y,int W,int H){
+    (static_cast<Fl_DerivedSingle_Window*>(win))->resize_super(X,Y,W,H);
+  }
   FL_EXPORT_C(void,Fl_Single_Window_iconize)(fl_Single_Window win){
     (static_cast<Fl_DerivedSingle_Window*>(win))->iconize();
   }
   FL_EXPORT_C(void,Fl_Single_Window_flush)(fl_Single_Window win){
     (static_cast<Fl_DerivedSingle_Window*>(win))->flush();
+  }
+  FL_EXPORT_C(void,Fl_Single_Window_flush_super)(fl_Single_Window win){
+    (static_cast<Fl_DerivedSingle_Window*>(win))->flush_super();
   }
   FL_EXPORT_C(void,Fl_Single_Window_set_border)(fl_Single_Window win,int b){
     (static_cast<Fl_DerivedSingle_Window*>(win))->border(b);

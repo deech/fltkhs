@@ -279,6 +279,9 @@ return (fl_Window)(static_cast<Fl_DerivedDouble_Window*>(self))->as_window_super
   FL_EXPORT_C(void,Fl_Double_Window_set_labelcolor)(fl_Double_Window win,Fl_Color c){
     (static_cast<Fl_DerivedDouble_Window*>(win))->labelcolor(c);
   }
+  FL_EXPORT_C(Fl_Color ,Fl_Double_Window_labelcolor)(fl_Double_Window win){
+    return (static_cast<Fl_DerivedDouble_Window*>(win))->labelcolor();
+  }
   FL_EXPORT_C(Fl_Font,Fl_Double_Window_labelfont)(fl_Double_Window win){
     return (static_cast<Fl_DerivedDouble_Window*>(win))->labelfont();
   }

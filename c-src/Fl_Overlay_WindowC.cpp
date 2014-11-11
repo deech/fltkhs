@@ -92,6 +92,9 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Overlay_Window_set_labelcolor)(fl_Overlay_Window win,Fl_Color c){
     (static_cast<Fl_DerivedOverlay_Window*>(win))->labelcolor(c);
   }
+  FL_EXPORT_C(Fl_Color ,Fl_Overlay_Window_labelcolor)(fl_Overlay_Window win){
+    return (static_cast<Fl_DerivedOverlay_Window*>(win))->labelcolor();
+  }
   FL_EXPORT_C(Fl_Font,Fl_Overlay_Window_labelfont)(fl_Overlay_Window win){
     return (static_cast<Fl_DerivedOverlay_Window*>(win))->labelfont();
   }

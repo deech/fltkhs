@@ -76,6 +76,9 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Clock_set_labelcolor)(fl_Clock b,Fl_Color c){
     (static_cast<Fl_Clock*>(b))->labelcolor(c);
   }
+  FL_EXPORT_C(Fl_Color ,Fl_Clock_labelcolor)(fl_Clock b){
+    return (static_cast<Fl_Clock*>(b))->labelcolor();
+  }
   FL_EXPORT_C(Fl_Font,Fl_Clock_labelfont)(fl_Clock b){
     return (static_cast<Fl_Clock*>(b))->labelfont();
   }

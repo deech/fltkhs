@@ -242,7 +242,7 @@ FL_EXPORT_C(void, Fl_Gl_Window_draw_label)(fl_Gl_Window Gl_Window);
   FL_EXPORT_C(int, Fl_Gl_Window_decorated_h)(fl_Gl_Window win);
   // Fl_Gl_Window specific
   FL_EXPORT_C(char, Fl_Gl_Window_valid)(fl_Gl_Window win);
-  FL_EXPORT_C(void, Fl_Gl_Window_set_valid)(char v);
+  FL_EXPORT_C(void, Fl_Gl_Window_set_valid)(fl_Gl_Window win, char v);
   FL_EXPORT_C(void, Fl_Gl_Window_invalidate)(fl_Gl_Window win);
   FL_EXPORT_C(char, Fl_Gl_Window_context_valid)(fl_Gl_Window win);
   FL_EXPORT_C(void, Fl_Gl_Window_set_context_valid)(fl_Gl_Window win,char v);

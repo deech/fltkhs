@@ -77,6 +77,9 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Multiline_Input_set_labelcolor)(fl_Multiline_Input multiline_input,Fl_Color c){
     (static_cast<Fl_Multiline_Input*>(multiline_input))->labelcolor(c);
   }
+  FL_EXPORT_C(Fl_Color ,Fl_Multiline_Input_labelcolor)(fl_Multiline_Input multiline_input){
+    return (static_cast<Fl_Multiline_Input*>(multiline_input))->labelcolor();
+  }
   FL_EXPORT_C(Fl_Font,Fl_Multiline_Input_labelfont)(fl_Multiline_Input multiline_input){
     return (static_cast<Fl_Multiline_Input*>(multiline_input))->labelfont();
   }

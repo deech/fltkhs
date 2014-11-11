@@ -108,6 +108,9 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Hor_Slider_set_labelcolor)(fl_Hor_Slider slider,Fl_Color c){
     (static_cast<Fl_Hor_Slider*>(slider))->labelcolor(c);
   }
+  FL_EXPORT_C(Fl_Color ,Fl_Hor_Slider_labelcolor)(fl_Hor_Slider slider){
+    return (static_cast<Fl_Hor_Slider*>(slider))->labelcolor();
+  }
   FL_EXPORT_C(Fl_Font,Fl_Hor_Slider_labelfont)(fl_Hor_Slider slider){
     return (static_cast<Fl_Hor_Slider*>(slider))->labelfont();
   }

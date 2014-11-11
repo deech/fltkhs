@@ -242,6 +242,9 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Box_set_labelcolor)(fl_Box box,Fl_Color c){
     (static_cast<Fl_DerivedBox*>(box))->labelcolor(c);
   }
+  FL_EXPORT_C(Fl_Color ,Fl_Box_labelcolor)(fl_Box box){
+    return (static_cast<Fl_DerivedBox*>(box))->labelcolor();
+  }
   FL_EXPORT_C(Fl_Font,Fl_Box_labelfont)(fl_Box box){
     return (static_cast<Fl_DerivedBox*>(box))->labelfont();
   }

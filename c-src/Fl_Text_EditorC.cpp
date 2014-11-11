@@ -108,6 +108,9 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Text_Editor_set_labelcolor)(fl_Text_Editor win,Fl_Color c){
     (static_cast<DerivedText_Editor*>(win))->labelcolor(c);
   }
+  FL_EXPORT_C(Fl_Color ,Fl_Text_Editor_labelcolor)(fl_Text_Editor win){
+    return (static_cast<DerivedText_Editor*>(win))->labelcolor();
+  }
   FL_EXPORT_C(Fl_Font,Fl_Text_Editor_labelfont)(fl_Text_Editor win){
     return (static_cast<DerivedText_Editor*>(win))->labelfont();
   }
