@@ -204,11 +204,15 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Sys_Menu_Bar_set_labelcolor)(fl_Sys_Menu_Bar sys_menu_bar,Fl_Color c){
 #if defined(__APPLE__)
     (static_cast<Fl_Sys_Menu_Bar*>(sys_menu_bar))->labelcolor(c);
-  FL_EXPORT_C(Fl_Color ,Fl_Sys_Menu_Bar_labelcolor)(fl_Sys_Menu_Bar sys_menu_bar){
-return #if defined(__APPLE__)
-    (static_cast<Fl_Sys_Menu_Bar*>(sys_menu_bar))->labelcolor();
 #else
     (static_cast<Fl_Menu_Bar*>(sys_menu_bar))->labelcolor(c);
+#endif
+  }
+  FL_EXPORT_C(Fl_Color ,Fl_Sys_Menu_Bar_labelcolor)(fl_Sys_Menu_Bar sys_menu_bar){
+#if defined(__APPLE__)
+    return (static_cast<Fl_Sys_Menu_Bar*>(sys_menu_bar))->labelcolor();
+#else
+    return (static_cast<Fl_Menu_Bar*>(sys_menu_bar))->labelcolor();
 #endif
   }
   FL_EXPORT_C(Fl_Font,Fl_Sys_Menu_Bar_labelfont)(fl_Sys_Menu_Bar sys_menu_bar){

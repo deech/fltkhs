@@ -792,7 +792,7 @@ FL_EXPORT_C(fl_Window, Fl_OverriddenWindow_NewXY_WithLabel)(int x, int y, int w,
     Fl_Window::default_callback((static_cast<Fl_DerivedWindow*>(win)), v);
   }
   FL_EXPORT_C(void, Fl_Window_wait_for_expose)(fl_Window win) {
-    return (static_cast<Fl_DerivedWindow*>(win))->wait_for_expose();
+    return (static_cast<Fl_Window*>(win))->wait_for_expose();
   }
 #ifdef __cplusplus
 }
