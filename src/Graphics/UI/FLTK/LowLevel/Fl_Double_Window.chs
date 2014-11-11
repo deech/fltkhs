@@ -151,7 +151,8 @@ module Graphics.UI.FLTK.LowLevel.Fl_Double_Window
     doubleWindowSetCursorWithFgBg,
     doubleWindowSetDefaultCursor,
     doubleWindowDecoratedW,
-    doubleWindowDecoratedH
+    doubleWindowDecoratedH,
+    doubleWindowWaitForExpose
   )
 where
 #include "Fl_C.h"
@@ -215,22 +216,22 @@ defaultDoubleWindowFuncs = DoubleWindowFuncs Nothing Nothing Nothing Nothing Not
 doubleWindowNew :: Size -> Maybe Position -> Maybe String -> Maybe (DoubleWindowFuncs a) -> IO (DoubleWindow ())
 doubleWindowNew (Size (Width w) (Height h)) position title funcs' =
     case (position, title, funcs') of
-         (Nothing,Nothing,Nothing) -> windowNew' w h >>= toObject 
-         (Just (Position (X x) (Y y)), Nothing, Nothing) ->  windowNewXY' x y w h >>= toObject 
-         (Just (Position (X x) (Y y)), (Just l'), Nothing) -> windowNewXYWithLabel' x y w h l' >>= toObject 
-         (Nothing, (Just l'), Nothing) -> windowNewWithLabel' w h l' >>= toObject 
+         (Nothing,Nothing,Nothing) -> windowNew' w h >>= toObject
+         (Just (Position (X x) (Y y)), Nothing, Nothing) ->  windowNewXY' x y w h >>= toObject
+         (Just (Position (X x) (Y y)), (Just l'), Nothing) -> windowNewXYWithLabel' x y w h l' >>= toObject
+         (Nothing, (Just l'), Nothing) -> windowNewWithLabel' w h l' >>= toObject
          (Nothing,Nothing,(Just fs')) -> do
                                         p <- doubleWindowFunctionStruct fs'
-                                        overriddenWindowNew' w h p >>= toObject 
+                                        overriddenWindowNew' w h p >>= toObject
          (Just (Position (X x) (Y y)), Nothing, (Just fs')) ->  do
                                         p <- doubleWindowFunctionStruct fs'
-                                        overriddenWindowNewXY' x y w h p >>= toObject 
+                                        overriddenWindowNewXY' x y w h p >>= toObject
          (Just (Position (X x) (Y y)), (Just l'), (Just fs')) -> do
                                         p <- doubleWindowFunctionStruct fs'
-                                        overriddenWindowNewXYWithLabel' x y w h l' p >>= toObject 
+                                        overriddenWindowNewXYWithLabel' x y w h l' p >>= toObject
          (Nothing, (Just l'), (Just fs')) -> do
                                         p <- doubleWindowFunctionStruct fs'
-                                        overriddenWindowNewWithLabel' w h l' p >>= toObject 
+                                        overriddenWindowNewWithLabel' w h l' p >>= toObject
 
 {# fun Fl_Double_Window_Destroy as windowDestroy' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
 doubleWindowDestroy :: DoubleWindow a -> IO ()
@@ -570,3 +571,5 @@ doubleWindowDecoratedW :: DoubleWindow a  ->  IO (Int)
 doubleWindowDecoratedW = windowDecoratedW
 doubleWindowDecoratedH :: DoubleWindow a  ->  IO (Int)
 doubleWindowDecoratedH = windowDecoratedH
+doubleWindowWaitForExpose :: DoubleWindow a -> IO ()
+doubleWindowWaitForExpose = windowWaitForExpose

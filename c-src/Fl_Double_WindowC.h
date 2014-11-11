@@ -256,6 +256,7 @@ EXPORT {
   FL_EXPORT_C(void,		Fl_Double_Window_resize)(fl_Double_Window win, int X, int Y, int W, int H);
   FL_EXPORT_C(void,		Fl_Double_Window_hide_super)(fl_Double_Window win);
   FL_EXPORT_C(void,             Fl_Double_Window_hide)(fl_Double_Window win);
+  FL_EXPORT_C(void,             fl_Double_Window_wait_for_expose)(fl_Double_Window win);
 
 #ifdef __cplusplus
 }

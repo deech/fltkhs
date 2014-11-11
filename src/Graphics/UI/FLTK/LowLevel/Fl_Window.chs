@@ -158,7 +158,8 @@ module Graphics.UI.FLTK.LowLevel.Fl_Window
      windowDrawBox,
      windowDrawBoxWithBoxtype,
      windowDrawBackdrop,
-     windowDrawFocus
+     windowDrawFocus,
+     windowWaitForExpose
     )
 where
 #include "Fl_C.h"
@@ -838,3 +839,7 @@ windowDrawFocus window (Just (bx, r)) =
                 withObject window $ \windowPtr -> do
                   let (x_pos,y_pos,w_pos,h_pos) = fromRectangle r
                   windowDrawFocusWithTXywh' windowPtr bx x_pos y_pos w_pos h_pos
+
+{# fun unsafe Fl_Window_wait_for_expose as waitForExpose' { id `Ptr ()' } -> `()' #}
+windowWaitForExpose :: Window a  ->  IO ()
+windowWaitForExpose win = withObject win $ \winPtr -> waitForExpose' winPtr

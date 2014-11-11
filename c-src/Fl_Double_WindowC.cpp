@@ -774,6 +774,9 @@ return (fl_Window)(static_cast<Fl_DerivedDouble_Window*>(self))->as_window_super
   FL_EXPORT_C(void, Fl_Double_Window_default_callback)(fl_Double_Window win, void* v){
     Fl_Double_Window::default_callback((static_cast<Fl_DerivedDouble_Window*>(win)), v);
   }
+  FL_EXPORT_C(void, Fl_Double_Window_wait_for_expose)(fl_Double_Window win) {
+    return (static_cast<Fl_DerivedDouble_Window*>(win))->wait_for_expose();
+  }
 #ifdef __cplusplus
 }
 #endif
