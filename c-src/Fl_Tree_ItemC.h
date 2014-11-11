@@ -89,6 +89,10 @@ EXPORT {
   FL_EXPORT_C(int, Fl_Tree_Item_event_on_collapse_icon)(fl_Tree_Item tree_item,  fl_Tree_Prefs prefs);
   FL_EXPORT_C(int, Fl_Tree_Item_event_on_label)(fl_Tree_Item tree_item,  fl_Tree_Prefs prefs);
   FL_EXPORT_C(int, Fl_Tree_Item_is_root)(fl_Tree_Item tree_item);
+  FL_EXPORT_C(int, Fl_Tree_Item_label_x)(fl_Tree_Item tree_item);
+  FL_EXPORT_C(int, Fl_Tree_Item_label_y)(fl_Tree_Item tree_item);
+  FL_EXPORT_C(int, Fl_Tree_Item_label_w)(fl_Tree_Item tree_item);
+  FL_EXPORT_C(int, Fl_Tree_Item_label_h)(fl_Tree_Item tree_item);
 #ifdef __cplusplus
 }
 #endif

@@ -231,6 +231,18 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Tree_Item_select)(fl_Tree_Item tree_item){
     return (static_cast<Fl_Tree_Item*>(tree_item))->select();
   }
+  FL_EXPORT_C(int, Fl_Tree_Item_label_x)(fl_Tree_Item tree_item){
+    return (static_cast<Fl_Tree_Item*>(tree_item))->label_x();
+  }
+  FL_EXPORT_C(int, Fl_Tree_Item_label_y)(fl_Tree_Item tree_item){
+    return (static_cast<Fl_Tree_Item*>(tree_item))->label_y();
+  }
+  FL_EXPORT_C(int, Fl_Tree_Item_label_w)(fl_Tree_Item tree_item){
+    return (static_cast<Fl_Tree_Item*>(tree_item))->label_w();
+  }
+  FL_EXPORT_C(int, Fl_Tree_Item_label_h)(fl_Tree_Item tree_item){
+    return (static_cast<Fl_Tree_Item*>(tree_item))->label_h();
+  }
 #ifdef __cplusplus
 }
 #endif
