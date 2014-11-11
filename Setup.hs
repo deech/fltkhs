@@ -35,6 +35,8 @@ main = defaultMainWithHooks autoconfUserHooks {
        }
 
 myPreConf args flags = do
+   putStrLn "Running autoheader ..."
+   rawSystemExit normal "autoheader" []
    putStrLn "Running autoconf ..."
    rawSystemExit normal "autoconf" []
    preConf autoconfUserHooks args flags
