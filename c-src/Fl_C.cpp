@@ -317,6 +317,12 @@ EXPORT {
   FL_EXPORT_C(int,Fl_test_shortcut)(Fl_Shortcut shortcut){
     return Fl::test_shortcut(shortcut);
   }
+  FL_EXPORT_C(void,Fl_enable_im)(){
+    return Fl::enable_im();
+  }
+  FL_EXPORT_C(void,Fl_disable_im)(){
+    return Fl::disable_im();
+  }
   FL_EXPORT_C(int,Fl_handle)(int event,fl_Window window){
     return Fl::handle(event,(static_cast<Fl_Window*>(window)));
   }

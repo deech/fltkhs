@@ -79,6 +79,8 @@ module Graphics.UI.FLTK.LowLevel.FL
      compose,
      composeReset,
      testShortcut,
+     enableIm,
+     disableIm,
      pushed,
      focus,
      copy,
@@ -456,6 +458,10 @@ eventInsideWidget wp =
                       return $ toEnum eventNum)
 {# fun Fl_test_shortcut as testShortcut
        { id `FlShortcut' } -> `Bool' toBool #}
+{# fun Fl_enable_im as enableIm
+       {} -> `()' supressWarningAboutRes #}
+{# fun Fl_disable_im as disableIm
+       {} -> `()' supressWarningAboutRes #}
 {# fun Fl_handle as handle'
        { `Int',id `Ptr ()' } -> `Int' #}
 handle :: Event -> Window a -> IO Int

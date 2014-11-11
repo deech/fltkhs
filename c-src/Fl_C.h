@@ -153,6 +153,8 @@ EXPORT {
   FL_EXPORT_C(int        ,Fl_event_inside_region)(int X,int Y,int W,int H);
   FL_EXPORT_C(int        ,Fl_event_inside_widget)(fl_Widget widget);
   FL_EXPORT_C(int        ,Fl_test_shortcut)(Fl_Shortcut shortcut);
+  FL_EXPORT_C(void       ,Fl_enable_im)();
+  FL_EXPORT_C(void       ,Fl_disable_im)();
   FL_EXPORT_C(int        ,Fl_handle)(int event,fl_Window window);
   FL_EXPORT_C(int        ,Fl_handle_)(int event,fl_Window window);
   FL_EXPORT_C(fl_Widget  ,Fl_belowmouse)();
