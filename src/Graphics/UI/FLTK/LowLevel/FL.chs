@@ -17,6 +17,7 @@ module Graphics.UI.FLTK.LowLevel.FL
      background,
      background2,
      setScheme,
+     isScheme,
      setFirstWindow,
      nextWindow,
      setGrab,
@@ -305,6 +306,8 @@ background2 (r,g,b) = {#call Fl_background2 as fl_background2 #}
   {} -> `String' #}
 setScheme :: String -> IO Int
 setScheme sch = withCString sch $ \str -> {#call Fl_set_scheme as fl_set_scheme #} str >>= return . fromIntegral
+isScheme :: String -> IO Bool
+isScheme sch = withCString sch $ \str -> {#call Fl_is_scheme as fl_is_scheme #} str >>= return . toBool
 {# fun Fl_wait as wait
        {  } -> `Int' #}
 {# fun Fl_set_wait as setWait

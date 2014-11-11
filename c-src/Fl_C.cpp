@@ -115,6 +115,9 @@ EXPORT {
   FL_EXPORT_C(const char*,Fl_scheme)(){
     return Fl::scheme();
   }
+  FL_EXPORT_C(int,Fl_is_scheme)(const char* text){
+    return Fl::is_scheme(text);
+  }
   FL_EXPORT_C(int,Fl_scrollbar_size)( ){
     return Fl::scrollbar_size();
   }

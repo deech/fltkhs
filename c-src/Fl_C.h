@@ -86,6 +86,7 @@ EXPORT {
 
   FL_EXPORT_C(const char*,Fl_scheme)();
   FL_EXPORT_C(int        ,Fl_set_scheme)(const char* text);
+  FL_EXPORT_C(int        ,Fl_is_scheme)(const char* text);
   FL_EXPORT_C(int        ,Fl_reload_scheme)();
   FL_EXPORT_C(int        ,Fl_scrollbar_size)();
   FL_EXPORT_C(void       ,Fl_set_scrollbar_size)(int W);
