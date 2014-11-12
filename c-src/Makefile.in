@@ -23,6 +23,7 @@ CPPFILES= \
 	Fl_ChoiceC.cpp \
 	Fl_ClockC.cpp \
 	Fl_Color_ChooserC.cpp \
+	Fl_Copy_SurfaceC.cpp \
 	Fl_Double_WindowC.cpp \
 	Fl_DrawC.cpp \
 	Fl_DeviceC.cpp \

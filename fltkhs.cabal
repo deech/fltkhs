@@ -38,6 +38,7 @@ library
                    Graphics.UI.FLTK.LowLevel.Fl_Image
                    Graphics.UI.FLTK.LowLevel.Fl_Bitmap
                    Graphics.UI.FLTK.LowLevel.Fl_Draw
+                   Graphics.UI.FLTK.LowLevel.Fl_Copy_Surface
                    Graphics.UI.FLTK.LowLevel.FL
                    Graphics.UI.FLTK.LowLevel.Utils
   build-depends: base, containers, stm, bytestring

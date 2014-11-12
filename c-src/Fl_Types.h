@@ -362,6 +362,7 @@ EXPORT {
   typedef void* fl_Choice;
   typedef void* fl_Clock;
   typedef void* fl_Color_Chooser;
+  typedef void* fl_Copy_Surface;
   typedef void* fl_Counter;
   typedef void* fl_Device;
   typedef void* fl_Dial;

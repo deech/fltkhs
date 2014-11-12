@@ -413,6 +413,7 @@ simpleTypeMap =
     ,("Fl_Boxtype", "Boxtype")
     ,("Fl_Mode", "Mode")
     ,("fl_Widget", "Ptr ()")
+    ,("fl_Copy_Surface", "Ptr ()")
     ,("fl_Window", "Ptr ()")
     ,("fl_Overlay_Window", "Ptr ()")
     ,("fl_Group", "Ptr ()")
@@ -456,6 +457,7 @@ haskellEquivalent =
     [
      ("fl_Region"         , "Region"),
      ("fl_Widget"         , "Widget"),
+     ("fl_Copy_Surface"   , "CopySurface"),
      ("fl_Window"         , "Window"),
      ("fl_Overlay_Window" , "OverlayWindow"),
      ("fl_Group"          , "Group"),
