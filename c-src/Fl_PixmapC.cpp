@@ -10,6 +10,9 @@ EXPORT {
     Fl_Pixmap* i = new Fl_Pixmap((const uchar* const *)bits);
     return (fl_Pixmap)i;
   }
+  FL_EXPORT_C(void, Fl_Pixmap_Destroy)(fl_Pixmap pixmap){
+    delete (static_cast<Fl_Pixmap*>(pixmap));
+  }
   FL_EXPORT_C(int,Fl_Pixmap_w)(fl_Pixmap pixmap){
     return (static_cast<Fl_Pixmap*>(pixmap))->w();
   }
@@ -54,6 +57,9 @@ EXPORT {
   }
   FL_EXPORT_C(void,Fl_Pixmap_draw_with_cy)(fl_Pixmap pixmap,int X,int Y,int W,int H,int cy){
     (static_cast<Fl_Pixmap*>(pixmap))->draw(X,Y,W,H,cy);
+  }
+  FL_EXPORT_C(void,Fl_Pixmap_draw_with)(fl_Pixmap pixmap,int X,int Y,int W,int H){
+    (static_cast<Fl_Pixmap*>(pixmap))->draw(X,Y,W,H);
   }
   FL_EXPORT_C(void,Fl_Pixmap_draw)(fl_Pixmap pixmap,int X,int Y){
     (static_cast<Fl_Pixmap*>(pixmap))->draw(X,Y);

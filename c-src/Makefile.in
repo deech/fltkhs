@@ -38,6 +38,7 @@ CPPFILES= \
 	Fl_Hold_BrowserC.cpp \
 	Fl_Hor_Value_SliderC.cpp \
 	Fl_Hor_SliderC.cpp \
+	Fl_Image_SurfaceC.cpp \
 	Fl_ImageC.cpp \
 	Fl_Input_C.cpp \
 	Fl_InputC.cpp \

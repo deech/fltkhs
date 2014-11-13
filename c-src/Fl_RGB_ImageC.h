@@ -13,6 +13,7 @@ EXPORT {
   FL_EXPORT_C(fl_RGB_Image, Fl_RGB_Image_New_With_D)(uchar* bits, int W, int H, int D);
   FL_EXPORT_C(fl_RGB_Image, Fl_RGB_Image_New_With_LD)(uchar* bits, int W, int H, int LD);
   FL_EXPORT_C(fl_RGB_Image, Fl_RGB_Image_New_With_D_LD)(uchar* bits, int W, int H, int D, int LD);
+  FL_EXPORT_C(void, Fl_RGB_Image_Destroy)(fl_RGB_Image rgb_image);
   FL_EXPORT_C(int, Fl_RGB_Image_w)(fl_RGB_Image rgb_image);
   FL_EXPORT_C(int, Fl_RGB_Image_h)(fl_RGB_Image rgb_image);
   FL_EXPORT_C(int, Fl_RGB_Image_d)(fl_RGB_Image rgb_image);

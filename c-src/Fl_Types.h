@@ -394,6 +394,7 @@ EXPORT {
   typedef void* fl_Hor_Slider;
   typedef void* fl_Hor_Value_Slider;
   typedef void* fl_Image;
+  typedef void* fl_Image_Surface;
   typedef void* fl_Input_Choice;
   typedef void* fl_Input_;
   typedef void* fl_Input;

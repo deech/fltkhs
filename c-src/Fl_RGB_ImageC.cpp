@@ -18,6 +18,9 @@ EXPORT {
     Fl_RGB_Image* i = new Fl_RGB_Image(bits,W,H,D,LD);
     return (fl_RGB_Image)i;
   }
+  FL_EXPORT_C(void, Fl_RGB_Image_Destroy)(fl_RGB_Image rgb_image) {
+    delete (static_cast<Fl_RGB_Image*>(rgb_image));
+  }
   FL_EXPORT_C(int,Fl_RGB_Image_w)(fl_RGB_Image rgb_image){
     return (static_cast<Fl_RGB_Image*>(rgb_image))->w();
   }
