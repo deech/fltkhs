@@ -10,9 +10,11 @@
 #include <Fl_Check_ButtonC.h>
 #include <Fl_ChoiceC.h>
 #include <Fl_ClockC.h>
+#include <Fl_CounterC.h>
 #include <Fl_Color_ChooserC.h>
 #include <Fl_DeviceC.h>
 #include <Fl_Double_WindowC.h>
+#include <Fl_DialC.h>
 #include <Fl_DrawC.h>
 #include <Fl_ExportMacros.h>
 #include <Fl_File_BrowserC.h>
@@ -72,6 +74,7 @@
 #include <Fl_Tree_ItemC.h>
 #include <Fl_Tree_PrefsC.h>
 #include <Fl_ValuatorC.h>
+#include <Fl_AdjusterC.h>
 #include <Fl_Value_InputC.h>
 #include <Fl_Value_SliderC.h>
 #include <Fl_WidgetC.h>

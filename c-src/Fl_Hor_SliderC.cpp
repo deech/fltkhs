@@ -229,7 +229,7 @@ EXPORT {
     return (static_cast<Fl_Hor_Slider*>(slider))->take_focus();
   }
   FL_EXPORT_C(void,Fl_Hor_Slider_set_visible_focus)(fl_Hor_Slider slider){
-    (static_cast<Fl_Hor_Slider*>(slider))->visible_focus();
+    (static_cast<Fl_Hor_Slider*>(slider))->set_visible_focus();
   }
   FL_EXPORT_C(void,Fl_Hor_Slider_clear_visible_focus)(fl_Hor_Slider slider){
     (static_cast<Fl_Hor_Slider*>(slider))->clear_visible_focus();

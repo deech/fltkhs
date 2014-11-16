@@ -97,8 +97,6 @@ module Graphics.UI.FLTK.LowLevel.Fl_Valuator
      valuatorSetMaximum,
      valuatorRange,
      valuatorSetStep,
-     valuatorSetStepWithAB,
-     valuatorStepWithS,
      valuatorStep,
      valuatorPrecision,
      valuatorValue,
@@ -117,6 +115,7 @@ import Foreign.C.Types
 import Graphics.UI.FLTK.LowLevel.Fl_Enumerations
 import Graphics.UI.FLTK.LowLevel.Fl_Types
 import Graphics.UI.FLTK.LowLevel.Utils
+import Data.Ratio
 
 data ValuatorFuncs a =
     ValuatorFuncs
@@ -454,18 +453,12 @@ valuatorSetMaximum valuator a = withObject valuator $ \valuatorPtr -> setMaximum
 {# fun unsafe Fl_Valuator_range as range' { id `Ptr ()',`Double',`Double' } -> `()' supressWarningAboutRes #}
 valuatorRange :: Valuator a  -> Double -> Double ->  IO (())
 valuatorRange valuator a b = withObject valuator $ \valuatorPtr -> range' valuatorPtr a b
-{# fun unsafe Fl_Valuator_set_step as setStep' { id `Ptr ()',`Int' } -> `()' supressWarningAboutRes #}
-valuatorSetStep :: Valuator a  -> Int ->  IO (())
-valuatorSetStep valuator a = withObject valuator $ \valuatorPtr -> setStep' valuatorPtr a
-{# fun unsafe Fl_Valuator_set_step_with_a_b as setStepWithAB' { id `Ptr ()',`Double',`Int' } -> `()' supressWarningAboutRes #}
-valuatorSetStepWithAB :: Valuator a  -> Double -> Int ->  IO (())
-valuatorSetStepWithAB valuator a b = withObject valuator $ \valuatorPtr -> setStepWithAB' valuatorPtr a b
-{# fun unsafe Fl_Valuator_step_with_s as stepWithS' { id `Ptr ()',`Double' } -> `()' supressWarningAboutRes #}
-valuatorStepWithS :: Valuator a  -> Double ->  IO (())
-valuatorStepWithS valuator s = withObject valuator $ \valuatorPtr -> stepWithS' valuatorPtr s
+{# fun unsafe Fl_Valuator_set_step_with_a_b as setStepWithAB' { id `Ptr ()', `Double', `Int' } -> `()' supressWarningAboutRes #}
+valuatorSetStep :: Valuator a -> Rational -> IO ()
+valuatorSetStep valuator r = withObject valuator $ \valuatorPtr -> setStepWithAB' valuatorPtr (fromIntegral (denominator r)) (fromIntegral (numerator r))
 {# fun unsafe Fl_Valuator_step as step' { id `Ptr ()' } -> `Double' #}
-valuatorStep :: Valuator a  ->  IO (Double)
-valuatorStep valuator = withObject valuator $ \valuatorPtr -> step' valuatorPtr
+valuatorStep :: Valuator a  ->  IO (Rational)
+valuatorStep valuator = withObject valuator $ \valuatorPtr -> step' valuatorPtr >>= \r -> return $ approxRational r 0
 {# fun unsafe Fl_Valuator_precision as precision' { id `Ptr ()',`Int' } -> `()' supressWarningAboutRes #}
 valuatorPrecision :: Valuator a  -> Int ->  IO (())
 valuatorPrecision valuator precision = withObject valuator $ \valuatorPtr -> precision' valuatorPtr precision

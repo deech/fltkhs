@@ -371,7 +371,7 @@ FL_EXPORT_C(void, Fl_Browser_draw_label)(fl_Browser Browser){
     return (static_cast<Fl_DerivedBrowser*>(browser))->take_focus();
   }
   FL_EXPORT_C(void,Fl_Browser_set_visible_focus)(fl_Browser browser){
-    (static_cast<Fl_DerivedBrowser*>(browser))->visible_focus();
+    (static_cast<Fl_DerivedBrowser*>(browser))->set_visible_focus();
   }
   FL_EXPORT_C(void,Fl_Browser_clear_visible_focus)(fl_Browser browser){
     (static_cast<Fl_DerivedBrowser*>(browser))->clear_visible_focus();

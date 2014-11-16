@@ -195,7 +195,7 @@ EXPORT {
     return (static_cast<Fl_Float_Input*>(float_input))->take_focus();
   }
   FL_EXPORT_C(void,Fl_Float_Input_set_visible_focus)(fl_Float_Input float_input){
-    (static_cast<Fl_Float_Input*>(float_input))->visible_focus();
+    (static_cast<Fl_Float_Input*>(float_input))->set_visible_focus();
   }
   FL_EXPORT_C(void,Fl_Float_Input_clear_visible_focus)(fl_Float_Input float_input){
     (static_cast<Fl_Float_Input*>(float_input))->clear_visible_focus();

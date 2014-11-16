@@ -372,7 +372,7 @@ FL_EXPORT_C(void, Fl_Menu_Bar_draw_label)(fl_Menu_Bar Menu_Bar){
     return (static_cast<Fl_DerivedMenu_Bar*>(menu_bar))->take_focus();
   }
   FL_EXPORT_C(void,Fl_Menu_Bar_set_visible_focus)(fl_Menu_Bar menu_bar){
-    (static_cast<Fl_DerivedMenu_Bar*>(menu_bar))->visible_focus();
+    (static_cast<Fl_DerivedMenu_Bar*>(menu_bar))->set_visible_focus();
   }
   FL_EXPORT_C(void,Fl_Menu_Bar_clear_visible_focus)(fl_Menu_Bar menu_bar){
     (static_cast<Fl_DerivedMenu_Bar*>(menu_bar))->clear_visible_focus();

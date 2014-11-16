@@ -401,7 +401,7 @@ FL_EXPORT_C(void, Fl_Gl_Window_draw_label)(fl_Gl_Window Gl_Window){
     return (static_cast<Fl_DerivedGl_Window*>(win))->take_focus();
   }
   FL_EXPORT_C(void,Fl_Gl_Window_set_visible_focus)(fl_Gl_Window win){
-    (static_cast<Fl_DerivedGl_Window*>(win))->visible_focus();
+    (static_cast<Fl_DerivedGl_Window*>(win))->set_visible_focus();
   }
   FL_EXPORT_C(void,Fl_Gl_Window_clear_visible_focus)(fl_Gl_Window win){
     (static_cast<Fl_DerivedGl_Window*>(win))->clear_visible_focus();

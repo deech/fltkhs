@@ -196,7 +196,7 @@ EXPORT {
     return (static_cast<Fl_Group*>(win))->take_focus();
   }
   FL_EXPORT_C(void,Fl_Group_set_visible_focus)(fl_Group win){
-    (static_cast<Fl_Group*>(win))->visible_focus();
+    (static_cast<Fl_Group*>(win))->set_visible_focus();
   }
   FL_EXPORT_C(void,Fl_Group_clear_visible_focus)(fl_Group win){
     (static_cast<Fl_Group*>(win))->clear_visible_focus();

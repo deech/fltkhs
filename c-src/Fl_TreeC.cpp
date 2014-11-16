@@ -184,7 +184,7 @@ EXPORT {
     return (static_cast<Fl_Tree*>(tree))->take_focus();
   }
   FL_EXPORT_C(void,Fl_Tree_set_visible_focus)(fl_Tree tree){
-    (static_cast<Fl_Tree*>(tree))->visible_focus();
+    (static_cast<Fl_Tree*>(tree))->set_visible_focus();
   }
   FL_EXPORT_C(void,Fl_Tree_clear_visible_focus)(fl_Tree tree){
     (static_cast<Fl_Tree*>(tree))->clear_visible_focus();

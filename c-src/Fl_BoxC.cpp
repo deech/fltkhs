@@ -363,7 +363,7 @@ EXPORT {
     return (static_cast<Fl_DerivedBox*>(box))->take_focus();
   }
   FL_EXPORT_C(void,Fl_Box_set_visible_focus)(fl_Box box){
-    (static_cast<Fl_DerivedBox*>(box))->visible_focus();
+    (static_cast<Fl_DerivedBox*>(box))->set_visible_focus();
   }
   FL_EXPORT_C(void,Fl_Box_clear_visible_focus)(fl_Box box){
     (static_cast<Fl_DerivedBox*>(box))->clear_visible_focus();

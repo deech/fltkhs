@@ -184,7 +184,7 @@ EXPORT {
     return (static_cast<Fl_Tabs*>(tabs))->take_focus();
   }
   FL_EXPORT_C(void,Fl_Tabs_set_visible_focus)(fl_Tabs tabs){
-    (static_cast<Fl_Tabs*>(tabs))->visible_focus();
+    (static_cast<Fl_Tabs*>(tabs))->set_visible_focus();
   }
   FL_EXPORT_C(void,Fl_Tabs_clear_visible_focus)(fl_Tabs tabs){
     (static_cast<Fl_Tabs*>(tabs))->clear_visible_focus();

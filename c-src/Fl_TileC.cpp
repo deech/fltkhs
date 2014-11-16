@@ -196,7 +196,7 @@ EXPORT {
     return (static_cast<Fl_Tile*>(tile))->take_focus();
   }
   FL_EXPORT_C(void,Fl_Tile_set_visible_focus)(fl_Tile tile){
-    (static_cast<Fl_Tile*>(tile))->visible_focus();
+    (static_cast<Fl_Tile*>(tile))->set_visible_focus();
   }
   FL_EXPORT_C(void,Fl_Tile_clear_visible_focus)(fl_Tile tile){
     (static_cast<Fl_Tile*>(tile))->clear_visible_focus();

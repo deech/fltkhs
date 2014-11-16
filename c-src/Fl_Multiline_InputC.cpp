@@ -198,7 +198,7 @@ EXPORT {
     return (static_cast<Fl_Multiline_Input*>(multiline_input))->take_focus();
   }
   FL_EXPORT_C(void,Fl_Multiline_Input_set_visible_focus)(fl_Multiline_Input multiline_input){
-    (static_cast<Fl_Multiline_Input*>(multiline_input))->visible_focus();
+    (static_cast<Fl_Multiline_Input*>(multiline_input))->set_visible_focus();
   }
   FL_EXPORT_C(void,Fl_Multiline_Input_clear_visible_focus)(fl_Multiline_Input multiline_input){
     (static_cast<Fl_Multiline_Input*>(multiline_input))->clear_visible_focus();

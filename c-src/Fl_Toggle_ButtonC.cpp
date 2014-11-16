@@ -197,7 +197,7 @@ EXPORT {
     return (static_cast<Fl_Toggle_Button*>(b))->take_focus();
   }
   FL_EXPORT_C(void,Fl_Toggle_Button_set_visible_focus)(fl_Toggle_Button b){
-    (static_cast<Fl_Toggle_Button*>(b))->visible_focus();
+    (static_cast<Fl_Toggle_Button*>(b))->set_visible_focus();
   }
   FL_EXPORT_C(void,Fl_Toggle_Button_clear_visible_focus)(fl_Toggle_Button b){
     (static_cast<Fl_Toggle_Button*>(b))->clear_visible_focus();

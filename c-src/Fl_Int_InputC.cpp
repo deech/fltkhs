@@ -352,7 +352,7 @@ FL_EXPORT_C(void, Fl_Int_Input_draw_label)(fl_Int_Input Int_Input){
     return (static_cast<Fl_DerivedInt_Input*>(int_input))->take_focus();
   }
   FL_EXPORT_C(void,Fl_Int_Input_set_visible_focus)(fl_Int_Input int_input){
-    (static_cast<Fl_DerivedInt_Input*>(int_input))->visible_focus();
+    (static_cast<Fl_DerivedInt_Input*>(int_input))->set_visible_focus();
   }
   FL_EXPORT_C(void,Fl_Int_Input_clear_visible_focus)(fl_Int_Input int_input){
     (static_cast<Fl_DerivedInt_Input*>(int_input))->clear_visible_focus();

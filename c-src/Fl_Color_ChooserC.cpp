@@ -193,7 +193,7 @@ EXPORT {
     return (static_cast<Fl_Color_Chooser*>(color_chooser))->take_focus();
   }
   FL_EXPORT_C(void,Fl_Color_Chooser_set_visible_focus)(fl_Color_Chooser color_chooser){
-    (static_cast<Fl_Color_Chooser*>(color_chooser))->visible_focus();
+    (static_cast<Fl_Color_Chooser*>(color_chooser))->set_visible_focus();
   }
   FL_EXPORT_C(void,Fl_Color_Chooser_clear_visible_focus)(fl_Color_Chooser color_chooser){
     (static_cast<Fl_Color_Chooser*>(color_chooser))->clear_visible_focus();

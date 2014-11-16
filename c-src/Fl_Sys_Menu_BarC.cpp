@@ -474,7 +474,7 @@ EXPORT {
   }
   FL_EXPORT_C(void,Fl_Sys_Menu_Bar_set_visible_focus)(fl_Sys_Menu_Bar sys_menu_bar){
 #if defined(__APPLE__)
-    (static_cast<Fl_Sys_Menu_Bar*>(sys_menu_bar))->visible_focus();
+    (static_cast<Fl_Sys_Menu_Bar*>(sys_menu_bar))->set_visible_focus();
 #else
     (static_cast<Fl_Menu_Bar*>(sys_menu_bar))->visible_focus();
 #endif

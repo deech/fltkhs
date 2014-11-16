@@ -407,7 +407,7 @@ FL_EXPORT_C(void, Fl_Table_draw_label)(fl_Table Table){
     return (static_cast<Fl_DerivedTable*>(table))->take_focus();
   }
   FL_EXPORT_C(void,Fl_Table_set_visible_focus)(fl_Table table){
-    (static_cast<Fl_DerivedTable*>(table))->visible_focus();
+    (static_cast<Fl_DerivedTable*>(table))->set_visible_focus();
   }
   FL_EXPORT_C(void,Fl_Table_clear_visible_focus)(fl_Table table){
     (static_cast<Fl_DerivedTable*>(table))->clear_visible_focus();

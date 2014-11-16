@@ -413,7 +413,7 @@ FL_EXPORT_C(void, Fl_Table_Row_draw_label)(fl_Table_Row Table_Row){
     return (static_cast<Fl_DerivedTable_Row*>(table_row))->take_focus();
   }
   FL_EXPORT_C(void,Fl_Table_Row_set_visible_focus)(fl_Table_Row table_row){
-    (static_cast<Fl_DerivedTable_Row*>(table_row))->visible_focus();
+    (static_cast<Fl_DerivedTable_Row*>(table_row))->set_visible_focus();
   }
   FL_EXPORT_C(void,Fl_Table_Row_clear_visible_focus)(fl_Table_Row table_row){
     (static_cast<Fl_DerivedTable_Row*>(table_row))->clear_visible_focus();

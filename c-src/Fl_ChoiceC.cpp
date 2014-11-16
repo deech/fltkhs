@@ -220,7 +220,7 @@ EXPORT {
     return (static_cast<Fl_Choice*>(choice))->take_focus();
   }
   FL_EXPORT_C(void,Fl_Choice_set_visible_focus)(fl_Choice choice){
-    (static_cast<Fl_Choice*>(choice))->visible_focus();
+    (static_cast<Fl_Choice*>(choice))->set_visible_focus();
   }
   FL_EXPORT_C(void,Fl_Choice_clear_visible_focus)(fl_Choice choice){
     (static_cast<Fl_Choice*>(choice))->clear_visible_focus();

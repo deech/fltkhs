@@ -377,7 +377,7 @@ FL_EXPORT_C(void, Fl_Button_draw_label)(fl_Button Button){
     return (static_cast<Fl_DerivedButton*>(b))->take_focus();
   }
   FL_EXPORT_C(void,Fl_Button_set_visible_focus)(fl_Button b){
-    (static_cast<Fl_DerivedButton*>(b))->visible_focus();
+    (static_cast<Fl_DerivedButton*>(b))->set_visible_focus();
   }
   FL_EXPORT_C(void,Fl_Button_clear_visible_focus)(fl_Button b){
     (static_cast<Fl_DerivedButton*>(b))->clear_visible_focus();

@@ -196,7 +196,7 @@ EXPORT {
     return (static_cast<Fl_Wizard*>(wizard))->take_focus();
   }
   FL_EXPORT_C(void,Fl_Wizard_set_visible_focus)(fl_Wizard wizard){
-    (static_cast<Fl_Wizard*>(wizard))->visible_focus();
+    (static_cast<Fl_Wizard*>(wizard))->set_visible_focus();
   }
   FL_EXPORT_C(void,Fl_Wizard_clear_visible_focus)(fl_Wizard wizard){
     (static_cast<Fl_Wizard*>(wizard))->clear_visible_focus();

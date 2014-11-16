@@ -413,6 +413,9 @@ simpleTypeMap =
     ,("Fl_Boxtype", "Boxtype")
     ,("Fl_Mode", "Mode")
     ,("fl_Widget", "Ptr ()")
+    ,("fl_Adjuster", "Ptr ()")
+    ,("fl_Counter", "Ptr ()")
+    ,("fl_Dial", "Ptr ()")
     ,("fl_RGB_Image", "Ptr ()")
     ,("fl_Pixmap", "Ptr ()")
     ,("fl_Copy_Surface", "Ptr ()")
@@ -460,6 +463,9 @@ haskellEquivalent =
     [
      ("fl_Region"         , "Region"),
      ("fl_Widget"         , "Widget"),
+     ("fl_Adjuster"       , "Adjuster"),
+     ("fl_Counter"        , "Counter"),
+     ("fl_Dial"           , "Dial"),
      ("fl_RGB_Image"      , "RGBImage"),
      ("fl_Pixmap"         , "Pixmap"),
      ("fl_Copy_Surface"   , "CopySurface"),

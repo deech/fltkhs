@@ -363,7 +363,7 @@ FL_EXPORT_C(void, Fl_Widget_draw_label)(fl_Widget Widget){
     return (static_cast<Fl_DerivedWidget*>(widget))->take_focus();
   }
   FL_EXPORT_C(void,Fl_Widget_set_visible_focus)(fl_Widget widget){
-    (static_cast<Fl_DerivedWidget*>(widget))->visible_focus();
+    (static_cast<Fl_DerivedWidget*>(widget))->set_visible_focus();
   }
   FL_EXPORT_C(void,Fl_Widget_set_visible)(fl_Widget widget){
     (static_cast<Fl_DerivedWidget*>(widget))->set_visible();

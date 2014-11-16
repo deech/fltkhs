@@ -197,7 +197,7 @@ EXPORT {
     return (static_cast<Fl_Check_Button*>(b))->take_focus();
   }
   FL_EXPORT_C(void,Fl_Check_Button_set_visible_focus)(fl_Check_Button b){
-    (static_cast<Fl_Check_Button*>(b))->visible_focus();
+    (static_cast<Fl_Check_Button*>(b))->set_visible_focus();
   }
   FL_EXPORT_C(void,Fl_Check_Button_clear_visible_focus)(fl_Check_Button b){
     (static_cast<Fl_Check_Button*>(b))->clear_visible_focus();

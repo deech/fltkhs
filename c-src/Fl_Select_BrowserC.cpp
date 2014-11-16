@@ -196,7 +196,7 @@ EXPORT {
     return (static_cast<Fl_Select_Browser*>(select_browser))->take_focus();
   }
   FL_EXPORT_C(void,Fl_Select_Browser_set_visible_focus)(fl_Select_Browser select_browser){
-    (static_cast<Fl_Select_Browser*>(select_browser))->visible_focus();
+    (static_cast<Fl_Select_Browser*>(select_browser))->set_visible_focus();
   }
   FL_EXPORT_C(void,Fl_Select_Browser_clear_visible_focus)(fl_Select_Browser select_browser){
     (static_cast<Fl_Select_Browser*>(select_browser))->clear_visible_focus();

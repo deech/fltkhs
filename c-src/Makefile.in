@@ -4,6 +4,8 @@ LD = $(CXX) -shared
 CXXSTATIC = $(CXX) -static
 
 CPPFILES= \
+	Fl_DialC.cpp \
+	Fl_CounterC.cpp \
 	Utils.cpp \
 	xC.cpp \
 	fl_utf8C.cpp \
@@ -87,6 +89,7 @@ CPPFILES= \
 	Fl_Tree_ItemC.cpp \
 	Fl_Tree_PrefsC.cpp \
 	Fl_ValuatorC.cpp \
+	Fl_AdjusterC.cpp \
 	Fl_Value_InputC.cpp \
 	Fl_Value_SliderC.cpp \
 	Fl_WidgetC.cpp \

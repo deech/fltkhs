@@ -197,7 +197,7 @@ EXPORT {
     return (static_cast<Fl_Clock*>(b))->take_focus();
   }
   FL_EXPORT_C(void,Fl_Clock_set_visible_focus)(fl_Clock b){
-    (static_cast<Fl_Clock*>(b))->visible_focus();
+    (static_cast<Fl_Clock*>(b))->set_visible_focus();
   }
   FL_EXPORT_C(void,Fl_Clock_clear_visible_focus)(fl_Clock b){
     (static_cast<Fl_Clock*>(b))->clear_visible_focus();

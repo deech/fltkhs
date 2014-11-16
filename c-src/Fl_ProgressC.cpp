@@ -223,7 +223,7 @@ EXPORT {
     return (static_cast<Fl_Progress*>(progress))->take_focus();
   }
   FL_EXPORT_C(void,Fl_Progress_set_visible_focus)(fl_Progress progress){
-    (static_cast<Fl_Progress*>(progress))->visible_focus();
+    (static_cast<Fl_Progress*>(progress))->set_visible_focus();
   }
   FL_EXPORT_C(void,Fl_Progress_clear_visible_focus)(fl_Progress progress){
     (static_cast<Fl_Progress*>(progress))->clear_visible_focus();

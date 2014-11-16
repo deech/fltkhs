@@ -370,7 +370,7 @@ FL_EXPORT_C(void, Fl_Multi_Browser_draw_label)(fl_Multi_Browser Multi_Browser){
     return (static_cast<Fl_DerivedMulti_Browser*>(multi_browser))->take_focus();
   }
   FL_EXPORT_C(void,Fl_Multi_Browser_set_visible_focus)(fl_Multi_Browser multi_browser){
-    (static_cast<Fl_DerivedMulti_Browser*>(multi_browser))->visible_focus();
+    (static_cast<Fl_DerivedMulti_Browser*>(multi_browser))->set_visible_focus();
   }
   FL_EXPORT_C(void,Fl_Multi_Browser_clear_visible_focus)(fl_Multi_Browser multi_browser){
     (static_cast<Fl_DerivedMulti_Browser*>(multi_browser))->clear_visible_focus();

@@ -402,7 +402,7 @@ return (fl_Window)(static_cast<Fl_DerivedSingle_Window*>(self))->as_window_super
     return (static_cast<Fl_DerivedSingle_Window*>(win))->take_focus();
   }
   FL_EXPORT_C(void,Fl_Single_Window_set_visible_focus)(fl_Single_Window win){
-    (static_cast<Fl_DerivedSingle_Window*>(win))->visible_focus();
+    (static_cast<Fl_DerivedSingle_Window*>(win))->set_visible_focus();
   }
   FL_EXPORT_C(void,Fl_Single_Window_clear_visible_focus)(fl_Single_Window win){
     (static_cast<Fl_DerivedSingle_Window*>(win))->clear_visible_focus();

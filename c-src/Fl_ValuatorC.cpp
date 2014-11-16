@@ -388,7 +388,7 @@ FL_EXPORT_C(void, Fl_Valuator_draw_label)(fl_Valuator Valuator){
     return (static_cast<Fl_DerivedValuator*>(valuator))->take_focus();
   }
   FL_EXPORT_C(void,Fl_Valuator_set_visible_focus)(fl_Valuator valuator){
-    (static_cast<Fl_DerivedValuator*>(valuator))->visible_focus();
+    (static_cast<Fl_DerivedValuator*>(valuator))->set_visible_focus();
   }
   FL_EXPORT_C(void,Fl_Valuator_clear_visible_focus)(fl_Valuator valuator){
     (static_cast<Fl_DerivedValuator*>(valuator))->clear_visible_focus();

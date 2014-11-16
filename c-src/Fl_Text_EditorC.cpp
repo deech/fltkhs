@@ -229,7 +229,7 @@ EXPORT {
     return (static_cast<DerivedText_Editor*>(win))->take_focus();
   }
   FL_EXPORT_C(void,Fl_Text_Editor_set_visible_focus)(fl_Text_Editor win){
-    (static_cast<DerivedText_Editor*>(win))->visible_focus();
+    (static_cast<DerivedText_Editor*>(win))->set_visible_focus();
   }
   FL_EXPORT_C(void,Fl_Text_Editor_clear_visible_focus)(fl_Text_Editor win){
     (static_cast<DerivedText_Editor*>(win))->clear_visible_focus();
