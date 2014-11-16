@@ -4,7 +4,10 @@ LD = $(CXX) -shared
 CXXSTATIC = $(CXX) -static
 
 CPPFILES= \
+	Fl_RollerC.cpp \
 	Fl_DialC.cpp \
+	Fl_Fill_DialC.cpp \
+	Fl_Line_DialC.cpp \
 	Fl_CounterC.cpp \
 	Utils.cpp \
 	xC.cpp \
