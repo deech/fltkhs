@@ -2,32 +2,17 @@
 #ifdef __cplusplus
 EXPORT {
 #endif
-  FL_EXPORT_C(int,Fl_Progress_handle_super )(fl_Progress progress,int event){
-    return (static_cast<Fl_Progress*>(progress))->handle(event);
-  }
   FL_EXPORT_C(int,Fl_Progress_handle )(fl_Progress progress, int event){
     return (static_cast<Fl_Progress*>(progress))->handle(event);
-  }
-  FL_EXPORT_C(void,Fl_Progress_resize_super )(fl_Progress progress,int x, int y, int w, int h){
-    (static_cast<Fl_Progress*>(progress))->resize(x,y,w,h);
   }
   FL_EXPORT_C(void,Fl_Progress_resize )(fl_Progress progress,int x, int y, int w, int h){
     (static_cast<Fl_Progress*>(progress))->resize(x,y,w,h);
   }
-  FL_EXPORT_C(void,Fl_Progress_show_super)(fl_Progress progress){
-    (static_cast<Fl_Progress*>(progress))->show();
-  }
   FL_EXPORT_C(void,Fl_Progress_show )(fl_Progress progress){
     (static_cast<Fl_Progress*>(progress))->show();
   }
-  FL_EXPORT_C(void,Fl_Progress_hide_super)(fl_Progress progress){
-    (static_cast<Fl_Progress*>(progress))->hide();
-  }
   FL_EXPORT_C(void,Fl_Progress_hide )(fl_Progress progress){
     (static_cast<Fl_Progress*>(progress))->hide();
-  }
-  FL_EXPORT_C(fl_Window,Fl_Progress_as_window_super)(fl_Progress progress){
-    return (static_cast<Fl_Progress*>(progress))->as_window();
   }
   FL_EXPORT_C(fl_Window,Fl_Progress_as_window )(fl_Progress progress){
     return (static_cast<Fl_Progress*>(progress))->as_window();

@@ -8,7 +8,7 @@ EXEEXT = .exe
 endif
 
 EXAMPLES= \
-        sanity_check.c \
+  sanity_check.c \
 	arc.c \
 	bitmap.c \
 	boxtype.c \
@@ -17,7 +17,7 @@ EXAMPLES= \
 	buttons.c \
 	clock.c \
 	colbrowser.c \
-        color_chooser.c \
+	color_chooser.c \
 	cube.c \
 	cursor.c \
 	curve.c \

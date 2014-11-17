@@ -50,6 +50,7 @@ library
                    Graphics.UI.FLTK.LowLevel.Fl_Value_Input
                    Graphics.UI.FLTK.LowLevel.Fl_Value_Output
                    Graphics.UI.FLTK.LowLevel.Fl_Timer
+                   Graphics.UI.FLTK.LowLevel.Fl_Progress
                    Graphics.UI.FLTK.LowLevel.FL
                    Graphics.UI.FLTK.LowLevel.Utils
   build-depends: base, containers, stm, bytestring

@@ -10,17 +10,11 @@
 EXPORT {
 #endif
   /* Inherited from Fl_Widget */
-  FL_EXPORT_C(int ,         Fl_Progress_handle_super)(fl_Progress progress,int event);
   FL_EXPORT_C(int ,         Fl_Progress_handle )(fl_Progress progress,int event);
-  FL_EXPORT_C(void,         Fl_Progress_resize_super)(fl_Progress progress,int x, int y, int w, int h);
   FL_EXPORT_C(void,         Fl_Progress_resize )(fl_Progress progress,int x, int y, int w, int h);
-  FL_EXPORT_C(void,         Fl_Progress_show_super)(fl_Progress progress);
   FL_EXPORT_C(void,         Fl_Progress_show )(fl_Progress progress);
-  FL_EXPORT_C(void,         Fl_Progress_hide_super)(fl_Progress progress);
   FL_EXPORT_C(void,         Fl_Progress_hide )(fl_Progress progress);
-  FL_EXPORT_C(fl_Window,    Fl_Progress_as_window_super)(fl_Progress progress);
   FL_EXPORT_C(fl_Window,    Fl_Progress_as_window )(fl_Progress progress);
-  FL_EXPORT_C(fl_Gl_Window, Fl_Progress_as_gl_window_super)(fl_Progress progress);
   FL_EXPORT_C(fl_Gl_Window, Fl_Progress_as_gl_window)(fl_Progress progress);
   FL_EXPORT_C(fl_Group,     Fl_Progress_parent)(fl_Progress progress);
   FL_EXPORT_C(void,         Fl_Progress_set_parent)(fl_Progress progress, fl_Group grp);
