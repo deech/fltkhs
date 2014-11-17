@@ -28,6 +28,7 @@
 #include <Fl_Gl_WindowC.h>
 #include <Fl_TimerC.h>
 #include <Fl_ProgressC.h>
+#include <Fl_PositionerC.h>
 #include <Fl_GroupC.h>
 #include <Fl_Hold_BrowserC.h>
 #include <Fl_ImageC.h>
