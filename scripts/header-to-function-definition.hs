@@ -415,6 +415,7 @@ simpleTypeMap =
     ,("fl_Widget", "Ptr ()")
     ,("fl_Adjuster", "Ptr ()")
     ,("fl_Counter", "Ptr ()")
+    ,("fl_Scrollbar", "Ptr ()")
     ,("fl_Dial", "Ptr ()")
     ,("fl_RGB_Image", "Ptr ()")
     ,("fl_Pixmap", "Ptr ()")
@@ -465,6 +466,7 @@ haskellEquivalent =
      ("fl_Widget"         , "Widget"),
      ("fl_Adjuster"       , "Adjuster"),
      ("fl_Counter"        , "Counter"),
+     ("fl_Scrollbar"      , "Scrollbar"),
      ("fl_Dial"           , "Dial"),
      ("fl_RGB_Image"      , "RGBImage"),
      ("fl_Pixmap"         , "Pixmap"),

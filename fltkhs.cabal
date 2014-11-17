@@ -45,6 +45,7 @@ library
                    Graphics.UI.FLTK.LowLevel.Fl_Dial
                    Graphics.UI.FLTK.LowLevel.Fl_Roller
                    Graphics.UI.FLTK.LowLevel.Fl_Counter
+                   Graphics.UI.FLTK.LowLevel.Fl_Scrollbar
                    Graphics.UI.FLTK.LowLevel.FL
                    Graphics.UI.FLTK.LowLevel.Utils
   build-depends: base, containers, stm, bytestring

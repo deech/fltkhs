@@ -9,6 +9,7 @@
 #include <Fl_ButtonC.h>
 #include <Fl_Check_ButtonC.h>
 #include <Fl_ChoiceC.h>
+#include <Fl_ScrollbarC.h>
 #include <Fl_ClockC.h>
 #include <Fl_ClockC.h>
 #include <Fl_Color_ChooserC.h>
