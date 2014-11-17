@@ -2,38 +2,20 @@
 #ifdef __cplusplus
 EXPORT {
 #endif
-  FL_EXPORT_C(int,Fl_Value_Slider_handle_super)(fl_Value_Slider value_slider,int event){
-    return (static_cast<Fl_Value_Slider*>(value_slider))->Fl_Value_Slider::handle(event);
-  }
   FL_EXPORT_C(int,Fl_Value_Slider_handle )(fl_Value_Slider value_slider, int event){
     return (static_cast<Fl_Value_Slider*>(value_slider))->handle(event);
-  }
-  FL_EXPORT_C(void,Fl_Value_Slider_resize_super )(fl_Value_Slider value_slider,int x, int y, int w, int h){
-    (static_cast<Fl_Value_Slider*>(value_slider))->Fl_Value_Slider::resize(x,y,w,h);
   }
   FL_EXPORT_C(void,Fl_Value_Slider_resize )(fl_Value_Slider value_slider,int x, int y, int w, int h){
     (static_cast<Fl_Value_Slider*>(value_slider))->resize(x,y,w,h);
   }
-  FL_EXPORT_C(void,Fl_Value_Slider_show_super)(fl_Value_Slider value_slider){
-    (static_cast<Fl_Value_Slider*>(value_slider))->Fl_Value_Slider::show();
-  }
   FL_EXPORT_C(void,Fl_Value_Slider_show )(fl_Value_Slider value_slider){
     (static_cast<Fl_Value_Slider*>(value_slider))->show();
-  }
-  FL_EXPORT_C(void,Fl_Value_Slider_hide_super)(fl_Value_Slider value_slider){
-    (static_cast<Fl_Value_Slider*>(value_slider))->Fl_Value_Slider::hide();
   }
   FL_EXPORT_C(void,Fl_Value_Slider_hide )(fl_Value_Slider value_slider){
     (static_cast<Fl_Value_Slider*>(value_slider))->hide();
   }
-  FL_EXPORT_C(fl_Window,Fl_Value_Slider_as_window_super)(fl_Value_Slider value_slider){
-    return (static_cast<Fl_Value_Slider*>(value_slider))->Fl_Value_Slider::as_window();
-  }
   FL_EXPORT_C(fl_Window,Fl_Value_Slider_as_window )(fl_Value_Slider value_slider){
     return (static_cast<Fl_Value_Slider*>(value_slider))->as_window();
-  }
-  FL_EXPORT_C(fl_Gl_Window,Fl_Value_Slider_as_gl_window_super)(fl_Value_Slider value_slider){
-    return (fl_Gl_Window) (static_cast<Fl_Value_Slider*>(value_slider))->Fl_Value_Slider::as_gl_window();
   }
   FL_EXPORT_C(fl_Gl_Window,Fl_Value_Slider_as_gl_window )(fl_Value_Slider value_slider){
     return (fl_Gl_Window) (static_cast<Fl_Value_Slider*>(value_slider))->as_gl_window();
@@ -355,6 +337,14 @@ EXPORT {
   FL_EXPORT_C(fl_Value_Slider, Fl_Value_Slider_New)(int x, int y, int w, int h) {
     Fl_Value_Slider* value_slider = new Fl_Value_Slider(x,y,w,h,0);
     return (fl_Value_Slider)value_slider;
+  }
+  FL_EXPORT_C(fl_Hor_Value_Slider, Fl_Hor_Value_Slider_New_WithLabel)(int x, int y, int w, int h, const char* label) {
+    Fl_Hor_Value_Slider* hor_value_slider = new Fl_Hor_Value_Slider(x,y,w,h,label);
+    return (static_cast<fl_Hor_Value_Slider>(hor_value_slider));
+  }
+  FL_EXPORT_C(fl_Hor_Value_Slider, Fl_Hor_Value_Slider_New)(int x, int y, int w, int h) {
+    Fl_Hor_Value_Slider* hor_value_slider = new Fl_Hor_Value_Slider(x,y,w,h,0);
+    return (fl_Hor_Value_Slider)hor_value_slider;
   }
   FL_EXPORT_C(void,      Fl_Value_Slider_Destroy)(fl_Value_Slider value_slider){
     delete (static_cast<Fl_Value_Slider*>(value_slider));

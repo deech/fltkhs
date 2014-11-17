@@ -9,8 +9,6 @@
 #include "Fl_CallbackC.h"
 EXPORT {
 #endif
-  FL_EXPORT_C(int,Fl_Value_Slider_handle)(fl_Widget self, int event);
-  FL_EXPORT_C(int,Fl_Value_Slider_handle_super)(fl_Widget self, int event);
   FL_EXPORT_C(fl_Group,     Fl_Value_Slider_parent)(fl_Value_Slider value_slider);
   FL_EXPORT_C(void,         Fl_Value_Slider_set_parent)(fl_Value_Slider value_slider, fl_Group grp);
   FL_EXPORT_C(uchar,        Fl_Value_Slider_type)(fl_Value_Slider value_slider);
@@ -59,9 +57,7 @@ EXPORT {
   FL_EXPORT_C(void,         Fl_Value_Slider_set_when)(fl_Value_Slider value_slider, uchar i);
   FL_EXPORT_C(unsigned int, Fl_Value_Slider_visible)(fl_Value_Slider value_slider);
   FL_EXPORT_C(int,          Fl_Value_Slider_visible_r)(fl_Value_Slider value_slider);
-  FL_EXPORT_C(void,         Fl_Value_Slider_show_super)(fl_Value_Slider value_slider);
   FL_EXPORT_C(void,         Fl_Value_Slider_show)(fl_Value_Slider value_slider);
-  FL_EXPORT_C(void,         Fl_Value_Slider_hide_super)(fl_Value_Slider value_slider);
   FL_EXPORT_C(void,         Fl_Value_Slider_hide)(fl_Value_Slider value_slider);
   FL_EXPORT_C(void,         Fl_Value_Slider_set_visible)(fl_Value_Slider value_slider);
   FL_EXPORT_C(void,         Fl_Value_Slider_clear_visible)(fl_Value_Slider value_slider);
@@ -94,9 +90,7 @@ EXPORT {
   FL_EXPORT_C(fl_Window,    Fl_Value_Slider_window)(fl_Value_Slider value_slider);
   FL_EXPORT_C(fl_Window,    Fl_Value_Slider_top_window)(fl_Value_Slider value_slider);
   FL_EXPORT_C(fl_Window ,   Fl_Value_Slider_top_window_offset)(fl_Value_Slider value_slider, int* xoff, int* yoff);
-  FL_EXPORT_C(fl_Gl_Window, Fl_Value_Slider_as_gl_window_super)(fl_Value_Slider value_slider);
   FL_EXPORT_C(fl_Gl_Window, Fl_Value_Slider_as_gl_window)(fl_Value_Slider value_slider);
-  FL_EXPORT_C(void,         Fl_Value_Slider_resize_super)(fl_Table table,int X, int Y, int W, int H);
   FL_EXPORT_C(void,         Fl_Value_Slider_resize)(fl_Table table,int X, int Y, int W, int H);
 
   /* Inherited from Fl_Valuator */
@@ -129,6 +123,8 @@ EXPORT {
   /* Fl_Value_Slider specific */
   FL_EXPORT_C(fl_Value_Slider,    Fl_Value_Slider_New_WithLabel)(int x, int y, int w, int h, const char* label);
   FL_EXPORT_C(fl_Value_Slider   , Fl_Value_Slider_New)(int x, int y, int w, int h);
+  FL_EXPORT_C(fl_Value_Slider,    Fl_Hor_Value_Slider_New_WithLabel)(int x, int y, int w, int h, const char* label);
+  FL_EXPORT_C(fl_Value_Slider   , Fl_Hor_Value_Slider_New)(int x, int y, int w, int h);
   FL_EXPORT_C(void,      Fl_Value_Slider_Destroy)(fl_Value_Slider value_slider);
   FL_EXPORT_C(Fl_Font, Fl_Value_Slider_textfont)(fl_Value_Slider value_slider);
   FL_EXPORT_C(void, Fl_Value_Slider_set_textfont)(fl_Value_Slider value_slider, Fl_Font s);
@@ -136,6 +132,7 @@ EXPORT {
   FL_EXPORT_C(void, Fl_Value_Slider_set_textsize)(fl_Value_Slider value_slider, Fl_Fontsize s);
   FL_EXPORT_C(Fl_Color, Fl_Value_Slider_textcolor)(fl_Value_Slider value_slider);
   FL_EXPORT_C(void, Fl_Value_Slider_set_textcolor)(fl_Value_Slider value_slider, Fl_Color s);
+  FL_EXPORT_C(int,Fl_Value_Slider_handle)(fl_Widget self, int event);
 #ifdef __cplusplus
 }
 #endif
