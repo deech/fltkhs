@@ -414,6 +414,7 @@ simpleTypeMap =
     ,("Fl_Mode", "Mode")
     ,("fl_Widget", "Ptr ()")
     ,("fl_Adjuster", "Ptr ()")
+    ,("fl_Timer", "Ptr ()")
     ,("fl_Counter", "Ptr ()")
     ,("fl_Scrollbar", "Ptr ()")
     ,("fl_Dial", "Ptr ()")
@@ -467,6 +468,7 @@ haskellEquivalent =
      ("fl_Region"         , "Region"),
      ("fl_Widget"         , "Widget"),
      ("fl_Adjuster"       , "Adjuster"),
+     ("fl_Timer"          , "Timer"),
      ("fl_Counter"        , "Counter"),
      ("fl_Scrollbar"      , "Scrollbar"),
      ("fl_Dial"           , "Dial"),

@@ -41,6 +41,10 @@ EXPORT {
 #define FL_HOLD_BROWSER		2	/**< type() of Fl_Hold_Browser */
 #define FL_MULTI_BROWSER	3	/**< type() of Fl_Multi_Browser */
 
+#define FL_NORMAL_TIMER 0
+#define FL_VALUE_TIMER  1
+#define FL_HIDDEN_TIMER 2  
+
 #define FL_SORT_ASCENDING	0	/**< sort browser items in ascending alphabetic order. */
 #define FL_SORT_DESCENDING	1	/**< sort in descending order */
 #ifndef INTERNAL_LINKAGE

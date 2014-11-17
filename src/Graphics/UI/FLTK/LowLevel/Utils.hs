@@ -225,3 +225,12 @@ withBitmap (BitmapHs bitmap (Size (Width width') (Height height'))) f =
    B.useAsCString
      (foldl1 B.append bitmap)
      (\ptr -> f ptr width' height')
+
+countDirectionToCChar :: CountDirection -> CChar
+countDirectionToCChar d = 
+  case d of
+   CountUp -> 1
+   CountDown -> 0
+
+ccharToCountDirection :: CChar -> CountDirection
+ccharToCountDirection c = if (c == 0) then CountDown else CountUp
