@@ -340,6 +340,24 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Value_Input_set_shortcut)(fl_Value_Input value_input,int v){
     (static_cast<Fl_Value_Input*>(value_input))->shortcut(v);
   }
+  FL_EXPORT_C(Fl_Font,Fl_Value_Input_textfont)(fl_Value_Input value_input){
+    return (static_cast<Fl_Value_Input*>(value_input))->textfont();
+  }
+  FL_EXPORT_C(void,Fl_Value_Input_set_textfont)(fl_Value_Input value_input,int v){
+    (static_cast<Fl_Value_Input*>(value_input))->textfont(v);
+  }
+  FL_EXPORT_C(int,Fl_Value_Input_textsize)(fl_Value_Input value_input){
+    return (static_cast<Fl_Value_Input*>(value_input))->textsize();
+  }
+  FL_EXPORT_C(void,Fl_Value_Input_set_textsize)(fl_Value_Input value_input,int v){
+    (static_cast<Fl_Value_Input*>(value_input))->textsize(v);
+  }
+  FL_EXPORT_C(Fl_Color,Fl_Value_Input_textcolor)(fl_Value_Input value_input){
+    return (static_cast<Fl_Value_Input*>(value_input))->textcolor();
+  }
+  FL_EXPORT_C(void,Fl_Value_Input_set_textcolor)(fl_Value_Input value_input,int v){
+    (static_cast<Fl_Value_Input*>(value_input))->textcolor(v);
+  }
 #ifdef __cplusplus
 }
 #endif

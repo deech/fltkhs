@@ -121,6 +121,12 @@ EXPORT {
   FL_EXPORT_C(void ,	Fl_Value_Input_set_soft)(fl_Value_Input value_input, char s);
   FL_EXPORT_C(int ,	Fl_Value_Input_shortcut)(fl_Value_Input value_input);
   FL_EXPORT_C(void,	Fl_Value_Input_set_shortcut)(fl_Value_Input value_input,int v);
+  FL_EXPORT_C(Fl_Font,	Fl_Value_Input_textfont)(fl_Value_Input value_input);
+  FL_EXPORT_C(void,	Fl_Value_Input_set_textfont)(fl_Value_Input value_input,int v);
+  FL_EXPORT_C(int ,	Fl_Value_Input_textsize)(fl_Value_Input value_input);
+  FL_EXPORT_C(void,	Fl_Value_Input_set_textsize)(fl_Value_Input value_input,int v);
+  FL_EXPORT_C(Fl_Color,	Fl_Value_Input_textcolor)(fl_Value_Input value_input);
+  FL_EXPORT_C(void,	Fl_Value_Input_set_textcolor)(fl_Value_Input value_input,int v);
 #ifdef __cplusplus
 }
 #endif

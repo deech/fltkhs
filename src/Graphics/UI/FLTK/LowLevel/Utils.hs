@@ -48,6 +48,8 @@ cToBool :: (Eq a, Num a) => a -> Bool
 cToBool status = case status of
                    0 -> False
                    _ -> True
+cFromBool :: (Eq a, Num a) => Bool -> a
+cFromBool status = if status then 1 else 0
 
 toFunPtr :: (a -> FunPtr a) -> a -> FunPtr a
 toFunPtr f a = f a
