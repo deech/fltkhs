@@ -6,6 +6,7 @@
 // the callback mechanism included below to work.
 #include "FL/Fl.H"
 #include "FL/Fl_Value_Slider.H"
+#include "FL/Fl_Hor_Value_Slider.H"
 #include "Fl_CallbackC.h"
 EXPORT {
 #endif

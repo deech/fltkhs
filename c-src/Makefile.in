@@ -41,7 +41,6 @@ CPPFILES= \
 	Fl_Gl_WindowC.cpp \
 	Fl_GroupC.cpp \
 	Fl_Hold_BrowserC.cpp \
-	Fl_Hor_Value_SliderC.cpp \
 	Fl_Image_SurfaceC.cpp \
 	Fl_ImageC.cpp \
 	Fl_Input_C.cpp \
