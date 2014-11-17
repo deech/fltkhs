@@ -357,6 +357,46 @@ EXPORT {
     Fl_Slider* slider = new Fl_Slider(t,x,y,w,h,label);
     return (fl_Slider)slider;
   }
+  FL_EXPORT_C(fl_Fill_Slider, Fl_Fill_Slider_New_WithLabel)(int x, int y, int w, int h, const char* label) {
+    Fl_Fill_Slider* slider = new Fl_Fill_Slider(x,y,w,h,label);
+    return (static_cast<fl_Fill_Slider>(slider));
+  }
+  FL_EXPORT_C(fl_Fill_Slider, Fl_Fill_Slider_New)(int x, int y, int w, int h) {
+    Fl_Fill_Slider* slider = new Fl_Fill_Slider(x,y,w,h,0);
+    return (fl_Fill_Slider)slider;
+  }
+  FL_EXPORT_C(fl_Hor_Slider, Fl_Hor_Slider_New_WithLabel)(int x, int y, int w, int h, const char* label) {
+    Fl_Hor_Slider* slider = new Fl_Hor_Slider(x,y,w,h,label);
+    return (static_cast<fl_Hor_Slider>(slider));
+  }
+  FL_EXPORT_C(fl_Hor_Slider, Fl_Hor_Slider_New)(int x, int y, int w, int h) {
+    Fl_Hor_Slider* slider = new Fl_Hor_Slider(x,y,w,h,0);
+    return (fl_Hor_Slider)slider;
+  }
+  FL_EXPORT_C(fl_Hor_Nice_Slider, Fl_Hor_Nice_Slider_New_WithLabel)(int x, int y, int w, int h, const char* label) {
+    Fl_Hor_Nice_Slider* slider = new Fl_Hor_Nice_Slider(x,y,w,h,label);
+    return (static_cast<fl_Hor_Nice_Slider>(slider));
+  }
+  FL_EXPORT_C(fl_Hor_Nice_Slider, Fl_Hor_Nice_Slider_New)(int x, int y, int w, int h) {
+    Fl_Hor_Nice_Slider* slider = new Fl_Hor_Nice_Slider(x,y,w,h,0);
+    return (fl_Hor_Nice_Slider)slider;
+  }
+  FL_EXPORT_C(fl_Hor_Fill_Slider, Fl_Hor_Fill_Slider_New_WithLabel)(int x, int y, int w, int h, const char* label) {
+    Fl_Hor_Fill_Slider* slider = new Fl_Hor_Fill_Slider(x,y,w,h,label);
+    return (static_cast<fl_Hor_Fill_Slider>(slider));
+  }
+  FL_EXPORT_C(fl_Hor_Fill_Slider, Fl_Hor_Fill_Slider_New)(int x, int y, int w, int h) {
+    Fl_Hor_Fill_Slider* slider = new Fl_Hor_Fill_Slider(x,y,w,h,0);
+    return (fl_Hor_Fill_Slider)slider;
+  }
+  FL_EXPORT_C(fl_Nice_Slider, Fl_Nice_Slider_New_WithLabel)(int x, int y, int w, int h, const char* label) {
+    Fl_Nice_Slider* slider = new Fl_Nice_Slider(x,y,w,h,label);
+    return (static_cast<fl_Nice_Slider>(slider));
+  }
+  FL_EXPORT_C(fl_Nice_Slider, Fl_Nice_Slider_New)(int x, int y, int w, int h) {
+    Fl_Nice_Slider* slider = new Fl_Nice_Slider(x,y,w,h,0);
+    return (fl_Nice_Slider)slider;
+  }
   FL_EXPORT_C(void,      Fl_Slider_Destroy)(fl_Slider slider){
     delete (static_cast<Fl_Slider*>(slider));
   }

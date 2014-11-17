@@ -6,6 +6,8 @@
 // the callback mechanism included below to work.
 #include "FL/Fl.H"
 #include "FL/Fl_Dial.H"
+#include "FL/Fl_Fill_Dial.H"
+#include "FL/Fl_Line_Dial.H"
 #include "Fl_CallbackC.h"
 EXPORT {
 #endif
@@ -113,8 +115,11 @@ EXPORT {
   FL_EXPORT_C(double, Fl_Dial_increment)(fl_Dial dial, double v, int n);
 
   /* Fl_Dial specific */
-  FL_EXPORT_C(fl_Dial,    Fl_Dial_New_WithLabel)(int x, int y, int w, int h, const char* label);
-  FL_EXPORT_C(fl_Dial   , Fl_Dial_New)(int x, int y, int w, int h);
+  FL_EXPORT_C(fl_Dial      ,Fl_Dial_New_WithLabel)(int x, int y, int w, int h, const char* label);
+  FL_EXPORT_C(fl_Dial      ,Fl_Dial_New)(int x, int y, int w, int h);
+  FL_EXPORT_C(fl_Fill_Dial ,Fl_Fill_Dial_New)(int x, int y, int w, int h, const char* label);
+  FL_EXPORT_C(fl_Line_Dial ,Fl_Line_Dial_New_WithLabel)(int x, int y, int w, int h, const char* label);
+  FL_EXPORT_C(fl_Line_Dial ,Fl_Line_Dial_New)(int x, int y, int w, int h);
   FL_EXPORT_C(void,      Fl_Dial_Destroy)(fl_Dial dial);
   FL_EXPORT_C(void,      Fl_Dial_set_angle1)(fl_Dial dial, short a);
   FL_EXPORT_C(void,      Fl_Dial_set_angle2)(fl_Dial dial, short a);

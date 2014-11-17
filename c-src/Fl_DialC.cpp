@@ -316,6 +316,18 @@ EXPORT {
     Fl_Dial* dial = new Fl_Dial(x,y,w,h);
     return (fl_Dial) dial;
   }
+  FL_EXPORT_C(fl_Fill_Dial,Fl_Fill_Dial_New)(int x,int y,int w,int h,const char* label){
+    Fl_Fill_Dial* dial = new Fl_Fill_Dial(x,y,w,h,label);
+    return (fl_Fill_Dial) dial;
+  }
+  FL_EXPORT_C(fl_Line_Dial,Fl_Line_Dial_New_WithLabel)(int x,int y,int w,int h,const char* label){
+    Fl_Line_Dial* dial = new Fl_Line_Dial(x,y,w,h,label);
+    return (fl_Line_Dial) dial;
+  }
+  FL_EXPORT_C(fl_Line_Dial,Fl_Line_Dial_New)(int x,int y,int w,int h){
+    Fl_Line_Dial* dial = new Fl_Line_Dial(x,y,w,h);
+    return (fl_Line_Dial) dial;
+  }
   FL_EXPORT_C(void,Fl_Dial_Destroy)(fl_Dial dial){
     delete (static_cast<Fl_Dial*>(dial));
   }

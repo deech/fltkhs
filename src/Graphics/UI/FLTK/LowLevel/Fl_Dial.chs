@@ -3,6 +3,8 @@ module Graphics.UI.FLTK.LowLevel.Fl_Dial
     (
      -- * Constructor
      dialNew,
+     fillDialNew,
+     lineDialNew,
      dialDestroy,
      -- * Fl_Dial specific
      dialParent,
@@ -128,6 +130,23 @@ dialNew rectangle l'=
         Nothing -> dialNew' x_pos y_pos width height >>=
                              toObject
         Just l -> dialNewWithLabel' x_pos y_pos width height l >>=
+                               toObject
+{# fun Fl_Fill_Dial_New as fillDialNew' { `Int',`Int',`Int',`Int', `String' } -> `Ptr ()' id #}
+fillDialNew :: Rectangle -> String -> IO (FillDial ())
+fillDialNew rectangle l'=
+    let (x_pos, y_pos, width, height) = fromRectangle rectangle
+    in
+    fillDialNew' x_pos y_pos width height l' >>= toObject
+
+{# fun Fl_Line_Dial_New as lineDialNew' { `Int',`Int',`Int',`Int' } -> `Ptr ()' id #}
+{# fun Fl_Line_Dial_New_WithLabel as lineDialNewWithLabel' { `Int',`Int',`Int',`Int',`String'} -> `Ptr ()' id #}
+lineDialNew :: Rectangle -> Maybe String -> IO (LineDial ())
+lineDialNew rectangle l'=
+    let (x_pos, y_pos, width, height) = fromRectangle rectangle
+    in case l' of
+        Nothing -> lineDialNew' x_pos y_pos width height >>=
+                             toObject
+        Just l -> lineDialNewWithLabel' x_pos y_pos width height l >>=
                                toObject
 
 {# fun Fl_Dial_Destroy as dialDestroy' { id `Ptr ()' } -> `()' supressWarningAboutRes #}

@@ -6,6 +6,7 @@
 // the callback mechanism included below to work.
 #include "FL/Fl.H"
 #include "FL/Fl_Counter.H"
+#include "FL/Fl_Simple_Counter.H"
 #include "Fl_CallbackC.h"
 EXPORT {
 #endif
@@ -115,6 +116,8 @@ EXPORT {
   /* Fl_Counter specific */
   FL_EXPORT_C(fl_Counter,    Fl_Counter_New_WithLabel)(int x, int y, int w, int h, const char* label);
   FL_EXPORT_C(fl_Counter   , Fl_Counter_New)(int x, int y, int w, int h);
+  FL_EXPORT_C(fl_Simple_Counter,Fl_Simple_Counter_New)(int x,int y,int w,int h);
+  FL_EXPORT_C(fl_Simple_Counter,Fl_Simple_Counter_New_WithLabel)(int x,int y,int w,int h,const char* label);
   FL_EXPORT_C(void,      Fl_Counter_Destroy)(fl_Counter counter);
   FL_EXPORT_C(int,       Fl_Counter_handle)(fl_Counter counter, int event);
   FL_EXPORT_C(void,      Fl_Counter_lstep)(fl_Counter counter, double lstep);

@@ -43,8 +43,6 @@ library
                    Graphics.UI.FLTK.LowLevel.Fl_Image_Surface
                    Graphics.UI.FLTK.LowLevel.Fl_Adjuster
                    Graphics.UI.FLTK.LowLevel.Fl_Dial
-                   Graphics.UI.FLTK.LowLevel.Fl_Fill_Dial
-                   Graphics.UI.FLTK.LowLevel.Fl_Line_Dial
                    Graphics.UI.FLTK.LowLevel.Fl_Roller
                    Graphics.UI.FLTK.LowLevel.Fl_Counter
                    Graphics.UI.FLTK.LowLevel.FL

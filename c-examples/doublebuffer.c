@@ -4,7 +4,6 @@
 #include <Fl_Double_WindowC.h>
 #include <Fl_BoxC.h>
 #include <Fl_DrawC.h>
-#include <Fl_Hor_SliderC.h>
 #include <stdlib.h>
 #include <FL/math.h>
 #include <stdio.h>
@@ -59,10 +58,10 @@ int main (int argc ,char** argv){
   Fl_Single_Window_set_box(w1,FL_FLAT_BOX);
   Fl_Single_Window_set_color(w1,FL_BLACK); //w1.position(100,200);
   fl_Hor_Slider slider0 = Fl_Hor_Slider_New(20,370,360,25);
-  Fl_Hor_Slider_range(slider0,2,30);
-  Fl_Hor_Slider_set_step(slider0,1);
-  Fl_Hor_Slider_set_value(slider0,sides[0]);
-  Fl_Hor_Slider_set_callback(slider0,slider_cb);
+  Fl_Slider_range(slider0,2,30);
+  Fl_Slider_set_step(slider0,1);
+  Fl_Slider_set_value(slider0,sides[0]);
+  Fl_Slider_set_callback(slider0,slider_cb);
   Fl_Single_Window_end(w1);
   Fl_Window_end(w01);
   fl_Window w02 = Fl_Window_New_WithLabel(420,420,"Fl_Double_Window");
@@ -73,10 +72,10 @@ int main (int argc ,char** argv){
   Fl_Double_Window_set_box(w2,FL_FLAT_BOX);
   Fl_Double_Window_set_color(w2,FL_BLACK); //w2.position(100,200);
   fl_Hor_Slider slider1 = Fl_Hor_Slider_New(20,370,360,25);
-  Fl_Hor_Slider_range(slider1,2,30);
-  Fl_Hor_Slider_set_step(slider1,1);
-  Fl_Hor_Slider_set_value(slider1,sides[0]);
-  Fl_Hor_Slider_set_callback(slider1,slider_cb);
+  Fl_Slider_range(slider1,2,30);
+  Fl_Slider_set_step(slider1,1);
+  Fl_Slider_set_value(slider1,sides[0]);
+  Fl_Slider_set_callback(slider1,slider_cb);
   Fl_Double_Window_end(w2);
   Fl_Window_end(w02);
   Fl_Window_show_with_args(w01,argc, argv);

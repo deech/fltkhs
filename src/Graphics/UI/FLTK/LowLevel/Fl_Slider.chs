@@ -3,6 +3,11 @@ module Graphics.UI.FLTK.LowLevel.Fl_Slider
     (
      -- * Constructor
      sliderNew,
+     fillSliderNew,
+     horSliderNew,
+     horFillSliderNew,
+     horNiceSliderNew,
+     niceSliderNew,
      sliderDestroy,
      -- * Fl_Slider specific
      sliderHandle,
@@ -125,6 +130,58 @@ sliderNew rectangle l' =
         Nothing -> sliderNew' x_pos y_pos width height >>=
                              toObject
         Just l -> sliderNewWithLabel' x_pos y_pos width height l >>=
+                             toObject
+{# fun Fl_Fill_Slider_New as fillSliderNew' { `Int',`Int',`Int',`Int' } -> `Ptr ()' id #}
+{# fun Fl_Fill_Slider_New_WithLabel as fillSliderNewWithLabel' { `Int',`Int',`Int',`Int',`String'} -> `Ptr ()' id #}
+fillSliderNew :: Rectangle -> Maybe String -> IO (FillSlider ())
+fillSliderNew rectangle l' =
+    let (x_pos, y_pos, width, height) = fromRectangle rectangle
+    in case l' of
+        Nothing -> fillSliderNew' x_pos y_pos width height >>=
+                             toObject
+        Just l -> fillSliderNewWithLabel' x_pos y_pos width height l >>=
+                             toObject
+{# fun Fl_Hor_Slider_New as horSliderNew' { `Int',`Int',`Int',`Int' } -> `Ptr ()' id #}
+{# fun Fl_Hor_Slider_New_WithLabel as horSliderNewWithLabel' { `Int',`Int',`Int',`Int',`String'} -> `Ptr ()' id #}
+horSliderNew :: Rectangle -> Maybe String -> IO (HorSlider ())
+horSliderNew rectangle l' =
+    let (x_pos, y_pos, width, height) = fromRectangle rectangle
+    in case l' of
+        Nothing -> horSliderNew' x_pos y_pos width height >>=
+                             toObject
+        Just l -> horSliderNewWithLabel' x_pos y_pos width height l >>=
+                             toObject
+{# fun Fl_Hor_Fill_Slider_New as horFillSliderNew' { `Int',`Int',`Int',`Int' } -> `Ptr ()' id #}
+{# fun Fl_Hor_Fill_Slider_New_WithLabel as horFillSliderNewWithLabel' { `Int',`Int',`Int',`Int',`String'} -> `Ptr ()' id #}
+horFillSliderNew :: Rectangle -> Maybe String -> IO (HorFillSlider ())
+horFillSliderNew rectangle l' =
+    let (x_pos, y_pos, width, height) = fromRectangle rectangle
+    in case l' of
+        Nothing -> horFillSliderNew' x_pos y_pos width height >>=
+                             toObject
+        Just l -> horFillSliderNewWithLabel' x_pos y_pos width height l >>=
+                             toObject
+
+{# fun Fl_Hor_Nice_Slider_New as horNiceSliderNew' { `Int',`Int',`Int',`Int' } -> `Ptr ()' id #}
+{# fun Fl_Hor_Nice_Slider_New_WithLabel as horNiceSliderNewWithLabel' { `Int',`Int',`Int',`Int',`String'} -> `Ptr ()' id #}
+horNiceSliderNew :: Rectangle -> Maybe String -> IO (HorNiceSlider ())
+horNiceSliderNew rectangle l' =
+    let (x_pos, y_pos, width, height) = fromRectangle rectangle
+    in case l' of
+        Nothing -> horNiceSliderNew' x_pos y_pos width height >>=
+                             toObject
+        Just l -> horNiceSliderNewWithLabel' x_pos y_pos width height l >>=
+                             toObject
+
+{# fun Fl_Nice_Slider_New as niceSliderNew' { `Int',`Int',`Int',`Int' } -> `Ptr ()' id #}
+{# fun Fl_Nice_Slider_New_WithLabel as niceSliderNewWithLabel' { `Int',`Int',`Int',`Int',`String'} -> `Ptr ()' id #}
+niceSliderNew :: Rectangle -> Maybe String -> IO (NiceSlider ())
+niceSliderNew rectangle l' =
+    let (x_pos, y_pos, width, height) = fromRectangle rectangle
+    in case l' of
+        Nothing -> niceSliderNew' x_pos y_pos width height >>=
+                             toObject
+        Just l -> niceSliderNewWithLabel' x_pos y_pos width height l >>=
                              toObject
 
 {# fun Fl_Slider_Destroy as sliderDestroy' { id `Ptr ()' } -> `()' supressWarningAboutRes #}

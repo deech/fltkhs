@@ -6,6 +6,11 @@
 // the callback mechanism included below to work.
 #include "FL/Fl.H"
 #include "FL/Fl_Slider.H"
+#include "FL/Fl_Fill_Slider.H"
+#include "FL/Fl_Hor_Slider.H"
+#include "FL/Fl_Hor_Fill_Slider.H"
+#include "FL/Fl_Hor_Nice_Slider.H"
+#include "FL/Fl_Nice_Slider.H"
 #include "Fl_CallbackC.h"
 EXPORT {
 #endif
@@ -122,6 +127,16 @@ EXPORT {
   FL_EXPORT_C(fl_Slider,    Fl_Slider_New_WithLabel)(int x, int y, int w, int h, const char* label);
   FL_EXPORT_C(fl_Slider   , Fl_Slider_New)(int x, int y, int w, int h);
   FL_EXPORT_C(fl_Slider,    Fl_Slider_New_WithT)(uchar t, int x, int y, int w, int h, const char* label);
+  FL_EXPORT_C(fl_Fill_Slider,    Fl_Fill_Slider_New_WithLabel)(int x, int y, int w, int h, const char* label);
+  FL_EXPORT_C(fl_Fill_Slider   , Fl_Fill_Slider_New)(int x, int y, int w, int h);
+  FL_EXPORT_C(fl_Hor_Slider,    Fl_Hor_Slider_New_WithLabel)(int x, int y, int w, int h, const char* label);
+  FL_EXPORT_C(fl_Hor_Slider   , Fl_Hor_Slider_New)(int x, int y, int w, int h);
+  FL_EXPORT_C(fl_Hor_Fill_Slider,    Fl_Hor_Fill_Slider_New_WithLabel)(int x, int y, int w, int h, const char* label);
+  FL_EXPORT_C(fl_Hor_Fill_Slider   , Fl_Hor_Fill_Slider_New)(int x, int y, int w, int h);
+  FL_EXPORT_C(fl_Hor_Nice_Slider,    Fl_Hor_Nice_Slider_New_WithLabel)(int x, int y, int w, int h, const char* label);
+  FL_EXPORT_C(fl_Hor_Nice_Slider   , Fl_Hor_Nice_Slider_New)(int x, int y, int w, int h);
+  FL_EXPORT_C(fl_Nice_Slider,    Fl_Nice_Slider_New_WithLabel)(int x, int y, int w, int h, const char* label);
+  FL_EXPORT_C(fl_Nice_Slider   , Fl_Nice_Slider_New)(int x, int y, int w, int h);
   FL_EXPORT_C(void,      Fl_Slider_Destroy)(fl_Slider slider);
   FL_EXPORT_C(int, Fl_Slider_scrollvalue)(fl_Slider slider, int pos,int size,int first,int total);
   FL_EXPORT_C(float, Fl_Slider_set_slider_size)(fl_Slider slider);

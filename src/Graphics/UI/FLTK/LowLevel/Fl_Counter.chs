@@ -3,6 +3,7 @@ module Graphics.UI.FLTK.LowLevel.Fl_Counter
     (
      -- * Constructor
      counterNew,
+     simpleCounterNew,
      counterDestroy,
      -- * Fl_Counter specific
      counterParent,
@@ -131,6 +132,17 @@ counterNew rectangle l'=
         Nothing -> counterNew' x_pos y_pos width height >>=
                              toObject
         Just l -> counterNewWithLabel' x_pos y_pos width height l >>=
+                               toObject
+
+{# fun Fl_Simple_Counter_New as simpleCounterNew' { `Int',`Int',`Int',`Int' } -> `Ptr ()' id #}
+{# fun Fl_Simple_Counter_New_WithLabel as simpleCounterNewWithLabel' { `Int',`Int',`Int',`Int',`String'} -> `Ptr ()' id #}
+simpleCounterNew :: Rectangle -> Maybe String -> IO (SimpleCounter ())
+simpleCounterNew rectangle l'=
+    let (x_pos, y_pos, width, height) = fromRectangle rectangle
+    in case l' of
+        Nothing -> simpleCounterNew' x_pos y_pos width height >>=
+                             toObject
+        Just l -> simpleCounterNewWithLabel' x_pos y_pos width height l >>=
                                toObject
 
 {# fun Fl_Counter_Destroy as counterDestroy' { id `Ptr ()' } -> `()' supressWarningAboutRes #}

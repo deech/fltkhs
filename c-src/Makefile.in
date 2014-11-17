@@ -6,8 +6,6 @@ CXXSTATIC = $(CXX) -static
 CPPFILES= \
 	Fl_RollerC.cpp \
 	Fl_DialC.cpp \
-	Fl_Fill_DialC.cpp \
-	Fl_Line_DialC.cpp \
 	Fl_CounterC.cpp \
 	Utils.cpp \
 	xC.cpp \
@@ -42,7 +40,6 @@ CPPFILES= \
 	Fl_GroupC.cpp \
 	Fl_Hold_BrowserC.cpp \
 	Fl_Hor_Value_SliderC.cpp \
-	Fl_Hor_SliderC.cpp \
 	Fl_Image_SurfaceC.cpp \
 	Fl_ImageC.cpp \
 	Fl_Input_C.cpp \
@@ -73,7 +70,7 @@ CPPFILES= \
 	Fl_Round_ClockC.cpp \
 	Fl_Secret_InputC.cpp \
 	Fl_Select_BrowserC.cpp \
-        Fl_Shared_ImageC.cpp \
+  Fl_Shared_ImageC.cpp \
 	fl_show_colormapC.cpp \
 	Fl_Single_WindowC.cpp \
 	Fl_SliderC.cpp \

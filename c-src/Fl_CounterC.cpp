@@ -316,6 +316,14 @@ EXPORT {
     Fl_Counter* counter = new Fl_Counter(x,y,w,h);
     return (fl_Counter) counter;
   }
+  FL_EXPORT_C(fl_Simple_Counter,Fl_Simple_Counter_New_WithLabel)(int x,int y,int w,int h,const char* label){
+    Fl_Simple_Counter* simple_counter = new Fl_Simple_Counter(x,y,w,h,label);
+    return (fl_Simple_Counter) simple_counter;
+  }
+  FL_EXPORT_C(fl_Simple_Counter,Fl_Simple_Counter_New)(int x,int y,int w,int h){
+    Fl_Simple_Counter* simple_counter = new Fl_Simple_Counter(x,y,w,h);
+    return (fl_Simple_Counter) simple_counter;
+  }
   FL_EXPORT_C(void,Fl_Counter_Destroy)(fl_Counter counter){
     delete (static_cast<Fl_Counter*>(counter));
   }
