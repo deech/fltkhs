@@ -2,7 +2,7 @@
 #include <Fl_C.h>
 #include <Fl_Types.h>
 #include <Fl_Double_WindowC.h>
-#include <Fl_Hor_Value_SliderC.h>
+#include <Fl_Value_SliderC.h>
 #include <Fl_DrawC.h>
 #include <Fl_WidgetC.h>
 #include <Fl_SliderC.h>
@@ -57,16 +57,16 @@ int main(int argc, char** argv) {
   for (; n<6; n++) {
     fl_Hor_Value_Slider s= (fl_Hor_Value_Slider)Fl_Hor_Value_Slider_New_WithLabel(50,y,240,25,name[n]);
     y += 25;
-    if (n<3) {Fl_Hor_Value_Slider_set_minimum(s,0); Fl_Hor_Value_Slider_set_maximum(s,300);}
-    else if (n==5) {Fl_Hor_Value_Slider_set_minimum(s,0); Fl_Hor_Value_Slider_set_maximum(s,360);}
-    else {Fl_Hor_Value_Slider_set_minimum(s,-360); Fl_Hor_Value_Slider_set_maximum(s,360);}
-    Fl_Hor_Value_Slider_set_step(s,1);
-    Fl_Hor_Value_Slider_set_value(s,my_args[n]);
-    Fl_Hor_Value_Slider_set_align(s,FL_ALIGN_LEFT);
+    if (n<3) {Fl_Value_Slider_set_minimum(s,0); Fl_Value_Slider_set_maximum(s,300);}
+    else if (n==5) {Fl_Value_Slider_set_minimum(s,0); Fl_Value_Slider_set_maximum(s,360);}
+    else {Fl_Value_Slider_set_minimum(s,-360); Fl_Value_Slider_set_maximum(s,360);}
+    Fl_Value_Slider_set_step(s,1);
+    Fl_Value_Slider_set_value(s,my_args[n]);
+    Fl_Value_Slider_set_align(s,FL_ALIGN_LEFT);
 #ifdef __LP64__
-    Fl_Hor_Value_Slider_set_callback_with_user_data(s,slider_cb, (void*)(long long) n);
+    Fl_Value_Slider_set_callback_with_user_data(s,slider_cb, (void*)(long long) n);
 #else
-    Fl_Hor_Value_Slider_set_callback_with_user_data(s,slider_cb, (void*) n);
+    Fl_Value_Slider_set_callback_with_user_data(s,slider_cb, (void*) n);
 #endif
   }
   Fl_Double_Window_end(window);

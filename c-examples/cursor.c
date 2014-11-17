@@ -1,6 +1,6 @@
 #include <Fl_C.h>
 #include <Fl_Double_WindowC.h>
-#include <Fl_Hor_Value_SliderC.h>
+#include <Fl_Value_SliderC.h>
 #include <Fl_ChoiceC.h>
 #include <Fl_DrawC.h>
 #include <Fl_Menu_ItemC.h>
@@ -13,24 +13,24 @@ fl_Hor_Value_Slider cursor_slider;
 
 void choice_cb(fl_Widget w, void* v) {
   cursor = (Fl_Cursor)(fl_intptr_t)v;
-  Fl_Hor_Value_Slider_set_value(cursor_slider,cursor);
+  Fl_Value_Slider_set_value(cursor_slider,cursor);
   flc_cursor_with_fg_bg(cursor,fg,bg);
 }
 
 void setcursor(fl_Widget o, void * user_data) {
   fl_Hor_Value_Slider slider = (fl_Hor_Value_Slider)o;
-  cursor = (int)(Fl_Hor_Value_Slider_value(slider));
+  cursor = (int)(Fl_Value_Slider_value(slider));
   flc_cursor_with_fg_bg(cursor,fg,bg);
 }
 
 void setfg(fl_Widget o, void* user_data) {
   fl_Hor_Value_Slider slider = (fl_Hor_Value_Slider)o;
-  fg = (Fl_Color)(Fl_Hor_Value_Slider_value(slider));
+  fg = (Fl_Color)(Fl_Value_Slider_value(slider));
   flc_cursor_with_fg_bg(cursor,fg,bg);
 }
 void setbg(fl_Widget o, void* user_data) {
   fl_Hor_Value_Slider slider = (fl_Hor_Value_Slider)o;
-  bg = (Fl_Color)(Fl_Hor_Value_Slider_value(slider));
+  bg = (Fl_Color)(Fl_Value_Slider_value(slider));
   flc_cursor_with_fg_bg(cursor,fg,bg);
 }
 
@@ -128,32 +128,32 @@ int main(int argc, char **argv) {
 
   fl_Hor_Value_Slider slider1 = Fl_Hor_Value_Slider_New_WithLabel(80,180,310,30,"Cursor:");
   cursor_slider = slider1;
-  Fl_Hor_Value_Slider_set_align(slider1,FL_ALIGN_LEFT);
-  Fl_Hor_Value_Slider_set_step(slider1,1);
-  Fl_Hor_Value_Slider_precision(slider1,0);
-  Fl_Hor_Value_Slider_bounds(slider1,0,100);
-  Fl_Hor_Value_Slider_set_value(slider1,0);
-  Fl_Hor_Value_Slider_set_callback(slider1,&setcursor);
-  Fl_Hor_Value_Slider_set_value(slider1,cursor);
+  Fl_Value_Slider_set_align(slider1,FL_ALIGN_LEFT);
+  Fl_Value_Slider_set_step(slider1,1);
+  Fl_Value_Slider_precision(slider1,0);
+  Fl_Value_Slider_bounds(slider1,0,100);
+  Fl_Value_Slider_set_value(slider1,0);
+  Fl_Value_Slider_set_callback(slider1,&setcursor);
+  Fl_Value_Slider_set_value(slider1,cursor);
 
   fl_Hor_Value_Slider slider2 = Fl_Hor_Value_Slider_New_WithLabel(80,220,310,30,"fgcolor:");
-  Fl_Hor_Value_Slider_set_align(slider2,FL_ALIGN_LEFT);
-  Fl_Hor_Value_Slider_set_step(slider2,1);
-  Fl_Hor_Value_Slider_precision(slider2,0);
-  Fl_Hor_Value_Slider_bounds(slider2,0,255);
-  Fl_Hor_Value_Slider_set_value(slider2,0);
-  Fl_Hor_Value_Slider_set_callback(slider2,&setfg);
-  Fl_Hor_Value_Slider_set_value(slider2,fg);
+  Fl_Value_Slider_set_align(slider2,FL_ALIGN_LEFT);
+  Fl_Value_Slider_set_step(slider2,1);
+  Fl_Value_Slider_precision(slider2,0);
+  Fl_Value_Slider_bounds(slider2,0,255);
+  Fl_Value_Slider_set_value(slider2,0);
+  Fl_Value_Slider_set_callback(slider2,&setfg);
+  Fl_Value_Slider_set_value(slider2,fg);
 
 
   fl_Hor_Value_Slider slider3 = Fl_Hor_Value_Slider_New_WithLabel(80,260,310,30,"bgcolor:");
-  Fl_Hor_Value_Slider_set_align(slider3,FL_ALIGN_LEFT);
-  Fl_Hor_Value_Slider_set_step(slider3,1);
-  Fl_Hor_Value_Slider_precision(slider3,0);
-  Fl_Hor_Value_Slider_bounds(slider3,0,255);
-  Fl_Hor_Value_Slider_set_value(slider3,0);
-  Fl_Hor_Value_Slider_set_callback(slider3,&setbg);
-  Fl_Hor_Value_Slider_set_value(slider3,bg);
+  Fl_Value_Slider_set_align(slider3,FL_ALIGN_LEFT);
+  Fl_Value_Slider_set_step(slider3,1);
+  Fl_Value_Slider_precision(slider3,0);
+  Fl_Value_Slider_bounds(slider3,0,255);
+  Fl_Value_Slider_set_value(slider3,0);
+  Fl_Value_Slider_set_callback(slider3,&setbg);
+  Fl_Value_Slider_set_value(slider3,bg);
 
   Fl_Double_Window_set_resizable(window, window);
   Fl_Double_Window_show_with_args(window, argc, argv);

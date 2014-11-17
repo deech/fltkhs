@@ -1,7 +1,7 @@
 #include <Fl_C.h>
 #include <Fl_Double_WindowC.h>
-#include <Fl_Hor_Value_SliderC.h>
 #include <Fl_DrawC.h>
+#include <Fl_Value_SliderC.h>
 #include <Fl_Toggle_ButtonC.h>
 #include <Fl_WidgetC.h>
 #include <stdio.h>
@@ -70,15 +70,15 @@ int main(int argc, char** argv) {
   for (; n<9; n++) {
     fl_Hor_Value_Slider s = (fl_Hor_Value_Slider)Fl_Hor_Value_Slider_New_WithLabel(50,y,240,25,name[n]);
     y += 25;
-    Fl_Hor_Value_Slider_set_minimum(s,0); Fl_Hor_Value_Slider_set_maximum(s,280);
-    if (n == 8) Fl_Hor_Value_Slider_set_maximum(s,360);
-    Fl_Hor_Value_Slider_set_step(s,1);
-    Fl_Hor_Value_Slider_set_value(s,args[n]);
-    Fl_Hor_Value_Slider_set_align(s,FL_ALIGN_LEFT);
+    Fl_Value_Slider_set_minimum(s,0); Fl_Value_Slider_set_maximum(s,280);
+    if (n == 8) Fl_Value_Slider_set_maximum(s,360);
+    Fl_Value_Slider_set_step(s,1);
+    Fl_Value_Slider_set_value(s,args[n]);
+    Fl_Value_Slider_set_align(s,FL_ALIGN_LEFT);
 #ifdef __LP64__
-    Fl_Hor_Value_Slider_set_callback_with_user_data(s,slider_cb, (void*) (long long)n);
+    Fl_Value_Slider_set_callback_with_user_data(s,slider_cb, (void*) (long long)n);
 #else
-    Fl_Hor_Value_Slider_set_callback_with_user_data(s,slider_cb, (void*)n);
+    Fl_Value_Slider_set_callback_with_user_data(s,slider_cb, (void*)n);
 #endif
   }
   fl_Toggle_Button but = (fl_Toggle_Button)Fl_Toggle_Button_New_WithLabel(50,y,50,25,"points");
