@@ -153,241 +153,241 @@ menuButtonDestroy win = swapObject win $ \winPtr -> do
                                         menuButtonDestroy' winPtr
                                         return nullPtr
 
-menuButtonAsGroup :: SysMenuBar a  ->  IO (Group ())
+menuButtonAsGroup :: MenuButton a  ->  IO (Group ())
 menuButtonAsGroup = menu_AsGroup
-menuButtonAsGlWindow :: SysMenuBar a  ->  IO (GlWindow())
+menuButtonAsGlWindow :: MenuButton a  ->  IO (GlWindow())
 menuButtonAsGlWindow = menu_AsGlWindow
-menuButtonResize :: SysMenuBar a  -> Rectangle -> IO (())
+menuButtonResize :: MenuButton a  -> Rectangle -> IO (())
 menuButtonResize = menu_Resize
-menuButtonAsWindow :: SysMenuBar a  ->  IO (Window())
+menuButtonAsWindow :: MenuButton a  ->  IO (Window())
 menuButtonAsWindow = menu_AsWindow
-menuButtonHide :: SysMenuBar a  ->  IO (())
+menuButtonHide :: MenuButton a  ->  IO (())
 menuButtonHide = menu_Hide
-menuButtonShow :: SysMenuBar a -> IO ()
+menuButtonShow :: MenuButton a -> IO ()
 menuButtonShow = menu_Show
-menuButtonDrawBox :: SysMenuBar a -> IO ()
+menuButtonDrawBox :: MenuButton a -> IO ()
 menuButtonDrawBox = menu_DrawBox
-menuButtonDrawBoxWithBoxtype :: SysMenuBar a -> Boxtype -> Color -> Maybe Rectangle -> IO ()
+menuButtonDrawBoxWithBoxtype :: MenuButton a -> Boxtype -> Color -> Maybe Rectangle -> IO ()
 menuButtonDrawBoxWithBoxtype = menu_DrawBoxWithBoxtype
-menuButtonDrawBackdrop :: SysMenuBar a -> IO ()
+menuButtonDrawBackdrop :: MenuButton a -> IO ()
 menuButtonDrawBackdrop = menu_DrawBackdrop
-menuButtonDrawFocus :: SysMenuBar a -> Maybe (Boxtype, Rectangle) -> IO ()
+menuButtonDrawFocus :: MenuButton a -> Maybe (Boxtype, Rectangle) -> IO ()
 menuButtonDrawFocus = menu_DrawFocus
-menuButtonSetCallback :: SysMenuBar a -> (SysMenuBar b -> IO ()) -> IO (())
+menuButtonSetCallback :: MenuButton a -> (MenuButton b -> IO ()) -> IO (())
 menuButtonSetCallback = menu_SetCallback
-menuButtonParent :: SysMenuBar a -> IO (Group ())
+menuButtonParent :: MenuButton a -> IO (Group ())
 menuButtonParent = menu_Parent
-menuButtonSetParent :: SysMenuBar a -> Group b -> IO ()
+menuButtonSetParent :: MenuButton a -> Group b -> IO ()
 menuButtonSetParent = menu_SetParent
-menuButtonType_ :: SysMenuBar a  ->  IO (Word8)
+menuButtonType_ :: MenuButton a  ->  IO (Word8)
 menuButtonType_ = menu_Type_
-menuButtonSetType :: SysMenuBar a  -> Word8 ->  IO (())
+menuButtonSetType :: MenuButton a  -> Word8 ->  IO (())
 menuButtonSetType = menu_SetType
-menuButtonDrawLabel :: SysMenuBar a  -> Maybe (Rectangle,AlignType)->  IO (())
+menuButtonDrawLabel :: MenuButton a  -> Maybe (Rectangle,AlignType)->  IO (())
 menuButtonDrawLabel = menu_DrawLabel
-menuButtonX :: SysMenuBar a  ->  IO (Int)
+menuButtonX :: MenuButton a  ->  IO (Int)
 menuButtonX = menu_X
-menuButtonY :: SysMenuBar a  ->  IO (Int)
+menuButtonY :: MenuButton a  ->  IO (Int)
 menuButtonY = menu_Y
-menuButtonW :: SysMenuBar a  ->  IO (Int)
+menuButtonW :: MenuButton a  ->  IO (Int)
 menuButtonW = menu_W
-menuButtonH :: SysMenuBar a  ->  IO (Int)
+menuButtonH :: MenuButton a  ->  IO (Int)
 menuButtonH = menu_H
-menuButtonSetAlign :: SysMenuBar a  -> AlignType ->  IO (())
+menuButtonSetAlign :: MenuButton a  -> AlignType ->  IO (())
 menuButtonSetAlign = menu_SetAlign
-menuButtonAlign :: SysMenuBar a  ->  IO (AlignType)
+menuButtonAlign :: MenuButton a  ->  IO (AlignType)
 menuButtonAlign = menu_Align
-menuButtonBox :: SysMenuBar a  ->  IO (Boxtype)
+menuButtonBox :: MenuButton a  ->  IO (Boxtype)
 menuButtonBox = menu_Box
-menuButtonSetBox :: SysMenuBar a  -> Boxtype ->  IO (())
+menuButtonSetBox :: MenuButton a  -> Boxtype ->  IO (())
 menuButtonSetBox = menu_SetBox
-menuButtonColor :: SysMenuBar a  ->  IO (Color)
+menuButtonColor :: MenuButton a  ->  IO (Color)
 menuButtonColor = menu_Color
-menuButtonSetColor :: SysMenuBar a  -> Color ->  IO (())
+menuButtonSetColor :: MenuButton a  -> Color ->  IO (())
 menuButtonSetColor = menu_SetColor
-menuButtonSetColorWithBgSel :: SysMenuBar a  -> Color -> Color ->  IO (())
+menuButtonSetColorWithBgSel :: MenuButton a  -> Color -> Color ->  IO (())
 menuButtonSetColorWithBgSel = menu_SetColorWithBgSel
-menuButtonSelectionColor :: SysMenuBar a  ->  IO (Color)
+menuButtonSelectionColor :: MenuButton a  ->  IO (Color)
 menuButtonSelectionColor = menu_SelectionColor
-menuButtonSetSelectionColor :: SysMenuBar a  -> Color ->  IO (())
+menuButtonSetSelectionColor :: MenuButton a  -> Color ->  IO (())
 menuButtonSetSelectionColor = menu_SetSelectionColor
-menuButtonLabel :: SysMenuBar a  ->  IO (String)
+menuButtonLabel :: MenuButton a  ->  IO (String)
 menuButtonLabel = menu_Label
-menuButtonCopyLabel :: SysMenuBar a  -> String ->  IO (())
+menuButtonCopyLabel :: MenuButton a  -> String ->  IO (())
 menuButtonCopyLabel = menu_CopyLabel
-menuButtonSetLabel :: SysMenuBar a  -> String ->  IO (())
+menuButtonSetLabel :: MenuButton a  -> String ->  IO (())
 menuButtonSetLabel = menu_SetLabel
-menuButtonLabeltype :: SysMenuBar a  ->  IO (Labeltype)
+menuButtonLabeltype :: MenuButton a  ->  IO (Labeltype)
 menuButtonLabeltype = menu_Labeltype
-menuButtonSetLabeltype :: SysMenuBar a  -> Labeltype ->  IO (())
+menuButtonSetLabeltype :: MenuButton a  -> Labeltype ->  IO (())
 menuButtonSetLabeltype = menu_SetLabeltype
-menuButtonLabelcolor :: SysMenuBar a  ->  IO (Color)
+menuButtonLabelcolor :: MenuButton a  ->  IO (Color)
 menuButtonLabelcolor = menu_Labelcolor
-menuButtonSetLabelcolor :: SysMenuBar a  -> Color ->  IO (())
+menuButtonSetLabelcolor :: MenuButton a  -> Color ->  IO (())
 menuButtonSetLabelcolor = menu_SetLabelcolor
-menuButtonLabelfont :: SysMenuBar a  ->  IO (Font)
+menuButtonLabelfont :: MenuButton a  ->  IO (Font)
 menuButtonLabelfont = menu_Labelfont
-menuButtonSetLabelfont :: SysMenuBar a  -> Font ->  IO (())
+menuButtonSetLabelfont :: MenuButton a  -> Font ->  IO (())
 menuButtonSetLabelfont = menu_SetLabelfont
-menuButtonLabelsize :: SysMenuBar a  ->  IO (FontSize)
+menuButtonLabelsize :: MenuButton a  ->  IO (FontSize)
 menuButtonLabelsize = menu_Labelsize
-menuButtonSetLabelsize :: SysMenuBar a  -> FontSize ->  IO (())
+menuButtonSetLabelsize :: MenuButton a  -> FontSize ->  IO (())
 menuButtonSetLabelsize = menu_SetLabelsize
-menuButtonImage :: SysMenuBar a  ->  IO (Image ())
+menuButtonImage :: MenuButton a  ->  IO (Image ())
 menuButtonImage = menu_Image
-menuButtonSetImage :: SysMenuBar a  -> Image b ->  IO (())
+menuButtonSetImage :: MenuButton a  -> Image b ->  IO (())
 menuButtonSetImage = menu_SetImage
-menuButtonDeimage :: SysMenuBar a  ->  IO (Image ())
+menuButtonDeimage :: MenuButton a  ->  IO (Image ())
 menuButtonDeimage = menu_Deimage
-menuButtonSetDeimage :: SysMenuBar a  -> Image b ->  IO (())
+menuButtonSetDeimage :: MenuButton a  -> Image b ->  IO (())
 menuButtonSetDeimage = menu_SetDeimage
-menuButtonTooltip :: SysMenuBar a  ->  IO (String)
+menuButtonTooltip :: MenuButton a  ->  IO (String)
 menuButtonTooltip = menu_Tooltip
-menuButtonCopyTooltip :: SysMenuBar a  -> String ->  IO (())
+menuButtonCopyTooltip :: MenuButton a  -> String ->  IO (())
 menuButtonCopyTooltip = menu_CopyTooltip
-menuButtonSetTooltip :: SysMenuBar a  -> String ->  IO (())
+menuButtonSetTooltip :: MenuButton a  -> String ->  IO (())
 menuButtonSetTooltip = menu_SetTooltip
-menuButtonWhen :: SysMenuBar a  ->  IO (When)
+menuButtonWhen :: MenuButton a  ->  IO (When)
 menuButtonWhen = menu_When
-menuButtonSetWhen :: SysMenuBar a  -> Word8 ->  IO (())
+menuButtonSetWhen :: MenuButton a  -> Word8 ->  IO (())
 menuButtonSetWhen = menu_SetWhen
-menuButtonVisible :: SysMenuBar a  ->  IO (Int)
+menuButtonVisible :: MenuButton a  ->  IO (Int)
 menuButtonVisible = menu_Visible
-menuButtonVisibleR :: SysMenuBar a  ->  IO (Int)
+menuButtonVisibleR :: MenuButton a  ->  IO (Int)
 menuButtonVisibleR = menu_VisibleR
-menuButtonSetVisible :: SysMenuBar a  ->  IO (())
+menuButtonSetVisible :: MenuButton a  ->  IO (())
 menuButtonSetVisible = menu_SetVisible
-menuButtonClearVisible :: SysMenuBar a  ->  IO (())
+menuButtonClearVisible :: MenuButton a  ->  IO (())
 menuButtonClearVisible = menu_ClearVisible
-menuButtonActive :: SysMenuBar a  ->  IO (Int)
+menuButtonActive :: MenuButton a  ->  IO (Int)
 menuButtonActive = menu_Active
-menuButtonActiveR :: SysMenuBar a  ->  IO (Int)
+menuButtonActiveR :: MenuButton a  ->  IO (Int)
 menuButtonActiveR = menu_ActiveR
-menuButtonActivate :: SysMenuBar a  ->  IO (())
+menuButtonActivate :: MenuButton a  ->  IO (())
 menuButtonActivate = menu_Activate
-menuButtonDeactivate :: SysMenuBar a  ->  IO (())
+menuButtonDeactivate :: MenuButton a  ->  IO (())
 menuButtonDeactivate = menu_Deactivate
-menuButtonOutput :: SysMenuBar a  ->  IO (Int)
+menuButtonOutput :: MenuButton a  ->  IO (Int)
 menuButtonOutput = menu_Output
-menuButtonSetOutput :: SysMenuBar a  ->  IO (())
+menuButtonSetOutput :: MenuButton a  ->  IO (())
 menuButtonSetOutput = menu_SetOutput
-menuButtonClearOutput :: SysMenuBar a  ->  IO (())
+menuButtonClearOutput :: MenuButton a  ->  IO (())
 menuButtonClearOutput = menu_ClearOutput
-menuButtonTakesevents :: SysMenuBar a  ->  IO (Int)
+menuButtonTakesevents :: MenuButton a  ->  IO (Int)
 menuButtonTakesevents = menu_Takesevents
-menuButtonSetChanged :: SysMenuBar a  ->  IO (())
+menuButtonSetChanged :: MenuButton a  ->  IO (())
 menuButtonSetChanged = menu_SetChanged
-menuButtonClearChanged :: SysMenuBar a  ->  IO (())
+menuButtonClearChanged :: MenuButton a  ->  IO (())
 menuButtonClearChanged = menu_ClearChanged
-menuButtonTakeFocus :: SysMenuBar a  ->  IO (Int)
+menuButtonTakeFocus :: MenuButton a  ->  IO (Int)
 menuButtonTakeFocus = menu_TakeFocus
-menuButtonSetVisibleFocus :: SysMenuBar a  ->  IO (())
+menuButtonSetVisibleFocus :: MenuButton a  ->  IO (())
 menuButtonSetVisibleFocus = menu_SetVisibleFocus
-menuButtonClearVisibleFocus :: SysMenuBar a  ->  IO (())
+menuButtonClearVisibleFocus :: MenuButton a  ->  IO (())
 menuButtonClearVisibleFocus = menu_ClearVisibleFocus
-menuButtonModifyVisibleFocus :: SysMenuBar a  -> Int ->  IO (())
+menuButtonModifyVisibleFocus :: MenuButton a  -> Int ->  IO (())
 menuButtonModifyVisibleFocus = menu_ModifyVisibleFocus
-menuButtonVisibleFocus :: SysMenuBar a  ->  IO (Int)
+menuButtonVisibleFocus :: MenuButton a  ->  IO (Int)
 menuButtonVisibleFocus = menu_VisibleFocus
-menuButtonContains :: SysMenuBar a  -> Widget b  ->  IO (Int)
+menuButtonContains :: MenuButton a  -> Widget b  ->  IO (Int)
 menuButtonContains = menu_Contains
-menuButtonInside :: SysMenuBar a  -> SysMenuBar a  ->  IO (Int)
+menuButtonInside :: MenuButton a  -> MenuButton a  ->  IO (Int)
 menuButtonInside = menu_Inside
-menuButtonRedraw :: SysMenuBar a  ->  IO (())
+menuButtonRedraw :: MenuButton a  ->  IO (())
 menuButtonRedraw = menu_Redraw
-menuButtonRedrawLabel :: SysMenuBar a  ->  IO (())
+menuButtonRedrawLabel :: MenuButton a  ->  IO (())
 menuButtonRedrawLabel = menu_RedrawLabel
-menuButtonDamage :: SysMenuBar a  ->  IO (Word8)
+menuButtonDamage :: MenuButton a  ->  IO (Word8)
 menuButtonDamage = menu_Damage
-menuButtonClearDamageWithBitmask :: SysMenuBar a  -> Word8 ->  IO (())
+menuButtonClearDamageWithBitmask :: MenuButton a  -> Word8 ->  IO (())
 menuButtonClearDamageWithBitmask = menu_ClearDamageWithBitmask
-menuButtonClearDamage :: SysMenuBar a  ->  IO (())
+menuButtonClearDamage :: MenuButton a  ->  IO (())
 menuButtonClearDamage = menu_ClearDamage
-menuButtonDamageWithText :: SysMenuBar a  -> Word8 ->  IO (())
+menuButtonDamageWithText :: MenuButton a  -> Word8 ->  IO (())
 menuButtonDamageWithText = menu_DamageWithText
-menuButtonDamageInsideWidget :: SysMenuBar a  -> Word8 -> Rectangle ->  IO (())
+menuButtonDamageInsideWidget :: MenuButton a  -> Word8 -> Rectangle ->  IO (())
 menuButtonDamageInsideWidget = menu_DamageInsideWidget
-menuButtonMeasureLabel :: SysMenuBar a  -> IO (Size)
+menuButtonMeasureLabel :: MenuButton a  -> IO (Size)
 menuButtonMeasureLabel = menu_MeasureLabel
-menuButtonWindow :: SysMenuBar a  ->  IO (Window ())
+menuButtonWindow :: MenuButton a  ->  IO (Window ())
 menuButtonWindow = menu_Window
-menuButtonTopWindow :: SysMenuBar a  ->  IO (Window ())
+menuButtonTopWindow :: MenuButton a  ->  IO (Window ())
 menuButtonTopWindow = menu_TopWindow
-menuButtonTopWindowOffset :: SysMenuBar a -> IO (Position)
+menuButtonTopWindowOffset :: MenuButton a -> IO (Position)
 menuButtonTopWindowOffset = menu_TopWindowOffset
-menuButtonItemPathnameWithFinditem :: SysMenuBar a  -> String -> Int -> MenuItem b  ->  IO (Int)
+menuButtonItemPathnameWithFinditem :: MenuButton a  -> String -> Int -> MenuItem b  ->  IO (Int)
 menuButtonItemPathnameWithFinditem = menu_ItemPathnameWithFinditem
-menuButtonItemPathname :: SysMenuBar a  -> String -> Int ->  IO (Int)
+menuButtonItemPathname :: MenuButton a  -> String -> Int ->  IO (Int)
 menuButtonItemPathname = menu_ItemPathname
-menuButtonPicked :: SysMenuBar a  -> MenuItem b ->  IO (MenuItem b)
+menuButtonPicked :: MenuButton a  -> MenuItem b ->  IO (MenuItem b)
 menuButtonPicked = menu_Picked
-menuButtonFind :: SysMenuBar a -> MenuItemLocator b -> IO (Int)
+menuButtonFind :: MenuButton a -> MenuItemLocator b -> IO (Int)
 menuButtonFind = menu_Find
-menuButtonTestShortcut :: SysMenuBar a  ->  IO (MenuItem b)
+menuButtonTestShortcut :: MenuButton a  ->  IO (MenuItem b)
 menuButtonTestShortcut = menu_TestShortcut
-menuButtonGlobal :: SysMenuBar a  ->  IO ()
+menuButtonGlobal :: MenuButton a  ->  IO ()
 menuButtonGlobal = menu_Global
-menuButtonMenu :: SysMenuBar a  ->  IO (SysMenuBar a)
+menuButtonMenu :: MenuButton a  ->  IO (MenuButton a)
 menuButtonMenu = menu_Menu
-menuButtonsetMenu :: SysMenuBar a -> [MenuItem b] -> IO ()
+menuButtonsetMenu :: MenuButton a -> [MenuItem b] -> IO ()
 menuButtonsetMenu = menu_setMenu
-menuButtonCopy :: SysMenuBar a  -> MenuItem b  ->  IO ()
+menuButtonCopy :: MenuButton a  -> MenuItem b  ->  IO ()
 menuButtonCopy = menu_Copy
-menuButtonInsert :: SysMenuBar a -> Int -> String -> Shortcut -> (SysMenuBar a -> IO ()) -> [MenuProps] -> IO (Int)
+menuButtonInsert :: MenuButton a -> Int -> String -> Shortcut -> (MenuButton a -> IO ()) -> [MenuProps] -> IO (Int)
 menuButtonInsert = menu_Insert
-menuButtonAdd :: MenuItem a -> String -> Shortcut -> (SysMenuBar b -> IO ()) -> [MenuProps] -> IO (Int)
+menuButtonAdd :: MenuItem a -> String -> Shortcut -> (MenuButton b -> IO ()) -> [MenuProps] -> IO (Int)
 menuButtonAdd = menu_Add
-menuButtonSize :: SysMenuBar a  ->  IO (Int)
+menuButtonSize :: MenuButton a  ->  IO (Int)
 menuButtonSize = menu_Size
-menuButtonSetSize :: SysMenuBar a  -> Int -> Int ->  IO ()
+menuButtonSetSize :: MenuButton a  -> Int -> Int ->  IO ()
 menuButtonSetSize = menu_SetSize
-menuButtonClear :: SysMenuBar a  ->  IO ()
+menuButtonClear :: MenuButton a  ->  IO ()
 menuButtonClear = menu_Clear
-menuButtonClearSubmenu :: SysMenuBar a  -> Int ->  IO (Int)
+menuButtonClearSubmenu :: MenuButton a  -> Int ->  IO (Int)
 menuButtonClearSubmenu = menu_ClearSubmenu
-menuButtonReplace :: SysMenuBar a  -> Int -> String ->  IO ()
+menuButtonReplace :: MenuButton a  -> Int -> String ->  IO ()
 menuButtonReplace = menu_Replace
-menuButtonRemove :: SysMenuBar a  -> Int  ->  IO ()
+menuButtonRemove :: MenuButton a  -> Int  ->  IO ()
 menuButtonRemove = menu_Remove
-menuButtonSetShortcut :: SysMenuBar a  -> Int -> ShortcutKeySequence ->  IO ()
+menuButtonSetShortcut :: MenuButton a  -> Int -> ShortcutKeySequence ->  IO ()
 menuButtonSetShortcut = menu_SetShortcut
-menuButtonSetMode :: SysMenuBar a  -> Int -> Int ->  IO ()
+menuButtonSetMode :: MenuButton a  -> Int -> Int ->  IO ()
 menuButtonSetMode = menu_SetMode
-menuButtonMode :: SysMenuBar a  -> Int ->  IO (Int)
+menuButtonMode :: MenuButton a  -> Int ->  IO (Int)
 menuButtonMode = menu_Mode
-menuButtonMvalue :: SysMenuBar a  -> IO (MenuItem b)
+menuButtonMvalue :: MenuButton a  -> IO (MenuItem b)
 menuButtonMvalue = menu_Mvalue
-menuButtonValue :: SysMenuBar a  ->  IO (Int)
+menuButtonValue :: MenuButton a  ->  IO (Int)
 menuButtonValue = menu_Value
-menuButtonSetValue :: SysMenuBar a -> MenuItemReference b -> IO (Int)
+menuButtonSetValue :: MenuButton a -> MenuItemReference b -> IO (Int)
 menuButtonSetValue = menu_SetValue
-menuButtonText :: SysMenuBar a  ->  IO (String)
+menuButtonText :: MenuButton a  ->  IO (String)
 menuButtonText = menu_Text
-menuButtonTextWithIndex :: SysMenuBar a  -> Int ->  IO (String)
+menuButtonTextWithIndex :: MenuButton a  -> Int ->  IO (String)
 menuButtonTextWithIndex = menu_TextWithIndex
-menuButtonTextfont :: SysMenuBar a  ->  IO (Font)
+menuButtonTextfont :: MenuButton a  ->  IO (Font)
 menuButtonTextfont = menu_Textfont
-menuButtonSetTextfont :: SysMenuBar a  -> Font ->  IO ()
+menuButtonSetTextfont :: MenuButton a  -> Font ->  IO ()
 menuButtonSetTextfont = menu_SetTextfont
-menuButtonTextsize :: SysMenuBar a  ->  IO (FontSize)
+menuButtonTextsize :: MenuButton a  ->  IO (FontSize)
 menuButtonTextsize = menu_Textsize
-menuButtonSetTextsize :: SysMenuBar a  -> FontSize ->  IO ()
+menuButtonSetTextsize :: MenuButton a  -> FontSize ->  IO ()
 menuButtonSetTextsize = menu_SetTextsize
-menuButtonTextcolor :: SysMenuBar a  ->  IO (Color)
+menuButtonTextcolor :: MenuButton a  ->  IO (Color)
 menuButtonTextcolor = menu_Textcolor
-menuButtonSetTextcolor :: SysMenuBar a  -> Color ->  IO ()
+menuButtonSetTextcolor :: MenuButton a  -> Color ->  IO ()
 menuButtonSetTextcolor = menu_SetTextcolor
-menuButtonDownBox :: SysMenuBar a  ->  IO (Boxtype)
+menuButtonDownBox :: MenuButton a  ->  IO (Boxtype)
 menuButtonDownBox = menu_DownBox
-menuButtonSetDownBox :: SysMenuBar a  -> Boxtype ->  IO ()
+menuButtonSetDownBox :: MenuButton a  -> Boxtype ->  IO ()
 menuButtonSetDownBox = menu_SetDownBox
-menuButtonDownColor :: SysMenuBar a  ->  IO (Color)
+menuButtonDownColor :: MenuButton a  ->  IO (Color)
 menuButtonDownColor = menu_DownColor
-menuButtonSetDownColor :: SysMenuBar a  -> Int ->  IO ()
+menuButtonSetDownColor :: MenuButton a  -> Int ->  IO ()
 menuButtonSetDownColor = menu_SetDownColor
 {#fun Fl_Menu_Button_handle as menuButtonHandle' { id `Ptr ()', id `CInt' } -> `Int' #}
-menuButtonHandle :: SysMenuBar a -> Event -> IO Int
+menuButtonHandle :: MenuButton a -> Event -> IO Int
 menuButtonHandle menu_bar event = withObject menu_bar (\p -> menuButtonHandle' p (fromIntegral . fromEnum $ event))
 {#fun Fl_Menu_Button_popup as menuButtonPopup' { id `Ptr ()' } -> `Ptr ()' id #}
-menuButtonPopup :: SysMenuBar a -> IO (MenuItem ())
+menuButtonPopup :: MenuButton a -> IO (MenuItem ())
 menuButtonPopup menu_bar = withObject menu_bar (\p -> menuButtonPopup' p >>= toObject)
