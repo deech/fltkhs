@@ -50,7 +50,6 @@ CPPFILES= \
 	Fl_InputC.cpp \
 	Fl_Int_InputC.cpp \
 	Fl_Light_ButtonC.cpp \
-	Fl_Menu_BarC.cpp \
 	Fl_Menu_C.cpp \
 	Fl_Menu_ItemC.cpp \
 	Fl_Multi_BrowserC.cpp \

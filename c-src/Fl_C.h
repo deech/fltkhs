@@ -30,7 +30,7 @@
 #include "Fl_DrawC.h"
 #include "Fl_Menu_ItemC.h"
 #include "Fl_Menu_C.h"
-#include "Fl_Menu_BarC.h"
+#include "Fl_Sys_Menu_BarC.h"
 EXPORT {
 #endif
   typedef enum {

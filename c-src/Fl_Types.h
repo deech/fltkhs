@@ -407,7 +407,6 @@ EXPORT {
   typedef void* fl_JPEG_Image;
   typedef void* fl_Light_Button;
   typedef void* fl_Line_Dial;
-  typedef void* fl_Menu_Bar;
   typedef void* fl_Menu_Button;
   typedef void* fl_Menu_;
   typedef void* fl_Menu;

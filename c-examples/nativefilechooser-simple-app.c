@@ -4,7 +4,7 @@
 #include <errno.h>	// errno
 #include <Fl_C.h>
 #include <Fl_WindowC.h>
-#include <Fl_Menu_BarC.h>
+#include <Fl_Sys_Menu_BarC.h>
 #include <Fl_Native_File_ChooserC.h>
 #include <Fl_BoxC.h>
 #include <Fl_AskC.h>
@@ -103,11 +103,11 @@ void initializeWindow(fl_Window window){
   i->fc = chooser;
   Fl_Window_set_other_data(window,i);
   Fl_Window_begin(window);
-  fl_Menu_Bar menu = (fl_Menu_Bar)Fl_Menu_Bar_New(0,0,400,25);
-  Fl_Menu_Bar_add_with_user_data(menu, "&File/&Open",  FL_COMMAND+'o', open_cb, (void*)window);
-  Fl_Menu_Bar_add_with_user_data(menu,"&File/&Save",  FL_COMMAND+'s', save_cb, (void*)window);
-  Fl_Menu_Bar_add_with_user_data(menu,"&File/&Save As", 0,  saveas_cb, (void*)window);
-  Fl_Menu_Bar_add(menu,"&File/&Quit",  FL_COMMAND+'q', quit_cb);
+  fl_Sys_Menu_Bar menu = (fl_Sys_Menu_Bar)Fl_Sys_Menu_Bar_New(0,0,400,25);
+  Fl_Sys_Menu_Bar_add_with_user_data(menu, "&File/&Open",  FL_COMMAND+'o', open_cb, (void*)window);
+  Fl_Sys_Menu_Bar_add_with_user_data(menu,"&File/&Save",  FL_COMMAND+'s', save_cb, (void*)window);
+  Fl_Sys_Menu_Bar_add_with_user_data(menu,"&File/&Save As", 0,  saveas_cb, (void*)window);
+  Fl_Sys_Menu_Bar_add(menu,"&File/&Quit",  FL_COMMAND+'q', quit_cb);
   fl_Box box = (fl_Box)Fl_Box_New(20,25+20,Fl_Window_w(window)-40,Fl_Window_h(window)-40-25);
   Fl_Box_set_color(box,45);
   Fl_Box_set_box(box,FL_FLAT_BOX);

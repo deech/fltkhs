@@ -36,9 +36,8 @@
 #include <Fl_Input_C.h>
 #include <Fl_Int_InputC.h>
 #include <Fl_Light_ButtonC.h>
-#include <Fl_Menu_BarC.h>
 #include <Fl_Menu_C.h>
-#include <Fl_Menu_BarC.h>
+#include <Fl_Sys_Menu_BarC.h>
 #include <Fl_Menu_ItemC.h>
 #include <Fl_Multi_BrowserC.h>
 #include <Fl_Multiline_InputC.h>
@@ -64,7 +63,6 @@
 #include <Fl_Shared_ImageC.h>
 #include <Fl_Single_WindowC.h>
 #include <Fl_SliderC.h>
-#include <Fl_Sys_Menu_BarC.h>
 #include <Fl_TableC.h>
 #include <Fl_Table_RowC.h>
 #include <Fl_TabsC.h>
