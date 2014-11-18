@@ -107,8 +107,7 @@ module Graphics.UI.FLTK.LowLevel.Fl_Menu_
      menu_ItemPathnameWithFinditem,
      menu_ItemPathname,
      menu_Picked,
-     menu_FindItemWithName,
-     menu_FindIndex,
+     menu_Find,
      menu_TestShortcut,
      menu_Global,
      menu_Menu,
@@ -220,7 +219,7 @@ menu_AsGroupSuper menu_ = withObject menu_ $ \menu_Ptr -> asGroupSuper' menu_Ptr
 {# fun Fl_Menu__as_group as asGroup' { id `Ptr ()' } -> `Group ()' unsafeToObject #}
 menu_AsGroup :: MenuPrim a  ->  IO (Group ())
 menu_AsGroup menu_ = withObject menu_ $ \menu_Ptr -> asGroup' menu_Ptr
-menu_AsGlWindowSuper :: Widget a  ->  IO (GlWindow ())
+menu_AsGlWindowSuper :: MenuPrim a  ->  IO (GlWindow ())
 menu_AsGlWindowSuper = widgetAsGlWindowSuper
 {# fun Fl_Menu__as_gl_window as asGlWindow' { id `Ptr ()' } -> `GlWindow ()' unsafeToObject #}
 menu_AsGlWindow :: MenuPrim a  ->  IO (GlWindow())
@@ -262,165 +261,161 @@ menu_DrawBackdrop :: MenuPrim a -> IO ()
 menu_DrawBackdrop = widgetDrawBackdrop
 menu_DrawFocus :: MenuPrim a -> Maybe (Boxtype, Rectangle) -> IO ()
 menu_DrawFocus = widgetDrawFocus
-menu_SetCallback :: Widget a -> (MenuPrim b -> IO ()) -> IO (())
+menu_SetCallback :: MenuPrim a -> (MenuPrim b -> IO ()) -> IO (())
 menu_SetCallback = widgetSetCallback
-menu_Parent :: Widget a -> IO (Group ())
+menu_Parent :: MenuPrim a -> IO (Group ())
 menu_Parent = widgetParent
-menu_SetParent :: Widget a -> Group b -> IO ()
+menu_SetParent :: MenuPrim a -> Group b -> IO ()
 menu_SetParent = widgetSetParent
-menu_Type_ :: Widget a  ->  IO (Word8)
+menu_Type_ :: MenuPrim a  ->  IO (Word8)
 menu_Type_ = widgetType_
-menu_SetType :: Widget a  -> Word8 ->  IO (())
+menu_SetType :: MenuPrim a  -> Word8 ->  IO (())
 menu_SetType = widgetSetType
-menu_DrawLabel :: Widget a  -> Maybe (Rectangle,AlignType)->  IO (())
+menu_DrawLabel :: MenuPrim a  -> Maybe (Rectangle,AlignType)->  IO (())
 menu_DrawLabel = widgetDrawLabel
-menu_X :: Widget a  ->  IO (Int)
+menu_X :: MenuPrim a  ->  IO (Int)
 menu_X = widgetX
-menu_Y :: Widget a  ->  IO (Int)
+menu_Y :: MenuPrim a  ->  IO (Int)
 menu_Y = widgetY
-menu_W :: Widget a  ->  IO (Int)
+menu_W :: MenuPrim a  ->  IO (Int)
 menu_W = widgetW
-menu_H :: Widget a  ->  IO (Int)
+menu_H :: MenuPrim a  ->  IO (Int)
 menu_H = widgetH
-menu_SetAlign :: Widget a  -> AlignType ->  IO (())
+menu_SetAlign :: MenuPrim a  -> AlignType ->  IO (())
 menu_SetAlign = widgetSetAlign
-menu_Align :: Widget a  ->  IO (AlignType)
+menu_Align :: MenuPrim a  ->  IO (AlignType)
 menu_Align = widgetAlign
-menu_Box :: Widget a  ->  IO (Boxtype)
+menu_Box :: MenuPrim a  ->  IO (Boxtype)
 menu_Box = widgetBox
-menu_SetBox :: Widget a  -> Boxtype ->  IO (())
+menu_SetBox :: MenuPrim a  -> Boxtype ->  IO (())
 menu_SetBox = widgetSetBox
-menu_Color :: Widget a  ->  IO (Color)
+menu_Color :: MenuPrim a  ->  IO (Color)
 menu_Color = widgetColor
-menu_SetColor :: Widget a  -> Color ->  IO (())
+menu_SetColor :: MenuPrim a  -> Color ->  IO (())
 menu_SetColor = widgetSetColor
-menu_SetColorWithBgSel :: Widget a  -> Color -> Color ->  IO (())
+menu_SetColorWithBgSel :: MenuPrim a  -> Color -> Color ->  IO (())
 menu_SetColorWithBgSel = widgetSetColorWithBgSel
-menu_SelectionColor :: Widget a  ->  IO (Color)
+menu_SelectionColor :: MenuPrim a  ->  IO (Color)
 menu_SelectionColor = widgetSelectionColor
-menu_SetSelectionColor :: Widget a  -> Color ->  IO (())
+menu_SetSelectionColor :: MenuPrim a  -> Color ->  IO (())
 menu_SetSelectionColor = widgetSetSelectionColor
-menu_Label :: Widget a  ->  IO (String)
+menu_Label :: MenuPrim a  ->  IO (String)
 menu_Label = widgetLabel
-menu_CopyLabel :: Widget a  -> String ->  IO (())
+menu_CopyLabel :: MenuPrim a  -> String ->  IO (())
 menu_CopyLabel = widgetCopyLabel
-menu_SetLabel :: Widget a  -> String ->  IO (())
+menu_SetLabel :: MenuPrim a  -> String ->  IO (())
 menu_SetLabel = widgetSetLabel
-menu_Labeltype :: Widget a  ->  IO (Labeltype)
+menu_Labeltype :: MenuPrim a  ->  IO (Labeltype)
 menu_Labeltype = widgetLabeltype
-menu_SetLabeltype :: Widget a  -> Labeltype ->  IO (())
+menu_SetLabeltype :: MenuPrim a  -> Labeltype ->  IO (())
 menu_SetLabeltype = widgetSetLabeltype
-menu_Labelcolor :: Widget a  ->  IO (Color)
+menu_Labelcolor :: MenuPrim a  ->  IO (Color)
 menu_Labelcolor = widgetLabelcolor
-menu_SetLabelcolor :: Widget a  -> Color ->  IO (())
+menu_SetLabelcolor :: MenuPrim a  -> Color ->  IO (())
 menu_SetLabelcolor = widgetSetLabelcolor
-menu_Labelfont :: Widget a  ->  IO (Font)
+menu_Labelfont :: MenuPrim a  ->  IO (Font)
 menu_Labelfont = widgetLabelfont
-menu_SetLabelfont :: Widget a  -> Font ->  IO (())
+menu_SetLabelfont :: MenuPrim a  -> Font ->  IO (())
 menu_SetLabelfont = widgetSetLabelfont
-menu_Labelsize :: Widget a  ->  IO (FontSize)
+menu_Labelsize :: MenuPrim a  ->  IO (FontSize)
 menu_Labelsize = widgetLabelsize
-menu_SetLabelsize :: Widget a  -> FontSize ->  IO (())
+menu_SetLabelsize :: MenuPrim a  -> FontSize ->  IO (())
 menu_SetLabelsize = widgetSetLabelsize
-menu_Image :: Widget a  ->  IO (Image ())
+menu_Image :: MenuPrim a  ->  IO (Image ())
 menu_Image = widgetImage
-menu_SetImage :: Widget a  -> Image b ->  IO (())
+menu_SetImage :: MenuPrim a  -> Image b ->  IO (())
 menu_SetImage = widgetSetImage
-menu_Deimage :: Widget a  ->  IO (Image ())
+menu_Deimage :: MenuPrim a  ->  IO (Image ())
 menu_Deimage = widgetDeimage
-menu_SetDeimage :: Widget a  -> Image b ->  IO (())
+menu_SetDeimage :: MenuPrim a  -> Image b ->  IO (())
 menu_SetDeimage = widgetSetDeimage
-menu_Tooltip :: Widget a  ->  IO (String)
+menu_Tooltip :: MenuPrim a  ->  IO (String)
 menu_Tooltip = widgetTooltip
-menu_CopyTooltip :: Widget a  -> String ->  IO (())
+menu_CopyTooltip :: MenuPrim a  -> String ->  IO (())
 menu_CopyTooltip = widgetCopyTooltip
-menu_SetTooltip :: Widget a  -> String ->  IO (())
+menu_SetTooltip :: MenuPrim a  -> String ->  IO (())
 menu_SetTooltip = widgetSetTooltip
-menu_When :: Widget a  ->  IO (When)
+menu_When :: MenuPrim a  ->  IO (When)
 menu_When = widgetWhen
-menu_SetWhen :: Widget a  -> Word8 ->  IO (())
+menu_SetWhen :: MenuPrim a  -> Word8 ->  IO (())
 menu_SetWhen = widgetSetWhen
-menu_Visible :: Widget a  ->  IO (Int)
+menu_Visible :: MenuPrim a  ->  IO (Int)
 menu_Visible = widgetVisible
-menu_VisibleR :: Widget a  ->  IO (Int)
+menu_VisibleR :: MenuPrim a  ->  IO (Int)
 menu_VisibleR = widgetVisibleR
-menu_SetVisible :: Widget a  ->  IO (())
+menu_SetVisible :: MenuPrim a  ->  IO (())
 menu_SetVisible = widgetSetVisible
-menu_ClearVisible :: Widget a  ->  IO (())
+menu_ClearVisible :: MenuPrim a  ->  IO (())
 menu_ClearVisible = widgetClearVisible
-menu_Active :: Widget a  ->  IO (Int)
+menu_Active :: MenuPrim a  ->  IO (Int)
 menu_Active = widgetActive
-menu_ActiveR :: Widget a  ->  IO (Int)
+menu_ActiveR :: MenuPrim a  ->  IO (Int)
 menu_ActiveR = widgetActiveR
-menu_Activate :: Widget a  ->  IO (())
+menu_Activate :: MenuPrim a  ->  IO (())
 menu_Activate = widgetActivate
-menu_Deactivate :: Widget a  ->  IO (())
+menu_Deactivate :: MenuPrim a  ->  IO (())
 menu_Deactivate = widgetDeactivate
-menu_Output :: Widget a  ->  IO (Int)
+menu_Output :: MenuPrim a  ->  IO (Int)
 menu_Output = widgetOutput
-menu_SetOutput :: Widget a  ->  IO (())
+menu_SetOutput :: MenuPrim a  ->  IO (())
 menu_SetOutput = widgetSetOutput
-menu_ClearOutput :: Widget a  ->  IO (())
+menu_ClearOutput :: MenuPrim a  ->  IO (())
 menu_ClearOutput = widgetClearOutput
-menu_Takesevents :: Widget a  ->  IO (Int)
+menu_Takesevents :: MenuPrim a  ->  IO (Int)
 menu_Takesevents = widgetTakesevents
-menu_SetChanged :: Widget a  ->  IO (())
+menu_SetChanged :: MenuPrim a  ->  IO (())
 menu_SetChanged = widgetSetChanged
-menu_ClearChanged :: Widget a  ->  IO (())
+menu_ClearChanged :: MenuPrim a  ->  IO (())
 menu_ClearChanged = widgetClearChanged
-menu_TakeFocus :: Widget a  ->  IO (Int)
+menu_TakeFocus :: MenuPrim a  ->  IO (Int)
 menu_TakeFocus = widgetTakeFocus
-menu_SetVisibleFocus :: Widget a  ->  IO (())
+menu_SetVisibleFocus :: MenuPrim a  ->  IO (())
 menu_SetVisibleFocus = widgetSetVisibleFocus
-menu_ClearVisibleFocus :: Widget a  ->  IO (())
+menu_ClearVisibleFocus :: MenuPrim a  ->  IO (())
 menu_ClearVisibleFocus = widgetClearVisibleFocus
-menu_ModifyVisibleFocus :: Widget a  -> Int ->  IO (())
+menu_ModifyVisibleFocus :: MenuPrim a  -> Int ->  IO (())
 menu_ModifyVisibleFocus = widgetModifyVisibleFocus
-menu_VisibleFocus :: Widget a  ->  IO (Int)
+menu_VisibleFocus :: MenuPrim a  ->  IO (Int)
 menu_VisibleFocus = widgetVisibleFocus
-menu_Contains :: Widget a  -> Widget a  ->  IO (Int)
+menu_Contains :: MenuPrim a  -> Widget b  ->  IO (Int)
 menu_Contains = widgetContains
-menu_Inside :: Widget a  -> Widget a  ->  IO (Int)
+menu_Inside :: MenuPrim a  -> Widget b  ->  IO (Int)
 menu_Inside = widgetInside
-menu_Redraw :: Widget a  ->  IO (())
+menu_Redraw :: MenuPrim a  ->  IO (())
 menu_Redraw = widgetRedraw
-menu_RedrawLabel :: Widget a  ->  IO (())
+menu_RedrawLabel :: MenuPrim a  ->  IO (())
 menu_RedrawLabel = widgetRedrawLabel
-menu_Damage :: Widget a  ->  IO (Word8)
+menu_Damage :: MenuPrim a  ->  IO (Word8)
 menu_Damage = widgetDamage
-menu_ClearDamageWithBitmask :: Widget a  -> Word8 ->  IO (())
+menu_ClearDamageWithBitmask :: MenuPrim a  -> Word8 ->  IO (())
 menu_ClearDamageWithBitmask = widgetClearDamageWithBitmask
-menu_ClearDamage :: Widget a  ->  IO (())
+menu_ClearDamage :: MenuPrim a  ->  IO (())
 menu_ClearDamage = widgetClearDamage
-menu_DamageWithText :: Widget a  -> Word8 ->  IO (())
+menu_DamageWithText :: MenuPrim a  -> Word8 ->  IO (())
 menu_DamageWithText = widgetDamageWithText
-menu_DamageInsideWidget :: Widget a  -> Word8 -> Rectangle ->  IO (())
+menu_DamageInsideWidget :: MenuPrim a  -> Word8 -> Rectangle ->  IO (())
 menu_DamageInsideWidget = widgetDamageInsideWidget
-menu_MeasureLabel :: Widget a  -> IO (Size)
+menu_MeasureLabel :: MenuPrim a  -> IO (Size)
 menu_MeasureLabel = widgetMeasureLabel
-menu_Window :: Widget a  ->  IO (Window ())
+menu_Window :: MenuPrim a  ->  IO (Window ())
 menu_Window = widgetWindow
-menu_TopWindow :: Widget a  ->  IO (Window ())
+menu_TopWindow :: MenuPrim a  ->  IO (Window ())
 menu_TopWindow = widgetTopWindow
-menu_TopWindowOffset :: Widget a -> IO (Position)
+menu_TopWindowOffset :: MenuPrim a -> IO (Position)
 menu_TopWindowOffset = widgetTopWindowOffset
 {# fun unsafe Fl_Menu__item_pathname_with_finditem as itemPathnameWithFinditem' { id `Ptr ()',`String',`Int',id `Ptr ()' } -> `Int' #}
-menu_ItemPathnameWithFinditem :: MenuPrim a  -> String -> Int -> MenuItem a  ->  IO (Int)
+menu_ItemPathnameWithFinditem :: MenuPrim a  -> String -> Int -> MenuItem b  ->  IO (Int)
 menu_ItemPathnameWithFinditem menu_ name namelen finditem = withObject menu_ $ \menu_Ptr -> withObject finditem $ \finditemPtr -> itemPathnameWithFinditem' menu_Ptr name namelen finditemPtr
 {# fun unsafe Fl_Menu__item_pathname as itemPathname' { id `Ptr ()',`String',`Int' } -> `Int' #}
 menu_ItemPathname :: MenuPrim a  -> String -> Int ->  IO (Int)
 menu_ItemPathname menu_ name namelen = withObject menu_ $ \menu_Ptr -> itemPathname' menu_Ptr name namelen
 {# fun unsafe Fl_Menu__picked as picked' { id `Ptr ()',id `Ptr ()' } -> `Ptr ()' id #}
-menu_Picked :: MenuPrim a  -> MenuItem a ->  IO (MenuItem b)
+menu_Picked :: MenuPrim a  -> MenuItem b ->  IO (MenuItem b)
 menu_Picked menu_ item = withObject menu_ $ \menu_Ptr -> withObject item $ \itemPtr -> picked' menu_Ptr itemPtr >>= toObject
-{# fun unsafe Fl_Menu__find_item_with_name as findItemWithName' { id `Ptr ()',`String' } -> `Ptr ()' id #}
-menu_FindItemWithName :: MenuPrim a  -> MenuItemName ->  IO (MenuItem b)
-menu_FindItemWithName menu_ (MenuItemName name) =
-    withObject menu_ $ \menu_Ptr -> findItemWithName' menu_Ptr name >>= toObject
 {# fun unsafe Fl_Menu__find_index_with_name as findIndexWithName' { id `Ptr ()',`String' } -> `Int' #}
 {# fun unsafe Fl_Menu__find_index_with_item as findIndexWithItem' { id `Ptr ()',id `Ptr ()' } -> `Int' #}
-menu_FindIndex :: MenuPrim a -> MenuItemLocator b -> IO (Int)
-menu_FindIndex menu_ menu_item_referene =
+menu_Find :: MenuPrim a -> MenuItemLocator b -> IO (Int)
+menu_Find menu_ menu_item_referene =
     withObject menu_ $ \menu_Ptr ->
         case menu_item_referene of
           MenuItemNameLocator (MenuItemName name) -> findIndexWithName' menu_Ptr name
@@ -442,7 +437,7 @@ menu_setMenu menu_ items =
         withObjects items $ \menu_itemsPtr ->
             menuWithM' menu_Ptr menu_itemsPtr (length items)
 {# fun unsafe Fl_Menu__copy as copy' { id `Ptr ()',id `Ptr ()' } -> `()' #}
-menu_Copy :: MenuPrim a  -> MenuItem a  ->  IO ()
+menu_Copy :: MenuPrim a  -> MenuItem b  ->  IO ()
 menu_Copy menu_ m = withObject menu_ $ \menu_Ptr -> withObject m $ \mPtr -> copy' menu_Ptr mPtr
 
 {# fun unsafe Fl_Menu__insert_with_flags as insertWithFlags' { id `Ptr ()',`Int',`String',`Int',id `FunPtr CallbackWithUserDataPrim',`Int'} -> `Int' #}
@@ -530,7 +525,7 @@ menu_SetMode menu_ i fl = withObject menu_ $ \menu_Ptr -> setMode' menu_Ptr i fl
 menu_Mode :: MenuPrim a  -> Int ->  IO (Int)
 menu_Mode menu_ i = withObject menu_ $ \menu_Ptr -> mode' menu_Ptr i
 {# fun unsafe Fl_Menu__mvalue as mvalue' { id `Ptr ()' } -> `Ptr ()' id #}
-menu_Mvalue :: MenuPrim a  -> IO (MenuItem a)
+menu_Mvalue :: MenuPrim a  -> IO (MenuItem b)
 menu_Mvalue menu_ = withObject menu_ $ \menu_Ptr -> mvalue' menu_Ptr >>= toObject
 {# fun unsafe Fl_Menu__value as value' { id `Ptr ()' } -> `Int' #}
 menu_Value :: MenuPrim a  ->  IO (Int)

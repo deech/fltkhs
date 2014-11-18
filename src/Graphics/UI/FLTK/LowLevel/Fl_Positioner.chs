@@ -88,7 +88,6 @@ module Graphics.UI.FLTK.LowLevel.Fl_Positioner
      positionerDrawBackdrop,
      positionerDrawFocus,
      positionerHandle,
-     positionerHandle,
      positionerSetXvalue,
      positionerXvalue,
      positionerSetYvalue,

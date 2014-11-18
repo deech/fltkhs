@@ -38,6 +38,7 @@
 #include <Fl_Light_ButtonC.h>
 #include <Fl_Menu_BarC.h>
 #include <Fl_Menu_C.h>
+#include <Fl_Menu_BarC.h>
 #include <Fl_Menu_ItemC.h>
 #include <Fl_Multi_BrowserC.h>
 #include <Fl_Multiline_InputC.h>
