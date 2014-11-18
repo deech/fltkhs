@@ -4,6 +4,7 @@ LD = $(CXX) -shared
 CXXSTATIC = $(CXX) -static
 
 CPPFILES= \
+	Fl_Menu_ButtonC.cpp \
 	Fl_PositionerC.cpp \
 	Fl_TimerC.cpp \
 	Fl_Value_OutputC.cpp \
