@@ -108,6 +108,7 @@ EXPORT {
   /* Fl_Choice specific */ 
   FL_EXPORT_C(fl_Choice,    Fl_Choice_New_WithLabel)(int x, int y, int w, int h, const char* label);
   FL_EXPORT_C(fl_Choice   , Fl_Choice_New)(int x, int y, int w, int h);
+  FL_EXPORT_C(void, Fl_Choice_Destroy)(fl_Choice choice);
 
   FL_EXPORT_C(int, Fl_Choice_item_pathname_with_finditem)(fl_Choice choice, char* name, int namelen,  fl_Menu_Item finditem);
   FL_EXPORT_C(int, Fl_Choice_item_pathname)(fl_Choice choice, char* name, int namelen);

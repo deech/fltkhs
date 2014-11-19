@@ -281,6 +281,9 @@ EXPORT {
     Fl_Choice* choice = new Fl_Choice(x,y,w,h);
     return (static_cast<fl_Choice>(choice));
   }
+  FL_EXPORT_C(void, Fl_Choice_Destroy)(fl_Choice choice) {
+    delete (static_cast<Fl_Choice*>(choice));
+  }
   FL_EXPORT_C(int,Fl_Choice_item_pathname_with_finditem)(fl_Choice choice,char* name,int namelen,fl_Menu_Item finditem){
     return (static_cast<Fl_Choice*>(choice))->item_pathname(name,namelen,(static_cast<Fl_Menu_Item*>(finditem)));
   }

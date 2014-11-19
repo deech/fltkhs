@@ -40,6 +40,7 @@
 #include <Fl_Sys_Menu_BarC.h>
 #include <Fl_Menu_ButtonC.h>
 #include <Fl_Menu_ItemC.h>
+#include <Fl_ChoiceC.h>
 #include <Fl_Multi_BrowserC.h>
 #include <Fl_Multiline_InputC.h>
 #include <Fl_Multiline_OutputC.h>
