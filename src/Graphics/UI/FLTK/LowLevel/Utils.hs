@@ -57,6 +57,9 @@ toFunPtr f a = f a
 masks :: CInt -> CInt -> Bool
 masks compoundCode code = (code .|. compoundCode) /= 0
 
+keySequenceToCInt :: ShortcutKeySequence -> Int      
+keySequenceToCInt (ShortcutKeySequence codes char) =       
+  sum $ map fromEnum codes ++ [(maybe 0 fromEnum char)]
 foreign import ccall "wrapper"
         wrapWidgetEventHandlerPrim :: WidgetEventHandlerPrim ->
                                       IO (FunPtr WidgetEventHandlerPrim)

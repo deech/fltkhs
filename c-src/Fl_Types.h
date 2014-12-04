@@ -346,6 +346,7 @@ EXPORT {
 #  define GLUT_STROKE_ROMAN		(&glutStrokeRoman)
 #  define GLUT_STROKE_MONO_ROMAN	(&glutStrokeMonoRoman)
   typedef ulong Fl_Bitmask;
+  typedef unsigned int Fl_Char;
 #endif /* INTERNAL_LINKAGE */
   typedef void* ID;
   typedef void* fl_Window;

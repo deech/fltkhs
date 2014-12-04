@@ -448,13 +448,13 @@ menu_Insert menu_ index name shortcut cb flags =
     let combinedFlags = foldl1WithDefault 0 (.|.) (map fromEnum flags)
     ptr <- toWidgetCallbackPrim cb
     case shortcut of
-      KeySequence (ShortcutKeySequence codes char) ->
+      KeySequence ks@(ShortcutKeySequence codes char) ->
         if (not $ null codes) then
          insertWithFlags'
            menu_Ptr
            index
            name
-           (sum $ map fromEnum codes ++ [(maybe 0 fromEnum char)])
+           (keySequenceToCInt ks)
            (castFunPtr ptr)
            combinedFlags
         else error "Shortcut codes cannot be empty"
@@ -477,12 +477,12 @@ menu_Add menu_ name shortcut cb flags =
     let combinedFlags = foldl1WithDefault 0 (.|.) (map fromEnum flags)
     ptr <- toWidgetCallbackPrim cb
     case shortcut of
-      KeySequence (ShortcutKeySequence codes char) ->
+      KeySequence ks@(ShortcutKeySequence codes char) ->
         if (not $ null codes) then
           addWithFlags'
            menu_Ptr
            name
-           (sum $ map fromEnum codes ++ [(maybe 0 fromEnum char)])
+           (keySequenceToCInt ks)
            (castFunPtr ptr)
            combinedFlags
         else error "Shortcut codes cannot be empty"
@@ -515,9 +515,9 @@ menu_Remove :: MenuPrim a  -> Int  ->  IO ()
 menu_Remove menu_ index = withObject menu_ $ \menu_Ptr -> remove' menu_Ptr index
 {# fun unsafe Fl_Menu__shortcut as shortcut' { id `Ptr ()',`Int',`Int' } -> `()' #}
 menu_SetShortcut :: MenuPrim a  -> Int -> ShortcutKeySequence ->  IO ()
-menu_SetShortcut menu_ index (ShortcutKeySequence codes char) =
+menu_SetShortcut menu_ index ks =
     withObject menu_ $ \menu_Ptr ->
-        shortcut' menu_Ptr index (sum $ map fromEnum codes ++ [(maybe 0 fromEnum char)])
+        shortcut' menu_Ptr index (keySequenceToCInt ks)
 {# fun unsafe Fl_Menu__set_mode as setMode' { id `Ptr ()',`Int',`Int' } -> `()' #}
 menu_SetMode :: MenuPrim a  -> Int -> Int ->  IO ()
 menu_SetMode menu_ i fl = withObject menu_ $ \menu_Ptr -> setMode' menu_Ptr i fl

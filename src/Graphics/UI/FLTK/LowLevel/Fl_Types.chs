@@ -948,10 +948,11 @@ data ScreenLocation = Intersect Rectangle
                     | ScreenPosition Position
 data PositionSpec a = ByPosition Position
                     | ByWidget (Widget a)
-
+data CutInput = CutSelection | CutRange Int Int | CutFromCursor Int 
 newtype FontSize = FontSize CInt
 newtype PixmapHs = PixmapHs [B.ByteString]
 data BitmapHs = BitmapHs [B.ByteString] Size
+data Clipboard = InternalClipboard | SharedClipboard     
 
 toRectangle :: (Int,Int,Int,Int) -> Rectangle
 toRectangle (x_pos, y_pos, width, height) =

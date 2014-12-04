@@ -101,14 +101,14 @@ EXPORT {
   FL_EXPORT_C(void,     Fl_Input_Destroy)(fl_Input input);
   
   FL_EXPORT_C(void,         Fl_Input_resize)(fl_Input input, int X, int Y, int W, int H);
-  FL_EXPORT_C(int,          Fl_Input_set_value)(fl_Input input, const char*);
+  FL_EXPORT_C(int,          Fl_Input_set_value)(fl_Input input, const char* text);
   FL_EXPORT_C(int,          Fl_Input_set_value_with_length)(fl_Input input, const char* text, int length);
   FL_EXPORT_C(int,          Fl_Input_static_value)(fl_Input input, const char* text);
   FL_EXPORT_C(int,          Fl_Input_static_value_with_length)(fl_Input input, const char* text, int length);
   FL_EXPORT_C(const char*,  Fl_Input_value)(fl_Input input);
   FL_EXPORT_C(Fl_Char,      Fl_Input_index)(fl_Input input, int i);
   FL_EXPORT_C(int,          Fl_Input_size)(fl_Input input);
-  FL_EXPORT_C(void,         Fl_Input_set_size)(fl_Input input, int W, int H);
+  FL_EXPORT_C(void,         Fl_Input_set_size)(fl_Input input, int w, int h);
   FL_EXPORT_C(int,          Fl_Input_maximum_size)(fl_Input input);
   FL_EXPORT_C(void,         Fl_Input_set_maximum_size)(fl_Input input, int m);
   FL_EXPORT_C(int,          Fl_Input_position)(fl_Input input);
@@ -117,7 +117,7 @@ EXPORT {
   FL_EXPORT_C(int,          Fl_Input_set_position_n_n)(fl_Input input,int p);
   FL_EXPORT_C(int,          Fl_Input_set_mark)(fl_Input input,int m);
   FL_EXPORT_C(int,          Fl_Input_replace)(fl_Input input,int b, int e, const char *text);
-  FL_EXPORT_C(int,          Fl_Input_replace_with_ilen)(fl_Input input,int b, int e, const char *text, int ilen);
+  FL_EXPORT_C(int,          Fl_Input_replace_with_ilen)(fl_Input input,int b, int e, const char* text, int ilen);
   FL_EXPORT_C(int,          Fl_Input_cut)(fl_Input input);
   FL_EXPORT_C(int,          Fl_Input_cut_bytes)(fl_Input input,int n);
   FL_EXPORT_C(int,          Fl_Input_cut_range)(fl_Input input,int a, int b);

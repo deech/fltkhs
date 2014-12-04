@@ -268,12 +268,12 @@ menuItemAdd menu_item name shortcut cb flags =
     let combinedFlags = foldl1WithDefault 0 (.|.) (map fromEnum flags)
     ptr <- toWidgetCallbackPrim cb
     case shortcut of
-      KeySequence (ShortcutKeySequence codes char) ->
+      KeySequence ks@(ShortcutKeySequence codes char) ->
         if (not $ null codes) then
           addWithFlags'
            menu_itemPtr
            name
-           (sum $ map fromEnum codes ++ [(maybe 0 fromEnum char)])
+           (keySequenceToCInt ks)
            (castFunPtr ptr)
            combinedFlags
         else error "Shortcut codes cannot be empty"
@@ -288,7 +288,7 @@ menuItemAdd menu_item name shortcut cb flags =
         else error "Shortcut format string cannot be empty"
 
 menuItemInsert :: MenuItem a -> Int -> String -> ShortcutKeySequence -> (MenuItem b -> IO ()) -> [MenuProps] -> IO (Int)
-menuItemInsert menu_item index name (ShortcutKeySequence codes char) cb flags =
+menuItemInsert menu_item index name ks@(ShortcutKeySequence codes char) cb flags =
   withObject menu_item $ \menu_itemPtr ->
     if (not $ null codes) then do
       let combinedFlags = foldl1WithDefault 0 (.|.) (map fromEnum flags)
@@ -297,7 +297,7 @@ menuItemInsert menu_item index name (ShortcutKeySequence codes char) cb flags =
         menu_itemPtr
         index
         name
-        (sum $ map fromEnum codes ++ [(maybe 0 fromEnum char)])
+        (keySequenceToCInt ks)
         (castFunPtr ptr)
         combinedFlags
       else error "Shortcut codes cannot be empty"
