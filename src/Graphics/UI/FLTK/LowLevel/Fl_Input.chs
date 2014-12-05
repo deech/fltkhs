@@ -1,6 +1,7 @@
 {-# LANGUAGE CPP #-}
 module Graphics.UI.FLTK.LowLevel.Fl_Input
     (
+     FlInputType,
      -- * Constructor
      inputNew,
      inputDestroy,
@@ -132,23 +133,59 @@ where
 #include "Fl_ExportMacros.h"
 #include "Fl_Types.h"
 #include "Fl_InputC.h"
+#include "Fl_Input_C.h"                        
+#include "Fl_Int_InputC.h"                        
+#include "Fl_Float_InputC.h"                        
+#include "Fl_Secret_InputC.h"                        
+#include "Fl_Multiline_InputC.h"                        
+#include "Fl_OutputC.h"
+#include "Fl_Multiline_OutputC.h"
 import C2HS hiding (cFromEnum, cFromBool, cToBool,cToEnum)
 import Foreign.C.Types
 import Graphics.UI.FLTK.LowLevel.Fl_Enumerations
 import Graphics.UI.FLTK.LowLevel.Fl_Types
 import Graphics.UI.FLTK.LowLevel.Fl_Widget
 import Graphics.UI.FLTK.LowLevel.Utils
-
+#c
+enum FlInputType {
+  FlNormalInput = FL_NORMAL_INPUT,
+  FlFloatInput = FL_FLOAT_INPUT,
+  FlIntInput = FL_INT_INPUT,
+  FlMultilineInput = FL_MULTILINE_INPUT,
+  FlSecretInput = FL_SECRET_INPUT,
+  FlNormalOutput = FL_NORMAL_OUTPUT,
+  FlMultilineOutput = FL_MULTILINE_OUTPUT
+};
+#endc
+{#enum FlInputType {}#}
 {# fun Fl_Input_New as inputNew' { `Int',`Int',`Int',`Int' } -> `Ptr ()' id #}
 {# fun Fl_Input_New_WithLabel as inputNewWithLabel' { `Int',`Int',`Int',`Int',`String'} -> `Ptr ()' id #}
-inputNew :: Rectangle -> Maybe String -> IO (Input ())
-inputNew rectangle l'=
+{# fun Fl_Multiline_Input_New as multilineInputNew' { `Int',`Int',`Int',`Int' } -> `Ptr ()' id #}
+{# fun Fl_Multiline_Input_New_WithLabel as multilineInputNewWithLabel' { `Int',`Int',`Int',`Int',`String'} -> `Ptr ()' id #}
+{# fun Fl_Float_Input_New as floatInputNew' { `Int',`Int',`Int',`Int' } -> `Ptr ()' id #}
+{# fun Fl_Float_Input_New_WithLabel as floatInputNewWithLabel' { `Int',`Int',`Int',`Int',`String'} -> `Ptr ()' id #}
+{# fun Fl_Int_Input_New as intInputNew' { `Int',`Int',`Int',`Int' } -> `Ptr ()' id #}
+{# fun Fl_Int_Input_New_WithLabel as intInputNewWithLabel' { `Int',`Int',`Int',`Int',`String'} -> `Ptr ()' id #}
+{# fun Fl_Secret_Input_New as secretInputNew' { `Int',`Int',`Int',`Int' } -> `Ptr ()' id #}
+{# fun Fl_Secret_Input_New_WithLabel as secretInputNewWithLabel' { `Int',`Int',`Int',`Int',`String'} -> `Ptr ()' id #}
+{# fun Fl_Output_New as outputNew' { `Int',`Int',`Int',`Int' } -> `Ptr ()' id #}
+{# fun Fl_Output_New_WithLabel as outputNewWithLabel' { `Int',`Int',`Int',`Int',`String'} -> `Ptr ()' id #}
+{# fun Fl_Multiline_Output_New as multilineOutputNew' { `Int',`Int',`Int',`Int' } -> `Ptr ()' id #}
+{# fun Fl_Multiline_Output_New_WithLabel as multilineOutputNewWithLabel' { `Int',`Int',`Int',`Int',`String'} -> `Ptr ()' id #}
+inputNew :: Maybe FlInputType -> Rectangle -> Maybe String -> IO (Input ())
+inputNew flInputType rectangle l'=
     let (x_pos, y_pos, width, height) = fromRectangle rectangle
-    in case l' of
-        Nothing -> inputNew' x_pos y_pos width height >>=
-                             toObject
-        Just l -> inputNewWithLabel' x_pos y_pos width height l >>=
-                               toObject
+        constructor = case flInputType of 
+                       Just FlNormalInput -> maybe inputNew' (\l -> (\x y w h -> inputNewWithLabel' x y w h l)) l'
+                       Just FlFloatInput -> maybe floatInputNew' (\l -> (\x y w h -> floatInputNewWithLabel' x y w h l)) l'
+                       Just FlIntInput -> maybe intInputNew'  (\l -> (\x y w h -> intInputNewWithLabel' x y w h l)) l'
+                       Just FlMultilineInput -> maybe multilineInputNew'  (\l -> (\x y w h -> multilineInputNewWithLabel' x y w h l)) l'
+                       Just FlSecretInput -> maybe secretInputNew' (\l -> (\x y w h -> secretInputNewWithLabel' x y w h l)) l'
+                       Just FlNormalOutput -> maybe outputNew' (\l -> (\x y w h -> outputNewWithLabel' x y w h l)) l'
+                       Just FlMultilineOutput -> maybe multilineOutputNew' (\l -> (\x y w h -> multilineOutputNewWithLabel' x y w h l)) l'
+                       Nothing -> inputNew'
+    in 
+    constructor x_pos y_pos width height >>= toObject
 
 {# fun Fl_Input_Destroy as inputDestroy' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
 inputDestroy :: Input a -> IO ()
@@ -321,20 +358,29 @@ inputDrawBackdrop = widgetDrawBackdrop
 inputDrawFocus :: Input a -> Maybe (Boxtype, Rectangle) -> IO ()
 inputDrawFocus = widgetDrawFocus
 {#fun Fl_Input_handle as inputHandle' { id `Ptr ()', id `CInt' } -> `Int' #}
+{#fun Fl_Secret_Input_handle as secretInputHandle' { id `Ptr ()', id `CInt' } -> `Int' #}
 inputHandle :: Input a -> Event -> IO Int
-inputHandle input event = withObject input (\p -> inputHandle' p (fromIntegral . fromEnum $ event))
+inputHandle input event = 
+  withObject 
+    input 
+    (\p -> do 
+        t <- inputInputType input
+        case (toEnum t) of
+         FlSecretInput -> secretInputHandle' p (fromIntegral . fromEnum $ event)
+         _             -> inputHandle' p (fromIntegral . fromEnum $ event)
+    )
 {# fun unsafe Fl_Input_set_value as setValue' { id `Ptr ()',`String' } -> `Int' #}
 {# fun unsafe Fl_Input_set_value_with_length as setValueWithLength' { id `Ptr ()',`String',`Int' } -> `Int' #}
 inputSetValue :: Input a  -> String -> Maybe Int -> IO (Int)
 inputSetValue input text l' =
-  case l' of 
+  case l' of
    Nothing -> withObject input $ \inputPtr -> setValue' inputPtr text
    Just l -> withObject input $ \inputPtr -> setValueWithLength' inputPtr text l
 {# fun unsafe Fl_Input_static_value as staticValue' { id `Ptr ()',`String' } -> `Int' #}
 {# fun unsafe Fl_Input_static_value_with_length as staticValueWithLength' { id `Ptr ()',`String',`Int' } -> `Int' #}
 inputStaticValue :: Input a  -> String -> Maybe Int ->  IO (Int)
-inputStaticValue input text l'= 
-  case l' of 
+inputStaticValue input text l'=
+  case l' of
    Nothing -> withObject input $ \inputPtr -> staticValue' inputPtr text
    Just l -> withObject input $ \inputPtr -> staticValueWithLength' inputPtr text l
 {# fun unsafe Fl_Input_value as value' { id `Ptr ()' } -> `String' #}
@@ -391,7 +437,7 @@ inputInsertWithLength :: Input a  -> String -> Int ->  IO (Int)
 inputInsertWithLength input t l = withObject input $ \inputPtr -> insertWithLength' inputPtr t l
 {# fun unsafe Fl_Input_copy as copy' { id `Ptr ()',`Int' } -> `Int' #}
 inputCopy :: Input a  -> Clipboard ->  IO (Int)
-inputCopy input clipboard = 
+inputCopy input clipboard =
   case clipboard of
    InternalClipboard -> withObject input $ \inputPtr -> copy' inputPtr 1
    SharedClipboard -> withObject input $ \inputPtr -> copy' inputPtr 0

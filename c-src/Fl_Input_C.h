@@ -9,6 +9,17 @@
 #include "Fl_CallbackC.h"
 EXPORT {
 #endif
+#ifndef INTERNAL_LINKAGE
+ #define FL_NORMAL_INPUT		0
+ #define FL_FLOAT_INPUT		1
+ #define FL_INT_INPUT		2
+ #define FL_HIDDEN_INPUT		3
+ #define FL_MULTILINE_INPUT	4
+ #define FL_SECRET_INPUT		5
+ #define FL_INPUT_READONLY	8
+ #define FL_NORMAL_OUTPUT	(FL_NORMAL_INPUT | FL_INPUT_READONLY)
+ #define FL_MULTILINE_OUTPUT	(FL_MULTILINE_INPUT | FL_INPUT_READONLY)
+#endif /* INTERNAL_LINKAGE */
   /* Inherited from Fl_Widget */
   FL_EXPORT_C(int,Fl_Input__handle)(fl_Input_ self, int event);
   FL_EXPORT_C(fl_Group,     Fl_Input__parent)(fl_Input_ input_);
