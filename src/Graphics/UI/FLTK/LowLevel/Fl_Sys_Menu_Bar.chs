@@ -332,9 +332,9 @@ sysMenuBarsetMenu :: SysMenuBar a -> [MenuItem b] -> IO ()
 sysMenuBarsetMenu = menu_setMenu
 sysMenuBarCopy :: SysMenuBar a  -> MenuItem b  ->  IO ()
 sysMenuBarCopy = menu_Copy
-sysMenuBarInsert :: SysMenuBar a -> Int -> String -> Shortcut -> (SysMenuBar a -> IO ()) -> [MenuProps] -> IO (Int)
+sysMenuBarInsert :: SysMenuBar a -> Int -> String -> Maybe Shortcut -> (SysMenuBar a -> IO ()) -> [MenuProps] -> IO (Int)
 sysMenuBarInsert = menu_Insert
-sysMenuBarAdd :: MenuItem a -> String -> Shortcut -> (SysMenuBar b -> IO ()) -> [MenuProps] -> IO (Int)
+sysMenuBarAdd :: MenuItem a -> String -> Maybe Shortcut -> (SysMenuBar b -> IO ()) -> [MenuProps] -> IO (Int)
 sysMenuBarAdd = menu_Add
 sysMenuBarSize :: SysMenuBar a  ->  IO (Int)
 sysMenuBarSize = menu_Size

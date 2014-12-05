@@ -57,9 +57,12 @@ toFunPtr f a = f a
 masks :: CInt -> CInt -> Bool
 masks compoundCode code = (code .|. compoundCode) /= 0
 
-keySequenceToCInt :: ShortcutKeySequence -> Int      
-keySequenceToCInt (ShortcutKeySequence codes char) =       
-  sum $ map fromEnum codes ++ [(maybe 0 fromEnum char)]
+keySequenceToCInt :: ShortcutKeySequence -> CInt
+keySequenceToCInt (ShortcutKeySequence modifiers char) =
+  let charCode = case char of 
+        KeyboardInputCode c' -> fromIntegral $ fromEnum c'
+        KeyboardInputChar c' -> fromIntegral $ castCharToCChar c'
+  in (sum $ map (fromIntegral . fromEnum) modifiers) + charCode
 foreign import ccall "wrapper"
         wrapWidgetEventHandlerPrim :: WidgetEventHandlerPrim ->
                                       IO (FunPtr WidgetEventHandlerPrim)
@@ -230,7 +233,7 @@ withBitmap (BitmapHs bitmap (Size (Width width') (Height height'))) f =
      (\ptr -> f ptr width' height')
 
 countDirectionToCChar :: CountDirection -> CChar
-countDirectionToCChar d = 
+countDirectionToCChar d =
   case d of
    CountUp -> 1
    CountDown -> 0

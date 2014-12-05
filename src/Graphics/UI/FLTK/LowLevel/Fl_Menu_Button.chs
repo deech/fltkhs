@@ -333,9 +333,9 @@ menuButtonsetMenu :: MenuButton a -> [MenuItem b] -> IO ()
 menuButtonsetMenu = menu_setMenu
 menuButtonCopy :: MenuButton a  -> MenuItem b  ->  IO ()
 menuButtonCopy = menu_Copy
-menuButtonInsert :: MenuButton a -> Int -> String -> Shortcut -> (MenuButton a -> IO ()) -> [MenuProps] -> IO (Int)
+menuButtonInsert :: MenuButton a -> Int -> String -> Maybe Shortcut -> (MenuButton a -> IO ()) -> [MenuProps] -> IO (Int)
 menuButtonInsert = menu_Insert
-menuButtonAdd :: MenuItem a -> String -> Shortcut -> (MenuButton b -> IO ()) -> [MenuProps] -> IO (Int)
+menuButtonAdd :: MenuItem a -> String -> Maybe Shortcut -> (MenuButton b -> IO ()) -> [MenuProps] -> IO (Int)
 menuButtonAdd = menu_Add
 menuButtonSize :: MenuButton a  ->  IO (Int)
 menuButtonSize = menu_Size

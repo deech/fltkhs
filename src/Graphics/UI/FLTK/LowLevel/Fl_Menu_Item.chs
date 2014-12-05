@@ -259,48 +259,54 @@ menuItemFindShortcut menu_item index require_alt =
 menuItemDoCallback :: MenuItem a  -> Widget a  ->  IO ()
 menuItemDoCallback menu_item o = withObject menu_item $ \menu_itemPtr -> withObject o $ \oPtr -> doCallback' menu_itemPtr oPtr
 
-{# fun unsafe Fl_Menu_Item_insert_with_flags as insertWithFlags' { id `Ptr ()',`Int',`String',`Int',id `FunPtr CallbackWithUserDataPrim',`Int'} -> `Int' #}
-{# fun unsafe Fl_Menu_Item_add_with_flags as addWithFlags' { id `Ptr ()',`String',`Int',id `FunPtr CallbackWithUserDataPrim',`Int'} -> `Int' #}
+{# fun unsafe Fl_Menu_Item_insert_with_flags as insertWithFlags' { id `Ptr ()',`Int',`String',id `CInt',id `FunPtr CallbackWithUserDataPrim',`Int'} -> `Int' #}
+{# fun unsafe Fl_Menu_Item_add_with_flags as addWithFlags' { id `Ptr ()',`String',id `CInt',id `FunPtr CallbackWithUserDataPrim',`Int'} -> `Int' #}
 {# fun unsafe Fl_Menu_Item_add_with_shortcutname_flags as addWithShortcutnameFlags' { id `Ptr ()',`String',`String',id `FunPtr CallbackWithUserDataPrim',`Int' } -> `Int' #}
-menuItemAdd :: MenuItem a -> String -> Shortcut -> (MenuItem b -> IO ()) -> [MenuProps] -> IO (Int)
+menuItemAdd :: MenuItem a -> String -> Maybe Shortcut -> (MenuItem b -> IO ()) -> [MenuProps] -> IO (Int)
 menuItemAdd menu_item name shortcut cb flags =
   withObject menu_item $ \menu_itemPtr -> do
     let combinedFlags = foldl1WithDefault 0 (.|.) (map fromEnum flags)
     ptr <- toWidgetCallbackPrim cb
     case shortcut of
-      KeySequence ks@(ShortcutKeySequence codes char) ->
-        if (not $ null codes) then
+      Just s' -> case s' of
+        KeySequence ks ->
           addWithFlags'
            menu_itemPtr
            name
            (keySequenceToCInt ks)
            (castFunPtr ptr)
            combinedFlags
-        else error "Shortcut codes cannot be empty"
-      KeyFormat format ->
-        if (not $ null format) then
-          addWithShortcutnameFlags'
+        KeyFormat format ->
+          if (not $ null format) then
+            addWithShortcutnameFlags'
+            menu_itemPtr
+            name
+            format
+            (castFunPtr ptr)
+            combinedFlags
+          else error "Fl_Menu_Item.menu_item_add: shortcut format string cannot be empty"
+      Nothing -> 
+          addWithFlags'
            menu_itemPtr
            name
-           format
+           0
            (castFunPtr ptr)
            combinedFlags
-        else error "Shortcut format string cannot be empty"
 
-menuItemInsert :: MenuItem a -> Int -> String -> ShortcutKeySequence -> (MenuItem b -> IO ()) -> [MenuProps] -> IO (Int)
-menuItemInsert menu_item index name ks@(ShortcutKeySequence codes char) cb flags =
+menuItemInsert :: MenuItem a -> Int -> String -> Maybe ShortcutKeySequence -> (MenuItem b -> IO ()) -> [MenuProps] -> IO (Int)
+menuItemInsert menu_item index name ks cb flags =
   withObject menu_item $ \menu_itemPtr ->
-    if (not $ null codes) then do
       let combinedFlags = foldl1WithDefault 0 (.|.) (map fromEnum flags)
-      ptr <- toWidgetCallbackPrim cb
-      insertWithFlags'
-        menu_itemPtr
-        index
-        name
-        (keySequenceToCInt ks)
-        (castFunPtr ptr)
-        combinedFlags
-      else error "Shortcut codes cannot be empty"
+          shortcutCode = maybe 0 keySequenceToCInt ks
+      in do
+        ptr <- toWidgetCallbackPrim cb
+        insertWithFlags'
+          menu_itemPtr
+          index
+          name
+          shortcutCode
+          (castFunPtr ptr)
+          combinedFlags
 
 {# fun unsafe Fl_Menu_Item_size as size' { id `Ptr ()' } -> `Int' #}
 menuItemSize :: MenuItem a  ->  IO (Int)

@@ -440,61 +440,73 @@ menu_setMenu menu_ items =
 menu_Copy :: MenuPrim a  -> MenuItem b  ->  IO ()
 menu_Copy menu_ m = withObject menu_ $ \menu_Ptr -> withObject m $ \mPtr -> copy' menu_Ptr mPtr
 
-{# fun unsafe Fl_Menu__insert_with_flags as insertWithFlags' { id `Ptr ()',`Int',`String',`Int',id `FunPtr CallbackWithUserDataPrim',`Int'} -> `Int' #}
+{# fun unsafe Fl_Menu__insert_with_flags as insertWithFlags' { id `Ptr ()',`Int',`String',id `CInt',id `FunPtr CallbackWithUserDataPrim',`Int'} -> `Int' #}
 {# fun unsafe Fl_Menu__insert_with_shortcutname_flags as insertWithShortcutnameFlags' { id `Ptr ()',`Int',`String',`String',id `FunPtr CallbackWithUserDataPrim',`Int' } -> `Int' #}
-menu_Insert :: MenuPrim a -> Int -> String -> Shortcut -> (MenuPrim a -> IO ()) -> [MenuProps] -> IO (Int)
+menu_Insert :: MenuPrim a -> Int -> String -> Maybe Shortcut -> (MenuPrim a -> IO ()) -> [MenuProps] -> IO (Int)
 menu_Insert menu_ index name shortcut cb flags =
   withObject menu_ $ \menu_Ptr -> do
     let combinedFlags = foldl1WithDefault 0 (.|.) (map fromEnum flags)
     ptr <- toWidgetCallbackPrim cb
     case shortcut of
-      KeySequence ks@(ShortcutKeySequence codes char) ->
-        if (not $ null codes) then
-         insertWithFlags'
+      Just s' -> case s' of
+        KeySequence ks ->
+          insertWithFlags'
            menu_Ptr
            index
            name
            (keySequenceToCInt ks)
            (castFunPtr ptr)
            combinedFlags
-        else error "Shortcut codes cannot be empty"
-      KeyFormat format ->
-        if (not $ null format) then
-          insertWithShortcutnameFlags'
-           menu_Ptr
-           index
-           name
-           format
-           (castFunPtr ptr)
-           combinedFlags
-        else error "Shortcut format string cannot be empty"
-
-{# fun unsafe Fl_Menu__add_with_flags as addWithFlags' { id `Ptr ()',`String',`Int',id `FunPtr CallbackWithUserDataPrim',`Int' } -> `Int' #}
+        KeyFormat format ->
+          if (not $ null format) then
+            insertWithShortcutnameFlags'
+              menu_Ptr
+              index
+              name
+              format
+              (castFunPtr ptr)
+              combinedFlags
+          else error "Fl_Menu_.menu_insert: shortcut format string cannot be empty"
+      Nothing -> 
+        insertWithFlags'
+          menu_Ptr
+          index
+          name
+          0
+          (castFunPtr ptr)
+          combinedFlags
+{# fun unsafe Fl_Menu__add_with_flags as addWithFlags' { id `Ptr ()',`String',id `CInt',id `FunPtr CallbackWithUserDataPrim',`Int' } -> `Int' #}
 {# fun unsafe Fl_Menu__add_with_shortcutname_flags as addWithShortcutnameFlags' { id `Ptr ()',`String',`String',id `FunPtr CallbackWithUserDataPrim',`Int' } -> `Int' #}
-menu_Add :: MenuItem a -> String -> Shortcut -> (MenuPrim b -> IO ()) -> [MenuProps] -> IO (Int)
+menu_Add :: MenuItem a -> String -> Maybe Shortcut -> (MenuPrim b -> IO ()) -> [MenuProps] -> IO (Int)
 menu_Add menu_ name shortcut cb flags =
   withObject menu_ $ \menu_Ptr -> do
     let combinedFlags = foldl1WithDefault 0 (.|.) (map fromEnum flags)
     ptr <- toWidgetCallbackPrim cb
     case shortcut of
-      KeySequence ks@(ShortcutKeySequence codes char) ->
-        if (not $ null codes) then
+      Just s' -> case s' of
+        KeySequence ks ->
           addWithFlags'
            menu_Ptr
            name
            (keySequenceToCInt ks)
            (castFunPtr ptr)
            combinedFlags
-        else error "Shortcut codes cannot be empty"
-      KeyFormat format ->
-        if (not $ null format) then
-          addWithShortcutnameFlags'
+        KeyFormat format ->
+          if (not $ null format) then
+            addWithShortcutnameFlags'
+            menu_Ptr
+            name
+            format
+            (castFunPtr ptr)
+            combinedFlags
+          else error "Fl_Menu_.menu_add: Shortcut format string cannot be empty"
+      Nothing -> 
+          addWithFlags'
            menu_Ptr
            name
-           format
+           0
            (castFunPtr ptr)
            combinedFlags
-        else error "Shortcut format string cannot be empty"
 {# fun unsafe Fl_Menu__size as size' { id `Ptr ()' } -> `Int' #}
 menu_Size :: MenuPrim a  ->  IO (Int)
 menu_Size menu_ = withObject menu_ $ \menu_Ptr -> size' menu_Ptr
@@ -513,7 +525,7 @@ menu_Replace menu_ index name = withObject menu_ $ \menu_Ptr -> replace' menu_Pt
 {# fun unsafe Fl_Menu__remove as remove' { id `Ptr ()',`Int' } -> `()' #}
 menu_Remove :: MenuPrim a  -> Int  ->  IO ()
 menu_Remove menu_ index = withObject menu_ $ \menu_Ptr -> remove' menu_Ptr index
-{# fun unsafe Fl_Menu__shortcut as shortcut' { id `Ptr ()',`Int',`Int' } -> `()' #}
+{# fun unsafe Fl_Menu__shortcut as shortcut' { id `Ptr ()',`Int',id `CInt' } -> `()' #}
 menu_SetShortcut :: MenuPrim a  -> Int -> ShortcutKeySequence ->  IO ()
 menu_SetShortcut menu_ index ks =
     withObject menu_ $ \menu_Ptr ->

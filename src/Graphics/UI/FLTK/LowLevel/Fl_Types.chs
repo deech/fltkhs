@@ -941,7 +941,8 @@ data Rectangle = Rectangle Position Size
 data ByXY = ByXY ByX ByY
 data Intersection = Contained | Partial
 data Size = Size Width Height
-data ShortcutKeySequence = ShortcutKeySequence [KeyboardCode] (Maybe Char)
+data KeyboardInput = KeyboardInputCode KeyboardCode | KeyboardInputChar Char  
+data ShortcutKeySequence = ShortcutKeySequence [EventState] KeyboardInput
 data Shortcut = KeySequence ShortcutKeySequence | KeyFormat String
 data ScreenLocation = Intersect Rectangle
                     | ScreenNumber Int

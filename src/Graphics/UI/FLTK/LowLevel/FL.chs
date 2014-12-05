@@ -22,8 +22,9 @@ module Graphics.UI.FLTK.LowLevel.FL
      nextWindow,
      setGrab,
      getMouse,
-     validKeyboardStates,
-     extractModifiers,
+     eventStates,
+     extract,
+     extractEventStates,
      handle,
      handle_,
      belowmouse,
@@ -393,25 +394,26 @@ getMouse = do
        { `Int' } -> `()' supressWarningAboutRes #}
 {# fun Fl_event_button as eventButton
        {  } -> `MouseButton' cToEnum #}
-validKeyboardStates :: [KeyboardCode]
-validKeyboardStates = [ Kb_Shift
-                      , Kb_CapsLock
-                      , Kb_Ctrl
-                      , Kb_Alt
-                      , Kb_NumLock
-                      , Kb_Meta
-                      , Kb_ScrollLock
-                      , Kb_Button1
-                      , Kb_Button2
-                      , Kb_Button3
-                      ]
-extractModifiers :: (Enum a) => [a] -> CInt -> [a]
-extractModifiers allCodes compoundCode
+eventStates :: [EventState]
+eventStates = [
+               Kb_ShiftState,
+               Kb_CapsLockState,
+               Kb_CtrlState,
+               Kb_AltState,
+               Kb_NumLockState,
+               Kb_MetaState,
+               Kb_ScrollLockState,
+               Mouse_Button1State,
+               Mouse_Button2State,
+               Mouse_Button3State
+              ]
+extract :: (Enum a) => [a] -> CInt -> [a]
+extract allCodes compoundCode
     = map cToEnum $
       filter (masks compoundCode) $
       map cFromEnum allCodes
-unmaskKeysyms :: CInt -> [KeyboardCode]
-unmaskKeysyms = extractModifiers validKeyboardStates
+extractEventStates :: CInt -> [EventState]
+extractEventStates = extract eventStates
 -- foldModifiers :: [KeyboardCode] -> CInt
 -- foldModifiers codes =
 --     let validKeysyms = map cFromEnum (filter (\c -> c `elem` validKeyboardStates) codes)
@@ -420,9 +422,9 @@ unmaskKeysyms = extractModifiers validKeyboardStates
 --         [] -> (-1)
 --         (k:ks) -> foldl (\accum k' -> accum .&. k') k ks
 {# fun Fl_event_state as eventState
-       {  } -> `[KeyboardCode]' unmaskKeysyms #}
+       {  } -> `[EventState]' extractEventStates #}
 {# fun Fl_contains_event_state as containsEventState
-       {cFromEnum `KeyboardCode' } -> `Bool' toBool #}
+       {cFromEnum `EventState' } -> `Bool' toBool #}
 {# fun Fl_event_key as eventKey
        {  } -> `KeyboardCode' cToEnum #}
 {# fun Fl_event_original_key as eventOriginalKey

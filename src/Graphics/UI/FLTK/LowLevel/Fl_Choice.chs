@@ -332,9 +332,9 @@ choicesetMenu :: Choice a -> [MenuItem b] -> IO ()
 choicesetMenu = menu_setMenu
 choiceCopy :: Choice a  -> MenuItem b  ->  IO ()
 choiceCopy = menu_Copy
-choiceInsert :: Choice a -> Int -> String -> Shortcut -> (Choice a -> IO ()) -> [MenuProps] -> IO (Int)
+choiceInsert :: Choice a -> Int -> String -> Maybe Shortcut -> (Choice a -> IO ()) -> [MenuProps] -> IO (Int)
 choiceInsert = menu_Insert
-choiceAdd :: MenuItem a -> String -> Shortcut -> (Choice b -> IO ()) -> [MenuProps] -> IO (Int)
+choiceAdd :: MenuItem a -> String -> Maybe Shortcut -> (Choice b -> IO ()) -> [MenuProps] -> IO (Int)
 choiceAdd = menu_Add
 choiceSize :: Choice a  ->  IO (Int)
 choiceSize = menu_Size

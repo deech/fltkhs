@@ -14,7 +14,8 @@ module Graphics.UI.FLTK.LowLevel.Fl_Enumerations
      -- * Keyboard and mouse codes
      KeyboardCode(..),
      MouseButton(..),
-     kb_Command, kb_Control, kb_KpLast, kb_KeyMask,
+     EventState(..),
+     kb_CommandState, kb_ControlState, kb_KpLast,
      -- * Widget damage types
      Damage(..),
      -- * Glut attributes
@@ -215,6 +216,10 @@ enum KeyboardCode {
   Kb_Enter = FL_Enter,
   Kb_Pause = FL_Pause,
   Kb_Escape = FL_Escape,
+  Kb_Kana = FL_Kana,
+  Kb_Eisu = FL_Eisu,
+  Kb_Yen = FL_Yen,
+  Kb_JisUnderscore = FL_JIS_Underscore,
   Kb_Home = FL_Home,
   Kb_Left = FL_Left,
   Kb_Up = FL_Up,
@@ -235,6 +240,7 @@ enum KeyboardCode {
   Kb_ShiftR = FL_Shift_R,
   Kb_ControlL = FL_Control_L,
   Kb_ControlR = FL_Control_R,
+  Kb_CapsLock = FL_Caps_Lock,
   Kb_MetaL = FL_Meta_L,
   Kb_MetaR = FL_Meta_R,
   Kb_AltL = FL_Alt_L,
@@ -256,24 +262,30 @@ enum KeyboardCode {
   Kb_Refresh = FL_Refresh,
   Kb_Sleep = FL_Sleep,
   Kb_Favorites = FL_Favorites,
-  Kb_Shift = FL_SHIFT,
-  Kb_CapsLock = FL_CAPS_LOCK,
-  Kb_Ctrl = FL_CTRL,
-  Kb_Alt = FL_ALT,
-  Kb_NumLock = FL_NUM_LOCK,
-  Kb_Meta = FL_META,
-  Kb_ScrollLock = FL_SCROLL_LOCK,
-  Kb_Button1 = FL_BUTTON1,
-  Kb_Button2 = FL_BUTTON2,
-  Kb_Button3 = FL_BUTTON3,
-  Kb_Buttons = FL_BUTTONS,
 };
 enum MouseButton {
   Mouse_Left = FL_LEFT_MOUSE,
   Mouse_Middle = FL_MIDDLE_MOUSE,
   Mouse_Right = FL_RIGHT_MOUSE,
 };
-
+enum EventState {
+  Kb_ShiftState = FL_SHIFT,
+  Kb_CapsLockState = FL_CAPS_LOCK,
+  Kb_CtrlState = FL_CTRL,
+  Kb_AltState = FL_ALT,
+  Kb_NumLockState = FL_NUM_LOCK,
+  Kb_MetaState = FL_META,
+  Kb_ScrollLockState = FL_SCROLL_LOCK,
+  Mouse_Button1State = FL_BUTTON1,
+  Mouse_Button2State = FL_BUTTON2,
+  Mouse_Button3State= FL_BUTTON3,
+};
+enum KeyboardKeyMask {
+  Kb_KeyMask = FL_KEY_MASK
+};                        
+enum MouseButtonsMask {
+  Mouse_ButtonsMask = FL_BUTTONS,
+};
 enum Damage {
  DamageChild   = FL_DAMAGE_CHILD,
  DamageExpose  = FL_DAMAGE_EXPOSE,
@@ -282,7 +294,7 @@ enum Damage {
  DamageUser1   = FL_DAMAGE_USER1,
  DamageUser2   = FL_DAMAGE_USER2,
  DamageAll     = FL_DAMAGE_ALL
-} Damage;
+};
 enum GlutDraw {
  GlutNormal = GLUT_NORMAL,
  GlutOverlay = GLUT_OVERLAY
@@ -467,16 +479,17 @@ enum AlignType {
 #endif /*FLTK_ABI_VERSION*/
 {#enum KeyboardCode {} deriving (Show, Eq) #}
 {#enum MouseButton {} deriving (Show, Eq) #}
-kb_Command, kb_Control, kb_KpLast, kb_KeyMask :: KeyboardCode
+{#enum EventState {} deriving (Show, Eq) #}
+kb_CommandState, kb_ControlState :: EventState
 #ifdef __APPLE__
-kb_Command = Kb_Meta
-kb_Control = Kb_Ctrl
+kb_CommandState = Kb_MetaState
+kb_ControlState = Kb_CtrlState
 #else
-kb_Command = Kb_Ctrl
-kb_Control = Kb_Meta
+kb_CommandState = Kb_CtrlState
+kb_ControlState = Kb_MetaState
 #endif
+kb_KpLast :: KeyboardCode
 kb_KpLast = Kb_F
-kb_KeyMask = Kb_Delete
 {#enum Damage {} deriving (Show) #}
 {#enum GlutDraw {} deriving (Show) #}
 {#enum GlutMouseCodes {} deriving (Show) #}
