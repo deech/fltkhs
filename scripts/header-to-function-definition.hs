@@ -413,6 +413,7 @@ simpleTypeMap =
     ,("Fl_Boxtype", "Boxtype")
     ,("Fl_Mode", "Mode")
     ,("fl_Widget", "Ptr ()")
+    ,("fl_Table", "Ptr ()")
     ,("fl_Adjuster", "Ptr ()")
     ,("fl_Timer", "Ptr ()")
     ,("fl_Progress", "Ptr ()")
@@ -470,6 +471,7 @@ haskellEquivalent =
     [
      ("fl_Region"         , "Region"),
      ("fl_Widget"         , "Widget"),
+     ("fl_Table"          , "Table"),
      ("fl_Adjuster"       , "Adjuster"),
      ("fl_Timer"          , "Timer"),
      ("fl_Progress"       , "Progress"),

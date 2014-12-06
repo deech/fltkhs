@@ -9,34 +9,34 @@ import qualified System.IO.Unsafe as Unsafe
 
 foreign import ccall "wrapper"
         mkWidgetCallbackPtr :: CallbackWithUserDataPrim -> IO (FunPtr CallbackWithUserDataPrim)
-
 foreign import ccall "wrapper"
         mkCallbackPtr :: CallbackPrim -> IO (FunPtr CallbackPrim)
-
 foreign import ccall "wrapper"
         mkColorAverageCallbackPtr :: ColorAverageCallbackPrim -> IO (FunPtr ColorAverageCallbackPrim)
-
 foreign import ccall "wrapper"
         mkWidgetTransformCallbackPtr :: WidgetTransformCallbackPrim -> IO (FunPtr WidgetTransformCallbackPrim)
-
 foreign import ccall "wrapper"
         mkEventHandlerPtr :: WidgetEventHandlerPrim -> IO (FunPtr WidgetEventHandlerPrim)
-
 foreign import ccall "wrapper"
         mkGlobalEventHandlerPtr :: GlobalEventHandlerPrim -> IO (FunPtr GlobalEventHandlerPrim)
-
 foreign import ccall "wrapper"
         mkDrawCallbackPrimPtr :: DrawCallbackPrim -> IO (FunPtr DrawCallbackPrim)
-
 foreign import ccall "wrapper"
         mkImageDrawCallbackPrimPtr :: ImageDrawCallbackPrim -> IO (FunPtr ImageDrawCallbackPrim)
-
 foreign import ccall "wrapper"
         mkImageCopyCallbackPrimPtr :: ImageCopyCallbackPrim -> IO (FunPtr ImageCopyCallbackPrim)
-
 foreign import ccall "wrapper"
         mkFinalizer :: (Ptr a -> IO ()) -> IO (FinalizerPtr a)
-
+foreign import ccall "wrapper"
+        wrapWidgetEventHandlerPrim :: WidgetEventHandlerPrim -> IO (FunPtr WidgetEventHandlerPrim)
+foreign import ccall "wrapper"
+        mkRectanglePtr :: RectangleFPrim -> IO (FunPtr RectangleFPrim)
+foreign import ccall "wrapper"
+        mkGetPointerPtr :: GetPointerF -> IO (FunPtr GetPointerF)
+foreign import ccall "wrapper"
+        mkTableSetInt :: TableSetIntFPrim -> IO (FunPtr TableSetIntFPrim)
+foreign import ccall "wrapper"
+        mkTableDrawCellF :: TableDrawCellFPrim -> IO (FunPtr TableDrawCellFPrim)
 foreign import ccall "dynamic"
         unwrapGlobalCallbackPtr :: FunPtr GlobalCallback -> GlobalCallback
 
@@ -59,17 +59,10 @@ masks compoundCode code = (code .|. compoundCode) /= 0
 
 keySequenceToCInt :: ShortcutKeySequence -> CInt
 keySequenceToCInt (ShortcutKeySequence modifiers char) =
-  let charCode = case char of 
+  let charCode = case char of
         KeyboardInputCode c' -> fromIntegral $ fromEnum c'
         KeyboardInputChar c' -> fromIntegral $ castCharToCChar c'
   in (sum $ map (fromIntegral . fromEnum) modifiers) + charCode
-foreign import ccall "wrapper"
-        wrapWidgetEventHandlerPrim :: WidgetEventHandlerPrim ->
-                                      IO (FunPtr WidgetEventHandlerPrim)
-foreign import ccall "wrapper"
-        mkRectanglePtr :: RectangleFPrim -> IO (FunPtr RectangleFPrim)
-foreign import ccall "wrapper"
-        mkGetPointerPtr :: GetPointerF -> IO (FunPtr GetPointerF)
 
 wrapNonNull :: Ptr a -> String -> IO (ForeignPtr (Ptr a))
 wrapNonNull ptr msg = if (ptr == nullPtr)
@@ -160,12 +153,35 @@ toWidgetTransformCallbackPrim f =
            widget <- f (wrapObject pp)
            unsafeObjectToPtr widget
     )
+toTableSetIntFPrim :: TableSetIntF a -> IO (FunPtr TableSetIntFPrim)
+toTableSetIntFPrim f =
+    mkTableSetInt
+    (
+     \ptr num' -> do
+       pp <- wrapNonNull ptr "Null pointer. toTableSetInt"
+       f (wrapObject pp) (fromIntegral num')
+    )
+toTableDrawCellPrim :: TableDrawCellF a -> IO (FunPtr TableDrawCellFPrim)
+toTableDrawCellPrim f = 
+    mkTableDrawCellF
+    (
+     \ptr context' row' col' x_pos y_pos width height -> 
+         let rectangle = toRectangle (fromIntegral x_pos,
+                                      fromIntegral y_pos,
+                                      fromIntegral width,
+                                      fromIntegral height)
+         in
+         do 
+           pp <- wrapNonNull ptr "Null pointer. toTableDrawCellFPrim"
+           f (wrapObject pp) (toEnum $ fromIntegral context') (fromIntegral row') (fromIntegral col') rectangle
+    )
 
 toDrawCallback :: DrawCallback -> IO (FunPtr DrawCallbackPrim)
 toDrawCallback f = mkDrawCallbackPrimPtr
                    (\string' length' x' y' -> do
                       str' <- peekCStringLen (string', fromIntegral length')
                       f str' (Position (X (fromIntegral x')) (Y (fromIntegral y'))))
+
 
 runPointerF :: (Object a -> IO (Object b)) -> Ptr () -> String -> IO (Ptr c)
 runPointerF f ptr msg = do

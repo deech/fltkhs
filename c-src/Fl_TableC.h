@@ -216,7 +216,7 @@ FL_EXPORT_C(void, Fl_Table_draw_label)(fl_Table Table);
   FL_EXPORT_C(void, Fl_Table_set_top_row)(fl_Table table,int row);
   FL_EXPORT_C(int, Fl_Table_top_row)(fl_Table table);
   FL_EXPORT_C(int, Fl_Table_is_selected)(fl_Table table,int r, int c);
-  FL_EXPORT_C(void, Fl_Table_get_selection)(fl_Table table,int *row_top, int *col_left, int *row_bot, int *col_right);
+  FL_EXPORT_C(void, Fl_Table_get_selection)(fl_Table table,int* row_top, int* col_left, int* row_bot, int* col_right);
   FL_EXPORT_C(void, Fl_Table_set_selection)(fl_Table table,int row_top, int col_left, int row_bot, int col_right);
   FL_EXPORT_C(int, Fl_Table_move_cursor)(fl_Table table,int R, int C);
   FL_EXPORT_C(void, Fl_Table_draw)(fl_Table table);

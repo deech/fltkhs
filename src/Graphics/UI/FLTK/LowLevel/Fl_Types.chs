@@ -473,7 +473,10 @@ type TextBufferCallback          = FunPtr (Ptr () -> IO ())
 type UnfinishedStyleCb           = FunPtr (CInt -> Ptr () -> IO ())
 type FileChooserCallback         = FunPtr (Ptr () -> Ptr () -> IO())
 type SharedImageHandler          = FunPtr (CString -> CUChar -> CInt -> Ptr ())
-
+type TableDrawCellF a            = Table a -> TableContext -> Int -> Int -> Rectangle -> IO ()
+type TableDrawCellFPrim          = Ptr () -> CInt -> CInt -> CInt -> CInt -> CInt -> CInt -> CInt -> IO ()
+type TableSetIntF a              = Table a -> Int -> IO ()
+type TableSetIntFPrim            = Ptr () -> CInt -> IO ()
 -- {#pointer *Style_Table_Entry as StyleTableEntryPtr foreign -> StyleTableEntry #}
 -- data StyleTableEntry = StyleTableEntry {
 --       color :: Color,
@@ -941,7 +944,7 @@ data Rectangle = Rectangle Position Size
 data ByXY = ByXY ByX ByY
 data Intersection = Contained | Partial
 data Size = Size Width Height
-data KeyboardInput = KeyboardInputCode KeyboardCode | KeyboardInputChar Char  
+data KeyboardInput = KeyboardInputCode KeyboardCode | KeyboardInputChar Char
 data ShortcutKeySequence = ShortcutKeySequence [EventState] KeyboardInput
 data Shortcut = KeySequence ShortcutKeySequence | KeyFormat String
 data ScreenLocation = Intersect Rectangle
@@ -949,11 +952,11 @@ data ScreenLocation = Intersect Rectangle
                     | ScreenPosition Position
 data PositionSpec a = ByPosition Position
                     | ByWidget (Widget a)
-data CutInput = CutSelection | CutRange Int Int | CutFromCursor Int 
+data CutInput = CutSelection | CutRange Int Int | CutFromCursor Int
 newtype FontSize = FontSize CInt
 newtype PixmapHs = PixmapHs [B.ByteString]
 data BitmapHs = BitmapHs [B.ByteString] Size
-data Clipboard = InternalClipboard | SharedClipboard     
+data Clipboard = InternalClipboard | SharedClipboard
 
 toRectangle :: (Int,Int,Int,Int) -> Rectangle
 toRectangle (x_pos, y_pos, width, height) =
