@@ -124,7 +124,7 @@ menuItemLabelsize menu_item = withObject menu_item $ \menu_itemPtr -> labelsize'
 menuItemSetLabelsize :: MenuItem a  -> FontSize ->  IO ()
 menuItemSetLabelsize menu_item (FontSize pix) = withObject menu_item $ \menu_itemPtr -> setLabelsize' menu_itemPtr pix
 
-{# fun unsafe Fl_Menu_Item_set_callback as setCallback' { id `Ptr ()', id `FunPtr CallbackWithUserDataPrim'} -> `()' #}
+{# fun Fl_Menu_Item_set_callback as setCallback' { id `Ptr ()', id `FunPtr CallbackWithUserDataPrim'} -> `()' #}
 menuItemSetCallback :: MenuItem a  -> (MenuItem b -> IO ()) ->  IO ()
 menuItemSetCallback menu_item c = withObject menu_item $ \menu_itemPtr -> do
                                     ptr <- toWidgetCallbackPrim c
@@ -259,9 +259,9 @@ menuItemFindShortcut menu_item index require_alt =
 menuItemDoCallback :: MenuItem a  -> Widget a  ->  IO ()
 menuItemDoCallback menu_item o = withObject menu_item $ \menu_itemPtr -> withObject o $ \oPtr -> doCallback' menu_itemPtr oPtr
 
-{# fun unsafe Fl_Menu_Item_insert_with_flags as insertWithFlags' { id `Ptr ()',`Int',`String',id `CInt',id `FunPtr CallbackWithUserDataPrim',`Int'} -> `Int' #}
-{# fun unsafe Fl_Menu_Item_add_with_flags as addWithFlags' { id `Ptr ()',`String',id `CInt',id `FunPtr CallbackWithUserDataPrim',`Int'} -> `Int' #}
-{# fun unsafe Fl_Menu_Item_add_with_shortcutname_flags as addWithShortcutnameFlags' { id `Ptr ()',`String',`String',id `FunPtr CallbackWithUserDataPrim',`Int' } -> `Int' #}
+{# fun Fl_Menu_Item_insert_with_flags as insertWithFlags' { id `Ptr ()',`Int',`String',id `CInt',id `FunPtr CallbackWithUserDataPrim',`Int'} -> `Int' #}
+{# fun Fl_Menu_Item_add_with_flags as addWithFlags' { id `Ptr ()',`String',id `CInt',id `FunPtr CallbackWithUserDataPrim',`Int'} -> `Int' #}
+{# fun Fl_Menu_Item_add_with_shortcutname_flags as addWithShortcutnameFlags' { id `Ptr ()',`String',`String',id `FunPtr CallbackWithUserDataPrim',`Int' } -> `Int' #}
 menuItemAdd :: MenuItem a -> String -> Maybe Shortcut -> (MenuItem b -> IO ()) -> [MenuProps] -> IO (Int)
 menuItemAdd menu_item name shortcut cb flags =
   withObject menu_item $ \menu_itemPtr -> do

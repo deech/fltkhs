@@ -494,15 +494,18 @@ flcMeasure str draw_symbols =
     let _draw_symbols = maybe 0 fromBool draw_symbols in
     flcMeasureWithDrawSymbols' str _draw_symbols >>= \(size') -> return $ (toSize size')
 
-{# fun unsafe flc_draw_with_callthis_img_draw_symbols as flcDrawWithCallthisImgDrawSymbols' { `String',`Int',`Int',`Int',`Int',cFromEnum `AlignType', id `FunPtr DrawCallbackPrim', id `Ptr ()',`Bool' } -> `()' #}
+{# fun flc_draw_with_img_draw_symbols as flcDrawWithImgDrawSymbols' { `String',`Int',`Int',`Int',`Int',cFromEnum `AlignType', id `Ptr ()',`Bool' } -> `()' #}
+{# fun flc_draw_with_callthis_img_draw_symbols as flcDrawWithCallthisImgDrawSymbols' { `String',`Int',`Int',`Int',`Int',cFromEnum `AlignType', id `FunPtr DrawCallbackPrim', id `Ptr ()',`Bool' } -> `()' #}
 flcDrawInBoundingBox :: String -> Rectangle -> AlignType -> Maybe DrawCallback -> Maybe (Image a) -> Maybe Bool -> IO ()
 flcDrawInBoundingBox string' rectangle' align' draw_callback' image' draw_flags'
   = let (x_pos', y_pos', width', height') = fromRectangle rectangle'
     in
       withMaybeObject image' $ \image_ptr -> do
-          fptr <- orNullFunPtr toDrawCallback draw_callback'
-          flcDrawWithCallthisImgDrawSymbols'
-           string' x_pos' y_pos' width' height' align' fptr image_ptr (maybe False id draw_flags')
+          case draw_callback' of 
+            Nothing -> flcDrawWithImgDrawSymbols' string' x_pos' y_pos' width' height' align' image_ptr (maybe False id draw_flags') 
+            Just c' -> do 
+              fptr <- toDrawCallback c'
+              flcDrawWithCallthisImgDrawSymbols' string' x_pos' y_pos' width' height' align' fptr image_ptr (maybe False id draw_flags')
 
 {# fun unsafe flc_frame as flcFrame' { `String',`Int',`Int',`Int',`Int' } -> `()' #}
 flcFrame :: String -> Rectangle ->  IO ()

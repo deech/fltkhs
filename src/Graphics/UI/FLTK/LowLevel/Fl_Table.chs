@@ -7,7 +7,6 @@ module Graphics.UI.FLTK.LowLevel.Fl_Table
      tableDestroy,
      -- * Inherited from Fl_Widget
      tableHandle,
-     tableHandleSuper,
      tableParent,
      tableSetParent,
      tableType_,
@@ -159,8 +158,6 @@ module Graphics.UI.FLTK.LowLevel.Fl_Table
      tableCallbackContext,
      tableDoCallback,
      tableFindCell,
-     tableAsWindow,
-     tableAsWindowSuper,
      tableAsGroup,
      tableAsGroupSuper,
      tableAsGlWindow,
@@ -223,18 +220,18 @@ tableFunctionStruct funcs = do
       return p
 defaultTableFuncs :: TableFuncs a
 defaultTableFuncs = TableFuncs Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing
-{# fun Fl_Table_New as tableNew' {  `Int',`Int', `Int', `Int', id `Ptr ()'} -> `Ptr ()' id #}
-{# fun Fl_Table_New_WithLabel as tableNewWithLabel' { `Int',`Int',`Int',`Int',`String', id `Ptr ()'} -> `Ptr ()' id #}
+{# fun unsafe Fl_Table_New as tableNew' {  `Int',`Int', `Int', `Int', id `Ptr ()'} -> `Ptr ()' id #}
+{# fun unsafe Fl_Table_New_WithLabel as tableNewWithLabel' { `Int',`Int',`Int',`Int',`String', id `Ptr ()'} -> `Ptr ()' id #}
 tableNew :: Rectangle -> Maybe String -> TableFuncs a -> IO (Table ())
 tableNew rectangle label' funcs' =
     do 
       let (x_pos, y_pos, width, height) = fromRectangle rectangle
       ptr <- tableFunctionStruct funcs'
       case label' of
-        (Just l') -> tableNewWithLabel' x_pos y_pos width height l' (castPtr ptr) >>= toObject
-        Nothing -> tableNew' x_pos y_pos width height (castPtr ptr) >>= toObject
+        (Just l') -> tableNewWithLabel' x_pos y_pos width height l' ptr >>= toObject
+        Nothing -> tableNew' x_pos y_pos width height ptr >>= toObject
 
-{# fun Fl_Table_Destroy as tableDestroy' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
+{# fun unsafe Fl_Table_Destroy as tableDestroy' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
 tableDestroy :: Table a -> IO ()
 tableDestroy table = withObject table $ \tablePtr -> tableDestroy' tablePtr
 tableParent :: Table a -> IO (Group ())
@@ -403,25 +400,25 @@ tableDdfdesignKludge :: Table a  ->  IO (Widget ())
 tableDdfdesignKludge = groupDdfdesignKludge
 tableInsertWithBefore :: Group b -> Widget a  -> Widget c  ->  IO (())
 tableInsertWithBefore = groupInsertWithBefore
-{# fun unsafe Fl_Table_set_table_box as setTableBox' { id `Ptr ()',cFromEnum `Boxtype' } -> `()' #}
+{# fun Fl_Table_set_table_box as setTableBox' { id `Ptr ()',cFromEnum `Boxtype' } -> `()' #}
 tableSetTableBox :: Table a -> Boxtype ->  IO ()
 tableSetTableBox table val = withObject table $ \tablePtr -> setTableBox' tablePtr val
 {# fun unsafe Fl_Table_table_box as tableBox' { id `Ptr ()' } -> `Boxtype' cToEnum #}
 tableTableBox :: Table a  ->  IO (Boxtype)
 tableTableBox table = withObject table $ \tablePtr -> tableBox' tablePtr
-{# fun unsafe Fl_Table_set_rows as setRows' { id `Ptr ()',`Int' } -> `()' #}
+{# fun Fl_Table_set_rows as setRows' { id `Ptr ()',`Int' } -> `()' #}
 tableSetRows :: Table a  -> Int ->  IO ()
 tableSetRows table val = withObject table $ \tablePtr -> setRows' tablePtr val
 {# fun unsafe Fl_Table_rows as rows' { id `Ptr ()' } -> `Int' #}
 tableRows :: Table a  ->  IO (Int)
 tableRows table = withObject table $ \tablePtr -> rows' tablePtr
-{# fun unsafe Fl_Table_set_cols as setCols' { id `Ptr ()',`Int' } -> `()' #}
+{# fun Fl_Table_set_cols as setCols' { id `Ptr ()',`Int' } -> `()' #}
 tableSetCols :: Table a  -> Int ->  IO ()
 tableSetCols table val = withObject table $ \tablePtr -> setCols' tablePtr val
 {# fun unsafe Fl_Table_cols as cols' { id `Ptr ()' } -> `Int' #}
 tableCols :: Table a  ->  IO (Int)
 tableCols table = withObject table $ \tablePtr -> cols' tablePtr
-{# fun unsafe Fl_Table_set_visible_cells as setVisibleCells' { id `Ptr ()',id `Ptr CInt',id `Ptr CInt',id `Ptr CInt',id `Ptr CInt' } -> `()' #}
+{# fun Fl_Table_set_visible_cells as setVisibleCells' { id `Ptr ()',id `Ptr CInt',id `Ptr CInt',id `Ptr CInt',id `Ptr CInt' } -> `()' #}
 tableSetVisibleCells :: Table a  -> Ptr CInt -> Ptr CInt -> Ptr CInt -> Ptr CInt ->  IO ()
 tableSetVisibleCells table r1 r2 c1 c2 = withObject table $ \tablePtr -> setVisibleCells' tablePtr r1 r2 c1 c2
 {# fun unsafe Fl_Table_is_interactive_resize as isInteractiveResize' { id `Ptr ()' } -> `Int' #}
@@ -430,85 +427,85 @@ tableIsInteractiveResize table = withObject table $ \tablePtr -> isInteractiveRe
 {# fun unsafe Fl_Table_row_resize as rowResize' { id `Ptr ()' } -> `Int' #}
 tableRowResize :: Table a  ->  IO (Int)
 tableRowResize table = withObject table $ \tablePtr -> rowResize' tablePtr
-{# fun unsafe Fl_Table_set_row_resize as setRowResize' { id `Ptr ()',`Int' } -> `()' #}
-tableSetRowResize :: Table a  -> Int ->  IO ()
-tableSetRowResize table flag = withObject table $ \tablePtr -> setRowResize' tablePtr flag
+{# fun Fl_Table_set_row_resize as setRowResize' { id `Ptr ()',`Int' } -> `()' #}
+tableSetRowResize :: Table a  -> Bool ->  IO ()
+tableSetRowResize table flag = withObject table $ \tablePtr -> setRowResize' tablePtr (cFromBool flag)
 {# fun unsafe Fl_Table_col_resize as colResize' { id `Ptr ()' } -> `Int' #}
 tableColResize :: Table a  ->  IO (Int)
 tableColResize table = withObject table $ \tablePtr -> colResize' tablePtr
-{# fun unsafe Fl_Table_set_col_resize as setColResize' { id `Ptr ()',`Int' } -> `()' #}
-tableSetColResize :: Table a  -> Int ->  IO ()
-tableSetColResize table flag = withObject table $ \tablePtr -> setColResize' tablePtr flag
+{# fun Fl_Table_set_col_resize as setColResize' { id `Ptr ()',`Int' } -> `()' #}
+tableSetColResize :: Table a  -> Bool ->  IO ()
+tableSetColResize table flag = withObject table $ \tablePtr -> setColResize' tablePtr (cFromBool flag)
 {# fun unsafe Fl_Table_col_resize_min as colResizeMin' { id `Ptr ()' } -> `Int' #}
 tableColResizeMin :: Table a  ->  IO (Int)
 tableColResizeMin table = withObject table $ \tablePtr -> colResizeMin' tablePtr
-{# fun unsafe Fl_Table_set_col_resize_min as setColResizeMin' { id `Ptr ()',`Int' } -> `()' #}
+{# fun Fl_Table_set_col_resize_min as setColResizeMin' { id `Ptr ()',`Int' } -> `()' #}
 tableSetColResizeMin :: Table a  -> Int ->  IO ()
 tableSetColResizeMin table val = withObject table $ \tablePtr -> setColResizeMin' tablePtr val
 {# fun unsafe Fl_Table_row_resize_min as rowResizeMin' { id `Ptr ()' } -> `Int' #}
 tableRowResizeMin :: Table a  ->  IO (Int)
 tableRowResizeMin table = withObject table $ \tablePtr -> rowResizeMin' tablePtr
-{# fun unsafe Fl_Table_set_row_resize_min as setRowResizeMin' { id `Ptr ()',`Int' } -> `()' #}
+{# fun Fl_Table_set_row_resize_min as setRowResizeMin' { id `Ptr ()',`Int' } -> `()' #}
 tableSetRowResizeMin :: Table a  -> Int ->  IO ()
 tableSetRowResizeMin table val = withObject table $ \tablePtr -> setRowResizeMin' tablePtr val
 {# fun unsafe Fl_Table_row_header as rowHeader' { id `Ptr ()' } -> `Int' #}
 tableRowHeader :: Table a  ->  IO (Int)
 tableRowHeader table = withObject table $ \tablePtr -> rowHeader' tablePtr
-{# fun unsafe Fl_Table_set_row_header as setRowHeader' { id `Ptr ()',`Int' } -> `()' #}
-tableSetRowHeader :: Table a  -> Int ->  IO ()
-tableSetRowHeader table flag = withObject table $ \tablePtr -> setRowHeader' tablePtr flag
+{# fun Fl_Table_set_row_header as setRowHeader' { id `Ptr ()',`Int' } -> `()' #}
+tableSetRowHeader :: Table a  -> Bool ->  IO ()
+tableSetRowHeader table flag = withObject table $ \tablePtr -> setRowHeader' tablePtr (cFromBool flag)
 {# fun unsafe Fl_Table_col_header as colHeader' { id `Ptr ()' } -> `Int' #}
 tableColHeader :: Table a  ->  IO (Int)
 tableColHeader table = withObject table $ \tablePtr -> colHeader' tablePtr
-{# fun unsafe Fl_Table_set_col_header as setColHeader' { id `Ptr ()',`Int' } -> `()' #}
-tableSetColHeader :: Table a  -> Int ->  IO ()
-tableSetColHeader table flag = withObject table $ \tablePtr -> setColHeader' tablePtr flag
-{# fun unsafe Fl_Table_set_col_header_height as setColHeaderHeight' { id `Ptr ()',`Int' } -> `()' #}
+{# fun Fl_Table_set_col_header as setColHeader' { id `Ptr ()',`Int' } -> `()' #}
+tableSetColHeader :: Table a  -> Bool ->  IO ()
+tableSetColHeader table flag = withObject table $ \tablePtr -> setColHeader' tablePtr (cFromBool flag)
+{# fun Fl_Table_set_col_header_height as setColHeaderHeight' { id `Ptr ()',`Int' } -> `()' #}
 tableSetColHeaderHeight :: Table a  -> Int ->  IO ()
 tableSetColHeaderHeight table height = withObject table $ \tablePtr -> setColHeaderHeight' tablePtr height
 {# fun unsafe Fl_Table_col_header_height as colHeaderHeight' { id `Ptr ()' } -> `Int' #}
 tableColHeaderHeight :: Table a  ->  IO (Int)
 tableColHeaderHeight table = withObject table $ \tablePtr -> colHeaderHeight' tablePtr
-{# fun unsafe Fl_Table_set_row_header_width as setRowHeaderWidth' { id `Ptr ()',`Int' } -> `()' #}
+{# fun Fl_Table_set_row_header_width as setRowHeaderWidth' { id `Ptr ()',`Int' } -> `()' #}
 tableSetRowHeaderWidth :: Table a  -> Int ->  IO ()
 tableSetRowHeaderWidth table width = withObject table $ \tablePtr -> setRowHeaderWidth' tablePtr width
 {# fun unsafe Fl_Table_row_header_width as rowHeaderWidth' { id `Ptr ()' } -> `Int' #}
 tableRowHeaderWidth :: Table a  ->  IO (Int)
 tableRowHeaderWidth table = withObject table $ \tablePtr -> rowHeaderWidth' tablePtr
-{# fun unsafe Fl_Table_set_row_header_color as setRowHeaderColor' { id `Ptr ()',cFromColor `Color' } -> `()' #}
+{# fun Fl_Table_set_row_header_color as setRowHeaderColor' { id `Ptr ()',cFromColor `Color' } -> `()' #}
 tableSetRowHeaderColor :: Table a  -> Color ->  IO ()
 tableSetRowHeaderColor table val = withObject table $ \tablePtr -> setRowHeaderColor' tablePtr val
 {# fun unsafe Fl_Table_row_header_color as rowHeaderColor' { id `Ptr ()' } -> `Color' cToColor #}
 tableRowHeaderColor :: Table a  ->  IO (Color)
 tableRowHeaderColor table = withObject table $ \tablePtr -> rowHeaderColor' tablePtr
-{# fun unsafe Fl_Table_set_col_header_color as setColHeaderColor' { id `Ptr ()',cFromColor `Color' } -> `()' #}
+{# fun Fl_Table_set_col_header_color as setColHeaderColor' { id `Ptr ()',cFromColor `Color' } -> `()' #}
 tableSetColHeaderColor :: Table a  -> Color ->  IO ()
 tableSetColHeaderColor table val = withObject table $ \tablePtr -> setColHeaderColor' tablePtr val
 {# fun unsafe Fl_Table_col_header_color as colHeaderColor' { id `Ptr ()' } -> `Color' cToColor #}
 tableColHeaderColor :: Table a  ->  IO (Color)
 tableColHeaderColor table = withObject table $ \tablePtr -> colHeaderColor' tablePtr
-{# fun unsafe Fl_Table_set_row_height as setRowHeight' { id `Ptr ()',`Int',`Int' } -> `()' #}
+{# fun Fl_Table_set_row_height as setRowHeight' { id `Ptr ()',`Int',`Int' } -> `()' #}
 tableSetRowHeight :: Table a  -> Int -> Int ->  IO ()
 tableSetRowHeight table row height = withObject table $ \tablePtr -> setRowHeight' tablePtr row height
 {# fun unsafe Fl_Table_row_height as rowHeight' { id `Ptr ()',`Int' } -> `Int' #}
 tableRowHeight :: Table a  -> Int ->  IO (Int)
 tableRowHeight table row = withObject table $ \tablePtr -> rowHeight' tablePtr row
-{# fun unsafe Fl_Table_set_col_width as setColWidth' { id `Ptr ()',`Int',`Int' } -> `()' #}
+{# fun Fl_Table_set_col_width as setColWidth' { id `Ptr ()',`Int',`Int' } -> `()' #}
 tableSetColWidth :: Table a  -> Int -> Int ->  IO ()
 tableSetColWidth table col width = withObject table $ \tablePtr -> setColWidth' tablePtr col width
 {# fun unsafe Fl_Table_col_width as colWidth' { id `Ptr ()',`Int' } -> `Int' #}
 tableColWidth :: Table a  -> Int ->  IO (Int)
 tableColWidth table col = withObject table $ \tablePtr -> colWidth' tablePtr col
-{# fun unsafe Fl_Table_set_row_height_all as setRowHeightAll' { id `Ptr ()',`Int' } -> `()' #}
+{# fun Fl_Table_set_row_height_all as setRowHeightAll' { id `Ptr ()',`Int' } -> `()' #}
 tableSetRowHeightAll :: Table a  -> Int ->  IO ()
 tableSetRowHeightAll table height = withObject table $ \tablePtr -> setRowHeightAll' tablePtr height
-{# fun unsafe Fl_Table_set_col_width_all as setColWidthAll' { id `Ptr ()',`Int' } -> `()' #}
+{# fun Fl_Table_set_col_width_all as setColWidthAll' { id `Ptr ()',`Int' } -> `()' #}
 tableSetColWidthAll :: Table a  -> Int ->  IO ()
 tableSetColWidthAll table width = withObject table $ \tablePtr -> setColWidthAll' tablePtr width
-{# fun unsafe Fl_Table_set_row_position as setRowPosition' { id `Ptr ()',`Int' } -> `()' #}
+{# fun Fl_Table_set_row_position as setRowPosition' { id `Ptr ()',`Int' } -> `()' #}
 tableSetRowPosition :: Table a  -> Int ->  IO ()
 tableSetRowPosition table row = withObject table $ \tablePtr -> setRowPosition' tablePtr row
-{# fun unsafe Fl_Table_set_col_position as setColPosition' { id `Ptr ()',`Int' } -> `()' #}
+{# fun Fl_Table_set_col_position as setColPosition' { id `Ptr ()',`Int' } -> `()' #}
 tableSetColPosition :: Table a  -> Int ->  IO ()
 tableSetColPosition table col = withObject table $ \tablePtr -> setColPosition' tablePtr col
 {# fun unsafe Fl_Table_row_position as rowPosition' { id `Ptr ()' } -> `Int' #}
@@ -517,7 +514,7 @@ tableRowPosition table = withObject table $ \tablePtr -> rowPosition' tablePtr
 {# fun unsafe Fl_Table_col_position as colPosition' { id `Ptr ()' } -> `Int' #}
 tableColPosition :: Table a  ->  IO (Int)
 tableColPosition table = withObject table $ \tablePtr -> colPosition' tablePtr
-{# fun unsafe Fl_Table_set_top_row as setTopRow' { id `Ptr ()',`Int' } -> `()' #}
+{# fun Fl_Table_set_top_row as setTopRow' { id `Ptr ()',`Int' } -> `()' #}
 tableSetTopRow :: Table a  -> Int ->  IO ()
 tableSetTopRow table row = withObject table $ \tablePtr -> setTopRow' tablePtr row
 {# fun unsafe Fl_Table_top_row as topRow' { id `Ptr ()' } -> `Int' #}
@@ -532,7 +529,7 @@ tableGetSelection table =
     withObject table $ \tablePtr -> 
         getSelection' tablePtr >>= \(rt, cl, rb, cr) -> 
             return $ (Position (X rt) (Y cl), Position (X rb) (Y cr))
-{# fun unsafe Fl_Table_set_selection as setSelection' { id `Ptr ()',`Int',`Int',`Int',`Int' } -> `()' #}
+{# fun Fl_Table_set_selection as setSelection' { id `Ptr ()',`Int',`Int',`Int',`Int' } -> `()' #}
 tableSetSelection :: Table a  -> Int -> Int -> Int -> Int ->  IO ()
 tableSetSelection table row_top col_left row_bot col_right = withObject table $ \tablePtr -> setSelection' tablePtr row_top col_left row_bot col_right
 {# fun unsafe Fl_Table_move_cursor as moveCursor' { id `Ptr ()',`Int',`Int' } -> `Int' #}
@@ -591,15 +588,12 @@ tableFindCell table context r c  =
             if (cToBool result)
             then return $ Just $ toRectangle (x_pos', y_pos', width', height')
             else return $ Nothing
-{# fun unsafe Fl_Table_draw_super as drawSuper' { id `Ptr ()' } -> `()' #}
+{# fun Fl_Table_draw_super as drawSuper' { id `Ptr ()' } -> `()' #}
 tableDrawSuper :: Table a  ->  IO ()
 tableDrawSuper table = withObject table $ \tablePtr -> drawSuper' tablePtr
-{# fun unsafe Fl_Table_draw as draw' { id `Ptr ()' } -> `()' #}
+{# fun Fl_Table_draw as draw' { id `Ptr ()' } -> `()' #}
 tableDraw :: Table a  ->  IO ()
 tableDraw table = withObject table $ \tablePtr -> draw' tablePtr                       
-{# fun unsafe Fl_Table_handle_super as handleSuper' { id `Ptr ()',`Int' } -> `Int' #}
-tableHandleSuper :: Table a  -> Int ->  IO (Int)
-tableHandleSuper table event = withObject table $ \tablePtr -> handleSuper' tablePtr event                  
 {# fun unsafe Fl_Table_handle as handle' { id `Ptr ()',`Int' } -> `Int' #}
 tableHandle :: Table a  -> Int ->  IO (Int)
 tableHandle table event = withObject table $ \tablePtr -> handle' tablePtr event                               
@@ -615,12 +609,6 @@ tableClearSuper table = withObject table $ \tablePtr -> clearSuper' tablePtr
 {# fun unsafe Fl_Table_clear as clear' { id `Ptr ()' } -> `()' #}
 tableClear :: Table a  ->  IO ()
 tableClear table = withObject table $ \tablePtr -> clear' tablePtr                        
-{# fun unsafe Fl_Table_as_window_super as asWindowSuper' { id `Ptr ()' } -> `Ptr ()' id #}
-tableAsWindowSuper :: Table a  ->  IO (Window ())
-tableAsWindowSuper table = withObject table $ \tablePtr -> asWindowSuper' tablePtr >>= toObject                   
-{# fun unsafe Fl_Table_as_window as asWindow' { id `Ptr ()' } -> `Ptr ()' id #}
-tableAsWindow :: Table a  ->  IO (Window ())
-tableAsWindow table = withObject table $ \tablePtr -> asWindow' tablePtr >>= toObject                           
 {# fun unsafe Fl_Table_as_group_super as asGroupSuper' { id `Ptr ()' } -> `Ptr ()' id #}
 tableAsGroupSuper :: Table a  ->  IO (Group ())
 tableAsGroupSuper table = withObject table $ \tablePtr -> asGroupSuper' tablePtr >>= toObject                      
@@ -633,10 +621,10 @@ tableAsGlWindowSuper table = withObject table $ \tablePtr -> asGlWindowSuper' ta
 {# fun unsafe Fl_Table_as_gl_window as asGlWindow' { id `Ptr ()' } -> `Ptr ()' id #}
 tableAsGlWindow :: Table a  ->  IO (GlWindow ())
 tableAsGlWindow table = withObject table $ \tablePtr -> asGlWindow' tablePtr >>= toObject                             
-{# fun unsafe Fl_Table_set_rows_super as setRowsSuper' { id `Ptr ()',`Int' } -> `()' #}
+{# fun Fl_Table_set_rows_super as setRowsSuper' { id `Ptr ()',`Int' } -> `()' #}
 tableSetRowsSuper :: Table a  -> Int ->  IO ()
 tableSetRowsSuper table val = withObject table $ \tablePtr -> setRowsSuper' tablePtr val                        
-{# fun unsafe Fl_Table_set_cols_super as setColsSuper' { id `Ptr ()',`Int' } -> `()' #}
+{# fun Fl_Table_set_cols_super as setColsSuper' { id `Ptr ()',`Int' } -> `()' #}
 tableSetColsSuper :: Table a  -> Int ->  IO ()
 tableSetColsSuper table val = withObject table $ \tablePtr -> setColsSuper' tablePtr val                         
                               

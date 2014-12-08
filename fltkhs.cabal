@@ -72,7 +72,7 @@ Executable test_call
   Main-Is: TestCall.hs
   Hs-Source-Dirs: src/TestPrograms
   include-dirs: ./object_files ./lib
-  ghc-Options: -Wall -threaded
+  ghc-Options: -Wall
   Build-Depends:
     base,
     fltkhs
@@ -82,6 +82,15 @@ Executable buttons
   Hs-Source-Dirs: src/TestPrograms
   include-dirs: ./object_files ./lib
   ghc-Options: -Wall -threaded
+  Build-Depends:
+    base,
+    fltkhs
+
+Executable table-simple
+  Main-Is: table-simple.hs
+  Hs-Source-Dirs: src/Examples
+  include-dirs: ./object_files ./lib
+  ghc-Options: -Wall
   Build-Depends:
     base,
     fltkhs

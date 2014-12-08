@@ -190,7 +190,7 @@ import qualified Data.ByteString as B
 {#enum PageFormat {}#}
 {#enum PageLayout {}#}
 {#enum TableRowSelectMode {} #}
-{#enum TableContext {} #}
+{#enum TableContext {} deriving (Show) #}
 {#enum LinePosition {} #}
 data GLUTproc = GLUTproc {#type GLUTproc#}
 newtype GLUTIdleFunction = GLUTIdleFunction (FunPtr (IO ()))

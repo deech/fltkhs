@@ -164,17 +164,17 @@ toTableSetIntFPrim f =
 toTableDrawCellPrim :: TableDrawCellF a -> IO (FunPtr TableDrawCellFPrim)
 toTableDrawCellPrim f = 
     mkTableDrawCellF
-    (
-     \ptr context' row' col' x_pos y_pos width height -> 
-         let rectangle = toRectangle (fromIntegral x_pos,
-                                      fromIntegral y_pos,
-                                      fromIntegral width,
-                                      fromIntegral height)
-         in
-         do 
+     (
+      \ptr context' row' col' x_pos y_pos width height -> 
+          let rectangle = toRectangle (fromIntegral x_pos,
+                                       fromIntegral y_pos,
+                                       fromIntegral width,
+                                       fromIntegral height)
+          in
+          do 
            pp <- wrapNonNull ptr "Null pointer. toTableDrawCellFPrim"
            f (wrapObject pp) (toEnum $ fromIntegral context') (fromIntegral row') (fromIntegral col') rectangle
-    )
+     )
 
 toDrawCallback :: DrawCallback -> IO (FunPtr DrawCallbackPrim)
 toDrawCallback f = mkDrawCallbackPrimPtr
