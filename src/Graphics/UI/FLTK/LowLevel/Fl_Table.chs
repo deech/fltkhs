@@ -539,10 +539,10 @@ tableMoveCursor table r c = withObject table $ \tablePtr -> moveCursor' tablePtr
 tableInitSizes :: Table a  ->  IO ()
 tableInitSizes table = withObject table $ \tablePtr -> initSizes' tablePtr
 {# fun unsafe Fl_Table_add as add' { id `Ptr ()',id `Ptr ()' } -> `()' #}
-tableAdd :: Table a  -> Widget a  ->  IO ()
+tableAdd :: Table a  -> Widget b  ->  IO ()
 tableAdd table wgt = withObject table $ \tablePtr -> withObject wgt $ \wgtPtr -> add' tablePtr wgtPtr
 {# fun unsafe Fl_Table_insert as insert' { id `Ptr ()',id `Ptr ()',`Int' } -> `()' #}
-tableInsert :: Table a  -> Widget a  -> Int ->  IO ()
+tableInsert :: Table a  -> Widget b  -> Int ->  IO ()
 tableInsert table wgt n = withObject table $ \tablePtr -> withObject wgt $ \wgtPtr -> insert' tablePtr wgtPtr n
 {# fun unsafe Fl_Table_insert_with_widget as insertWithWidget' { id `Ptr ()',id `Ptr ()',id `Ptr ()' } -> `()' #}
 tableInsertWithWidget :: Table a  -> Widget b  -> Widget c  ->  IO ()
@@ -566,7 +566,7 @@ tableChild table n = withObject table $ \tablePtr -> child' tablePtr n >>= toObj
 tableChildren :: Table a  ->  IO (Int)
 tableChildren table = withObject table $ \tablePtr -> children' tablePtr
 {# fun unsafe Fl_Table_find as find' { id `Ptr ()',id `Ptr ()' } -> `Int' #}
-tableFind :: Table a  -> Widget a  ->  IO (Int)
+tableFind :: Table a  -> Widget b  ->  IO (Int)
 tableFind table wgt = withObject table $ \tablePtr -> withObject wgt $ \wgtPtr -> find' tablePtr wgtPtr
 {# fun unsafe Fl_Table_callback_row as callbackRow' { id `Ptr ()' } -> `Int' #}
 tableCallbackRow :: Table a  ->  IO (Int)

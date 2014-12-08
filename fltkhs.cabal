@@ -58,6 +58,7 @@ library
                    Graphics.UI.FLTK.LowLevel.Fl_Input
                    Graphics.UI.FLTK.LowLevel.Fl_Wizard
                    Graphics.UI.FLTK.LowLevel.Fl_Table
+                   Graphics.UI.FLTK.LowLevel.Fl_Table_Row
                    Graphics.UI.FLTK.LowLevel.FL
                    Graphics.UI.FLTK.LowLevel.Utils
   build-depends: base, containers, stm, bytestring
