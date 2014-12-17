@@ -95,3 +95,14 @@ Executable table-simple
   Build-Depends:
     base,
     fltkhs
+
+Executable table-sort
+  Main-Is: table-sort.hs
+  Hs-Source-Dirs: src/Examples
+  include-dirs: ./object_files ./lib
+  ghc-Options: -Wall
+  Build-Depends:
+    base,
+    fltkhs,
+    process
+
