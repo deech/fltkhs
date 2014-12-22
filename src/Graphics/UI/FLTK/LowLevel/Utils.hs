@@ -14,10 +14,6 @@ foreign import ccall "wrapper"
 foreign import ccall "wrapper"
         mkColorAverageCallbackPtr :: ColorAverageCallbackPrim -> IO (FunPtr ColorAverageCallbackPrim)
 foreign import ccall "wrapper"
-        mkWidgetTransformCallbackPtr :: WidgetTransformCallbackPrim -> IO (FunPtr WidgetTransformCallbackPrim)
-foreign import ccall "wrapper"
-        mkEventHandlerPtr :: WidgetEventHandlerPrim -> IO (FunPtr WidgetEventHandlerPrim)
-foreign import ccall "wrapper"
         mkGlobalEventHandlerPtr :: GlobalEventHandlerPrim -> IO (FunPtr GlobalEventHandlerPrim)
 foreign import ccall "wrapper"
         mkDrawCallbackPrimPtr :: DrawCallbackPrim -> IO (FunPtr DrawCallbackPrim)
@@ -28,17 +24,11 @@ foreign import ccall "wrapper"
 foreign import ccall "wrapper"
         mkFinalizer :: (Ptr a -> IO ()) -> IO (FinalizerPtr a)
 foreign import ccall "wrapper"
-        wrapWidgetEventHandlerPrim :: WidgetEventHandlerPrim -> IO (FunPtr WidgetEventHandlerPrim)
-foreign import ccall "wrapper"
-        mkRectanglePtr :: RectangleFPrim -> IO (FunPtr RectangleFPrim)
-foreign import ccall "wrapper"
-        mkGetPointerPtr :: GetPointerF -> IO (FunPtr GetPointerF)
-foreign import ccall "wrapper"
-        mkTableSetInt :: TableSetIntFPrim -> IO (FunPtr TableSetIntFPrim)
-foreign import ccall "wrapper"
-        mkTableDrawCellF :: TableDrawCellFPrim -> IO (FunPtr TableDrawCellFPrim)
+        wrapBoxDrawFPrim :: BoxDrawFPrim -> IO (FunPtr BoxDrawFPrim)
 foreign import ccall "dynamic"
         unwrapGlobalCallbackPtr :: FunPtr GlobalCallback -> GlobalCallback
+foreign import ccall "dynamic"
+        unwrapBoxDrawFPrim :: FunPtr BoxDrawFPrim -> BoxDrawFPrim
 
 cFromEnum :: (Enum a, Integral b) => a -> b
 cFromEnum = fromIntegral . fromEnum
@@ -72,17 +62,6 @@ wrapNonNull ptr msg = if (ptr == nullPtr)
                         poke pptr ptr
                         FC.newForeignPtr pptr (return ())
 
-toRectangleFPrim ::  RectangleF a -> IO (FunPtr RectangleFPrim)
-toRectangleFPrim f = mkRectanglePtr
-                     (\wPtr x_pos y_pos width height ->
-                          let rectangle = toRectangle (fromIntegral x_pos,
-                                                       fromIntegral y_pos,
-                                                       fromIntegral width,
-                                                       fromIntegral height)
-                          in do
-                          fptr <- wrapNonNull wPtr "Null Pointer. toRectangleFPrim"
-                          f (wrapObject fptr) rectangle
-                     )
 
 toGlobalEventHandlerPrim :: GlobalEventHandlerF -> IO (FunPtr GlobalEventHandlerPrim)
 toGlobalEventHandlerPrim f = mkGlobalEventHandlerPtr
@@ -90,29 +69,9 @@ toGlobalEventHandlerPrim f = mkGlobalEventHandlerPtr
                                 let event = cToEnum (eventNumber :: CInt)
                                 in f event >>= return . fromIntegral)
 
-toEventHandlerPrim :: WidgetEventHandler a -> IO (FunPtr WidgetEventHandlerPrim)
-toEventHandlerPrim f = wrapWidgetEventHandlerPrim
-                       (\wPtr eventNumber ->
-                            let event = cToEnum (eventNumber :: CInt)
-                            in do
-                            fptr <- wrapNonNull wPtr "Null Pointer: toEventHandlerPrim"
-                            result <- f (wrapObject fptr) event
-                            return $ fromIntegral result
-                       )
 toGlobalCallbackPrim :: GlobalCallback -> IO (FunPtr CallbackPrim)
 toGlobalCallbackPrim f = mkCallbackPtr (\_ -> f)
-toCallbackPrim :: WidgetCallback a -> IO (FunPtr CallbackPrim)
-toCallbackPrim f = mkCallbackPtr (\ptr ->
-                                    wrapNonNull ptr "Null pointer. toCallbackPrim" >>=
-                                    \pp -> f (wrapObject pp)
-                                 )
-
-toWidgetCallbackPrim :: WidgetCallback a -> IO (FunPtr CallbackWithUserDataPrim)
-toWidgetCallbackPrim f = mkWidgetCallbackPtr
-                         (\ptr _ -> wrapNonNull ptr "Null pointer: toWidgetCallbackPrim" >>=
-                                    \pp -> f (wrapObject pp)
-                         )
-toImageDrawCallbackPrim :: ImageDrawCallback a -> IO (FunPtr ImageDrawCallbackPrim)
+toImageDrawCallbackPrim :: ImageDrawCallback -> IO (FunPtr ImageDrawCallbackPrim)
 toImageDrawCallbackPrim f =
     mkImageDrawCallbackPrimPtr
     (\ptr x_pos' y_pos' width' height' x_offset' y_offset' ->
@@ -123,58 +82,27 @@ toImageDrawCallbackPrim f =
            size' = Size (Width $ fromIntegral width')
                         (Height $ fromIntegral height')
        in
-        toObject ptr >>= \objPtr -> f objPtr position' size' _x_offset _y_offset
+        toRef ptr >>= \refPtr -> f refPtr position' size' _x_offset _y_offset
     )
 
-toColorAverageCallbackPrim :: ColorAverageCallback a -> IO (FunPtr ColorAverageCallbackPrim)
+toColorAverageCallbackPrim :: ColorAverageCallback -> IO (FunPtr ColorAverageCallbackPrim)
 toColorAverageCallbackPrim f =
     mkColorAverageCallbackPtr
     (\ptr cint cfloat ->
          wrapNonNull ptr "Null pointer. toColorAverageCallbackPrim" >>= \pp ->
-         f (wrapObject pp) (Color (fromIntegral cint)) (realToFrac cfloat)
+         f (wrapInRef pp) (Color (fromIntegral cint)) (realToFrac cfloat)
     )
 
-toImageCopyCallbackPrim :: ImageCopyCallback a b -> IO (FunPtr ImageCopyCallbackPrim)
+toImageCopyCallbackPrim :: ImageCopyCallback -> IO (FunPtr ImageCopyCallbackPrim)
 toImageCopyCallbackPrim f =
     mkImageCopyCallbackPrimPtr
     (\ptr width' height' -> do
          pp <- wrapNonNull ptr "Null pointer. toImageCopyCallbackPrim"
-         objPtr <- f (wrapObject pp) (Size (Width $ fromIntegral width')
+         refPtr <- f (wrapInRef pp) (Size (Width $ fromIntegral width')
                                            (Height $ fromIntegral height'))
-         unsafeObjectToPtr objPtr
+         unsafeRefToPtr refPtr
     )
 
-toWidgetTransformCallbackPrim :: WidgetTransformCallback a b -> IO (FunPtr WidgetTransformCallbackPrim)
-toWidgetTransformCallbackPrim f =
-    mkWidgetTransformCallbackPtr
-    (\ptr ->
-         wrapNonNull ptr "Null pointer. toWidgetTransformCallbackPrim" >>= \pp ->
-         do
-           widget <- f (wrapObject pp)
-           unsafeObjectToPtr widget
-    )
-toTableSetIntFPrim :: TableSetIntF a -> IO (FunPtr TableSetIntFPrim)
-toTableSetIntFPrim f =
-    mkTableSetInt
-    (
-     \ptr num' -> do
-       pp <- wrapNonNull ptr "Null pointer. toTableSetInt"
-       f (wrapObject pp) (fromIntegral num')
-    )
-toTableDrawCellPrim :: TableDrawCellF a -> IO (FunPtr TableDrawCellFPrim)
-toTableDrawCellPrim f = 
-    mkTableDrawCellF
-     (
-      \ptr context' row' col' x_pos y_pos width height -> 
-          let rectangle = toRectangle (fromIntegral x_pos,
-                                       fromIntegral y_pos,
-                                       fromIntegral width,
-                                       fromIntegral height)
-          in
-          do 
-           pp <- wrapNonNull ptr "Null pointer. toTableDrawCellFPrim"
-           f (wrapObject pp) (toEnum $ fromIntegral context') (fromIntegral row') (fromIntegral col') rectangle
-     )
 
 toDrawCallback :: DrawCallback -> IO (FunPtr DrawCallbackPrim)
 toDrawCallback f = mkDrawCallbackPrimPtr
@@ -183,48 +111,66 @@ toDrawCallback f = mkDrawCallbackPrimPtr
                       f str' (Position (X (fromIntegral x')) (Y (fromIntegral y'))))
 
 
-runPointerF :: (Object a -> IO (Object b)) -> Ptr () -> String -> IO (Ptr c)
+runPointerF :: (Ref a -> IO (Ref b)) -> Ptr () -> String -> IO (Ptr c)
 runPointerF f ptr msg = do
    pp <- wrapNonNull ptr msg
-   result <- f (wrapObject pp)
-   withObject result (return . castPtr)
+   result <- f (wrapInRef pp)
+   withRef result (return . castPtr)
 
-toGetWindowFPrim :: GetWindowF a -> IO (FunPtr GetPointerF)
-toGetWindowFPrim f = mkGetPointerPtr (\ptr -> runPointerF f ptr "Null pointer: toGetWindowFPrim")
-toGetGlWindowFPrim :: GetGlWindowF a -> IO (FunPtr GetPointerF)
-toGetGlWindowFPrim f = mkGetPointerPtr (\ptr -> runPointerF f ptr "Null pointer: toGetGlWindowFPrim")
-toGetGroupFPrim :: GetGroupF a -> IO (FunPtr GetPointerF)
-toGetGroupFPrim f = mkGetPointerPtr (\ptr -> runPointerF f ptr "Null pointer: toGetGroupFPrim")
+toBoxDrawF :: BoxDrawFPrim -> BoxDrawF
+toBoxDrawF boxDrawPrim =
+    (\r c ->
+       let (x_pos,y_pos,width,height) = fromRectangle r
+           colorPrim = cFromColor c
+       in
+         boxDrawPrim ((fromIntegral x_pos) :: CInt)
+                     ((fromIntegral y_pos) :: CInt)
+                     ((fromIntegral width) :: CInt)
+                     ((fromIntegral height) :: CInt)
+                     colorPrim
+    )
+
+toBoxDrawFPrim :: BoxDrawF -> BoxDrawFPrim
+toBoxDrawFPrim f =
+    (\xPrim yPrim wPrim hPrim colorPrim ->
+       let r = toRectangle (fromIntegral xPrim,
+                            fromIntegral yPrim,
+                            fromIntegral wPrim,
+                            fromIntegral hPrim)
+           c = cToColor colorPrim
+       in
+           f r c)
+
 orNullFunPtr :: (a -> IO (FunPtr b)) -> Maybe a -> IO (FunPtr b)
 orNullFunPtr = maybe (return nullFunPtr)
 
-arrayToObjects:: (Ptr (Ptr ())) -> Int -> IO [(Object a)]
-arrayToObjects arrayPtr numElements =
+arrayToRefs:: (Ptr (Ptr ())) -> Int -> IO [(Ref a)]
+arrayToRefs arrayPtr numElements =
     go arrayPtr numElements []
     where
       go _ 0 accum =  return accum
       go currPtr numLeft accum = do
         curr <- peek currPtr
-        obj <- toObject curr
+        ref <- toRef curr
         go (currPtr `plusPtr` (sizeOf (undefined :: Ptr (Ptr a))))
            (numLeft - 1)
-           ([obj] ++ accum)
+           ([ref] ++ accum)
 
-objectOrError :: String -> Ptr () -> IO (Object b)
-objectOrError errorMessage p = wrapNonNull p errorMessage >>=
-                               return . wrapObject
+refOrError :: String -> Ptr () -> IO (Ref b)
+refOrError errorMessage p = wrapNonNull p errorMessage >>=
+                               return . wrapInRef
 toShortcut :: [KeyboardCode] -> FlShortcut
 toShortcut = fromIntegral . sum . (map fromEnum)
 
-toObject ::  Ptr () -> IO (Object a)
-toObject ptr = throwStackOnError $
+toRef ::  Ptr () -> IO (Ref a)
+toRef ptr = throwStackOnError $
                   do
                     pp <- wrapNonNull ptr "Null Pointer Error"
-                    let result = wrapObject pp
+                    let result = wrapInRef pp
                     return $ result
 
-unsafeToObject :: Ptr () -> (Object a)
-unsafeToObject = Unsafe.unsafePerformIO . toObject
+unsafeToRef :: Ptr () -> (Ref a)
+unsafeToRef = Unsafe.unsafePerformIO . toRef
 
 supressWarningAboutRes :: a -> ()
 supressWarningAboutRes _ = ()

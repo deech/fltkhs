@@ -1,144 +1,9 @@
+{-# LANGUAGE CPP, TypeSynonymInstances, FlexibleInstances, MultiParamTypeClasses, FlexibleContexts #-}
+{-# OPTIONS_GHC -fno-warn-orphans #-}
 module Graphics.UI.FLTK.LowLevel.Fl_Overlay_Window
     (
      overlayWindowNew,
-     overlayWindowDestroy,
-     overlayWindowSetCallback,
-     overlayWindowParent,
-     overlayWindowSetParent,
-     overlayWindowType_,
-     overlayWindowSetType,
-     overlayWindowDrawLabel,
-     overlayWindowX,
-     overlayWindowY,
-     overlayWindowW,
-     overlayWindowH,
-     overlayWindowSetAlign,
-     overlayWindowAlign,
-     overlayWindowBox,
-     overlayWindowSetBox,
-     overlayWindowColor,
-     overlayWindowSetColor,
-     overlayWindowSetColorWithBgSel,
-     overlayWindowSelectionColor,
-     overlayWindowSetSelectionColor,
-     overlayWindowLabeltype,
-     overlayWindowSetLabeltype,
-     overlayWindowLabelcolor,
-     overlayWindowSetLabelcolor,
-     overlayWindowLabelfont,
-     overlayWindowSetLabelfont,
-     overlayWindowLabelsize,
-     overlayWindowSetLabelsize,
-     overlayWindowImage,
-     overlayWindowSetImage,
-     overlayWindowDeimage,
-     overlayWindowSetDeimage,
-     overlayWindowTooltip,
-     overlayWindowCopyTooltip,
-     overlayWindowSetTooltip,
-     overlayWindowWhen,
-     overlayWindowSetWhen,
-     overlayWindowVisible,
-     overlayWindowVisibleR,
-     overlayWindowSetVisible,
-     overlayWindowClearVisible,
-     overlayWindowActive,
-     overlayWindowActiveR,
-     overlayWindowActivate,
-     overlayWindowDeactivate,
-     overlayWindowOutput,
-     overlayWindowSetOutput,
-     overlayWindowClearOutput,
-     overlayWindowTakesevents,
-     overlayWindowSetChanged,
-     overlayWindowClearChanged,
-     overlayWindowTakeFocus,
-     overlayWindowSetVisibleFocus,
-     overlayWindowClearVisibleFocus,
-     overlayWindowModifyVisibleFocus,
-     overlayWindowVisibleFocus,
-     overlayWindowContains,
-     overlayWindowInside,
-     overlayWindowRedraw,
-     overlayWindowRedrawLabel,
-     overlayWindowDamage,
-     overlayWindowClearDamageWithBitmask,
-     overlayWindowClearDamage,
-     overlayWindowDamageWithText,
-     overlayWindowDamageInsideWidget,
-     overlayWindowMeasureLabel,
-     overlayWindowWindow,
-     overlayWindowTopWindow,
-     overlayWindowTopWindowOffset,
-     overlayWindowBegin,
-     overlayWindowEnd,
-     overlayWindowFind,
-     overlayWindowAdd,
-     overlayWindowInsert,
-     overlayWindowRemoveIndex,
-     overlayWindowRemoveWidget,
-     overlayWindowClear,
-     overlayWindowSetResizable,
-     overlayWindowResizable,
-     overlayWindowAddResizable,
-     overlayWindowInitSizes,
-     overlayWindowChildren,
-     overlayWindowSetClipChildren,
-     overlayWindowClipChildren,
-     overlayWindowFocus,
-     overlayWindowDdfdesignKludge,
-     overlayWindowInsertWithBefore,
-     overlayWindowArray,
-     overlayWindowChild,
-     overlayWindowChanged,
-     overlayWindowFullscreen,
-     overlayWindowFullscreenOff,
-     overlayWindowSetBorder,
-     overlayWindowClearBorder,
-     overlayWindowBorder,
-     overlayWindowSetOverride,
-     overlayWindowOverride,
-     overlayWindowSetModal,
-     overlayWindowModal,
-     overlayWindowSetNonModal,
-     overlayWindowNonModal,
-     overlayWindowSetMenuWindow,
-     overlayWindowMenuWindow,
-     overlayWindowSetTooltipWindow,
-     overlayWindowTooltipWindow,
-     overlayWindowHotSpot,
-     overlayWindowFreePosition,
-     overlayWindowSizeRange,
-     overlayWindowSizeRangeWithArgs,
-     overlayWindowLabel,
-     overlayWindowIconlabel,
-     overlayWindowSetLabel,
-     overlayWindowSetIconlabel,
-     overlayWindowSetLabelWithIconlabel,
-     overlayWindowCopyLabel,
-     overlayWindowSetDefaultXclass,
-     overlayWindowDefaultXclass,
-     overlayWindowXclass,
-     overlayWindowSetXclass,
-     overlayWindowIcon,
-     overlayWindowSetIcon,
-     overlayWindowShown,
-     overlayWindowIconize,
-     overlayWindowXRoot,
-     overlayWindowYRoot,
-     overlayWindowCurrent,
-     overlayWindowMakeCurrent,
-     overlayWindowSetCursor,
-     overlayWindowSetCursorWithFgBg,
-     overlayWindowSetDefaultCursor,
-     overlayWindowDecoratedW,
-     overlayWindowDecoratedH,
-     overlayWindowShow,
-     overlayWindowFlush,
-     overlayWindowResize,
-     overlayWindowHide,
-     overlayWindowCanDoOverlay,
-     overlayWindowRedrawOverlay
+     makeOverlayCallback
     )
 where
 #include "Fl_C.h"
@@ -146,10 +11,10 @@ where
 import Foreign
 import Foreign.C
 import Graphics.UI.FLTK.LowLevel.Fl_Types
-import Graphics.UI.FLTK.LowLevel.Fl_Enumerations
-import Graphics.UI.FLTK.LowLevel.Fl_Double_Window
 import Graphics.UI.FLTK.LowLevel.Utils
-import Graphics.UI.FLTK.LowLevel.Fl_Window
+import Graphics.UI.FLTK.LowLevel.Hierarchy
+import Graphics.UI.FLTK.LowLevel.Dispatch
+import Graphics.UI.FLTK.LowLevel.Fl_Widget
 import C2HS hiding (cFromEnum, unsafePerformIO, toBool,cToEnum)
 
 {# fun Fl_Overlay_Window_New_WithLabel as windowNewWithLabel' { `Int', `Int', `String', id `FunPtr CallbackPrim' } -> `Ptr ()' id #}
@@ -157,297 +22,39 @@ import C2HS hiding (cFromEnum, unsafePerformIO, toBool,cToEnum)
 {# fun Fl_Overlay_Window_NewXY_WithLabel as windowNewWithXYLabel' { `Int', `Int', `Int', `Int', `String', id `FunPtr CallbackPrim' } -> `Ptr ()' id #}
 {# fun Fl_Overlay_Window_NewXY as windowNewWithXY' { `Int', `Int', `Int', `Int', id `FunPtr CallbackPrim' } -> `Ptr ()' id #}
 
-overlayWindowNew :: Size -> Maybe String -> Maybe Position -> (OverlayWindow a -> IO ()) -> IO (OverlayWindow a)
+overlayWindowNew :: Size -> Maybe String -> Maybe Position -> WidgetCallback -> IO (Ref OverlayWindow)
 overlayWindowNew (Size (Width width') (Height height')) title' position' callback' =
     do
       fptr <- toCallbackPrim callback'
       case (title', position') of
-        (Just t, Just (Position (X x') (Y y'))) -> windowNewWithXYLabel' width' height' x' y' t fptr >>= toObject
-        (Nothing, Just (Position (X x') (Y y'))) -> windowNewWithXY' width' height' x' y' fptr >>= toObject
-        (Just t, Nothing) -> windowNewWithLabel' width' height' t fptr >>= toObject
-        (Nothing, Nothing) -> windowNew' width' height' fptr >>= toObject
+        (Just t, Just (Position (X x') (Y y'))) -> windowNewWithXYLabel' width' height' x' y' t fptr >>= toRef
+        (Nothing, Just (Position (X x') (Y y'))) -> windowNewWithXY' width' height' x' y' fptr >>= toRef
+        (Just t, Nothing) -> windowNewWithLabel' width' height' t fptr >>= toRef
+        (Nothing, Nothing) -> windowNew' width' height' fptr >>= toRef
+
+makeOverlayCallback :: (Ref OverlayWindow-> IO ()) -> WidgetCallback
+makeOverlayCallback = WidgetCallback
 
 {# fun Fl_Overlay_Window_Destroy as windowDestroy' { id `Ptr ()' } -> `()' #}
-overlayWindowDestroy :: OverlayWindow a -> IO ()
-overlayWindowDestroy window = withObject window $ \windowPtr -> windowDestroy' windowPtr
-
-overlayWindowSetCallback :: OverlayWindow a -> (OverlayWindow b -> IO()) -> IO ()
-overlayWindowSetCallback = doubleWindowSetCallback
-overlayWindowParent :: OverlayWindow a -> IO (Group ())
-overlayWindowParent = doubleWindowParent
-overlayWindowSetParent :: OverlayWindow a -> Group b -> IO ()
-overlayWindowSetParent = doubleWindowSetParent
-overlayWindowType_ :: OverlayWindow a  ->  IO (Word8)
-overlayWindowType_ = doubleWindowType_
-overlayWindowSetType :: OverlayWindow a  -> Word8 ->  IO (())
-overlayWindowSetType = doubleWindowSetType
-overlayWindowDrawLabel :: OverlayWindow a  -> Maybe (Rectangle,AlignType)->  IO (())
-overlayWindowDrawLabel = doubleWindowDrawLabel
-overlayWindowX :: OverlayWindow a  ->  IO (Int)
-overlayWindowX = doubleWindowX
-overlayWindowY :: OverlayWindow a  ->  IO (Int)
-overlayWindowY = doubleWindowY
-overlayWindowW :: OverlayWindow a  ->  IO (Int)
-overlayWindowW = doubleWindowW
-overlayWindowH :: OverlayWindow a  ->  IO (Int)
-overlayWindowH = doubleWindowH
-overlayWindowSetAlign :: OverlayWindow a  -> AlignType ->  IO (())
-overlayWindowSetAlign = doubleWindowSetAlign
-overlayWindowAlign :: OverlayWindow a  ->  IO (AlignType)
-overlayWindowAlign = doubleWindowAlign
-overlayWindowBox :: OverlayWindow a  ->  IO (Boxtype)
-overlayWindowBox = doubleWindowBox
-overlayWindowSetBox :: OverlayWindow a  -> Boxtype ->  IO (())
-overlayWindowSetBox = doubleWindowSetBox
-overlayWindowColor :: OverlayWindow a  ->  IO (Color)
-overlayWindowColor = doubleWindowColor
-overlayWindowSetColor :: OverlayWindow a  -> Color ->  IO (())
-overlayWindowSetColor = doubleWindowSetColor
-overlayWindowSetColorWithBgSel :: OverlayWindow a  -> Color -> Color ->  IO (())
-overlayWindowSetColorWithBgSel = doubleWindowSetColorWithBgSel
-overlayWindowSelectionColor :: OverlayWindow a  ->  IO (Color)
-overlayWindowSelectionColor = doubleWindowSelectionColor
-overlayWindowSetSelectionColor :: OverlayWindow a  -> Color ->  IO (())
-overlayWindowSetSelectionColor = doubleWindowSetSelectionColor
-overlayWindowLabeltype :: OverlayWindow a  ->  IO (Labeltype)
-overlayWindowLabeltype = doubleWindowLabeltype
-overlayWindowSetLabeltype :: OverlayWindow a  -> Labeltype ->  IO (())
-overlayWindowSetLabeltype = doubleWindowSetLabeltype
-overlayWindowLabelcolor :: OverlayWindow a  ->  IO (Color)
-overlayWindowLabelcolor = doubleWindowLabelcolor
-overlayWindowSetLabelcolor :: OverlayWindow a  -> Color ->  IO (())
-overlayWindowSetLabelcolor = doubleWindowSetLabelcolor
-overlayWindowLabelfont :: OverlayWindow a  ->  IO (Font)
-overlayWindowLabelfont = doubleWindowLabelfont
-overlayWindowSetLabelfont :: OverlayWindow a  -> Font ->  IO (())
-overlayWindowSetLabelfont = doubleWindowSetLabelfont
-overlayWindowLabelsize :: OverlayWindow a  ->  IO (FontSize)
-overlayWindowLabelsize = doubleWindowLabelsize
-overlayWindowSetLabelsize :: OverlayWindow a  -> FontSize ->  IO (())
-overlayWindowSetLabelsize = doubleWindowSetLabelsize
-overlayWindowImage :: OverlayWindow a  ->  IO (Image ())
-overlayWindowImage = doubleWindowImage
-overlayWindowSetImage :: OverlayWindow a  -> Image b ->  IO (())
-overlayWindowSetImage = doubleWindowSetImage
-overlayWindowDeimage :: OverlayWindow a  ->  IO (Image ())
-overlayWindowDeimage = doubleWindowDeimage
-overlayWindowSetDeimage :: OverlayWindow a  -> Image b ->  IO (())
-overlayWindowSetDeimage = doubleWindowSetDeimage
-overlayWindowTooltip :: OverlayWindow a  ->  IO (String)
-overlayWindowTooltip = doubleWindowTooltip
-overlayWindowCopyTooltip :: OverlayWindow a  -> String ->  IO (())
-overlayWindowCopyTooltip = doubleWindowCopyTooltip
-overlayWindowSetTooltip :: OverlayWindow a  -> String ->  IO (())
-overlayWindowSetTooltip = doubleWindowSetTooltip
-overlayWindowWhen :: OverlayWindow a  ->  IO (When)
-overlayWindowWhen = doubleWindowWhen
-overlayWindowSetWhen :: OverlayWindow a  -> Word8 ->  IO (())
-overlayWindowSetWhen = doubleWindowSetWhen
-overlayWindowVisible :: OverlayWindow a  ->  IO (Int)
-overlayWindowVisible = doubleWindowVisible
-overlayWindowVisibleR :: OverlayWindow a  ->  IO (Int)
-overlayWindowVisibleR = doubleWindowVisibleR
-overlayWindowSetVisible :: OverlayWindow a  ->  IO (())
-overlayWindowSetVisible = doubleWindowSetVisible
-overlayWindowClearVisible :: OverlayWindow a  ->  IO (())
-overlayWindowClearVisible = doubleWindowClearVisible
-overlayWindowActive :: OverlayWindow a  ->  IO (Int)
-overlayWindowActive = doubleWindowActive
-overlayWindowActiveR :: OverlayWindow a  ->  IO (Int)
-overlayWindowActiveR = doubleWindowActiveR
-overlayWindowActivate :: OverlayWindow a  ->  IO (())
-overlayWindowActivate = doubleWindowActivate
-overlayWindowDeactivate :: OverlayWindow a  ->  IO (())
-overlayWindowDeactivate = doubleWindowDeactivate
-overlayWindowOutput :: OverlayWindow a  ->  IO (Int)
-overlayWindowOutput = doubleWindowOutput
-overlayWindowSetOutput :: OverlayWindow a  ->  IO (())
-overlayWindowSetOutput = doubleWindowSetOutput
-overlayWindowClearOutput :: OverlayWindow a  ->  IO (())
-overlayWindowClearOutput = doubleWindowClearOutput
-overlayWindowTakesevents :: OverlayWindow a  ->  IO (Int)
-overlayWindowTakesevents = doubleWindowTakesevents
-overlayWindowSetChanged :: OverlayWindow a  ->  IO (())
-overlayWindowSetChanged = doubleWindowSetChanged
-overlayWindowClearChanged :: OverlayWindow a  ->  IO (())
-overlayWindowClearChanged = doubleWindowClearChanged
-overlayWindowTakeFocus :: OverlayWindow a  ->  IO (Int)
-overlayWindowTakeFocus = doubleWindowTakeFocus
-overlayWindowSetVisibleFocus :: OverlayWindow a  ->  IO (())
-overlayWindowSetVisibleFocus = doubleWindowSetVisibleFocus
-overlayWindowClearVisibleFocus :: OverlayWindow a  ->  IO (())
-overlayWindowClearVisibleFocus = doubleWindowClearVisibleFocus
-overlayWindowModifyVisibleFocus :: OverlayWindow a  -> Int ->  IO (())
-overlayWindowModifyVisibleFocus = doubleWindowModifyVisibleFocus
-overlayWindowVisibleFocus :: OverlayWindow a  ->  IO (Int)
-overlayWindowVisibleFocus = doubleWindowVisibleFocus
-overlayWindowContains :: OverlayWindow a  -> Group b  ->  IO (Int)
-overlayWindowContains = doubleWindowContains
-overlayWindowInside :: OverlayWindow a  -> Group b  ->  IO (Int)
-overlayWindowInside = doubleWindowInside
-overlayWindowRedraw :: OverlayWindow a  ->  IO (())
-overlayWindowRedraw = doubleWindowRedraw
-overlayWindowRedrawLabel :: OverlayWindow a  ->  IO (())
-overlayWindowRedrawLabel = doubleWindowRedrawLabel
-overlayWindowDamage :: OverlayWindow a  ->  IO (Word8)
-overlayWindowDamage = doubleWindowDamage
-overlayWindowClearDamageWithBitmask :: OverlayWindow a  -> Word8 ->  IO (())
-overlayWindowClearDamageWithBitmask = doubleWindowClearDamageWithBitmask
-overlayWindowClearDamage :: OverlayWindow a  ->  IO (())
-overlayWindowClearDamage = doubleWindowClearDamage
-overlayWindowDamageWithText :: OverlayWindow a  -> Word8 ->  IO (())
-overlayWindowDamageWithText = doubleWindowDamageWithText
-overlayWindowDamageInsideWidget :: OverlayWindow a  -> Word8 -> Rectangle ->  IO (())
-overlayWindowDamageInsideWidget = doubleWindowDamageInsideWidget
-overlayWindowMeasureLabel :: OverlayWindow a  -> IO (Size)
-overlayWindowMeasureLabel = doubleWindowMeasureLabel
-overlayWindowWindow :: OverlayWindow a  ->  IO (Window ())
-overlayWindowWindow = doubleWindowWindow
-overlayWindowTopWindow :: OverlayWindow a  ->  IO (Window ())
-overlayWindowTopWindow = doubleWindowTopWindow
-overlayWindowTopWindowOffset :: OverlayWindow a -> IO (Position)
-overlayWindowTopWindowOffset = doubleWindowTopWindowOffset
-overlayWindowBegin :: OverlayWindow a  ->  IO (())
-overlayWindowBegin = doubleWindowBegin
-overlayWindowEnd :: OverlayWindow a  ->  IO (())
-overlayWindowEnd = doubleWindowEnd
-overlayWindowFind :: OverlayWindow a -> Widget b  ->  IO (Int)
-overlayWindowFind = doubleWindowFind
-overlayWindowAdd :: OverlayWindow a -> Widget b  ->  IO (())
-overlayWindowAdd = doubleWindowAdd
-overlayWindowInsert :: OverlayWindow a -> Widget b  -> Int ->  IO (())
-overlayWindowInsert = doubleWindowInsert
-overlayWindowRemoveIndex :: OverlayWindow a  -> Int ->  IO (())
-overlayWindowRemoveIndex = doubleWindowRemoveIndex
-overlayWindowRemoveWidget :: OverlayWindow a -> Widget b  ->  IO (())
-overlayWindowRemoveWidget = doubleWindowRemoveWidget
-overlayWindowClear :: OverlayWindow a  ->  IO (())
-overlayWindowClear = doubleWindowClear
-overlayWindowSetResizable :: OverlayWindow a -> Widget b  ->  IO (())
-overlayWindowSetResizable = doubleWindowSetResizable
-overlayWindowResizable :: OverlayWindow a  ->  IO (Widget ())
-overlayWindowResizable = doubleWindowResizable
-overlayWindowAddResizable :: OverlayWindow a -> Widget b  ->  IO (())
-overlayWindowAddResizable = doubleWindowAddResizable
-overlayWindowInitSizes :: OverlayWindow a  ->  IO (())
-overlayWindowInitSizes = doubleWindowInitSizes
-overlayWindowChildren :: OverlayWindow a  ->  IO (Int)
-overlayWindowChildren = doubleWindowChildren
-overlayWindowSetClipChildren :: OverlayWindow a  -> Int ->  IO (())
-overlayWindowSetClipChildren = doubleWindowSetClipChildren
-overlayWindowClipChildren :: OverlayWindow a  ->  IO (Int)
-overlayWindowClipChildren = doubleWindowClipChildren
-overlayWindowFocus :: OverlayWindow a -> Widget b  ->  IO (())
-overlayWindowFocus = doubleWindowFocus
-overlayWindowDdfdesignKludge :: OverlayWindow a  ->  IO (Widget ())
-overlayWindowDdfdesignKludge = doubleWindowDdfdesignKludge
-overlayWindowInsertWithBefore :: OverlayWindow a -> Widget b  -> Widget c  ->  IO (())
-overlayWindowInsertWithBefore = doubleWindowInsertWithBefore
-overlayWindowArray :: OverlayWindow a  ->  IO [(Widget ())]
-overlayWindowArray = doubleWindowArray
-overlayWindowChild :: OverlayWindow a  -> Int ->  IO (Widget ())
-overlayWindowChild = doubleWindowChild
-overlayWindowChanged :: OverlayWindow a  ->  IO (Int)
-overlayWindowChanged = doubleWindowChanged
-overlayWindowFullscreen :: OverlayWindow a  ->  IO (())
-overlayWindowFullscreen = doubleWindowFullscreen
-overlayWindowFullscreenOff :: OverlayWindow a -> Maybe Rectangle ->  IO (())
-overlayWindowFullscreenOff = doubleWindowFullscreenOff
-overlayWindowSetBorder :: OverlayWindow a  -> Bool ->  IO (())
-overlayWindowSetBorder = doubleWindowSetBorder
-overlayWindowClearBorder :: OverlayWindow a  ->  IO (())
-overlayWindowClearBorder = doubleWindowClearBorder
-overlayWindowBorder :: OverlayWindow a  ->  IO (Bool)
-overlayWindowBorder = doubleWindowBorder
-overlayWindowSetOverride :: OverlayWindow a  ->  IO (())
-overlayWindowSetOverride = doubleWindowSetOverride
-overlayWindowOverride :: OverlayWindow a  ->  IO (Bool)
-overlayWindowOverride = doubleWindowOverride
-overlayWindowSetModal :: OverlayWindow a  ->  IO (())
-overlayWindowSetModal = doubleWindowSetModal
-overlayWindowModal :: OverlayWindow a  ->  IO (Bool)
-overlayWindowModal = doubleWindowModal
-overlayWindowSetNonModal :: OverlayWindow a  ->  IO (())
-overlayWindowSetNonModal = doubleWindowSetNonModal
-overlayWindowNonModal :: OverlayWindow a  ->  IO (Bool)
-overlayWindowNonModal = doubleWindowNonModal
-overlayWindowSetMenuWindow :: OverlayWindow a  ->  IO (())
-overlayWindowSetMenuWindow = doubleWindowSetMenuWindow
-overlayWindowMenuWindow :: OverlayWindow a  ->  IO (Bool)
-overlayWindowMenuWindow = doubleWindowMenuWindow
-overlayWindowSetTooltipWindow :: OverlayWindow a  ->  IO (())
-overlayWindowSetTooltipWindow = doubleWindowSetTooltipWindow
-overlayWindowTooltipWindow :: OverlayWindow a  ->  IO (Bool)
-overlayWindowTooltipWindow = doubleWindowTooltipWindow
-overlayWindowHotSpot :: OverlayWindow a -> PositionSpec b -> Maybe Bool -> IO ()
-overlayWindowHotSpot = doubleWindowHotSpot
-overlayWindowFreePosition :: OverlayWindow a  ->  IO (())
-overlayWindowFreePosition = doubleWindowFreePosition
-overlayWindowSizeRange :: OverlayWindow a  -> Int -> Int -> IO (())
-overlayWindowSizeRange = doubleWindowSizeRange
-overlayWindowSizeRangeWithArgs :: OverlayWindow a  -> Int -> Int -> OptionalSizeRangeArgs ->  IO (())
-overlayWindowSizeRangeWithArgs = doubleWindowSizeRangeWithArgs
-overlayWindowLabel :: OverlayWindow a  ->  IO (String)
-overlayWindowLabel = doubleWindowLabel
-overlayWindowIconlabel :: OverlayWindow a  ->  IO (String)
-overlayWindowIconlabel = doubleWindowIconlabel
-overlayWindowSetLabel :: OverlayWindow a  -> String ->  IO (())
-overlayWindowSetLabel = doubleWindowSetLabel
-overlayWindowSetIconlabel :: OverlayWindow a  -> String ->  IO (())
-overlayWindowSetIconlabel = doubleWindowSetIconlabel
-overlayWindowSetLabelWithIconlabel :: OverlayWindow a  -> String -> String ->  IO (())
-overlayWindowSetLabelWithIconlabel = doubleWindowSetLabelWithIconlabel
-overlayWindowCopyLabel :: OverlayWindow a  -> String ->  IO (())
-overlayWindowCopyLabel = doubleWindowCopyLabel
-overlayWindowSetDefaultXclass :: String ->  IO (())
-overlayWindowSetDefaultXclass = doubleWindowSetDefaultXclass
-overlayWindowDefaultXclass ::  IO (String)
-overlayWindowDefaultXclass = doubleWindowDefaultXclass
-overlayWindowXclass :: OverlayWindow a  ->  IO (String)
-overlayWindowXclass = doubleWindowXclass
-overlayWindowSetXclass :: OverlayWindow a  -> String ->  IO (())
-overlayWindowSetXclass = doubleWindowSetXclass
-overlayWindowIcon :: OverlayWindow a  ->  IO (Ptr ())
-overlayWindowIcon = doubleWindowIcon
-overlayWindowSetIcon :: OverlayWindow a  -> Ptr () ->  IO (())
-overlayWindowSetIcon = doubleWindowSetIcon
-overlayWindowShown :: OverlayWindow a  ->  IO (Bool)
-overlayWindowShown = doubleWindowShown
-overlayWindowIconize :: OverlayWindow a  ->  IO (())
-overlayWindowIconize = doubleWindowIconize
-overlayWindowXRoot :: OverlayWindow a  ->  IO (Int)
-overlayWindowXRoot = doubleWindowXRoot
-overlayWindowYRoot :: OverlayWindow a  ->  IO (Int)
-overlayWindowYRoot = doubleWindowYRoot
-overlayWindowCurrent ::  IO (Ptr ())
-overlayWindowCurrent = doubleWindowCurrent
-overlayWindowMakeCurrent :: OverlayWindow a  ->  IO (())
-overlayWindowMakeCurrent = doubleWindowMakeCurrent
-overlayWindowSetCursor :: OverlayWindow a -> CursorType -> IO ()
-overlayWindowSetCursor = doubleWindowSetCursor
-overlayWindowSetCursorWithFgBg :: OverlayWindow a  -> CursorType -> (Maybe Color, Maybe Color) ->  IO (())
-overlayWindowSetCursorWithFgBg = doubleWindowSetCursorWithFgBg
-overlayWindowSetDefaultCursor :: OverlayWindow a  -> CursorType ->  IO (())
-overlayWindowSetDefaultCursor = doubleWindowSetDefaultCursor
-overlayWindowDecoratedW :: OverlayWindow a  ->  IO (Int)
-overlayWindowDecoratedW = doubleWindowDecoratedW
-overlayWindowDecoratedH :: OverlayWindow a  ->  IO (Int)
-overlayWindowDecoratedH = doubleWindowDecoratedH
+instance Op (Destroy ()) OverlayWindow ( IO ()) where
+  runOp _ win = withRef win $ \winPtr -> windowDestroy' winPtr
 {# fun unsafe Fl_Overlay_Window_show as show' { id `Ptr ()' } -> `()' #}
-overlayWindowShow :: OverlayWindow a  ->  IO ()
-overlayWindowShow win = withObject win $ \winPtr -> show' winPtr
+instance Op (ShowWidget ()) OverlayWindow ( IO ()) where
+  runOp _ window = withRef window (\p -> show' p)
 {# fun unsafe Fl_Overlay_Window_flush as flush' { id `Ptr ()' } -> `()' #}
-overlayWindowFlush :: OverlayWindow a  ->  IO ()
-overlayWindowFlush win = withObject win $ \winPtr -> flush' winPtr
+instance Op (Flush ()) OverlayWindow (  IO (())) where
+  runOp _ window = withRef window $ \windowPtr -> flush' windowPtr
 {# fun unsafe Fl_Overlay_Window_resize as resize' { id `Ptr ()',`Int',`Int',`Int',`Int' } -> `()' #}
-overlayWindowResize :: OverlayWindow a  -> Rectangle ->  IO ()
-overlayWindowResize win rectangle = let (x_pos', y_pos', width', height') = fromRectangle rectangle in withObject win $ \winPtr -> resize' winPtr x_pos' y_pos' width' height'
+instance Op (Resize ()) OverlayWindow ( Rectangle -> IO (())) where
+  runOp _ window rectangle = withRef window $ \windowPtr -> do
+                                 let (x_pos,y_pos,w_pos,h_pos) = fromRectangle rectangle
+                                 resize' windowPtr x_pos y_pos w_pos h_pos
 {# fun unsafe Fl_Overlay_Window_hide as hide' { id `Ptr ()' } -> `()' #}
-overlayWindowHide :: OverlayWindow a  ->  IO ()
-overlayWindowHide win = withObject win $ \winPtr -> hide' winPtr
+instance Op (Hide ()) OverlayWindow (  IO (())) where
+  runOp _ window = withRef window $ \windowPtr -> hide' windowPtr
 {# fun unsafe Fl_Overlay_Window_can_do_overlay as canDoOverlay' { id `Ptr ()' } -> `Int' #}
-overlayWindowCanDoOverlay :: OverlayWindow a  ->  IO (Int)
-overlayWindowCanDoOverlay win = withObject win $ \winPtr -> canDoOverlay' winPtr
+instance Op (CanDoOverlay ()) OverlayWindow (IO (Int)) where
+  runOp _ win = withRef win $ \winPtr -> canDoOverlay' winPtr
 {# fun unsafe Fl_Overlay_Window_redraw_overlay as redrawOverlay' { id `Ptr ()' } -> `()' #}
-overlayWindowRedrawOverlay :: OverlayWindow a  ->  IO ()
-overlayWindowRedrawOverlay win = withObject win $ \winPtr -> redrawOverlay' winPtr
+instance Op (RedrawOverlay ()) OverlayWindow (IO ()) where
+  runOp _ win = withRef win $ \winPtr -> redrawOverlay' winPtr

@@ -29,10 +29,16 @@ library
                    Graphics.UI.FLTK.LowLevel.Fl_Toggle_Button
                    Graphics.UI.FLTK.LowLevel.Fl_Enumerations
                    Graphics.UI.FLTK.LowLevel.Fl_Types
+                   Graphics.UI.FLTK.LowLevel.Dispatch
+                   Graphics.UI.FLTK.LowLevel.Hierarchy
                    Graphics.UI.FLTK.LowLevel.Fl_Group
                    Graphics.UI.FLTK.LowLevel.Fl_Widget
                    Graphics.UI.FLTK.LowLevel.Fl_Valuator
                    Graphics.UI.FLTK.LowLevel.Fl_Slider
+                   Graphics.UI.FLTK.LowLevel.Fl_Fill_Slider
+                   Graphics.UI.FLTK.LowLevel.Fl_Hor_Fill_Slider
+                   Graphics.UI.FLTK.LowLevel.Fl_Hor_Nice_Slider
+                   Graphics.UI.FLTK.LowLevel.Fl_Nice_Slider
                    Graphics.UI.FLTK.LowLevel.Fl_Menu_Item
                    Graphics.UI.FLTK.LowLevel.Fl_Menu_
                    Graphics.UI.FLTK.LowLevel.Fl_Sys_Menu_Bar
@@ -105,4 +111,3 @@ Executable table-sort
     base,
     fltkhs,
     process
-

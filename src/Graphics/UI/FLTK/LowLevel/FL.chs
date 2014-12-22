@@ -2,8 +2,6 @@
 module Graphics.UI.FLTK.LowLevel.FL
     (
      Option(..),
-     LabelDrawF,
-     LabelMeasureF,
      run,
      check,
      ready,
@@ -100,7 +98,6 @@ module Graphics.UI.FLTK.LowLevel.FL
 #if !defined(__APPLE__)
      removeFromColormap,
 #endif
-     setLabeltype,
      -- * Box
      BoxtypeSpec,
      getBoxtype,
@@ -172,47 +169,6 @@ import System.IO.Unsafe (unsafePerformIO)
 #endc
 
 {#enum Option {} deriving (Show) #}
-
-type LabelDrawFPrim = (Ptr () ->
-     		       CInt ->
-		       CInt ->
-		       CInt ->
-		       CInt ->
-		       FlAlign -> -- Align
-		       IO ())
-foreign import ccall "wrapper"
-        wrapLabelDrawFPrim :: LabelDrawFPrim ->
-                              IO (FunPtr LabelDrawFPrim)
-
-
-type LabelDrawF a = (Label a ->
-                     Rectangle ->
-		     AlignType ->
-		     IO ())
-
-type LabelMeasureFPrim = (Ptr () ->
-                          Ptr CInt ->
-                          Ptr CInt ->
-                          IO ())
-foreign import ccall "wrapper"
-        wrapLabelMeasureFPrim :: LabelMeasureFPrim ->
-                                 IO (FunPtr LabelMeasureFPrim)
-type LabelMeasureF a = (Label a -> IO Size)
-
-type BoxDrawFPrim = (CInt ->
-                     CInt ->
-                     CInt ->
-                     CInt ->
-                     FlColor ->
-                     IO ())
-foreign import ccall "wrapper"
-        wrapBoxDrawFPrim :: BoxDrawFPrim ->
-                            IO (FunPtr BoxDrawFPrim)
-
-foreign import ccall "dynamic"
-        unwrapBoxDrawFPrim :: FunPtr BoxDrawFPrim ->
-                              BoxDrawFPrim
-type BoxDrawF = Rectangle -> Color -> IO ()
 
 ptrToGlobalEventHandler :: TVar (FunPtr GlobalEventHandlerPrim)
 ptrToGlobalEventHandler = unsafePerformIO $ do
@@ -718,64 +674,8 @@ getFontName f = getFontNameWithAttributes' f
        {  } -> `Font' cToFont #}
 {# fun Fl_set_fonts_with_string as setFontsWithString
        { `String' } -> `Font' cToFont #}
-{# fun Fl_set_labeltype as setLabeltype'
-       {
-         cFromEnum `Labeltype',
-         id `FunPtr LabelDrawFPrim',
-         id `FunPtr LabelMeasureFPrim'
-       } -> `()' supressWarningAboutRes #}
-setLabeltype :: Labeltype ->
-                LabelDrawF a ->
-                LabelMeasureF a ->
-                IO ()
-setLabeltype label drawF measureF =
-    let drawFPrim = (\rawPtr xPrim yPrim wPrim hPrim alignPrim ->
-                         let rectangle = toRectangle (fromIntegral xPrim,
-                                                      fromIntegral yPrim,
-                                                      fromIntegral wPrim,
-                                                      fromIntegral hPrim)
-                             alignType = cToEnum alignPrim
-                         in do
-                         obj <- toObject rawPtr
-                         drawF obj rectangle alignType
-                     )
-        measureFPrim = (\rawPtr wPtr hPtr ->
-                          do
-                           obj <- toObject rawPtr
-                           (Size (Width width) (Height height)) <- measureF obj
-                           poke wPtr (fromIntegral width)
-                           poke hPtr (fromIntegral height)
-                       )
-    in
-      do
-        wrappedDrawFPrim <- wrapLabelDrawFPrim drawFPrim
-        wrappedMeasureFPrim <- wrapLabelMeasureFPrim measureFPrim
-        setLabeltype' label wrappedDrawFPrim wrappedMeasureFPrim
-
 {# fun Fl_get_boxtype as getBoxtype'
        { cFromEnum `Boxtype' } -> `FunPtr BoxDrawFPrim' id #}
-toBoxDrawF :: BoxDrawFPrim -> BoxDrawF
-toBoxDrawF boxDrawPrim =
-    (\r c ->
-       let (x_pos,y_pos,width,height) = fromRectangle r
-           colorPrim = cFromColor c
-       in
-         boxDrawPrim ((fromIntegral x_pos) :: CInt)
-                     ((fromIntegral y_pos) :: CInt)
-                     ((fromIntegral width) :: CInt)
-                     ((fromIntegral height) :: CInt)
-                     colorPrim
-    )
-toBoxDrawFPrim :: BoxDrawF -> BoxDrawFPrim
-toBoxDrawFPrim f =
-    (\xPrim yPrim wPrim hPrim colorPrim ->
-       let r = toRectangle (fromIntegral xPrim,
-                            fromIntegral yPrim,
-                            fromIntegral wPrim,
-                            fromIntegral hPrim)
-           c = cToColor colorPrim
-       in
-           f r c)
 
 getBoxtype :: Boxtype -> IO BoxDrawF
 getBoxtype bt = do
