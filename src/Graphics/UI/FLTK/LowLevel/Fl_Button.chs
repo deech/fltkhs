@@ -2,10 +2,7 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 module Graphics.UI.FLTK.LowLevel.Fl_Button
     (
-     ButtonFuncs(..),
-     defaultButtonFuncs,
-     -- * Constructor
-     buttonNew,
+     buttonNew
     )
 where
 #include "Fl_ExportMacros.h"
@@ -20,62 +17,21 @@ import Graphics.UI.FLTK.LowLevel.Fl_Types
 import Graphics.UI.FLTK.LowLevel.Utils
 import Graphics.UI.FLTK.LowLevel.Dispatch
 import Graphics.UI.FLTK.LowLevel.Hierarchy
-data ButtonFuncs =
-    ButtonFuncs
-    {
-     buttonDrawOverride       :: Maybe WidgetCallback
-    ,buttonHandleOverride     :: Maybe WidgetEventHandler
-    ,buttonResizeOverride     :: Maybe RectangleF
-    ,buttonShowOverride       :: Maybe WidgetCallback
-    ,buttonHideOverride       :: Maybe WidgetCallback
-    ,buttonAsWindowOverride   :: Maybe GetWindowF
-    ,buttonAsGlWindowOverride :: Maybe GetGlWindowF
-    ,buttonAsGroupOverride    :: Maybe GetGroupF
-    }
-
-buttonFunctionStruct :: ButtonFuncs -> IO (Ptr ())
-buttonFunctionStruct funcs = do
-      p <- mallocBytes {#sizeof fl_Button_Virtual_Funcs #}
-      toCallbackPrim `orNullFunPtr` (buttonDrawOverride funcs) >>=
-                             {#set fl_Button_Virtual_Funcs->draw#} p
-      toEventHandlerPrim `orNullFunPtr` (buttonHandleOverride funcs) >>=
-                             {#set fl_Button_Virtual_Funcs->handle#} p
-      toRectangleFPrim `orNullFunPtr` (buttonResizeOverride funcs) >>=
-                             {#set fl_Button_Virtual_Funcs->resize#} p
-      toCallbackPrim `orNullFunPtr` (buttonShowOverride funcs) >>=
-                             {#set fl_Button_Virtual_Funcs->show#} p
-      toCallbackPrim `orNullFunPtr` (buttonHideOverride funcs) >>=
-                             {#set fl_Button_Virtual_Funcs->hide#} p
-      toGetWindowFPrim `orNullFunPtr` (buttonAsWindowOverride funcs) >>=
-                             {#set fl_Button_Virtual_Funcs->as_window#} p
-      toGetGlWindowFPrim `orNullFunPtr` (buttonAsGlWindowOverride funcs) >>=
-                             {#set fl_Button_Virtual_Funcs->as_gl_window#} p
-      toGetGroupFPrim `orNullFunPtr` (buttonAsGroupOverride funcs) >>=
-                             {#set fl_Button_Virtual_Funcs->as_group#} p
-      return p
-defaultButtonFuncs :: ButtonFuncs
-defaultButtonFuncs = ButtonFuncs Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing
 
 {# fun Fl_Button_New as widgetNew' { `Int',`Int',`Int',`Int' } -> `Ptr ()' id #}
 {# fun Fl_Button_New_WithLabel as widgetNewWithLabel' { `Int',`Int',`Int',`Int',`String'} -> `Ptr ()' id #}
 {# fun Fl_OverriddenButton_New_WithLabel as overriddenWidgetNewWithLabel' { `Int',`Int',`Int',`Int',`String', id `Ptr ()'} -> `Ptr ()' id #}
 {# fun Fl_OverriddenButton_New as overriddenWidgetNew' { `Int',`Int',`Int',`Int', id `Ptr ()'} -> `Ptr ()' id #}
-buttonNew :: Rectangle -> Maybe String -> Maybe ButtonFuncs -> IO (Ref Button)
+buttonNew :: Rectangle -> Maybe String -> Maybe (CustomWidgetFuncs Button) -> IO (Ref Button)
 buttonNew rectangle l' funcs' =
-    let (x_pos, y_pos, width, height) = fromRectangle rectangle
-    in case (l', funcs') of
-        (Nothing,Nothing) -> widgetNew' x_pos y_pos width height >>=
-                             toRef
-        ((Just l), Nothing) -> widgetNewWithLabel' x_pos y_pos width height l >>=
-                               toRef
-        ((Just l), (Just fs)) -> do
-                               ptr <- buttonFunctionStruct fs
-                               overriddenWidgetNewWithLabel' x_pos y_pos width height l (castPtr ptr) >>=
-                                                             toRef
-        (Nothing, (Just fs)) -> do
-                               ptr <- buttonFunctionStruct fs
-                               overriddenWidgetNew' x_pos y_pos width height (castPtr ptr) >>=
-                                                    toRef
+  widgetMaker
+    rectangle
+    l'
+    funcs'
+    widgetNew'
+    widgetNewWithLabel'
+    overriddenWidgetNew'
+    overriddenWidgetNewWithLabel'
 
 {# fun Fl_Button_Destroy as widgetDestroy' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
 instance Op (Destroy ()) Button (IO ()) where
@@ -92,21 +48,6 @@ instance Op (HandleSuper ()) Button ( Int ->  IO (Int)) where
 {#fun Fl_Button_handle as buttonHandle' { id `Ptr ()', id `CInt' } -> `Int' #}
 instance Op (Handle ()) Button ( Event -> IO Int) where
   runOp _ button event = withRef button (\p -> buttonHandle' p (fromIntegral . fromEnum $ event))
-{# fun Fl_Button_as_group_super as asGroupSuper' { id `Ptr ()' } -> `Ref Group' unsafeToRef #}
-instance Op (AsGroupSuper ()) Button (  IO (Ref Group)) where
-  runOp _ button = withRef button $ \buttonPtr -> asGroupSuper' buttonPtr
-{# fun Fl_Button_as_group as asGroup' { id `Ptr ()' } -> `Ref Group' unsafeToRef #}
-instance Op (AsGroup ()) Button (  IO (Ref Group)) where
-  runOp _ button = withRef button $ \buttonPtr -> asGroup' buttonPtr
-{# fun Fl_Button_as_gl_window as asGlWindow' { id `Ptr ()' } -> `Ref GlWindow' unsafeToRef #}
-instance Op (AsGlWindow ()) Button (  IO (Ref GlWindow)) where
-  runOp _ button = withRef button $ \buttonPtr -> asGlWindow' buttonPtr
-{# fun Fl_Button_as_window_super as asWindowSuper' { id `Ptr ()' } -> `Ref Window' unsafeToRef #}
-instance Op (AsWindowSuper ()) Window (  IO (Ref Window)) where
-  runOp _ window = withRef window $ \windowPtr -> asWindowSuper' windowPtr
-{# fun Fl_Button_as_window as asWindow' { id `Ptr ()' } -> `Ref Window' unsafeToRef #}
-instance Op (AsWindow ()) Button (  IO (Ref Window)) where
-  runOp _ button = withRef button $ \buttonPtr -> asWindow' buttonPtr
 {# fun Fl_Button_resize_super as resizeSuper' { id `Ptr ()',`Int',`Int',`Int',`Int' } -> `()' supressWarningAboutRes #}
 instance Op (ResizeSuper ()) Button ( Rectangle -> IO (())) where
   runOp _ button rectangle =

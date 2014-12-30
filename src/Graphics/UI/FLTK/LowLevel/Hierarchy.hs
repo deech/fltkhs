@@ -1,6 +1,10 @@
 {-# LANGUAGE EmptyDataDecls, TypeSynonymInstances, FlexibleInstances, MultiParamTypeClasses, FlexibleContexts #-}
 module Graphics.UI.FLTK.LowLevel.Hierarchy
        (
+         -- * Region
+         Region,
+         -- * GlContext
+         GlContext,
          -- * Widget
          Widget,
          CWidget,
@@ -156,14 +160,6 @@ module Graphics.UI.FLTK.LowLevel.Hierarchy
          getTopWindow,
          GetTopWindowOffset,
          getTopWindowOffset,
-         AsGroupSuper,
-         asGroupSuper,
-         AsGroup,
-         asGroup,
-         AsGlWindowSuper,
-         asGlWindowSuper,
-         AsGlWindow,
-         asGlWindow,
          ResizeSuper,
          resizeSuper,
          Resize,
@@ -228,10 +224,6 @@ module Graphics.UI.FLTK.LowLevel.Hierarchy
          handleSuper,
          FlushSuper,
          flushSuper,
-         AsWindowSuper,
-         asWindowSuper,
-         AsWindow,
-         asWindow,
          Changed,
          changed,
          MakeFullscreen,
@@ -406,6 +398,274 @@ module Graphics.UI.FLTK.LowLevel.Hierarchy
          NiceSlider,
          -- * HorNiceSlider
          HorNiceSlider,
+         -- * MenuItem
+         MenuItem,
+         NextWithStep,
+         nextWithStep,
+         Next,
+         next,
+         GetFirst,
+         getFirst,
+         SetLabelWithLabeltype,
+         setLabelWithLabeltype,
+         Submenu,
+         submenu,
+         Checkbox,
+         checkbox,
+         Radio,
+         radio,
+         Visible,
+         visible,
+         Activevisible,
+         activevisible,
+         Measure,
+         measure,
+         DrawWithT,
+         drawWithT,
+         Draw,
+         draw,
+         GetFlags,
+         getFlags,
+         SetFlags,
+         setFlags,
+         GetText,
+         getText,
+         Pulldown,
+         pulldown,
+         Popup,
+         popup,
+         TestShortcut,
+         testShortcut,
+         FindShortcut,
+         findShortcut,
+         DoCallback,
+         doCallback,
+         GetSize,
+         getSize,
+         -- * MenuPrim
+         MenuPrim,
+         ItemPathname,
+         itemPathname,
+         Picked,
+         picked,
+         FindIndex,
+         findIndex,
+         Global,
+         global,
+         GetMenu,
+         getMenu,
+         SetMenu,
+         setMenu,
+         Copy,
+         copy,
+         SetSize,
+         setSize,
+         ClearSubmenu,
+         clearSubmenu,
+         Replace,
+         replace,
+         Remove,
+         remove,
+         SetMode,
+         setMode,
+         GetMode,
+         getMode,
+         Mvalue,
+         mvalue,
+         GetTextWithIndex,
+         getTextWithIndex,
+         GetTextfont,
+         getTextfont,
+         SetTextfont,
+         setTextfont,
+         GetTextsize,
+         getTextsize,
+         SetTextsize,
+         setTextsize,
+         GetTextcolor,
+         getTextcolor,
+         SetTextcolor,
+         setTextcolor,
+         DownBox,
+         downBox,
+         -- * SysMenuBar
+         SysMenuBar,
+         -- * Choice,
+         Choice,
+         -- * MenuButton
+         MenuButton,
+         -- * Image
+         Image,
+         GetD,
+         getD,
+         GetLd,
+         getLd,
+         GetCount,
+         getCount,
+         ColorAverage,
+         colorAverage,
+         Inactive,
+         inactive,
+         Desaturate,
+         desaturate,
+         DrawResize,
+         drawResize,
+         Uncache,
+         uncache,
+         -- * Bitmap
+         Bitmap,
+         -- * Pixmap
+         Pixmap,
+         -- * CopySurface
+         CopySurface,
+         ClassName,
+         className,
+         SetCurrent,
+         setCurrent,
+         -- * ImageSurface
+         ImageSurface,
+         -- * Adjuster
+         Adjuster,
+         SetSoft,
+         setSoft,
+         GetSoft,
+         getSoft,
+         -- * Dial
+         Dial,
+         GetAngle1,
+         getAngle1,
+         SetAngle1,
+         setAngle1,
+         GetAngle2,
+         getAngle2,
+         SetAngle2,
+         setAngle2,
+         SetAngles,
+         setAngles,
+         -- * FillDial
+         FillDial,
+         -- * LineDial
+         LineDial,
+         -- * Roller
+         Roller,
+         -- * Counter
+         Counter,
+         SetLstep,
+         setLstep,
+         -- * SimpleCounter
+         SimpleCounter,
+         -- * Scrollbar
+         Scrollbar,
+         SetLinesize,
+         setLinesize,
+         GetLinesize,
+         getLinesize,
+         -- * ValueSlider
+         ValueSlider,
+         -- * Input
+         Input,
+         StaticValue,
+         staticValue,
+         Index,
+         index,
+         GetMaximumSize,
+         getMaximumSize,
+         SetMaximumSize,
+         setMaximumSize,
+         GetPosition,
+         getPosition,
+         GetMark,
+         getMark,
+         SetPosition,
+         setPosition,
+         SetMark,
+         setMark,
+         Cut,
+         cut,
+         CutFromCursor,
+         cutFromCursor,
+         CutRange,
+         cutRange,
+         InsertWithLength,
+         insertWithLength,
+         Undo,
+         undo,
+         CopyCuts,
+         copyCuts,
+         GetCursorColor,
+         getCursorColor,
+         SetCursorColor,
+         setCursorColor,
+         GetInputType,
+         getInputType,
+         SetInputType,
+         setInputType,
+         GetReadonly,
+         getReadonly,
+         SetReadonly,
+         setReadonly,
+         GetWrap,
+         getWrap,
+         SetWrap,
+         setWrap,
+         GetTabNav,
+         getTabNav,
+         SetTabNav,
+         setTabNav,
+         -- * ValueInput
+         ValueInput,
+         -- * ValueOutput
+         ValueOutput,
+         -- * Timer
+         Timer,
+         GetDirection,
+         getDirection,
+         SetDirection,
+         setDirection,
+         GetSuspended,
+         getSuspended,
+         SetSuspended,
+         setSuspended,
+         -- * HiddenTimer
+         HiddenTimer,
+         -- * ValueTimer
+         ValueTimer,
+         -- * Progress
+         Progress,
+         -- * Positioner
+         Positioner,
+         SetXvalue,
+         setXvalue,
+         GetXvalue,
+         getXvalue,
+         SetYvalue,
+         setYvalue,
+         GetYvalue,
+         getYvalue,
+         SetXminimum,
+         setXminimum,
+         GetXminimum,
+         getXminimum,
+         SetYminimum,
+         setYminimum,
+         GetYminimum,
+         getYminimum,
+         SetXmaximum,
+         setXmaximum,
+         GetXmaximum,
+         getXmaximum,
+         SetYmaximum,
+         setYmaximum,
+         GetYmaximum,
+         getYmaximum,
+         SetXbounds,
+         setXbounds,
+         SetYbounds,
+         setYbounds,
+         SetXstep,
+         setXstep,
+         SetYstep,
+         setYstep,
          GlWindow,
          Table
        )
@@ -413,6 +673,14 @@ where
 import Prelude hiding (round)
 import Graphics.UI.FLTK.LowLevel.Fl_Types
 import Graphics.UI.FLTK.LowLevel.Dispatch
+
+-- * Region
+data CRegion fs parent
+type Region = CRegion () Base
+
+-- * GlContext
+data CGlContext fs parent
+type GlContext = CGlContext () Base
 
 -- * Widget
 data CWidget fs parent
@@ -492,10 +760,6 @@ type Widget = CWidget
                (GetWindow
                (GetTopWindow
                (GetTopWindowOffset
-               (AsGroupSuper
-               (AsGroup
-               (AsGlWindowSuper
-               (AsGlWindow
                (ResizeSuper
                (Resize
                (SetCallback
@@ -503,7 +767,7 @@ type Widget = CWidget
                (DrawBoxWithBoxtype
                (DrawBackdrop
                (DrawFocus
-               ()))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))
+               ()))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))
               Base
 data Destroy a
 destroy :: (FindOp a (Destroy ()) (Match r), Op (Destroy ()) r impl) => Ref a -> impl
@@ -733,18 +997,6 @@ getTopWindow = dispatch (undefined :: GetTopWindow ())
 data GetTopWindowOffset a
 getTopWindowOffset :: (FindOp a (GetTopWindowOffset ()) (Match r), Op (GetTopWindowOffset ()) r impl) => Ref a -> impl
 getTopWindowOffset = dispatch (undefined :: GetTopWindowOffset ())
-data AsGroupSuper a
-asGroupSuper :: (FindOp a (AsGroupSuper ()) (Match r), Op (AsGroupSuper ()) r impl) => Ref a -> impl
-asGroupSuper = dispatch (undefined :: AsGroupSuper ())
-data AsGroup a
-asGroup :: (FindOp a (AsGroup ()) (Match r), Op (AsGroup ()) r impl) => Ref a -> impl
-asGroup = dispatch (undefined :: AsGroup ())
-data AsGlWindowSuper a
-asGlWindowSuper :: (FindOp a (AsGlWindowSuper ()) (Match r), Op (AsGlWindowSuper ()) r impl) => Ref a -> impl
-asGlWindowSuper = dispatch (undefined :: AsGlWindowSuper ())
-data AsGlWindow a
-asGlWindow :: (FindOp a (AsGlWindow ()) (Match r), Op (AsGlWindow ()) r impl) => Ref a -> impl
-asGlWindow = dispatch (undefined :: AsGlWindow ())
 data ResizeSuper a
 resizeSuper :: (FindOp a (ResizeSuper ()) (Match r), Op (ResizeSuper ()) r impl) => Ref a -> impl
 resizeSuper = dispatch (undefined :: ResizeSuper ())
@@ -752,8 +1004,8 @@ data Resize a
 resize :: (FindOp a (Resize ()) (Match r), Op (Resize ()) r impl) => Ref a -> impl
 resize = dispatch (undefined :: Resize ())
 data SetCallback a
-setCallback :: (FindOp a (SetCallback ()) (Match r), Op (SetCallback ()) r impl) => Ref a -> impl
-setCallback = dispatch (undefined :: SetCallback ())
+setCallback :: (FindOp a (SetCallback ()) (Match r), OpWithOriginal (SetCallback ()) a r impl) => Ref a -> impl
+setCallback = dispatchWithOriginal (undefined :: SetCallback ())
 data DrawBox a
 drawBox :: (FindOp a (DrawBox ()) (Match r), Op (DrawBox ()) r impl) => Ref a -> impl
 drawBox = dispatch (undefined :: DrawBox ())
@@ -808,7 +1060,7 @@ add :: (FindOp a (Add ()) (Match r), Op (Add ()) r impl) => Ref a -> impl
 add = dispatch (undefined :: Add ())
 data Insert a
 insert :: (FindOp a (Insert ()) (Match r), Op (Insert ()) r impl) => Ref a -> impl
-insert = dispatch (undefined :: Insert ())
+insert = dispatch(undefined :: Insert ())
 data RemoveIndex a
 removeIndex :: (FindOp a (RemoveIndex ()) (Match r), Op (RemoveIndex ()) r impl) => Ref a -> impl
 removeIndex = dispatch (undefined :: RemoveIndex ())
@@ -867,12 +1119,7 @@ type Window =
       (ResizeSuper
       (ShowWidget
       (ShowWidgetSuper
-      (AsGlWindow
-      (AsGlWindowSuper
-      (AsGroupSuper
       (FlushSuper
-      (AsWindowSuper
-      (AsWindow
       (Changed
       (MakeFullscreen
       (FullscreenOff
@@ -912,7 +1159,7 @@ type Window =
       (GetDecoratedW
       (GetDecoratedH
       (WaitForExpose
-      ()))))))))))))))))))))))))))))))))))))))))))))))))))))
+      ())))))))))))))))))))))))))))))))))))))))))))))))
       Group
 data CGlWindow fs parent
 type GlWindow = CGlWindow () Window
@@ -926,12 +1173,6 @@ handleSuper = dispatch (undefined :: HandleSuper ())
 data FlushSuper a
 flushSuper :: (FindOp a (FlushSuper ()) (Match r), Op (FlushSuper ()) r impl) => Ref a -> impl
 flushSuper = dispatch (undefined :: FlushSuper ())
-data AsWindowSuper a
-asWindowSuper :: (FindOp a (AsWindowSuper ()) (Match r), Op (AsWindowSuper ()) r impl) => Ref a -> impl
-asWindowSuper = dispatch (undefined :: AsWindowSuper ())
-data AsWindow a
-asWindow :: (FindOp a (AsWindow ()) (Match r), Op (AsWindow ()) r impl) => Ref a -> impl
-asWindow = dispatch (undefined :: AsWindow ())
 data Changed a
 changed :: (FindOp a (Changed ()) (Match r), Op (Changed ()) r impl) => Ref a -> impl
 changed = dispatch (undefined :: Changed ())
@@ -1061,17 +1302,11 @@ type SingleWindow =
       (HideSuper
       (Hide
       (FlushSuper
-      (AsWindowSuper
-      (AsGlWindowSuper
-      (AsGroupSuper
       (ShowWidget
       (Handle
       (Resize
-      (AsWindow
-      (AsGlWindow
-      (AsGroup
       (MakeCurrent
-      ()))))))))))))))))))
+      ()))))))))))))
     Window
 
 data CDoubleWindow fs parent
@@ -1085,16 +1320,10 @@ type DoubleWindow =
       (HideSuper
       (Hide
       (FlushSuper
-      (AsWindowSuper
-      (AsGlWindowSuper
-      (AsGroupSuper
       (ShowWidget
       (Handle
       (Resize
-      (AsWindow
-      (AsGlWindow
-      (AsGroup
-      ())))))))))))))))))
+      ())))))))))))
     Window
 
 data COverlayWindow fs parent
@@ -1129,11 +1358,6 @@ type Button =
      (DrawSuper
      (HandleSuper
      (Handle
-     (AsGroupSuper
-     (AsGroup
-     (AsGlWindow
-     (AsWindowSuper
-     (AsWindow
      (ResizeSuper
      (Resize
      (HideSuper
@@ -1154,7 +1378,7 @@ type Button =
      (DrawBox
      (DrawBackdrop
      (DrawFocus
-     ())))))))))))))))))))))))))))))
+     ()))))))))))))))))))))))))
      Widget
 
 data GetValue a
@@ -1225,8 +1449,6 @@ type Valuator =
     CValuator
      (Destroy
      (Handle
-     (AsGlWindowSuper
-     (AsGlWindow
      (ResizeSuper
      (Resize
      (GetBounds
@@ -1244,7 +1466,7 @@ type Valuator =
      (Round
      (Clamp
      (Increment
-     ())))))))))))))))))))))
+     ())))))))))))))))))))
      Widget
 
 data GetBounds a
@@ -1343,3 +1565,780 @@ type HorNiceSlider =
   CHorNiceSlider
     ()
     Widget
+
+data CMenuItem fs parent
+type MenuItem =
+  CMenuItem
+   (Destroy
+   (NextWithStep
+   (Next
+   (GetFirst
+   (GetLabel
+   (SetLabel
+   (SetLabelWithLabeltype
+   (GetLabeltype
+   (SetLabeltype
+   (GetLabelcolor
+   (SetLabelcolor
+   (GetLabelfont
+   (SetLabelfont
+   (GetLabelsize
+   (SetLabelsize
+   (SetCallback
+   (GetShortcut
+   (SetShortcut
+   (Submenu
+   (Checkbox
+   (Radio
+   (GetValue
+   (Set
+   (Clear
+   (Setonly
+   (Visible
+   (ShowWidget
+   (Hide
+   (Active
+   (Activate
+   (Deactivate
+   (Activevisible
+   (Measure
+   (DrawWithT
+   (Draw
+   (GetFlags
+   (SetFlags
+   (GetText
+   (Pulldown
+   (Popup
+   (TestShortcut
+   (FindShortcut
+   (DoCallback
+   (Add
+   (Insert
+   (GetSize
+   ()))))))))))))))))))))))))))))))))))))))))))))))
+   Base
+
+data NextWithStep a
+nextWithStep :: (FindOp a (NextWithStep  ()) (Match r), Op (NextWithStep  ()) r impl) => Ref a -> impl
+nextWithStep = dispatch (undefined :: NextWithStep ())
+data Next a
+next :: (FindOp a (Next  ()) (Match r), Op (Next  ()) r impl) => Ref a -> impl
+next = dispatch (undefined :: Next ())
+data GetFirst a
+getFirst :: (FindOp a (GetFirst  ()) (Match r), Op (GetFirst  ()) r impl) => Ref a -> impl
+getFirst = dispatch (undefined :: GetFirst ())
+data SetLabelWithLabeltype a
+setLabelWithLabeltype :: (FindOp a (SetLabelWithLabeltype  ()) (Match r), Op (SetLabelWithLabeltype  ()) r impl) => Ref a -> impl
+setLabelWithLabeltype = dispatch (undefined :: SetLabelWithLabeltype ())
+data Submenu a
+submenu :: (FindOp a (Submenu  ()) (Match r), Op (Submenu  ()) r impl) => Ref a -> impl
+submenu = dispatch (undefined :: Submenu ())
+data Checkbox a
+checkbox :: (FindOp a (Checkbox  ()) (Match r), Op (Checkbox  ()) r impl) => Ref a -> impl
+checkbox = dispatch (undefined :: Checkbox ())
+data Radio a
+radio :: (FindOp a (Radio  ()) (Match r), Op (Radio  ()) r impl) => Ref a -> impl
+radio = dispatch (undefined :: Radio ())
+data Visible a
+visible :: (FindOp a (Visible  ()) (Match r), Op (Visible  ()) r impl) => Ref a -> impl
+visible = dispatch (undefined :: Visible ())
+data Activevisible a
+activevisible :: (FindOp a (Activevisible  ()) (Match r), Op (Activevisible  ()) r impl) => Ref a -> impl
+activevisible = dispatch (undefined :: Activevisible ())
+data Measure a
+measure :: (FindOp a (Measure  ()) (Match r), Op (Measure  ()) r impl) => Ref a -> impl
+measure = dispatch (undefined :: Measure ())
+data DrawWithT a
+drawWithT :: (FindOp a (DrawWithT  ()) (Match r), Op (DrawWithT  ()) r impl) => Ref a -> impl
+drawWithT = dispatch (undefined :: DrawWithT ())
+data Draw a
+draw :: (FindOp a (Draw  ()) (Match r), Op (Draw  ()) r impl) => Ref a -> impl
+draw = dispatch (undefined :: Draw ())
+data GetFlags a
+getFlags :: (FindOp a (GetFlags  ()) (Match r), Op (GetFlags  ()) r impl) => Ref a -> impl
+getFlags = dispatch (undefined :: GetFlags ())
+data SetFlags a
+setFlags :: (FindOp a (SetFlags  ()) (Match r), Op (SetFlags  ()) r impl) => Ref a -> impl
+setFlags = dispatch (undefined :: SetFlags ())
+data Pulldown a
+pulldown :: (FindOp a (Pulldown  ()) (Match r), Op (Pulldown  ()) r impl) => Ref a -> impl
+pulldown = dispatch (undefined :: Pulldown ())
+data Popup a
+popup :: (FindOp a (Popup  ()) (Match r), Op (Popup  ()) r impl) => Ref a -> impl
+popup = dispatch (undefined :: Popup ())
+data TestShortcut a
+testShortcut :: (FindOp a (TestShortcut  ()) (Match r), Op (TestShortcut  ()) r impl) => Ref a -> impl
+testShortcut = dispatch (undefined :: TestShortcut ())
+data FindShortcut a
+findShortcut :: (FindOp a (FindShortcut  ()) (Match r), Op (FindShortcut  ()) r impl) => Ref a -> impl
+findShortcut = dispatch (undefined :: FindShortcut ())
+data DoCallback a
+doCallback :: (FindOp a (DoCallback  ()) (Match r), Op (DoCallback  ()) r impl) => Ref a -> impl
+doCallback = dispatch (undefined :: DoCallback ())
+data GetSize a
+getSize :: (FindOp a (GetSize  ()) (Match r), Op (GetSize  ()) r impl) => Ref a -> impl
+getSize = dispatch (undefined :: GetSize ())
+
+data CMenuPrim fs parent
+type MenuPrim =
+  CMenuPrim
+    (Destroy
+    (HandleSuper
+    (Handle
+    (ResizeSuper
+    (Resize
+    (HideSuper
+    (Hide
+    (ShowWidgetSuper
+    (ShowWidget
+    (ItemPathname
+    (Picked
+    (FindIndex
+    (TestShortcut
+    (Global
+    (GetMenu
+    (SetMenu
+    (Copy
+    (Insert
+    (Add
+    (GetSize
+    (SetSize
+    (Clear
+    (ClearSubmenu
+    (Replace
+    (Remove
+    (SetShortcut
+    (SetMode
+    (GetMode
+    (Mvalue
+    (GetValue
+    (SetValue
+    (GetText
+    (GetTextWithIndex
+    (GetTextfont
+    (SetTextfont
+    (GetTextsize
+    (SetTextsize
+    (GetTextcolor
+    (SetTextcolor
+    (GetDownBox
+    (SetDownBox
+    (GetDownColor
+    (SetDownColor
+    ())))))))))))))))))))))))))))))))))))))))))))
+    Widget
+
+data ItemPathname a
+itemPathname :: (FindOp a (ItemPathname ()) (Match r), Op (ItemPathname ()) r impl) => Ref a -> impl
+itemPathname = dispatch (undefined :: ItemPathname ())
+data Picked a
+picked :: (FindOp a (Picked ()) (Match r), Op (Picked ()) r impl) => Ref a -> impl
+picked = dispatch (undefined :: Picked ())
+data FindIndex a
+findIndex :: (FindOp a (FindIndex  ()) (Match r), Op (FindIndex  ()) r impl) => Ref a -> impl
+findIndex = dispatch (undefined :: FindIndex ())
+data Global a
+global :: (FindOp a (Global  ()) (Match r), Op (Global  ()) r impl) => Ref a -> impl
+global = dispatch (undefined :: Global ())
+data GetMenu a
+getMenu :: (FindOp a (GetMenu  ()) (Match r), Op (GetMenu  ()) r impl) => Ref a -> impl
+getMenu = dispatch (undefined :: GetMenu ())
+data SetMenu a
+setMenu :: (FindOp a (SetMenu  ()) (Match r), Op (SetMenu  ()) r impl) => Ref a -> impl
+setMenu = dispatch (undefined :: SetMenu ())
+data Copy a
+copy :: (FindOp a (Copy  ()) (Match r), Op (Copy  ()) r impl) => Ref a -> impl
+copy = dispatch (undefined :: Copy ())
+data SetSize a
+setSize :: (FindOp a (SetSize  ()) (Match r), Op (SetSize  ()) r impl) => Ref a -> impl
+setSize = dispatch (undefined :: SetSize ())
+data ClearSubmenu a
+clearSubmenu :: (FindOp a (ClearSubmenu  ()) (Match r), Op (ClearSubmenu  ()) r impl) => Ref a -> impl
+clearSubmenu = dispatch (undefined :: ClearSubmenu ())
+data Replace a
+replace :: (FindOp a (Replace  ()) (Match r), Op (Replace  ()) r impl) => Ref a -> impl
+replace = dispatch (undefined :: Replace ())
+data Remove a
+remove :: (FindOp a (Remove  ()) (Match r), Op (Remove  ()) r impl) => Ref a -> impl
+remove = dispatch (undefined :: Remove ())
+data SetMode a
+setMode :: (FindOp a (SetMode  ()) (Match r), Op (SetMode  ()) r impl) => Ref a -> impl
+setMode = dispatch (undefined :: SetMode ())
+data GetMode a
+getMode :: (FindOp a (GetMode  ()) (Match r), Op (GetMode  ()) r impl) => Ref a -> impl
+getMode = dispatch (undefined :: GetMode ())
+data Mvalue a
+mvalue :: (FindOp a (Mvalue  ()) (Match r), Op (Mvalue  ()) r impl) => Ref a -> impl
+mvalue = dispatch (undefined :: Mvalue ())
+data GetText a
+getText :: (FindOp a (GetText  ()) (Match r), Op (GetText  ()) r impl) => Ref a -> impl
+getText = dispatch (undefined :: GetText ())
+data GetTextWithIndex a
+getTextWithIndex :: (FindOp a (GetTextWithIndex  ()) (Match r), Op (GetTextWithIndex  ()) r impl) => Ref a -> impl
+getTextWithIndex = dispatch (undefined :: GetTextWithIndex ())
+data GetTextfont a
+getTextfont :: (FindOp a (GetTextfont  ()) (Match r), Op (GetTextfont  ()) r impl) => Ref a -> impl
+getTextfont = dispatch (undefined :: GetTextfont ())
+data SetTextfont a
+setTextfont :: (FindOp a (SetTextfont  ()) (Match r), Op (SetTextfont  ()) r impl) => Ref a -> impl
+setTextfont = dispatch (undefined :: SetTextfont ())
+data GetTextsize a
+getTextsize :: (FindOp a (GetTextsize  ()) (Match r), Op (GetTextsize  ()) r impl) => Ref a -> impl
+getTextsize = dispatch (undefined :: GetTextsize ())
+data SetTextsize a
+setTextsize :: (FindOp a (SetTextsize  ()) (Match r), Op (SetTextsize  ()) r impl) => Ref a -> impl
+setTextsize = dispatch (undefined :: SetTextsize ())
+data GetTextcolor a
+getTextcolor :: (FindOp a (GetTextcolor  ()) (Match r), Op (GetTextcolor  ()) r impl) => Ref a -> impl
+getTextcolor = dispatch (undefined :: GetTextcolor ())
+data SetTextcolor a
+setTextcolor :: (FindOp a (SetTextcolor  ()) (Match r), Op (SetTextcolor  ()) r impl) => Ref a -> impl
+setTextcolor = dispatch (undefined :: SetTextcolor ())
+data DownBox a
+downBox :: (FindOp a (DownBox  ()) (Match r), Op (DownBox  ()) r impl) => Ref a -> impl
+downBox = dispatch (undefined :: DownBox ())
+
+data CSysMenuBar fs parent
+type SysMenuBar =
+  CSysMenuBar
+   (Destroy
+   (GetMenu
+   (SetMenu
+   (Add
+   (Insert
+   (Remove
+   (Replace
+   (Clear
+   (ClearSubmenu
+   (Global
+   (SetMode
+   (GetMode
+   (SetShortcut
+   (Handle
+   ()))))))))))))))
+   MenuPrim
+
+data CChoice fs parent
+type Choice =
+  CChoice
+  (Destroy
+  (Handle
+  (GetValue
+  (SetValue
+  ()))))
+  MenuPrim
+
+data CMenuButton fs parent
+type MenuButton =
+  CMenuButton
+  (Destroy
+  (Handle
+  (Popup
+  ())))
+  MenuPrim
+
+data CImage fs parent
+type Image =
+  CImage
+  (Destroy
+  (GetW
+  (GetH
+  (GetD
+  (GetLd
+  (GetCount
+  (Copy
+  (ColorAverage
+  (Inactive
+  (Desaturate
+  (DrawResize
+  (Draw
+  (Uncache
+  ())))))))))))))
+  Base
+data GetD a
+getD :: (FindOp a (GetD ()) (Match r), Op (GetD ()) r impl) => Ref a -> impl
+getD = dispatch (undefined :: GetD ())
+data GetLd a
+getLd :: (FindOp a (GetLd ()) (Match r), Op (GetLd ()) r impl) => Ref a -> impl
+getLd = dispatch (undefined :: GetLd ())
+data GetCount a
+getCount :: (FindOp a (GetCount ()) (Match r), Op (GetCount ()) r impl) => Ref a -> impl
+getCount = dispatch (undefined :: GetCount ())
+data ColorAverage a
+colorAverage :: (FindOp a (ColorAverage ()) (Match r), Op (ColorAverage ()) r impl) => Ref a -> impl
+colorAverage = dispatch (undefined :: ColorAverage ())
+data Inactive a
+inactive :: (FindOp a (Inactive ()) (Match r), Op (Inactive ()) r impl) => Ref a -> impl
+inactive = dispatch (undefined :: Inactive ())
+data Desaturate a
+desaturate :: (FindOp a (Desaturate ()) (Match r), Op (Desaturate ()) r impl) => Ref a -> impl
+desaturate = dispatch (undefined :: Desaturate ())
+data DrawResize a
+drawResize :: (FindOp a (DrawResize ()) (Match r), Op (DrawResize ()) r impl) => Ref a -> impl
+drawResize = dispatch (undefined :: DrawResize ())
+data Uncache a
+uncache :: (FindOp a (Uncache ()) (Match r), Op (Uncache ()) r impl) => Ref a -> impl
+uncache = dispatch (undefined :: Uncache ())
+
+data CBitmap fs parent
+type Bitmap =
+  CBitmap
+  (Destroy
+  (GetW
+  (GetH
+  (GetD
+  (GetLd
+  (GetCount
+  (Copy
+  (ColorAverage
+  (Inactive
+  (Desaturate
+  (DrawResize
+  (Draw
+  (Uncache
+  ())))))))))))))
+  Image
+
+data CPixmap fs parent
+type Pixmap =
+  CPixmap
+  (Destroy
+  (GetW
+  (GetH
+  (GetD
+  (GetLd
+  (GetCount
+  (Copy
+  (ColorAverage
+  (Inactive
+  (Desaturate
+  (DrawResize
+  (Draw
+  (Uncache
+  ())))))))))))))
+  Image
+
+data CCopySurface fs parent
+type CopySurface =
+  CCopySurface
+  (Destroy
+  (ClassName
+  (SetCurrent
+  (Draw
+  ()))))
+  Base
+data ClassName a
+className :: (FindOp a (ClassName ()) (Match r), Op (ClassName ()) r impl) => Ref a -> impl
+className = dispatch (undefined :: ClassName ())
+data SetCurrent a
+setCurrent :: (FindOp a (SetCurrent ()) (Match r), Op (SetCurrent ()) r impl) => Ref a -> impl
+setCurrent = dispatch (undefined :: SetCurrent ())
+
+data CImageSurface fs parent
+type ImageSurface =
+  CImageSurface
+  (Destroy
+  (ClassName
+  (SetCurrent
+  (Draw
+  ()))))
+  Base
+
+data CAdjuster fs parent
+type Adjuster =
+  CAdjuster
+  (Destroy
+  (SetSoft
+  (GetSoft
+  ())))
+  Valuator
+
+data SetSoft a
+setSoft :: (FindOp a (SetSoft ()) (Match r), Op (SetSoft ()) r impl) => Ref a -> impl
+setSoft = dispatch (undefined :: SetSoft ())
+data GetSoft a
+getSoft :: (FindOp a (GetSoft ()) (Match r), Op (GetSoft ()) r impl) => Ref a -> impl
+getSoft = dispatch (undefined :: GetSoft ())
+
+data CDial fs parent
+type Dial =
+  CDial
+  (Destroy
+  (GetAngle1
+  (SetAngle1
+  (GetAngle2
+  (SetAngle2
+  (SetAngles
+  ()))))))
+  Valuator
+
+data GetAngle1 a
+getAngle1 :: (FindOp a (GetAngle1 ()) (Match r), Op (GetAngle1 ()) r impl) => Ref a -> impl
+getAngle1 = dispatch (undefined :: GetAngle1 ())
+data SetAngle1 a
+setAngle1 :: (FindOp a (SetAngle1 ()) (Match r), Op (SetAngle1 ()) r impl) => Ref a -> impl
+setAngle1 = dispatch (undefined :: SetAngle1 ())
+data GetAngle2 a
+getAngle2 :: (FindOp a (GetAngle2 ()) (Match r), Op (GetAngle2 ()) r impl) => Ref a -> impl
+getAngle2 = dispatch (undefined :: GetAngle2 ())
+data SetAngle2 a
+setAngle2 :: (FindOp a (SetAngle2 ()) (Match r), Op (SetAngle2 ()) r impl) => Ref a -> impl
+setAngle2 = dispatch (undefined :: SetAngle2 ())
+data SetAngles a
+setAngles :: (FindOp a (SetAngles ()) (Match r), Op (SetAngles ()) r impl) => Ref a -> impl
+setAngles = dispatch (undefined :: SetAngles ())
+
+data CFillDial fs parent
+type FillDial =
+  CFillDial
+  ()
+  Dial
+
+data CLineDial fs parent
+type LineDial =
+  CLineDial
+  ()
+  Dial
+
+data CRoller fs parent
+type Roller =
+  CRoller
+  (Destroy
+  (Handle
+  ()))
+  Valuator
+
+data CCounter fs parent
+type Counter =
+  CCounter
+  (Destroy
+  (Handle
+  (SetLstep
+  (SetTextfont
+  (GetTextfont
+  (SetTextsize
+  (GetTextsize
+  (SetTextcolor
+  (GetTextcolor
+  ())))))))))
+  Valuator
+
+data SetLstep a
+setLstep :: (FindOp a (SetLstep ()) (Match r), Op (SetLstep ()) r impl) => Ref a -> impl
+setLstep = dispatch (undefined :: SetLstep ())
+
+data CSimpleCounter fs parent
+type SimpleCounter =
+  CSimpleCounter
+  ()
+  Counter
+
+data CScrollbar fs parent
+type Scrollbar =
+ CScrollbar
+ (Destroy
+ (SetValue
+ (Handle
+ (SetLinesize
+ (GetLinesize
+ ())))))
+ Slider
+
+data SetLinesize a
+setLinesize :: (FindOp a (SetLinesize ()) (Match r), Op (SetLinesize ()) r impl) => Ref a -> impl
+setLinesize = dispatch (undefined :: SetLinesize ())
+data GetLinesize a
+getLinesize :: (FindOp a (GetLinesize ()) (Match r), Op (GetLinesize ()) r impl) => Ref a -> impl
+getLinesize = dispatch (undefined :: GetLinesize ())
+
+data CValueSlider fs parent
+type ValueSlider =
+  CValueSlider
+  (Destroy
+  (Handle
+  (GetTextfont
+  (SetTextfont
+  (GetTextsize
+  (SetTextsize
+  (GetTextcolor
+  (SetTextcolor
+  ()))))))))
+  Slider
+
+data CInput fs parent
+type Input =
+  CInput
+   (Destroy
+   (Handle
+   (SetValue
+   (StaticValue
+   (GetValue
+   (Index
+   (SetSize
+   (GetMaximumSize
+   (GetSize
+   (SetMaximumSize
+   (GetPosition
+   (GetMark
+   (SetPosition
+   (SetMark
+   (Replace
+   (Cut
+   (CutFromCursor
+   (CutRange
+   (Insert
+   (InsertWithLength
+   (Copy
+   (Undo
+   (CopyCuts
+   (GetShortcut
+   (SetShortcut
+   (GetTextfont
+   (SetTextfont
+   (GetTextsize
+   (SetTextsize
+   (GetTextcolor
+   (SetTextcolor
+   (GetCursorColor
+   (SetCursorColor
+   (GetInputType
+   (SetInputType
+   (GetReadonly
+   (SetReadonly
+   (GetWrap
+   (SetWrap
+   (GetTabNav
+   (SetTabNav
+   ())))))))))))))))))))))))))))))))))))))))))
+   Widget
+
+data StaticValue a
+staticValue :: (FindOp a (StaticValue ()) (Match r), Op (StaticValue ()) r impl) => Ref a -> impl
+staticValue = dispatch (undefined :: StaticValue ())
+data Index a
+index :: (FindOp a (Index ()) (Match r), Op (Index ()) r impl) => Ref a -> impl
+index = dispatch (undefined :: Index ())
+data GetMaximumSize a
+getMaximumSize :: (FindOp a (GetMaximumSize ()) (Match r), Op (GetMaximumSize ()) r impl) => Ref a -> impl
+getMaximumSize = dispatch (undefined :: GetMaximumSize ())
+data SetMaximumSize a
+setMaximumSize :: (FindOp a (SetMaximumSize ()) (Match r), Op (SetMaximumSize ()) r impl) => Ref a -> impl
+setMaximumSize = dispatch (undefined :: SetMaximumSize ())
+data GetPosition a
+getPosition :: (FindOp a (GetPosition ()) (Match r), Op (GetPosition ()) r impl) => Ref a -> impl
+getPosition = dispatch (undefined :: GetPosition ())
+data GetMark a
+getMark :: (FindOp a (GetMark ()) (Match r), Op (GetMark ()) r impl) => Ref a -> impl
+getMark = dispatch (undefined :: GetMark ())
+data SetPosition a
+setPosition :: (FindOp a (SetPosition ()) (Match r), Op (SetPosition ()) r impl) => Ref a -> impl
+setPosition = dispatch (undefined :: SetPosition ())
+data SetMark a
+setMark :: (FindOp a (SetMark ()) (Match r), Op (SetMark ()) r impl) => Ref a -> impl
+setMark = dispatch (undefined :: SetMark ())
+data Cut a
+cut :: (FindOp a (Cut ()) (Match r), Op (Cut ()) r impl) => Ref a -> impl
+cut = dispatch (undefined :: Cut ())
+data CutFromCursor a
+cutFromCursor :: (FindOp a (CutFromCursor ()) (Match r), Op (CutFromCursor ()) r impl) => Ref a -> impl
+cutFromCursor = dispatch (undefined :: CutFromCursor ())
+data CutRange a
+cutRange :: (FindOp a (CutRange ()) (Match r), Op (CutRange ()) r impl) => Ref a -> impl
+cutRange = dispatch (undefined :: CutRange ())
+data InsertWithLength a
+insertWithLength :: (FindOp a (InsertWithLength ()) (Match r), Op (InsertWithLength ()) r impl) => Ref a -> impl
+insertWithLength = dispatch (undefined :: InsertWithLength ())
+data Undo a
+undo :: (FindOp a (Undo ()) (Match r), Op (Undo ()) r impl) => Ref a -> impl
+undo = dispatch (undefined :: Undo ())
+data CopyCuts a
+copyCuts :: (FindOp a (CopyCuts ()) (Match r), Op (CopyCuts ()) r impl) => Ref a -> impl
+copyCuts = dispatch (undefined :: CopyCuts ())
+data GetCursorColor a
+getCursorColor :: (FindOp a (GetCursorColor ()) (Match r), Op (GetCursorColor ()) r impl) => Ref a -> impl
+getCursorColor = dispatch (undefined :: GetCursorColor ())
+data SetCursorColor a
+setCursorColor :: (FindOp a (SetCursorColor ()) (Match r), Op (SetCursorColor ()) r impl) => Ref a -> impl
+setCursorColor = dispatch (undefined :: SetCursorColor ())
+data GetInputType a
+getInputType :: (FindOp a (GetInputType ()) (Match r), Op (GetInputType ()) r impl) => Ref a -> impl
+getInputType = dispatch (undefined :: GetInputType ())
+data SetInputType a
+setInputType :: (FindOp a (SetInputType ()) (Match r), Op (SetInputType ()) r impl) => Ref a -> impl
+setInputType = dispatch (undefined :: SetInputType ())
+data GetReadonly a
+getReadonly :: (FindOp a (GetReadonly ()) (Match r), Op (GetReadonly ()) r impl) => Ref a -> impl
+getReadonly = dispatch (undefined :: GetReadonly ())
+data SetReadonly a
+setReadonly :: (FindOp a (SetReadonly ()) (Match r), Op (SetReadonly ()) r impl) => Ref a -> impl
+setReadonly = dispatch (undefined :: SetReadonly ())
+data GetWrap a
+getWrap :: (FindOp a (GetWrap ()) (Match r), Op (GetWrap ()) r impl) => Ref a -> impl
+getWrap = dispatch (undefined :: GetWrap ())
+data SetWrap a
+setWrap :: (FindOp a (SetWrap ()) (Match r), Op (SetWrap ()) r impl) => Ref a -> impl
+setWrap = dispatch (undefined :: SetWrap ())
+data GetTabNav a
+getTabNav :: (FindOp a (GetTabNav ()) (Match r), Op (GetTabNav ()) r impl) => Ref a -> impl
+getTabNav = dispatch (undefined :: GetTabNav ())
+data SetTabNav a
+setTabNav :: (FindOp a (SetTabNav ()) (Match r), Op (SetTabNav ()) r impl) => Ref a -> impl
+setTabNav = dispatch (undefined :: SetTabNav ())
+
+data CValueInput fs parent
+type ValueInput =
+  CValueInput
+  (Destroy
+  (Handle
+  (GetSoft
+  (SetSoft
+  (GetShortcut
+  (SetShortcut
+  (SetTextfont
+  (GetTextfont
+  (SetTextsize
+  (GetTextsize
+  (SetTextcolor
+  (GetTextcolor
+  ()))))))))))))
+  Valuator
+
+data CValueOutput fs parent
+type ValueOutput =
+  CValueOutput
+   (Destroy
+   (Handle
+   (GetSoft
+   (SetSoft
+   (SetTextfont
+   (GetTextfont
+   (SetTextsize
+   (GetTextsize
+   (SetTextcolor
+   (GetTextcolor
+   ()))))))))))
+   Valuator
+
+data CTimer fs parent
+type Timer =
+  CTimer
+   (Destroy
+   (Handle
+   (GetDirection
+   (SetDirection
+   (GetValue
+   (SetValue
+   (GetSuspended
+   (SetSuspended
+   ()))))))))
+   Widget
+
+data GetDirection a
+getDirection :: (FindOp a (GetDirection ()) (Match r), Op (GetDirection ()) r impl) => Ref a -> impl
+getDirection = dispatch (undefined :: GetDirection ())
+data SetDirection a
+setDirection :: (FindOp a (SetDirection ()) (Match r), Op (SetDirection ()) r impl) => Ref a -> impl
+setDirection = dispatch (undefined :: SetDirection ())
+data GetSuspended a
+getSuspended :: (FindOp a (GetSuspended ()) (Match r), Op (GetSuspended ()) r impl) => Ref a -> impl
+getSuspended = dispatch (undefined :: GetSuspended ())
+data SetSuspended a
+setSuspended :: (FindOp a (SetSuspended ()) (Match r), Op (SetSuspended ()) r impl) => Ref a -> impl
+setSuspended = dispatch (undefined :: SetSuspended ())
+
+data CHiddenTimer fs parent
+type HiddenTimer =
+  CHiddenTimer
+   ()
+   Widget
+
+data CValueTimer fs parent
+type ValueTimer =
+  CValueTimer
+   ()
+   Widget
+
+data CProgress fs parent
+type Progress =
+  CProgress
+   (Destroy
+   (SetMaximum
+   (GetMaximum
+   (SetMinimum
+   (GetMinimum
+   (SetValue
+   (GetValue
+   ())))))))
+   Widget
+
+data CPositioner fs parent
+type Positioner =
+  CPositioner
+   (Destroy
+   (Handle
+   (SetXvalue
+   (GetXvalue
+   (SetYvalue
+   (GetYvalue
+   (SetXminimum
+   (GetXminimum
+   (SetYminimum
+   (GetYminimum
+   (SetXmaximum
+   (GetXmaximum
+   (SetYmaximum
+   (GetYmaximum
+   (SetXbounds
+   (SetYbounds
+   (SetXstep
+   (SetYstep
+   ()))))))))))))))))))
+   Widget
+data SetXvalue a
+setXvalue :: (FindOp a (SetXvalue ()) (Match r), Op (SetXvalue ()) r impl) => Ref a -> impl
+setXvalue = dispatch (undefined :: SetXvalue ())
+data GetXvalue a
+getXvalue :: (FindOp a (GetXvalue ()) (Match r), Op (GetXvalue ()) r impl) => Ref a -> impl
+getXvalue = dispatch (undefined :: GetXvalue ())
+data SetYvalue a
+setYvalue :: (FindOp a (SetYvalue ()) (Match r), Op (SetYvalue ()) r impl) => Ref a -> impl
+setYvalue = dispatch (undefined :: SetYvalue ())
+data GetYvalue a
+getYvalue :: (FindOp a (GetYvalue ()) (Match r), Op (GetYvalue ()) r impl) => Ref a -> impl
+getYvalue = dispatch (undefined :: GetYvalue ())
+data SetXminimum a
+setXminimum :: (FindOp a (SetXminimum ()) (Match r), Op (SetXminimum ()) r impl) => Ref a -> impl
+setXminimum = dispatch (undefined :: SetXminimum ())
+data GetXminimum a
+getXminimum :: (FindOp a (GetXminimum ()) (Match r), Op (GetXminimum ()) r impl) => Ref a -> impl
+getXminimum = dispatch (undefined :: GetXminimum ())
+data SetYminimum a
+setYminimum :: (FindOp a (SetYminimum ()) (Match r), Op (SetYminimum ()) r impl) => Ref a -> impl
+setYminimum = dispatch (undefined :: SetYminimum ())
+data GetYminimum a
+getYminimum :: (FindOp a (GetYminimum ()) (Match r), Op (GetYminimum ()) r impl) => Ref a -> impl
+getYminimum = dispatch (undefined :: GetYminimum ())
+data SetXmaximum a
+setXmaximum :: (FindOp a (SetXmaximum ()) (Match r), Op (SetXmaximum ()) r impl) => Ref a -> impl
+setXmaximum = dispatch (undefined :: SetXmaximum ())
+data GetXmaximum a
+getXmaximum :: (FindOp a (GetXmaximum ()) (Match r), Op (GetXmaximum ()) r impl) => Ref a -> impl
+getXmaximum = dispatch (undefined :: GetXmaximum ())
+data SetYmaximum a
+setYmaximum :: (FindOp a (SetYmaximum ()) (Match r), Op (SetYmaximum ()) r impl) => Ref a -> impl
+setYmaximum = dispatch (undefined :: SetYmaximum ())
+data GetYmaximum a
+getYmaximum :: (FindOp a (GetYmaximum ()) (Match r), Op (GetYmaximum ()) r impl) => Ref a -> impl
+getYmaximum = dispatch (undefined :: GetYmaximum ())
+data SetXbounds a
+setXbounds :: (FindOp a (SetXbounds ()) (Match r), Op (SetXbounds ()) r impl) => Ref a -> impl
+setXbounds = dispatch (undefined :: SetXbounds ())
+data SetYbounds a
+setYbounds :: (FindOp a (SetYbounds ()) (Match r), Op (SetYbounds ()) r impl) => Ref a -> impl
+setYbounds = dispatch (undefined :: SetYbounds ())
+data SetXstep a
+setXstep :: (FindOp a (SetXstep ()) (Match r), Op (SetXstep ()) r impl) => Ref a -> impl
+setXstep = dispatch (undefined :: SetXstep ())
+data SetYstep a
+setYstep :: (FindOp a (SetYstep ()) (Match r), Op (SetYstep ()) r impl) => Ref a -> impl
+setYstep = dispatch (undefined :: SetYstep ())

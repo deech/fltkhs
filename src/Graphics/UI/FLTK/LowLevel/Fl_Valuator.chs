@@ -2,8 +2,6 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 module Graphics.UI.FLTK.LowLevel.Fl_Valuator
     (
-     ValuatorFuncs(..),
-     defaultValuatorFuncs,
      -- * Constructor
      valuatorNew,
     )
@@ -21,59 +19,20 @@ import Graphics.UI.FLTK.LowLevel.Dispatch
 import Graphics.UI.FLTK.LowLevel.Fl_Widget
 import Data.Ratio
 
-data ValuatorFuncs =
-  ValuatorFuncs
-  {
-   valuatorDrawOverride       :: Maybe WidgetCallback
-  ,valuatorHandleOverride     :: Maybe WidgetEventHandler
-  ,valuatorResizeOverride     :: Maybe RectangleF
-  ,valuatorShowOverride       :: Maybe WidgetCallback
-  ,valuatorHideOverride       :: Maybe WidgetCallback
-  ,valuatorAsWindowOverride   :: Maybe GetWindowF
-  ,valuatorAsGlWindowOverride :: Maybe GetGlWindowF
-  }
-
-valuatorFunctionStruct :: ValuatorFuncs -> IO (Ptr ())
-valuatorFunctionStruct funcs = do
-      p <- mallocBytes {#sizeof fl_Valuator_Virtual_Funcs #}
-      toCallbackPrim `orNullFunPtr` (valuatorDrawOverride funcs) >>=
-                             {#set fl_Valuator_Virtual_Funcs->draw#} p
-      toEventHandlerPrim `orNullFunPtr` (valuatorHandleOverride funcs) >>=
-                             {#set fl_Valuator_Virtual_Funcs->handle#} p
-      toRectangleFPrim `orNullFunPtr` (valuatorResizeOverride funcs) >>=
-                             {#set fl_Valuator_Virtual_Funcs->resize#} p
-      toCallbackPrim `orNullFunPtr` (valuatorShowOverride funcs) >>=
-                             {#set fl_Valuator_Virtual_Funcs->show#} p
-      toCallbackPrim `orNullFunPtr` (valuatorHideOverride funcs) >>=
-                             {#set fl_Valuator_Virtual_Funcs->hide#} p
-      toGetWindowFPrim `orNullFunPtr` (valuatorAsWindowOverride funcs) >>=
-                             {#set fl_Valuator_Virtual_Funcs->as_window#} p
-      toGetGlWindowFPrim `orNullFunPtr` (valuatorAsGlWindowOverride funcs) >>=
-                             {#set fl_Valuator_Virtual_Funcs->as_gl_window#} p
-      return p
-defaultValuatorFuncs :: ValuatorFuncs
-defaultValuatorFuncs = ValuatorFuncs Nothing Nothing Nothing Nothing Nothing Nothing Nothing
-
 {# fun Fl_Valuator_New as valuatorNew' { `Int',`Int',`Int',`Int' } -> `Ptr ()' id #}
 {# fun Fl_Valuator_New_WithLabel as valuatorNewWithLabel' { `Int',`Int',`Int',`Int',`String'} -> `Ptr ()' id #}
 {# fun Fl_OverriddenValuator_New_WithLabel as overriddenValuatorNewWithLabel' { `Int',`Int',`Int',`Int',`String', id `Ptr ()'} -> `Ptr ()' id #}
 {# fun Fl_OverriddenValuator_New as overriddenValuatorNew' { `Int',`Int',`Int',`Int', id `Ptr ()'} -> `Ptr ()' id #}
-valuatorNew :: Rectangle -> Maybe String -> Maybe ValuatorFuncs -> IO (Ref Valuator)
+valuatorNew :: Rectangle -> Maybe String -> Maybe (CustomWidgetFuncs Valuator) -> IO (Ref Valuator)
 valuatorNew rectangle l' funcs' =
-    let (x_pos, y_pos, width, height) = fromRectangle rectangle
-    in case (l', funcs') of
-        (Nothing,Nothing) -> valuatorNew' x_pos y_pos width height >>=
-                             toRef
-        ((Just l), Nothing) -> valuatorNewWithLabel' x_pos y_pos width height l >>=
-                               toRef
-        ((Just l), (Just fs)) -> do
-                               ptr <- valuatorFunctionStruct fs
-                               overriddenValuatorNewWithLabel' x_pos y_pos width height l (castPtr ptr) >>=
-                                                             toRef
-        (Nothing, (Just fs)) -> do
-                               ptr <- valuatorFunctionStruct fs
-                               overriddenValuatorNew' x_pos y_pos width height (castPtr ptr) >>=
-                                                    toRef
+  widgetMaker
+    rectangle
+    l'
+    funcs'
+    valuatorNew'
+    valuatorNewWithLabel'
+    overriddenValuatorNew'
+    overriddenValuatorNewWithLabel'
 
 {# fun Fl_Valuator_Destroy as valuatorDestroy' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
 instance Op (Destroy ()) Valuator ( IO ()) where
@@ -83,12 +42,6 @@ instance Op (Destroy ()) Valuator ( IO ()) where
 {#fun Fl_Valuator_handle as valuatorHandle' { id `Ptr ()', id `CInt' } -> `Int' #}
 instance Op (Handle ()) Valuator ( Event -> IO Int) where
   runOp _ valuator event = withRef valuator (\p -> valuatorHandle' p (fromIntegral . fromEnum $ event))
-{# fun Fl_Valuator_as_gl_window_super as asGlWindowSuper' { id `Ptr ()' } -> `(Ref GlWindow)' unsafeToRef #}
-instance Op (AsGlWindowSuper ()) Valuator (  IO (Ref GlWindow)) where
-  runOp _ valuator = withRef valuator $ \valuatorPtr -> asGlWindowSuper' valuatorPtr
-{# fun Fl_Valuator_as_gl_window as asGlWindow' { id `Ptr ()' } -> `(Ref GlWindow)' unsafeToRef #}
-instance Op (AsGlWindow ()) Valuator (  IO (Ref GlWindow)) where
-  runOp _ valuator = withRef valuator $ \valuatorPtr -> asGlWindow' valuatorPtr
 {# fun Fl_Valuator_resize_super as resizeSuper' { id `Ptr ()',`Int',`Int',`Int',`Int' } -> `()' supressWarningAboutRes #}
 instance Op (ResizeSuper ()) Valuator ( Rectangle ->  IO (())) where
   runOp _ valuator rectangle = withRef valuator $ \valuatorPtr -> do

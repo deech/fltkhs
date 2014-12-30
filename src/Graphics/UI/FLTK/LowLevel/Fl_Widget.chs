@@ -1,22 +1,22 @@
-{-# LANGUAGE CPP, ExistentialQuantification, TypeSynonymInstances, FlexibleInstances, MultiParamTypeClasses, FlexibleContexts, ScopedTypeVariables #-}
+{-# LANGUAGE CPP, ExistentialQuantification, TypeSynonymInstances, FlexibleInstances, MultiParamTypeClasses, FlexibleContexts, ScopedTypeVariables, UndecidableInstances #-}
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 module Graphics.UI.FLTK.LowLevel.Fl_Widget
     (
      Widget,
      PositionSpec(..),
-     WidgetFuncs(..),
-     defaultWidgetFuncs,
+     CustomWidgetFuncs(..),
+     defaultCustomWidgetFuncs,
+     fillCustomWidgetFunctionStruct,
+     customWidgetFunctionStruct,
+     onWidget,
      -- * Constructor
      widgetNew,
+     widgetMaker,
      -- * Fl_Widget specific
      WidgetTransformCallback,
-     WidgetCallback(..),
-     RectangleF,
-     GetWindowF,
-     GetGlWindowF,
-     GetGroupF,
+     Callback(..),
+     BaseCallback(..),
      GetPointerF,
-     WidgetEventHandler,
      WidgetEventHandlerPrim,
      WidgetTransformCallbackPrim,
      RectangleFPrim,
@@ -25,19 +25,15 @@ module Graphics.UI.FLTK.LowLevel.Fl_Widget
      TableSetIntF,
      TableSetIntFPrim,
      EventDispatchPrim,
-     EventDispatchF,
-     mkEventHandlerPtr,
      wrapEventDispatchPrim,
      toRectangleFPrim,
      toEventHandlerPrim,
      toCallbackPrim,
-     toWidgetCallbackPrim,
+     toCallbackPrimWithUserData,
+     toBaseCallbackPrim,
      toWidgetTransformCallbackPrim,
      toTableSetIntFPrim,
      toTableDrawCellPrim,
-     toGetWindowFPrim,
-     toGetGlWindowFPrim,
-     toGetGroupFPrim,
      unwrapEventDispatchPrim
     )
 where
@@ -52,50 +48,10 @@ import Graphics.UI.FLTK.LowLevel.Utils
 import Graphics.UI.FLTK.LowLevel.Dispatch
 import Graphics.UI.FLTK.LowLevel.Hierarchy
 
-data WidgetFuncs =
-    WidgetFuncs
-    {
-     widgetDrawOverride       :: Maybe WidgetCallback
-    ,widgetHandleOverride     :: Maybe WidgetEventHandler
-    ,widgetResizeOverride     :: Maybe RectangleF
-    ,widgetShowOverride       :: Maybe WidgetCallback
-    ,widgetHideOverride       :: Maybe WidgetCallback
-    ,widgetAsWindowOverride   :: Maybe GetWindowF
-    ,widgetAsGlWindowOverride :: Maybe GetGlWindowF
-    ,widgetAsGroupOverride    :: Maybe GetGroupF
-    }
-
-widgetFunctionStruct :: WidgetFuncs -> IO (Ptr ())
-widgetFunctionStruct funcs = do
-      p <- mallocBytes {#sizeof fl_Widget_Virtual_Funcs #}
-      toCallbackPrim `orNullFunPtr` (widgetDrawOverride funcs) >>=
-                             {#set fl_Widget_Virtual_Funcs->draw#} p
-      toEventHandlerPrim `orNullFunPtr` (widgetHandleOverride funcs) >>=
-                             {#set fl_Widget_Virtual_Funcs->handle#} p
-      toRectangleFPrim `orNullFunPtr` (widgetResizeOverride funcs) >>=
-                             {#set fl_Widget_Virtual_Funcs->resize#} p
-      toCallbackPrim `orNullFunPtr` (widgetShowOverride funcs) >>=
-                             {#set fl_Widget_Virtual_Funcs->show#} p
-      toCallbackPrim `orNullFunPtr` (widgetHideOverride funcs) >>=
-                             {#set fl_Widget_Virtual_Funcs->hide#} p
-      toGetWindowFPrim `orNullFunPtr` (widgetAsWindowOverride funcs) >>=
-                             {#set fl_Widget_Virtual_Funcs->as_window#} p
-      toGetGlWindowFPrim `orNullFunPtr` (widgetAsGlWindowOverride funcs) >>=
-                             {#set fl_Widget_Virtual_Funcs->as_gl_window#} p
-      toGetGroupFPrim `orNullFunPtr` (widgetAsGroupOverride funcs) >>=
-                             {#set fl_Widget_Virtual_Funcs->as_group#} p
-      return p
-defaultWidgetFuncs :: WidgetFuncs
-defaultWidgetFuncs = WidgetFuncs Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing
-
 type WidgetTransformCallback     = Ref Widget -> IO (Ref Widget)
-data WidgetCallback              = forall a. (FindObj a Widget Same) => WidgetCallback(Ref a -> IO ())
-data RectangleF                  = forall a. (FindObj a Widget Same) => RectangleF (Ref a -> Rectangle -> IO ())
-data GetWindowF                  = forall a. (FindObj a Widget Same) => GetWindowF (Ref a -> IO (Ref Window))
-data GetGlWindowF                = forall a. (FindObj a Widget Same) => GetGlWindowF (Ref a -> IO (Ref GlWindow))
-data GetGroupF                   = forall a. (FindObj a Window Same) => GetGroupF (Ref a -> IO (Ref Group))
+data Callback                    = forall a. (FindObj a Widget Same) => Callback (Ref a -> IO ())
+data BaseCallback                = forall a. (FindObj a Base   Same) => BaseCallback (Ref a -> IO ())
 type GetPointerF                 = Ptr () -> IO (Ptr ())
-data WidgetEventHandler          = forall a. (FindObj a Widget Same) => WidgetEventHandler (Ref a -> Event -> IO Int)
 type WidgetEventHandlerPrim      = Ptr () -> CInt -> IO CInt
 type WidgetTransformCallbackPrim = Ptr () -> IO (Ptr ())
 type RectangleFPrim              = Ptr () -> CInt -> CInt -> CInt -> CInt -> IO ()
@@ -104,16 +60,13 @@ type TableDrawCellFPrim          = Ptr () -> CInt -> CInt -> CInt -> CInt -> CIn
 type TableSetIntF                = Ref Table -> Int -> IO ()
 type TableSetIntFPrim            = Ptr () -> CInt -> IO ()
 type EventDispatchPrim           = CInt -> Ptr () -> IO CInt
-data EventDispatchF              = forall a. (FindObj a Widget Same) => EventDispatchF (Event -> Ref a -> IO Int)
 data PositionSpec = ByPosition Position
                   | forall a. (FindObj a Widget Same) => ByWidget (Ref a)
 
 foreign import ccall "wrapper"
         mkWidgetTransformCallbackPtr :: WidgetTransformCallbackPrim -> IO (FunPtr WidgetTransformCallbackPrim)
 foreign import ccall "wrapper"
-        mkEventHandlerPtr :: WidgetEventHandlerPrim -> IO (FunPtr WidgetEventHandlerPrim)
-foreign import ccall "wrapper"
-        wrapWidgetEventHandlerPrim :: WidgetEventHandlerPrim -> IO (FunPtr WidgetEventHandlerPrim)
+        mkWidgetEventHandler :: (Ptr () -> CInt -> IO CInt) -> IO (FunPtr (Ptr () -> CInt -> IO CInt))
 foreign import ccall "wrapper"
         mkRectanglePtr :: RectangleFPrim -> IO (FunPtr RectangleFPrim)
 foreign import ccall "wrapper"
@@ -127,46 +80,56 @@ foreign import ccall "wrapper"
 foreign import ccall "dynamic"
         unwrapEventDispatchPrim :: FunPtr EventDispatchPrim -> EventDispatchPrim
 
-toRectangleFPrim ::  RectangleF -> IO (FunPtr RectangleFPrim)
-toRectangleFPrim (RectangleF f) = mkRectanglePtr
-                     (\wPtr x_pos y_pos width height ->
-                          let rectangle = toRectangle (fromIntegral x_pos,
-                                                       fromIntegral y_pos,
-                                                       fromIntegral width,
-                                                       fromIntegral height)
-                          in do
-                          fptr <- wrapNonNull wPtr "Null Pointer. toRectangleFPrim"
-                          f (wrapInRef fptr) rectangle
-                     )
-toEventHandlerPrim :: WidgetEventHandler -> IO (FunPtr WidgetEventHandlerPrim)
-toEventHandlerPrim (WidgetEventHandler f) = wrapWidgetEventHandlerPrim
-                       (\wPtr eventNumber ->
+toRectangleFPrim ::  (Ref a -> Rectangle -> IO ()) ->
+                     IO (FunPtr (Ptr () -> CInt -> CInt -> CInt -> CInt -> IO ()))
+toRectangleFPrim f = mkRectanglePtr $ \wPtr x_pos y_pos width height ->
+  let rectangle = toRectangle (fromIntegral x_pos,
+                               fromIntegral y_pos,
+                               fromIntegral width,
+                               fromIntegral height)
+  in do
+  fptr <- wrapNonNull wPtr "Null Pointer. toRectangleFPrim"
+  f (wrapInRef fptr) rectangle
+
+toEventHandlerPrim :: (Ref a -> Event -> IO Int) ->
+                      IO (FunPtr (Ptr () -> CInt -> IO CInt))
+toEventHandlerPrim f = mkWidgetEventHandler $
+                       \wPtr eventNumber ->
                             let event = cToEnum (eventNumber :: CInt)
                             in do
                             fptr <- wrapNonNull wPtr "Null Pointer: toEventHandlerPrim"
                             result <- f (wrapInRef fptr) event
                             return $ fromIntegral result
-                       )
-toCallbackPrim :: WidgetCallback -> IO (FunPtr CallbackPrim)
-toCallbackPrim (WidgetCallback f) = mkCallbackPtr (\ptr ->
-                                    wrapNonNull ptr "Null pointer. toCallbackPrim" >>=
-                                    \pp -> f (castTo (wrapInRef pp))
-                                 )
 
-toWidgetCallbackPrim :: WidgetCallback -> IO (FunPtr CallbackWithUserDataPrim)
-toWidgetCallbackPrim (WidgetCallback f) = mkWidgetCallbackPtr
-                                    (\ptr _ -> wrapNonNull ptr "Null pointer: toWidgetCallbackPrim" >>=
-                                               \pp -> f (castTo (wrapInRef pp))
-                                    )
-toWidgetTransformCallbackPrim :: WidgetTransformCallback -> IO (FunPtr WidgetTransformCallbackPrim)
+onWidget :: (FindObj a Widget Same) => Ref a -> (Ref a -> IO ()) -> (Ref a -> IO ())
+onWidget _ = id
+
+toCallbackPrim :: (Ref a -> IO ()) ->
+                  IO (FunPtr (Ptr () -> IO ()))
+toCallbackPrim f = mkCallbackPtr $ \ptr -> do
+  pp <- wrapNonNull ptr "Null pointer. toCallbackPrim"
+  f (castTo (wrapInRef pp))
+
+
+toCallbackPrimWithUserData :: (Ref a -> IO ()) ->
+                              IO (FunPtr (Ptr () -> Ptr () -> IO ()))
+toCallbackPrimWithUserData f = mkWidgetCallbackPtr $ \ptr _ -> do
+  pp <- wrapNonNull ptr "Null pointer: toWidgetCallbackPrim"
+  f (castTo (wrapInRef pp))
+
+toBaseCallbackPrim :: BaseCallback -> IO (FunPtr CallbackPrim)
+toBaseCallbackPrim (BaseCallback f) = mkCallbackPtr $ \ptr -> do
+  pp <- wrapNonNull ptr "Null pointer: toBaseCallbackPrim"
+  f (castTo (wrapInRef pp))
+
+toWidgetTransformCallbackPrim :: (Ref Widget -> IO (Ref Widget))->
+                                 IO (FunPtr (Ptr () -> IO (Ptr ())))
 toWidgetTransformCallbackPrim f =
-    mkWidgetTransformCallbackPtr
-    (\ptr ->
-         wrapNonNull ptr "Null pointer. toWidgetTransformCallbackPrim" >>= \pp ->
-         do
-           widget <- f (castTo (wrapInRef pp))
-           unsafeRefToPtr widget
-    )
+    mkWidgetTransformCallbackPtr $ \ptr -> do
+      pp <- wrapNonNull ptr "Null pointer. toWidgetTransformCallbackPrim"
+      widget <- f (castTo (wrapInRef pp))
+      unsafeRefToPtr widget
+
 toTableSetIntFPrim :: TableSetIntF -> IO (FunPtr TableSetIntFPrim)
 toTableSetIntFPrim f =
     mkTableSetInt
@@ -175,6 +138,7 @@ toTableSetIntFPrim f =
        pp <- wrapNonNull ptr "Null pointer. toTableSetInt"
        f (wrapInRef pp) (fromIntegral num')
     )
+
 toTableDrawCellPrim :: TableDrawCellF -> IO (FunPtr TableDrawCellFPrim)
 toTableDrawCellPrim f =
     mkTableDrawCellF
@@ -189,33 +153,80 @@ toTableDrawCellPrim f =
            pp <- wrapNonNull ptr "Null pointer. toTableDrawCellFPrim"
            f (wrapInRef pp) (toEnum $ fromIntegral context') (fromIntegral row') (fromIntegral col') rectangle
      )
-toGetWindowFPrim :: GetWindowF -> IO (FunPtr GetPointerF)
-toGetWindowFPrim (GetWindowF f) = mkGetPointerPtr (\ptr -> runPointerF f ptr "Null pointer: toGetWindowFPrim")
-toGetGlWindowFPrim :: GetGlWindowF -> IO (FunPtr GetPointerF)
-toGetGlWindowFPrim (GetGlWindowF f) = mkGetPointerPtr (\ptr -> runPointerF f ptr "Null pointer: toGetGlWindowFPrim")
-toGetGroupFPrim :: GetGroupF -> IO (FunPtr GetPointerF)
-toGetGroupFPrim (GetGroupF f) = mkGetPointerPtr (\ptr -> runPointerF f ptr "Null pointer: toGetGroupFPrim")
+
+data CustomWidgetFuncs a =
+    CustomWidgetFuncs
+    {
+     drawCustom   :: Maybe (Ref a -> IO ())
+    ,handleCustom :: Maybe (Ref a -> Event -> IO Int)
+    ,resizeCustom :: Maybe (Ref a -> Rectangle -> IO ())
+    ,showCustom   :: Maybe (Ref a -> IO ())
+    ,hideCustom   :: Maybe (Ref a -> IO ())
+    }
+
+fillCustomWidgetFunctionStruct :: forall a. (FindObj a Widget Same) =>
+                                  Ptr () ->
+                                  CustomWidgetFuncs a ->
+                                  IO ()
+fillCustomWidgetFunctionStruct structPtr (CustomWidgetFuncs _draw' _handle' _resize' _show' _hide') = do
+      toCallbackPrim `orNullFunPtr` _draw'       >>= {#set fl_Widget_Virtual_Funcs->draw#} structPtr
+      toEventHandlerPrim `orNullFunPtr` _handle' >>= {#set fl_Widget_Virtual_Funcs->handle#} structPtr
+      toRectangleFPrim `orNullFunPtr` _resize'   >>= {#set fl_Widget_Virtual_Funcs->resize#} structPtr
+      toCallbackPrim `orNullFunPtr` _show'       >>= {#set fl_Widget_Virtual_Funcs->show#} structPtr
+      toCallbackPrim `orNullFunPtr` _hide'       >>= {#set fl_Widget_Virtual_Funcs->hide#} structPtr
+
+customWidgetFunctionStruct :: forall a. (FindObj a Widget Same) =>
+                              CustomWidgetFuncs a ->
+                              IO (Ptr ())
+customWidgetFunctionStruct customWidgetFuncs' = do
+  p <- mallocBytes {#sizeof fl_Widget_Virtual_Funcs #}
+  fillCustomWidgetFunctionStruct p customWidgetFuncs'
+  return p
+
+
+defaultCustomWidgetFuncs :: forall a. (FindObj a Widget Same) => CustomWidgetFuncs a
+defaultCustomWidgetFuncs = CustomWidgetFuncs
+                            Nothing
+                            Nothing
+                            Nothing
+                            Nothing
+                            Nothing
+
+widgetMaker :: forall a. (FindObj a Widget Same) =>
+               Rectangle ->
+               Maybe String ->
+               Maybe (CustomWidgetFuncs a) ->
+               (Int -> Int -> Int -> Int -> IO ( Ptr () )) ->
+               (Int -> Int -> Int -> Int -> String -> IO ( Ptr () )) ->
+               (Int -> Int -> Int -> Int -> Ptr () -> IO ( Ptr () )) ->
+               (Int -> Int -> Int -> Int -> String -> Ptr () -> IO ( Ptr () )) ->
+               IO (Ref a)
+widgetMaker rectangle _label' customFuncs' new' newWithLabel' newWithCustomFuncs' newWithCustomFuncsLabel' =
+    let (x_pos, y_pos, width, height) = fromRectangle rectangle
+    in case (_label', customFuncs') of
+        (Nothing,Nothing) -> new' x_pos y_pos width height >>= toRef
+        ((Just l), Nothing) -> newWithLabel' x_pos y_pos width height l >>= toRef
+        ((Just l), (Just fs)) -> do
+          ptr <- customWidgetFunctionStruct fs
+          newWithCustomFuncsLabel' x_pos y_pos width height l (castPtr ptr) >>= toRef
+        (Nothing, (Just fs)) -> do
+          ptr <- customWidgetFunctionStruct fs
+          newWithCustomFuncs' x_pos y_pos width height (castPtr ptr) >>= toRef
 
 {# fun Fl_Widget_New as widgetNew' { `Int',`Int',`Int',`Int' } -> `Ptr ()' id #}
 {# fun Fl_Widget_New_WithLabel as widgetNewWithLabel' { `Int',`Int',`Int',`Int',`String'} -> `Ptr ()' id #}
 {# fun Fl_OverriddenWidget_New_WithLabel as overriddenWidgetNewWithLabel' { `Int',`Int',`Int',`Int',`String', id `Ptr ()'} -> `Ptr ()' id #}
 {# fun Fl_OverriddenWidget_New as overriddenWidgetNew' { `Int',`Int',`Int',`Int', id `Ptr ()'} -> `Ptr ()' id #}
-widgetNew :: Rectangle -> Maybe String -> Maybe WidgetFuncs -> IO (Ref Widget)
+widgetNew :: Rectangle -> Maybe String -> Maybe (CustomWidgetFuncs Widget) -> IO (Ref Widget)
 widgetNew rectangle l' funcs' =
-    let (x_pos, y_pos, width, height) = fromRectangle rectangle
-    in case (l', funcs') of
-        (Nothing,Nothing) -> widgetNew' x_pos y_pos width height >>=
-                             toRef
-        ((Just l), Nothing) -> widgetNewWithLabel' x_pos y_pos width height l >>=
-                               toRef
-        ((Just l), (Just fs)) -> do
-                               ptr <- widgetFunctionStruct fs
-                               overriddenWidgetNewWithLabel' x_pos y_pos width height l (castPtr ptr) >>=
-                                                             toRef
-        (Nothing, (Just fs)) -> do
-                               ptr <- widgetFunctionStruct fs
-                               overriddenWidgetNew' x_pos y_pos width height (castPtr ptr) >>=
-                                                    toRef
+  widgetMaker
+    rectangle
+    l'
+    funcs'
+    widgetNew'
+    widgetNewWithLabel'
+    overriddenWidgetNew'
+    overriddenWidgetNewWithLabel'
 
 {# fun Fl_Widget_Destroy as widgetDestroy' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
 instance Op (Destroy ()) Widget (IO ()) where
@@ -232,7 +243,7 @@ instance Op (GetParent ()) Widget (IO (Ref Group)) where
     runOp _ widget = withRef widget widgetParent' >>= toRef
 
 {#fun Fl_Widget_set_parent as widgetSetParent' { id `Ptr ()', id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance Op (SetParent ()) Widget (Ref Group -> IO ()) where
+instance (FindObj a Group Same) => Op (SetParent ()) Widget (Ref a -> IO ()) where
     runOp _ widget group =
       withRef widget
       (\widgetPtr ->
@@ -330,13 +341,13 @@ instance Op (SetLabelsize ()) Widget (FontSize ->  IO (())) where
 instance Op (GetImage ()) Widget ( IO (Ref Image)) where
   runOp _ widget = withRef widget $ \widgetPtr -> image' widgetPtr
 {# fun Fl_Widget_set_image as setImage' { id `Ptr ()',id `Ptr ()'} -> `()' supressWarningAboutRes #}
-instance Op (SetImage ()) Widget (Ref Image ->  IO (())) where
+instance (FindObj a Image Same) => Op (SetImage ()) Widget (Ref a ->  IO (())) where
   runOp _ widget pix = withRef widget $ \widgetPtr -> withRef pix $ \pixPtr -> setImage' widgetPtr pixPtr
 {# fun Fl_Widget_deimage as deimage' { id `Ptr ()' } -> `(Ref Image)' unsafeToRef #}
 instance Op (GetDeimage ()) Widget ( IO (Ref Image)) where
   runOp _ widget = withRef widget $ \widgetPtr -> deimage' widgetPtr
 {# fun Fl_Widget_set_deimage as setDeimage' { id `Ptr ()',id `Ptr ()'} -> `()' supressWarningAboutRes #}
-instance Op (SetDeimage ()) Widget (Ref Image ->  IO (())) where
+instance (FindObj a Image Same) => Op (SetDeimage ()) Widget (Ref a ->  IO (())) where
   runOp _ widget pix = withRef widget $ \widgetPtr -> withRef pix $ \pixPtr -> setDeimage' widgetPtr pixPtr
 {# fun Fl_Widget_tooltip as tooltip' { id `Ptr ()' } -> `String' #}
 instance Op (GetTooltip ()) Widget ( IO (String)) where
@@ -423,10 +434,10 @@ instance Op (ModifyVisibleFocus ()) Widget (Int ->  IO (())) where
 instance Op (GetVisibleFocus ()) Widget ( IO (Int)) where
   runOp _ widget = withRef widget $ \widgetPtr -> visibleFocus' widgetPtr
 {# fun Fl_Widget_contains as contains' { id `Ptr ()',id `Ptr ()' } -> `Int' #}
-instance Op (Contains ()) Widget (Ref Widget  ->  IO (Int)) where
+instance (FindObj a Widget Same) => Op (Contains ()) Widget (Ref a ->  IO (Int)) where
   runOp _ widget otherWidget = withRef widget $ \widgetPtr -> withRef otherWidget $ \otherWidgetPtr -> contains' widgetPtr otherWidgetPtr
 {# fun Fl_Widget_inside as inside' { id `Ptr ()',id `Ptr ()' } -> `Int' #}
-instance Op (Inside ()) Widget (Ref Widget -> IO (Int)) where
+instance (FindObj a Widget Same) => Op (Inside ()) Widget (Ref a -> IO (Int)) where
   runOp _ widget otherWidget = withRef widget $ \widgetPtr -> withRef otherWidget $ \otherWidgetPtr -> inside' widgetPtr otherWidgetPtr
 {# fun Fl_Widget_redraw as redraw' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
 instance Op (Redraw ()) Widget ( IO (())) where
@@ -463,18 +474,6 @@ instance Op (GetTopWindow ()) Widget ( IO (Ref Window)) where
 {# fun Fl_Widget_top_window_offset as topWindowOffset' { id `Ptr ()',alloca- `Int' peekIntConv*,alloca- `Int' peekIntConv* } -> `()' #}
 instance Op (GetTopWindowOffset ()) Widget (IO (Position)) where
   runOp _ widget = withRef widget $ \widgetPtr -> topWindowOffset' widgetPtr >>= \(x_pos,y_pos) -> return $ Position (X x_pos) (Y y_pos)
-{# fun Fl_Widget_as_group_super as asGroupSuper' { id `Ptr ()' } -> `Ptr ()' id #}
-instance Op (AsGroupSuper ()) Widget ( IO (Ref Group)) where
-  runOp _ widget = withRef widget $ \widgetPtr -> asGroupSuper' widgetPtr >>= toRef
-{# fun Fl_Widget_as_group as asGroup' { id `Ptr ()' } -> `Ptr ()' id #}
-instance Op (AsGroup ()) Widget ( IO (Ref Group)) where
-  runOp _ widget = withRef widget $ \widgetPtr -> asGroup' widgetPtr >>= toRef
-{# fun Fl_Widget_as_gl_window_super as asGlWindowSuper' { id `Ptr ()' } -> `(Ref GlWindow)' unsafeToRef #}
-instance Op (AsGlWindowSuper ()) Widget ( IO (Ref GlWindow)) where
-  runOp _ widget = withRef widget $ \widgetPtr -> asGlWindowSuper' widgetPtr
-{# fun Fl_Widget_as_gl_window as asGlWindow' { id `Ptr ()' } -> `(Ref GlWindow)' unsafeToRef #}
-instance Op (AsGlWindow ()) Widget ( IO (Ref GlWindow)) where
-  runOp _ widget = withRef widget $ \widgetPtr -> asGlWindow' widgetPtr
 {# fun Fl_Widget_resize_super as resizeSuper' { id `Ptr ()',`Int',`Int',`Int',`Int' } -> `()' supressWarningAboutRes #}
 instance Op (ResizeSuper ()) Widget (Rectangle ->  IO (())) where
   runOp _ widget rectangle = withRef widget $ \widgetPtr -> do
@@ -486,9 +485,10 @@ instance Op (Resize ()) Widget (Rectangle -> IO (())) where
     let (x_pos,y_pos,w_pos,h_pos) = fromRectangle rectangle
     resize' widgetPtr x_pos y_pos w_pos h_pos
 {# fun Fl_Widget_set_callback as setCallback' { id `Ptr ()', id `FunPtr CallbackWithUserDataPrim'} -> `()' supressWarningAboutRes #}
-instance Op (SetCallback ()) Widget (WidgetCallback -> IO (())) where
-  runOp _ widget callback = withRef widget $ \widgetPtr -> do
-    ptr <- toWidgetCallbackPrim callback
+
+instance OpWithOriginal orig (SetCallback ()) Widget ((Ref orig -> IO ())-> IO (())) where
+  runOpWithOriginal _ _ widget callback = withRef widget $ \widgetPtr -> do
+    ptr <- toCallbackPrimWithUserData callback
     setCallback' widgetPtr (castFunPtr ptr)
 
 {# fun Fl_Widget_draw_box as widgetDrawBox' { id `Ptr ()' } -> `()' supressWarningAboutRes #}

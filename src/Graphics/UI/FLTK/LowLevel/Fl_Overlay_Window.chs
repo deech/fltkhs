@@ -1,9 +1,8 @@
-{-# LANGUAGE CPP, TypeSynonymInstances, FlexibleInstances, MultiParamTypeClasses, FlexibleContexts #-}
+{-# LANGUAGE CPP, TypeSynonymInstances, FlexibleInstances, MultiParamTypeClasses, FlexibleContexts, ExistentialQuantification #-}
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 module Graphics.UI.FLTK.LowLevel.Fl_Overlay_Window
     (
-     overlayWindowNew,
-     makeOverlayCallback
+     overlayWindowNew
     )
 where
 #include "Fl_C.h"
@@ -22,7 +21,7 @@ import C2HS hiding (cFromEnum, unsafePerformIO, toBool,cToEnum)
 {# fun Fl_Overlay_Window_NewXY_WithLabel as windowNewWithXYLabel' { `Int', `Int', `Int', `Int', `String', id `FunPtr CallbackPrim' } -> `Ptr ()' id #}
 {# fun Fl_Overlay_Window_NewXY as windowNewWithXY' { `Int', `Int', `Int', `Int', id `FunPtr CallbackPrim' } -> `Ptr ()' id #}
 
-overlayWindowNew :: Size -> Maybe String -> Maybe Position -> WidgetCallback -> IO (Ref OverlayWindow)
+overlayWindowNew :: forall a. (FindObj a OverlayWindow Same) => Size -> Maybe String -> Maybe Position -> (Ref a -> IO ()) -> IO (Ref OverlayWindow)
 overlayWindowNew (Size (Width width') (Height height')) title' position' callback' =
     do
       fptr <- toCallbackPrim callback'
@@ -31,9 +30,6 @@ overlayWindowNew (Size (Width width') (Height height')) title' position' callbac
         (Nothing, Just (Position (X x') (Y y'))) -> windowNewWithXY' width' height' x' y' fptr >>= toRef
         (Just t, Nothing) -> windowNewWithLabel' width' height' t fptr >>= toRef
         (Nothing, Nothing) -> windowNew' width' height' fptr >>= toRef
-
-makeOverlayCallback :: (Ref OverlayWindow-> IO ()) -> WidgetCallback
-makeOverlayCallback = WidgetCallback
 
 {# fun Fl_Overlay_Window_Destroy as windowDestroy' { id `Ptr ()' } -> `()' #}
 instance Op (Destroy ()) OverlayWindow ( IO ()) where

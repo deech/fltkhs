@@ -1,291 +1,259 @@
-{-# LANGUAGE CPP #-}
+{-# LANGUAGE CPP, TypeSynonymInstances, FlexibleInstances, MultiParamTypeClasses, FlexibleContexts #-}
+{-# OPTIONS_GHC -fno-warn-orphans #-}
 module Graphics.UI.FLTK.LowLevel.Fl_Menu_Item
   (
    menuItemNew,
-   menuItemDestroy,
-   menuItemNextWithStep,
-   menuItemNext,
-   menuItemFirst,
-   menuItemLabel,
-   menuItemSetLabel,
-   menuItemSetLabelWithLabeltype,
-   menuItemLabeltype,
-   menuItemSetLabeltype,
-   menuItemLabelcolor,
-   menuItemSetLabelcolor,
-   menuItemLabelfont,
-   menuItemSetLabelfont,
-   menuItemLabelsize,
-   menuItemSetLabelsize,
-   menuItemSetCallback,
-   menuItemShortcut,
-   menuItemSetShortcut,
-   menuItemSubmenu,
-   menuItemCheckbox,
-   menuItemRadio,
-   menuItemValue,
-   menuItemSet,
-   menuItemClear,
-   menuItemSetonly,
-   menuItemVisible,
-   menuItemShow,
-   menuItemHide,
-   menuItemActive,
-   menuItemActivate,
-   menuItemDeactivate,
-   menuItemActivevisible,
-   menuItemMeasure,
-   menuItemDrawWithT,
-   menuItemDraw,
-   menuItemFlags,
-   menuItemSetFlags,
-   menuItemText,
-   menuItemPulldown,
-   menuItemPopup,
-   menuItemTestShortcut,
-   menuItemFindShortcut,
-   menuItemDoCallback,
-   menuItemAdd,
-   menuItemInsert,
-   menuItemSize
+   MenuItemIndex(..),
+   MenuItemName(..),
+   MenuItemPointer(..),
+   MenuItemReference(..),
+   MenuItemLocator(..)
   )
 where
 #include "Fl_ExportMacros.h"
 #include "Fl_Types.h"
 #include "Fl_Menu_ItemC.h"
 import C2HS hiding (cFromEnum, cFromBool, cToBool,cToEnum)
-import Foreign.C.Types
 import Graphics.UI.FLTK.LowLevel.Fl_Enumerations
 import Graphics.UI.FLTK.LowLevel.Fl_Types
 import Graphics.UI.FLTK.LowLevel.Utils
+import Graphics.UI.FLTK.LowLevel.Hierarchy
+import Graphics.UI.FLTK.LowLevel.Dispatch
+import Graphics.UI.FLTK.LowLevel.Fl_Widget
+
+newtype MenuItemIndex = MenuItemIndex Int
+data MenuItemPointer = MenuItemPointer (Ref MenuItem)
+newtype MenuItemName = MenuItemName String
+data MenuItemReference = MenuItemIndexReference MenuItemIndex | MenuItemPointerReference MenuItemPointer
+data MenuItemLocator = MenuItemPointerLocator MenuItemPointer | MenuItemNameLocator MenuItemName
 
 {# fun unsafe Fl_Menu_Item_New as new' { } -> `Ptr ()' id #}
-menuItemNew :: IO (MenuItem a)
-menuItemNew = new' >>= toObject
+menuItemNew :: IO (Ref MenuItem)
+menuItemNew = new' >>= toRef
 
 {# fun unsafe Fl_Menu_Item_Destroy as destroy' { id `Ptr ()' } -> `()' id #}
-menuItemDestroy :: MenuItem a -> IO ()
-menuItemDestroy menu_item = withObject menu_item $ \menu_itemPtr -> destroy' menu_itemPtr
+instance Op (Destroy ()) MenuItem ( IO ()) where
+  runOp _ menu_item = withRef menu_item $ \menu_itemPtr -> destroy' menu_itemPtr
 
 {# fun unsafe Fl_Menu_Item_next_with_step as nextWithStep' { id `Ptr ()',`Int' } -> `Ptr ()' id #}
-menuItemNextWithStep :: MenuItem a  -> Int ->  IO (MenuItem a)
-menuItemNextWithStep menu_item step =
-  withObject menu_item $ \menu_itemPtr -> nextWithStep' menu_itemPtr step >>= toObject
+instance Op (NextWithStep ()) MenuItem ( Int ->  IO (Ref MenuItem)) where
+  runOp _ menu_item step =
+    withRef menu_item $ \menu_itemPtr -> nextWithStep' menu_itemPtr step >>= toRef
 
 {# fun unsafe Fl_Menu_Item_next as next' { id `Ptr ()' } -> `Ptr ()' id #}
-menuItemNext :: MenuItem a  ->  IO (Ptr ())
-menuItemNext menu_item = withObject menu_item $ \menu_itemPtr -> next' menu_itemPtr
+instance Op (Next ()) MenuItem (  IO (Ptr ())) where
+  runOp _ menu_item = withRef menu_item $ \menu_itemPtr -> next' menu_itemPtr
 
 {# fun unsafe Fl_Menu_Item_first as first' { id `Ptr ()' } -> `Ptr ()' id #}
-menuItemFirst :: MenuItem a  ->  IO (Ptr ())
-menuItemFirst menu_item = withObject menu_item $ \menu_itemPtr -> first' menu_itemPtr
+instance Op (GetFirst ()) MenuItem (  IO (Ptr ())) where
+  runOp _ menu_item = withRef menu_item $ \menu_itemPtr -> first' menu_itemPtr
 
 {# fun unsafe Fl_Menu_Item_label as label' { id `Ptr ()' } -> `String' #}
-menuItemLabel :: MenuItem a  ->  IO (String)
-menuItemLabel menu_item = withObject menu_item $ \menu_itemPtr -> label' menu_itemPtr
+instance Op (GetLabel ()) MenuItem (  IO (String)) where
+  runOp _ menu_item = withRef menu_item $ \menu_itemPtr -> label' menu_itemPtr
 
 {# fun unsafe Fl_Menu_Item_set_label as setLabel' { id `Ptr ()',`String' } -> `()' #}
-menuItemSetLabel :: MenuItem a  -> String ->  IO ()
-menuItemSetLabel menu_item a = withObject menu_item $ \menu_itemPtr -> setLabel' menu_itemPtr a
+instance Op (SetLabel ()) MenuItem ( String ->  IO ()) where
+  runOp _ menu_item a = withRef menu_item $ \menu_itemPtr -> setLabel' menu_itemPtr a
 
 {# fun unsafe Fl_Menu_Item_set_label_with_labeltype as setLabelWithLabeltype' { id `Ptr ()',cFromEnum `Labeltype',`String' } -> `()' #}
-menuItemSetLabelWithLabeltype :: MenuItem a  -> Labeltype -> String ->  IO ()
-menuItemSetLabelWithLabeltype menu_item labeltype b = withObject menu_item $ \menu_itemPtr -> setLabelWithLabeltype' menu_itemPtr labeltype b
+instance Op (SetLabelWithLabeltype ()) MenuItem ( Labeltype -> String ->  IO ()) where
+  runOp _ menu_item labeltype b = withRef menu_item $ \menu_itemPtr -> setLabelWithLabeltype' menu_itemPtr labeltype b
 
 {# fun unsafe Fl_Menu_Item_labeltype as labeltype' { id `Ptr ()' } -> `Labeltype' cToEnum #}
-menuItemLabeltype :: MenuItem a  ->  IO (Labeltype)
-menuItemLabeltype menu_item = withObject menu_item $ \menu_itemPtr -> labeltype' menu_itemPtr
+instance Op (GetLabeltype ()) MenuItem (  IO (Labeltype)) where
+  runOp _ menu_item = withRef menu_item $ \menu_itemPtr -> labeltype' menu_itemPtr
 
 {# fun unsafe Fl_Menu_Item_set_labeltype as setLabeltype' { id `Ptr ()',cFromEnum `Labeltype' } -> `()' #}
-menuItemSetLabeltype :: MenuItem a  -> Labeltype ->  IO ()
-menuItemSetLabeltype menu_item a = withObject menu_item $ \menu_itemPtr -> setLabeltype' menu_itemPtr a
+instance Op (SetLabeltype ()) MenuItem ( Labeltype ->  IO ()) where
+  runOp _ menu_item a = withRef menu_item $ \menu_itemPtr -> setLabeltype' menu_itemPtr a
 
 {# fun unsafe Fl_Menu_Item_labelcolor as labelcolor' { id `Ptr ()' } -> `Color' cToColor #}
-menuItemLabelcolor :: MenuItem a  ->  IO (Color)
-menuItemLabelcolor menu_item = withObject menu_item $ \menu_itemPtr -> labelcolor' menu_itemPtr
+instance Op (GetLabelcolor ()) MenuItem (  IO (Color)) where
+  runOp _ menu_item = withRef menu_item $ \menu_itemPtr -> labelcolor' menu_itemPtr
 
 {# fun unsafe Fl_Menu_Item_set_labelcolor as setLabelcolor' { id `Ptr ()',cFromColor `Color' } -> `()' #}
-menuItemSetLabelcolor :: MenuItem a  -> Color ->  IO ()
-menuItemSetLabelcolor menu_item a = withObject menu_item $ \menu_itemPtr -> setLabelcolor' menu_itemPtr a
+instance Op (SetLabelcolor ()) MenuItem ( Color ->  IO ()) where
+  runOp _ menu_item a = withRef menu_item $ \menu_itemPtr -> setLabelcolor' menu_itemPtr a
 
 {# fun unsafe Fl_Menu_Item_labelfont as labelfont' { id `Ptr ()' } -> `Font' cToFont #}
-menuItemLabelfont :: MenuItem a  ->  IO (Font)
-menuItemLabelfont menu_item = withObject menu_item $ \menu_itemPtr -> labelfont' menu_itemPtr
+instance Op (GetLabelfont ()) MenuItem (  IO (Font)) where
+  runOp _ menu_item = withRef menu_item $ \menu_itemPtr -> labelfont' menu_itemPtr
 
 {# fun unsafe Fl_Menu_Item_set_labelfont as setLabelfont' { id `Ptr ()',cFromFont `Font' } -> `()' #}
-menuItemSetLabelfont :: MenuItem a  -> Font ->  IO ()
-menuItemSetLabelfont menu_item a = withObject menu_item $ \menu_itemPtr -> setLabelfont' menu_itemPtr a
+instance Op (SetLabelfont ()) MenuItem ( Font ->  IO ()) where
+  runOp _ menu_item a = withRef menu_item $ \menu_itemPtr -> setLabelfont' menu_itemPtr a
 
 {# fun unsafe Fl_Menu_Item_labelsize as labelsize' { id `Ptr ()' } -> `CInt' id #}
-menuItemLabelsize :: MenuItem a  ->  IO (FontSize)
-menuItemLabelsize menu_item = withObject menu_item $ \menu_itemPtr -> labelsize' menu_itemPtr >>= return . FontSize
+instance Op (GetLabelsize ()) MenuItem (  IO (FontSize)) where
+  runOp _ menu_item = withRef menu_item $ \menu_itemPtr -> labelsize' menu_itemPtr >>= return . FontSize
 
 {# fun unsafe Fl_Menu_Item_set_labelsize as setLabelsize' { id `Ptr ()', id `CInt' } -> `()' #}
-menuItemSetLabelsize :: MenuItem a  -> FontSize ->  IO ()
-menuItemSetLabelsize menu_item (FontSize pix) = withObject menu_item $ \menu_itemPtr -> setLabelsize' menu_itemPtr pix
+instance Op (SetLabelsize ()) MenuItem ( FontSize ->  IO ()) where
+  runOp _ menu_item (FontSize pix) = withRef menu_item $ \menu_itemPtr -> setLabelsize' menu_itemPtr pix
 
 {# fun Fl_Menu_Item_set_callback as setCallback' { id `Ptr ()', id `FunPtr CallbackWithUserDataPrim'} -> `()' #}
-menuItemSetCallback :: MenuItem a  -> (MenuItem b -> IO ()) ->  IO ()
-menuItemSetCallback menu_item c = withObject menu_item $ \menu_itemPtr -> do
-                                    ptr <- toWidgetCallbackPrim c
+instance OpWithOriginal orig (SetCallback ()) MenuItem ( (Ref orig -> IO ()) ->  IO ()) where
+  runOpWithOriginal _ _ menu_item c = withRef menu_item $ \menu_itemPtr -> do
+                                    ptr <- toCallbackPrim c
                                     setCallback' menu_itemPtr (castFunPtr ptr)
 
 {# fun unsafe Fl_Menu_Item_shortcut as shortcut' { id `Ptr ()' } -> `Int' #}
-menuItemShortcut :: MenuItem a  ->  IO (Int)
-menuItemShortcut menu_item = withObject menu_item $ \menu_itemPtr -> shortcut' menu_itemPtr
+instance Op (GetShortcut ()) MenuItem (  IO (Int)) where
+  runOp _ menu_item = withRef menu_item $ \menu_itemPtr -> shortcut' menu_itemPtr
 
 {# fun unsafe Fl_Menu_Item_set_shortcut as setShortcut' { id `Ptr ()',`Int' } -> `()' #}
-menuItemSetShortcut :: MenuItem a  -> Int ->  IO ()
-menuItemSetShortcut menu_item s = withObject menu_item $ \menu_itemPtr -> setShortcut' menu_itemPtr s
+instance Op (SetShortcut ()) MenuItem ( Int ->  IO ()) where
+  runOp _ menu_item s = withRef menu_item $ \menu_itemPtr -> setShortcut' menu_itemPtr s
 
 {# fun unsafe Fl_Menu_Item_submenu as submenu' { id `Ptr ()' } -> `Int' #}
-menuItemSubmenu :: MenuItem a  ->  IO (Int)
-menuItemSubmenu menu_item = withObject menu_item $ \menu_itemPtr -> submenu' menu_itemPtr
+instance Op (Submenu ()) MenuItem (  IO (Int)) where
+  runOp _ menu_item = withRef menu_item $ \menu_itemPtr -> submenu' menu_itemPtr
 
 {# fun unsafe Fl_Menu_Item_checkbox as checkbox' { id `Ptr ()' } -> `Int' #}
-menuItemCheckbox :: MenuItem a  ->  IO (Int)
-menuItemCheckbox menu_item = withObject menu_item $ \menu_itemPtr -> checkbox' menu_itemPtr
+instance Op (Checkbox ()) MenuItem (  IO (Int)) where
+  runOp _ menu_item = withRef menu_item $ \menu_itemPtr -> checkbox' menu_itemPtr
 
 {# fun unsafe Fl_Menu_Item_radio as radio' { id `Ptr ()' } -> `Int' #}
-menuItemRadio :: MenuItem a  ->  IO (Int)
-menuItemRadio menu_item = withObject menu_item $ \menu_itemPtr -> radio' menu_itemPtr
+instance Op (Radio ()) MenuItem (  IO (Int)) where
+  runOp _ menu_item = withRef menu_item $ \menu_itemPtr -> radio' menu_itemPtr
 
 {# fun unsafe Fl_Menu_Item_value as value' { id `Ptr ()' } -> `Int' #}
-menuItemValue :: MenuItem a  ->  IO (Int)
-menuItemValue menu_item = withObject menu_item $ \menu_itemPtr -> value' menu_itemPtr
+instance Op (GetValue ()) MenuItem (  IO (Int)) where
+  runOp _ menu_item = withRef menu_item $ \menu_itemPtr -> value' menu_itemPtr
 
 {# fun unsafe Fl_Menu_Item_set as set' { id `Ptr ()' } -> `()' #}
-menuItemSet :: MenuItem a  ->  IO ()
-menuItemSet menu_item = withObject menu_item $ \menu_itemPtr -> set' menu_itemPtr
+instance Op (Set ()) MenuItem (  IO ()) where
+  runOp _ menu_item = withRef menu_item $ \menu_itemPtr -> set' menu_itemPtr
 
 {# fun unsafe Fl_Menu_Item_clear as clear' { id `Ptr ()' } -> `()' #}
-menuItemClear :: MenuItem a  ->  IO ()
-menuItemClear menu_item = withObject menu_item $ \menu_itemPtr -> clear' menu_itemPtr
+instance Op (Clear ()) MenuItem (  IO ()) where
+  runOp _ menu_item = withRef menu_item $ \menu_itemPtr -> clear' menu_itemPtr
 
 {# fun unsafe Fl_Menu_Item_setonly as setonly' { id `Ptr ()' } -> `()' #}
-menuItemSetonly :: MenuItem a  ->  IO ()
-menuItemSetonly menu_item = withObject menu_item $ \menu_itemPtr -> setonly' menu_itemPtr
+instance Op (Setonly ()) MenuItem (  IO ()) where
+  runOp _ menu_item = withRef menu_item $ \menu_itemPtr -> setonly' menu_itemPtr
 
 {# fun unsafe Fl_Menu_Item_visible as visible' { id `Ptr ()' } -> `Int' #}
-menuItemVisible :: MenuItem a  ->  IO (Int)
-menuItemVisible menu_item = withObject menu_item $ \menu_itemPtr -> visible' menu_itemPtr
+instance Op (Visible ()) MenuItem (  IO (Int)) where
+  runOp _ menu_item = withRef menu_item $ \menu_itemPtr -> visible' menu_itemPtr
 
 {# fun unsafe Fl_Menu_Item_show as show' { id `Ptr ()' } -> `()' #}
-menuItemShow :: MenuItem a  ->  IO ()
-menuItemShow menu_item = withObject menu_item $ \menu_itemPtr -> show' menu_itemPtr
+instance Op (ShowWidget ()) MenuItem (  IO ()) where
+  runOp _ menu_item = withRef menu_item $ \menu_itemPtr -> show' menu_itemPtr
 
 {# fun unsafe Fl_Menu_Item_hide as hide' { id `Ptr ()' } -> `()' #}
-menuItemHide :: MenuItem a  ->  IO ()
-menuItemHide menu_item = withObject menu_item $ \menu_itemPtr -> hide' menu_itemPtr
+instance Op (Hide ()) MenuItem (  IO ()) where
+  runOp _ menu_item = withRef menu_item $ \menu_itemPtr -> hide' menu_itemPtr
 
 {# fun unsafe Fl_Menu_Item_active as active' { id `Ptr ()' } -> `Int' #}
-menuItemActive :: MenuItem a  ->  IO (Int)
-menuItemActive menu_item = withObject menu_item $ \menu_itemPtr -> active' menu_itemPtr
+instance Op (Active ()) MenuItem (  IO (Int)) where
+  runOp _ menu_item = withRef menu_item $ \menu_itemPtr -> active' menu_itemPtr
 
 {# fun unsafe Fl_Menu_Item_activate as activate' { id `Ptr ()' } -> `()' #}
-menuItemActivate :: MenuItem a  ->  IO ()
-menuItemActivate menu_item = withObject menu_item $ \menu_itemPtr -> activate' menu_itemPtr
+instance Op (Activate ()) MenuItem (  IO ()) where
+  runOp _ menu_item = withRef menu_item $ \menu_itemPtr -> activate' menu_itemPtr
 
 {# fun unsafe Fl_Menu_Item_deactivate as deactivate' { id `Ptr ()' } -> `()' #}
-menuItemDeactivate :: MenuItem a  ->  IO ()
-menuItemDeactivate menu_item = withObject menu_item $ \menu_itemPtr -> deactivate' menu_itemPtr
+instance Op (Deactivate ()) MenuItem (  IO ()) where
+  runOp _ menu_item = withRef menu_item $ \menu_itemPtr -> deactivate' menu_itemPtr
 
 {# fun unsafe Fl_Menu_Item_activevisible as activevisible' { id `Ptr ()' } -> `Int' #}
-menuItemActivevisible :: MenuItem a  ->  IO (Int)
-menuItemActivevisible menu_item = withObject menu_item $ \menu_itemPtr -> activevisible' menu_itemPtr
+instance Op (Activevisible ()) MenuItem (  IO (Int)) where
+  runOp _ menu_item = withRef menu_item $ \menu_itemPtr -> activevisible' menu_itemPtr
 
-{# fun unsafe Fl_Menu_Item_measure as measure' { id `Ptr ()',alloca- `Int' peekIntConv*,id `Ptr ()' } -> `()' #}
-menuItemMeasure :: MenuItem a -> MenuPrim a ->  IO (Int)
-menuItemMeasure menu_item menu = withObject menu_item $ \menu_itemPtr -> withObject menu $ \menuPtr -> measure' menu_itemPtr menuPtr
+{# fun unsafe Fl_Menu_Item_measure as measure' { id `Ptr ()',alloca- `Int' peekIntConv*,id `Ptr ()' } -> `Int' #}
+instance Op (Measure ()) MenuItem ( Ref MenuPrim ->  IO (Int,Int)) where
+  runOp _ menu_item menu' = withRef menu_item $ \menu_itemPtr -> withRef menu' $ \menuPtr -> measure' menu_itemPtr menuPtr
 
 {# fun unsafe Fl_Menu_Item_draw_with_t as drawWithT' { id `Ptr ()',`Int',`Int',`Int',`Int',id `Ptr ()',`Int' } -> `()' #}
-menuItemDrawWithT :: MenuItem a  -> Rectangle -> MenuPrim a -> Int ->  IO ()
-menuItemDrawWithT menu_item rectangle menu t =
+instance Op (DrawWithT ()) MenuItem ( Rectangle -> Ref MenuPrim -> Int ->  IO ()) where
+  runOp _ menu_item rectangle menu' t =
     let (x_pos', y_pos', width', height') = fromRectangle rectangle in
-    withObject menu_item $ \menu_itemPtr -> withObject menu $ \menuPtr -> drawWithT' menu_itemPtr x_pos' y_pos' width' height' menuPtr t
+    withRef menu_item $ \menu_itemPtr -> withRef menu' $ \menuPtr -> drawWithT' menu_itemPtr x_pos' y_pos' width' height' menuPtr t
 
 {# fun unsafe Fl_Menu_Item_draw as draw' { id `Ptr ()',`Int',`Int',`Int',`Int',id `Ptr ()' } -> `()' #}
-menuItemDraw :: MenuItem a  -> Rectangle -> MenuPrim a ->  IO ()
-menuItemDraw menu_item rectangle menu =
-  let (x_pos', y_pos', width', height') = fromRectangle rectangle in
-  withObject menu_item $ \menu_itemPtr ->
-  withObject menu $ \menuPtr -> draw' menu_itemPtr x_pos' y_pos' width' height' menuPtr
+instance Op (Draw ()) MenuItem ( Rectangle -> Ref MenuPrim ->  IO ()) where
+  runOp _ menu_item rectangle menu' =
+    let (x_pos', y_pos', width', height') = fromRectangle rectangle in
+    withRef menu_item $ \menu_itemPtr ->
+    withRef menu' $ \menuPtr -> draw' menu_itemPtr x_pos' y_pos' width' height' menuPtr
 
 {# fun unsafe Fl_Menu_Item_flags as flags' { id `Ptr ()' } -> `Int' #}
-menuItemFlags :: MenuItem a  ->  IO (Int)
-menuItemFlags menu_item = withObject menu_item $ \menu_itemPtr -> flags' menu_itemPtr
+instance Op (GetFlags ()) MenuItem (  IO (Int)) where
+  runOp _ menu_item = withRef menu_item $ \menu_itemPtr -> flags' menu_itemPtr
 
 {# fun unsafe Fl_Menu_Item_set_flags as setFlags' { id `Ptr ()',`Int' } -> `()' #}
-menuItemSetFlags :: MenuItem a  -> Int ->  IO ()
-menuItemSetFlags menu_item flags = withObject menu_item $ \menu_itemPtr -> setFlags' menu_itemPtr flags
+instance Op (SetFlags ()) MenuItem ( Int ->  IO ()) where
+  runOp _ menu_item flags = withRef menu_item $ \menu_itemPtr -> setFlags' menu_itemPtr flags
 
 {# fun unsafe Fl_Menu_Item_text as text' { id `Ptr ()' } -> `String' #}
-menuItemText :: MenuItem a  ->  IO (String)
-menuItemText menu_item = withObject menu_item $ \menu_itemPtr -> text' menu_itemPtr
+instance Op (GetText ()) MenuItem (  IO (String)) where
+  runOp _ menu_item = withRef menu_item $ \menu_itemPtr -> text' menu_itemPtr
 
 {# fun unsafe Fl_Menu_Item_pulldown_with_args as pulldownWithArgs' { id `Ptr ()',`Int',`Int',`Int',`Int',id `Ptr ()', id `Ptr ()', id `Ptr ()', fromBool `Bool'} -> `Ptr ()' id #}
-menuItemPulldown :: MenuItem a -> Rectangle -> Maybe (MenuItem a) -> Maybe (MenuPrim b) -> Maybe (MenuItem c) -> Maybe Bool -> IO (MenuItem b)
-menuItemPulldown menu_item rectangle picked template_menu title menu_barFlag =
-  let (x_pos, y_pos, width, height) = fromRectangle rectangle
-      menu_bar = maybe False id menu_barFlag
-  in
-   withObject menu_item $ \menu_itemPtr ->
-   withMaybeObject picked $ \pickedPtr ->
-   withMaybeObject template_menu $ \template_menuPtr ->
-   withMaybeObject title $ \titlePtr ->
-   pulldownWithArgs' menu_itemPtr x_pos y_pos width height pickedPtr template_menuPtr titlePtr menu_bar >>= toObject
+instance Op (Pulldown ()) MenuItem ( Rectangle -> Maybe (Ref MenuItem) -> Maybe (Ref MenuPrim) -> Maybe (Ref MenuItem) -> Maybe Bool -> IO (Ref MenuItem)) where
+  runOp _ menu_item rectangle picked' template_menu title menu_barFlag =
+    let (x_pos, y_pos, width, height) = fromRectangle rectangle
+        menu_bar = maybe False id menu_barFlag
+    in
+     withRef menu_item $ \menu_itemPtr ->
+     withMaybeRef picked' $ \pickedPtr ->
+     withMaybeRef template_menu $ \template_menuPtr ->
+     withMaybeRef title $ \titlePtr ->
+     pulldownWithArgs' menu_itemPtr x_pos y_pos width height pickedPtr template_menuPtr titlePtr menu_bar >>= toRef
 
 {# fun unsafe Fl_Menu_Item_popup_with_args as popupWithArgs' { id `Ptr ()',`Int',`Int', id `Ptr CChar' , id `Ptr ()', id `Ptr ()'} -> `Ptr ()' id #}
-menuItemPopup :: MenuItem a -> Position -> Maybe String -> Maybe (MenuItem a) -> Maybe (MenuPrim b) -> IO (MenuItem c)
-menuItemPopup menu_item (Position (X x_pos) (Y y_pos)) title picked template_menu =
-  withObject menu_item $ \menu_itemPtr ->
-  withMaybeObject picked $ \pickedPtr ->
-  withMaybeObject template_menu $ \template_menuPtr ->
-  maybeNew newCString title >>= \titlePtr ->
-  popupWithArgs' menu_itemPtr x_pos y_pos titlePtr pickedPtr template_menuPtr >>= toObject
+instance Op (Popup ()) MenuItem ( Position -> Maybe String -> Maybe (Ref MenuItem) -> Maybe (Ref MenuPrim) -> IO (Ref MenuItem)) where
+  runOp _ menu_item (Position (X x_pos) (Y y_pos)) title picked' template_menu =
+    withRef menu_item $ \menu_itemPtr ->
+    withMaybeRef picked' $ \pickedPtr ->
+    withMaybeRef template_menu $ \template_menuPtr ->
+    maybeNew newCString title >>= \titlePtr ->
+    popupWithArgs' menu_itemPtr x_pos y_pos titlePtr pickedPtr template_menuPtr >>= toRef
 
 {# fun unsafe Fl_Menu_Item_test_shortcut as testShortcut' { id `Ptr ()' } -> `Ptr ()' id #}
-menuItemTestShortcut :: MenuItem a  ->  IO (MenuItem a)
-menuItemTestShortcut menu_item = withObject menu_item $ \menu_itemPtr -> testShortcut' menu_itemPtr >>= toObject
+instance Op (TestShortcut ()) MenuItem (  IO (Ref MenuItem)) where
+  runOp _ menu_item = withRef menu_item $ \menu_itemPtr -> testShortcut' menu_itemPtr >>= toRef
 
 {# fun unsafe Fl_Menu_Item_find_shortcut_with_ip_require_alt as findShortcutWithIpRequireAlt' { id `Ptr ()',id `Ptr CInt',`Bool' } -> `Ptr ()' id #}
-menuItemFindShortcut :: MenuItem a -> Maybe Int -> Bool -> IO (MenuItem a)
-menuItemFindShortcut menu_item index require_alt =
-    withObject menu_item $ \menu_itemPtr ->
-        maybeNew (new . fromIntegral) index >>= \index_Ptr ->
-            findShortcutWithIpRequireAlt' menu_itemPtr index_Ptr require_alt >>= toObject
+instance Op (FindShortcut ()) MenuItem ( Maybe Int -> Bool -> IO (Ref MenuItem)) where
+  runOp _ menu_item index' require_alt =
+    withRef menu_item $ \menu_itemPtr ->
+        maybeNew (new . fromIntegral) index' >>= \index_Ptr ->
+            findShortcutWithIpRequireAlt' menu_itemPtr index_Ptr require_alt >>= toRef
 
 {# fun unsafe Fl_Menu_Item_do_callback as doCallback' { id `Ptr ()',id `Ptr ()' } -> `()' #}
-menuItemDoCallback :: MenuItem a  -> Widget a  ->  IO ()
-menuItemDoCallback menu_item o = withObject menu_item $ \menu_itemPtr -> withObject o $ \oPtr -> doCallback' menu_itemPtr oPtr
+instance Op (DoCallback ()) MenuItem ( Ref Widget  ->  IO ()) where
+  runOp _ menu_item o = withRef menu_item $ \menu_itemPtr -> withRef o $ \oPtr -> doCallback' menu_itemPtr oPtr
 
 {# fun Fl_Menu_Item_insert_with_flags as insertWithFlags' { id `Ptr ()',`Int',`String',id `CInt',id `FunPtr CallbackWithUserDataPrim',`Int'} -> `Int' #}
 {# fun Fl_Menu_Item_add_with_flags as addWithFlags' { id `Ptr ()',`String',id `CInt',id `FunPtr CallbackWithUserDataPrim',`Int'} -> `Int' #}
 {# fun Fl_Menu_Item_add_with_shortcutname_flags as addWithShortcutnameFlags' { id `Ptr ()',`String',`String',id `FunPtr CallbackWithUserDataPrim',`Int' } -> `Int' #}
-menuItemAdd :: MenuItem a -> String -> Maybe Shortcut -> (MenuItem b -> IO ()) -> [MenuProps] -> IO (Int)
-menuItemAdd menu_item name shortcut cb flags =
-  withObject menu_item $ \menu_itemPtr -> do
-    let combinedFlags = foldl1WithDefault 0 (.|.) (map fromEnum flags)
-    ptr <- toWidgetCallbackPrim cb
-    case shortcut of
-      Just s' -> case s' of
-        KeySequence ks ->
-          addWithFlags'
+instance Op (Add ()) MenuItem ( String -> Maybe Shortcut -> (Ref MenuItem -> IO ()) -> [MenuProps] -> IO (Int)) where
+  runOp _ menu_item name shortcut cb flags =
+    withRef menu_item $ \menu_itemPtr -> do
+      let combinedFlags = foldl1WithDefault 0 (.|.) (map fromEnum flags)
+      ptr <- toBaseCallbackPrim (BaseCallback cb)
+      case shortcut of
+       Just s' -> case s' of
+         KeySequence ks ->
+           addWithFlags'
            menu_itemPtr
            name
            (keySequenceToCInt ks)
            (castFunPtr ptr)
            combinedFlags
-        KeyFormat format ->
-          if (not $ null format) then
-            addWithShortcutnameFlags'
-            menu_itemPtr
-            name
-            format
-            (castFunPtr ptr)
-            combinedFlags
-          else error "Fl_Menu_Item.menu_item_add: shortcut format string cannot be empty"
-      Nothing -> 
+         KeyFormat format' ->
+           if (not $ null format') then
+             addWithShortcutnameFlags'
+             menu_itemPtr
+             name
+             format'
+             (castFunPtr ptr)
+             combinedFlags
+           else error "menuItemAdd: shortcut format string cannot be empty"
+       Nothing ->
           addWithFlags'
            menu_itemPtr
            name
@@ -293,21 +261,21 @@ menuItemAdd menu_item name shortcut cb flags =
            (castFunPtr ptr)
            combinedFlags
 
-menuItemInsert :: MenuItem a -> Int -> String -> Maybe ShortcutKeySequence -> (MenuItem b -> IO ()) -> [MenuProps] -> IO (Int)
-menuItemInsert menu_item index name ks cb flags =
-  withObject menu_item $ \menu_itemPtr ->
-      let combinedFlags = foldl1WithDefault 0 (.|.) (map fromEnum flags)
-          shortcutCode = maybe 0 keySequenceToCInt ks
-      in do
-        ptr <- toWidgetCallbackPrim cb
-        insertWithFlags'
-          menu_itemPtr
-          index
-          name
-          shortcutCode
-          (castFunPtr ptr)
-          combinedFlags
+instance Op (Insert ()) MenuItem ( Int -> String -> Maybe ShortcutKeySequence -> (Ref MenuItem -> IO ()) -> [MenuProps] -> IO (Int)) where
+  runOp _ menu_item index' name ks cb flags =
+    withRef menu_item $ \menu_itemPtr ->
+                            let combinedFlags = foldl1WithDefault 0 (.|.) (map fromEnum flags)
+                                shortcutCode = maybe 0 keySequenceToCInt ks
+                            in do
+                              ptr <- toBaseCallbackPrim (BaseCallback cb)
+                              insertWithFlags'
+                                menu_itemPtr
+                                index'
+                                name
+                                shortcutCode
+                                (castFunPtr ptr)
+                                combinedFlags
 
 {# fun unsafe Fl_Menu_Item_size as size' { id `Ptr ()' } -> `Int' #}
-menuItemSize :: MenuItem a  ->  IO (Int)
-menuItemSize menu_item = withObject menu_item $ \menu_itemPtr -> size' menu_itemPtr
+instance Op (GetSize ()) MenuItem (  IO (Int)) where
+  runOp _ menu_item = withRef menu_item $ \menu_itemPtr -> size' menu_itemPtr

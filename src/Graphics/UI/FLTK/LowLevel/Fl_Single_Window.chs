@@ -2,9 +2,8 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 module Graphics.UI.FLTK.LowLevel.Fl_Single_Window
   (
-    SingleWindowFuncs(..),
-    defaultSingleWindowFuncs,
-    singleWindowNew
+    singleWindowNew,
+    singleWindowCustom
   )
 where
 #include "Fl_C.h"
@@ -17,48 +16,9 @@ import Graphics.UI.FLTK.LowLevel.Utils
 import Graphics.UI.FLTK.LowLevel.Dispatch
 import Graphics.UI.FLTK.LowLevel.Hierarchy
 import Graphics.UI.FLTK.LowLevel.Fl_Widget
+import Graphics.UI.FLTK.LowLevel.Fl_Window
 import C2HS hiding (cFromEnum, unsafePerformIO, toBool,cToEnum)
 
-data SingleWindowFuncs =
-    SingleWindowFuncs
-    {
-     singleWindowDrawOverride       :: Maybe WidgetCallback
-    ,singleWindowHandleOverride     :: Maybe WidgetEventHandler
-    ,singleWindowResizeOverride     :: Maybe RectangleF
-    ,singleWindowShowOverride       :: Maybe WidgetCallback
-    ,singleWindowHideOverride       :: Maybe WidgetCallback
-    ,singleWindowAsWindowOverride   :: Maybe GetWindowF
-    ,singleWindowAsGlWindowOverride :: Maybe GetGlWindowF
-    ,singleWindowAsGroupOverride    :: Maybe GetGroupF
-    ,singleWindowFlushOverride      :: Maybe WidgetCallback
-    }
-
-singleWindowFunctionStruct :: SingleWindowFuncs -> IO (Ptr ())
-singleWindowFunctionStruct funcs = do
-      p <- mallocBytes {#sizeof fl_Single_Window_Virtual_Funcs #}
-      toCallbackPrim `orNullFunPtr` (singleWindowDrawOverride funcs) >>=
-                             {#set fl_Single_Window_Virtual_Funcs->draw#} p
-      toEventHandlerPrim `orNullFunPtr` (singleWindowHandleOverride funcs) >>=
-                             {#set fl_Single_Window_Virtual_Funcs->handle#} p
-      toRectangleFPrim `orNullFunPtr` (singleWindowResizeOverride funcs) >>=
-                             {#set fl_Single_Window_Virtual_Funcs->resize#} p
-      toCallbackPrim `orNullFunPtr` (singleWindowShowOverride funcs) >>=
-                             {#set fl_Single_Window_Virtual_Funcs->show#} p
-      toCallbackPrim `orNullFunPtr` (singleWindowHideOverride funcs) >>=
-                             {#set fl_Single_Window_Virtual_Funcs->hide#} p
-      toGetWindowFPrim `orNullFunPtr` (singleWindowAsWindowOverride funcs) >>=
-                             {#set fl_Single_Window_Virtual_Funcs->as_window#} p
-      toGetGlWindowFPrim `orNullFunPtr` (singleWindowAsGlWindowOverride funcs) >>=
-                             {#set fl_Single_Window_Virtual_Funcs->as_gl_window#} p
-      toGetGroupFPrim `orNullFunPtr` (singleWindowAsGroupOverride funcs) >>=
-                             {#set fl_Single_Window_Virtual_Funcs->as_group#} p
-      toCallbackPrim  `orNullFunPtr` (singleWindowFlushOverride funcs) >>=
-                             {#set fl_Single_Window_Virtual_Funcs->flush#} p
-      {#set fl_Single_Window_Virtual_Funcs->destroy_data #} p nullFunPtr
-      return p
-
-defaultSingleWindowFuncs :: SingleWindowFuncs
-defaultSingleWindowFuncs = SingleWindowFuncs Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing
 {# fun Fl_Single_Window_New as windowNew' { `Int',`Int' } -> `Ptr ()' id #}
 {# fun Fl_Single_Window_New_WithLabel as windowNewWithLabel' {`Int',`Int',`String'} -> `Ptr ()' id #}
 {# fun Fl_Single_Window_NewXY_WithLabel as windowNewXYWithLabel' { `Int',`Int',`Int',`Int',`String'} -> `Ptr ()' id #}
@@ -67,25 +27,39 @@ defaultSingleWindowFuncs = SingleWindowFuncs Nothing Nothing Nothing Nothing Not
 {# fun Fl_OverriddenSingle_Window_NewXY as overriddenWindowNewXY' {`Int',`Int', `Int', `Int', id `Ptr ()'} -> `Ptr ()' id #}
 {# fun Fl_OverriddenSingle_Window_NewXY_WithLabel as overriddenWindowNewXYWithLabel' { `Int',`Int',`Int',`Int',`String', id `Ptr ()'} -> `Ptr ()' id #}
 {# fun Fl_OverriddenSingle_Window_New_WithLabel as overriddenWindowNewWithLabel' { `Int',`Int', `String', id `Ptr ()'} -> `Ptr ()' id #}
-singleWindowNew :: Size -> Maybe Position -> Maybe String -> Maybe SingleWindowFuncs -> IO (Ref SingleWindow)
-singleWindowNew (Size (Width w) (Height h)) position title funcs' =
-    case (position, title, funcs') of
-         (Nothing,Nothing,Nothing) -> windowNew' w h >>= toRef
-         (Just (Position (X x) (Y y)), Nothing, Nothing) ->  windowNewXY' x y w h >>= toRef
-         (Just (Position (X x) (Y y)), (Just l'), Nothing) -> windowNewXYWithLabel' x y w h l' >>= toRef
-         (Nothing, (Just l'), Nothing) -> windowNewWithLabel' w h l' >>= toRef
-         (Nothing,Nothing,(Just fs')) -> do
-                                        p <- singleWindowFunctionStruct fs'
-                                        overriddenWindowNew' w h p >>= toRef
-         (Just (Position (X x) (Y y)), Nothing, (Just fs')) ->  do
-                                        p <- singleWindowFunctionStruct fs'
-                                        overriddenWindowNewXY' x y w h p >>= toRef
-         (Just (Position (X x) (Y y)), (Just l'), (Just fs')) -> do
-                                        p <- singleWindowFunctionStruct fs'
-                                        overriddenWindowNewXYWithLabel' x y w h l' p >>= toRef
-         (Nothing, (Just l'), (Just fs')) -> do
-                                        p <- singleWindowFunctionStruct fs'
-                                        overriddenWindowNewWithLabel' w h l' p >>= toRef
+singleWindowCustom :: Size -> Maybe Position -> Maybe String -> Maybe (CustomWidgetFuncs SingleWindow) -> Maybe (CustomWindowFuncs SingleWindow) -> IO (Ref SingleWindow)
+singleWindowCustom size position title customWidgetFuncs' customWindowFuncs' =
+  windowMaker
+    size
+    position
+    title
+    customWidgetFuncs'
+    customWindowFuncs'
+    windowNew'
+    windowNewWithLabel'
+    windowNewXY'
+    windowNewXYWithLabel'
+    overriddenWindowNew'
+    overriddenWindowNewWithLabel'
+    overriddenWindowNewXY'
+    overriddenWindowNewXYWithLabel'
+
+singleWindowNew :: Size -> Maybe Position -> Maybe String -> IO (Ref SingleWindow)
+singleWindowNew size position title =
+  windowMaker
+    size
+    position
+    title
+    (Nothing :: (Maybe (CustomWidgetFuncs SingleWindow)))
+    (Nothing :: (Maybe (CustomWindowFuncs SingleWindow)))
+    windowNew'
+    windowNewWithLabel'
+    windowNewXY'
+    windowNewXYWithLabel'
+    overriddenWindowNew'
+    overriddenWindowNewWithLabel'
+    overriddenWindowNewXY'
+    overriddenWindowNewXYWithLabel'
 
 {# fun Fl_Single_Window_Destroy as windowDestroy' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
 instance Op (Destroy ()) SingleWindow ( IO ()) where
@@ -121,18 +95,6 @@ instance Op (Hide ()) SingleWindow (  IO (())) where
 instance Op (FlushSuper ()) SingleWindow (  IO (())) where
   runOp _ window = withRef window $ \windowPtr -> flushSuper' windowPtr
 
-{# fun Fl_Single_Window_as_window_super as asWindowSuper' { id `Ptr ()' } -> `Ref Window' unsafeToRef #}
-instance Op (AsWindowSuper ()) SingleWindow (  IO (Ref Window)) where
-  runOp _ window = withRef window $ \windowPtr -> asWindowSuper' windowPtr
-
-{# fun Fl_Single_Window_as_gl_window_super as asGlWindowSuper' { id `Ptr ()' } -> `Ref GlWindow' unsafeToRef #}
-instance Op (AsGlWindowSuper ()) SingleWindow (  IO (Ref GlWindow)) where
-  runOp _ window = withRef window $ \windowPtr -> asGlWindowSuper' windowPtr
-
-{# fun Fl_Single_Window_as_group_super as asGroupSuper' { id `Ptr ()' } -> `Ref Group' unsafeToRef #}
-instance Op (AsGroupSuper ()) SingleWindow (  IO (Ref Group)) where
-  runOp _ window = withRef window $ \windowPtr -> asGroupSuper' windowPtr
-
 {# fun Fl_Single_Window_show as windowShow' {id `Ptr ()'} -> `()' supressWarningAboutRes #}
 instance Op (ShowWidget ()) SingleWindow ( IO ()) where
   runOp _ window = withRef window (\p -> windowShow' p)
@@ -148,17 +110,6 @@ instance Op (Resize ()) SingleWindow ( Rectangle -> IO (())) where
                                  let (x_pos,y_pos,w_pos,h_pos) = fromRectangle rectangle
                                  resize' windowPtr x_pos y_pos w_pos h_pos
 
-{# fun Fl_Single_Window_as_window as asWindow' { id `Ptr ()' } -> `Ref Window' unsafeToRef #}
-instance Op (AsWindow ()) SingleWindow (  IO (Ref Window)) where
-  runOp _ window = withRef window $ \windowPtr -> asWindow' windowPtr
-
-{# fun Fl_Single_Window_as_gl_window as asGlWindow' { id `Ptr ()' } -> `Ref GlWindow' unsafeToRef #}
-instance Op (AsGlWindow ()) SingleWindow (  IO (Ref GlWindow)) where
-  runOp _ window = withRef window $ \windowPtr -> asGlWindow' windowPtr
-
-{# fun Fl_Single_Window_as_group as asGroup' { id `Ptr ()' } -> `Ref Group' unsafeToRef #}
-instance Op (AsGroup ()) SingleWindow (  IO (Ref Group)) where
-  runOp _ window = withRef window $ \windowPtr -> asGroup' windowPtr
 
 {# fun Fl_Single_Window_make_current as makeCurrent' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
 instance Op (MakeCurrent ()) SingleWindow (  IO (())) where

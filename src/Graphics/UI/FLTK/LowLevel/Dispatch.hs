@@ -1,4 +1,4 @@
-{-# LANGUAGE GADTs, MultiParamTypeClasses, FunctionalDependencies, FlexibleInstances, UndecidableInstances, FlexibleContexts, OverlappingInstances, ScopedTypeVariables, EmptyDataDecls #-}
+{-# LANGUAGE GADTs, MultiParamTypeClasses, FunctionalDependencies, FlexibleInstances, UndecidableInstances, FlexibleContexts, ScopedTypeVariables, OverlappingInstances, EmptyDataDecls #-}
 module Graphics.UI.FLTK.LowLevel.Dispatch
        (
          FindOp,
@@ -7,7 +7,10 @@ module Graphics.UI.FLTK.LowLevel.Dispatch
          Op,
          Same,
          Different,
+         OpWithOriginal,
+         runOpWithOriginal,
          dispatch,
+         dispatchWithOriginal,
          runOp,
          castTo
        )
@@ -45,7 +48,7 @@ instance Contains () b Different
 -- eg. Downcast Rectangle Shape
 class Downcast aas as | aas -> as
 instance Downcast (a fs as) as
-instance Downcast Base Base
+instance (as ~ Base) => Downcast Base as
 
 -- Find an the first "object" with given
 -- associated method in the hierarchy.
@@ -67,7 +70,12 @@ instance (r ~ Same) => FindObj' a b Same r
 
 class FindObj a b c | a b -> c
 instance (TypeEqual (a () ()) (o () ()) match, FindObj' (a fs as) (o ofs oos) match r) => FindObj (a fs as) (o ofs oos) r
-instance FindObj Base o Different
+instance (r ~ Different) => FindObj Base o r
+instance FindObj Base Base Same
+
+
+class OpWithOriginal op orig s impl | op orig s -> impl where
+  runOpWithOriginal :: op -> orig -> (Ref s) -> impl
 
 -- Implementations of methods on various types
 -- of objects
@@ -83,3 +91,6 @@ instance CastTo a b r where castTo (Ref x) = (Ref x)
 -- right implementation.
 dispatch :: forall a r op impl. (FindOp a op (Match r), Op op r impl) => op -> Ref a -> impl
 dispatch _ refA = runOp (undefined :: op) ((castTo refA) :: Ref r)
+
+dispatchWithOriginal :: forall a r op impl. (FindOp a op (Match r), OpWithOriginal op a r impl) => op -> Ref a -> impl
+dispatchWithOriginal _ refA = runOpWithOriginal (undefined :: op) (undefined :: a) ((castTo refA) :: Ref r)

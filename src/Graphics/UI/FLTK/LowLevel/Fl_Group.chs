@@ -1,4 +1,4 @@
-{-# LANGUAGE CPP, EmptyDataDecls, TypeSynonymInstances, FlexibleInstances, MultiParamTypeClasses, FlexibleContexts #-}
+{-# LANGUAGE CPP, EmptyDataDecls, TypeSynonymInstances, FlexibleInstances, MultiParamTypeClasses, FlexibleContexts, UndecidableInstances #-}
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 module Graphics.UI.FLTK.LowLevel.Fl_Group
     (
@@ -39,23 +39,23 @@ instance Op (End ()) Group ( IO (())) where
   runOp _ group = withRef group $ \groupPtr -> end' groupPtr
 
 {# fun Fl_Group_find as find' { id `Ptr ()',id `Ptr ()' } -> `Int' #}
-instance Op (Find ()) Group (Ref Widget  ->  IO (Int)) where
+instance (FindObj a Widget Same) => Op (Find ()) Group (Ref a->  IO (Int)) where
   runOp _ group w = withRef group $ \groupPtr -> withRef w $ \wPtr -> find' groupPtr wPtr
 
 {# fun Fl_Group_add as add' { id `Ptr ()',id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance Op (Add ()) Group (Ref Widget  ->  IO (())) where
+instance (FindObj a Widget Same) => Op (Add ()) Group (Ref a->  IO (())) where
   runOp _ group w = withRef group $ \groupPtr -> withRef w $ \wPtr -> add' groupPtr wPtr
 
 {# fun Fl_Group_insert as insert' { id `Ptr ()',id `Ptr ()',`Int' } -> `()' supressWarningAboutRes #}
-instance Op (Insert ()) Group (Ref Widget  -> Int ->  IO (())) where
+instance (FindObj a Widget Same) => Op (Insert ()) Group (Ref a-> Int ->  IO (())) where
   runOp _ group w i = withRef group $ \groupPtr -> withRef w $ \wPtr -> insert' groupPtr wPtr i
 
 {# fun Fl_Group_remove_index as removeIndex' { id `Ptr ()',`Int' } -> `()' supressWarningAboutRes #}
 instance Op (RemoveIndex ()) Group (Int ->  IO (())) where
-  runOp _ group index = withRef group $ \groupPtr -> removeIndex' groupPtr index
+  runOp _ group index' = withRef group $ \groupPtr -> removeIndex' groupPtr index'
 
 {# fun Fl_Group_remove_widget as removeWidget' { id `Ptr ()',id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance Op (RemoveWidget ()) Group (Ref Widget  ->  IO (())) where
+instance (FindObj a Widget Same) => Op (RemoveWidget ()) Group (Ref a->  IO (())) where
   runOp _ group w = withRef group $ \groupPtr -> withRef w $ \wPtr -> removeWidget' groupPtr wPtr
 
 {# fun Fl_Group_clear as clear' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
@@ -63,7 +63,7 @@ instance Op (Clear ()) Group ( IO (())) where
   runOp _ group = withRef group $ \groupPtr -> clear' groupPtr
 
 {# fun Fl_Group_set_resizable as setResizable' { id `Ptr ()',id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance Op (SetResizable ()) Group (Ref Widget  ->  IO (())) where
+instance (FindObj a Widget Same) => Op (SetResizable ()) Group (Ref a ->  IO (())) where
   runOp _ group o = withRef group $ \groupPtr -> withRef o $ \oPtr -> setResizable' groupPtr oPtr
 
 {# fun Fl_Group_resizable as resizable' { id `Ptr ()' } -> `Ptr ()' id #}
@@ -71,7 +71,7 @@ instance Op (GetResizable ()) Group (  IO (Ref Widget)) where
   runOp _ group = withRef group $ \groupPtr -> resizable' groupPtr >>= toRef
 
 {# fun Fl_Group_add_resizable as addResizable' { id `Ptr ()',id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance Op (AddResizable ()) Group ( Ref Widget  ->  IO (())) where
+instance (FindObj a Widget Same) => Op (AddResizable ()) Group (Ref a ->  IO (())) where
   runOp _ group o = withRef group $ \groupPtr -> withRef o $ \oPtr -> addResizable' groupPtr oPtr
 
 {# fun Fl_Group_init_sizes as initSizes' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
@@ -91,7 +91,7 @@ instance Op (ClipChildren ()) Group (  IO (Int)) where
   runOp _ group = withRef group $ \groupPtr -> clipChildren' groupPtr
 
 {# fun Fl_Group_focus as focus' { id `Ptr ()',id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance Op (Focus ()) Group (Ref Widget  ->  IO (())) where
+instance (FindObj a Widget Same) => Op (Focus ()) Group (Ref a ->  IO (())) where
   runOp _ group w = withRef group $ \groupPtr -> withRef w $ \wPtr -> focus' groupPtr wPtr
 
 {# fun Fl_Group__ddfdesign_kludge as ddfdesignKludge' { id `Ptr ()' } -> `Ptr ()' id #}
@@ -99,7 +99,7 @@ instance Op (DdfdesignKludge ()) Group (  IO (Ref Widget)) where
   runOp _ group = withRef group $ \groupPtr -> ddfdesignKludge' groupPtr >>= toRef
 
 {# fun Fl_Group_insert_with_before as insertWithBefore' { id `Ptr ()',id `Ptr ()',id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance Op (InsertWithBefore ()) Group (Ref Widget  -> Ref Widget  ->  IO (())) where
+instance (FindObj a Widget Same, FindObj b Widget Same) => Op (InsertWithBefore ()) Group (Ref a -> Ref b ->  IO (())) where
   runOp _ self w before = withRef self $ \selfPtr -> withRef w $ \wPtr -> withRef before $ \beforePtr -> insertWithBefore' selfPtr wPtr beforePtr
 
 {# fun Fl_Group_array as array' { id `Ptr ()' } -> `Ptr (Ptr ())' id#}

@@ -1,4 +1,4 @@
-{-# LANGUAGE CPP #-}
+{-# LANGUAGE CPP, FlexibleContexts #-}
 module Graphics.UI.FLTK.LowLevel.Fl_Draw
        (
        flcSetColor,
@@ -122,6 +122,8 @@ import Foreign.C
 import Graphics.UI.FLTK.LowLevel.Fl_Types
 import Graphics.UI.FLTK.LowLevel.Fl_Enumerations
 import Graphics.UI.FLTK.LowLevel.Utils
+import Graphics.UI.FLTK.LowLevel.Dispatch
+import Graphics.UI.FLTK.LowLevel.Hierarchy
 import Data.ByteString
 import Data.ByteString.Unsafe
 
@@ -190,8 +192,8 @@ flcRestoreClip ::  IO ()
 flcRestoreClip  = flcRestoreClip'
 
 {# fun unsafe flc_set_clip_region as flcSetClipRegion' { id `Ptr ()' } -> `()' #}
-flcSetClipRegion :: Region ->  IO ()
-flcSetClipRegion r = withObject r $ \rPtr -> flcSetClipRegion' rPtr
+flcSetClipRegion :: Ref Region ->  IO ()
+flcSetClipRegion r = withRef r $ \rPtr -> flcSetClipRegion' rPtr
 
 {# fun unsafe flc_clip_region as flcClipRegion' {  } -> `Ptr ()' id #}
 flcClipRegion ::  IO (Ptr ())
@@ -338,7 +340,7 @@ flcCurve x0 y0 x1 y1 x2 y2 x3 y3 = flcCurve' x0 y0 x1 y1 x2 y2 x3 y3
 
 {# fun unsafe flc_arc_by_radius as flcArcByRadius' { `Double',`Double',`Double',`Double',`Double' } -> `()' #}
 flcArcByRadius :: ByXY -> Double -> Double -> Double ->  IO ()
-flcArcByRadius (ByXY (ByX by_x') (ByY by_y')) r start end = flcArcByRadius' by_x' by_y' r start end
+flcArcByRadius (ByXY (ByX by_x') (ByY by_y')) r start' end' = flcArcByRadius' by_x' by_y' r start' end'
 
 {# fun unsafe flc_circle as flcCircle' { `Double',`Double',`Double' } -> `()' #}
 flcCircle :: ByXY -> Double ->  IO ()
@@ -496,14 +498,14 @@ flcMeasure str draw_symbols =
 
 {# fun flc_draw_with_img_draw_symbols as flcDrawWithImgDrawSymbols' { `String',`Int',`Int',`Int',`Int',cFromEnum `AlignType', id `Ptr ()',`Bool' } -> `()' #}
 {# fun flc_draw_with_callthis_img_draw_symbols as flcDrawWithCallthisImgDrawSymbols' { `String',`Int',`Int',`Int',`Int',cFromEnum `AlignType', id `FunPtr DrawCallbackPrim', id `Ptr ()',`Bool' } -> `()' #}
-flcDrawInBoundingBox :: String -> Rectangle -> AlignType -> Maybe DrawCallback -> Maybe (Image a) -> Maybe Bool -> IO ()
+flcDrawInBoundingBox :: (FindObj a Image Same) => String -> Rectangle -> AlignType -> Maybe DrawCallback -> Maybe (Ref a) -> Maybe Bool -> IO ()
 flcDrawInBoundingBox string' rectangle' align' draw_callback' image' draw_flags'
   = let (x_pos', y_pos', width', height') = fromRectangle rectangle'
     in
-      withMaybeObject image' $ \image_ptr -> do
-          case draw_callback' of 
-            Nothing -> flcDrawWithImgDrawSymbols' string' x_pos' y_pos' width' height' align' image_ptr (maybe False id draw_flags') 
-            Just c' -> do 
+      withMaybeRef image' $ \image_ptr -> do
+          case draw_callback' of
+            Nothing -> flcDrawWithImgDrawSymbols' string' x_pos' y_pos' width' height' align' image_ptr (maybe False id draw_flags')
+            Just c' -> do
               fptr <- toDrawCallback c'
               flcDrawWithCallthisImgDrawSymbols' string' x_pos' y_pos' width' height' align' fptr image_ptr (maybe False id draw_flags')
 
@@ -633,8 +635,8 @@ flcSetStatus :: Rectangle ->  IO ()
 flcSetStatus rectangle = let (x_pos', y_pos', width', height') = fromRectangle rectangle in flcSetStatus' x_pos' y_pos' width' height'
 
 {# fun unsafe flc_set_spot_with_win as flcSetSpotWithWin' { `Int',`Int',`Int',`Int',`Int',`Int',id `Ptr ()' } -> `()' #}
-flcSetSpotWithWin :: Int -> Int -> Rectangle -> Window a  ->  IO ()
-flcSetSpotWithWin font' size' rectangle win = let (x_pos', y_pos', width', height') = fromRectangle rectangle in withObject win $ \winPtr -> flcSetSpotWithWin' font' size' x_pos' y_pos' width' height' winPtr
+flcSetSpotWithWin :: (FindObj a Window Same) => Int -> Int -> Rectangle -> Ref Window -> IO ()
+flcSetSpotWithWin font' size' rectangle win = let (x_pos', y_pos', width', height') = fromRectangle rectangle in withRef win $ \winPtr -> flcSetSpotWithWin' font' size' x_pos' y_pos' width' height' winPtr
 
 {# fun unsafe flc_set_spot as flcSetSpot' { `Int',`Int',`Int',`Int',`Int',`Int' } -> `()' #}
 flcSetSpot :: Int -> Int -> Rectangle ->  IO ()

@@ -56,6 +56,7 @@ keySequenceToCInt (ShortcutKeySequence modifiers char) =
 
 wrapNonNull :: Ptr a -> String -> IO (ForeignPtr (Ptr a))
 wrapNonNull ptr msg = if (ptr == nullPtr)
+
                       then error msg
                       else do
                         pptr <- malloc
@@ -71,38 +72,6 @@ toGlobalEventHandlerPrim f = mkGlobalEventHandlerPtr
 
 toGlobalCallbackPrim :: GlobalCallback -> IO (FunPtr CallbackPrim)
 toGlobalCallbackPrim f = mkCallbackPtr (\_ -> f)
-toImageDrawCallbackPrim :: ImageDrawCallback -> IO (FunPtr ImageDrawCallbackPrim)
-toImageDrawCallbackPrim f =
-    mkImageDrawCallbackPrimPtr
-    (\ptr x_pos' y_pos' width' height' x_offset' y_offset' ->
-       let _x_offset = fmap X $ integralToMaybe x_offset'
-           _y_offset = fmap Y $ integralToMaybe y_offset'
-           position' = Position (X $ fromIntegral x_pos')
-                                (Y $ fromIntegral y_pos')
-           size' = Size (Width $ fromIntegral width')
-                        (Height $ fromIntegral height')
-       in
-        toRef ptr >>= \refPtr -> f refPtr position' size' _x_offset _y_offset
-    )
-
-toColorAverageCallbackPrim :: ColorAverageCallback -> IO (FunPtr ColorAverageCallbackPrim)
-toColorAverageCallbackPrim f =
-    mkColorAverageCallbackPtr
-    (\ptr cint cfloat ->
-         wrapNonNull ptr "Null pointer. toColorAverageCallbackPrim" >>= \pp ->
-         f (wrapInRef pp) (Color (fromIntegral cint)) (realToFrac cfloat)
-    )
-
-toImageCopyCallbackPrim :: ImageCopyCallback -> IO (FunPtr ImageCopyCallbackPrim)
-toImageCopyCallbackPrim f =
-    mkImageCopyCallbackPrimPtr
-    (\ptr width' height' -> do
-         pp <- wrapNonNull ptr "Null pointer. toImageCopyCallbackPrim"
-         refPtr <- f (wrapInRef pp) (Size (Width $ fromIntegral width')
-                                           (Height $ fromIntegral height'))
-         unsafeRefToPtr refPtr
-    )
-
 
 toDrawCallback :: DrawCallback -> IO (FunPtr DrawCallbackPrim)
 toDrawCallback f = mkDrawCallbackPrimPtr
@@ -202,3 +171,6 @@ countDirectionToCChar d =
 
 ccharToCountDirection :: CChar -> CountDirection
 ccharToCountDirection c = if (c == 0) then CountDown else CountUp
+
+oneKb :: Int
+oneKb = 1024

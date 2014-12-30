@@ -212,26 +212,15 @@ type FlIntPtr             = {#type fl_intptr_t #}
 type FlUIntPtr            = {#type fl_uintptr_t#}
 type ID                   = {#type ID#}
 data Ref a                = Ref !(ForeignPtr (Ptr ())) deriving Show
-data CGlContext a
-type GlContext            = CGlContext Base
-data CRegion a
-type Region               = CRegion Base
-
 -- * The FLTK widget hierarchy
-data Base
-data CImage a
-type Image = CImage Base
-data CMenuItem a
-type MenuItem = CMenuItem Base
+data CBase fs parent
+type Base = CBase () ()
 
 type GlobalCallback              = IO ()
 type CallbackWithUserDataPrim    = Ptr () -> Ptr () -> IO ()
 type CallbackPrim                = Ptr () -> IO ()
-type ColorAverageCallback        = Ref Image -> Color -> Float -> IO ()
 type ColorAverageCallbackPrim    = Ptr () -> CUInt -> CFloat -> IO ()
-type ImageDrawCallback           = Ref Image -> Position -> Size -> Maybe X -> Maybe Y -> IO ()
 type ImageDrawCallbackPrim       = Ptr () -> CInt -> CInt -> CInt -> CInt -> CInt -> CInt -> IO ()
-type ImageCopyCallback           = Ref Image -> Size -> IO (Ref Image)
 type ImageCopyCallbackPrim       = Ptr () -> CInt -> CInt -> IO (Ptr ())
 type GlobalEventHandlerPrim      = CInt -> IO CInt
 type GlobalEventHandlerF         = Event -> IO Int
@@ -254,13 +243,7 @@ newtype ByY = ByY Double
 newtype Angle = Angle CShort
 data Position = Position X Y
 data CountDirection = CountUp | CountDown
-data Measure = Measure Width Height
 data DPI = DPI Float Float
-newtype MenuItemIndex = MenuItemIndex Int
-data MenuItemPointer = MenuItemPointer (Ref MenuItem)
-newtype MenuItemName = MenuItemName String
-data MenuItemReference = MenuItemIndexReference MenuItemIndex | MenuItemPointerReference MenuItemPointer
-data MenuItemLocator = MenuItemPointerLocator MenuItemPointer | MenuItemNameLocator MenuItemName
 data Rectangle = Rectangle Position Size
 data ByXY = ByXY ByX ByY
 data Intersection = Contained | Partial
