@@ -43,15 +43,15 @@ import Graphics.UI.FLTK.LowLevel.Dispatch
 import Graphics.UI.FLTK.LowLevel.Hierarchy
 
 type WidgetTransformCallback     = Ref Widget -> IO (Ref Widget)
-data Callback                    = forall a. (FindObj a Widget Same) => Callback (Ref a -> IO ())
-data BaseCallback                = forall a. (FindObj a Base   Same) => BaseCallback (Ref a -> IO ())
+data Callback                    = forall a. (Parent a Widget) => Callback (Ref a -> IO ())
+data BaseCallback                = forall a. (Parent a Base  ) => BaseCallback (Ref a -> IO ())
 type GetPointerF                 = Ptr () -> IO (Ptr ())
 type WidgetEventHandlerPrim      = Ptr () -> CInt -> IO CInt
 type WidgetTransformCallbackPrim = Ptr () -> IO (Ptr ())
 type RectangleFPrim              = Ptr () -> CInt -> CInt -> CInt -> CInt -> IO ()
 type EventDispatchPrim           = CInt -> Ptr () -> IO CInt
 data PositionSpec = ByPosition Position
-                  | forall a. (FindObj a Widget Same) => ByWidget (Ref a)
+                  | forall a. (Parent a Widget) => ByWidget (Ref a)
 
 foreign import ccall "wrapper"
         mkWidgetTransformCallbackPtr :: WidgetTransformCallbackPrim -> IO (FunPtr WidgetTransformCallbackPrim)
@@ -87,7 +87,7 @@ toEventHandlerPrim f = mkWidgetEventHandler $
                             result <- f (wrapInRef fptr) event
                             return $ fromIntegral result
 
-onWidget :: (FindObj a Widget Same) => Ref a -> (Ref a -> IO ()) -> (Ref a -> IO ())
+onWidget :: (Parent a Widget) => Ref a -> (Ref a -> IO ()) -> (Ref a -> IO ())
 onWidget _ = id
 
 toCallbackPrim :: (Ref a -> IO ()) ->
@@ -126,7 +126,7 @@ data CustomWidgetFuncs a =
     ,hideCustom   :: Maybe (Ref a -> IO ())
     }
 
-fillCustomWidgetFunctionStruct :: forall a. (FindObj a Widget Same) =>
+fillCustomWidgetFunctionStruct :: forall a. (Parent a Widget) =>
                                   Ptr () ->
                                   CustomWidgetFuncs a ->
                                   IO ()
@@ -137,7 +137,7 @@ fillCustomWidgetFunctionStruct structPtr (CustomWidgetFuncs _draw' _handle' _res
       toCallbackPrim `orNullFunPtr` _show'       >>= {#set fl_Widget_Virtual_Funcs->show#} structPtr
       toCallbackPrim `orNullFunPtr` _hide'       >>= {#set fl_Widget_Virtual_Funcs->hide#} structPtr
 
-customWidgetFunctionStruct :: forall a. (FindObj a Widget Same) =>
+customWidgetFunctionStruct :: forall a. (Parent a Widget) =>
                               CustomWidgetFuncs a ->
                               IO (Ptr ())
 customWidgetFunctionStruct customWidgetFuncs' = do
@@ -146,7 +146,7 @@ customWidgetFunctionStruct customWidgetFuncs' = do
   return p
 
 
-defaultCustomWidgetFuncs :: forall a. (FindObj a Widget Same) => CustomWidgetFuncs a
+defaultCustomWidgetFuncs :: forall a. (Parent a Widget) => CustomWidgetFuncs a
 defaultCustomWidgetFuncs = CustomWidgetFuncs
                             Nothing
                             Nothing
@@ -154,7 +154,7 @@ defaultCustomWidgetFuncs = CustomWidgetFuncs
                             Nothing
                             Nothing
 
-widgetMaker :: forall a. (FindObj a Widget Same) =>
+widgetMaker :: forall a. (Parent a Widget) =>
                Rectangle ->
                Maybe String ->
                Maybe (CustomWidgetFuncs a) ->
@@ -205,7 +205,7 @@ instance Op (GetParent ()) Widget (IO (Ref Group)) where
     runOp _ widget = withRef widget widgetParent' >>= toRef
 
 {#fun Fl_Widget_set_parent as widgetSetParent' { id `Ptr ()', id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance (FindObj a Group Same) => Op (SetParent ()) Widget (Ref a -> IO ()) where
+instance (Parent a Group) => Op (SetParent ()) Widget (Ref a -> IO ()) where
     runOp _ widget group =
       withRef widget
       (\widgetPtr ->
@@ -303,13 +303,13 @@ instance Op (SetLabelsize ()) Widget (FontSize ->  IO (())) where
 instance Op (GetImage ()) Widget ( IO (Ref Image)) where
   runOp _ widget = withRef widget $ \widgetPtr -> image' widgetPtr
 {# fun Fl_Widget_set_image as setImage' { id `Ptr ()',id `Ptr ()'} -> `()' supressWarningAboutRes #}
-instance (FindObj a Image Same) => Op (SetImage ()) Widget (Ref a ->  IO (())) where
+instance (Parent a Image) => Op (SetImage ()) Widget (Ref a ->  IO (())) where
   runOp _ widget pix = withRef widget $ \widgetPtr -> withRef pix $ \pixPtr -> setImage' widgetPtr pixPtr
 {# fun Fl_Widget_deimage as deimage' { id `Ptr ()' } -> `(Ref Image)' unsafeToRef #}
 instance Op (GetDeimage ()) Widget ( IO (Ref Image)) where
   runOp _ widget = withRef widget $ \widgetPtr -> deimage' widgetPtr
 {# fun Fl_Widget_set_deimage as setDeimage' { id `Ptr ()',id `Ptr ()'} -> `()' supressWarningAboutRes #}
-instance (FindObj a Image Same) => Op (SetDeimage ()) Widget (Ref a ->  IO (())) where
+instance (Parent a Image) => Op (SetDeimage ()) Widget (Ref a ->  IO (())) where
   runOp _ widget pix = withRef widget $ \widgetPtr -> withRef pix $ \pixPtr -> setDeimage' widgetPtr pixPtr
 {# fun Fl_Widget_tooltip as tooltip' { id `Ptr ()' } -> `String' #}
 instance Op (GetTooltip ()) Widget ( IO (String)) where
@@ -396,10 +396,10 @@ instance Op (ModifyVisibleFocus ()) Widget (Int ->  IO (())) where
 instance Op (GetVisibleFocus ()) Widget ( IO (Int)) where
   runOp _ widget = withRef widget $ \widgetPtr -> visibleFocus' widgetPtr
 {# fun Fl_Widget_contains as contains' { id `Ptr ()',id `Ptr ()' } -> `Int' #}
-instance (FindObj a Widget Same) => Op (Contains ()) Widget (Ref a ->  IO (Int)) where
+instance (Parent a Widget) => Op (Contains ()) Widget (Ref a ->  IO (Int)) where
   runOp _ widget otherWidget = withRef widget $ \widgetPtr -> withRef otherWidget $ \otherWidgetPtr -> contains' widgetPtr otherWidgetPtr
 {# fun Fl_Widget_inside as inside' { id `Ptr ()',id `Ptr ()' } -> `Int' #}
-instance (FindObj a Widget Same) => Op (Inside ()) Widget (Ref a -> IO (Int)) where
+instance (Parent a Widget) => Op (Inside ()) Widget (Ref a -> IO (Int)) where
   runOp _ widget otherWidget = withRef widget $ \widgetPtr -> withRef otherWidget $ \otherWidgetPtr -> inside' widgetPtr otherWidgetPtr
 {# fun Fl_Widget_redraw as redraw' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
 instance Op (Redraw ()) Widget ( IO (())) where

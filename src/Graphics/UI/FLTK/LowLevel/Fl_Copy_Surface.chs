@@ -32,5 +32,5 @@ instance Op (SetCurrent ()) CopySurface (  IO ()) where
   runOp _ copy_surface = withRef copy_surface $ \copy_surfacePtr -> setCurrent' copy_surfacePtr
 
 {# fun unsafe Fl_Copy_Surface_draw as draw' { id `Ptr ()',id `Ptr ()',`Int',`Int' } -> `()' #}
-instance (FindObj a Widget Same) => Op (Draw ()) CopySurface ( Ref a  -> Position -> IO ()) where
+instance (Parent a Widget) => Op (Draw ()) CopySurface ( Ref a  -> Position -> IO ()) where
   runOp _ copy_surface widget (Position (X delta_x) (Y delta_y)) = withRef copy_surface $ \copy_surfacePtr -> withRef widget $ \widgetPtr -> draw' copy_surfacePtr widgetPtr delta_x delta_y

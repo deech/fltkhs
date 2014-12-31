@@ -78,7 +78,7 @@ data CustomTableFuncs a =
     ,setColsCustom    :: Maybe (Ref a -> Int -> IO ())
     }
 
-fillCustomTableFunctionStruct :: forall a. (FindObj a Table Same) =>
+fillCustomTableFunctionStruct :: forall a. (Parent a Table) =>
                                   Ptr () ->
                                   CustomTableFuncs a ->
                                   IO ()
@@ -88,11 +88,11 @@ fillCustomTableFunctionStruct structPtr (CustomTableFuncs _drawCell' _clear' _se
    toSetIntPrim `orNullFunPtr` _setRows' >>= {#set fl_Table_Virtual_Funcs->set_rows#} structPtr
    toSetIntPrim `orNullFunPtr` _setCols' >>= {#set fl_Table_Virtual_Funcs->set_cols#} structPtr
 
-defaultCustomTableFuncs :: forall a. (FindObj a Table Same) => CustomTableFuncs a
+defaultCustomTableFuncs :: forall a. (Parent a Table) => CustomTableFuncs a
 defaultCustomTableFuncs = CustomTableFuncs Nothing Nothing Nothing Nothing
 
-tableCustomFunctionStruct :: (FindObj a Widget Same,
-                              FindObj b Table Same) =>
+tableCustomFunctionStruct :: (Parent a Widget,
+                              Parent b Table) =>
                              CustomWidgetFuncs a ->
                              CustomTableFuncs b ->
                              IO (Ptr ())
@@ -256,13 +256,13 @@ instance Op (MoveCursor ()) Table ( Int -> Int ->  IO (Int)) where
 instance Op (InitSizes ()) Table (  IO ()) where
   runOp _ table = withRef table $ \tablePtr -> initSizes' tablePtr
 {# fun unsafe Fl_Table_add as add' { id `Ptr ()',id `Ptr ()' } -> `()' #}
-instance (FindObj a Widget Same) => Op (Add ()) Table ( Ref a  ->  IO ()) where
+instance (Parent a Widget) => Op (Add ()) Table ( Ref a  ->  IO ()) where
   runOp _ table wgt = withRef table $ \tablePtr -> withRef wgt $ \wgtPtr -> add' tablePtr wgtPtr
 {# fun unsafe Fl_Table_insert as insert' { id `Ptr ()',id `Ptr ()',`Int' } -> `()' #}
-instance (FindObj a Widget Same) => Op (Insert ()) Table ( Ref a -> Int ->  IO ()) where
+instance (Parent a Widget) => Op (Insert ()) Table ( Ref a -> Int ->  IO ()) where
   runOp _ table wgt n = withRef table $ \tablePtr -> withRef wgt $ \wgtPtr -> insert' tablePtr wgtPtr n
 {# fun unsafe Fl_Table_insert_with_widget as insertWithWidget' { id `Ptr ()',id `Ptr ()',id `Ptr ()' } -> `()' #}
-instance (FindObj a Widget Same, FindObj b Widget Same) => Op (InsertWithBefore ()) Table (Ref a -> Ref b ->  IO (())) where
+instance (Parent a Widget, Parent b Widget) => Op (InsertWithBefore ()) Table (Ref a -> Ref b ->  IO (())) where
   runOp _ self w before = withRef self $ \selfPtr -> withRef w $ \wPtr -> withRef before $ \beforePtr -> insertWithWidget' selfPtr wPtr beforePtr
 {# fun unsafe Fl_Table_begin as begin' { id `Ptr ()' } -> `()' #}
 instance Op (Begin ()) Table (  IO ()) where
@@ -283,7 +283,7 @@ instance Op (GetChild ()) Table ( Int ->  IO (Ref Widget)) where
 instance Op (Children ()) Table (  IO (Int)) where
   runOp _ table = withRef table $ \tablePtr -> children' tablePtr
 {# fun unsafe Fl_Table_find as find' { id `Ptr ()',id `Ptr ()' } -> `Int' #}
-instance (FindObj a Widget Same) => Op (Find ()) Table (Ref a ->  IO (Int)) where
+instance (Parent a Widget) => Op (Find ()) Table (Ref a ->  IO (Int)) where
   runOp _ table wgt = withRef table $ \tablePtr -> withRef wgt $ \wgtPtr -> find' tablePtr wgtPtr
 {# fun unsafe Fl_Table_callback_row as callbackRow' { id `Ptr ()' } -> `Int' #}
 instance Op (CallbackRow ()) Table (  IO (Int)) where

@@ -54,17 +54,17 @@ optionalSizeRangeArgsToStruct args = do
 defaultOptionalSizeRangeArgs :: OptionalSizeRangeArgs
 defaultOptionalSizeRangeArgs = OptionalSizeRangeArgs Nothing Nothing Nothing Nothing Nothing
 
-fillCustomWindowFunctionStruct :: forall a. (FindObj a Window Same) =>
+fillCustomWindowFunctionStruct :: forall a. (Parent a Window) =>
                                   Ptr () ->
                                   CustomWindowFuncs a ->
                                   IO ()
 fillCustomWindowFunctionStruct structPtr (CustomWindowFuncs _flush') =
   toCallbackPrim  `orNullFunPtr` _flush' >>= {#set fl_Window_Virtual_Funcs->flush#} structPtr
 
-defaultCustomWindowFuncs :: forall a. (FindObj a Window Same) => CustomWindowFuncs a
+defaultCustomWindowFuncs :: forall a. (Parent a Window) => CustomWindowFuncs a
 defaultCustomWindowFuncs = CustomWindowFuncs Nothing
 
-windowMaker :: forall a b. (FindObj a Window Same, FindObj b Widget Same) =>
+windowMaker :: forall a b. (Parent a Window, Parent b Widget) =>
                Size ->
                Maybe Position ->
                Maybe String ->
@@ -376,7 +376,7 @@ instance Op (GetYRoot ()) Window (  IO (Int)) where
   runOp _ win = withRef win $ \winPtr -> yRoot' winPtr
 
 {# fun Fl_Window_current as current' {  } -> `Ptr ()' id #}
-currentWindow ::  (FindObj a Window Same) => IO (Ref a)
+currentWindow ::  (Parent a Window) => IO (Ref a)
 currentWindow = current' >>= toRef
 
 {# fun Fl_Window_make_current as makeCurrent' { id `Ptr ()' } -> `()' supressWarningAboutRes #}

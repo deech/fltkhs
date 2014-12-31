@@ -32,5 +32,5 @@ instance Op (SetCurrent ()) ImageSurface (  IO ()) where
   runOp _ image_surface = withRef image_surface $ \image_surfacePtr -> setCurrent' image_surfacePtr
 
 {# fun unsafe Fl_Image_Surface_draw as draw' { id `Ptr ()',id `Ptr ()',`Int',`Int' } -> `()' #}
-instance (FindObj a Widget Same) => Op (Draw ()) ImageSurface ( Ref a  -> Position -> IO ()) where
+instance (Parent a Widget) => Op (Draw ()) ImageSurface ( Ref a  -> Position -> IO ()) where
   runOp _ image_surface widget (Position (X delta_x) (Y delta_y)) = withRef image_surface $ \image_surfacePtr -> withRef widget $ \widgetPtr -> draw' image_surfacePtr widgetPtr delta_x delta_y

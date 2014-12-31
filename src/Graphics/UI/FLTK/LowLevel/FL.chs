@@ -313,12 +313,12 @@ isScheme sch = withCString sch $ \str -> {#call Fl_is_scheme as fl_is_scheme #} 
        {  } -> `Ref Window' unsafeToRef #}
 {# fun Fl_set_first_window as setFirstWindow'
        { id `Ptr ()' } -> `()' supressWarningAboutRes #}
-setFirstWindow :: (FindObj a Window Same) => Ref a -> IO ()
+setFirstWindow :: (Parent a Window) => Ref a -> IO ()
 setFirstWindow wp =
     withRef wp setFirstWindow'
 {# fun Fl_next_window as nextWindow'
        { id `Ptr ()' } -> `Ref Window' unsafeToRef #}
-nextWindow :: (FindObj a Window Same) => Ref a -> IO (Ref Window)
+nextWindow :: (Parent a Window) => Ref a -> IO (Ref Window)
 nextWindow currWindow =
     withRef currWindow nextWindow'
 {# fun Fl_modal as modal
@@ -327,7 +327,7 @@ nextWindow currWindow =
        {  } -> `Ref Window' unsafeToRef #}
 {# fun Fl_set_grab as setGrab'
        { id `Ptr ()' } -> `()' supressWarningAboutRes #}
-setGrab :: (FindObj a Window Same) => Ref a -> IO ()
+setGrab :: (Parent a Window) => Ref a -> IO ()
 setGrab wp = withRef wp setGrab'
 {# fun Fl_event as event
        {  } -> `Event' cToEnum #}
@@ -424,7 +424,7 @@ eventInsideRegion (Rectangle
       return $ toEnum eventNum
 {# fun Fl_event_inside_widget as eventInsideWidget'
        { id `Ptr ()' } -> `Int' #}
-eventInsideWidget :: (FindObj a Widget Same) => Ref a -> IO Event
+eventInsideWidget :: (Parent a Widget) => Ref a -> IO Event
 eventInsideWidget wp =
     withRef wp  (\ptr -> do
                       eventNum <- eventInsideWidget' (castPtr ptr)
@@ -437,31 +437,31 @@ eventInsideWidget wp =
        {} -> `()' supressWarningAboutRes #}
 {# fun Fl_handle as handle'
        { `Int',id `Ptr ()' } -> `Int' #}
-handle :: (FindObj a Window Same) =>  Event -> Ref a -> IO Int
+handle :: (Parent a Window) =>  Event -> Ref a -> IO Int
 handle e wp =
     withRef wp (handle' (cFromEnum e))
 {# fun Fl_handle_ as handle_'
        { `Int',id `Ptr ()' } -> `Int' #}
-handle_ :: (FindObj a Window Same) =>  Event -> Ref Window -> IO Int
+handle_ :: (Parent a Window) =>  Event -> Ref Window -> IO Int
 handle_ e wp =
     withRef wp (handle_' (cFromEnum e))
 {# fun Fl_belowmouse as belowmouse
        {  } -> `Ref Widget' unsafeToRef #}
 {# fun Fl_set_belowmouse as setBelowmouse'
        { id `Ptr ()' } -> `()' supressWarningAboutRes #}
-setBelowmouse :: (FindObj a Widget Same) => Ref a -> IO ()
+setBelowmouse :: (Parent a Widget) => Ref a -> IO ()
 setBelowmouse wp = withRef wp setBelowmouse'
 {# fun Fl_pushed as pushed
        {  } -> `Ref Widget' unsafeToRef #}
 {# fun Fl_set_pushed as setPushed'
        { id `Ptr ()' } -> `()' supressWarningAboutRes #}
-setPushed :: (FindObj a Widget Same) => Ref a -> IO ()
+setPushed :: (Parent a Widget) => Ref a -> IO ()
 setPushed wp = withRef wp setPushed'
 {# fun Fl_focus as focus
        {  } -> `Ref Widget' unsafeToRef #}
 {# fun Fl_set_focus as setFocus'
        { id `Ptr ()' } -> `()' supressWarningAboutRes #}
-setFocus :: (FindObj a Widget Same) => Ref a -> IO ()
+setFocus :: (Parent a Widget) => Ref a -> IO ()
 setFocus wp = withRef wp setFocus'
 {# fun Fl_add_handler as addHandler'
        { id `FunPtr GlobalEventHandlerPrim' } -> `()' supressWarningAboutRes #}
@@ -516,7 +516,7 @@ setEventDispatch ed = do
        { `String',`Int',`Int' } -> `()' supressWarningAboutRes #}
 {# fun Fl_paste_with_source as pasteWithSource
        { id `Ptr ()',`Int' } -> `()' supressWarningAboutRes #}
-paste :: (FindObj a Widget Same) => Ref a -> Maybe Int -> IO ()
+paste :: (Parent a Widget) => Ref a -> Maybe Int -> IO ()
 paste widget (Just clipboard) = withRef widget ((flip pasteWithSource) clipboard)
 paste widget Nothing          = withRef widget ((flip pasteWithSource) 0)
 
@@ -756,16 +756,16 @@ setDndTextOps :: Bool -> IO ()
 setDndTextOps =  {#call Fl_set_dnd_text_ops as fl_set_dnd_text_ops #} . fromBool
 dndTextOps :: IO Option
 dndTextOps = {#call Fl_dnd_text_ops as fl_dnd_text_ops #} >>= return . cToEnum
-deleteWidget :: (FindObj a Widget Same) => Ref a -> IO ()
+deleteWidget :: (Parent a Widget) => Ref a -> IO ()
 deleteWidget wptr =
   swapRef wptr $ \ptr -> do
     {#call Fl_delete_widget as fl_delete_widget #} ptr
     return nullPtr
 doWidgetDeletion :: IO ()
 doWidgetDeletion = {#call Fl_do_widget_deletion as fl_do_widget_deletion #}
-watchWidgetPointer :: (FindObj a Widget Same) => Ref a -> IO ()
+watchWidgetPointer :: (Parent a Widget) => Ref a -> IO ()
 watchWidgetPointer wp = withRef wp {#call Fl_watch_widget_pointer as fl_Watch_widget_Pointer #}
-releaseWidgetPointer :: (FindObj a Widget Same) => Ref a -> IO ()
+releaseWidgetPointer :: (Parent a Widget) => Ref a -> IO ()
 releaseWidgetPointer wp = withRef wp {#call Fl_release_widget_pointer as fl_release_widget_pointer #}
-clearWidgetPointer :: (FindObj a Widget Same) => Ref a -> IO ()
+clearWidgetPointer :: (Parent a Widget) => Ref a -> IO ()
 clearWidgetPointer wp = withRef wp {#call Fl_clear_widget_pointer as fl_Clear_Widget_Pointer #}

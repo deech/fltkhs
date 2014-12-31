@@ -36,7 +36,7 @@ instance Op (Next ()) Wizard ( IO ()) where
 instance Op (Prev ()) Wizard ( IO ()) where
   runOp _ wizard = withRef wizard $ \wizardPtr -> wizardPrev' wizardPtr
 {# fun unsafe Fl_Wizard_set_value as wizardSetValue' { id `Ptr ()', id `Ptr ()' } -> `()' #}
-instance (FindObj a Widget Same) => Op (SetValue ()) Wizard ( Ref a -> IO ()) where
+instance (Parent a Widget) => Op (SetValue ()) Wizard ( Ref a -> IO ()) where
   runOp _ wizard widget =
     withRef wizard $ \wizardPtr ->
       withRef widget $ \widgetPtr ->

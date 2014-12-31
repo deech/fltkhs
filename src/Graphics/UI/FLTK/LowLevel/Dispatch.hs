@@ -12,7 +12,8 @@ module Graphics.UI.FLTK.LowLevel.Dispatch
          dispatch,
          dispatchWithOriginal,
          runOp,
-         castTo
+         castTo,
+         Parent
        )
 where
 import Graphics.UI.FLTK.LowLevel.Fl_Types
@@ -73,6 +74,8 @@ instance (TypeEqual (a () ()) (o () ()) match, FindObj' (a fs as) (o ofs oos) ma
 instance (r ~ Different) => FindObj Base o r
 instance FindObj Base Base Same
 
+class Parent a b
+instance (FindObj a b Same) => Parent a b
 
 class OpWithOriginal op s orig impl | op s orig -> impl where
   runOpWithOriginal :: op -> (Ref s) -> orig -> impl

@@ -120,7 +120,7 @@ instance Op (Copy ()) MenuPrim ( Ref MenuItem  ->  IO ()) where
 
 {# fun Fl_Menu__insert_with_flags as insertWithFlags' { id `Ptr ()',`Int',`String',id `CInt',id `FunPtr CallbackWithUserDataPrim',`Int'} -> `Int' #}
 {# fun Fl_Menu__insert_with_shortcutname_flags as insertWithShortcutnameFlags' { id `Ptr ()',`Int',`String',`String',id `FunPtr CallbackWithUserDataPrim',`Int' } -> `Int' #}
-instance (FindObj a MenuPrim Same) => Op (Insert ()) MenuPrim ( Int -> String -> Maybe Shortcut -> (Ref a -> IO ()) -> [MenuProps] -> IO (Int)) where
+instance (Parent a MenuPrim) => Op (Insert ()) MenuPrim ( Int -> String -> Maybe Shortcut -> (Ref a -> IO ()) -> [MenuProps] -> IO (Int)) where
   runOp _ menu_ index' name shortcut cb flags =
     withRef menu_ $ \menu_Ptr -> do
       let combinedFlags = foldl1WithDefault 0 (.|.) (map fromEnum flags)
@@ -155,7 +155,7 @@ instance (FindObj a MenuPrim Same) => Op (Insert ()) MenuPrim ( Int -> String ->
             combinedFlags
 {# fun Fl_Menu__add_with_flags as addWithFlags' { id `Ptr ()',`String',id `CInt',id `FunPtr CallbackWithUserDataPrim',`Int' } -> `Int' #}
 {# fun Fl_Menu__add_with_shortcutname_flags as addWithShortcutnameFlags' { id `Ptr ()',`String',`String',id `FunPtr CallbackWithUserDataPrim',`Int' } -> `Int' #}
-instance (FindObj a MenuPrim Same) => Op (Add ()) MenuPrim ( String -> Maybe Shortcut -> (Ref a-> IO ()) -> [MenuProps] -> IO (Int)) where
+instance (Parent a MenuPrim) => Op (Add ()) MenuPrim ( String -> Maybe Shortcut -> (Ref a-> IO ()) -> [MenuProps] -> IO (Int)) where
   runOp _ menu_ name shortcut cb flags =
     withRef menu_ $ \menu_Ptr -> do
       let combinedFlags = foldl1WithDefault 0 (.|.) (map fromEnum flags)

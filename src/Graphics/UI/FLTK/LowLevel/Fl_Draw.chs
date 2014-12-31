@@ -507,7 +507,7 @@ flcDrawInBoxWithImageReference' string' rectangle' align' draw_callback' image_p
   Just c' -> do
              fptr <- toDrawCallback c'
              flcDrawWithCallthisImgDrawSymbols' string' x_pos' y_pos' width' height' align' fptr image_ptr (maybe False id draw_flags')
-flcDrawInBoxWithImageReference :: (FindObj a Image Same) => String -> Rectangle -> AlignType -> Maybe DrawCallback -> Ref a -> Maybe Bool -> IO ()
+flcDrawInBoxWithImageReference :: (Parent a Image) => String -> Rectangle -> AlignType -> Maybe DrawCallback -> Ref a -> Maybe Bool -> IO ()
 flcDrawInBoxWithImageReference string' rectangle' align' draw_callback' image' draw_flags'
   = withRef image' $ \imagePtr' -> flcDrawInBoxWithImageReference' string' rectangle' align' draw_callback' imagePtr' draw_flags'
 
@@ -641,7 +641,7 @@ flcSetStatus :: Rectangle ->  IO ()
 flcSetStatus rectangle = let (x_pos', y_pos', width', height') = fromRectangle rectangle in flcSetStatus' x_pos' y_pos' width' height'
 
 {# fun unsafe flc_set_spot_with_win as flcSetSpotWithWin' { `Int',`Int',`Int',`Int',`Int',`Int',id `Ptr ()' } -> `()' #}
-flcSetSpotWithWin :: (FindObj a Window Same) => Int -> Int -> Rectangle -> Ref Window -> IO ()
+flcSetSpotWithWin :: (Parent a Window) => Int -> Int -> Rectangle -> Ref Window -> IO ()
 flcSetSpotWithWin font' size' rectangle win = let (x_pos', y_pos', width', height') = fromRectangle rectangle in withRef win $ \winPtr -> flcSetSpotWithWin' font' size' x_pos' y_pos' width' height' winPtr
 
 {# fun unsafe flc_set_spot as flcSetSpot' { `Int',`Int',`Int',`Int',`Int',`Int' } -> `()' #}
