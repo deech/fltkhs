@@ -86,7 +86,8 @@ module Graphics.UI.FLTK.LowLevel.Fl_Draw
        flcDrawWithNAngle,
        flcRtlDraw,
        flcMeasure,
-       flcDrawInBoundingBox,
+       flcDrawInBoxWithImageReference,
+       flcDrawInBox,
        flcFrame,
        flcFrame2,
        flcDrawBox,
@@ -498,16 +499,21 @@ flcMeasure str draw_symbols =
 
 {# fun flc_draw_with_img_draw_symbols as flcDrawWithImgDrawSymbols' { `String',`Int',`Int',`Int',`Int',cFromEnum `AlignType', id `Ptr ()',`Bool' } -> `()' #}
 {# fun flc_draw_with_callthis_img_draw_symbols as flcDrawWithCallthisImgDrawSymbols' { `String',`Int',`Int',`Int',`Int',cFromEnum `AlignType', id `FunPtr DrawCallbackPrim', id `Ptr ()',`Bool' } -> `()' #}
-flcDrawInBoundingBox :: (FindObj a Image Same) => String -> Rectangle -> AlignType -> Maybe DrawCallback -> Maybe (Ref a) -> Maybe Bool -> IO ()
-flcDrawInBoundingBox string' rectangle' align' draw_callback' image' draw_flags'
-  = let (x_pos', y_pos', width', height') = fromRectangle rectangle'
-    in
-      withMaybeRef image' $ \image_ptr -> do
-          case draw_callback' of
-            Nothing -> flcDrawWithImgDrawSymbols' string' x_pos' y_pos' width' height' align' image_ptr (maybe False id draw_flags')
-            Just c' -> do
-              fptr <- toDrawCallback c'
-              flcDrawWithCallthisImgDrawSymbols' string' x_pos' y_pos' width' height' align' fptr image_ptr (maybe False id draw_flags')
+flcDrawInBoxWithImageReference' ::  String -> Rectangle -> AlignType -> Maybe DrawCallback -> Ptr () -> Maybe Bool -> IO ()
+flcDrawInBoxWithImageReference' string' rectangle' align' draw_callback' image_ptr draw_flags' =
+  let (x_pos', y_pos', width', height') = fromRectangle rectangle' in
+  case draw_callback' of
+  Nothing -> flcDrawWithImgDrawSymbols' string' x_pos' y_pos' width' height' align' image_ptr (maybe False id draw_flags')
+  Just c' -> do
+             fptr <- toDrawCallback c'
+             flcDrawWithCallthisImgDrawSymbols' string' x_pos' y_pos' width' height' align' fptr image_ptr (maybe False id draw_flags')
+flcDrawInBoxWithImageReference :: (FindObj a Image Same) => String -> Rectangle -> AlignType -> Maybe DrawCallback -> Ref a -> Maybe Bool -> IO ()
+flcDrawInBoxWithImageReference string' rectangle' align' draw_callback' image' draw_flags'
+  = withRef image' $ \imagePtr' -> flcDrawInBoxWithImageReference' string' rectangle' align' draw_callback' imagePtr' draw_flags'
+
+flcDrawInBox :: String -> Rectangle -> AlignType -> Maybe DrawCallback -> Maybe Bool -> IO ()
+flcDrawInBox string' rectangle' align' draw_callback' draw_flags'
+  = flcDrawInBoxWithImageReference' string' rectangle' align' draw_callback' (castPtr nullPtr) draw_flags'
 
 {# fun unsafe flc_frame as flcFrame' { `String',`Int',`Int',`Int',`Int' } -> `()' #}
 flcFrame :: String -> Rectangle ->  IO ()

@@ -9,7 +9,7 @@ module Graphics.UI.FLTK.LowLevel.Fl_Table
      toDrawCellPrim,
      fillCustomTableFunctionStruct,
      defaultCustomTableFuncs,
-     tableNew,
+     tableCustom,
      tableCustomFunctionStruct
     )
 where
@@ -105,8 +105,8 @@ tableCustomFunctionStruct customWidgetFuncs' customTableFuncs' =
 
 {# fun unsafe Fl_Table_New as tableNew' {  `Int',`Int', `Int', `Int', id `Ptr ()'} -> `Ptr ()' id #}
 {# fun unsafe Fl_Table_New_WithLabel as tableNewWithLabel' { `Int',`Int',`Int',`Int',`String', id `Ptr ()'} -> `Ptr ()' id #}
-tableNew :: Rectangle -> Maybe String -> CustomWidgetFuncs Table -> CustomTableFuncs Table -> IO (Ref Table)
-tableNew rectangle label' customWidgetFuncs' customTableFuncs' =
+tableCustom :: Rectangle -> Maybe String -> CustomWidgetFuncs Table -> CustomTableFuncs Table -> IO (Ref Table)
+tableCustom rectangle label' customWidgetFuncs' customTableFuncs' =
     do
       let (x_pos, y_pos, width, height) = fromRectangle rectangle
       ptr <- tableCustomFunctionStruct customWidgetFuncs' customTableFuncs'

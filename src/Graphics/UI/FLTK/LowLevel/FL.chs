@@ -757,7 +757,10 @@ setDndTextOps =  {#call Fl_set_dnd_text_ops as fl_set_dnd_text_ops #} . fromBool
 dndTextOps :: IO Option
 dndTextOps = {#call Fl_dnd_text_ops as fl_dnd_text_ops #} >>= return . cToEnum
 deleteWidget :: (FindObj a Widget Same) => Ref a -> IO ()
-deleteWidget wptr = withRef wptr {#call Fl_delete_widget as fl_delete_widget #}
+deleteWidget wptr =
+  swapRef wptr $ \ptr -> do
+    {#call Fl_delete_widget as fl_delete_widget #} ptr
+    return nullPtr
 doWidgetDeletion :: IO ()
 doWidgetDeletion = {#call Fl_do_widget_deletion as fl_do_widget_deletion #}
 watchWidgetPointer :: (FindObj a Widget Same) => Ref a -> IO ()

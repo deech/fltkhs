@@ -1,15 +1,7 @@
 module Main where
 
 import Graphics.UI.FLTK.LowLevel.FL
-import Graphics.UI.FLTK.LowLevel.Fl_Window
-import Graphics.UI.FLTK.LowLevel.Fl_Button
-import Graphics.UI.FLTK.LowLevel.Fl_Return_Button
-import Graphics.UI.FLTK.LowLevel.Fl_Repeat_Button
-import Graphics.UI.FLTK.LowLevel.Fl_Check_Button
-import Graphics.UI.FLTK.LowLevel.Fl_Light_Button
-import Graphics.UI.FLTK.LowLevel.Fl_Round_Button
-import Graphics.UI.FLTK.LowLevel.Fl_Toggle_Button
-import Graphics.UI.FLTK.LowLevel.Fl_Types
+import Graphics.UI.FLTK.LowLevel.FLTKHS
 
 main :: IO ()
 main = do
@@ -17,12 +9,10 @@ main = do
                 (Size (Width 320) (Height 170))
                 Nothing
                 Nothing
-                Nothing
      b <- buttonNew
            (Rectangle (Position (X 10) (Y 10)) (Size (Width 130) (Height 30)))
            (Just "Fl_Button")
-           Nothing
-     buttonSetTooltip b "This is a tooltip."
+     setTooltip b "This is a tooltip."
      _ <- repeatButtonNew
            (Rectangle (Position (X 10) (Y 50)) (Size (Width 130) (Height 30)))
            (Just "Fl_Repeat_Button")
@@ -41,7 +31,7 @@ main = do
      _ <- checkButtonNew
            (Rectangle (Position (X 150) (Y 90)) (Size (Width 160) (Height 30)))
            (Just "Fl_Check_Button")
-     windowEnd window
-     windowShow window
+     end window
+     showWidget window
      _ <- run
      return ()

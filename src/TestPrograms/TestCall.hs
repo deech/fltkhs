@@ -14,6 +14,7 @@ showOverride wptr = do
 
 drawOverride :: Ref Window -> IO ()
 drawOverride wptr = do
+  print "here"
   drawSuper wptr
 
 addButton :: Int -> Int -> String -> IO (Ref Button)
@@ -37,7 +38,7 @@ addWindow = do
   button1 <- addButton 10 30 "button 1"
   button2 <- addButton 10 70 "button 2"
   setCallback button1 (\btn -> setLabel btn "New Label")
-  setCallback button2 (\_ -> destroy button1)
+  setCallback button2 (\_ -> FL.deleteWidget button1 >> redraw window)
   setCallback window (windowCallback "window's callback data")
   showWidget window
   return window
@@ -111,13 +112,13 @@ main :: IO ()
 main = do
   _ <- addWindow
   print "added Window"
-  _ <- FL.addAwakeHandler (print "awake handler's callback data")
-  print "added awake handler"
-  _ <- runAwakeHandler
+  -- _ <- FL.addAwakeHandler (print "awake handler's callback data")
+  -- print "added awake handler"
+  -- _ <- runAwakeHandler
   -- _ <- setEventDispatch eventIntercept
   -- f <- eventDispatch
   -- _ <- f DndDrag win
-  _ <- FL.setHandler globalEventHandler
-  print "ran awake handler"
+  -- _ <- FL.setHandler globalEventHandler
+  -- print "ran awake handler"
   _ <- FL.run
   return ()

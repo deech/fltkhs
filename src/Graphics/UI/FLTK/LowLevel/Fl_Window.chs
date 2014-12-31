@@ -445,6 +445,6 @@ instance Op (DrawFocus ()) Window ( Maybe (Boxtype, Rectangle) -> IO ()) where
                   let (x_pos,y_pos,w_pos,h_pos) = fromRectangle r
                   windowDrawFocusWithTXywh' windowPtr bx x_pos y_pos w_pos h_pos
 
-{# fun unsafe Fl_Window_wait_for_expose as waitForExpose' { id `Ptr ()' } -> `()' #}
+{# fun Fl_Window_wait_for_expose as waitForExpose' { id `Ptr ()' } -> `()' #}
 instance Op (WaitForExpose ()) Window (  IO ()) where
   runOp _ win = withRef win $ \winPtr -> waitForExpose' winPtr
