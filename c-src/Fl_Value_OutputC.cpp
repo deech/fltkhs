@@ -4,6 +4,9 @@
 EXPORT {
 #endif
   /* Inherited from Fl_Widget */
+  FL_EXPORT_C(void,Fl_Value_Output_resize)(fl_Value_Output value_output,int X,int Y,int W,int H) {
+    (static_cast<Fl_Value_Output*>(value_output)->resize(X,Y,W,H));
+  }
   FL_EXPORT_C(int,Fl_Value_Output_handle)(fl_Value_Output self, int event){
     return (static_cast<Fl_Value_Output*>(self))->handle(event);
   }

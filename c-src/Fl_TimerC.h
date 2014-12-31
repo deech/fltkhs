@@ -104,13 +104,13 @@ EXPORT {
   FL_EXPORT_C(fl_Timer, Fl_Hidden_Timer_New)(int x, int y, int w, int h, const char* l);
 
   FL_EXPORT_C(void, Fl_Timer_Destroy)(fl_Timer timer);
-  
-  FL_EXPORT_C(char,      Fl_Timer_direction)(fl_Timer adjuster);
-  FL_EXPORT_C(void,      Fl_Timer_set_direction)(fl_Timer adjuster, char d);
-  FL_EXPORT_C(double,    Fl_Timer_value)(fl_Timer adjuster);
-  FL_EXPORT_C(void,      Fl_Timer_set_value)(fl_Timer adjuster, double value);
-  FL_EXPORT_C(char,      Fl_Timer_suspended)(fl_Timer adjuster);
-  FL_EXPORT_C(void,      Fl_Timer_set_suspended)(fl_Timer adjuster, char s);
+
+  FL_EXPORT_C(char,      Fl_Timer_direction)(fl_Timer timer);
+  FL_EXPORT_C(void,      Fl_Timer_set_direction)(fl_Timer timer, char d);
+  FL_EXPORT_C(double,    Fl_Timer_value)(fl_Timer timer);
+  FL_EXPORT_C(void,      Fl_Timer_set_value)(fl_Timer timer, double value);
+  FL_EXPORT_C(char,      Fl_Timer_suspended)(fl_Timer timer);
+  FL_EXPORT_C(void,      Fl_Timer_set_suspended)(fl_Timer timer, char s);
 #ifdef __cplusplus
 }
 #endif

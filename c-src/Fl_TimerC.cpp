@@ -1,7 +1,10 @@
 #include "Fl_TimerC.h"
 #ifdef __cplusplus
 EXPORT {
-#endif  
+#endif
+  FL_EXPORT_C(int , Fl_Timer_handle )(fl_Timer timer,int event) {
+    return (static_cast<Fl_Timer*>(timer))->handle(event);
+  }
   FL_EXPORT_C(fl_Group,Fl_Timer_parent)(fl_Timer adjuster){
     return (static_cast<Fl_Timer*>(adjuster))->parent();
   }
@@ -278,6 +281,12 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Timer_set_direction)(fl_Timer timer,char d){
     (static_cast<Fl_Timer*>(timer))->direction(d);
   }
+  FL_EXPORT_C(void,Fl_Timer_set_value)(fl_Timer timer, double value) {
+    (static_cast<Fl_Timer*>(timer)->value(value));
+  }
+  FL_EXPORT_C(double, Fl_Timer_value)(fl_Timer timer){
+    return (static_cast<Fl_Timer*>(timer)->value());
+  }
   FL_EXPORT_C(char,Fl_Timer_suspended)(fl_Timer timer){
     return (static_cast<Fl_Timer*>(timer))->suspended();
   }
@@ -286,4 +295,4 @@ EXPORT {
   }
 #ifdef __cplusplus
 }
-#endif 
+#endif
