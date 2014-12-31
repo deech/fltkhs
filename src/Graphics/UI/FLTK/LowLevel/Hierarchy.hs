@@ -1144,7 +1144,7 @@ data Resize a
 resize :: (FindOp a (Resize ()) (Match r), Op (Resize ()) r impl) => Ref a -> impl
 resize = dispatch (undefined :: Resize ())
 data SetCallback a
-setCallback :: (FindOp a (SetCallback ()) (Match r), OpWithOriginal (SetCallback ()) a r impl) => Ref a -> impl
+setCallback :: (FindOp a (SetCallback ()) (Match r), OpWithOriginal (SetCallback ()) r a impl) => Ref a -> impl
 setCallback = dispatchWithOriginal (undefined :: SetCallback ())
 data DrawBox a
 drawBox :: (FindOp a (DrawBox ()) (Match r), Op (DrawBox ()) r impl) => Ref a -> impl

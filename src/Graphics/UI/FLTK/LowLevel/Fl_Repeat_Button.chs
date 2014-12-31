@@ -2,7 +2,7 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 module Graphics.UI.FLTK.LowLevel.Fl_Repeat_Button
     (
-     returnButtonNew
+    repeatButtonNew
     )
 where
 #include "Fl_ExportMacros.h"
@@ -19,8 +19,8 @@ import Graphics.UI.FLTK.LowLevel.Dispatch
 
 {# fun Fl_Return_Button_New as widgetNew' { `Int',`Int',`Int',`Int' } -> `Ptr ()' id #}
 {# fun Fl_Return_Button_New_WithLabel as widgetNewWithLabel' { `Int',`Int',`Int',`Int',`String'} -> `Ptr ()' id #}
-returnButtonNew :: Rectangle -> Maybe String -> IO (Ref ReturnButton)
-returnButtonNew rectangle l' =
+repeatButtonNew :: Rectangle -> Maybe String -> IO (Ref ReturnButton)
+repeatButtonNew rectangle l' =
     let (x_pos, y_pos, width, height) = fromRectangle rectangle
     in case l' of
         Nothing -> widgetNew' x_pos y_pos width height >>= toRef

@@ -207,8 +207,8 @@ instance Op (Resize ()) Window ( Rectangle -> IO (())) where
                                  resize' windowPtr x_pos y_pos w_pos h_pos
 
 {# fun Fl_Window_set_callback as windowSetCallback' {id `Ptr ()' , id `FunPtr CallbackWithUserDataPrim'} -> `()' supressWarningAboutRes #}
-instance OpWithOriginal (SetCallback ()) orig Window ((Ref orig -> IO ())-> IO ()) where
-  runOpWithOriginal _ _ window callback =
+instance OpWithOriginal (SetCallback ()) Window orig ((Ref orig -> IO ())-> IO ()) where
+  runOpWithOriginal _ window _ callback =
    withRef window $ (\p -> do
                            callbackPtr <- toCallbackPrimWithUserData callback
                            windowSetCallback' (castPtr p) callbackPtr)

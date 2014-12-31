@@ -74,8 +74,8 @@ instance (r ~ Different) => FindObj Base o r
 instance FindObj Base Base Same
 
 
-class OpWithOriginal op orig s impl | op orig s -> impl where
-  runOpWithOriginal :: op -> orig -> (Ref s) -> impl
+class OpWithOriginal op s orig impl | op s orig -> impl where
+  runOpWithOriginal :: op -> (Ref s) -> orig -> impl
 
 -- Implementations of methods on various types
 -- of objects
@@ -92,5 +92,5 @@ instance CastTo a b r where castTo (Ref x) = (Ref x)
 dispatch :: forall a r op impl. (FindOp a op (Match r), Op op r impl) => op -> Ref a -> impl
 dispatch _ refA = runOp (undefined :: op) ((castTo refA) :: Ref r)
 
-dispatchWithOriginal :: forall a r op impl. (FindOp a op (Match r), OpWithOriginal op a r impl) => op -> Ref a -> impl
-dispatchWithOriginal _ refA = runOpWithOriginal (undefined :: op) (undefined :: a) ((castTo refA) :: Ref r)
+dispatchWithOriginal :: forall a r op impl. (FindOp a op (Match r), OpWithOriginal op r a impl) => op -> Ref a -> impl
+dispatchWithOriginal _ refA = runOpWithOriginal (undefined :: op) ((castTo refA) :: Ref r) (undefined :: a)

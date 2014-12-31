@@ -1,51 +1,53 @@
+{-# LANGUAGE ScopedTypeVariables #-}
 module Main where
-import Graphics.UI.FLTK.LowLevel.Fl_Window
-import Graphics.UI.FLTK.LowLevel.FL
+import Graphics.UI.FLTK.LowLevel.FLTKHS
 import Graphics.UI.FLTK.LowLevel.Fl_Enumerations
-import Graphics.UI.FLTK.LowLevel.Fl_Types
-import Graphics.UI.FLTK.LowLevel.Fl_Button
-windowCallback ::  (Show a) => a -> Widget b -> IO ()
+import qualified Graphics.UI.FLTK.LowLevel.FL as FL
+
+windowCallback ::  (Show a) => a -> Ref Window -> IO ()
 windowCallback a _ = print a
-callback ::  (Show a) => a -> IO ()
-callback a = print a
-showOverride :: Window () -> IO ()
+
+showOverride :: Ref Window -> IO ()
 showOverride wptr = do
   print "showOverride"
-  windowShowSuper wptr
-drawOverride :: Window () -> IO ()
+  showWidgetSuper wptr
+
+drawOverride :: Ref Window -> IO ()
 drawOverride wptr = do
-  windowDrawSuper wptr
-buttonCallback :: (Show a) => a -> Button b -> IO ()
-buttonCallback a _ = print a
-addButton :: Int -> Int -> String -> IO (Button ())
+  drawSuper wptr
+
+addButton :: Int -> Int -> String -> IO (Ref Button)
 addButton x_pos y_pos label = do
   button <- buttonNew
               (Rectangle (Position (X x_pos) (Y y_pos)) (Size (Width 80) (Height 30)) )
               (Just label)
-              Nothing
   return button
-destroyButton :: Button a -> b -> IO ()
-destroyButton b = \_ -> buttonDestroy b >> redraw
-addWindow :: IO (Window ())
+
+addWindow :: IO (Ref Window)
 addWindow = do
-  window <- windowNew (Size (Width 100) (Height 100))
-                      Nothing
-                      (Just "Test")
-                      (Just (defaultWindowFuncs {windowDrawOverride = (Just drawOverride)}))
+  window <- windowCustom
+              (Size (Width 100) (Height 100))
+              Nothing
+              (Just "Test")
+              (Just (defaultCustomWidgetFuncs {
+                        drawCustom = (Just drawOverride)
+                        }
+                    ))
+              (Just defaultCustomWindowFuncs)
   button1 <- addButton 10 30 "button 1"
   button2 <- addButton 10 70 "button 2"
-  buttonSetCallback button1 (\btn -> buttonSetLabel btn "New Label")
-  buttonSetCallback button2 (destroyButton button1)
-  windowSetCallback window (windowCallback "window's callback data")
-  windowShow window
+  setCallback button1 (\btn -> setLabel btn "New Label")
+  setCallback button2 (\_ -> destroy button1)
+  setCallback window (windowCallback "window's callback data")
+  showWidget window
   return window
 
 runAwakeHandler :: IO ()
 runAwakeHandler = do
-  awakeHandler <- getAwakeHandler_
+  awakeHandler <- FL.getAwakeHandler_
   awakeHandler
 
-eventIntercept :: Event -> (Window ()) -> IO Int
+eventIntercept :: Event -> Ref Window -> IO Int
 eventIntercept e _ =
     case e of
       NoEvent                    -> do { putStrLn "NoEvent"; return 0; }
@@ -109,13 +111,13 @@ main :: IO ()
 main = do
   _ <- addWindow
   print "added Window"
-  _ <- addAwakeHandler (print "awake handler's callback data")
+  _ <- FL.addAwakeHandler (print "awake handler's callback data")
   print "added awake handler"
   _ <- runAwakeHandler
   -- _ <- setEventDispatch eventIntercept
   -- f <- eventDispatch
   -- _ <- f DndDrag win
-  _ <- setHandler globalEventHandler
+  _ <- FL.setHandler globalEventHandler
   print "ran awake handler"
-  _ <- run
+  _ <- FL.run
   return ()

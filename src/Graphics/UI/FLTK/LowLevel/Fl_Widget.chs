@@ -448,8 +448,8 @@ instance Op (Resize ()) Widget (Rectangle -> IO (())) where
     resize' widgetPtr x_pos y_pos w_pos h_pos
 {# fun Fl_Widget_set_callback as setCallback' { id `Ptr ()', id `FunPtr CallbackWithUserDataPrim'} -> `()' supressWarningAboutRes #}
 
-instance OpWithOriginal orig (SetCallback ()) Widget ((Ref orig -> IO ())-> IO (())) where
-  runOpWithOriginal _ _ widget callback = withRef widget $ \widgetPtr -> do
+instance OpWithOriginal (SetCallback ()) Widget orig ((Ref orig -> IO ())-> IO ()) where
+  runOpWithOriginal _ widget _ callback = withRef widget $ \widgetPtr -> do
     ptr <- toCallbackPrimWithUserData callback
     setCallback' widgetPtr (castFunPtr ptr)
 

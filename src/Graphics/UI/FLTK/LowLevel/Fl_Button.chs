@@ -2,6 +2,7 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 module Graphics.UI.FLTK.LowLevel.Fl_Button
     (
+     buttonCustom,
      buttonNew
     )
 where
@@ -22,12 +23,23 @@ import Graphics.UI.FLTK.LowLevel.Hierarchy
 {# fun Fl_Button_New_WithLabel as widgetNewWithLabel' { `Int',`Int',`Int',`Int',`String'} -> `Ptr ()' id #}
 {# fun Fl_OverriddenButton_New_WithLabel as overriddenWidgetNewWithLabel' { `Int',`Int',`Int',`Int',`String', id `Ptr ()'} -> `Ptr ()' id #}
 {# fun Fl_OverriddenButton_New as overriddenWidgetNew' { `Int',`Int',`Int',`Int', id `Ptr ()'} -> `Ptr ()' id #}
-buttonNew :: Rectangle -> Maybe String -> Maybe (CustomWidgetFuncs Button) -> IO (Ref Button)
-buttonNew rectangle l' funcs' =
+buttonCustom :: Rectangle -> Maybe String -> Maybe (CustomWidgetFuncs Button) -> IO (Ref Button)
+buttonCustom rectangle l' funcs' =
   widgetMaker
     rectangle
     l'
     funcs'
+    widgetNew'
+    widgetNewWithLabel'
+    overriddenWidgetNew'
+    overriddenWidgetNewWithLabel'
+
+buttonNew :: Rectangle -> Maybe String -> IO (Ref Button)
+buttonNew rectangle l' =
+  widgetMaker
+    rectangle
+    l'
+    Nothing
     widgetNew'
     widgetNewWithLabel'
     overriddenWidgetNew'

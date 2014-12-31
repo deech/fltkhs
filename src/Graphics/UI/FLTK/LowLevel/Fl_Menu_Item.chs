@@ -93,8 +93,8 @@ instance Op (SetLabelsize ()) MenuItem ( FontSize ->  IO ()) where
   runOp _ menu_item (FontSize pix) = withRef menu_item $ \menu_itemPtr -> setLabelsize' menu_itemPtr pix
 
 {# fun Fl_Menu_Item_set_callback as setCallback' { id `Ptr ()', id `FunPtr CallbackWithUserDataPrim'} -> `()' #}
-instance OpWithOriginal orig (SetCallback ()) MenuItem ( (Ref orig -> IO ()) ->  IO ()) where
-  runOpWithOriginal _ _ menu_item c = withRef menu_item $ \menu_itemPtr -> do
+instance OpWithOriginal (SetCallback ()) MenuItem orig ( (Ref orig -> IO ()) ->  IO ()) where
+  runOpWithOriginal _ menu_item _ c = withRef menu_item $ \menu_itemPtr -> do
                                     ptr <- toCallbackPrim c
                                     setCallback' menu_itemPtr (castFunPtr ptr)
 
