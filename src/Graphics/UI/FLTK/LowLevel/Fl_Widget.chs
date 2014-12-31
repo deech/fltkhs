@@ -20,10 +20,6 @@ module Graphics.UI.FLTK.LowLevel.Fl_Widget
      WidgetEventHandlerPrim,
      WidgetTransformCallbackPrim,
      RectangleFPrim,
-     TableDrawCellF,
-     TableDrawCellFPrim,
-     TableSetIntF,
-     TableSetIntFPrim,
      EventDispatchPrim,
      wrapEventDispatchPrim,
      toRectangleFPrim,
@@ -32,8 +28,6 @@ module Graphics.UI.FLTK.LowLevel.Fl_Widget
      toCallbackPrimWithUserData,
      toBaseCallbackPrim,
      toWidgetTransformCallbackPrim,
-     toTableSetIntFPrim,
-     toTableDrawCellPrim,
      unwrapEventDispatchPrim
     )
 where
@@ -55,10 +49,6 @@ type GetPointerF                 = Ptr () -> IO (Ptr ())
 type WidgetEventHandlerPrim      = Ptr () -> CInt -> IO CInt
 type WidgetTransformCallbackPrim = Ptr () -> IO (Ptr ())
 type RectangleFPrim              = Ptr () -> CInt -> CInt -> CInt -> CInt -> IO ()
-type TableDrawCellF              = Ref Table -> TableContext -> Int -> Int -> Rectangle -> IO ()
-type TableDrawCellFPrim          = Ptr () -> CInt -> CInt -> CInt -> CInt -> CInt -> CInt -> CInt -> IO ()
-type TableSetIntF                = Ref Table -> Int -> IO ()
-type TableSetIntFPrim            = Ptr () -> CInt -> IO ()
 type EventDispatchPrim           = CInt -> Ptr () -> IO CInt
 data PositionSpec = ByPosition Position
                   | forall a. (FindObj a Widget Same) => ByWidget (Ref a)
@@ -71,10 +61,6 @@ foreign import ccall "wrapper"
         mkRectanglePtr :: RectangleFPrim -> IO (FunPtr RectangleFPrim)
 foreign import ccall "wrapper"
         mkGetPointerPtr :: GetPointerF -> IO (FunPtr GetPointerF)
-foreign import ccall "wrapper"
-        mkTableSetInt :: TableSetIntFPrim -> IO (FunPtr TableSetIntFPrim)
-foreign import ccall "wrapper"
-        mkTableDrawCellF :: TableDrawCellFPrim -> IO (FunPtr TableDrawCellFPrim)
 foreign import ccall "wrapper"
         wrapEventDispatchPrim :: EventDispatchPrim -> IO (FunPtr EventDispatchPrim)
 foreign import ccall "dynamic"
@@ -129,30 +115,6 @@ toWidgetTransformCallbackPrim f =
       pp <- wrapNonNull ptr "Null pointer. toWidgetTransformCallbackPrim"
       widget <- f (castTo (wrapInRef pp))
       unsafeRefToPtr widget
-
-toTableSetIntFPrim :: TableSetIntF -> IO (FunPtr TableSetIntFPrim)
-toTableSetIntFPrim f =
-    mkTableSetInt
-    (
-     \ptr num' -> do
-       pp <- wrapNonNull ptr "Null pointer. toTableSetInt"
-       f (wrapInRef pp) (fromIntegral num')
-    )
-
-toTableDrawCellPrim :: TableDrawCellF -> IO (FunPtr TableDrawCellFPrim)
-toTableDrawCellPrim f =
-    mkTableDrawCellF
-     (
-      \ptr context' row' col' x_pos y_pos width height ->
-          let rectangle = toRectangle (fromIntegral x_pos,
-                                       fromIntegral y_pos,
-                                       fromIntegral width,
-                                       fromIntegral height)
-          in
-          do
-           pp <- wrapNonNull ptr "Null pointer. toTableDrawCellFPrim"
-           f (wrapInRef pp) (toEnum $ fromIntegral context') (fromIntegral row') (fromIntegral col') rectangle
-     )
 
 data CustomWidgetFuncs a =
     CustomWidgetFuncs

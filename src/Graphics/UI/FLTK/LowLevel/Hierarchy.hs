@@ -666,8 +666,148 @@ module Graphics.UI.FLTK.LowLevel.Hierarchy
          setXstep,
          SetYstep,
          setYstep,
+         -- * Wizard
+         Wizard,
+         Prev,
+         prev,
+         -- * Table
+         Table,
+         SetTableBox,
+         setTableBox,
+         GetTableBox,
+         getTableBox,
+         SetRows,
+         setRows,
+         GetRows,
+         getRows,
+         SetCols,
+         setCols,
+         GetCols,
+         getCols,
+         SetVisibleCells,
+         setVisibleCells,
+         IsInteractiveResize,
+         isInteractiveResize,
+         GetRowResize,
+         getRowResize,
+         SetRowResize,
+         setRowResize,
+         GetColResize,
+         getColResize,
+         SetColResize,
+         setColResize,
+         GetColResizeMin,
+         getColResizeMin,
+         SetColResizeMin,
+         setColResizeMin,
+         GetRowResizeMin,
+         getRowResizeMin,
+         SetRowResizeMin,
+         setRowResizeMin,
+         GetRowHeader,
+         getRowHeader,
+         SetRowHeader,
+         setRowHeader,
+         GetColHeader,
+         getColHeader,
+         SetColHeader,
+         setColHeader,
+         SetColHeaderHeight,
+         setColHeaderHeight,
+         GetColHeaderHeight,
+         getColHeaderHeight,
+         SetRowHeaderWidth,
+         setRowHeaderWidth,
+         GetRowHeaderWidth,
+         getRowHeaderWidth,
+         SetRowHeaderColor,
+         setRowHeaderColor,
+         GetRowHeaderColor,
+         getRowHeaderColor,
+         SetColHeaderColor,
+         setColHeaderColor,
+         GetColHeaderColor,
+         getColHeaderColor,
+         SetRowHeight,
+         setRowHeight,
+         GetRowHeight,
+         getRowHeight,
+         SetColWidth,
+         setColWidth,
+         GetColWidth,
+         getColWidth,
+         SetRowHeightAll,
+         setRowHeightAll,
+         SetColWidthAll,
+         setColWidthAll,
+         SetRowPosition,
+         setRowPosition,
+         SetColPosition,
+         setColPosition,
+         GetRowPosition,
+         getRowPosition,
+         GetColPosition,
+         getColPosition,
+         SetTopRow,
+         setTopRow,
+         GetTopRow,
+         getTopRow,
+         IsSelected,
+         isSelected,
+         GetSelection,
+         getSelection,
+         SetSelection,
+         setSelection,
+         MoveCursor,
+         moveCursor,
+         CallbackRow,
+         callbackRow,
+         CallbackCol,
+         callbackCol,
+         CallbackContext,
+         callbackContext,
+         FindCell,
+         findCell,
+         ClearSuper,
+         clearSuper,
+         SetRowsSuper,
+         setRowsSuper,
+         SetColsSuper,
+         setColsSuper,
+         -- * TableRow
+         TableRow,
+         GetType,
+         getType,
+         -- * GlWindow
          GlWindow,
-         Table
+         GetValid,
+         getValid,
+         SetValid,
+         setValid,
+         Invalidate,
+         invalidate,
+         GetContextValid,
+         getContextValid,
+         SetContextValid,
+         setContextValid,
+         CanDoWithM,
+         canDoWithM,
+         CanDo,
+         canDo,
+         GetContext,
+         getContext,
+         SetContext,
+         setContext,
+         SetContextWithDestroyFlag,
+         setContextWithDestroyFlag,
+         SwapBuffers,
+         swapBuffers,
+         Ortho,
+         ortho,
+         HideOverlay,
+         hideOverlay,
+         MakeOverlayCurrent,
+         makeOverlayCurrent,
        )
 where
 import Prelude hiding (round)
@@ -1107,8 +1247,6 @@ data GetChild a
 getChild :: (FindOp a (GetChild ()) (Match r), Op (GetChild ()) r impl) => Ref a -> impl
 getChild = dispatch (undefined :: GetChild ())
 
-data CTable fs parent
-type Table = CTable () Group
 data CWindow fs parent
 type Window =
     CWindow
@@ -1161,8 +1299,6 @@ type Window =
       (WaitForExpose
       ())))))))))))))))))))))))))))))))))))))))))))))))
       Group
-data CGlWindow fs parent
-type GlWindow = CGlWindow () Window
 
 data DrawSuper a
 drawSuper :: (FindOp a (DrawSuper ()) (Match r), Op (DrawSuper ()) r impl) => Ref a -> impl
@@ -2342,3 +2478,352 @@ setXstep = dispatch (undefined :: SetXstep ())
 data SetYstep a
 setYstep :: (FindOp a (SetYstep ()) (Match r), Op (SetYstep ()) r impl) => Ref a -> impl
 setYstep = dispatch (undefined :: SetYstep ())
+
+data CWizard fs parent
+type Wizard =
+  CWizard
+  (Destroy
+  (Next
+  (Prev
+  (SetValue
+  (GetValue
+  ())))))
+  Widget
+
+data Prev a
+prev :: (FindOp a (Prev ()) (Match r), Op (Prev ()) r impl) => Ref a -> impl
+prev = dispatch (undefined :: Prev ())
+
+data CTable fs parent
+type Table =
+  CTable
+   (Destroy
+   (SetTableBox
+   (GetTableBox
+   (SetRows
+   (GetRows
+   (SetCols
+   (GetCols
+   (SetVisibleCells
+   (IsInteractiveResize
+   (GetRowResize
+   (SetRowResize
+   (GetColResize
+   (SetColResize
+   (GetColResizeMin
+   (SetColResizeMin
+   (GetRowResizeMin
+   (SetRowResizeMin
+   (GetRowHeader
+   (SetRowHeader
+   (GetColHeader
+   (SetColHeader
+   (SetColHeaderHeight
+   (GetColHeaderHeight
+   (SetRowHeaderWidth
+   (GetRowHeaderWidth
+   (SetRowHeaderColor
+   (GetRowHeaderColor
+   (SetColHeaderColor
+   (GetColHeaderColor
+   (SetRowHeight
+   (GetRowHeight
+   (SetColWidth
+   (GetColWidth
+   (SetRowHeightAll
+   (SetColWidthAll
+   (SetRowPosition
+   (SetColPosition
+   (GetRowPosition
+   (GetColPosition
+   (SetTopRow
+   (GetTopRow
+   (IsSelected
+   (GetSelection
+   (SetSelection
+   (MoveCursor
+   (InitSizes
+   (Add
+   (Insert
+   (InsertWithBefore
+   (Begin
+   (End
+   (GetArray
+   (GetChild
+   (Children
+   (Find
+   (CallbackRow
+   (CallbackCol
+   (CallbackContext
+   (DoCallback
+   (FindCell
+   (DrawSuper
+   (Draw
+   (Handle
+   (ResizeSuper
+   (Resize
+   (ClearSuper
+   (Clear
+   (SetRowsSuper
+   (SetColsSuper
+   (ShowWidget
+   (ShowWidgetSuper
+   (Hide
+   (HideSuper
+   ())))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))
+   Group
+
+data SetTableBox a
+setTableBox :: (FindOp a (SetTableBox ()) (Match r), Op (SetTableBox ()) r impl) => Ref a -> impl
+setTableBox = dispatch (undefined :: SetTableBox ())
+data GetTableBox a
+getTableBox :: (FindOp a (GetTableBox ()) (Match r), Op (GetTableBox ()) r impl) => Ref a -> impl
+getTableBox = dispatch (undefined :: GetTableBox ())
+data SetRows a
+setRows :: (FindOp a (SetRows ()) (Match r), Op (SetRows ()) r impl) => Ref a -> impl
+setRows = dispatch (undefined :: SetRows ())
+data GetRows a
+getRows :: (FindOp a (GetRows ()) (Match r), Op (GetRows ()) r impl) => Ref a -> impl
+getRows = dispatch (undefined :: GetRows ())
+data SetCols a
+setCols :: (FindOp a (SetCols ()) (Match r), Op (SetCols ()) r impl) => Ref a -> impl
+setCols = dispatch (undefined :: SetCols ())
+data GetCols a
+getCols :: (FindOp a (GetCols ()) (Match r), Op (GetCols ()) r impl) => Ref a -> impl
+getCols = dispatch (undefined :: GetCols ())
+data SetVisibleCells a
+setVisibleCells :: (FindOp a (SetVisibleCells ()) (Match r), Op (SetVisibleCells ()) r impl) => Ref a -> impl
+setVisibleCells = dispatch (undefined :: SetVisibleCells ())
+data IsInteractiveResize a
+isInteractiveResize :: (FindOp a (IsInteractiveResize ()) (Match r), Op (IsInteractiveResize ()) r impl) => Ref a -> impl
+isInteractiveResize = dispatch (undefined :: IsInteractiveResize ())
+data GetRowResize a
+getRowResize :: (FindOp a (GetRowResize ()) (Match r), Op (GetRowResize ()) r impl) => Ref a -> impl
+getRowResize = dispatch (undefined :: GetRowResize ())
+data SetRowResize a
+setRowResize :: (FindOp a (SetRowResize ()) (Match r), Op (SetRowResize ()) r impl) => Ref a -> impl
+setRowResize = dispatch (undefined :: SetRowResize ())
+data GetColResize a
+getColResize :: (FindOp a (GetColResize ()) (Match r), Op (GetColResize ()) r impl) => Ref a -> impl
+getColResize = dispatch (undefined :: GetColResize ())
+data SetColResize a
+setColResize :: (FindOp a (SetColResize ()) (Match r), Op (SetColResize ()) r impl) => Ref a -> impl
+setColResize = dispatch (undefined :: SetColResize ())
+data GetColResizeMin a
+getColResizeMin :: (FindOp a (GetColResizeMin ()) (Match r), Op (GetColResizeMin ()) r impl) => Ref a -> impl
+getColResizeMin = dispatch (undefined :: GetColResizeMin ())
+data SetColResizeMin a
+setColResizeMin :: (FindOp a (SetColResizeMin ()) (Match r), Op (SetColResizeMin ()) r impl) => Ref a -> impl
+setColResizeMin = dispatch (undefined :: SetColResizeMin ())
+data GetRowResizeMin a
+getRowResizeMin :: (FindOp a (GetRowResizeMin ()) (Match r), Op (GetRowResizeMin ()) r impl) => Ref a -> impl
+getRowResizeMin = dispatch (undefined :: GetRowResizeMin ())
+data SetRowResizeMin a
+setRowResizeMin :: (FindOp a (SetRowResizeMin ()) (Match r), Op (SetRowResizeMin ()) r impl) => Ref a -> impl
+setRowResizeMin = dispatch (undefined :: SetRowResizeMin ())
+data GetRowHeader a
+getRowHeader :: (FindOp a (GetRowHeader ()) (Match r), Op (GetRowHeader ()) r impl) => Ref a -> impl
+getRowHeader = dispatch (undefined :: GetRowHeader ())
+data SetRowHeader a
+setRowHeader :: (FindOp a (SetRowHeader ()) (Match r), Op (SetRowHeader ()) r impl) => Ref a -> impl
+setRowHeader = dispatch (undefined :: SetRowHeader ())
+data GetColHeader a
+getColHeader :: (FindOp a (GetColHeader ()) (Match r), Op (GetColHeader ()) r impl) => Ref a -> impl
+getColHeader = dispatch (undefined :: GetColHeader ())
+data SetColHeader a
+setColHeader :: (FindOp a (SetColHeader ()) (Match r), Op (SetColHeader ()) r impl) => Ref a -> impl
+setColHeader = dispatch (undefined :: SetColHeader ())
+data SetColHeaderHeight a
+setColHeaderHeight :: (FindOp a (SetColHeaderHeight ()) (Match r), Op (SetColHeaderHeight ()) r impl) => Ref a -> impl
+setColHeaderHeight = dispatch (undefined :: SetColHeaderHeight ())
+data GetColHeaderHeight a
+getColHeaderHeight :: (FindOp a (GetColHeaderHeight ()) (Match r), Op (GetColHeaderHeight ()) r impl) => Ref a -> impl
+getColHeaderHeight = dispatch (undefined :: GetColHeaderHeight ())
+data SetRowHeaderWidth a
+setRowHeaderWidth :: (FindOp a (SetRowHeaderWidth ()) (Match r), Op (SetRowHeaderWidth ()) r impl) => Ref a -> impl
+setRowHeaderWidth = dispatch (undefined :: SetRowHeaderWidth ())
+data GetRowHeaderWidth a
+getRowHeaderWidth :: (FindOp a (GetRowHeaderWidth ()) (Match r), Op (GetRowHeaderWidth ()) r impl) => Ref a -> impl
+getRowHeaderWidth = dispatch (undefined :: GetRowHeaderWidth ())
+data SetRowHeaderColor a
+setRowHeaderColor :: (FindOp a (SetRowHeaderColor ()) (Match r), Op (SetRowHeaderColor ()) r impl) => Ref a -> impl
+setRowHeaderColor = dispatch (undefined :: SetRowHeaderColor ())
+data GetRowHeaderColor a
+getRowHeaderColor :: (FindOp a (GetRowHeaderColor ()) (Match r), Op (GetRowHeaderColor ()) r impl) => Ref a -> impl
+getRowHeaderColor = dispatch (undefined :: GetRowHeaderColor ())
+data SetColHeaderColor a
+setColHeaderColor :: (FindOp a (SetColHeaderColor ()) (Match r), Op (SetColHeaderColor ()) r impl) => Ref a -> impl
+setColHeaderColor = dispatch (undefined :: SetColHeaderColor ())
+data GetColHeaderColor a
+getColHeaderColor :: (FindOp a (GetColHeaderColor ()) (Match r), Op (GetColHeaderColor ()) r impl) => Ref a -> impl
+getColHeaderColor = dispatch (undefined :: GetColHeaderColor ())
+data SetRowHeight a
+setRowHeight :: (FindOp a (SetRowHeight ()) (Match r), Op (SetRowHeight ()) r impl) => Ref a -> impl
+setRowHeight = dispatch (undefined :: SetRowHeight ())
+data GetRowHeight a
+getRowHeight :: (FindOp a (GetRowHeight ()) (Match r), Op (GetRowHeight ()) r impl) => Ref a -> impl
+getRowHeight = dispatch (undefined :: GetRowHeight ())
+data SetColWidth a
+setColWidth :: (FindOp a (SetColWidth ()) (Match r), Op (SetColWidth ()) r impl) => Ref a -> impl
+setColWidth = dispatch (undefined :: SetColWidth ())
+data GetColWidth a
+getColWidth :: (FindOp a (GetColWidth ()) (Match r), Op (GetColWidth ()) r impl) => Ref a -> impl
+getColWidth = dispatch (undefined :: GetColWidth ())
+data SetRowHeightAll a
+setRowHeightAll :: (FindOp a (SetRowHeightAll ()) (Match r), Op (SetRowHeightAll ()) r impl) => Ref a -> impl
+setRowHeightAll = dispatch (undefined :: SetRowHeightAll ())
+data SetColWidthAll a
+setColWidthAll :: (FindOp a (SetColWidthAll ()) (Match r), Op (SetColWidthAll ()) r impl) => Ref a -> impl
+setColWidthAll = dispatch (undefined :: SetColWidthAll ())
+data SetRowPosition a
+setRowPosition :: (FindOp a (SetRowPosition ()) (Match r), Op (SetRowPosition ()) r impl) => Ref a -> impl
+setRowPosition = dispatch (undefined :: SetRowPosition ())
+data SetColPosition a
+setColPosition :: (FindOp a (SetColPosition ()) (Match r), Op (SetColPosition ()) r impl) => Ref a -> impl
+setColPosition = dispatch (undefined :: SetColPosition ())
+data GetRowPosition a
+getRowPosition :: (FindOp a (GetRowPosition ()) (Match r), Op (GetRowPosition ()) r impl) => Ref a -> impl
+getRowPosition = dispatch (undefined :: GetRowPosition ())
+data GetColPosition a
+getColPosition :: (FindOp a (GetColPosition ()) (Match r), Op (GetColPosition ()) r impl) => Ref a -> impl
+getColPosition = dispatch (undefined :: GetColPosition ())
+data SetTopRow a
+setTopRow :: (FindOp a (SetTopRow ()) (Match r), Op (SetTopRow ()) r impl) => Ref a -> impl
+setTopRow = dispatch (undefined :: SetTopRow ())
+data GetTopRow a
+getTopRow :: (FindOp a (GetTopRow ()) (Match r), Op (GetTopRow ()) r impl) => Ref a -> impl
+getTopRow = dispatch (undefined :: GetTopRow ())
+data IsSelected a
+isSelected :: (FindOp a (IsSelected ()) (Match r), Op (IsSelected ()) r impl) => Ref a -> impl
+isSelected = dispatch (undefined :: IsSelected ())
+data GetSelection a
+getSelection :: (FindOp a (GetSelection ()) (Match r), Op (GetSelection ()) r impl) => Ref a -> impl
+getSelection = dispatch (undefined :: GetSelection ())
+data SetSelection a
+setSelection :: (FindOp a (SetSelection ()) (Match r), Op (SetSelection ()) r impl) => Ref a -> impl
+setSelection = dispatch (undefined :: SetSelection ())
+data MoveCursor a
+moveCursor :: (FindOp a (MoveCursor ()) (Match r), Op (MoveCursor ()) r impl) => Ref a -> impl
+moveCursor = dispatch (undefined :: MoveCursor ())
+data CallbackRow a
+callbackRow :: (FindOp a (CallbackRow ()) (Match r), Op (CallbackRow ()) r impl) => Ref a -> impl
+callbackRow = dispatch (undefined :: CallbackRow ())
+data CallbackCol a
+callbackCol :: (FindOp a (CallbackCol ()) (Match r), Op (CallbackCol ()) r impl) => Ref a -> impl
+callbackCol = dispatch (undefined :: CallbackCol ())
+data CallbackContext a
+callbackContext :: (FindOp a (CallbackContext ()) (Match r), Op (CallbackContext ()) r impl) => Ref a -> impl
+callbackContext = dispatch (undefined :: CallbackContext ())
+data FindCell a
+findCell :: (FindOp a (FindCell ()) (Match r), Op (FindCell ()) r impl) => Ref a -> impl
+findCell = dispatch (undefined :: FindCell ())
+data ClearSuper a
+clearSuper :: (FindOp a (ClearSuper ()) (Match r), Op (ClearSuper ()) r impl) => Ref a -> impl
+clearSuper = dispatch (undefined :: ClearSuper ())
+data SetRowsSuper a
+setRowsSuper :: (FindOp a (SetRowsSuper ()) (Match r), Op (SetRowsSuper ()) r impl) => Ref a -> impl
+setRowsSuper = dispatch (undefined :: SetRowsSuper ())
+data SetColsSuper a
+setColsSuper :: (FindOp a (SetColsSuper ()) (Match r), Op (SetColsSuper ()) r impl) => Ref a -> impl
+setColsSuper = dispatch (undefined :: SetColsSuper ())
+
+data CTableRow fs parent
+type TableRow =
+  CTableRow
+    (Destroy
+    (GetRows
+    (SetType
+    (GetType
+    (SetRows
+    (SetCols
+    (ClearSuper
+    (Clear
+    (SetRowsSuper
+    (SetColsSuper
+    (Handle
+    (ResizeSuper
+    (Resize
+    ())))))))))))))
+    Table
+data GetType a
+getType :: (FindOp a (GetType ()) (Match r), Op (GetType ()) r impl) => Ref a -> impl
+getType = dispatch (undefined :: GetType ())
+
+data CGlWindow fs parent
+type GlWindow =
+  CGlWindow
+    (DrawSuper
+    (HideSuper
+    (FlushSuper
+    (Flush
+    (ShowWidgetSuper
+    (ResizeSuper
+    (Hide
+    (ShowWidget
+    (Resize
+    (Handle
+    (HandleSuper
+    (Destroy
+    (GetValid
+    (SetValid
+    (Invalidate
+    (GetContextValid
+    (SetContextValid
+    (CanDoWithM
+    (CanDo
+    (GetMode
+    (SetMode
+    (GetContext
+    (SetContext
+    (SetContextWithDestroyFlag
+    (SwapBuffers
+    (Ortho
+    (CanDoOverlay
+    (RedrawOverlay
+    (HideOverlay
+    (MakeOverlayCurrent
+    ()))))))))))))))))))))))))))))))
+    Window
+
+data GetValid a
+getValid :: (FindOp a (GetValid ()) (Match r), Op (GetValid ()) r impl) => Ref a -> impl
+getValid = dispatch (undefined :: GetValid ())
+data SetValid a
+setValid :: (FindOp a (SetValid ()) (Match r), Op (SetValid ()) r impl) => Ref a -> impl
+setValid = dispatch (undefined :: SetValid ())
+data Invalidate a
+invalidate :: (FindOp a (Invalidate ()) (Match r), Op (Invalidate ()) r impl) => Ref a -> impl
+invalidate = dispatch (undefined :: Invalidate ())
+data GetContextValid a
+getContextValid :: (FindOp a (GetContextValid ()) (Match r), Op (GetContextValid ()) r impl) => Ref a -> impl
+getContextValid = dispatch (undefined :: GetContextValid ())
+data SetContextValid a
+setContextValid :: (FindOp a (SetContextValid ()) (Match r), Op (SetContextValid ()) r impl) => Ref a -> impl
+setContextValid = dispatch (undefined :: SetContextValid ())
+data CanDoWithM a
+canDoWithM :: (FindOp a (CanDoWithM ()) (Match r), Op (CanDoWithM ()) r impl) => Ref a -> impl
+canDoWithM = dispatch (undefined :: CanDoWithM ())
+data CanDo a
+canDo :: (FindOp a (CanDo ()) (Match r), Op (CanDo ()) r impl) => Ref a -> impl
+canDo = dispatch (undefined :: CanDo ())
+data GetContext a
+getContext :: (FindOp a (GetContext ()) (Match r), Op (GetContext ()) r impl) => Ref a -> impl
+getContext = dispatch (undefined :: GetContext ())
+data SetContext a
+setContext :: (FindOp a (SetContext ()) (Match r), Op (SetContext ()) r impl) => Ref a -> impl
+setContext = dispatch (undefined :: SetContext ())
+data SetContextWithDestroyFlag a
+setContextWithDestroyFlag :: (FindOp a (SetContextWithDestroyFlag ()) (Match r), Op (SetContextWithDestroyFlag ()) r impl) => Ref a -> impl
+setContextWithDestroyFlag = dispatch (undefined :: SetContextWithDestroyFlag ())
+data SwapBuffers a
+swapBuffers :: (FindOp a (SwapBuffers ()) (Match r), Op (SwapBuffers ()) r impl) => Ref a -> impl
+swapBuffers = dispatch (undefined :: SwapBuffers ())
+data Ortho a
+ortho :: (FindOp a (Ortho ()) (Match r), Op (Ortho ()) r impl) => Ref a -> impl
+ortho = dispatch (undefined :: Ortho ())
+data HideOverlay a
+hideOverlay :: (FindOp a (HideOverlay ()) (Match r), Op (HideOverlay ()) r impl) => Ref a -> impl
+hideOverlay = dispatch (undefined :: HideOverlay ())
+data MakeOverlayCurrent a
+makeOverlayCurrent :: (FindOp a (MakeOverlayCurrent ()) (Match r), Op (MakeOverlayCurrent ()) r impl) => Ref a -> impl
+makeOverlayCurrent = dispatch (undefined :: MakeOverlayCurrent ())

@@ -78,7 +78,7 @@ instance Op (Handle ()) Input ( Event -> IO Int) where
     withRef
       input
       (\p -> do
-          t <- getType_ input
+          t <- getInputType input
           case (toEnum (fromIntegral t)) of
            FlSecretInput -> secretInputHandle' p (fromIntegral . fromEnum $ event)
            _             -> inputHandle' p (fromIntegral . fromEnum $ event)
