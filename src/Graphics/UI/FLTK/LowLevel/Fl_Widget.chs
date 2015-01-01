@@ -36,7 +36,7 @@ where
 #include "Fl_WidgetC.h"
 import C2HS hiding (cFromEnum, cFromBool, cToBool,cToEnum)
 import Foreign.C.Types
-import Graphics.UI.FLTK.LowLevel.Fl_Enumerations hiding (selectionColor)
+import Graphics.UI.FLTK.LowLevel.Fl_Enumerations
 import Graphics.UI.FLTK.LowLevel.Fl_Types
 import Graphics.UI.FLTK.LowLevel.Utils
 import Graphics.UI.FLTK.LowLevel.Dispatch
@@ -261,7 +261,7 @@ instance Op (SetColor ()) Widget (Color ->  IO (())) where
 instance Op (SetColorWithBgSel ()) Widget (Color -> Color ->  IO (())) where
   runOp _ widget bg a = withRef widget $ \widgetPtr -> setColorWithBgSel' widgetPtr bg a
 {# fun Fl_Widget_selection_color as selectionColor' { id `Ptr ()' } -> `Color' cToColor #}
-instance Op (SelectionColor ()) Widget ( IO (Color)) where
+instance Op (GetSelectionColor ()) Widget ( IO (Color)) where
   runOp _ widget = withRef widget $ \widgetPtr -> selectionColor' widgetPtr
 {# fun Fl_Widget_set_selection_color as setSelectionColor' { id `Ptr ()',cFromColor `Color' } -> `()' supressWarningAboutRes #}
 instance Op (SetSelectionColor ()) Widget (Color ->  IO (())) where
@@ -324,8 +324,8 @@ instance Op (SetTooltip ()) Widget (String ->  IO (())) where
 instance Op (GetWhen ()) Widget ( IO (When)) where
   runOp _ widget = withRef widget $ \widgetPtr -> when' widgetPtr
 {# fun Fl_Widget_set_when as setWhen' { id `Ptr ()',`Word8' } -> `()' supressWarningAboutRes #}
-instance Op (SetWhen ()) Widget (Word8 ->  IO (())) where
-  runOp _ widget i = withRef widget $ \widgetPtr -> setWhen' widgetPtr i
+instance Op (SetWhen ()) Widget (When ->  IO (())) where
+  runOp _ widget i = withRef widget $ \widgetPtr -> setWhen' widgetPtr (fromIntegral $ fromEnum i)
 {# fun Fl_Widget_visible as visible' { id `Ptr ()' } -> `Int' #}
 instance Op (GetVisible ()) Widget ( IO (Int)) where
   runOp _ widget = withRef widget $ \widgetPtr -> visible' widgetPtr

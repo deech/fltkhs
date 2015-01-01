@@ -82,7 +82,6 @@ library
 Executable test_call
   Main-Is: TestCall.hs
   Hs-Source-Dirs: src/TestPrograms
-  include-dirs: ./object_files ./lib
   ghc-Options: -Wall
   Build-Depends:
     base,
@@ -91,7 +90,6 @@ Executable test_call
 Executable buttons
   Main-Is: Buttons.hs
   Hs-Source-Dirs: src/TestPrograms
-  include-dirs: ./object_files ./lib
   ghc-Options: -Wall -threaded
   Build-Depends:
     base,
@@ -100,7 +98,6 @@ Executable buttons
 Executable table-simple
   Main-Is: table-simple.hs
   Hs-Source-Dirs: src/Examples
-  include-dirs: ./object_files ./lib
   ghc-Options: -Wall
   Build-Depends:
     base,
@@ -109,8 +106,7 @@ Executable table-simple
 Executable table-sort
   Main-Is: table-sort.hs
   Hs-Source-Dirs: src/Examples
-  include-dirs: ./object_files ./lib
-  ghc-Options: -Wall
+  ghc-Options: -Wall -threaded
   Build-Depends:
     base,
     fltkhs,

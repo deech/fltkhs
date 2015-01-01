@@ -282,7 +282,7 @@ enum EventState {
 };
 enum KeyboardKeyMask {
   Kb_KeyMask = FL_KEY_MASK
-};                        
+};
 enum MouseButtonsMask {
   Mouse_ButtonsMask = FL_BUTTONS,
 };
@@ -467,15 +467,15 @@ enum AlignType {
  AlignImageMask       = 0x0320
 };
 #endc
-{#enum Event {} deriving (Show) #}
-{#enum When {} deriving (Show) #}
-{#enum FdWhen {} deriving (Show) #}
-{#enum TreeSort {} deriving (Show) #}
-{#enum TreeConnector {} deriving (Show) #}
-{#enum TreeSelect {} deriving (Show) #}
+{#enum Event {} deriving (Show, Eq) #}
+{#enum When {} deriving (Show, Eq) #}
+{#enum FdWhen {} deriving (Show, Eq) #}
+{#enum TreeSort {} deriving (Show, Eq) #}
+{#enum TreeConnector {} deriving (Show, Eq) #}
+{#enum TreeSelect {} deriving (Show, Eq) #}
 #if FLTK_ABI_VERSION >= 10302
-{#enum TreeItemReselectMode {} deriving (Show) #}
-{#enum TreeItemDrawMode {} deriving (Show) #}
+{#enum TreeItemReselectMode {} deriving (Show, Eq) #}
+{#enum TreeItemDrawMode {} deriving (Show, Eq) #}
 #endif /*FLTK_ABI_VERSION*/
 {#enum KeyboardCode {} deriving (Show, Eq) #}
 {#enum MouseButton {} deriving (Show, Eq) #}

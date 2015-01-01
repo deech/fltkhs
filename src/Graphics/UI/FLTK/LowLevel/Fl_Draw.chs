@@ -232,8 +232,8 @@ flcRectfWithRgb :: Rectangle -> RGB ->  IO ()
 flcRectfWithRgb rectangle (r', g' , b') = let (x_pos', y_pos', width', height') = fromRectangle rectangle in flcRectfWithRgb' x_pos' y_pos' width' height' r' g' b'
 
 {# fun unsafe flc_line as flcLine' { `Int',`Int',`Int',`Int' } -> `()' #}
-flcLine :: Position -> Int -> Int ->  IO ()
-flcLine (Position (X x_pos') (Y y_pos')) x1 y1 = flcLine' x_pos' y_pos' x1 y1
+flcLine :: Position -> Position ->  IO ()
+flcLine (Position (X x_pos') (Y y_pos'))(Position (X x_pos'') (Y y_pos''))  = flcLine' x_pos' y_pos' x_pos'' y_pos''
 
 {# fun unsafe flc_line_with_x2_y2 as flcLineWithX2Y2' { `Int',`Int',`Int',`Int',`Int',`Int' } -> `()' #}
 flcLineWithX2Y2 :: Position -> Int -> Int -> Int -> Int ->  IO ()

@@ -44,8 +44,8 @@ module Graphics.UI.FLTK.LowLevel.Hierarchy
          setColor,
          SetColorWithBgSel,
          setColorWithBgSel,
-         SelectionColor,
-         selectionColor,
+         GetSelectionColor,
+         getSelectionColor,
          SetSelectionColor,
          setSelectionColor,
          GetLabel,
@@ -778,6 +778,10 @@ module Graphics.UI.FLTK.LowLevel.Hierarchy
          TableRow,
          GetType,
          getType,
+         GetRowSelected,
+         getRowSelected,
+         SelectAllRows,
+         selectAllRows,
          -- * GlWindow
          GlWindow,
          GetValid,
@@ -843,7 +847,7 @@ type Widget = CWidget
                (GetColor
                (SetColor
                (SetColorWithBgSel
-               (SelectionColor
+               (GetSelectionColor
                (SetSelectionColor
                (GetLabel
                (CopyLabel
@@ -963,9 +967,9 @@ setColor = dispatch (undefined :: SetColor ())
 data SetColorWithBgSel a
 setColorWithBgSel :: (FindOp a (SetColorWithBgSel ()) (Match r), Op (SetColorWithBgSel ()) r impl) => Ref a -> impl
 setColorWithBgSel = dispatch (undefined :: SetColorWithBgSel ())
-data SelectionColor a
-selectionColor :: (FindOp a (SelectionColor ()) (Match r), Op (SelectionColor ()) r impl) => Ref a -> impl
-selectionColor = dispatch (undefined :: SelectionColor ())
+data GetSelectionColor a
+getSelectionColor :: (FindOp a (GetSelectionColor ()) (Match r), Op (GetSelectionColor ()) r impl) => Ref a -> impl
+getSelectionColor = dispatch (undefined :: GetSelectionColor ())
 data SetSelectionColor a
 setSelectionColor :: (FindOp a (SetSelectionColor ()) (Match r), Op (SetSelectionColor ()) r impl) => Ref a -> impl
 setSelectionColor = dispatch (undefined :: SetSelectionColor ())
@@ -2743,11 +2747,19 @@ type TableRow =
     (Handle
     (ResizeSuper
     (Resize
-    ())))))))))))))
+    (GetRowSelected
+    (SelectAllRows
+    ())))))))))))))))
     Table
 data GetType a
 getType :: (FindOp a (GetType ()) (Match r), Op (GetType ()) r impl) => Ref a -> impl
 getType = dispatch (undefined :: GetType ())
+data GetRowSelected a
+getRowSelected :: (FindOp a (GetRowSelected ()) (Match r), Op (GetRowSelected ()) r impl) => Ref a -> impl
+getRowSelected = dispatch (undefined :: GetRowSelected ())
+data SelectAllRows a
+selectAllRows :: (FindOp a (SelectAllRows ()) (Match r), Op (SelectAllRows ()) r impl) => Ref a -> impl
+selectAllRows = dispatch (undefined :: SelectAllRows ())
 
 data CGlWindow fs parent
 type GlWindow =

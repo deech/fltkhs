@@ -166,8 +166,8 @@ instance Op (GetRowResizeMin ()) Table (  IO (Int)) where
 instance Op (SetRowResizeMin ()) Table ( Int ->  IO ()) where
   runOp _ table val = withRef table $ \tablePtr -> setRowResizeMin' tablePtr val
 {# fun unsafe Fl_Table_row_header as rowHeader' { id `Ptr ()' } -> `Int' #}
-instance Op (GetRowHeader ()) Table (  IO (Int)) where
-  runOp _ table = withRef table $ \tablePtr -> rowHeader' tablePtr
+instance Op (GetRowHeader ()) Table (  IO Bool) where
+  runOp _ table = withRef table $ \tablePtr -> rowHeader' tablePtr >>= return . cToBool
 {# fun Fl_Table_set_row_header as setRowHeader' { id `Ptr ()',`Int' } -> `()' #}
 instance Op (SetRowHeader ()) Table ( Bool ->  IO ()) where
   runOp _ table flag = withRef table $ \tablePtr -> setRowHeader' tablePtr (cFromBool flag)

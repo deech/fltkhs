@@ -2,7 +2,8 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 module Graphics.UI.FLTK.LowLevel.Fl_Table_Row
     (
-     tableRowNew
+     tableRowNew,
+     TableRowSelectFlag
     )
 where
 #include "Fl_ExportMacros.h"
@@ -16,6 +17,8 @@ import Graphics.UI.FLTK.LowLevel.Fl_Table
 import Graphics.UI.FLTK.LowLevel.Utils
 import Graphics.UI.FLTK.LowLevel.Hierarchy
 import Graphics.UI.FLTK.LowLevel.Dispatch
+
+data TableRowSelectFlag = TableRowSelect | TableRowDeselect | TableRowToggle
 
 {# fun unsafe Fl_OverriddenTable_Row_New as tableRowNew' {  `Int',`Int', `Int', `Int', id `Ptr ()'} -> `Ptr ()' id #}
 {# fun unsafe Fl_OverriddenTable_Row_New_WithLabel as tableRowNewWithLabel' { `Int',`Int',`Int',`Int',`String', id `Ptr ()'} -> `Ptr ()' id #}
@@ -67,3 +70,14 @@ instance Op (ResizeSuper ()) TableRow ( Rectangle ->  IO ()) where
 {# fun unsafe Fl_Table_Row_resize as resize' { id `Ptr ()',`Int',`Int',`Int',`Int' } -> `()' #}
 instance Op (Resize ()) TableRow ( Rectangle ->  IO ()) where
   runOp _ table rectangle = let (x_pos', y_pos', width', height') = fromRectangle rectangle in withRef table $ \tablePtr -> resize' tablePtr x_pos' y_pos' width' height'
+{# fun Fl_Table_Row_row_selected as rowSelected' { id `Ptr ()', `Int'} -> `Bool' cToBool #}
+instance Op (GetRowSelected ()) TableRow (Int -> IO (Bool)) where
+  runOp _ table idx' = withRef table $ \tablePtr -> rowSelected' tablePtr idx'
+{# fun Fl_Table_Row_select_all_rows_with_flag as selectAllRows' {id `Ptr ()', `Int'} -> `()' #}
+instance Op (SelectAllRows ()) TableRow (TableRowSelectFlag -> IO ()) where
+  runOp _ table flag' = withRef table $
+                          \tablePtr ->
+                             case flag' of
+                              TableRowSelect -> selectAllRows' tablePtr 1
+                              TableRowDeselect -> selectAllRows' tablePtr 0
+                              TableRowToggle -> selectAllRows' tablePtr 2
