@@ -116,7 +116,6 @@ module Graphics.UI.FLTK.LowLevel.FL
      setFonts,
      setFontsWithString,
      -- * Events
-     EventDispatchF,
      event,
      eventShift,
      eventCtrl,
@@ -195,10 +194,6 @@ foreign import ccall "wrapper"
                                  IO (FunPtr EventDispatchPrim)
 foreign import ccall "dynamic"
         unwrapEventDispatchPrim :: FunPtr EventDispatchPrim -> EventDispatchPrim
-
-type EventDispatchF a = (Event ->
-                         Ref Widget ->
-                         IO Int)
 
 run :: IO Int
 run = {#call Fl_run as fl_run #} >>= return . fromIntegral
@@ -442,7 +437,7 @@ handle e wp =
     withRef wp (handle' (cFromEnum e))
 {# fun Fl_handle_ as handle_'
        { `Int',id `Ptr ()' } -> `Int' #}
-handle_ :: (Parent a Window) =>  Event -> Ref Window -> IO Int
+handle_ :: (Parent a Window) =>  Event -> Ref a -> IO Int
 handle_ e wp =
     withRef wp (handle_' (cFromEnum e))
 {# fun Fl_belowmouse as belowmouse
@@ -481,7 +476,7 @@ setHandler eh = do
        { id `Ptr (FunPtr EventDispatchPrim)' } -> `()' supressWarningAboutRes #}
 {# fun Fl_event_dispatch as eventDispatch'
        {  } -> `FunPtr EventDispatchPrim' id #}
-eventDispatch :: IO (EventDispatchF a)
+eventDispatch :: (Parent a Widget) => IO (Event -> Ref a -> IO (Int))
 eventDispatch =
     do
       funPtr <- eventDispatch'
@@ -496,7 +491,7 @@ eventDispatch =
                     )
              )
 
-setEventDispatch :: (EventDispatchF a) -> IO ()
+setEventDispatch :: (Parent a Widget) => (Event -> Ref a -> IO Int) -> IO ()
 setEventDispatch ed = do
     do
       let toPrim = (\e ptr ->

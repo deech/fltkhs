@@ -29,59 +29,59 @@ positionerNew rectangle l'=
                                toRef
 
 {# fun Fl_Positioner_Destroy as positionerDestroy' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance Op (Destroy ()) Positioner ( IO ()) where
-  runOp _ win = swapRef win $ \winPtr -> do
+instance (impl ~ (IO ())) => Op (Destroy ()) Positioner orig impl where
+  runOp _ _ win = swapRef win $ \winPtr -> do
     positionerDestroy' winPtr
     return nullPtr
 
 {#fun Fl_Positioner_handle as positionerHandle' { id `Ptr ()', id `CInt' } -> `Int' #}
-instance Op (Handle ()) Positioner ( Event -> IO Int) where
-  runOp _ positioner event = withRef positioner (\p -> positionerHandle' p (fromIntegral . fromEnum $ event))
+instance (impl ~ (Event -> IO Int)) => Op (Handle ()) Positioner orig impl where
+  runOp _ _ positioner event = withRef positioner (\p -> positionerHandle' p (fromIntegral . fromEnum $ event))
 {# fun unsafe Fl_Positioner_set_xvalue as setXvalue' { id `Ptr ()',`Double' } -> `()' #}
-instance Op (SetXvalue ()) Positioner ( Double ->  IO ()) where
-  runOp _ positioner xvalue = withRef positioner $ \positionerPtr -> setXvalue' positionerPtr xvalue
+instance (impl ~ (Double ->  IO ())) => Op (SetXvalue ()) Positioner orig impl where
+  runOp _ _ positioner xvalue = withRef positioner $ \positionerPtr -> setXvalue' positionerPtr xvalue
 {# fun unsafe Fl_Positioner_xvalue as xvalue' { id `Ptr ()' } -> `Double' #}
-instance Op (GetXvalue ()) Positioner (  IO (Double)) where
-  runOp _ positioner = withRef positioner $ \positionerPtr -> xvalue' positionerPtr
+instance (impl ~ ( IO (Double))) => Op (GetXvalue ()) Positioner orig impl where
+  runOp _ _ positioner = withRef positioner $ \positionerPtr -> xvalue' positionerPtr
 {# fun unsafe Fl_Positioner_set_yvalue as setYvalue' { id `Ptr ()',`Double' } -> `()' #}
-instance Op (SetYvalue ()) Positioner ( Double ->  IO ()) where
-  runOp _ positioner yvalue = withRef positioner $ \positionerPtr -> setYvalue' positionerPtr yvalue
+instance (impl ~ (Double ->  IO ())) => Op (SetYvalue ()) Positioner orig impl where
+  runOp _ _ positioner yvalue = withRef positioner $ \positionerPtr -> setYvalue' positionerPtr yvalue
 {# fun unsafe Fl_Positioner_yvalue as yvalue' { id `Ptr ()' } -> `Double' #}
-instance Op (GetYvalue ()) Positioner (  IO (Double)) where
-  runOp _ positioner = withRef positioner $ \positionerPtr -> yvalue' positionerPtr
+instance (impl ~ ( IO (Double))) => Op (GetYvalue ()) Positioner orig impl where
+  runOp _ _ positioner = withRef positioner $ \positionerPtr -> yvalue' positionerPtr
 {# fun unsafe Fl_Positioner_set_xminimum as setXminimum' { id `Ptr ()',`Double' } -> `()' #}
-instance Op (SetXminimum ()) Positioner ( Double ->  IO ()) where
-  runOp _ positioner xminimum = withRef positioner $ \positionerPtr -> setXminimum' positionerPtr xminimum
+instance (impl ~ (Double ->  IO ())) => Op (SetXminimum ()) Positioner orig impl where
+  runOp _ _ positioner xminimum = withRef positioner $ \positionerPtr -> setXminimum' positionerPtr xminimum
 {# fun unsafe Fl_Positioner_xminimum as xminimum' { id `Ptr ()' } -> `Double' #}
-instance Op (GetXminimum ()) Positioner (  IO (Double)) where
-  runOp _ positioner = withRef positioner $ \positionerPtr -> xminimum' positionerPtr
+instance (impl ~ ( IO (Double))) => Op (GetXminimum ()) Positioner orig impl where
+  runOp _ _ positioner = withRef positioner $ \positionerPtr -> xminimum' positionerPtr
 {# fun unsafe Fl_Positioner_set_yminimum as setYminimum' { id `Ptr ()',`Double' } -> `()' #}
-instance Op (SetYminimum ()) Positioner ( Double ->  IO ()) where
-  runOp _ positioner yminimum = withRef positioner $ \positionerPtr -> setYminimum' positionerPtr yminimum
+instance (impl ~ (Double ->  IO ())) => Op (SetYminimum ()) Positioner orig impl where
+  runOp _ _ positioner yminimum = withRef positioner $ \positionerPtr -> setYminimum' positionerPtr yminimum
 {# fun unsafe Fl_Positioner_yminimum as yminimum' { id `Ptr ()' } -> `Double' #}
-instance Op (GetYminimum ()) Positioner (  IO (Double)) where
-  runOp _ positioner = withRef positioner $ \positionerPtr -> yminimum' positionerPtr
+instance (impl ~ ( IO (Double))) => Op (GetYminimum ()) Positioner orig impl where
+  runOp _ _ positioner = withRef positioner $ \positionerPtr -> yminimum' positionerPtr
 {# fun unsafe Fl_Positioner_set_xmaximum as setXmaximum' { id `Ptr ()',`Double' } -> `()' #}
-instance Op (SetXmaximum ()) Positioner ( Double ->  IO ()) where
-  runOp _ positioner xmaximum = withRef positioner $ \positionerPtr -> setXmaximum' positionerPtr xmaximum
+instance (impl ~ (Double ->  IO ())) => Op (SetXmaximum ()) Positioner orig impl where
+  runOp _ _ positioner xmaximum = withRef positioner $ \positionerPtr -> setXmaximum' positionerPtr xmaximum
 {# fun unsafe Fl_Positioner_xmaximum as xmaximum' { id `Ptr ()' } -> `Double' #}
-instance Op (GetXmaximum ()) Positioner (  IO (Double)) where
-  runOp _ positioner = withRef positioner $ \positionerPtr -> xmaximum' positionerPtr
+instance (impl ~ ( IO (Double))) => Op (GetXmaximum ()) Positioner orig impl where
+  runOp _ _ positioner = withRef positioner $ \positionerPtr -> xmaximum' positionerPtr
 {# fun unsafe Fl_Positioner_set_ymaximum as setYmaximum' { id `Ptr ()',`Double' } -> `()' #}
-instance Op (SetYmaximum ()) Positioner ( Double ->  IO ()) where
-  runOp _ positioner ymaximum = withRef positioner $ \positionerPtr -> setYmaximum' positionerPtr ymaximum
+instance (impl ~ (Double ->  IO ())) => Op (SetYmaximum ()) Positioner orig impl where
+  runOp _ _ positioner ymaximum = withRef positioner $ \positionerPtr -> setYmaximum' positionerPtr ymaximum
 {# fun unsafe Fl_Positioner_ymaximum as ymaximum' { id `Ptr ()' } -> `Double' #}
-instance Op (GetYmaximum ()) Positioner (  IO (Double)) where
-  runOp _ positioner = withRef positioner $ \positionerPtr -> ymaximum' positionerPtr
+instance (impl ~ ( IO (Double))) => Op (GetYmaximum ()) Positioner orig impl where
+  runOp _ _ positioner = withRef positioner $ \positionerPtr -> ymaximum' positionerPtr
 {# fun unsafe Fl_Positioner_xbounds as xbounds' { id `Ptr ()',`Double',`Double' } -> `()' #}
-instance Op (SetXbounds ()) Positioner ( Double -> Double ->  IO ()) where
-  runOp _ positioner xstart xend = withRef positioner $ \positionerPtr -> xbounds' positionerPtr xstart xend
+instance (impl ~ (Double -> Double ->  IO ())) => Op (SetXbounds ()) Positioner orig impl where
+  runOp _ _ positioner xstart xend = withRef positioner $ \positionerPtr -> xbounds' positionerPtr xstart xend
 {# fun unsafe Fl_Positioner_ybounds as ybounds' { id `Ptr ()',`Double',`Double' } -> `()' #}
-instance Op (SetYbounds ()) Positioner ( Double -> Double ->  IO ()) where
-  runOp _ positioner ystart yend = withRef positioner $ \positionerPtr -> ybounds' positionerPtr ystart yend
+instance (impl ~ (Double -> Double ->  IO ())) => Op (SetYbounds ()) Positioner orig impl where
+  runOp _ _ positioner ystart yend = withRef positioner $ \positionerPtr -> ybounds' positionerPtr ystart yend
 {# fun unsafe Fl_Positioner_xstep as xstep' { id `Ptr ()',`Double' } -> `()' #}
-instance Op (SetXstep ()) Positioner ( Double ->  IO ()) where
-  runOp _ positioner xstep = withRef positioner $ \positionerPtr -> xstep' positionerPtr xstep
+instance (impl ~ (Double ->  IO ())) => Op (SetXstep ()) Positioner orig impl where
+  runOp _ _ positioner xstep = withRef positioner $ \positionerPtr -> xstep' positionerPtr xstep
 {# fun unsafe Fl_Positioner_ystep as ystep' { id `Ptr ()',`Double' } -> `()' #}
-instance Op (SetYstep ()) Positioner ( Double ->  IO ()) where
-  runOp _ positioner ystep = withRef positioner $ \positionerPtr -> ystep' positionerPtr ystep
+instance (impl ~ (Double ->  IO ())) => Op (SetYstep ()) Positioner orig impl where
+  runOp _ _ positioner ystep = withRef positioner $ \positionerPtr -> ystep' positionerPtr ystep

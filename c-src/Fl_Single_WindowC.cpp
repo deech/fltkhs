@@ -731,9 +731,10 @@ return (fl_Window)(static_cast<Fl_DerivedSingle_Window*>(self))->as_window_super
   FL_EXPORT_C(int,Fl_Single_Window_y_root)(fl_Single_Window win){
     return (static_cast<Fl_DerivedSingle_Window*>(win))->y_root();
   }
-  FL_EXPORT_C(int,Fl_Single_Window_make_current)(fl_Single_Window win){
-    return (static_cast<Fl_Single_Window*>(win))->make_current();
-  }
+  // See header file to see why this is commented out.
+  // FL_EXPORT_C(int,Fl_Single_Window_make_current)(fl_Single_Window win){
+  //   return (static_cast<Fl_DerivedSingle_Window*>(win))->make_current();
+  // }
   FL_EXPORT_C(void,Fl_Single_Window_set_cursor_with_bg)(fl_Single_Window win,Fl_Cursor cursor,Fl_Color bg){
     (static_cast<Fl_DerivedSingle_Window*>(win))->cursor(cursor,bg);
   }

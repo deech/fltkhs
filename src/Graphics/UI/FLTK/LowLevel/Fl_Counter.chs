@@ -29,32 +29,32 @@ counterNew rectangle l'=
                                toRef
 
 {# fun Fl_Counter_Destroy as counterDestroy' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance Op (Destroy ()) Counter ( IO ()) where
-  runOp _ win = swapRef win $ \winPtr -> do
+instance (impl ~ (IO ())) => Op (Destroy ()) Counter orig impl where
+  runOp _ _ win = swapRef win $ \winPtr -> do
     counterDestroy' winPtr
     return nullPtr
 
 {#fun Fl_Counter_handle as counterHandle' { id `Ptr ()', id `CInt' } -> `Int' #}
-instance Op (Handle ()) Counter ( Event -> IO Int) where
-  runOp _ counter event = withRef counter (\p -> counterHandle' p (fromIntegral . fromEnum $ event))
+instance (impl ~ (Event -> IO Int)) => Op (Handle ()) Counter orig impl where
+  runOp _ _ counter event = withRef counter (\p -> counterHandle' p (fromIntegral . fromEnum $ event))
 {# fun unsafe Fl_Counter_lstep as lstep' { id `Ptr ()',`Double' } -> `()' #}
-instance Op (SetLstep ()) Counter ( Double ->  IO ()) where
-  runOp _ counter lstep = withRef counter $ \counterPtr -> lstep' counterPtr lstep
+instance (impl ~ (Double ->  IO ())) => Op (SetLstep ()) Counter orig impl where
+  runOp _ _ counter lstep = withRef counter $ \counterPtr -> lstep' counterPtr lstep
 {# fun unsafe Fl_Counter_set_textfont as setTextfont' { id `Ptr ()',cFromFont `Font' } -> `()' #}
-instance Op (SetTextfont ()) Counter ( Font ->  IO ()) where
-  runOp _ counter text = withRef counter $ \counterPtr -> setTextfont' counterPtr text
+instance (impl ~ (Font ->  IO ())) => Op (SetTextfont ()) Counter orig impl where
+  runOp _ _ counter text = withRef counter $ \counterPtr -> setTextfont' counterPtr text
 {# fun unsafe Fl_Counter_textfont as textfont' { id `Ptr ()' } -> `Font' cToFont #}
-instance Op (GetTextfont ()) Counter (  IO (Font)) where
-  runOp _ counter = withRef counter $ \counterPtr -> textfont' counterPtr
+instance (impl ~ ( IO (Font))) => Op (GetTextfont ()) Counter orig impl where
+  runOp _ _ counter = withRef counter $ \counterPtr -> textfont' counterPtr
 {# fun unsafe Fl_Counter_set_textsize as setTextsize' { id `Ptr ()', id `CInt' } -> `()' #}
-instance Op (SetTextsize ()) Counter ( FontSize ->  IO ()) where
-  runOp _ counter (FontSize text) = withRef counter $ \counterPtr -> setTextsize' counterPtr text
+instance (impl ~ (FontSize ->  IO ())) => Op (SetTextsize ()) Counter orig impl where
+  runOp _ _ counter (FontSize text) = withRef counter $ \counterPtr -> setTextsize' counterPtr text
 {# fun unsafe Fl_Counter_textsize as textsize' { id `Ptr ()' } -> `CInt' id #}
-instance Op (GetTextsize ()) Counter (  IO (FontSize)) where
-  runOp _ counter = withRef counter $ \counterPtr -> textsize' counterPtr >>= return . FontSize
+instance (impl ~ ( IO (FontSize))) => Op (GetTextsize ()) Counter orig impl where
+  runOp _ _ counter = withRef counter $ \counterPtr -> textsize' counterPtr >>= return . FontSize
 {# fun unsafe Fl_Counter_set_textcolor as setTextcolor' { id `Ptr ()',cFromColor `Color' } -> `()' #}
-instance Op (SetTextcolor ()) Counter ( Color ->  IO ()) where
-  runOp _ counter text = withRef counter $ \counterPtr -> setTextcolor' counterPtr text
+instance (impl ~ (Color ->  IO ())) => Op (SetTextcolor ()) Counter orig impl where
+  runOp _ _ counter text = withRef counter $ \counterPtr -> setTextcolor' counterPtr text
 {# fun unsafe Fl_Counter_textcolor as textcolor' { id `Ptr ()' } -> `Color' cToColor #}
-instance Op (GetTextcolor ()) Counter (  IO (Color)) where
-  runOp _ counter = withRef counter $ \counterPtr -> textcolor' counterPtr
+instance (impl ~ ( IO (Color))) => Op (GetTextcolor ()) Counter orig impl where
+  runOp _ _ counter = withRef counter $ \counterPtr -> textcolor' counterPtr

@@ -29,7 +29,7 @@ horSliderNew rectangle l' =
                              toRef
 
 {# fun Fl_Hor_Slider_Destroy as sliderDestroy' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance Op (Destroy ()) HorSlider ( IO ()) where
-runOp _ win = swapRef win $ \winPtr -> do
+instance (impl ~ (IO ())) => Op (Destroy ()) HorSlider orig impl where
+  runOp _ _ win = swapRef win $ \winPtr -> do
                                         sliderDestroy' winPtr
                                         return nullPtr

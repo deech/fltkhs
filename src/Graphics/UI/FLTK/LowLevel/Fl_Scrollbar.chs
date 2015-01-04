@@ -29,24 +29,24 @@ scrollbarNew rectangle l'=
                                toRef
 
 {# fun Fl_Scrollbar_Destroy as scrollbarDestroy' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance Op (Destroy ()) Scrollbar ( IO ()) where
-  runOp _ win = swapRef win $ \winPtr -> do
+instance (impl ~ (IO ())) => Op (Destroy ()) Scrollbar orig impl where
+  runOp _ _ win = swapRef win $ \winPtr -> do
     scrollbarDestroy' winPtr
     return nullPtr
 
 {# fun unsafe Fl_Scrollbar_scrollvalue as scrollvalue' { id `Ptr ()',`Int',`Int',`Int',`Int' } -> `Int' #}
-instance Op (SetValue ()) Scrollbar ( Int -> Int -> Int -> Int ->  IO (Int)) where
-  runOp _ slider pos size first total = withRef slider $ \sliderPtr -> scrollvalue' sliderPtr pos size first total
+instance (impl ~ (Int -> Int -> Int -> Int ->  IO (Int))) => Op (SetValue ()) Scrollbar orig impl where
+  runOp _ _ slider pos size first total = withRef slider $ \sliderPtr -> scrollvalue' sliderPtr pos size first total
 
 {# fun unsafe Fl_Scrollbar_set_linesize as setLinesize' { id `Ptr ()',`Int' } -> `()' #}
-instance Op (SetLinesize ()) Scrollbar ( Int ->  IO ()) where
-  runOp _ slider i = withRef slider $ \sliderPtr -> setLinesize' sliderPtr i
+instance (impl ~ (Int ->  IO ())) => Op (SetLinesize ()) Scrollbar orig impl where
+  runOp _ _ slider i = withRef slider $ \sliderPtr -> setLinesize' sliderPtr i
 
 {# fun unsafe Fl_Scrollbar_linesize as linesize' { id `Ptr ()' } -> `Int' #}
-instance Op (GetLinesize ()) Scrollbar (  IO (Int)) where
-  runOp _ slider = withRef slider $ \sliderPtr -> linesize' sliderPtr
+instance (impl ~ ( IO (Int))) => Op (GetLinesize ()) Scrollbar orig impl where
+  runOp _ _ slider = withRef slider $ \sliderPtr -> linesize' sliderPtr
 
 {#fun Fl_Scrollbar_handle as scrollbarHandle'
       { id `Ptr ()', id `CInt' } -> `Int' #}
-instance Op (Handle ()) Scrollbar ( Event -> IO Int) where
-  runOp _ scrollbar event = withRef scrollbar (\p -> scrollbarHandle' p (fromIntegral . fromEnum $ event))
+instance (impl ~ (Event -> IO Int)) => Op (Handle ()) Scrollbar orig impl where
+  runOp _ _ scrollbar event = withRef scrollbar (\p -> scrollbarHandle' p (fromIntegral . fromEnum $ event))

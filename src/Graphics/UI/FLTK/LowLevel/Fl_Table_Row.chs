@@ -32,50 +32,50 @@ tableRowNew rectangle label' customWidgetFuncs' customTableFuncs' =
         Nothing -> tableRowNew' x_pos y_pos width height ptr >>= toRef
 
 {# fun unsafe Fl_Table_Row_Destroy as tableRowDestroy' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance Op (Destroy ()) TableRow ( IO ()) where
-  runOp _ tableRow = withRef tableRow $ \tableRowPtr -> tableRowDestroy' tableRowPtr
+instance (impl ~ (IO ())) => Op (Destroy ()) TableRow orig impl where
+  runOp _ _ tableRow = withRef tableRow $ \tableRowPtr -> tableRowDestroy' tableRowPtr
 {# fun unsafe Fl_Table_Row_rows as rows' { id `Ptr ()' } -> `Int' #}
-instance Op (GetRows ()) TableRow (  IO (Int)) where
-  runOp _ tableRow = withRef tableRow $ \tableRowPtr -> rows' tableRowPtr
+instance (impl ~ ( IO (Int))) => Op (GetRows ()) TableRow orig impl where
+  runOp _ _ tableRow = withRef tableRow $ \tableRowPtr -> rows' tableRowPtr
 {# fun Fl_Table_Row_set_type as tableRowSetType' { id `Ptr ()', cFromEnum `TableRowSelectMode'} -> `()' #}
-instance Op (SetType ()) TableRow ( TableRowSelectMode -> IO ()) where
-  runOp _ tableRow selectionMode = withRef tableRow $ \tableRowPtr' -> tableRowSetType' tableRowPtr' selectionMode
+instance (impl ~ (TableRowSelectMode -> IO ())) => Op (SetType ()) TableRow orig impl where
+  runOp _ _ tableRow selectionMode = withRef tableRow $ \tableRowPtr' -> tableRowSetType' tableRowPtr' selectionMode
 {# fun Fl_Table_Row_type as tableRowType { id `Ptr ()' } -> `TableRowSelectMode' cToEnum  #}
-instance Op (GetType ()) TableRow ( IO TableRowSelectMode) where
-  runOp _ tableRow = withRef tableRow $ \tableRowPtr' -> tableRowType tableRowPtr'
+instance (impl ~ (IO TableRowSelectMode)) => Op (GetType ()) TableRow orig impl where
+  runOp _ _ tableRow = withRef tableRow $ \tableRowPtr' -> tableRowType tableRowPtr'
 {# fun Fl_Table_Row_set_rows as setRows' { id `Ptr ()',`Int' } -> `()' #}
-instance Op (SetRows ()) TableRow ( Int ->  IO ()) where
-  runOp _ table val = withRef table $ \tablePtr -> setRows' tablePtr val
+instance (impl ~ (Int ->  IO ())) => Op (SetRows ()) TableRow orig impl where
+  runOp _ _ table val = withRef table $ \tablePtr -> setRows' tablePtr val
 {# fun Fl_Table_Row_set_cols as setCols' { id `Ptr ()',`Int' } -> `()' #}
-instance Op (SetCols ()) TableRow ( Int ->  IO ()) where
-  runOp _ table val = withRef table $ \tablePtr -> setCols' tablePtr val
+instance (impl ~ (Int ->  IO ())) => Op (SetCols ()) TableRow orig impl where
+  runOp _ _ table val = withRef table $ \tablePtr -> setCols' tablePtr val
 {# fun unsafe Fl_Table_Row_clear_super as clearSuper' { id `Ptr ()' } -> `()' #}
-instance Op (ClearSuper ()) TableRow (  IO ()) where
-  runOp _ table = withRef table $ \tablePtr -> clearSuper' tablePtr
+instance (impl ~ ( IO ())) => Op (ClearSuper ()) TableRow orig impl where
+  runOp _ _ table = withRef table $ \tablePtr -> clearSuper' tablePtr
 {# fun unsafe Fl_Table_Row_clear as clear' { id `Ptr ()' } -> `()' #}
-instance Op (Clear ()) TableRow (  IO ()) where
-  runOp _ table = withRef table $ \tablePtr -> clear' tablePtr
+instance (impl ~ ( IO ())) => Op (Clear ()) TableRow orig impl where
+  runOp _ _ table = withRef table $ \tablePtr -> clear' tablePtr
 {# fun Fl_Table_Row_set_rows_super as setRowsSuper' { id `Ptr ()',`Int' } -> `()' #}
-instance Op (SetRowsSuper ()) TableRow ( Int ->  IO ()) where
-  runOp _ table val = withRef table $ \tablePtr -> setRowsSuper' tablePtr val
+instance (impl ~ (Int ->  IO ())) => Op (SetRowsSuper ()) TableRow orig impl where
+  runOp _ _ table val = withRef table $ \tablePtr -> setRowsSuper' tablePtr val
 {# fun Fl_Table_Row_set_cols_super as setColsSuper' { id `Ptr ()',`Int' } -> `()' #}
-instance Op (SetColsSuper ()) TableRow ( Int ->  IO ()) where
-  runOp _ table val = withRef table $ \tablePtr -> setColsSuper' tablePtr val
+instance (impl ~ (Int ->  IO ())) => Op (SetColsSuper ()) TableRow orig impl where
+  runOp _ _ table val = withRef table $ \tablePtr -> setColsSuper' tablePtr val
 {# fun unsafe Fl_Table_Row_handle as handle' { id `Ptr ()',`Int' } -> `Int' #}
-instance Op (Handle ()) TableRow ( Int ->  IO (Int)) where
-  runOp _ table event = withRef table $ \tablePtr -> handle' tablePtr event
+instance (impl ~ (Int ->  IO (Int))) => Op (Handle ()) TableRow orig impl where
+  runOp _ _ table event = withRef table $ \tablePtr -> handle' tablePtr event
 {# fun unsafe Fl_Table_Row_resize_super as resizeSuper' { id `Ptr ()',`Int',`Int',`Int',`Int' } -> `()' #}
-instance Op (ResizeSuper ()) TableRow ( Rectangle ->  IO ()) where
-  runOp _ table rectangle = let (x_pos', y_pos', width', height') = fromRectangle rectangle in withRef table $ \tablePtr -> resizeSuper' tablePtr x_pos' y_pos' width' height'
+instance (impl ~ (Rectangle ->  IO ())) => Op (ResizeSuper ()) TableRow orig impl where
+  runOp _ _ table rectangle = let (x_pos', y_pos', width', height') = fromRectangle rectangle in withRef table $ \tablePtr -> resizeSuper' tablePtr x_pos' y_pos' width' height'
 {# fun unsafe Fl_Table_Row_resize as resize' { id `Ptr ()',`Int',`Int',`Int',`Int' } -> `()' #}
-instance Op (Resize ()) TableRow ( Rectangle ->  IO ()) where
-  runOp _ table rectangle = let (x_pos', y_pos', width', height') = fromRectangle rectangle in withRef table $ \tablePtr -> resize' tablePtr x_pos' y_pos' width' height'
+instance (impl ~ (Rectangle ->  IO ())) => Op (Resize ()) TableRow orig impl where
+  runOp _ _ table rectangle = let (x_pos', y_pos', width', height') = fromRectangle rectangle in withRef table $ \tablePtr -> resize' tablePtr x_pos' y_pos' width' height'
 {# fun Fl_Table_Row_row_selected as rowSelected' { id `Ptr ()', `Int'} -> `Bool' cToBool #}
-instance Op (GetRowSelected ()) TableRow (Int -> IO (Bool)) where
-  runOp _ table idx' = withRef table $ \tablePtr -> rowSelected' tablePtr idx'
+instance (impl ~ ( Int -> IO (Bool))) => Op (GetRowSelected ()) TableRow orig impl where
+  runOp _ _ table idx' = withRef table $ \tablePtr -> rowSelected' tablePtr idx'
 {# fun Fl_Table_Row_select_all_rows_with_flag as selectAllRows' {id `Ptr ()', `Int'} -> `()' #}
-instance Op (SelectAllRows ()) TableRow (TableRowSelectFlag -> IO ()) where
-  runOp _ table flag' = withRef table $
+instance (impl ~ ( TableRowSelectFlag -> IO ())) => Op (SelectAllRows ()) TableRow orig impl where
+  runOp _ _ table flag' = withRef table $
                           \tablePtr ->
                              case flag' of
                               TableRowSelect -> selectAllRows' tablePtr 1

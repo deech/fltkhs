@@ -12,7 +12,7 @@ homepage: http://github.com/deech/fltkc
 -- copyright:
 category: UI
 build-type: Custom
-cabal-version: >=1.8
+cabal-version: >=1.18
 library
   exposed-modules:
                    Graphics.UI.FLTK.LowLevel.FLTKHS
@@ -73,41 +73,41 @@ library
                    Graphics.UI.FLTK.LowLevel.Utils
   build-depends: base, containers, stm, bytestring
   build-tools: c2hs
-  extensions: ForeignFunctionInterface
   hs-source-dirs: src
   other-modules: C2HS
-  include-dirs: ./c-src
-  ghc-options: -Wall -lfltkc -optl-static -O2
+  include-dirs: ./c-src, ./
+  Default-Extensions: TypeFamilies
+  default-language: Haskell2010
+  ghc-options: -Wall -fcontext-stack=1024 -optl-static
 
 Executable test_call
   Main-Is: TestCall.hs
   Hs-Source-Dirs: src/TestPrograms
-  ghc-Options: -Wall
-  Build-Depends:
-    base,
-    fltkhs
+  ghc-Options: -Wall -threaded -fcontext-stack=1024
+  Build-Depends: base,fltkhs
+  default-language: Haskell2010
+  ghc-options: -pgml g++ "-optl-Wl,--whole-archive" "-optl-Wl,-Bstatic" "-optl-Wl,-lfltkc" "-optl-Wl,-Bdynamic" "-optl-Wl,--no-whole-archive"
 
 Executable buttons
   Main-Is: Buttons.hs
   Hs-Source-Dirs: src/TestPrograms
-  ghc-Options: -Wall -threaded
-  Build-Depends:
-    base,
-    fltkhs
+  ghc-Options: -Wall -threaded -fcontext-stack=1024
+  Build-Depends: base,fltkhs
+  extra-libraries: fltk,fltk_gl
+  ghc-options: -pgml g++ "-optl-Wl,--whole-archive" "-optl-Wl,-Bstatic" "-optl-Wl,-lfltkc" "-optl-Wl,-Bdynamic" "-optl-Wl,--no-whole-archive"
 
 Executable table-simple
   Main-Is: table-simple.hs
   Hs-Source-Dirs: src/Examples
-  ghc-Options: -Wall
-  Build-Depends:
-    base,
-    fltkhs
+  ghc-Options: -Wall -threaded -fcontext-stack=1024
+  Build-Depends: base,fltkhs
+  extra-libraries: fltk,fltk_gl
+  ghc-options: -pgml g++ "-optl-Wl,--whole-archive" "-optl-Wl,-Bstatic" "-optl-Wl,-lfltkc" "-optl-Wl,-Bdynamic" "-optl-Wl,--no-whole-archive"
 
 Executable table-sort
   Main-Is: table-sort.hs
   Hs-Source-Dirs: src/Examples
-  ghc-Options: -Wall -threaded
-  Build-Depends:
-    base,
-    fltkhs,
-    process
+  ghc-Options: -Wall -threaded -fcontext-stack=1024
+  Build-Depends: base,fltkhs,process
+  extra-libraries: fltk,fltk_gl
+  ghc-options: -pgml g++ "-optl-Wl,--whole-archive" "-optl-Wl,-Bstatic" "-optl-Wl,-lfltkc" "-optl-Wl,-Bdynamic" "-optl-Wl,--no-whole-archive"

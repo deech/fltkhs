@@ -26,8 +26,8 @@ roundButtonNew rectangle l' =
         Just l -> widgetNewWithLabel' x_pos y_pos width height l >>= toRef
 
 {# fun Fl_Round_Button_Destroy as widgetDestroy' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance Op (Destroy ()) RoundButton (IO ()) where
-   runOp _ button = swapRef button $
+instance (x ~ IO ()) => Op (Destroy ()) RoundButton orig x where
+  runOp _ _ button = swapRef button $
                     \buttonPtr ->
                      widgetDestroy' buttonPtr >>
                      return nullPtr

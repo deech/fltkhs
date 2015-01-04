@@ -30,13 +30,13 @@ menuButtonNew rectangle l'=
                                toRef
 
 {# fun Fl_Menu_Button_Destroy as menuButtonDestroy' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance Op (Destroy ()) MenuButton (IO ()) where
-  runOp _ win = swapRef win $ \winPtr -> do
+instance (impl ~ ( IO ())) => Op (Destroy ()) MenuButton orig impl where
+  runOp _ _ win = swapRef win $ \winPtr -> do
     menuButtonDestroy' winPtr
     return nullPtr
 {#fun Fl_Menu_Button_handle as menuButtonHandle' { id `Ptr ()', id `CInt' } -> `Int' #}
-instance Op (Handle ()) MenuButton ( Event -> IO Int) where
-  runOp _ menu_bar event = withRef menu_bar (\p -> menuButtonHandle' p (fromIntegral . fromEnum $ event))
+instance (impl ~ (Event -> IO Int)) => Op (Handle ()) MenuButton orig impl where
+  runOp _ _ menu_bar event = withRef menu_bar (\p -> menuButtonHandle' p (fromIntegral . fromEnum $ event))
 {#fun Fl_Menu_Button_popup as menuButtonPopup' { id `Ptr ()' } -> `Ptr ()' id #}
-instance Op (Popup ()) MenuButton (IO (Ref MenuItem)) where
-  runOp _ menu_bar = withRef menu_bar (\p -> menuButtonPopup' p >>= toRef)
+instance (impl ~ ( IO (Ref MenuItem))) => Op (Popup ()) MenuButton orig impl where
+  runOp _ _ menu_bar = withRef menu_bar (\p -> menuButtonPopup' p >>= toRef)

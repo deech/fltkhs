@@ -29,43 +29,43 @@ valueInputNew rectangle l'=
                                toRef
 
 {# fun Fl_Value_Input_Destroy as valueInputDestroy' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance Op (Destroy ()) ValueInput ( IO ()) where
-  runOp _ win = swapRef win $ \winPtr -> do
+instance (impl ~ (IO ())) => Op (Destroy ()) ValueInput orig impl where
+  runOp _ _ win = swapRef win $ \winPtr -> do
     valueInputDestroy' winPtr
     return nullPtr
 {#fun Fl_Value_Input_handle as valueInputHandle' { id `Ptr ()', id `CInt' } -> `Int' #}
-instance Op (Handle ()) ValueInput ( Event -> IO Int) where
-  runOp _ valueInput event = withRef valueInput (\p -> valueInputHandle' p (fromIntegral . fromEnum $ event))
+instance (impl ~ (Event -> IO Int)) => Op (Handle ()) ValueInput orig impl where
+  runOp _ _ valueInput event = withRef valueInput (\p -> valueInputHandle' p (fromIntegral . fromEnum $ event))
 {# fun unsafe Fl_Value_Input_soft as soft' { id `Ptr ()' } -> `Bool' cToBool #}
-instance Op (GetSoft ()) ValueInput (  IO (Bool)) where
-  runOp _ value_input = withRef value_input $ \value_inputPtr -> soft' value_inputPtr
+instance (impl ~ ( IO (Bool))) => Op (GetSoft ()) ValueInput orig impl where
+  runOp _ _ value_input = withRef value_input $ \value_inputPtr -> soft' value_inputPtr
 {# fun unsafe Fl_Value_Input_resize as resize' { id `Ptr ()',`Int',`Int',`Int',`Int' } -> `()' #}
-instance Op (Resize ()) ValueInput ( Rectangle ->  IO ()) where
-  runOp _ value_input rectangle = let (x_pos', y_pos', width', height') = fromRectangle rectangle in withRef value_input $ \value_inputPtr -> resize' value_inputPtr x_pos' y_pos' width' height'
+instance (impl ~ (Rectangle ->  IO ())) => Op (Resize ()) ValueInput orig impl where
+  runOp _ _ value_input rectangle = let (x_pos', y_pos', width', height') = fromRectangle rectangle in withRef value_input $ \value_inputPtr -> resize' value_inputPtr x_pos' y_pos' width' height'
 {# fun unsafe Fl_Value_Input_set_soft as setSoft' { id `Ptr ()',cFromBool `Bool' } -> `()' #}
-instance Op (SetSoft ()) ValueInput ( Bool->  IO ()) where
-  runOp _ value_input s = withRef value_input $ \value_inputPtr -> setSoft' value_inputPtr s
+instance (impl ~ (Bool->  IO ())) => Op (SetSoft ()) ValueInput orig impl where
+  runOp _ _ value_input s = withRef value_input $ \value_inputPtr -> setSoft' value_inputPtr s
 {# fun unsafe Fl_Value_Input_shortcut as shortcut' { id `Ptr ()' } -> `Int' #}
-instance Op (GetShortcut ()) ValueInput (  IO (Int)) where
-  runOp _ value_input = withRef value_input $ \value_inputPtr -> shortcut' value_inputPtr
+instance (impl ~ ( IO (Int))) => Op (GetShortcut ()) ValueInput orig impl where
+  runOp _ _ value_input = withRef value_input $ \value_inputPtr -> shortcut' value_inputPtr
 {# fun unsafe Fl_Value_Input_set_shortcut as setShortcut' { id `Ptr ()',`Int' } -> `()' #}
-instance Op (SetShortcut ()) ValueInput ( Int ->  IO ()) where
-  runOp _ value_input v = withRef value_input $ \value_inputPtr -> setShortcut' value_inputPtr v
+instance (impl ~ (Int ->  IO ())) => Op (SetShortcut ()) ValueInput orig impl where
+  runOp _ _ value_input v = withRef value_input $ \value_inputPtr -> setShortcut' value_inputPtr v
 {# fun unsafe Fl_Value_Input_textfont as textfont' { id `Ptr ()' } -> `Font' cToFont #}
-instance Op (GetTextfont ()) ValueInput (  IO (Font)) where
-  runOp _ value_input = withRef value_input $ \value_inputPtr -> textfont' value_inputPtr
+instance (impl ~ ( IO (Font))) => Op (GetTextfont ()) ValueInput orig impl where
+  runOp _ _ value_input = withRef value_input $ \value_inputPtr -> textfont' value_inputPtr
 {# fun unsafe Fl_Value_Input_set_textfont as setTextfont' { id `Ptr ()',`Int' } -> `()' #}
-instance Op (SetTextfont ()) ValueInput ( Int ->  IO ()) where
-  runOp _ value_input v = withRef value_input $ \value_inputPtr -> setTextfont' value_inputPtr v
+instance (impl ~ (Int ->  IO ())) => Op (SetTextfont ()) ValueInput orig impl where
+  runOp _ _ value_input v = withRef value_input $ \value_inputPtr -> setTextfont' value_inputPtr v
 {# fun unsafe Fl_Value_Input_textsize as textsize' { id `Ptr ()' } -> `CInt' id #}
-instance Op (GetTextsize ()) ValueInput (  IO (FontSize)) where
-  runOp _ value_input = withRef value_input $ \value_inputPtr -> textsize' value_inputPtr >>= return . FontSize
+instance (impl ~ ( IO (FontSize))) => Op (GetTextsize ()) ValueInput orig impl where
+  runOp _ _ value_input = withRef value_input $ \value_inputPtr -> textsize' value_inputPtr >>= return . FontSize
 {# fun unsafe Fl_Value_Input_set_textsize as setTextsize' { id `Ptr ()',id `CInt' } -> `()' #}
-instance Op (SetTextsize ()) ValueInput ( FontSize ->  IO ()) where
-  runOp _ value_input (FontSize v) = withRef value_input $ \value_inputPtr -> setTextsize' value_inputPtr v
+instance (impl ~ (FontSize ->  IO ())) => Op (SetTextsize ()) ValueInput orig impl where
+  runOp _ _ value_input (FontSize v) = withRef value_input $ \value_inputPtr -> setTextsize' value_inputPtr v
 {# fun unsafe Fl_Value_Input_textcolor as textcolor' { id `Ptr ()' } -> `Color' cToColor #}
-instance Op (GetTextcolor ()) ValueInput (  IO (Color)) where
-  runOp _ value_input = withRef value_input $ \value_inputPtr -> textcolor' value_inputPtr
+instance (impl ~ ( IO (Color))) => Op (GetTextcolor ()) ValueInput orig impl where
+  runOp _ _ value_input = withRef value_input $ \value_inputPtr -> textcolor' value_inputPtr
 {# fun unsafe Fl_Value_Input_set_textcolor as setTextcolor' { id `Ptr ()',`Int' } -> `()' #}
-instance Op (SetTextcolor ()) ValueInput ( Int ->  IO ()) where
-  runOp _ value_input v = withRef value_input $ \value_inputPtr -> setTextcolor' value_inputPtr v
+instance (impl ~ (Int ->  IO ())) => Op (SetTextcolor ()) ValueInput orig impl where
+  runOp _ _ value_input v = withRef value_input $ \value_inputPtr -> setTextcolor' value_inputPtr v

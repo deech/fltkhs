@@ -28,28 +28,28 @@ sliderNew rectangle l' =
                              toRef
 
 {# fun Fl_Slider_Destroy as sliderDestroy' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance Op (Destroy ()) Slider ( IO ()) where
-  runOp _ win = swapRef win $ \winPtr -> do
+instance (impl ~ (IO ())) => Op (Destroy ()) Slider orig impl where
+  runOp _ _ win = swapRef win $ \winPtr -> do
                                         sliderDestroy' winPtr
                                         return nullPtr
 {#fun Fl_Slider_handle as sliderHandle' { id `Ptr ()', id `CInt' } -> `Int' #}
-instance Op (Handle ()) Slider ( Event -> IO Int) where
-  runOp _ slider event = withRef slider (\p -> sliderHandle' p (fromIntegral . fromEnum $ event))
+instance (impl ~ (Event -> IO Int)) => Op (Handle ()) Slider orig impl where
+  runOp _ _ slider event = withRef slider (\p -> sliderHandle' p (fromIntegral . fromEnum $ event))
 {# fun unsafe Fl_Slider_bounds as bounds' { id `Ptr ()',`Double',`Double' } -> `()' supressWarningAboutRes #}
-instance Op (GetBounds ()) Slider ( Double -> Double ->  IO (())) where
-  runOp _ slider a b = withRef slider $ \sliderPtr -> bounds' sliderPtr a b
+instance (impl ~ (Double -> Double ->  IO (()))) => Op (GetBounds ()) Slider orig impl where
+  runOp _ _ slider a b = withRef slider $ \sliderPtr -> bounds' sliderPtr a b
 {# fun unsafe Fl_Slider_scrollvalue as scrollvalue' { id `Ptr ()',`Int',`Int',`Int',`Int' } -> `Int' #}
-instance Op (Scrollvalue ()) Slider ( Int -> Int -> Int -> Int ->  IO (Int)) where
-  runOp _ slider pos slider_size first total = withRef slider $ \sliderPtr -> scrollvalue' sliderPtr pos slider_size first total
+instance (impl ~ (Int -> Int -> Int -> Int ->  IO (Int))) => Op (Scrollvalue ()) Slider orig impl where
+  runOp _ _ slider pos slider_size first total = withRef slider $ \sliderPtr -> scrollvalue' sliderPtr pos slider_size first total
 {# fun unsafe Fl_Slider_set_slider_size as setSliderSize' { id `Ptr ()' } -> `Float' #}
-instance Op (SetSliderSize ()) Slider (  IO (Float)) where
-  runOp _ slider = withRef slider $ \sliderPtr -> setSliderSize' sliderPtr
+instance (impl ~ ( IO (Float))) => Op (SetSliderSize ()) Slider orig impl where
+  runOp _ _ slider = withRef slider $ \sliderPtr -> setSliderSize' sliderPtr
 {# fun unsafe Fl_Slider_slider_size as sliderSize' { id `Ptr ()',`Double' } -> `()' supressWarningAboutRes #}
-instance Op (GetSliderSize ()) Slider ( Double ->  IO (())) where
-  runOp _ slider v = withRef slider $ \sliderPtr -> sliderSize' sliderPtr v
+instance (impl ~ (Double ->  IO (()))) => Op (GetSliderSize ()) Slider orig impl where
+  runOp _ _ slider v = withRef slider $ \sliderPtr -> sliderSize' sliderPtr v
 {# fun unsafe Fl_Slider_slider as slider' { id `Ptr ()' } -> `Boxtype' cToEnum #}
-instance Op (GetSlider ()) Slider (  IO (Boxtype)) where
-  runOp _ slider = withRef slider $ \sliderPtr -> slider' sliderPtr
+instance (impl ~ ( IO (Boxtype))) => Op (GetSlider ()) Slider orig impl where
+  runOp _ _ slider = withRef slider $ \sliderPtr -> slider' sliderPtr
 {# fun unsafe Fl_Slider_set_slider as setSlider' { id `Ptr ()',cFromEnum `Boxtype' } -> `()' supressWarningAboutRes #}
-instance Op (SetSlider ()) Slider ( Boxtype ->  IO (())) where
-  runOp _ slider c = withRef slider $ \sliderPtr -> setSlider' sliderPtr c
+instance (impl ~ (Boxtype ->  IO (()))) => Op (SetSlider ()) Slider orig impl where
+  runOp _ _ slider c = withRef slider $ \sliderPtr -> setSlider' sliderPtr c

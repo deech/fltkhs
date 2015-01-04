@@ -20,45 +20,45 @@ import Graphics.UI.FLTK.LowLevel.Dispatch
 pixmapNew :: PixmapHs -> IO (Ref Pixmap)
 pixmapNew pixmap = withPixmap pixmap (\ptr -> flPixmapNew' ptr >>= toRef)
 {# fun unsafe Fl_Pixmap_Destroy as flPixmapDestroy' { id `Ptr ()' } -> `()' id #}
-instance Op (Destroy ()) Pixmap ( IO ()) where
-  runOp _ pixmap = withRef pixmap $ \pixmapPtr -> flPixmapDestroy' pixmapPtr
+instance (impl ~ (IO ())) => Op (Destroy ()) Pixmap orig impl where
+  runOp _ _ pixmap = withRef pixmap $ \pixmapPtr -> flPixmapDestroy' pixmapPtr
 {# fun unsafe Fl_Pixmap_w as w' { id `Ptr ()' } -> `Int' #}
-instance Op (GetW ()) Pixmap (  IO (Int)) where
-  runOp _ pixmap = withRef pixmap $ \pixmapPtr -> w' pixmapPtr
+instance (impl ~ ( IO (Int))) => Op (GetW ()) Pixmap orig impl where
+  runOp _ _ pixmap = withRef pixmap $ \pixmapPtr -> w' pixmapPtr
 {# fun unsafe Fl_Pixmap_h as h' { id `Ptr ()' } -> `Int' #}
-instance Op (GetH ()) Pixmap (  IO (Int)) where
-  runOp _ pixmap = withRef pixmap $ \pixmapPtr -> h' pixmapPtr
+instance (impl ~ ( IO (Int))) => Op (GetH ()) Pixmap orig impl where
+  runOp _ _ pixmap = withRef pixmap $ \pixmapPtr -> h' pixmapPtr
 {# fun unsafe Fl_Pixmap_d as d' { id `Ptr ()' } -> `Int' #}
-instance Op (GetD ()) Pixmap (  IO (Int)) where
-  runOp _ pixmap = withRef pixmap $ \pixmapPtr -> d' pixmapPtr
+instance (impl ~ ( IO (Int))) => Op (GetD ()) Pixmap orig impl where
+  runOp _ _ pixmap = withRef pixmap $ \pixmapPtr -> d' pixmapPtr
 {# fun unsafe Fl_Pixmap_ld as ld' { id `Ptr ()' } -> `Int' #}
-instance Op (GetLd ()) Pixmap (  IO (Int)) where
-  runOp _ pixmap = withRef pixmap $ \pixmapPtr -> ld' pixmapPtr
+instance (impl ~ ( IO (Int))) => Op (GetLd ()) Pixmap orig impl where
+  runOp _ _ pixmap = withRef pixmap $ \pixmapPtr -> ld' pixmapPtr
 {# fun unsafe Fl_Pixmap_count as count' { id `Ptr ()' } -> `Int' #}
-instance Op (GetCount ()) Pixmap (  IO (Int)) where
-  runOp _ pixmap = withRef pixmap $ \pixmapPtr -> count' pixmapPtr
+instance (impl ~ ( IO (Int))) => Op (GetCount ()) Pixmap orig impl where
+  runOp _ _ pixmap = withRef pixmap $ \pixmapPtr -> count' pixmapPtr
 {# fun unsafe Fl_Pixmap_copy_with_w_h as copyWithWH' { id `Ptr ()',`Int',`Int' } -> `Ptr ()' id #}
 {# fun unsafe Fl_Pixmap_copy as copy' { id `Ptr ()' } -> `Ptr ()' id #}
-instance Op (Copy ()) Pixmap (  Maybe Size -> IO (Ref Pixmap)) where
-  runOp _ pixmap size' = case size' of
+instance (impl ~ ( Maybe Size -> IO (Ref Pixmap))) => Op (Copy ()) Pixmap orig impl where
+  runOp _ _ pixmap size' = case size' of
     Just (Size (Width w) (Height h)) -> withRef pixmap $ \pixmapPtr -> copyWithWH' pixmapPtr w h >>= toRef
     Nothing -> withRef pixmap $ \pixmapPtr -> copy' pixmapPtr >>= toRef
 {# fun unsafe Fl_Pixmap_color_average as colorAverage' { id `Ptr ()',cFromColor `Color',`Float' } -> `()' #}
-instance Op (ColorAverage ()) Pixmap ( Color -> Float ->  IO ()) where
-  runOp _ pixmap c i = withRef pixmap $ \pixmapPtr -> colorAverage' pixmapPtr c i
+instance (impl ~ (Color -> Float ->  IO ())) => Op (ColorAverage ()) Pixmap orig impl where
+  runOp _ _ pixmap c i = withRef pixmap $ \pixmapPtr -> colorAverage' pixmapPtr c i
 {# fun unsafe Fl_Pixmap_inactive as inactive' { id `Ptr ()' } -> `()' #}
-instance Op (Inactive ()) Pixmap (  IO ()) where
-  runOp _ pixmap = withRef pixmap $ \pixmapPtr -> inactive' pixmapPtr
+instance (impl ~ ( IO ())) => Op (Inactive ()) Pixmap orig impl where
+  runOp _ _ pixmap = withRef pixmap $ \pixmapPtr -> inactive' pixmapPtr
 {# fun unsafe Fl_Pixmap_desaturate as desaturate' { id `Ptr ()' } -> `()' #}
-instance Op (Desaturate ()) Pixmap (  IO ()) where
-  runOp _ pixmap = withRef pixmap $ \pixmapPtr -> desaturate' pixmapPtr
+instance (impl ~ ( IO ())) => Op (Desaturate ()) Pixmap orig impl where
+  runOp _ _ pixmap = withRef pixmap $ \pixmapPtr -> desaturate' pixmapPtr
 
 {# fun unsafe Fl_Pixmap_draw_with_cx_cy as drawWithCxCy' { id `Ptr ()',`Int',`Int',`Int',`Int',`Int',`Int' } -> `()' #}
 {# fun unsafe Fl_Pixmap_draw_with_cx as drawWithCx' { id `Ptr ()',`Int',`Int',`Int',`Int',`Int' } -> `()' #}
 {# fun unsafe Fl_Pixmap_draw_with_cy as drawWithCy' { id `Ptr ()',`Int',`Int',`Int',`Int',`Int' } -> `()' #}
 {# fun unsafe Fl_Pixmap_draw_with as drawWith' { id `Ptr ()',`Int',`Int',`Int',`Int' } -> `()' #}
-instance Op (DrawResize ()) Pixmap ( Position -> Size -> Maybe X -> Maybe Y -> IO ()) where
-  runOp _ pixmap (Position (X x) (Y y)) (Size (Width w) (Height h)) xOffset yOffset =
+instance (impl ~ (Position -> Size -> Maybe X -> Maybe Y -> IO ())) => Op (DrawResize ()) Pixmap orig impl where
+  runOp _ _ pixmap (Position (X x) (Y y)) (Size (Width w) (Height h)) xOffset yOffset =
     case (xOffset, yOffset) of
       (Just (X xOff), Just (Y yOff)) ->
         withRef pixmap $ \pixmapPtr -> drawWithCxCy' pixmapPtr x y w h (fromIntegral xOff) (fromIntegral yOff)
@@ -70,8 +70,8 @@ instance Op (DrawResize ()) Pixmap ( Position -> Size -> Maybe X -> Maybe Y -> I
         withRef pixmap $ \pixmapPtr -> drawWith' pixmapPtr x y w h
 
 {# fun unsafe Fl_Pixmap_draw as draw' { id `Ptr ()',`Int',`Int' } -> `()' #}
-instance Op (Draw ()) Pixmap ( Position ->  IO ()) where
-  runOp _ image (Position (X x_pos') (Y y_pos')) = withRef image $ \imagePtr -> draw' imagePtr x_pos' y_pos'
+instance (impl ~ (Position ->  IO ())) => Op (Draw ()) Pixmap orig impl where
+  runOp _ _ image (Position (X x_pos') (Y y_pos')) = withRef image $ \imagePtr -> draw' imagePtr x_pos' y_pos'
 {# fun unsafe Fl_Pixmap_uncache as uncache' { id `Ptr ()' } -> `()' #}
-instance Op (Uncache ()) Pixmap (  IO ()) where
-  runOp _ pixmap = withRef pixmap $ \pixmapPtr -> uncache' pixmapPtr
+instance (impl ~ ( IO ())) => Op (Uncache ()) Pixmap orig impl where
+  runOp _ _ pixmap = withRef pixmap $ \pixmapPtr -> uncache' pixmapPtr

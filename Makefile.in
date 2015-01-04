@@ -1,5 +1,5 @@
 EXECUTABLEDIR = executables
-LIBDIR = lib
+LIBDIR = c-lib
 OBJECT_FILES = object_files
 SRC = c-src
 EXAMPLES = c-examples

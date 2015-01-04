@@ -25,23 +25,23 @@ wizardNew rectangle label' =
         Nothing -> wizardNew' x_pos y_pos width height >>= toRef
 
 {# fun Fl_Wizard_Destroy as wizardDestroy' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance Op (Destroy ()) Wizard ( IO ()) where
-  runOp _ wizard = swapRef wizard $ \wizardPtr -> do
+instance (impl ~ (IO ())) => Op (Destroy ()) Wizard orig impl where
+  runOp _ _ wizard = swapRef wizard $ \wizardPtr -> do
     wizardDestroy' wizardPtr
     return nullPtr
 {# fun unsafe Fl_Wizard_next as wizardNext' { id `Ptr ()' } -> `()' #}
-instance Op (Next ()) Wizard ( IO ()) where
-  runOp _ wizard = withRef wizard $ \wizardPtr -> wizardNext' wizardPtr
+instance (impl ~ (IO ())) => Op (Next ()) Wizard orig impl where
+  runOp _ _ wizard = withRef wizard $ \wizardPtr -> wizardNext' wizardPtr
 {# fun unsafe Fl_Wizard_prev as wizardPrev' { id `Ptr ()' } -> `()' #}
-instance Op (Prev ()) Wizard ( IO ()) where
-  runOp _ wizard = withRef wizard $ \wizardPtr -> wizardPrev' wizardPtr
+instance (impl ~ (IO ())) => Op (Prev ()) Wizard orig impl where
+  runOp _ _ wizard = withRef wizard $ \wizardPtr -> wizardPrev' wizardPtr
 {# fun unsafe Fl_Wizard_set_value as wizardSetValue' { id `Ptr ()', id `Ptr ()' } -> `()' #}
-instance (Parent a Widget) => Op (SetValue ()) Wizard ( Ref a -> IO ()) where
-  runOp _ wizard widget =
+instance (Parent a Widget, impl ~ ( Ref a -> IO ())) => Op (SetValue ()) Wizard orig impl where
+  runOp _ _ wizard widget =
     withRef wizard $ \wizardPtr ->
       withRef widget $ \widgetPtr ->
         wizardSetValue' wizardPtr widgetPtr
 {# fun unsafe Fl_Wizard_value as wizardValue' {id `Ptr ()'} -> `Ptr ()' id #}
-instance Op (GetValue ()) Wizard ( IO (Ref Widget)) where
-  runOp _ wizard =
+instance (impl ~ (IO (Ref Widget))) => Op (GetValue ()) Wizard orig impl where
+  runOp _ _ wizard =
     withRef wizard $ \wizardPtr -> wizardValue' wizardPtr >>= toRef

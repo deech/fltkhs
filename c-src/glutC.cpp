@@ -158,9 +158,9 @@ EXPORT {
   FL_EXPORT_C(int,flc_glutBitmapWidth)(void* font,int character){
     return glutBitmapWidth(font,character);
   }
-  FL_EXPORT_C(int,flc_glutExtensionSupported)(char* name){
-    return glutExtensionSupported(name);
-  }
+  // FL_EXPORT_C(int,flc_glutExtensionSupported)(char* name){
+  //   return glutExtensionSupported(name);
+  // }
   FL_EXPORT_C(void,flc_glutStrokeCharacter)(void* font,int character){
     glutStrokeCharacter(font,character);
   }
@@ -275,4 +275,3 @@ EXPORT {
 #ifdef __cplusplus
 }
 #endif
-  

@@ -28,25 +28,25 @@ progressNew rectangle l'=
                                toRef
 
 {# fun Fl_Progress_Destroy as progressDestroy' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance Op (Destroy ()) Progress (IO ()) where
-  runOp _ win = swapRef win $ \winPtr -> do
+instance (impl ~ ( IO ())) => Op (Destroy ()) Progress orig impl where
+  runOp _ _ win = swapRef win $ \winPtr -> do
     progressDestroy' winPtr
     return nullPtr
 {# fun unsafe Fl_Progress_set_maximum as setMaximum' { id `Ptr ()',`Float' } -> `()' #}
-instance Op (SetMaximum ()) Progress ( Float ->  IO ()) where
-  runOp _ progress v = withRef progress $ \progressPtr -> setMaximum' progressPtr v
+instance (impl ~ (Float ->  IO ())) => Op (SetMaximum ()) Progress orig impl where
+  runOp _ _ progress v = withRef progress $ \progressPtr -> setMaximum' progressPtr v
 {# fun unsafe Fl_Progress_maximum as maximum' { id `Ptr ()' } -> `Float' #}
-instance Op (GetMaximum ()) Progress (  IO (Float)) where
-  runOp _ progress = withRef progress $ \progressPtr -> maximum' progressPtr
+instance (impl ~ ( IO (Float))) => Op (GetMaximum ()) Progress orig impl where
+  runOp _ _ progress = withRef progress $ \progressPtr -> maximum' progressPtr
 {# fun unsafe Fl_Progress_set_minimum as setMinimum' { id `Ptr ()',`Float' } -> `()' #}
-instance Op (SetMinimum ()) Progress ( Float ->  IO ()) where
-  runOp _ progress v = withRef progress $ \progressPtr -> setMinimum' progressPtr v
+instance (impl ~ (Float ->  IO ())) => Op (SetMinimum ()) Progress orig impl where
+  runOp _ _ progress v = withRef progress $ \progressPtr -> setMinimum' progressPtr v
 {# fun unsafe Fl_Progress_minimum as minimum' { id `Ptr ()' } -> `Float' #}
-instance Op (GetMinimum ()) Progress (  IO (Float)) where
-  runOp _ progress = withRef progress $ \progressPtr -> minimum' progressPtr
+instance (impl ~ ( IO (Float))) => Op (GetMinimum ()) Progress orig impl where
+  runOp _ _ progress = withRef progress $ \progressPtr -> minimum' progressPtr
 {# fun unsafe Fl_Progress_set_value as setValue' { id `Ptr ()',`Float' } -> `()' #}
-instance Op (SetValue ()) Progress ( Float ->  IO ()) where
-  runOp _ progress v = withRef progress $ \progressPtr -> setValue' progressPtr v
+instance (impl ~ (Float ->  IO ())) => Op (SetValue ()) Progress orig impl where
+  runOp _ _ progress v = withRef progress $ \progressPtr -> setValue' progressPtr v
 {# fun unsafe Fl_Progress_value as value' { id `Ptr ()' } -> `Float' #}
-instance Op (GetValue ()) Progress (  IO (Float)) where
-  runOp _ progress = withRef progress $ \progressPtr -> value' progressPtr
+instance (impl ~ ( IO (Float))) => Op (GetValue ()) Progress orig impl where
+  runOp _ _ progress = withRef progress $ \progressPtr -> value' progressPtr

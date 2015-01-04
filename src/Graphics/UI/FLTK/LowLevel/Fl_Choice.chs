@@ -30,18 +30,18 @@ choiceNew rectangle l'=
         Just l -> choiceNewWithLabel' x_pos y_pos width height l >>=
                                toRef
 {# fun Fl_Choice_Destroy as widgetDestroy' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance Op (Destroy ()) Choice ( IO ()) where
-  runOp _ menu_ = swapRef menu_ $
+instance (impl ~ (IO ())) => Op (Destroy ()) Choice orig impl where
+  runOp _ _ menu_ = swapRef menu_ $
                           \menu_Ptr ->
                              widgetDestroy' menu_Ptr >>
                              return nullPtr
 {# fun unsafe Fl_Choice_value as value' { id `Ptr ()' } -> `Int' #}
-instance Op (GetValue ()) Choice (  IO (Int)) where
-  runOp _ menu_ = withRef menu_ $ \menu_Ptr -> value' menu_Ptr
+instance (impl ~ ( IO (Int))) => Op (GetValue ()) Choice orig impl where
+  runOp _ _ menu_ = withRef menu_ $ \menu_Ptr -> value' menu_Ptr
 {# fun unsafe Fl_Choice_set_value_with_item as valueWithItem' { id `Ptr ()',id `Ptr ()' } -> `Int' #}
 {# fun unsafe Fl_Choice_set_value_with_index as valueWithIndex' { id `Ptr ()',`Int' } -> `Int' #}
-instance Op (SetValue ()) Choice ( MenuItemReference -> IO (Int)) where
-  runOp _ menu_ menu_item_reference =
+instance (impl ~ (MenuItemReference -> IO (Int))) => Op (SetValue ()) Choice orig impl where
+  runOp _ _ menu_ menu_item_reference =
     withRef menu_ $ \menu_Ptr ->
         case menu_item_reference of
           (MenuItemIndexReference (MenuItemIndex index')) -> valueWithIndex' menu_Ptr index'
@@ -49,5 +49,5 @@ instance Op (SetValue ()) Choice ( MenuItemReference -> IO (Int)) where
               withRef menu_item $ \menu_itemPtr ->
                   valueWithItem' menu_Ptr menu_itemPtr
 {#fun Fl_Choice_handle as menu_Handle' { id `Ptr ()', id `CInt' } -> `Int' #}
-instance Op (Handle ()) Choice ( Event -> IO Int) where
-  runOp _ menu_ event = withRef menu_ (\p -> menu_Handle' p (fromIntegral . fromEnum $ event))
+instance (impl ~ (Event -> IO Int)) => Op (Handle ()) Choice orig impl where
+  runOp _ _ menu_ event = withRef menu_ (\p -> menu_Handle' p (fromIntegral . fromEnum $ event))

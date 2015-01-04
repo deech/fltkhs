@@ -20,17 +20,17 @@ imageSurfaceNew :: Size -> IO (Ref ImageSurface)
 imageSurfaceNew (Size (Width w') (Height h')) = imageSurfaceNew' w' h' >>= toRef
 
 {# fun Fl_Image_Surface_Destroy as imageSurfaceDestroy' {id `Ptr ()'} -> `()' #}
-instance Op (Destroy ()) ImageSurface ( IO ()) where
-  runOp _ image_surface = withRef image_surface $ \image_surfacePtr -> imageSurfaceDestroy' image_surfacePtr
+instance (impl ~ (IO ())) => Op (Destroy ()) ImageSurface orig impl where
+  runOp _ _ image_surface = withRef image_surface $ \image_surfacePtr -> imageSurfaceDestroy' image_surfacePtr
 
 {# fun unsafe Fl_Image_Surface_class_name as className' { id `Ptr ()' } -> `String' #}
-instance Op (ClassName ()) ImageSurface (  IO (String)) where
-  runOp _ image_surface = withRef image_surface $ \image_surfacePtr -> className' image_surfacePtr
+instance (impl ~ ( IO (String))) => Op (ClassName ()) ImageSurface orig impl where
+  runOp _ _ image_surface = withRef image_surface $ \image_surfacePtr -> className' image_surfacePtr
 
 {# fun unsafe Fl_Image_Surface_set_current as setCurrent' { id `Ptr ()' } -> `()' #}
-instance Op (SetCurrent ()) ImageSurface (  IO ()) where
-  runOp _ image_surface = withRef image_surface $ \image_surfacePtr -> setCurrent' image_surfacePtr
+instance (impl ~ ( IO ())) => Op (SetCurrent ()) ImageSurface orig impl where
+  runOp _ _ image_surface = withRef image_surface $ \image_surfacePtr -> setCurrent' image_surfacePtr
 
 {# fun unsafe Fl_Image_Surface_draw as draw' { id `Ptr ()',id `Ptr ()',`Int',`Int' } -> `()' #}
-instance (Parent a Widget) => Op (Draw ()) ImageSurface ( Ref a  -> Position -> IO ()) where
-  runOp _ image_surface widget (Position (X delta_x) (Y delta_y)) = withRef image_surface $ \image_surfacePtr -> withRef widget $ \widgetPtr -> draw' image_surfacePtr widgetPtr delta_x delta_y
+instance (Parent a Widget, impl ~ ( Ref a  -> Position -> IO ())) => Op (Draw ()) ImageSurface orig impl where
+  runOp _ _ image_surface widget (Position (X delta_x) (Y delta_y)) = withRef image_surface $ \image_surfacePtr -> withRef widget $ \widgetPtr -> draw' image_surfacePtr widgetPtr delta_x delta_y

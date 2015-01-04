@@ -34,12 +34,13 @@ data TableState = TableState {
   rowData :: IORef [[String]]
   }
 
+drawSortArrow :: Rectangle -> Bool -> IO ()
 drawSortArrow (Rectangle (Position (X x') (Y y')) (Size (Width w') (Height h'))) sortReverse' =
   let xlft = x' + (w'-6) - 8
       xctr = x' + (w'-6) - 4
       xrit = x' + (w'-6) - 0
-      ytop = y' - (truncate ((fromIntegral h') / 2)) - 4
-      ybot = y' - (truncate ((fromIntegral h') / 2)) + 4
+      ytop = y' - (truncate ((fromIntegral h' / 2) :: Double)) - 4
+      ybot = y' - (truncate ((fromIntegral h' / 2) :: Double)) + 4
   in
    if sortReverse'
    then do
@@ -64,7 +65,7 @@ drawCell tableState table tc row' col' rectangle' =
     rowData' <- readIORef (rowData tableState)
     if (row' < length rowData' && col' < length (rowData' !! row'))
       then case tc of
-            ContextColHeader ->   do
+            ContextColHeader -> do
               flcPushClip rectangle'
               flcDrawBox ThinUpBox rectangle' backgroundColor
               if (col' < 9)

@@ -27,12 +27,12 @@ returnButtonNew rectangle l' =
         Just l -> widgetNewWithLabel' x_pos y_pos width height l >>= toRef
 
 {# fun Fl_Return_Button_Destroy as widgetDestroy' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance Op (Destroy ()) ReturnButton (IO ()) where
-   runOp _ button = swapRef button $
+instance (impl ~  IO ()) => Op (Destroy ()) ReturnButton orig impl where
+  runOp _ _ button = swapRef button $
                     \buttonPtr ->
                      widgetDestroy' buttonPtr >>
                      return nullPtr
 
 {#fun Fl_Return_Button_handle as handle' { id `Ptr ()', id `CInt' } -> `Int' #}
-instance Op (Handle ()) ReturnButton (Event -> IO Int) where
-  runOp _ button event = withRef button (\p -> handle' p (fromIntegral . fromEnum $ event))
+instance (impl ~ ( Event -> IO Int)) => Op (Handle ()) ReturnButton orig impl where
+  runOp _ _ button event = withRef button (\p -> handle' p (fromIntegral . fromEnum $ event))

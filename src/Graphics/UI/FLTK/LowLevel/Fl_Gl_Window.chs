@@ -70,92 +70,92 @@ glWindowNew size position title =
     overriddenWindowNewXYWithLabel'
 
 {# fun unsafe Fl_Gl_Window_draw_super as drawSuper' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance Op (DrawSuper ()) GlWindow (  IO (())) where
-  runOp _ self = withRef self $ \selfPtr -> drawSuper' selfPtr
+instance (impl ~ ( IO (()))) => Op (DrawSuper ()) GlWindow orig impl where
+  runOp _ _ self = withRef self $ \selfPtr -> drawSuper' selfPtr
 {# fun unsafe Fl_Gl_Window_hide_super as hideSuper' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance Op (HideSuper ()) GlWindow (  IO (())) where
-  runOp _ win = withRef win $ \winPtr -> hideSuper' winPtr
+instance (impl ~ ( IO (()))) => Op (HideSuper ()) GlWindow orig impl where
+  runOp _ _ win = withRef win $ \winPtr -> hideSuper' winPtr
 {# fun unsafe Fl_Gl_Window_flush_super as flushSuper' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance Op (FlushSuper ()) GlWindow (  IO (())) where
-  runOp _ win = withRef win $ \winPtr -> flushSuper' winPtr
+instance (impl ~ ( IO (()))) => Op (FlushSuper ()) GlWindow orig impl where
+  runOp _ _ win = withRef win $ \winPtr -> flushSuper' winPtr
 {# fun unsafe Fl_Gl_Window_flush as flush' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance Op (Flush ()) GlWindow (  IO (())) where
-  runOp _ win = withRef win $ \winPtr -> flush' winPtr
+instance (impl ~ ( IO (()))) => Op (Flush ()) GlWindow orig impl where
+  runOp _ _ win = withRef win $ \winPtr -> flush' winPtr
 {# fun unsafe Fl_Gl_Window_show_super as showSuper' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance Op (ShowWidgetSuper ()) GlWindow (  IO (())) where
-  runOp _ win = withRef win $ \winPtr -> showSuper' winPtr
+instance (impl ~ ( IO (()))) => Op (ShowWidgetSuper ()) GlWindow orig impl where
+  runOp _ _ win = withRef win $ \winPtr -> showSuper' winPtr
 {# fun unsafe Fl_Gl_Window_resize_super as resizeSuper' { id `Ptr ()',`Int',`Int',`Int',`Int' } -> `()' supressWarningAboutRes #}
-instance Op (ResizeSuper ()) GlWindow ( Int -> Int -> Int -> Int ->  IO (())) where
-  runOp _ win x y w h = withRef win $ \winPtr -> resizeSuper' winPtr x y w h
+instance (impl ~ (Int -> Int -> Int -> Int ->  IO (()))) => Op (ResizeSuper ()) GlWindow orig impl where
+  runOp _ _ win x y w h = withRef win $ \winPtr -> resizeSuper' winPtr x y w h
 {# fun unsafe Fl_Gl_Window_hide as hide' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance Op (Hide ()) GlWindow (  IO (())) where
-  runOp _ win = withRef win $ \winPtr -> hide' winPtr
+instance (impl ~ ( IO (()))) => Op (Hide ()) GlWindow orig impl where
+  runOp _ _ win = withRef win $ \winPtr -> hide' winPtr
 {# fun unsafe Fl_Gl_Window_show as show' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance Op (ShowWidget ()) GlWindow (  IO (())) where
-  runOp _ win = withRef win $ \winPtr -> show' winPtr
+instance (impl ~ ( IO (()))) => Op (ShowWidget ()) GlWindow orig impl where
+  runOp _ _ win = withRef win $ \winPtr -> show' winPtr
 {# fun unsafe Fl_Gl_Window_resize as resize' { id `Ptr ()',`Int',`Int',`Int',`Int' } -> `()' supressWarningAboutRes #}
-instance Op (Resize ()) GlWindow ( Int -> Int -> Int -> Int ->  IO (())) where
-  runOp _ win x y w h = withRef win $ \winPtr -> resize' winPtr x y w h
+instance (impl ~ (Int -> Int -> Int -> Int ->  IO (()))) => Op (Resize ()) GlWindow orig impl where
+  runOp _ _ win x y w h = withRef win $ \winPtr -> resize' winPtr x y w h
 {# fun unsafe Fl_Gl_Window_handle as handle' { id `Ptr ()',`Int' } -> `Int' #}
-instance Op (Handle ()) GlWindow ( Int ->  IO (Int)) where
-  runOp _ self event = withRef self $ \selfPtr -> handle' selfPtr event
+instance (impl ~ (Int ->  IO (Int))) => Op (Handle ()) GlWindow orig impl where
+  runOp _ _ self event = withRef self $ \selfPtr -> handle' selfPtr event
 {# fun unsafe Fl_Gl_Window_handle_super as handleSuper' { id `Ptr ()',`Int' } -> `Int' #}
-instance Op (HandleSuper ()) GlWindow ( Int ->  IO (Int)) where
-  runOp _ self event = withRef self $ \selfPtr -> handleSuper' selfPtr event
+instance (impl ~ (Int ->  IO (Int))) => Op (HandleSuper ()) GlWindow orig impl where
+  runOp _ _ self event = withRef self $ \selfPtr -> handleSuper' selfPtr event
 {# fun Fl_Gl_Window_Destroy as windowDestroy' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance Op (Destroy ()) GlWindow ( IO ()) where
-  runOp _ win = withRef win $ \winPtr -> windowDestroy' winPtr
+instance (impl ~ (IO ())) => Op (Destroy ()) GlWindow orig impl where
+  runOp _ _ win = withRef win $ \winPtr -> windowDestroy' winPtr
 {# fun unsafe Fl_Gl_Window_valid as valid' { id `Ptr ()' } -> `Bool' #}
-instance Op (GetValid ()) GlWindow (  IO (Bool)) where
-  runOp _ win = withRef win $ \winPtr -> valid' winPtr
+instance (impl ~ ( IO (Bool))) => Op (GetValid ()) GlWindow orig impl where
+  runOp _ _ win = withRef win $ \winPtr -> valid' winPtr
 {# fun unsafe Fl_Gl_Window_set_valid as setValid' { id `Ptr ()', `Bool' } -> `()' supressWarningAboutRes #}
-instance Op (SetValid ()) GlWindow ( Bool ->  IO (())) where
-  runOp _ win v = withRef win $ \winPtr -> setValid' winPtr v
+instance (impl ~ (Bool ->  IO (()))) => Op (SetValid ()) GlWindow orig impl where
+  runOp _ _ win v = withRef win $ \winPtr -> setValid' winPtr v
 {# fun unsafe Fl_Gl_Window_invalidate as invalidate' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance Op (Invalidate ()) GlWindow (  IO (())) where
-  runOp _ win = withRef win $ \winPtr -> invalidate' winPtr
+instance (impl ~ ( IO (()))) => Op (Invalidate ()) GlWindow orig impl where
+  runOp _ _ win = withRef win $ \winPtr -> invalidate' winPtr
 {# fun unsafe Fl_Gl_Window_context_valid as contextValid' { id `Ptr ()' } -> `Bool' toBool #}
-instance Op (GetContextValid ()) GlWindow (  IO (Bool)) where
-  runOp _ win = withRef win $ \winPtr -> contextValid' winPtr
+instance (impl ~ ( IO (Bool))) => Op (GetContextValid ()) GlWindow orig impl where
+  runOp _ _ win = withRef win $ \winPtr -> contextValid' winPtr
 {# fun unsafe Fl_Gl_Window_set_context_valid as setContextValid' { id `Ptr ()', fromBool `Bool' } -> `()' supressWarningAboutRes #}
-instance Op (SetContextValid ()) GlWindow ( Bool ->  IO (())) where
-  runOp _ win v = withRef win $ \winPtr -> setContextValid' winPtr v
+instance (impl ~ (Bool ->  IO (()))) => Op (SetContextValid ()) GlWindow orig impl where
+  runOp _ _ win v = withRef win $ \winPtr -> setContextValid' winPtr v
 {# fun unsafe Fl_Gl_Window_can_do_with_m as canDoWithM' { id `Ptr ()',`Int' } -> `Int' #}
-instance Op (CanDoWithM ()) GlWindow ( Int ->  IO (Int)) where
-  runOp _ win m = withRef win $ \winPtr -> canDoWithM' winPtr m
+instance (impl ~ (Int ->  IO (Int))) => Op (CanDoWithM ()) GlWindow orig impl where
+  runOp _ _ win m = withRef win $ \winPtr -> canDoWithM' winPtr m
 {# fun unsafe Fl_Gl_Window_can_do as canDo' { id `Ptr ()' } -> `Int' #}
-instance Op (CanDo ()) GlWindow (  IO (Int)) where
-  runOp _ win = withRef win $ \winPtr -> canDo' winPtr
+instance (impl ~ ( IO (Int))) => Op (CanDo ()) GlWindow orig impl where
+  runOp _ _ win = withRef win $ \winPtr -> canDo' winPtr
 {# fun unsafe Fl_Gl_Window_mode as mode' { id `Ptr ()' } -> `Mode' cToEnum #}
-instance Op (GetMode ()) GlWindow (  IO (Mode)) where
-  runOp _ win = withRef win $ \winPtr -> mode' winPtr
+instance (impl ~ ( IO (Mode))) => Op (GetMode ()) GlWindow orig impl where
+  runOp _ _ win = withRef win $ \winPtr -> mode' winPtr
 {# fun unsafe Fl_Gl_Window_set_mode as setMode' { id `Ptr ()',cFromEnum `Mode' } -> `Int' #}
-instance Op (SetMode ()) GlWindow ( Mode ->  IO (Int)) where
-  runOp _ win a = withRef win $ \winPtr -> setMode' winPtr a
+instance (impl ~ (Mode ->  IO (Int))) => Op (SetMode ()) GlWindow orig impl where
+  runOp _ _ win a = withRef win $ \winPtr -> setMode' winPtr a
 {# fun unsafe Fl_Gl_Window_context as context' { id `Ptr ()' } -> `Ref GlContext' unsafeToRef #}
-instance Op (GetContext ()) GlWindow (  IO (Ref GlContext)) where
-  runOp _ win = withRef win $ \winPtr -> context' winPtr
+instance (impl ~ ( IO (Ref GlContext))) => Op (GetContext ()) GlWindow orig impl where
+  runOp _ _ win = withRef win $ \winPtr -> context' winPtr
 {# fun unsafe Fl_Gl_Window_set_context as setContext' { id `Ptr ()',id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance Op (SetContext ()) GlWindow (Ref GlContext ->  IO (())) where
-  runOp _ win context = withRef win $ \winPtr -> withRef context $ \contextPtr -> setContext' winPtr contextPtr
+instance (impl ~ ( Ref GlContext ->  IO (()))) => Op (SetContext ()) GlWindow orig impl where
+  runOp _ _ win context = withRef win $ \winPtr -> withRef context $ \contextPtr -> setContext' winPtr contextPtr
 {# fun unsafe Fl_Gl_Window_set_context_with_destroy_flag as setContextWithDestroyFlag' { id `Ptr ()',id `Ptr ()', fromBool `Bool'} -> `()' supressWarningAboutRes #}
-instance Op (SetContextWithDestroyFlag ()) GlWindow (Ref GlContext ->  Bool -> IO (())) where
-  runOp _ win context destroyFlag= withRef win $ \winPtr -> withRef context $ \contextPtr -> setContextWithDestroyFlag' winPtr contextPtr destroyFlag
+instance (impl ~ ( Ref GlContext ->  Bool -> IO (()))) => Op (SetContextWithDestroyFlag ()) GlWindow orig impl where
+  runOp _ _ win context destroyFlag= withRef win $ \winPtr -> withRef context $ \contextPtr -> setContextWithDestroyFlag' winPtr contextPtr destroyFlag
 {# fun unsafe Fl_Gl_Window_swap_buffers as swapBuffers' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance Op (SwapBuffers ()) GlWindow (  IO (())) where
-  runOp _ win = withRef win $ \winPtr -> swapBuffers' winPtr
+instance (impl ~ ( IO (()))) => Op (SwapBuffers ()) GlWindow orig impl where
+  runOp _ _ win = withRef win $ \winPtr -> swapBuffers' winPtr
 {# fun unsafe Fl_Gl_Window_ortho as ortho' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance Op (Ortho ()) GlWindow (  IO (())) where
-  runOp _ win = withRef win $ \winPtr -> ortho' winPtr
+instance (impl ~ ( IO (()))) => Op (Ortho ()) GlWindow orig impl where
+  runOp _ _ win = withRef win $ \winPtr -> ortho' winPtr
 {# fun unsafe Fl_Gl_Window_can_do_overlay as canDoOverlay' { id `Ptr ()' } -> `Int' #}
-instance Op (CanDoOverlay ()) GlWindow (  IO (Int)) where
-  runOp _ win = withRef win $ \winPtr -> canDoOverlay' winPtr
+instance (impl ~ ( IO (Int))) => Op (CanDoOverlay ()) GlWindow orig impl where
+  runOp _ _ win = withRef win $ \winPtr -> canDoOverlay' winPtr
 {# fun unsafe Fl_Gl_Window_redraw_overlay as redrawOverlay' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance Op (RedrawOverlay ()) GlWindow (  IO (())) where
-  runOp _ win = withRef win $ \winPtr -> redrawOverlay' winPtr
+instance (impl ~ ( IO (()))) => Op (RedrawOverlay ()) GlWindow orig impl where
+  runOp _ _ win = withRef win $ \winPtr -> redrawOverlay' winPtr
 {# fun unsafe Fl_Gl_Window_hide_overlay as hideOverlay' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance Op (HideOverlay ()) GlWindow (  IO (())) where
-  runOp _ win = withRef win $ \winPtr -> hideOverlay' winPtr
+instance (impl ~ ( IO (()))) => Op (HideOverlay ()) GlWindow orig impl where
+  runOp _ _ win = withRef win $ \winPtr -> hideOverlay' winPtr
 {# fun unsafe Fl_Gl_Window_make_overlay_current as makeOverlayCurrent' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance Op (MakeOverlayCurrent ()) GlWindow (  IO (())) where
-  runOp _ win = withRef win $ \winPtr -> makeOverlayCurrent' winPtr
+instance (impl ~ ( IO (()))) => Op (MakeOverlayCurrent ()) GlWindow orig impl where
+  runOp _ _ win = withRef win $ \winPtr -> makeOverlayCurrent' winPtr

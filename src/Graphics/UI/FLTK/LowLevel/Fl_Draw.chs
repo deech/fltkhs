@@ -641,7 +641,7 @@ flcSetStatus :: Rectangle ->  IO ()
 flcSetStatus rectangle = let (x_pos', y_pos', width', height') = fromRectangle rectangle in flcSetStatus' x_pos' y_pos' width' height'
 
 {# fun unsafe flc_set_spot_with_win as flcSetSpotWithWin' { `Int',`Int',`Int',`Int',`Int',`Int',id `Ptr ()' } -> `()' #}
-flcSetSpotWithWin :: (Parent a Window) => Int -> Int -> Rectangle -> Ref Window -> IO ()
+flcSetSpotWithWin :: (Parent a Window) => Int -> Int -> Rectangle -> Ref a -> IO ()
 flcSetSpotWithWin font' size' rectangle win = let (x_pos', y_pos', width', height') = fromRectangle rectangle in withRef win $ \winPtr -> flcSetSpotWithWin' font' size' x_pos' y_pos' width' height' winPtr
 
 {# fun unsafe flc_set_spot as flcSetSpot' { `Int',`Int',`Int',`Int',`Int',`Int' } -> `()' #}

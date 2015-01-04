@@ -29,11 +29,11 @@ rollerNew rectangle l'=
                                toRef
 
 {# fun Fl_Roller_Destroy as rollerDestroy' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance Op (Destroy ()) Roller ( IO ()) where
-  runOp _ roller = swapRef roller $ \rollerPtr -> do
+instance (impl ~ (IO ())) => Op (Destroy ()) Roller orig impl where
+  runOp _ _ roller = swapRef roller $ \rollerPtr -> do
     rollerDestroy' rollerPtr
     return nullPtr
 
 {#fun Fl_Roller_handle as rollerHandle' { id `Ptr ()', id `CInt' } -> `Int' #}
-instance Op (Handle ()) Roller ( Event -> IO Int) where
-  runOp _ roller event = withRef roller (\p -> rollerHandle' p (fromIntegral . fromEnum $ event))
+instance (impl ~ (Event -> IO Int)) => Op (Handle ()) Roller orig impl where
+  runOp _ _ roller event = withRef roller (\p -> rollerHandle' p (fromIntegral . fromEnum $ event))

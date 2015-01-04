@@ -101,7 +101,7 @@ CPPFILES= \
 	Fl_WizardC.cpp
 
 OBJECTS = $(CPPFILES:.cpp=.o)
-LIBDIR = ../lib
+LIBDIR = ../c-lib
 OBJECT_FILES = ../object_files
 .SILENT:
 all: libfltkc.a

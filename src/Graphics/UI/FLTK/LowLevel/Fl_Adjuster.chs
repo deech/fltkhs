@@ -28,14 +28,14 @@ adjusterNew rectangle l'=
                                toRef
 
 {# fun Fl_Adjuster_Destroy as adjusterDestroy' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance Op (Destroy ()) Adjuster ( IO ()) where
-  runOp _ adjuster = swapRef adjuster $ \adjusterPtr -> do
+instance (impl ~ (IO ())) => Op (Destroy ()) Adjuster orig impl where
+  runOp _ _ adjuster = swapRef adjuster $ \adjusterPtr -> do
     adjusterDestroy' adjusterPtr
     return nullPtr
 
 {# fun unsafe Fl_Adjuster_soft as soft' { id `Ptr ()' } -> `Int' #}
-instance Op (GetSoft ()) Adjuster (  IO (Int)) where
-  runOp _ adjuster = withRef adjuster $ \adjusterPtr -> soft' adjusterPtr
+instance (impl ~ ( IO (Int))) => Op (GetSoft ()) Adjuster orig impl where
+  runOp _ _ adjuster = withRef adjuster $ \adjusterPtr -> soft' adjusterPtr
 {# fun unsafe Fl_Adjuster_set_soft as setSoft' { id `Ptr ()',`Int' } -> `()' #}
-instance Op (SetSoft ()) Adjuster ( Int ->  IO ()) where
-  runOp _ adjuster soft = withRef adjuster $ \adjusterPtr -> setSoft' adjusterPtr soft
+instance (impl ~ (Int ->  IO ())) => Op (SetSoft ()) Adjuster orig impl where
+  runOp _ _ adjuster soft = withRef adjuster $ \adjusterPtr -> setSoft' adjusterPtr soft

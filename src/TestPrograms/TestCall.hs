@@ -110,15 +110,13 @@ globalEventHandler e =
 
 main :: IO ()
 main = do
-  _ <- addWindow
+  win <- addWindow
   print "added Window"
-  -- _ <- FL.addAwakeHandler (print "awake handler's callback data")
-  -- print "added awake handler"
-  -- _ <- runAwakeHandler
-  -- _ <- setEventDispatch eventIntercept
-  -- f <- eventDispatch
-  -- _ <- f DndDrag win
-  -- _ <- FL.setHandler globalEventHandler
-  -- print "ran awake handler"
+  _ <- FL.addAwakeHandler (print "awake handler's callback data")
+  print "added awake handler"
+  _ <- runAwakeHandler
+  _ <- FL.setEventDispatch eventIntercept
+  _ <- FL.setHandler globalEventHandler
+  print "ran awake handler"
   _ <- FL.run
   return ()

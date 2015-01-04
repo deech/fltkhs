@@ -181,7 +181,8 @@ EXPORT {
   FL_EXPORT_C(int, Fl_Single_Window_x_root)(fl_Single_Window win);
   FL_EXPORT_C(int, Fl_Single_Window_y_root)(fl_Single_Window win);
   FL_EXPORT_C(fl_Single_Window, Fl_Single_Window_current)();
-  FL_EXPORT_C(int, Fl_Single_Window_make_current)(fl_Single_Window win);
+  // There is no make_current implementation on Fl_Single_Window
+  // even though it is in the header file.
   // FL_EXPORT_C(int, Fl_Single_Window_make_current)(fl_Single_Window win);
   FL_EXPORT_C(void, Fl_Single_Window_set_cursor_with_bg)(fl_Single_Window win, Fl_Cursor cursor, Fl_Color bg);
   FL_EXPORT_C(void, Fl_Single_Window_set_cursor_with_fg)(fl_Single_Window win,Fl_Cursor cursor, Fl_Color fg);

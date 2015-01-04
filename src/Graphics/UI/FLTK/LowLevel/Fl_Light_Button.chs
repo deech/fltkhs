@@ -26,8 +26,8 @@ lightButtonNew rectangle l' =
         Just l -> widgetNewWithLabel' x_pos y_pos width height l >>= toRef
 
 {# fun Fl_Light_Button_Destroy as widgetDestroy' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance Op (Destroy ()) LightButton (IO ()) where
-   runOp _ button = swapRef button $
+instance (impl ~ (IO ())) => Op (Destroy ()) LightButton orig impl where
+  runOp _ _ button = swapRef button $
                     \buttonPtr ->
                      widgetDestroy' buttonPtr >>
                      return nullPtr

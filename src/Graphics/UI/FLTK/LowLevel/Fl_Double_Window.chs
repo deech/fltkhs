@@ -63,50 +63,50 @@ doubleWindowNew size position title =
     overriddenWindowNewXYWithLabel'
 
 {# fun Fl_Double_Window_Destroy as windowDestroy' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance Op (Destroy ()) DoubleWindow ( IO ()) where
-  runOp _ win = withRef win $ \winPtr -> windowDestroy' winPtr
+instance (impl ~ (IO ())) => Op (Destroy ()) DoubleWindow orig impl where
+  runOp _ _ win = withRef win $ \winPtr -> windowDestroy' winPtr
 
 {# fun Fl_Double_Window_draw_super as drawSuper' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance Op (DrawSuper ()) DoubleWindow (  IO (())) where
-  runOp _ window = withRef window $ \windowPtr -> drawSuper' windowPtr
+instance (impl ~ ( IO (()))) => Op (DrawSuper ()) DoubleWindow orig impl where
+  runOp _ _ window = withRef window $ \windowPtr -> drawSuper' windowPtr
 
 {# fun Fl_Double_Window_handle_super as handleSuper' { id `Ptr ()',`Int' } -> `Int' #}
-instance Op (HandleSuper ()) DoubleWindow ( Int ->  IO (Int)) where
-  runOp _ window event = withRef window $ \windowPtr -> handleSuper' windowPtr event
+instance (impl ~ (Int ->  IO (Int))) => Op (HandleSuper ()) DoubleWindow orig impl where
+  runOp _ _ window event = withRef window $ \windowPtr -> handleSuper' windowPtr event
 
 {# fun Fl_Double_Window_resize_super as resizeSuper' { id `Ptr ()',`Int',`Int',`Int',`Int' } -> `()' supressWarningAboutRes #}
-instance Op (ResizeSuper ()) DoubleWindow ( Rectangle -> IO (())) where
-  runOp _ window rectangle =
+instance (impl ~ (Rectangle -> IO (()))) => Op (ResizeSuper ()) DoubleWindow orig impl where
+  runOp _ _ window rectangle =
     let (x_pos, y_pos, width, height) = fromRectangle rectangle
     in withRef window $ \windowPtr -> resizeSuper' windowPtr x_pos y_pos width height
 
 {# fun Fl_Double_Window_show_super as showSuper' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance Op (ShowWidgetSuper ()) DoubleWindow (  IO (())) where
-  runOp _ window = withRef window $ \windowPtr -> showSuper' windowPtr
+instance (impl ~ ( IO (()))) => Op (ShowWidgetSuper ()) DoubleWindow orig impl where
+  runOp _ _ window = withRef window $ \windowPtr -> showSuper' windowPtr
 
 {# fun Fl_Double_Window_hide_super as hideSuper' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance Op (HideSuper ()) DoubleWindow (  IO (())) where
-  runOp _ window = withRef window $ \windowPtr -> hideSuper' windowPtr
+instance (impl ~ ( IO (()))) => Op (HideSuper ()) DoubleWindow orig impl where
+  runOp _ _ window = withRef window $ \windowPtr -> hideSuper' windowPtr
 
 {# fun Fl_Double_Window_hide as hide' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance Op (Hide ()) DoubleWindow (  IO (())) where
-  runOp _ window = withRef window $ \windowPtr -> hide' windowPtr
+instance (impl ~ ( IO (()))) => Op (Hide ()) DoubleWindow orig impl where
+  runOp _ _ window = withRef window $ \windowPtr -> hide' windowPtr
 
 {# fun Fl_Double_Window_flush_super as flushSuper' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance Op (FlushSuper ()) DoubleWindow (  IO (())) where
-  runOp _ window = withRef window $ \windowPtr -> flushSuper' windowPtr
+instance (impl ~ ( IO (()))) => Op (FlushSuper ()) DoubleWindow orig impl where
+  runOp _ _ window = withRef window $ \windowPtr -> flushSuper' windowPtr
 
 {# fun Fl_Double_Window_show as windowShow' {id `Ptr ()'} -> `()' supressWarningAboutRes #}
-instance Op (ShowWidget ()) DoubleWindow ( IO ()) where
-  runOp _ window = withRef window (\p -> windowShow' p)
+instance (impl ~ (IO ())) => Op (ShowWidget ()) DoubleWindow orig impl where
+  runOp _ _ window = withRef window (\p -> windowShow' p)
 
 {#fun Fl_Double_Window_handle as windowHandle'
       { id `Ptr ()', id `CInt' } -> `Int' #}
-instance Op (Handle ()) DoubleWindow ( Event -> IO Int) where
-  runOp _ window event = withRef window (\p -> windowHandle' p (fromIntegral . fromEnum $ event))
+instance (impl ~ (Event -> IO Int)) => Op (Handle ()) DoubleWindow orig impl where
+  runOp _ _ window event = withRef window (\p -> windowHandle' p (fromIntegral . fromEnum $ event))
 
 {# fun Fl_Double_Window_resize as resize' { id `Ptr ()',`Int',`Int',`Int',`Int' } -> `()' supressWarningAboutRes #}
-instance Op (Resize ()) DoubleWindow ( Rectangle -> IO (())) where
-  runOp _ window rectangle = withRef window $ \windowPtr -> do
+instance (impl ~ (Rectangle -> IO (()))) => Op (Resize ()) DoubleWindow orig impl where
+  runOp _ _ window rectangle = withRef window $ \windowPtr -> do
                                  let (x_pos,y_pos,w_pos,h_pos) = fromRectangle rectangle
                                  resize' windowPtr x_pos y_pos w_pos h_pos

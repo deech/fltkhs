@@ -41,7 +41,7 @@ myPreConf args flags = do
    rawSystemExit normal "autoconf" []
    preConf autoconfUserHooks args flags
 
-fltkcdir = unsafePerformIO getCurrentDirectory ++ "/lib"
+fltkcdir = unsafePerformIO getCurrentDirectory ++ "/c-lib"
 fltkclib = "fltkc"
 headerdir = unsafePerformIO getCurrentDirectory ++ "/c-src"
 currentdir = unsafePerformIO getCurrentDirectory
@@ -127,8 +127,9 @@ myBuildHook pkg_descr local_bld_info user_hooks bld_flags =
        do putStrLn "==Compiling C bindings=="
           rawSystemExit normal "make" ["src"]
        else return ()
+     -- (buildHook autoconfUserHooks) pkg_descr local_bld_info user_hooks bld_flags
      let new_pkg_descr
-           = removeExecutables . addIncludeDirs . withFltkc (++) $ pkg_descr
+           = removeExecutables . addHeaders . addIncludeDirs . withFltkc (++) $ pkg_descr
          new_local_bld_info = local_bld_info{localPkgDescr = new_pkg_descr}
          (libs, nonlibs)
            = partition
@@ -138,8 +139,7 @@ myBuildHook pkg_descr local_bld_info user_hooks bld_flags =
                       _ -> False)
                (componentsConfigs new_local_bld_info)
          lib_lbi = new_local_bld_info{componentsConfigs = libs}
-     buildHook simpleUserHooks new_pkg_descr lib_lbi user_hooks
-       bld_flags
+     buildHook simpleUserHooks new_pkg_descr lib_lbi user_hooks bld_flags
      let distPref = fromFlag (buildDistPref bld_flags)
          dbFile = distPref </> "package.conf.inplace"
          verbosity = fromFlag (buildVerbosity bld_flags)
@@ -155,19 +155,19 @@ myBuildHook pkg_descr local_bld_info user_hooks bld_flags =
                                            map (combine objectFileDir) .
                                              filter (\ f -> takeExtension f == ".o")
                               hobjs <- getHaskellObjects lib with_in_place pref objExtension True
-                              let staticObjectFiles = cobjs ++ hobjs
-                              (arProg, _) <- requireProgram verbosity arProgram
+                              let staticObjectFiles = hobjs ++ cobjs
+                              (arProg, _ ) <- requireProgram verbosity arProgram
                                                (withPrograms with_in_place)
                               let vanillaLibFilePath
                                     = pref </> mkLibName (head $ componentLibraries clbi)
                               Ar.createArLibArchive verbosity with_in_place vanillaLibFilePath
                                 staticObjectFiles
-             (CExe exe) -> do preprocessComponent new_pkg_descr comp
+             (CExe exe) -> do preprocessComponent pkg_descr comp
                                 with_in_place
                                 False
                                 verbosity
                                 []
-                              buildExe verbosity (buildNumJobs bld_flags) new_pkg_descr
+                              buildExe verbosity (buildNumJobs bld_flags) pkg_descr
                                 with_in_place
                                 exe
                                 clbi

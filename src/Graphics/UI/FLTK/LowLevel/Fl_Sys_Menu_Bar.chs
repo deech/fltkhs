@@ -28,45 +28,45 @@ sysMenuBarNew rectangle l'=
         Just l -> sysMenuBarNewWithLabel' x_pos y_pos width height l >>=
                                toRef
 {# fun Fl_Sys_Menu_Bar_Destroy as sysMenuBarDestroy' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance Op (Destroy ()) SysMenuBar (IO ()) where
-  runOp _ win = swapRef win $ \winPtr -> do
+instance (impl ~ ( IO ())) => Op (Destroy ()) SysMenuBar orig impl where
+  runOp _ _ win = swapRef win $ \winPtr -> do
     sysMenuBarDestroy' winPtr
     return nullPtr
 {#fun Fl_Sys_Menu_Bar_handle as sysMenuBarHandle' { id `Ptr ()', id `CInt' } -> `Int' #}
-instance Op (Handle ()) SysMenuBar (Event -> IO Int) where
-  runOp _ menu_bar event = withRef menu_bar (\p -> sysMenuBarHandle' p (fromIntegral . fromEnum $ event))
+instance (impl ~ ( Event -> IO Int)) => Op (Handle ()) SysMenuBar orig impl where
+  runOp _ _ menu_bar event = withRef menu_bar (\p -> sysMenuBarHandle' p (fromIntegral . fromEnum $ event))
 {# fun unsafe Fl_Sys_Menu_Bar_remove as remove' { id `Ptr ()',`Int' } -> `()' #}
-instance Op (Remove ()) SysMenuBar ( Int  ->  IO ()) where
-  runOp _ menu_ index' = withRef menu_ $ \menu_Ptr -> remove' menu_Ptr index'
+instance (impl ~ (Int  ->  IO ())) => Op (Remove ()) SysMenuBar orig impl where
+  runOp _ _ menu_ index' = withRef menu_ $ \menu_Ptr -> remove' menu_Ptr index'
 {# fun unsafe Fl_Sys_Menu_Bar_replace as replace' { id `Ptr ()',`Int',`String' } -> `()' #}
-instance Op (Replace ()) SysMenuBar ( Int -> String ->  IO ()) where
-  runOp _ menu_ index' name = withRef menu_ $ \menu_Ptr -> replace' menu_Ptr index' name
+instance (impl ~ (Int -> String ->  IO ())) => Op (Replace ()) SysMenuBar orig impl where
+  runOp _ _ menu_ index' name = withRef menu_ $ \menu_Ptr -> replace' menu_Ptr index' name
 {# fun unsafe Fl_Sys_Menu_Bar_clear as clear' { id `Ptr ()' } -> `()' #}
-instance Op (Clear ()) SysMenuBar (  IO ()) where
-  runOp _ menu_ = withRef menu_ $ \menu_Ptr -> clear' menu_Ptr
+instance (impl ~ ( IO ())) => Op (Clear ()) SysMenuBar orig impl where
+  runOp _ _ menu_ = withRef menu_ $ \menu_Ptr -> clear' menu_Ptr
 {# fun unsafe Fl_Sys_Menu_Bar_clear_submenu as clearSubmenu' { id `Ptr ()',`Int' } -> `Int' #}
-instance Op (ClearSubmenu ()) SysMenuBar ( Int ->  IO (Int)) where
-  runOp _ menu_ index' = withRef menu_ $ \menu_Ptr -> clearSubmenu' menu_Ptr index'
+instance (impl ~ (Int ->  IO (Int))) => Op (ClearSubmenu ()) SysMenuBar orig impl where
+  runOp _ _ menu_ index' = withRef menu_ $ \menu_Ptr -> clearSubmenu' menu_Ptr index'
 {# fun unsafe Fl_Sys_Menu_Bar_shortcut as shortcut' { id `Ptr ()',`Int',id `CInt' } -> `()' #}
-instance Op (SetShortcut ()) SysMenuBar ( Int -> ShortcutKeySequence ->  IO ()) where
-  runOp _ menu_ index' ks =
+instance (impl ~ (Int -> ShortcutKeySequence ->  IO ())) => Op (SetShortcut ()) SysMenuBar orig impl where
+  runOp _ _ menu_ index' ks =
     withRef menu_ $ \menu_Ptr ->
         shortcut' menu_Ptr index' (keySequenceToCInt ks)
 {# fun unsafe Fl_Sys_Menu_Bar_set_mode as setMode' { id `Ptr ()',`Int',`Int' } -> `()' #}
-instance Op (SetMode ()) SysMenuBar ( Int -> Int ->  IO ()) where
-  runOp _ menu_ i fl = withRef menu_ $ \menu_Ptr -> setMode' menu_Ptr i fl
+instance (impl ~ (Int -> Int ->  IO ())) => Op (SetMode ()) SysMenuBar orig impl where
+  runOp _ _ menu_ i fl = withRef menu_ $ \menu_Ptr -> setMode' menu_Ptr i fl
 {# fun unsafe Fl_Sys_Menu_Bar_mode as mode' { id `Ptr ()',`Int' } -> `Int' #}
-instance Op (GetMode ()) SysMenuBar ( Int ->  IO (Int)) where
-  runOp _ menu_ i = withRef menu_ $ \menu_Ptr -> mode' menu_Ptr i
+instance (impl ~ (Int ->  IO (Int))) => Op (GetMode ()) SysMenuBar orig impl where
+  runOp _ _ menu_ i = withRef menu_ $ \menu_Ptr -> mode' menu_Ptr i
 {# fun unsafe Fl_Sys_Menu_Bar_global as global' { id `Ptr ()' } -> `()' #}
-instance Op (Global ()) SysMenuBar (  IO ()) where
-  runOp _ menu_ = withRef menu_ $ \menu_Ptr -> global' menu_Ptr
+instance (impl ~ ( IO ())) => Op (Global ()) SysMenuBar orig impl where
+  runOp _ _ menu_ = withRef menu_ $ \menu_Ptr -> global' menu_Ptr
 {# fun unsafe Fl_Sys_Menu_Bar_menu as menu' { id `Ptr ()' } -> `Ptr ()' id #}
-instance Op (GetMenu ()) SysMenuBar (  IO (Ref MenuItem)) where
-  runOp _ menu_ = withRef menu_ $ \menu_Ptr -> menu' menu_Ptr >>= toRef
+instance (impl ~ ( IO (Ref MenuItem))) => Op (GetMenu ()) SysMenuBar orig impl where
+  runOp _ _ menu_ = withRef menu_ $ \menu_Ptr -> menu' menu_Ptr >>= toRef
 {# fun unsafe Fl_Sys_Menu_Bar_menu_with_m as menuWithM' { id `Ptr ()',id `Ptr ( Ptr () )',`Int' } -> `()' #}
-instance Op (SetMenu ()) SysMenuBar ( [Ref MenuItem] -> IO ()) where
-  runOp _ menu_ items =
+instance (impl ~ ([Ref MenuItem] -> IO ())) => Op (SetMenu ()) SysMenuBar orig impl where
+  runOp _ _ menu_ items =
     withRef menu_ $ \menu_Ptr ->
         withRefs items $ \menu_itemsPtr ->
             menuWithM' menu_Ptr menu_itemsPtr (length items)

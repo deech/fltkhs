@@ -1,4 +1,4 @@
-{-# LANGUAGE GADTs, MultiParamTypeClasses, FunctionalDependencies, FlexibleInstances, UndecidableInstances, FlexibleContexts, ScopedTypeVariables, OverlappingInstances, EmptyDataDecls #-}
+{-# LANGUAGE TypeFamilies, GADTs, UndecidableInstances, MultiParamTypeClasses, FunctionalDependencies, FlexibleInstances, FlexibleContexts, ScopedTypeVariables, OverlappingInstances, EmptyDataDecls #-}
 module Graphics.UI.FLTK.LowLevel.Dispatch
        (
          FindOp,
@@ -7,10 +7,7 @@ module Graphics.UI.FLTK.LowLevel.Dispatch
          Op,
          Same,
          Different,
-         OpWithOriginal,
-         runOpWithOriginal,
          dispatch,
-         dispatchWithOriginal,
          runOp,
          castTo,
          Parent
@@ -77,13 +74,10 @@ instance FindObj Base Base Same
 class Parent a b
 instance (FindObj a b Same) => Parent a b
 
-class OpWithOriginal op s orig impl | op s orig -> impl where
-  runOpWithOriginal :: op -> (Ref s) -> orig -> impl
-
 -- Implementations of methods on various types
 -- of objects
-class Op op s impl | op s -> impl where
-    runOp :: op -> (Ref s) -> impl
+class Op op obj origObj impl where
+  runOp :: op -> origObj -> (Ref obj) -> impl
 
 -- Arbitrarily cast from one thing to another
 -- Probably should add some safety here ...
@@ -92,8 +86,10 @@ instance CastTo a b r where castTo (Ref x) = (Ref x)
 
 -- Given some "object" and a "function" dispatch to the
 -- right implementation.
-dispatch :: forall a r op impl. (FindOp a op (Match r), Op op r impl) => op -> Ref a -> impl
-dispatch _ refA = runOp (undefined :: op) ((castTo refA) :: Ref r)
-
-dispatchWithOriginal :: forall a r op impl. (FindOp a op (Match r), OpWithOriginal op r a impl) => op -> Ref a -> impl
-dispatchWithOriginal _ refA = runOpWithOriginal (undefined :: op) ((castTo refA) :: Ref r) (undefined :: a)
+dispatch :: forall op obj origObj impl.
+            (
+              FindOp origObj op (Match obj),
+              Op op obj origObj impl
+            ) =>
+            op -> Ref origObj -> impl
+dispatch op refOrig = runOp op (undefined :: origObj) ((castTo refOrig) :: Ref obj)

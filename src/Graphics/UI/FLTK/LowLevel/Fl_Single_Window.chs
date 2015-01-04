@@ -62,55 +62,50 @@ singleWindowNew size position title =
     overriddenWindowNewXYWithLabel'
 
 {# fun Fl_Single_Window_Destroy as windowDestroy' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance Op (Destroy ()) SingleWindow ( IO ()) where
-  runOp _ win = withRef win $ \winPtr -> windowDestroy' winPtr
+instance (impl ~ (IO ())) => Op (Destroy ()) SingleWindow orig impl where
+  runOp _ _ win = withRef win $ \winPtr -> windowDestroy' winPtr
 
 {# fun Fl_Single_Window_draw_super as drawSuper' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance Op (DrawSuper ()) SingleWindow (  IO (())) where
-  runOp _ window = withRef window $ \windowPtr -> drawSuper' windowPtr
+instance (impl ~ ( IO (()))) => Op (DrawSuper ()) SingleWindow orig impl where
+  runOp _ _ window = withRef window $ \windowPtr -> drawSuper' windowPtr
 
 {# fun Fl_Single_Window_handle_super as handleSuper' { id `Ptr ()',`Int' } -> `Int' #}
-instance Op (HandleSuper ()) SingleWindow ( Int ->  IO (Int)) where
-  runOp _ window event = withRef window $ \windowPtr -> handleSuper' windowPtr event
+instance (impl ~ (Int ->  IO (Int))) => Op (HandleSuper ()) SingleWindow orig impl where
+  runOp _ _ window event = withRef window $ \windowPtr -> handleSuper' windowPtr event
 
 {# fun Fl_Single_Window_resize_super as resizeSuper' { id `Ptr ()',`Int',`Int',`Int',`Int' } -> `()' supressWarningAboutRes #}
-instance Op (ResizeSuper ()) SingleWindow ( Rectangle -> IO (())) where
-  runOp _ window rectangle =
+instance (impl ~ (Rectangle -> IO (()))) => Op (ResizeSuper ()) SingleWindow orig impl where
+  runOp _ _ window rectangle =
     let (x_pos, y_pos, width, height) = fromRectangle rectangle
     in withRef window $ \windowPtr -> resizeSuper' windowPtr x_pos y_pos width height
 
 {# fun Fl_Single_Window_show_super as showSuper' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance Op (ShowWidgetSuper ()) SingleWindow (  IO (())) where
-  runOp _ window = withRef window $ \windowPtr -> showSuper' windowPtr
+instance (impl ~ ( IO (()))) => Op (ShowWidgetSuper ()) SingleWindow orig impl where
+  runOp _ _ window = withRef window $ \windowPtr -> showSuper' windowPtr
 
 {# fun Fl_Single_Window_hide_super as hideSuper' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance Op (HideSuper ()) SingleWindow (  IO (())) where
-  runOp _ window = withRef window $ \windowPtr -> hideSuper' windowPtr
+instance (impl ~ ( IO (()))) => Op (HideSuper ()) SingleWindow orig impl where
+  runOp _ _ window = withRef window $ \windowPtr -> hideSuper' windowPtr
 
 {# fun Fl_Single_Window_hide as hide' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance Op (Hide ()) SingleWindow (  IO (())) where
-  runOp _ window = withRef window $ \windowPtr -> hide' windowPtr
+instance (impl ~ ( IO (()))) => Op (Hide ()) SingleWindow orig impl where
+  runOp _ _ window = withRef window $ \windowPtr -> hide' windowPtr
 
 {# fun Fl_Single_Window_flush_super as flushSuper' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance Op (FlushSuper ()) SingleWindow (  IO (())) where
-  runOp _ window = withRef window $ \windowPtr -> flushSuper' windowPtr
+instance (impl ~ ( IO (()))) => Op (FlushSuper ()) SingleWindow orig impl where
+  runOp _ _ window = withRef window $ \windowPtr -> flushSuper' windowPtr
 
 {# fun Fl_Single_Window_show as windowShow' {id `Ptr ()'} -> `()' supressWarningAboutRes #}
-instance Op (ShowWidget ()) SingleWindow ( IO ()) where
-  runOp _ window = withRef window (\p -> windowShow' p)
+instance (impl ~ (IO ())) => Op (ShowWidget ()) SingleWindow orig impl where
+  runOp _ _ window = withRef window (\p -> windowShow' p)
 
 {#fun Fl_Single_Window_handle as windowHandle'
       { id `Ptr ()', id `CInt' } -> `Int' #}
-instance Op (Handle ()) SingleWindow ( Event -> IO Int) where
-  runOp _ window event = withRef window (\p -> windowHandle' p (fromIntegral . fromEnum $ event))
+instance (impl ~ (Event -> IO Int)) => Op (Handle ()) SingleWindow orig impl where
+  runOp _ _ window event = withRef window (\p -> windowHandle' p (fromIntegral . fromEnum $ event))
 
 {# fun Fl_Single_Window_resize as resize' { id `Ptr ()',`Int',`Int',`Int',`Int' } -> `()' supressWarningAboutRes #}
-instance Op (Resize ()) SingleWindow ( Rectangle -> IO (())) where
-  runOp _ window rectangle = withRef window $ \windowPtr -> do
+instance (impl ~ (Rectangle -> IO (()))) => Op (Resize ()) SingleWindow orig impl where
+  runOp _ _ window rectangle = withRef window $ \windowPtr -> do
                                  let (x_pos,y_pos,w_pos,h_pos) = fromRectangle rectangle
                                  resize' windowPtr x_pos y_pos w_pos h_pos
-
-
-{# fun Fl_Single_Window_make_current as makeCurrent' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance Op (MakeCurrent ()) SingleWindow (  IO (())) where
-  runOp _ win = withRef win $ \winPtr -> makeCurrent' winPtr

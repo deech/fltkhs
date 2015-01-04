@@ -39,28 +39,28 @@ hiddenTimerNew rectangle l'=
     hiddenTimerNewWithLabel' x_pos y_pos width height l' >>= toRef
 
 {# fun Fl_Timer_Destroy as timerDestroy' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance Op (Destroy ()) Timer ( IO ()) where
-  runOp _ win = swapRef win $ \winPtr -> do
+instance (impl ~ (IO ())) => Op (Destroy ()) Timer orig impl where
+  runOp _ _ win = swapRef win $ \winPtr -> do
                                         timerDestroy' winPtr
                                         return nullPtr
 {#fun Fl_Timer_handle as timerHandle' { id `Ptr ()', id `CInt' } -> `Int' #}
-instance Op (Handle ()) Timer ( Event -> IO Int) where
-  runOp _ timer event = withRef timer (\p -> timerHandle' p (fromIntegral . fromEnum $ event))
+instance (impl ~ (Event -> IO Int)) => Op (Handle ()) Timer orig impl where
+  runOp _ _ timer event = withRef timer (\p -> timerHandle' p (fromIntegral . fromEnum $ event))
 {# fun unsafe Fl_Timer_direction as direction' { id `Ptr ()' } -> `CChar' id #}
-instance Op (GetDirection ()) Timer (  IO (CountDirection)) where
-  runOp _ adjuster = withRef adjuster $ \adjusterPtr -> direction' adjusterPtr >>= return . ccharToCountDirection
+instance (impl ~ ( IO (CountDirection))) => Op (GetDirection ()) Timer orig impl where
+  runOp _ _ adjuster = withRef adjuster $ \adjusterPtr -> direction' adjusterPtr >>= return . ccharToCountDirection
 {# fun unsafe Fl_Timer_set_direction as setDirection' { id `Ptr ()',id `CChar' } -> `()' #}
-instance Op (SetDirection ()) Timer ( CountDirection ->  IO ()) where
-  runOp _ adjuster d = withRef adjuster $ \adjusterPtr -> setDirection' adjusterPtr (countDirectionToCChar d)
+instance (impl ~ (CountDirection ->  IO ())) => Op (SetDirection ()) Timer orig impl where
+  runOp _ _ adjuster d = withRef adjuster $ \adjusterPtr -> setDirection' adjusterPtr (countDirectionToCChar d)
 {# fun unsafe Fl_Timer_value as value' { id `Ptr ()' } -> `Double' #}
-instance Op (GetValue ()) Timer (  IO (Double)) where
-  runOp _ adjuster = withRef adjuster $ \adjusterPtr -> value' adjusterPtr
+instance (impl ~ ( IO (Double))) => Op (GetValue ()) Timer orig impl where
+  runOp _ _ adjuster = withRef adjuster $ \adjusterPtr -> value' adjusterPtr
 {# fun unsafe Fl_Timer_set_value as setValue' { id `Ptr ()',`Double' } -> `()' #}
-instance Op (SetValue ()) Timer ( Double ->  IO ()) where
-  runOp _ adjuster value = withRef adjuster $ \adjusterPtr -> setValue' adjusterPtr value
+instance (impl ~ (Double ->  IO ())) => Op (SetValue ()) Timer orig impl where
+  runOp _ _ adjuster value = withRef adjuster $ \adjusterPtr -> setValue' adjusterPtr value
 {# fun unsafe Fl_Timer_suspended as suspended' { id `Ptr ()' } -> `Bool' cToBool #}
-instance Op (GetSuspended ()) Timer (  IO (Bool)) where
-  runOp _ adjuster = withRef adjuster $ \adjusterPtr -> suspended' adjusterPtr
+instance (impl ~ ( IO (Bool))) => Op (GetSuspended ()) Timer orig impl where
+  runOp _ _ adjuster = withRef adjuster $ \adjusterPtr -> suspended' adjusterPtr
 {# fun unsafe Fl_Timer_set_suspended as setSuspended' { id `Ptr ()', cFromBool `Bool' } -> `()' #}
-instance Op (SetSuspended ()) Timer ( Bool ->  IO ()) where
-  runOp _ adjuster s = withRef adjuster $ \adjusterPtr -> setSuspended' adjusterPtr s
+instance (impl ~ (Bool ->  IO ())) => Op (SetSuspended ()) Timer orig impl where
+  runOp _ _ adjuster s = withRef adjuster $ \adjusterPtr -> setSuspended' adjusterPtr s
