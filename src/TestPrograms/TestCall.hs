@@ -110,7 +110,7 @@ globalEventHandler e =
 
 main :: IO ()
 main = do
-  win <- addWindow
+  _ <- addWindow
   print "added Window"
   _ <- FL.addAwakeHandler (print "awake handler's callback data")
   print "added awake handler"

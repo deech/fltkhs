@@ -93,7 +93,6 @@ Executable buttons
   Hs-Source-Dirs: src/TestPrograms
   ghc-Options: -Wall -threaded -fcontext-stack=1024
   Build-Depends: base,fltkhs
-  extra-libraries: fltk,fltk_gl
   ghc-options: -pgml g++ "-optl-Wl,--whole-archive" "-optl-Wl,-Bstatic" "-optl-Wl,-lfltkc" "-optl-Wl,-Bdynamic" "-optl-Wl,--no-whole-archive"
 
 Executable table-simple
@@ -101,7 +100,6 @@ Executable table-simple
   Hs-Source-Dirs: src/Examples
   ghc-Options: -Wall -threaded -fcontext-stack=1024
   Build-Depends: base,fltkhs
-  extra-libraries: fltk,fltk_gl
   ghc-options: -pgml g++ "-optl-Wl,--whole-archive" "-optl-Wl,-Bstatic" "-optl-Wl,-lfltkc" "-optl-Wl,-Bdynamic" "-optl-Wl,--no-whole-archive"
 
 Executable table-sort
@@ -109,5 +107,4 @@ Executable table-sort
   Hs-Source-Dirs: src/Examples
   ghc-Options: -Wall -threaded -fcontext-stack=1024
   Build-Depends: base,fltkhs,process
-  extra-libraries: fltk,fltk_gl
   ghc-options: -pgml g++ "-optl-Wl,--whole-archive" "-optl-Wl,-Bstatic" "-optl-Wl,-lfltkc" "-optl-Wl,-Bdynamic" "-optl-Wl,--no-whole-archive"

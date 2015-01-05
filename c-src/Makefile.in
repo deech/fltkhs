@@ -1,6 +1,7 @@
 FLTKCONFIG=@FLTKCONFIG@
 CXX = $(shell $(FLTKCONFIG) --cxx) $(shell $(FLTKCONFIG) --cxxflags) -Wall -Werror -DINTERNAL_LINKAGE -g -Icpp -I../
-LD = $(CXX) -shared
+CXXSHARED = $(CXX)
+LD = $(CXX) -shared -Wl
 CXXSTATIC = $(CXX) -static
 
 CPPFILES= \
@@ -102,19 +103,28 @@ CPPFILES= \
 
 OBJECTS = $(CPPFILES:.cpp=.o)
 LIBDIR = ../c-lib
-OBJECT_FILES = ../object_files
+SHARED_OBJECT_FILES = ../shared_object_files
+STATIC_OBJECT_FILES = ../static_object_files
 .SILENT:
-all: libfltkc.a
+all: libfltkc.a libfltkc.so
 .SUFFIXES: .cpp .o
 .cpp.o:
-	test -d $(OBJECT_FILES) || mkdir $(OBJECT_FILES)
+	test -d $(STATIC_OBJECT_FILES) || mkdir $(STATIC_OBJECT_FILES)
+	test -d $(SHARED_OBJECT_FILES) || mkdir $(SHARED_OBJECT_FILES)
 	@echo "*** Compiling $<..."
-	$(CXXSTATIC) -c $^ -o $(OBJECT_FILES)/$@
+	$(CXXSTATIC) -c $^ -o $(STATIC_OBJECT_FILES)/$@
+	$(CXXSHARED) -c -fPIC $^ -o $(SHARED_OBJECT_FILES)/$@
 libfltkc.a : $(OBJECTS)
 	test -d $(LIBDIR) || mkdir $(LIBDIR)
 	@echo "*** Linking $@..."
-	(cd $(OBJECT_FILES); \
+	(cd $(STATIC_OBJECT_FILES); \
 	ar rcs $(LIBDIR)/$@ $^;)
+libfltkc.so : $(OBJECTS)
+	test -d $(LIBDIR) || mkdir $(LIBDIR)
+	@echo "*** Linking $@..."
+	(cd $(SHARED_OBJECT_FILES); \
+  $(LD),-soname,$(LIBDIR)/$@ -o $(LIBDIR)/$@ $^);
 clean:
 	test -d $(LIBDIR) && rm -rf $(LIBDIR)
-	test -d $(OBJECT_FILES) && rm -rf $(OBJECT_FILES)
+	test -d $(SHARED_OBJECT_FILES) && rm -rf $(SHARED_OBJECT_FILES)
+	test -d $(STATIC_OBJECT_FILES) && rm -rf $(STATIC_OBJECT_FILES)

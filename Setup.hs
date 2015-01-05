@@ -52,7 +52,7 @@ getHeaders = unsafePerformIO $ do
                                   not (takeBaseName f `isPrefixOf` "Derived") -- but not the extra classes
                            ) contents
   return headerFiles
-objectFileDir = unsafePerformIO getCurrentDirectory ++ "/object_files"
+objectFileDir = unsafePerformIO getCurrentDirectory ++ "/static_object_files"
 getObjectFileDirContents = getDirectoryContents objectFileDir
 
 addIncludeDirs pd =
