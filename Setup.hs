@@ -31,7 +31,8 @@ import qualified Distribution.Simple.UHC  as UHC
 main = defaultMainWithHooks autoconfUserHooks {
          preConf = myPreConf,
          buildHook = myBuildHook,
-         cleanHook = myCleanHook
+         cleanHook = myCleanHook,
+         copyHook = copyCBindings
        }
 
 myPreConf args flags = do
@@ -172,6 +173,17 @@ myBuildHook pkg_descr local_bld_info user_hooks bld_flags =
                                 exe
                                 clbi
              _ -> return ()
+
+copyCBindings :: PackageDescription -> LocalBuildInfo -> UserHooks -> CopyFlags -> IO ()
+copyCBindings pkg_descr lbi uhs flags = do
+    let libPref = libdir . absoluteInstallDirs pkg_descr lbi
+                . fromFlag . copyDest
+                $ flags
+    rawSystemExit (fromFlag $ copyVerbosity flags) "cp"
+        ["c-lib/libfltkc.a", libPref]
+    rawSystemExit (fromFlag $ copyVerbosity flags) "cp"
+        ["c-lib/libfltkc.so", libPref]
+    (copyHook autoconfUserHooks) pkg_descr lbi uhs flags
 
 myCleanHook pd _ uh cf = do
   rawSystemExit normal "make" ["clean"]
