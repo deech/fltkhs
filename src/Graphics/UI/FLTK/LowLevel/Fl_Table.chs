@@ -262,7 +262,7 @@ instance (Parent a Widget, impl ~ (Ref a  ->  IO ())) => Op (Add ()) Table orig 
 instance (Parent a Widget, impl ~ (Ref a -> Int ->  IO ())) => Op (Insert ()) Table orig impl where
   runOp _ _ table wgt n = withRef table $ \tablePtr -> withRef wgt $ \wgtPtr -> insert' tablePtr wgtPtr n
 {# fun unsafe Fl_Table_insert_with_widget as insertWithWidget' { id `Ptr ()',id `Ptr ()',id `Ptr ()' } -> `()' #}
-instance (Parent a Widget, Parent b Widget, impl ~ (Ref a -> Ref b ->  IO (()))) => Op (InsertWithBefore ()) Table orig impl where
+instance (Parent a Widget, Parent b Widget, impl ~ (Ref a -> Ref b ->  IO ())) => Op (InsertWithBefore ()) Table orig impl where
   runOp _ _ self w before = withRef self $ \selfPtr -> withRef w $ \wPtr -> withRef before $ \beforePtr -> insertWithWidget' selfPtr wPtr beforePtr
 {# fun unsafe Fl_Table_begin as begin' { id `Ptr ()' } -> `()' #}
 instance (impl ~ (  IO ())) => Op (Begin ()) Table orig impl where
@@ -333,14 +333,14 @@ instance (impl ~ ( Int ->  IO ())) => Op (SetRowsSuper ()) Table orig impl where
 instance (impl ~ ( Int ->  IO ())) => Op (SetColsSuper ()) Table orig impl where
   runOp _ _ table val = withRef table $ \tablePtr -> setColsSuper' tablePtr val
 {# fun Fl_Table_show_super as showSuper' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance (impl ~ ( IO (()))) => Op (ShowWidgetSuper ()) Table orig impl where
+instance (impl ~ ( IO ())) => Op (ShowWidgetSuper ()) Table orig impl where
   runOp _ _ widget = withRef widget $ \widgetPtr -> showSuper' widgetPtr
 {# fun Fl_Table_show as show' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance (impl ~ ( IO (()))) => Op (ShowWidget ()) Table orig impl where
+instance (impl ~ ( IO ())) => Op (ShowWidget ()) Table orig impl where
   runOp _ _ widget = withRef widget $ \widgetPtr -> show' widgetPtr
 {# fun Fl_Table_hide_super as hideSuper' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance (impl ~ ( IO (()))) => Op (HideSuper ()) Table orig impl where
+instance (impl ~ ( IO ())) => Op (HideSuper ()) Table orig impl where
   runOp _ _ widget = withRef widget $ \widgetPtr -> hideSuper' widgetPtr
 {# fun Fl_Table_hide as hide' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance (impl ~ ( IO (()))) => Op (Hide ()) Table orig impl where
+instance (impl ~ ( IO ())) => Op (Hide ()) Table orig impl where
   runOp _ _ widget = withRef widget $ \widgetPtr -> hide' widgetPtr

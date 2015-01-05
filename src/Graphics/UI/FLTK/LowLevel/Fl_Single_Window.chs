@@ -17,7 +17,7 @@ import Graphics.UI.FLTK.LowLevel.Dispatch
 import Graphics.UI.FLTK.LowLevel.Hierarchy
 import Graphics.UI.FLTK.LowLevel.Fl_Widget
 import Graphics.UI.FLTK.LowLevel.Fl_Window
-import C2HS hiding (cFromEnum, unsafePerformIO, toBool,cToEnum)
+import C2HS hiding (cFromEnum, toBool,cToEnum)
 
 {# fun Fl_Single_Window_New as windowNew' { `Int',`Int' } -> `Ptr ()' id #}
 {# fun Fl_Single_Window_New_WithLabel as windowNewWithLabel' {`Int',`Int',`String'} -> `Ptr ()' id #}
@@ -66,7 +66,7 @@ instance (impl ~ (IO ())) => Op (Destroy ()) SingleWindow orig impl where
   runOp _ _ win = withRef win $ \winPtr -> windowDestroy' winPtr
 
 {# fun Fl_Single_Window_draw_super as drawSuper' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance (impl ~ ( IO (()))) => Op (DrawSuper ()) SingleWindow orig impl where
+instance (impl ~ ( IO ())) => Op (DrawSuper ()) SingleWindow orig impl where
   runOp _ _ window = withRef window $ \windowPtr -> drawSuper' windowPtr
 
 {# fun Fl_Single_Window_handle_super as handleSuper' { id `Ptr ()',`Int' } -> `Int' #}
@@ -74,25 +74,25 @@ instance (impl ~ (Int ->  IO (Int))) => Op (HandleSuper ()) SingleWindow orig im
   runOp _ _ window event = withRef window $ \windowPtr -> handleSuper' windowPtr event
 
 {# fun Fl_Single_Window_resize_super as resizeSuper' { id `Ptr ()',`Int',`Int',`Int',`Int' } -> `()' supressWarningAboutRes #}
-instance (impl ~ (Rectangle -> IO (()))) => Op (ResizeSuper ()) SingleWindow orig impl where
+instance (impl ~ (Rectangle -> IO ())) => Op (ResizeSuper ()) SingleWindow orig impl where
   runOp _ _ window rectangle =
     let (x_pos, y_pos, width, height) = fromRectangle rectangle
     in withRef window $ \windowPtr -> resizeSuper' windowPtr x_pos y_pos width height
 
 {# fun Fl_Single_Window_show_super as showSuper' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance (impl ~ ( IO (()))) => Op (ShowWidgetSuper ()) SingleWindow orig impl where
+instance (impl ~ ( IO ())) => Op (ShowWidgetSuper ()) SingleWindow orig impl where
   runOp _ _ window = withRef window $ \windowPtr -> showSuper' windowPtr
 
 {# fun Fl_Single_Window_hide_super as hideSuper' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance (impl ~ ( IO (()))) => Op (HideSuper ()) SingleWindow orig impl where
+instance (impl ~ ( IO ())) => Op (HideSuper ()) SingleWindow orig impl where
   runOp _ _ window = withRef window $ \windowPtr -> hideSuper' windowPtr
 
 {# fun Fl_Single_Window_hide as hide' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance (impl ~ ( IO (()))) => Op (Hide ()) SingleWindow orig impl where
+instance (impl ~ ( IO ())) => Op (Hide ()) SingleWindow orig impl where
   runOp _ _ window = withRef window $ \windowPtr -> hide' windowPtr
 
 {# fun Fl_Single_Window_flush_super as flushSuper' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance (impl ~ ( IO (()))) => Op (FlushSuper ()) SingleWindow orig impl where
+instance (impl ~ ( IO ())) => Op (FlushSuper ()) SingleWindow orig impl where
   runOp _ _ window = withRef window $ \windowPtr -> flushSuper' windowPtr
 
 {# fun Fl_Single_Window_show as windowShow' {id `Ptr ()'} -> `()' supressWarningAboutRes #}
@@ -105,7 +105,7 @@ instance (impl ~ (Event -> IO Int)) => Op (Handle ()) SingleWindow orig impl whe
   runOp _ _ window event = withRef window (\p -> windowHandle' p (fromIntegral . fromEnum $ event))
 
 {# fun Fl_Single_Window_resize as resize' { id `Ptr ()',`Int',`Int',`Int',`Int' } -> `()' supressWarningAboutRes #}
-instance (impl ~ (Rectangle -> IO (()))) => Op (Resize ()) SingleWindow orig impl where
+instance (impl ~ (Rectangle -> IO ())) => Op (Resize ()) SingleWindow orig impl where
   runOp _ _ window rectangle = withRef window $ \windowPtr -> do
                                  let (x_pos,y_pos,w_pos,h_pos) = fromRectangle rectangle
                                  resize' windowPtr x_pos y_pos w_pos h_pos

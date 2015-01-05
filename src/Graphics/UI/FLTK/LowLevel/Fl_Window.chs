@@ -167,7 +167,7 @@ instance (impl ~ (IO ())) => Op (Destroy ()) Window orig impl where
   runOp _ _ win = withRef win $ \winPtr -> windowDestroy' winPtr
 
 {# fun Fl_Window_draw_super as drawSuper' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance (impl ~ ( IO (()))) => Op (DrawSuper ()) Window orig impl where
+instance (impl ~ ( IO ())) => Op (DrawSuper ()) Window orig impl where
   runOp _ _ window = withRef window $ \windowPtr -> drawSuper' windowPtr
 
 {# fun Fl_Window_handle_super as handleSuper' { id `Ptr ()',`Int' } -> `Int' #}
@@ -175,21 +175,21 @@ instance (impl ~ (Int ->  IO (Int))) => Op (HandleSuper ()) Window orig impl whe
   runOp _ _ window event = withRef window $ \windowPtr -> handleSuper' windowPtr event
 
 {# fun Fl_Window_resize_super as resizeSuper' { id `Ptr ()',`Int',`Int',`Int',`Int' } -> `()' supressWarningAboutRes #}
-instance (impl ~ (Rectangle -> IO (()))) => Op (ResizeSuper ()) Window orig impl where
+instance (impl ~ (Rectangle -> IO ())) => Op (ResizeSuper ()) Window orig impl where
   runOp _ _ window rectangle =
     let (x_pos, y_pos, width, height) = fromRectangle rectangle
     in withRef window $ \windowPtr -> resizeSuper' windowPtr x_pos y_pos width height
 
 {# fun Fl_Window_show_super as showSuper' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance (impl ~ ( IO (()))) => Op (ShowWidgetSuper ()) Window orig impl where
+instance (impl ~ ( IO ())) => Op (ShowWidgetSuper ()) Window orig impl where
   runOp _ _ window = withRef window $ \windowPtr -> showSuper' windowPtr
 
 {# fun Fl_Window_hide_super as hideSuper' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance (impl ~ ( IO (()))) => Op (HideSuper ()) Window orig impl where
+instance (impl ~ ( IO ())) => Op (HideSuper ()) Window orig impl where
   runOp _ _ window = withRef window $ \windowPtr -> hideSuper' windowPtr
 
 {# fun Fl_Window_flush_super as flushSuper' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance (impl ~ ( IO (()))) => Op (FlushSuper ()) Window orig impl where
+instance (impl ~ ( IO ())) => Op (FlushSuper ()) Window orig impl where
   runOp _ _ window = withRef window $ \windowPtr -> flushSuper' windowPtr
 
 {# fun Fl_Window_show as windowShow' {id `Ptr ()'} -> `()' supressWarningAboutRes #}
@@ -201,7 +201,7 @@ instance (impl ~ (Event -> IO Int)) => Op (Handle ()) Window orig impl where
   runOp _ _ window event = withRef window (\p -> windowHandle' p (fromIntegral . fromEnum $ event))
 
 {# fun Fl_Window_resize as resize' { id `Ptr ()',`Int',`Int',`Int',`Int' } -> `()' supressWarningAboutRes #}
-instance (impl ~ (Rectangle -> IO (()))) => Op (Resize ()) Window orig impl where
+instance (impl ~ (Rectangle -> IO ())) => Op (Resize ()) Window orig impl where
   runOp _ _ window rectangle = withRef window $ \windowPtr -> do
                                  let (x_pos,y_pos,w_pos,h_pos) = fromRectangle rectangle
                                  resize' windowPtr x_pos y_pos w_pos h_pos
@@ -214,7 +214,7 @@ instance (impl ~ ((Ref orig -> IO ()) -> IO ())) => Op (SetCallback ()) Window o
                            windowSetCallback' (castPtr p) callbackPtr)
 
 {# fun Fl_Window_hide as hide' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance (impl ~ ( IO (()))) => Op (Hide ()) Window orig impl where
+instance (impl ~ ( IO ())) => Op (Hide ()) Window orig impl where
   runOp _ _ window = withRef window $ \windowPtr -> hide' windowPtr
 
 {# fun Fl_Window_changed as changed' { id `Ptr ()' } -> `Int' #}
@@ -222,12 +222,12 @@ instance (impl ~ ( IO (Int))) => Op (Changed ()) Window orig impl where
   runOp _ _ win = withRef win $ \winPtr -> changed' winPtr
 
 {# fun Fl_Window_fullscreen as fullscreen' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance (impl ~ ( IO (()))) => Op (MakeFullscreen ()) Window orig impl where
+instance (impl ~ ( IO ())) => Op (MakeFullscreen ()) Window orig impl where
   runOp _ _ win = withRef win $ \winPtr -> fullscreen' winPtr
 
 {# fun Fl_Window_fullscreen_off as fullscreenOff' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
 {# fun Fl_Window_fullscreen_off_with_resize as fullscreenOffWithResize' { id `Ptr ()',`Int',`Int',`Int',`Int' } -> `()' supressWarningAboutRes #}
-instance (impl ~ (Maybe Rectangle ->  IO (()))) => Op (FullscreenOff ()) Window orig impl where
+instance (impl ~ (Maybe Rectangle ->  IO ())) => Op (FullscreenOff ()) Window orig impl where
   runOp _ _ win (Just rectangle) =
     withRef win $ \winPtr ->
         let (x_pos, y_pos, width, height) = fromRectangle rectangle
@@ -236,11 +236,11 @@ instance (impl ~ (Maybe Rectangle ->  IO (()))) => Op (FullscreenOff ()) Window 
     withRef win $ \winPtr -> fullscreenOff' winPtr
 
 {# fun Fl_Window_set_border as setBorder' { id `Ptr ()', fromBool `Bool' } -> `()' supressWarningAboutRes #}
-instance (impl ~ (Bool ->  IO (()))) => Op (SetBorder ()) Window orig impl where
+instance (impl ~ (Bool ->  IO ())) => Op (SetBorder ()) Window orig impl where
   runOp _ _ win b = withRef win $ \winPtr -> setBorder' winPtr b
 
 {# fun Fl_Window_clear_border as clearBorder' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance (impl ~ ( IO (()))) => Op (ClearBorder ()) Window orig impl where
+instance (impl ~ ( IO ())) => Op (ClearBorder ()) Window orig impl where
   runOp _ _ win = withRef win $ \winPtr -> clearBorder' winPtr
 
 {# fun Fl_Window_border as border' { id `Ptr ()' } -> `Bool' toBool#}
@@ -248,7 +248,7 @@ instance (impl ~ ( IO (Bool))) => Op (GetBorder ()) Window orig impl where
   runOp _ _ win = withRef win $ \winPtr -> border' winPtr
 
 {# fun Fl_Window_set_override as setOverride' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance (impl ~ ( IO (()))) => Op (SetOverride ()) Window orig impl where
+instance (impl ~ ( IO ())) => Op (SetOverride ()) Window orig impl where
   runOp _ _ win = withRef win $ \winPtr -> setOverride' winPtr
 
 {# fun Fl_Window_override as override' { id `Ptr ()' } -> `Bool' toBool #}
@@ -256,7 +256,7 @@ instance (impl ~ ( IO (Bool))) => Op (GetOverride ()) Window orig impl where
   runOp _ _ win = withRef win $ \winPtr -> override' winPtr
 
 {# fun Fl_Window_set_modal as setModal' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance (impl ~ ( IO (()))) => Op (SetModal ()) Window orig impl where
+instance (impl ~ ( IO ())) => Op (SetModal ()) Window orig impl where
   runOp _ _ win = withRef win $ \winPtr -> setModal' winPtr
 
 {# fun Fl_Window_modal as modal' { id `Ptr ()' } -> `Bool' toBool #}
@@ -264,7 +264,7 @@ instance (impl ~ ( IO (Bool))) => Op (GetModal ()) Window orig impl where
   runOp _ _ win = withRef win $ \winPtr -> modal' winPtr
 
 {# fun Fl_Window_set_non_modal as setNonModal' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance (impl ~ ( IO (()))) => Op (SetNonModal ()) Window orig impl where
+instance (impl ~ ( IO ())) => Op (SetNonModal ()) Window orig impl where
   runOp _ _ win = withRef win $ \winPtr -> setNonModal' winPtr
 
 {# fun Fl_Window_non_modal as nonModal' { id `Ptr ()' } -> `Bool' toBool #}
@@ -272,7 +272,7 @@ instance (impl ~ ( IO (Bool))) => Op (NonModal ()) Window orig impl where
   runOp _ _ win = withRef win $ \winPtr -> nonModal' winPtr
 
 {# fun Fl_Window_set_menu_window as setMenuWindow' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance (impl ~ ( IO (()))) => Op (SetMenuWindow ()) Window orig impl where
+instance (impl ~ ( IO ())) => Op (SetMenuWindow ()) Window orig impl where
   runOp _ _ win = withRef win $ \winPtr -> setMenuWindow' winPtr
 
 {# fun Fl_Window_menu_window as menuWindow' { id `Ptr ()' } -> `Bool' toBool #}
@@ -280,7 +280,7 @@ instance (impl ~ ( IO (Bool))) => Op (GetMenuWindow ()) Window orig impl where
   runOp _ _ win = withRef win $ \winPtr -> menuWindow' winPtr
 
 {# fun Fl_Window_set_tooltip_window as setTooltipWindow' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance (impl ~ ( IO (()))) => Op (SetTooltipWindow ()) Window orig impl where
+instance (impl ~ ( IO ())) => Op (SetTooltipWindow ()) Window orig impl where
   runOp _ _ win = withRef win $ \winPtr -> setTooltipWindow' winPtr
 
 {# fun Fl_Window_tooltip_window as tooltipWindow' { id `Ptr ()' } -> `Bool' toBool #}
@@ -305,15 +305,15 @@ instance (impl ~ (PositionSpec -> Maybe Bool -> IO ())) => Op (HotSpot ()) Windo
                   withRef templateWidget $ \templatePtr ->
                       hotspotWithWidget' winPtr templatePtr
 {# fun Fl_Window_free_position as freePosition' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance (impl ~ ( IO (()))) => Op (FreePosition ()) Window orig impl where
+instance (impl ~ ( IO ())) => Op (FreePosition ()) Window orig impl where
   runOp _ _ win = withRef win $ \winPtr -> freePosition' winPtr
 
 {# fun Fl_Window_size_range as sizeRange' { id `Ptr ()',`Int',`Int' } -> `()' supressWarningAboutRes #}
 {# fun Fl_Window_size_range_with_args as sizeRangeWithArgs' { id `Ptr ()',`Int',`Int', id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance (impl ~ (Int -> Int -> IO (()))) => Op (SizeRange ()) Window orig impl where
+instance (impl ~ (Int -> Int -> IO ())) => Op (SizeRange ()) Window orig impl where
   runOp _ _ win minw' minh' =
     withRef win $ \winPtr -> sizeRange' winPtr minw' minh'
-instance (impl ~ (Int -> Int -> OptionalSizeRangeArgs ->  IO (()))) => Op (SizeRangeWithArgs ()) Window orig impl where
+instance (impl ~ (Int -> Int -> OptionalSizeRangeArgs ->  IO ())) => Op (SizeRangeWithArgs ()) Window orig impl where
   runOp _ _ win minw' minh' args =
     withRef win $ \winPtr -> do
       structPtr <- optionalSizeRangeArgsToStruct args
@@ -328,19 +328,19 @@ instance (impl ~ ( IO (String))) => Op (GetIconlabel ()) Window orig impl where
   runOp _ _ win = withRef win $ \winPtr -> iconlabel' winPtr
 
 {# fun Fl_Window_set_label as setLabel' { id `Ptr ()',`String' } -> `()' supressWarningAboutRes #}
-instance (impl ~ (String ->  IO (()))) => Op (SetLabel ()) Window orig impl where
+instance (impl ~ (String ->  IO ())) => Op (SetLabel ()) Window orig impl where
   runOp _ _ win l' = withRef win $ \winPtr -> setLabel' winPtr l'
 
 {# fun Fl_Window_set_iconlabel as setIconlabel' { id `Ptr ()',`String' } -> `()' supressWarningAboutRes #}
-instance (impl ~ (String ->  IO (()))) => Op (SetIconlabel ()) Window orig impl where
+instance (impl ~ (String ->  IO ())) => Op (SetIconlabel ()) Window orig impl where
   runOp _ _ win l' = withRef win $ \winPtr -> setIconlabel' winPtr l'
 
 {# fun Fl_Window_set_label_with_iconlabel as setLabelWithIconlabel' { id `Ptr ()',`String',`String' } -> `()' supressWarningAboutRes #}
-instance (impl ~ (String -> String ->  IO (()))) => Op (SetLabelWithIconlabel ()) Window orig impl where
+instance (impl ~ (String -> String ->  IO ())) => Op (SetLabelWithIconlabel ()) Window orig impl where
   runOp _ _ win label iconlabel = withRef win $ \winPtr -> setLabelWithIconlabel' winPtr label iconlabel
 
 {# fun Fl_Window_copy_label as copyLabel' { id `Ptr ()',`String' } -> `()' supressWarningAboutRes #}
-instance (impl ~ (String ->  IO (()))) => Op (CopyLabel ()) Window orig impl where
+instance (impl ~ (String ->  IO ())) => Op (CopyLabel ()) Window orig impl where
   runOp _ _ win a = withRef win $ \winPtr -> copyLabel' winPtr a
 
 {# fun Fl_Window_xclass as xclass' { id `Ptr ()' } -> `String' #}
@@ -348,7 +348,7 @@ instance (impl ~ ( IO (String))) => Op (GetXclass ()) Window orig impl where
   runOp _ _ win = withRef win $ \winPtr -> xclass' winPtr
 
 {# fun Fl_Window_set_xclass as setXclass' { id `Ptr ()',`String' } -> `()' supressWarningAboutRes #}
-instance (impl ~ (String ->  IO (()))) => Op (SetXclass ()) Window orig impl where
+instance (impl ~ (String ->  IO ())) => Op (SetXclass ()) Window orig impl where
   runOp _ _ win c = withRef win $ \winPtr -> setXclass' winPtr c
 
 {# fun Fl_Window_icon as icon' { id `Ptr ()' } -> `Ptr ()' id #}
@@ -356,7 +356,7 @@ instance (impl ~ ( IO (Ptr ()))) => Op (GetIcon ()) Window orig impl where
   runOp _ _ win = withRef win $ \winPtr -> icon' winPtr
 
 {# fun Fl_Window_set_icon as setIcon' { id `Ptr ()', id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance (impl ~ (Ptr () ->  IO (()))) => Op (SetIcon ()) Window orig impl where
+instance (impl ~ (Ptr () ->  IO ())) => Op (SetIcon ()) Window orig impl where
   runOp _ _ win bitmap = withRef win $ \winPtr -> setIcon' winPtr bitmap
 
 {# fun Fl_Window_shown as shown' { id `Ptr ()' } -> `Bool' toBool #}
@@ -364,7 +364,7 @@ instance (impl ~ ( IO (Bool))) => Op (Shown ()) Window orig impl where
   runOp _ _ win = withRef win $ \winPtr -> shown' winPtr
 
 {# fun Fl_Window_iconize as iconize' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance (impl ~ ( IO (()))) => Op (Iconize ()) Window orig impl where
+instance (impl ~ ( IO ())) => Op (Iconize ()) Window orig impl where
   runOp _ _ win = withRef win $ \winPtr -> iconize' winPtr
 
 {# fun Fl_Window_x_root as xRoot' { id `Ptr ()' } -> `Int' #}
@@ -380,7 +380,7 @@ currentWindow ::  (Parent a Window) => IO (Ref a)
 currentWindow = current' >>= toRef
 
 {# fun Fl_Window_make_current as makeCurrent' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance (impl ~ ( IO (()))) => Op (MakeCurrent ()) Window orig impl where
+instance (impl ~ ( IO ())) => Op (MakeCurrent ()) Window orig impl where
   runOp _ _ win = withRef win $ \winPtr -> makeCurrent' winPtr
 
 {# fun Fl_Window_set_cursor_with_bg as setCursorWithBg' { id `Ptr ()',cFromEnum `CursorType',cFromColor `Color' } -> `()' supressWarningAboutRes #}
@@ -389,7 +389,7 @@ instance (impl ~ ( IO (()))) => Op (MakeCurrent ()) Window orig impl where
 {# fun Fl_Window_set_cursor as setCursor' { id `Ptr ()',cFromEnum `CursorType' } -> `()' supressWarningAboutRes #}
 instance (impl ~ (CursorType -> IO ())) => Op (SetCursor ()) Window orig impl where
   runOp _ _ win cursor =  withRef win $ \winPtr -> setCursor' winPtr cursor
-instance (impl ~ (CursorType -> (Maybe Color, Maybe Color) ->  IO (()))) => Op (SetCursorWithFgBg ()) Window orig impl where
+instance (impl ~ (CursorType -> (Maybe Color, Maybe Color) ->  IO ())) => Op (SetCursorWithFgBg ()) Window orig impl where
   runOp _ _ win cursor fgbg =
     case fgbg of
       ((Just fg), (Just bg)) -> withRef win $ \winPtr -> setCursorWithFgBg' winPtr cursor fg bg
@@ -401,7 +401,7 @@ instance (impl ~ (CursorType -> (Maybe Color, Maybe Color) ->  IO (()))) => Op (
 {# fun Fl_Window_set_default_cursor_with_fg as setDefaultCursorWithFg' { id `Ptr ()',cFromEnum `CursorType',cFromColor `Color' } -> `()' supressWarningAboutRes #}
 {# fun Fl_Window_set_default_cursor_with_fg_bg as setDefaultCursorWithFgBg' { id `Ptr ()',cFromEnum `CursorType',cFromColor `Color',cFromColor `Color' } -> `()' supressWarningAboutRes #}
 {# fun Fl_Window_set_default_cursor as setDefaultCursor' { id `Ptr ()',cFromEnum `CursorType' } -> `()' supressWarningAboutRes #}
-instance (impl ~ (CursorType -> IO (()))) => Op (SetDefaultCursor ()) Window orig impl where
+instance (impl ~ (CursorType -> IO ())) => Op (SetDefaultCursor ()) Window orig impl where
   runOp _ _ win cursor = withRef win $ \winPtr -> setDefaultCursor' winPtr cursor
 instance (impl ~ (CursorType -> (Maybe Color, Maybe Color) -> IO ())) => Op (SetDefaultCursorWithFgBg ()) Window orig impl where
   runOp _ _ win cursor fgbg =

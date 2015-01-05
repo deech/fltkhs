@@ -47,23 +47,23 @@ instance (impl ~ (Int ->  IO (Int))) => Op (HandleSuper ()) MenuPrim orig impl w
 instance (impl ~ (Event -> IO Int)) => Op (Handle ()) MenuPrim orig impl where
   runOp _ _ menu_ event = withRef menu_ (\p -> menu_Handle' p (fromIntegral . fromEnum $ event))
 {# fun Fl_Menu__resize_super as resizeSuper' { id `Ptr ()',`Int',`Int',`Int',`Int' } -> `()' supressWarningAboutRes #}
-instance (impl ~ (Rectangle -> IO (()))) => Op (ResizeSuper ()) MenuPrim orig impl where
+instance (impl ~ (Rectangle -> IO ())) => Op (ResizeSuper ()) MenuPrim orig impl where
   runOp _ _ menu_ rectangle =
     let (x_pos, y_pos, width, height) = fromRectangle rectangle
     in withRef menu_ $ \menu_Ptr -> resizeSuper' menu_Ptr x_pos y_pos width height
 {# fun Fl_Menu__resize as resize' { id `Ptr ()',`Int',`Int',`Int',`Int' } -> `()' supressWarningAboutRes #}
-instance (impl ~ (Rectangle -> IO (()))) => Op (Resize ()) MenuPrim orig impl where
+instance (impl ~ (Rectangle -> IO ())) => Op (Resize ()) MenuPrim orig impl where
   runOp _ _ menu_ rectangle = withRef menu_ $ \menu_Ptr -> do
                                  let (x_pos,y_pos,w_pos,h_pos) = fromRectangle rectangle
                                  resize' menu_Ptr x_pos y_pos w_pos h_pos
 {# fun Fl_Menu__hide_super as hideSuper' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance (impl ~ ( IO (()))) => Op (HideSuper ()) MenuPrim orig impl where
+instance (impl ~ ( IO ())) => Op (HideSuper ()) MenuPrim orig impl where
   runOp _ _ menu_ = withRef menu_ $ \menu_Ptr -> hideSuper' menu_Ptr
 {# fun Fl_Menu__hide as hide' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance (impl ~ ( IO (()))) => Op (Hide ()) MenuPrim orig impl where
+instance (impl ~ ( IO ())) => Op (Hide ()) MenuPrim orig impl where
   runOp _ _ menu_ = withRef menu_ $ \menu_Ptr -> hide' menu_Ptr
 {# fun Fl_Menu__show_super as showSuper' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance (impl ~ ( IO (()))) => Op (ShowWidgetSuper ()) MenuPrim orig impl where
+instance (impl ~ ( IO ())) => Op (ShowWidgetSuper ()) MenuPrim orig impl where
   runOp _ _ menu_ = withRef menu_ $ \menu_Ptr -> showSuper' menu_Ptr
 {# fun Fl_Menu__show as menu_Show' {id `Ptr ()'} -> `()' supressWarningAboutRes #}
 instance (impl ~ (IO ())) => Op (ShowWidget ()) MenuPrim orig impl where

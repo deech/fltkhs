@@ -31,11 +31,11 @@ instance (impl ~ ( IO ())) => Op (Destroy ()) Group orig impl where
   runOp _ _ group = withRef group $ \groupPtr -> groupDestroy' groupPtr
 
 {# fun Fl_Group_begin as begin' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance (impl ~ ( IO (()))) => Op (Begin ()) Group orig impl where
+instance (impl ~ ( IO ())) => Op (Begin ()) Group orig impl where
   runOp _ _ group = withRef group $ \groupPtr -> begin' groupPtr
 
 {# fun Fl_Group_end as end' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance (impl ~ (IO (()))) => Op (End ()) Group orig impl where
+instance (impl ~ (IO ())) => Op (End ()) Group orig impl where
   runOp _ _ group = withRef group $ \groupPtr -> end' groupPtr
 
 {# fun Fl_Group_find as find' { id `Ptr ()',id `Ptr ()' } -> `Int' #}
@@ -43,23 +43,23 @@ instance (Parent a Widget, impl ~ (Ref a ->  IO (Int))) => Op (Find ()) Group or
   runOp _ _ group w = withRef group $ \groupPtr -> withRef w $ \wPtr -> find' groupPtr wPtr
 
 {# fun Fl_Group_add as add' { id `Ptr ()',id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance (Parent a Widget, impl ~ (Ref a->  IO (()))) => Op (Add ()) Group orig impl where
+instance (Parent a Widget, impl ~ (Ref a->  IO ())) => Op (Add ()) Group orig impl where
   runOp _ _ group w = withRef group $ \groupPtr -> withRef w $ \wPtr -> add' groupPtr wPtr
 
 {# fun Fl_Group_insert as insert' { id `Ptr ()',id `Ptr ()',`Int' } -> `()' supressWarningAboutRes #}
-instance (Parent a Widget, impl ~ (Ref a-> Int ->  IO (()))) => Op (Insert ()) Group orig impl where
+instance (Parent a Widget, impl ~ (Ref a-> Int ->  IO ())) => Op (Insert ()) Group orig impl where
   runOp _ _ group w i = withRef group $ \groupPtr -> withRef w $ \wPtr -> insert' groupPtr wPtr i
 
 {# fun Fl_Group_remove_index as removeIndex' { id `Ptr ()',`Int' } -> `()' supressWarningAboutRes #}
-instance (impl ~ ( Int ->  IO (()))) => Op (RemoveIndex ()) Group orig impl where
+instance (impl ~ ( Int ->  IO ())) => Op (RemoveIndex ()) Group orig impl where
   runOp _ _ group index' = withRef group $ \groupPtr -> removeIndex' groupPtr index'
 
 {# fun Fl_Group_remove_widget as removeWidget' { id `Ptr ()',id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance (Parent a Widget, impl ~ (Ref a ->  IO (()))) => Op (RemoveWidget ()) Group orig impl where
+instance (Parent a Widget, impl ~ (Ref a ->  IO ())) => Op (RemoveWidget ()) Group orig impl where
   runOp _ _ group w = withRef group $ \groupPtr -> withRef w $ \wPtr -> removeWidget' groupPtr wPtr
 
 {# fun Fl_Group_clear as clear' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance (impl ~ (IO (()))) => Op (Clear ()) Group orig impl where
+instance (impl ~ (IO ())) => Op (Clear ()) Group orig impl where
   runOp _ _ group = withRef group $ \groupPtr -> clear' groupPtr
 
 {# fun Fl_Group_set_resizable as setResizable' { id `Ptr ()',id `Ptr ()' } -> `()' supressWarningAboutRes #}
@@ -71,11 +71,11 @@ instance (impl ~ ( IO (Ref Widget))) => Op (GetResizable ()) Group orig impl whe
   runOp _ _ group = withRef group $ \groupPtr -> resizable' groupPtr >>= toRef
 
 {# fun Fl_Group_add_resizable as addResizable' { id `Ptr ()',id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance (Parent a Widget, impl ~ (Ref a ->  IO (()))) => Op (AddResizable ()) Group orig impl where
+instance (Parent a Widget, impl ~ (Ref a ->  IO ())) => Op (AddResizable ()) Group orig impl where
   runOp _ _ group o = withRef group $ \groupPtr -> withRef o $ \oPtr -> addResizable' groupPtr oPtr
 
 {# fun Fl_Group_init_sizes as initSizes' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance (impl ~ ( IO (()))) => Op (InitSizes ()) Group orig impl where
+instance (impl ~ ( IO ())) => Op (InitSizes ()) Group orig impl where
   runOp _ _ group = withRef group $ \groupPtr -> initSizes' groupPtr
 
 {# fun Fl_Group_children as children' { id `Ptr ()' } -> `Int' #}
@@ -83,7 +83,7 @@ instance (impl ~ ( IO (Int))) => Op (Children ()) Group orig impl where
   runOp _ _ group = withRef group $ \groupPtr -> children' groupPtr
 
 {# fun Fl_Group_set_clip_children as setClipChildren' { id `Ptr ()',`Int' } -> `()' supressWarningAboutRes #}
-instance (impl ~ (Int ->  IO (()))) => Op (SetClipChildren ()) Group orig impl where
+instance (impl ~ (Int ->  IO ())) => Op (SetClipChildren ()) Group orig impl where
   runOp _ _ group c = withRef group $ \groupPtr -> setClipChildren' groupPtr c
 
 {# fun Fl_Group_clip_children as clipChildren' { id `Ptr ()' } -> `Int' #}
@@ -91,7 +91,7 @@ instance (impl ~ ( IO (Int))) => Op (ClipChildren ()) Group orig impl where
   runOp _ _ group = withRef group $ \groupPtr -> clipChildren' groupPtr
 
 {# fun Fl_Group_focus as focus' { id `Ptr ()',id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance (Parent a Widget, impl ~ (Ref a ->  IO (()))) => Op (Focus ()) Group orig impl where
+instance (Parent a Widget, impl ~ (Ref a ->  IO ())) => Op (Focus ()) Group orig impl where
   runOp _ _ group w = withRef group $ \groupPtr -> withRef w $ \wPtr -> focus' groupPtr wPtr
 
 {# fun Fl_Group__ddfdesign_kludge as ddfdesignKludge' { id `Ptr ()' } -> `Ptr ()' id #}
@@ -99,7 +99,7 @@ instance (impl ~ (IO (Ref Widget))) => Op (DdfdesignKludge ()) Group orig impl w
   runOp _ _ group = withRef group $ \groupPtr -> ddfdesignKludge' groupPtr >>= toRef
 
 {# fun Fl_Group_insert_with_before as insertWithBefore' { id `Ptr ()',id `Ptr ()',id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance (Parent a Widget, impl ~ (Ref a -> Ref b ->  IO (()))) => Op (InsertWithBefore ()) Group orig impl where
+instance (Parent a Widget, impl ~ (Ref a -> Ref b ->  IO ())) => Op (InsertWithBefore ()) Group orig impl where
   runOp _ _ self w before = withRef self $ \selfPtr -> withRef w $ \wPtr -> withRef before $ \beforePtr -> insertWithBefore' selfPtr wPtr beforePtr
 
 {# fun Fl_Group_array as array' { id `Ptr ()' } -> `Ptr (Ptr ())' id#}

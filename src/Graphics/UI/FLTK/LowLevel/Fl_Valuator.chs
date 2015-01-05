@@ -43,32 +43,32 @@ instance (impl ~ (IO ())) => Op (Destroy ()) Valuator orig impl where
 instance (impl ~ (Event -> IO Int)) => Op (Handle ()) Valuator orig impl where
   runOp _ _ valuator event = withRef valuator (\p -> valuatorHandle' p (fromIntegral . fromEnum $ event))
 {# fun Fl_Valuator_resize_super as resizeSuper' { id `Ptr ()',`Int',`Int',`Int',`Int' } -> `()' supressWarningAboutRes #}
-instance (impl ~ (Rectangle ->  IO (()))) => Op (ResizeSuper ()) Valuator orig impl where
+instance (impl ~ (Rectangle ->  IO ())) => Op (ResizeSuper ()) Valuator orig impl where
   runOp _ _ valuator rectangle = withRef valuator $ \valuatorPtr -> do
                                  let (x_pos,y_pos,w_pos,h_pos) = fromRectangle rectangle
                                  resizeSuper' valuatorPtr x_pos y_pos w_pos h_pos
 {# fun Fl_Valuator_resize as resize' { id `Ptr ()',`Int',`Int',`Int',`Int' } -> `()' supressWarningAboutRes #}
-instance (impl ~ (Rectangle -> IO (()))) => Op (Resize ()) Valuator orig impl where
+instance (impl ~ (Rectangle -> IO ())) => Op (Resize ()) Valuator orig impl where
   runOp _ _ valuator rectangle = withRef valuator $ \valuatorPtr -> do
                                  let (x_pos,y_pos,w_pos,h_pos) = fromRectangle rectangle
                                  resize' valuatorPtr x_pos y_pos w_pos h_pos
 {# fun unsafe Fl_Valuator_bounds as bounds' { id `Ptr ()',`Double',`Double' } -> `()' supressWarningAboutRes #}
-instance (impl ~ (Double -> Double ->  IO (()))) => Op (GetBounds ()) Valuator orig impl where
+instance (impl ~ (Double -> Double ->  IO ())) => Op (GetBounds ()) Valuator orig impl where
   runOp _ _ valuator a b = withRef valuator $ \valuatorPtr -> bounds' valuatorPtr a b
 {# fun unsafe Fl_Valuator_minimum as minimum' { id `Ptr ()' } -> `Double' #}
 instance (impl ~ ( IO (Double))) => Op (GetMinimum ()) Valuator orig impl where
   runOp _ _ valuator = withRef valuator $ \valuatorPtr -> minimum' valuatorPtr
 {# fun unsafe Fl_Valuator_set_minimum as setMinimum' { id `Ptr ()',`Double' } -> `()' supressWarningAboutRes #}
-instance (impl ~ (Double ->  IO (()))) => Op (SetMinimum ()) Valuator orig impl where
+instance (impl ~ (Double ->  IO ())) => Op (SetMinimum ()) Valuator orig impl where
   runOp _ _ valuator a = withRef valuator $ \valuatorPtr -> setMinimum' valuatorPtr a
 {# fun unsafe Fl_Valuator_maximum as maximum' { id `Ptr ()' } -> `Double' #}
 instance (impl ~ ( IO (Double))) => Op (GetMaximum ()) Valuator orig impl where
   runOp _ _ valuator = withRef valuator $ \valuatorPtr -> maximum' valuatorPtr
 {# fun unsafe Fl_Valuator_set_maximum as setMaximum' { id `Ptr ()',`Double' } -> `()' supressWarningAboutRes #}
-instance (impl ~ (Double ->  IO (()))) => Op (SetMaximum ()) Valuator orig impl where
+instance (impl ~ (Double ->  IO ())) => Op (SetMaximum ()) Valuator orig impl where
   runOp _ _ valuator a = withRef valuator $ \valuatorPtr -> setMaximum' valuatorPtr a
 {# fun unsafe Fl_Valuator_range as range' { id `Ptr ()',`Double',`Double' } -> `()' supressWarningAboutRes #}
-instance (impl ~ (Double -> Double ->  IO (()))) => Op (GetRange ()) Valuator orig impl where
+instance (impl ~ (Double -> Double ->  IO ())) => Op (GetRange ()) Valuator orig impl where
   runOp _ _ valuator a b = withRef valuator $ \valuatorPtr -> range' valuatorPtr a b
 {# fun unsafe Fl_Valuator_set_step_with_a_b as setStepWithAB' { id `Ptr ()', `Double', `Int' } -> `()' supressWarningAboutRes #}
 instance (impl ~ (Rational -> IO ())) => Op (SetStep ()) Valuator orig impl where
@@ -77,7 +77,7 @@ instance (impl ~ (Rational -> IO ())) => Op (SetStep ()) Valuator orig impl wher
 instance (impl ~ ( IO (Rational))) => Op (GetStep ()) Valuator orig impl where
   runOp _ _ valuator = withRef valuator $ \valuatorPtr -> step' valuatorPtr >>= \r -> return $ approxRational r 0
 {# fun unsafe Fl_Valuator_precision as precision' { id `Ptr ()',`Int' } -> `()' supressWarningAboutRes #}
-instance (impl ~ (Int ->  IO (()))) => Op (Precision ()) Valuator orig impl where
+instance (impl ~ (Int ->  IO ())) => Op (Precision ()) Valuator orig impl where
   runOp _ _ valuator p' = withRef valuator $ \valuatorPtr -> precision' valuatorPtr p'
 {# fun unsafe Fl_Valuator_value as value' { id `Ptr ()' } -> `Double' #}
 instance (impl ~ ( IO (Double))) => Op (GetValue ()) Valuator orig impl where

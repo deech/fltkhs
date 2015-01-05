@@ -213,11 +213,11 @@ instance (Parent a Group, impl ~ (Ref a -> IO ())) => Op (SetParent ()) Widget o
 instance (impl ~ IO (Word8)) => Op (GetType_ ()) Widget orig impl where
   runOp _ _ widget = withRef widget $ \widgetPtr -> type' widgetPtr
 {# fun Fl_Widget_set_type as setType' { id `Ptr ()',`Word8' } -> `()' supressWarningAboutRes #}
-instance (impl ~ (Word8 ->  IO (()))) => Op (SetType ()) Widget orig impl where
+instance (impl ~ (Word8 ->  IO ())) => Op (SetType ()) Widget orig impl where
   runOp _ _ widget t = withRef widget $ \widgetPtr -> setType' widgetPtr t
 {# fun Fl_Widget_draw_label as drawLabel' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
 {# fun Fl_Widget_draw_label_with_xywh_alignment as drawLabelWithXywhAlignment' { id `Ptr ()',`Int',`Int',`Int',`Int',cFromEnum `AlignType' } -> `()' supressWarningAboutRes #}
-instance (impl ~ (Maybe (Rectangle,AlignType)->  IO (()))) => Op (DrawLabel ()) Widget orig impl where
+instance (impl ~ (Maybe (Rectangle,AlignType)->  IO ())) => Op (DrawLabel ()) Widget orig impl where
   runOp _ _ widget Nothing = withRef widget $ \widgetPtr -> drawLabel' widgetPtr
   runOp _ _ widget (Just (rectangle,align_)) = withRef widget $ \widgetPtr -> do
     let (x_pos,y_pos,w_pos,h_pos) = fromRectangle rectangle
@@ -275,25 +275,25 @@ instance (impl ~ ( String -> IO ())) => Op (SetLabel ()) Widget orig impl where
 instance (impl ~ (IO (Labeltype))) => Op (GetLabeltype ()) Widget orig impl where
   runOp _ _ widget = withRef widget $ \widgetPtr -> labeltype' widgetPtr
 {# fun Fl_Widget_set_labeltype as setLabeltype' { id `Ptr ()',cFromEnum `Labeltype' } -> `()' supressWarningAboutRes #}
-instance (impl ~ ( Labeltype ->  IO (()))) => Op (SetLabeltype ()) Widget orig impl where
+instance (impl ~ ( Labeltype ->  IO ())) => Op (SetLabeltype ()) Widget orig impl where
   runOp _ _ widget a = withRef widget $ \widgetPtr -> setLabeltype' widgetPtr a
 {# fun Fl_Widget_labelcolor as labelcolor' { id `Ptr ()' } -> `Color' cToColor #}
 instance (impl ~ (IO (Color))) => Op (GetLabelcolor ()) Widget orig impl where
   runOp _ _ widget = withRef widget $ \widgetPtr -> labelcolor' widgetPtr
 {# fun Fl_Widget_set_labelcolor as setLabelcolor' { id `Ptr ()',cFromColor `Color' } -> `()' supressWarningAboutRes #}
-instance (impl ~ ( Color ->  IO (()))) => Op (SetLabelcolor ()) Widget orig impl where
+instance (impl ~ ( Color ->  IO ())) => Op (SetLabelcolor ()) Widget orig impl where
   runOp _ _ widget c = withRef widget $ \widgetPtr -> setLabelcolor' widgetPtr c
 {# fun Fl_Widget_labelfont as labelfont' { id `Ptr ()' } -> `Font' cToFont #}
 instance (impl ~ (IO (Font))) => Op (GetLabelfont ()) Widget orig impl where
   runOp _ _ widget = withRef widget $ \widgetPtr -> labelfont' widgetPtr
 {# fun Fl_Widget_set_labelfont as setLabelfont' { id `Ptr ()',cFromFont `Font' } -> `()' supressWarningAboutRes #}
-instance (impl ~ ( Font ->  IO (()))) => Op (SetLabelfont ()) Widget orig impl where
+instance (impl ~ ( Font ->  IO ())) => Op (SetLabelfont ()) Widget orig impl where
   runOp _ _ widget c = withRef widget $ \widgetPtr -> setLabelfont' widgetPtr c
 {# fun Fl_Widget_labelsize as labelsize' { id `Ptr ()' } -> `CInt' id #}
 instance (impl ~ (IO (FontSize))) => Op (GetLabelsize ()) Widget orig impl where
   runOp _ _ widget = withRef widget $ \widgetPtr -> labelsize' widgetPtr >>= return . FontSize
 {# fun Fl_Widget_set_labelsize as setLabelsize' { id `Ptr ()',id `CInt' } -> `()' supressWarningAboutRes #}
-instance (impl ~ ( FontSize ->  IO (()))) => Op (SetLabelsize ()) Widget orig impl where
+instance (impl ~ ( FontSize ->  IO ())) => Op (SetLabelsize ()) Widget orig impl where
   runOp _ _ widget (FontSize pix) = withRef widget $ \widgetPtr -> setLabelsize' widgetPtr pix
 {# fun Fl_Widget_image as image' { id `Ptr ()' } -> `(Ref Image)' unsafeToRef #}
 instance (impl ~ (IO (Ref Image))) => Op (GetImage ()) Widget orig impl where
@@ -311,16 +311,16 @@ instance (Parent a Image, impl ~ (Ref a ->  IO ())) => Op (SetDeimage ()) Widget
 instance (impl ~ (IO (String))) => Op (GetTooltip ()) Widget orig impl where
   runOp _ _ widget = withRef widget $ \widgetPtr -> tooltip' widgetPtr
 {# fun Fl_Widget_copy_tooltip as copyTooltip' { id `Ptr ()',`String' } -> `()' supressWarningAboutRes #}
-instance (impl ~ ( String ->  IO (()))) => Op (CopyTooltip ()) Widget orig impl where
+instance (impl ~ ( String ->  IO ())) => Op (CopyTooltip ()) Widget orig impl where
   runOp _ _ widget text = withRef widget $ \widgetPtr -> copyTooltip' widgetPtr text
 {# fun Fl_Widget_set_tooltip as setTooltip' { id `Ptr ()',`String' } -> `()' supressWarningAboutRes #}
-instance (impl ~ ( String ->  IO (()))) => Op (SetTooltip ()) Widget orig impl where
+instance (impl ~ ( String ->  IO ())) => Op (SetTooltip ()) Widget orig impl where
   runOp _ _ widget text = withRef widget $ \widgetPtr -> setTooltip' widgetPtr text
 {# fun Fl_Widget_when as when' { id `Ptr ()' } -> `When' cToEnum #}
 instance (impl ~ (IO (When))) => Op (GetWhen ()) Widget orig impl where
   runOp _ _ widget = withRef widget $ \widgetPtr -> when' widgetPtr
 {# fun Fl_Widget_set_when as setWhen' { id `Ptr ()',`Word8' } -> `()' supressWarningAboutRes #}
-instance (impl ~ ( When ->  IO (()))) => Op (SetWhen ()) Widget orig impl where
+instance (impl ~ ( When ->  IO ())) => Op (SetWhen ()) Widget orig impl where
   runOp _ _ widget i = withRef widget $ \widgetPtr -> setWhen' widgetPtr (fromIntegral $ fromEnum i)
 {# fun Fl_Widget_visible as visible' { id `Ptr ()' } -> `Int' #}
 instance (impl ~ (IO (Int))) => Op (GetVisible ()) Widget orig impl where
@@ -329,22 +329,22 @@ instance (impl ~ (IO (Int))) => Op (GetVisible ()) Widget orig impl where
 instance (impl ~ (IO (Int))) => Op (GetVisibleR ()) Widget orig impl where
   runOp _ _ widget = withRef widget $ \widgetPtr -> visibleR' widgetPtr
 {# fun Fl_Widget_show_super as showSuper' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance (impl ~ (IO (()))) => Op (ShowWidgetSuper ()) Widget orig impl where
+instance (impl ~ (IO ())) => Op (ShowWidgetSuper ()) Widget orig impl where
   runOp _ _ widget = withRef widget $ \widgetPtr -> showSuper' widgetPtr
 {# fun Fl_Widget_show as show' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance (impl ~ (IO (()))) => Op (ShowWidget ()) Widget orig impl where
+instance (impl ~ (IO ())) => Op (ShowWidget ()) Widget orig impl where
   runOp _ _ widget = withRef widget $ \widgetPtr -> show' widgetPtr
 {# fun Fl_Widget_hide_super as hideSuper' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance (impl ~ (IO (()))) => Op (HideSuper ()) Widget orig impl where
+instance (impl ~ (IO ())) => Op (HideSuper ()) Widget orig impl where
   runOp _ _ widget = withRef widget $ \widgetPtr -> hideSuper' widgetPtr
 {# fun Fl_Widget_hide as hide' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance (impl ~ (IO (()))) => Op (Hide ()) Widget orig impl where
+instance (impl ~ (IO ())) => Op (Hide ()) Widget orig impl where
   runOp _ _ widget = withRef widget $ \widgetPtr -> hide' widgetPtr
 {# fun Fl_Widget_set_visible as setVisible' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance (impl ~ (IO (()))) => Op (SetVisible ()) Widget orig impl where
+instance (impl ~ (IO ())) => Op (SetVisible ()) Widget orig impl where
   runOp _ _ widget = withRef widget $ \widgetPtr -> setVisible' widgetPtr
 {# fun Fl_Widget_clear_visible as clearVisible' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance (impl ~ (IO (()))) => Op (ClearVisible ()) Widget orig impl where
+instance (impl ~ (IO ())) => Op (ClearVisible ()) Widget orig impl where
   runOp _ _ widget = withRef widget $ \widgetPtr -> clearVisible' widgetPtr
 {# fun Fl_Widget_active as active' { id `Ptr ()' } -> `Int' #}
 instance (impl ~ (IO (Int))) => Op (Active ()) Widget orig impl where
@@ -353,40 +353,40 @@ instance (impl ~ (IO (Int))) => Op (Active ()) Widget orig impl where
 instance (impl ~ (IO (Int))) => Op (ActiveR ()) Widget orig impl where
   runOp _ _ widget = withRef widget $ \widgetPtr -> activeR' widgetPtr
 {# fun Fl_Widget_activate as activate' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance (impl ~ (IO (()))) => Op (Activate ()) Widget orig impl where
+instance (impl ~ (IO ())) => Op (Activate ()) Widget orig impl where
   runOp _ _ widget = withRef widget $ \widgetPtr -> activate' widgetPtr
 {# fun Fl_Widget_deactivate as deactivate' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance (impl ~ (IO (()))) => Op (Deactivate ()) Widget orig impl where
+instance (impl ~ (IO ())) => Op (Deactivate ()) Widget orig impl where
   runOp _ _ widget = withRef widget $ \widgetPtr -> deactivate' widgetPtr
 {# fun Fl_Widget_output as output' { id `Ptr ()' } -> `Int' #}
 instance (impl ~ (IO (Int))) => Op (GetOutput ()) Widget orig impl where
   runOp _ _ widget = withRef widget $ \widgetPtr -> output' widgetPtr
 {# fun Fl_Widget_set_output as setOutput' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance (impl ~ (IO (()))) => Op (SetOutput ()) Widget orig impl where
+instance (impl ~ (IO ())) => Op (SetOutput ()) Widget orig impl where
   runOp _ _ widget = withRef widget $ \widgetPtr -> setOutput' widgetPtr
 {# fun Fl_Widget_clear_output as clearOutput' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance (impl ~ (IO (()))) => Op (ClearOutput ()) Widget orig impl where
+instance (impl ~ (IO ())) => Op (ClearOutput ()) Widget orig impl where
   runOp _ _ widget = withRef widget $ \widgetPtr -> clearOutput' widgetPtr
 {# fun Fl_Widget_takesevents as takesevents' { id `Ptr ()' } -> `Int' #}
 instance (impl ~ (IO (Int))) => Op (Takesevents ()) Widget orig impl where
   runOp _ _ widget = withRef widget $ \widgetPtr -> takesevents' widgetPtr
 {# fun Fl_Widget_set_changed as setChanged' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance (impl ~ (IO (()))) => Op (SetChanged ()) Widget orig impl where
+instance (impl ~ (IO ())) => Op (SetChanged ()) Widget orig impl where
   runOp _ _ widget = withRef widget $ \widgetPtr -> setChanged' widgetPtr
 {# fun Fl_Widget_clear_changed as clearChanged' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance (impl ~ (IO (()))) => Op (GetClearChanged ()) Widget orig impl where
+instance (impl ~ (IO ())) => Op (GetClearChanged ()) Widget orig impl where
   runOp _ _ widget = withRef widget $ \widgetPtr -> clearChanged' widgetPtr
 {# fun Fl_Widget_take_focus as takeFocus' { id `Ptr ()' } -> `Int' #}
 instance (impl ~ (IO (Int))) => Op (TakeFocus ()) Widget orig impl where
   runOp _ _ widget = withRef widget $ \widgetPtr -> takeFocus' widgetPtr
 {# fun Fl_Widget_set_visible_focus as setVisibleFocus' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance (impl ~ (IO (()))) => Op (SetVisibleFocus ()) Widget orig impl where
+instance (impl ~ (IO ())) => Op (SetVisibleFocus ()) Widget orig impl where
   runOp _ _ widget = withRef widget $ \widgetPtr -> setVisibleFocus' widgetPtr
 {# fun Fl_Widget_clear_visible_focus as clearVisibleFocus' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance (impl ~ (IO (()))) => Op (ClearVisibleFocus ()) Widget orig impl where
+instance (impl ~ (IO ())) => Op (ClearVisibleFocus ()) Widget orig impl where
   runOp _ _ widget = withRef widget $ \widgetPtr -> clearVisibleFocus' widgetPtr
 {# fun Fl_Widget_modify_visible_focus as modifyVisibleFocus' { id `Ptr ()',`Int' } -> `()' supressWarningAboutRes #}
-instance (impl ~ ( Int ->  IO (()))) => Op (ModifyVisibleFocus ()) Widget orig impl where
+instance (impl ~ ( Int ->  IO ())) => Op (ModifyVisibleFocus ()) Widget orig impl where
   runOp _ _ widget v = withRef widget $ \widgetPtr -> modifyVisibleFocus' widgetPtr v
 {# fun Fl_Widget_visible_focus as visibleFocus' { id `Ptr ()' } -> `Int' #}
 instance (impl ~ (IO (Int))) => Op (GetVisibleFocus ()) Widget orig impl where
@@ -398,25 +398,25 @@ instance (Parent a Widget, impl ~  (Ref a ->  IO Int)) => Op (Contains ()) Widge
 instance (Parent a Widget, impl ~ (Ref a -> IO (Int))) => Op (Inside ()) Widget orig impl where
   runOp _ _ widget otherWidget = withRef widget $ \widgetPtr -> withRef otherWidget $ \otherWidgetPtr -> inside' widgetPtr otherWidgetPtr
 {# fun Fl_Widget_redraw as redraw' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance (impl ~ (IO (()))) => Op (Redraw ()) Widget orig impl where
+instance (impl ~ (IO ())) => Op (Redraw ()) Widget orig impl where
   runOp _ _ widget = withRef widget $ \widgetPtr -> redraw' widgetPtr
 {# fun Fl_Widget_redraw_label as redrawLabel' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance (impl ~ (IO (()))) => Op (RedrawLabel ()) Widget orig impl where
+instance (impl ~ (IO ())) => Op (RedrawLabel ()) Widget orig impl where
   runOp _ _ widget = withRef widget $ \widgetPtr -> redrawLabel' widgetPtr
 {# fun Fl_Widget_damage as damage' { id `Ptr ()' } -> `Word8' #}
 instance (impl ~ (IO (Word8))) => Op (GetDamage ()) Widget orig impl where
   runOp _ _ widget = withRef widget $ \widgetPtr -> damage' widgetPtr
 {# fun Fl_Widget_clear_damage_with_bitmask as clearDamageWithBitmask' { id `Ptr ()',`Word8' } -> `()' supressWarningAboutRes #}
-instance (impl ~ ( Word8 ->  IO (()))) => Op (ClearDamageWithBitmask ()) Widget orig impl where
+instance (impl ~ ( Word8 ->  IO ())) => Op (ClearDamageWithBitmask ()) Widget orig impl where
   runOp _ _ widget c = withRef widget $ \widgetPtr -> clearDamageWithBitmask' widgetPtr c
 {# fun Fl_Widget_clear_damage as clearDamage' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance (impl ~ (IO (()))) => Op (ClearDamage ()) Widget orig impl where
+instance (impl ~ (IO ())) => Op (ClearDamage ()) Widget orig impl where
   runOp _ _ widget = withRef widget $ \widgetPtr -> clearDamage' widgetPtr
 {# fun Fl_Widget_damage_with_text as damageWithText' { id `Ptr ()',`Word8' } -> `()' supressWarningAboutRes #}
-instance (impl ~ ( Word8 ->  IO (()))) => Op (GetDamageWithText ()) Widget orig impl where
+instance (impl ~ ( Word8 ->  IO ())) => Op (GetDamageWithText ()) Widget orig impl where
   runOp _ _ widget c = withRef widget $ \widgetPtr -> damageWithText' widgetPtr c
 {# fun Fl_Widget_damage_inside_widget as damageInsideWidget' { id `Ptr ()',`Word8',`Int',`Int',`Int',`Int' } -> `()' supressWarningAboutRes #}
-instance (impl ~ ( Word8 -> Rectangle ->  IO (()))) => Op (GetDamageInsideWidget ()) Widget orig impl where
+instance (impl ~ ( Word8 -> Rectangle ->  IO ())) => Op (GetDamageInsideWidget ()) Widget orig impl where
   runOp _ _ widget c rectangle = withRef widget $ \widgetPtr -> do
     let (x_pos,y_pos,w_pos,h_pos) = fromRectangle rectangle
     damageInsideWidget' widgetPtr c x_pos y_pos w_pos h_pos
@@ -433,12 +433,12 @@ instance (impl ~ (IO (Ref Window))) => Op (GetTopWindow ()) Widget orig impl whe
 instance (impl ~ ( IO (Position))) => Op (GetTopWindowOffset ()) Widget orig impl where
   runOp _ _ widget = withRef widget $ \widgetPtr -> topWindowOffset' widgetPtr >>= \(x_pos,y_pos) -> return $ Position (X x_pos) (Y y_pos)
 {# fun Fl_Widget_resize_super as resizeSuper' { id `Ptr ()',`Int',`Int',`Int',`Int' } -> `()' supressWarningAboutRes #}
-instance (impl ~ ( Rectangle ->  IO (()))) => Op (ResizeSuper ()) Widget orig impl where
+instance (impl ~ ( Rectangle ->  IO ())) => Op (ResizeSuper ()) Widget orig impl where
   runOp _ _ widget rectangle = withRef widget $ \widgetPtr -> do
     let (x_pos,y_pos,w_pos,h_pos) = fromRectangle rectangle
     resizeSuper' widgetPtr x_pos y_pos w_pos h_pos
 {# fun Fl_Widget_resize as resize' { id `Ptr ()',`Int',`Int',`Int',`Int' } -> `()' supressWarningAboutRes #}
-instance (impl ~ ( Rectangle -> IO (()))) => Op (Resize ()) Widget orig impl where
+instance (impl ~ ( Rectangle -> IO ())) => Op (Resize ()) Widget orig impl where
   runOp _ _ widget rectangle = withRef widget $ \widgetPtr -> do
     let (x_pos,y_pos,w_pos,h_pos) = fromRectangle rectangle
     resize' widgetPtr x_pos y_pos w_pos h_pos
