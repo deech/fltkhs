@@ -16,7 +16,6 @@ module Graphics.UI.FLTK.LowLevel.Fl_Widget
      WidgetTransformCallback,
      Callback(..),
      BaseCallback(..),
-     GetPointerF,
      WidgetEventHandlerPrim,
      WidgetTransformCallbackPrim,
      RectangleFPrim,
@@ -45,7 +44,6 @@ import Graphics.UI.FLTK.LowLevel.Hierarchy
 type WidgetTransformCallback     = Ref Widget -> IO (Ref Widget)
 data Callback                    = forall a. (Parent a Widget) => Callback (Ref a -> IO ())
 data BaseCallback                = forall a. (Parent a Base  ) => BaseCallback (Ref a -> IO ())
-type GetPointerF                 = Ptr () -> IO (Ptr ())
 type WidgetEventHandlerPrim      = Ptr () -> CInt -> IO CInt
 type WidgetTransformCallbackPrim = Ptr () -> IO (Ptr ())
 type RectangleFPrim              = Ptr () -> CInt -> CInt -> CInt -> CInt -> IO ()
@@ -59,8 +57,6 @@ foreign import ccall "wrapper"
         mkWidgetEventHandler :: (Ptr () -> CInt -> IO CInt) -> IO (FunPtr (Ptr () -> CInt -> IO CInt))
 foreign import ccall "wrapper"
         mkRectanglePtr :: RectangleFPrim -> IO (FunPtr RectangleFPrim)
-foreign import ccall "wrapper"
-        mkGetPointerPtr :: GetPointerF -> IO (FunPtr GetPointerF)
 foreign import ccall "wrapper"
         wrapEventDispatchPrim :: EventDispatchPrim -> IO (FunPtr EventDispatchPrim)
 foreign import ccall "dynamic"

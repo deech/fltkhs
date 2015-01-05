@@ -78,7 +78,7 @@ library
   include-dirs: ./c-src, ./
   Default-Extensions: TypeFamilies
   default-language: Haskell2010
-  ghc-options: -Wall -fcontext-stack=1024 -optl-static
+  ghc-options: -Wall -fcontext-stack=1024
 
 Executable test_call
   Main-Is: TestCall.hs

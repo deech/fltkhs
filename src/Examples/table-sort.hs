@@ -7,6 +7,7 @@ import Control.Monad
 import Graphics.UI.FLTK.LowLevel.FLTKHS
 import Data.IORef
 import Data.List
+import Data.Function
 import System.Process
 dirCommand :: ([Char], [[Char]])
 dirHeaders :: [[Char]]
@@ -39,8 +40,8 @@ drawSortArrow (Rectangle (Position (X x') (Y y')) (Size (Width w') (Height h')))
   let xlft = x' + (w'-6) - 8
       xctr = x' + (w'-6) - 4
       xrit = x' + (w'-6) - 0
-      ytop = y' - (truncate ((fromIntegral h' / 2) :: Double)) - 4
-      ybot = y' - (truncate ((fromIntegral h' / 2) :: Double)) + 4
+      ytop = y' + (truncate ((fromIntegral h' / 2) :: Double)) - 4
+      ybot = y' + (truncate ((fromIntegral h' / 2) :: Double)) + 4
   in
    if sortReverse'
    then do
@@ -63,7 +64,9 @@ drawCell tableState table tc row' col' rectangle' =
     sortReverse' <- readIORef (sortReverse tableState)
     sortLastCol' <- readIORef (sortLastCol tableState)
     rowData' <- readIORef (rowData tableState)
-    if (row' < length rowData' && col' < length (rowData' !! row'))
+    numCols <- getCols table
+    numRows <- getRows table
+    if (row' < numRows && col' < numCols)
       then case tc of
             ContextColHeader -> do
               flcPushClip rectangle'
@@ -71,7 +74,6 @@ drawCell tableState table tc row' col' rectangle' =
               if (col' < 9)
                 then do
                   flcSetColor blackColor
-                  print (dirHeaders !! col')
                   flcDrawInBox
                     (dirHeaders !! col')
                     (toRectangle ((x'+2),y',w',h'))
@@ -86,22 +88,26 @@ drawCell tableState table tc row' col' rectangle' =
             ContextCell -> do
               flcPushClip rectangle'
               bgColor <- do
-                isSelected <- getRowSelected table row'
-                if isSelected
+                isSelected' <- getRowSelected table row'
+                if isSelected'
                   then getSelectionColor table
                   else return whiteColor
               flcSetColor bgColor
               flcRectf rectangle'
               flcSetFont rowFontFace rowFontSize
               flcSetColor blackColor
+              let currentRow = rowData' !! row'
+                  cellContents = if (col' < length currentRow)
+                                 then currentRow !! col'
+                                 else ""
               flcDrawInBox
-                (rowData' !! row' !! col')
+                cellContents
                 (toRectangle $ (x'+2,y',w',h'))
                 AlignLeft
                 Nothing
                 Nothing
               flcSetColor light2Color
-              flcRectf rectangle'
+              flcRect rectangle'
               flcPopClip
             _ -> return ()
       else return ()
@@ -114,6 +120,12 @@ setIndex idx' xs f =
                  else e
    )
    (zip [0..] xs)
+
+indexOr :: a -> Int -> [a] -> a
+indexOr fallback idx xs =
+  if (idx < length xs)
+  then xs !! idx
+  else fallback
 
 eventCallback :: TableState -> Ref TableRow -> IO ()
 eventCallback tableState table = do
@@ -130,21 +142,22 @@ eventCallback tableState table = do
            then readIORef (sortReverse tableState) >>= writeIORef (sortReverse tableState) . toggle
            else writeIORef (sortReverse tableState) False
          sortReverse' <- readIORef (sortReverse tableState)
-         rowData' <- readIORef (rowData tableState)
+         rowData' <- readIORef (rowData tableState) >>= return . zip [(0 :: Int)..]
+         let sorted = sortBy (compare `on` (indexOr "" col'. snd)) rowData'
          writeIORef
            (rowData tableState)
-           (setIndex col' rowData'
-              (\e -> if (sortReverse')
-                     then reverse (sort e)
-                     else sort e))
+           (if sortReverse'
+            then (reverse $ map snd sorted)
+            else map snd sorted)
          writeIORef (sortLastCol tableState) col'
+         redraw table
          else return ()
    _ -> return ()
   where toggle True = False
         toggle False = True
 
 autowidth :: Ref TableRow -> Int -> [[String]] -> IO ()
-autowidth table pad rowData = do
+autowidth table pad rowData' = do
   flcSetFont headerFontFace headerFontSize
   mapM_
     (\(colNum, colName) -> do
@@ -165,7 +178,7 @@ autowidth table pad rowData = do
         )
         (zip [0..] row')
     )
-    rowData
+    rowData'
   -- need to do { table_resized(); redraw(); }
   -- but table_resized() is unexposed.
   -- setting the row_header flag induces this.

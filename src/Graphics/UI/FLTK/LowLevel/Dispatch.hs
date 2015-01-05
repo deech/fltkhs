@@ -1,4 +1,4 @@
-{-# LANGUAGE TypeFamilies, GADTs, UndecidableInstances, MultiParamTypeClasses, FunctionalDependencies, FlexibleInstances, FlexibleContexts, ScopedTypeVariables, OverlappingInstances, EmptyDataDecls #-}
+{-# LANGUAGE GADTs, UndecidableInstances, MultiParamTypeClasses, FunctionalDependencies, FlexibleInstances, FlexibleContexts, ScopedTypeVariables, OverlappingInstances, EmptyDataDecls #-}
 module Graphics.UI.FLTK.LowLevel.Dispatch
        (
          FindOp,
