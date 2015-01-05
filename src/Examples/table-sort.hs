@@ -97,11 +97,8 @@ drawCell tableState table tc row' col' rectangle' =
               flcSetFont rowFontFace rowFontSize
               flcSetColor blackColor
               let currentRow = rowData' !! row'
-                  cellContents = if (col' < length currentRow)
-                                 then currentRow !! col'
-                                 else ""
               flcDrawInBox
-                cellContents
+                (indexOr "" col' currentRow)
                 (toRectangle $ (x'+2,y',w',h'))
                 AlignLeft
                 Nothing
