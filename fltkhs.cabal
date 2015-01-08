@@ -39,6 +39,7 @@ library
                    Graphics.UI.FLTK.LowLevel.Fl_Fill_Slider
                    Graphics.UI.FLTK.LowLevel.Fl_Hor_Fill_Slider
                    Graphics.UI.FLTK.LowLevel.Fl_Hor_Nice_Slider
+                   Graphics.UI.FLTK.LowLevel.Fl_Hor_Value_Slider
                    Graphics.UI.FLTK.LowLevel.Fl_Nice_Slider
                    Graphics.UI.FLTK.LowLevel.Fl_Menu_Item
                    Graphics.UI.FLTK.LowLevel.Fl_Menu_
@@ -71,40 +72,54 @@ library
                    Graphics.UI.FLTK.LowLevel.Fl_Table_Row
                    Graphics.UI.FLTK.LowLevel.FL
                    Graphics.UI.FLTK.LowLevel.Utils
-  build-depends: base, containers, stm, bytestring
+  build-depends: base, stm, bytestring
   build-tools: c2hs
   hs-source-dirs: src
   other-modules: C2HS
   include-dirs: ./c-src, ./
   Default-Extensions: TypeFamilies
   default-language: Haskell2010
-  ghc-options: -Wall -fcontext-stack=1024
+  ghc-options: -Wall -fcontext-stack=200
 
 Executable test_call
   Main-Is: TestCall.hs
   Hs-Source-Dirs: src/TestPrograms
-  ghc-Options: -Wall -threaded -fcontext-stack=1024
   Build-Depends: base,fltkhs
   default-language: Haskell2010
-  ghc-options: -pgml g++ "-optl-Wl,--whole-archive" "-optl-Wl,-Bstatic" "-optl-Wl,-lfltkc" "-optl-Wl,-Bdynamic" "-optl-Wl,--no-whole-archive"
+  ghc-Options: -Wall -threaded -fcontext-stack=200
+  ghc-Options: -pgml g++ "-optl-Wl,--whole-archive" "-optl-Wl,-Bstatic" "-optl-Wl,-lfltkc" "-optl-Wl,-Bdynamic" "-optl-Wl,--no-whole-archive"
 
 Executable buttons
   Main-Is: Buttons.hs
   Hs-Source-Dirs: src/TestPrograms
-  ghc-Options: -Wall -threaded -fcontext-stack=1024
   Build-Depends: base,fltkhs
-  ghc-options: -pgml g++ "-optl-Wl,--whole-archive" "-optl-Wl,-Bstatic" "-optl-Wl,-lfltkc" "-optl-Wl,-Bdynamic" "-optl-Wl,--no-whole-archive"
+  ghc-Options: -Wall -threaded -fcontext-stack=200
+  ghc-Options: -pgml g++ "-optl-Wl,--whole-archive" "-optl-Wl,-Bstatic" "-optl-Wl,-lfltkc" "-optl-Wl,-Bdynamic" "-optl-Wl,--no-whole-archive"
 
 Executable table-simple
   Main-Is: table-simple.hs
   Hs-Source-Dirs: src/Examples
-  ghc-Options: -Wall -threaded -fcontext-stack=1024
   Build-Depends: base,fltkhs
-  ghc-options: -pgml g++ "-optl-Wl,--whole-archive" "-optl-Wl,-Bstatic" "-optl-Wl,-lfltkc" "-optl-Wl,-Bdynamic" "-optl-Wl,--no-whole-archive"
+  ghc-Options: -Wall -threaded -fcontext-stack=200
+  ghc-Options: -pgml g++ "-optl-Wl,--whole-archive" "-optl-Wl,-Bstatic" "-optl-Wl,-lfltkc" "-optl-Wl,-Bdynamic" "-optl-Wl,--no-whole-archive"
 
 Executable table-sort
   Main-Is: table-sort.hs
   Hs-Source-Dirs: src/Examples
-  ghc-Options: -Wall -threaded -fcontext-stack=1024
   Build-Depends: base,fltkhs,process
-  ghc-options: -pgml g++ "-optl-Wl,--whole-archive" "-optl-Wl,-Bstatic" "-optl-Wl,-lfltkc" "-optl-Wl,-Bdynamic" "-optl-Wl,--no-whole-archive"
+  ghc-Options: -Wall -threaded -fcontext-stack=200
+  ghc-Options: -pgml g++ "-optl-Wl,--whole-archive" "-optl-Wl,-Bstatic" "-optl-Wl,-lfltkc" "-optl-Wl,-Bdynamic" "-optl-Wl,--no-whole-archive"
+
+Executable arc
+  Main-Is: arc.hs
+  Hs-Source-Dirs: src/Examples
+  Build-Depends: base,fltkhs
+  ghc-Options: -Wall -threaded -fcontext-stack=200
+  ghc-Options: -pgml g++ "-optl-Wl,--whole-archive" "-optl-Wl,-Bstatic" "-optl-Wl,-lfltkc" "-optl-Wl,-Bdynamic" "-optl-Wl,--no-whole-archive"
+
+Executable bitmap
+  Main-Is: bitmap.hs
+  Hs-Source-Dirs: src/Examples
+  Build-Depends: base,fltkhs,bytestring
+  ghc-Options: -Wall -threaded -fcontext-stack=200
+  ghc-Options: -pgml g++ "-optl-Wl,--whole-archive" "-optl-Wl,-Bstatic" "-optl-Wl,-lfltkc" "-optl-Wl,-Bdynamic" "-optl-Wl,--no-whole-archive"

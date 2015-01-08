@@ -257,7 +257,7 @@ data ScreenLocation = Intersect Rectangle
 data CutInput = CutSelection | CutRange Int Int | CutFromCursor Int
 newtype FontSize = FontSize CInt
 newtype PixmapHs = PixmapHs [B.ByteString]
-data BitmapHs = BitmapHs [B.ByteString] Size
+data BitmapHs = BitmapHs B.ByteString Size
 data Clipboard = InternalClipboard | SharedClipboard
 
 toRectangle :: (Int,Int,Int,Int) -> Rectangle
@@ -339,3 +339,4 @@ swapRef ref@(Ref fptr) f = do
 
 wrapInRef :: ForeignPtr (Ptr ()) -> Ref a
 wrapInRef = Ref . castForeignPtr
+xb

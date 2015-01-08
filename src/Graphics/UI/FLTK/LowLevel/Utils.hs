@@ -1,6 +1,7 @@
 module Graphics.UI.FLTK.LowLevel.Utils where
 import Graphics.UI.FLTK.LowLevel.Fl_Types
 import Graphics.UI.FLTK.LowLevel.Fl_Enumerations
+import Data.List
 import Foreign
 import qualified Foreign.Concurrent as FC
 import Foreign.C
@@ -43,6 +44,15 @@ cFromBool status = if status then 1 else 0
 
 toFunPtr :: (a -> FunPtr a) -> a -> FunPtr a
 toFunPtr f a = f a
+
+extract :: (Enum a) => [a] -> CInt -> [a]
+extract allCodes compoundCode
+    = map cToEnum $
+      filter (masks compoundCode) $
+      map cFromEnum allCodes
+
+combine :: (Enum a, Ord a) => [a] -> Int
+combine = sum . map (fromEnum. head) . group . sort
 
 masks :: CInt -> CInt -> Bool
 masks compoundCode code = (code .|. compoundCode) /= 0
@@ -160,7 +170,7 @@ withPixmap (PixmapHs pixmap) f =
 withBitmap :: BitmapHs -> ((Ptr CChar) -> Int -> Int -> IO a) -> IO a
 withBitmap (BitmapHs bitmap (Size (Width width') (Height height'))) f =
    B.useAsCString
-     (foldl1 B.append bitmap)
+     bitmap
      (\ptr -> f ptr width' height')
 
 countDirectionToCChar :: CountDirection -> CChar
@@ -174,3 +184,8 @@ ccharToCountDirection c = if (c == 0) then CountDown else CountUp
 
 oneKb :: Int
 oneKb = 1024
+
+alignmentsToInt :: Alignments -> Int
+alignmentsToInt (Alignments aligntypes') = combine aligntypes'
+intToAlignments :: Int -> Alignments
+intToAlignments = Alignments . extract allAlignTypes . fromIntegral

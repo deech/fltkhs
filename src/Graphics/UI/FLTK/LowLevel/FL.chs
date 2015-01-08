@@ -370,11 +370,6 @@ eventStates = [
                Mouse_Button2State,
                Mouse_Button3State
               ]
-extract :: (Enum a) => [a] -> CInt -> [a]
-extract allCodes compoundCode
-    = map cToEnum $
-      filter (masks compoundCode) $
-      map cFromEnum allCodes
 extractEventStates :: CInt -> [EventState]
 extractEventStates = extract eventStates
 -- foldModifiers :: [KeyboardCode] -> CInt

@@ -36,12 +36,33 @@ module Graphics.UI.FLTK.LowLevel.Fl_Enumerations
      Mode(..),
      single,
      -- * Alignment
+     Alignments(..),
      AlignType(..),
-     alignNoWrap, alignImageOverText,
+     alignCenter,
+     alignTop,
+     alignBottom,
+     alignLeft,
+     alignRight,
+     alignInside,
+     alignTextOverImage,
+     alignClip,
+     alignWrap,
+     alignImageNextToText,
+     alignTextNextToImage,
+     alignImageBackdrop,
+     alignLeftTop,
+     alignRightTop,
+     alignLeftBottom,
+     alignRightBottom,
+     alignPositionMask,
+     alignImageMask,
+     alignNoWrap,
+     alignImageOverText,
      alignTopLeft,
      alignTopRight,
      alignBottomLeft,
      alignBottomRight,
+     allAlignTypes,
      -- * Box types
      Boxtype(..),
      frame,frameBox, circleBox, diamondBox,
@@ -447,24 +468,22 @@ enum Mode {
  ModeFakeSingle  = FL_FAKE_SINGLE
 };
 enum AlignType {
- AlignCenter          = 0,
- AlignTop             = 1,
- AlignBottom          = 2,
- AlignLeft            = 4,
- AlignRight           = 8,
- AlignInside          = 16,
- AlignTextOverImage   = 0x0020,
- AlignClip            = 64,
- AlignWrap            = 128,
- AlignImageNextToText = 0x0100,
- AlignTextNextToImage = 0x0120,
- AlignImageBackdrop   = 0x0200,
- AlignLeftTop         = 0x0007,
- AlignRightTop        = 0x000b,
- AlignLeftBottom      = 0x000d,
- AlignRightBottom     = 0x000e,
- AlignPositionMask    = 0x000f,
- AlignImageMask       = 0x0320
+ AlignTypeCenter          = 0,
+ AlignTypeTop             = 1,
+ AlignTypeBottom          = 2,
+ AlignTypeLeft            = 4,
+ AlignTypeRight           = 8,
+ AlignTypeInside          = 16,
+ AlignTypeTextOverImage   = 0x0020,
+ AlignTypeClip            = 64,
+ AlignTypeWrap            = 128,
+ AlignTypeImageNextToText = 0x0100,
+ AlignTypeTextNextToImage = 0x0120,
+ AlignTypeImageBackdrop   = 0x0200,
+ AlignTypeLeftTop         = 0x0007,
+ AlignTypeRightTop        = 0x000b,
+ AlignTypeLeftBottom      = 0x000d,
+ AlignTypeRightBottom     = 0x000e,
 };
 #endc
 {#enum Event {} deriving (Show, Eq) #}
@@ -505,11 +524,75 @@ glutCursorFullCrossHair :: GlutCursor
 glutCursorFullCrossHair = GlutCursorCrosshair
 {#enum Cursor {} deriving (Show) #}
 {#enum Mode   {} deriving (Show) #}
-{#enum AlignType {} deriving (Show) #}
-alignNoWrap, alignImageOverText :: AlignType
-alignNoWrap = AlignCenter
-alignImageOverText = AlignCenter
-
+{#enum AlignType {} deriving (Show, Eq, Ord) #}
+newtype Alignments = Alignments [AlignType]
+alignCenter :: Alignments
+alignCenter = Alignments [AlignTypeCenter]
+alignTop :: Alignments
+alignTop = Alignments [AlignTypeTop]
+alignBottom :: Alignments
+alignBottom = Alignments [AlignTypeBottom]
+alignLeft :: Alignments
+alignLeft = Alignments [AlignTypeLeft]
+alignRight :: Alignments
+alignRight = Alignments [AlignTypeRight]
+alignInside :: Alignments
+alignInside = Alignments [AlignTypeInside]
+alignTextOverImage :: Alignments
+alignTextOverImage = Alignments [AlignTypeTextOverImage]
+alignClip :: Alignments
+alignClip = Alignments [AlignTypeClip]
+alignWrap :: Alignments
+alignWrap = Alignments [AlignTypeWrap]
+alignImageNextToText :: Alignments
+alignImageNextToText = Alignments [AlignTypeImageNextToText]
+alignTextNextToImage :: Alignments
+alignTextNextToImage = Alignments [AlignTypeTextNextToImage]
+alignImageBackdrop :: Alignments
+alignImageBackdrop = Alignments [AlignTypeImageBackdrop]
+alignLeftTop :: Alignments
+alignLeftTop = Alignments [AlignTypeLeftTop]
+alignRightTop :: Alignments
+alignRightTop = Alignments [AlignTypeRightTop]
+alignLeftBottom :: Alignments
+alignLeftBottom = Alignments [AlignTypeLeftBottom]
+alignRightBottom :: Alignments
+alignRightBottom = Alignments [AlignTypeRightBottom]
+alignPositionMask :: Alignments
+alignPositionMask = Alignments [AlignTypeLeft, AlignTypeRight, AlignTypeTop, AlignTypeBottom]
+alignImageMask :: Alignments
+alignImageMask = Alignments [AlignTypeImageBackdrop, AlignTypeImageNextToText, AlignTypeTextOverImage]
+alignNoWrap :: Alignments
+alignNoWrap = alignCenter
+alignImageOverText :: Alignments
+alignImageOverText = alignCenter
+alignTopLeft :: Alignments
+alignTopLeft = Alignments [AlignTypeTop, AlignTypeLeft]
+alignTopRight :: Alignments
+alignTopRight = Alignments [AlignTypeTop, AlignTypeRight]
+alignBottomLeft :: Alignments
+alignBottomLeft = Alignments [AlignTypeBottom, AlignTypeLeft]
+alignBottomRight :: Alignments
+alignBottomRight = Alignments [AlignTypeBottom, AlignTypeRight]
+allAlignTypes :: [AlignType]
+allAlignTypes = [
+      AlignTypeCenter,
+      AlignTypeTop,
+      AlignTypeBottom,
+      AlignTypeLeft,
+      AlignTypeRight,
+      AlignTypeInside,
+      AlignTypeTextOverImage,
+      AlignTypeClip,
+      AlignTypeWrap,
+      AlignTypeImageNextToText,
+      AlignTypeTextNextToImage,
+      AlignTypeImageBackdrop,
+      AlignTypeLeftTop,
+      AlignTypeRightTop,
+      AlignTypeLeftBottom,
+      AlignTypeRightBottom
+      ]
 data Boxtype = NoBox
              | FlatBox
              | UpBox
@@ -913,22 +996,6 @@ defineEmbossedLabel_ =
 defineEmbossedLabel :: Labeltype
 defineEmbossedLabel = toEnum defineEmbossedLabel_
 
-alignTopLeft :: AlignType
-alignTopLeft = toEnum $ fromIntegral {#call pure unsafe FL_ALIGN_TOP_LEFTC as
-                                                        aLIGN_TOP_LEFTC #}
-alignTopRight :: AlignType
-alignTopRight = toEnum $ fromIntegral {#call pure unsafe FL_ALIGN_TOP_RIGHTC as
-                                                         aLIGN_TOP_RIGHTC #}
-
-alignBottomLeft :: AlignType
-alignBottomLeft =
-       toEnum $ fromIntegral {#call pure unsafe FL_ALIGN_BOTTOM_LEFTC as
-                                                aLIGN_BOTTOM_LEFTC #}
-
-alignBottomRight :: AlignType
-alignBottomRight =
-      toEnum $ fromIntegral {#call pure unsafe FL_ALIGN_BOTTOM_RIGHTC as
-                                               aLIGN_BOTTOM_RIGHTC #}
 cFromColor :: Color -> CUInt
 cFromColor (Color c) = fromIntegral c
 cToColor :: CUInt-> Color

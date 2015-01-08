@@ -30,6 +30,8 @@ module Graphics.UI.FLTK.LowLevel.Hierarchy
          getW,
          GetH,
          getH,
+         GetRectangle,
+         getRectangle,
          SetAlign,
          setAlign,
          GetAlign,
@@ -562,6 +564,8 @@ module Graphics.UI.FLTK.LowLevel.Hierarchy
          getLinesize,
          -- * ValueSlider
          ValueSlider,
+         -- * HorValueSlider
+         HorValueSlider,
          -- * Input
          Input,
          StaticValue,
@@ -840,6 +844,7 @@ type Widget = CWidget
                (GetY
                (GetW
                (GetH
+               (GetRectangle
                (SetAlign
                (GetAlign
                (GetBox
@@ -911,7 +916,7 @@ type Widget = CWidget
                (DrawBoxWithBoxtype
                (DrawBackdrop
                (DrawFocus
-               ()))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))
+               ())))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))
               Base
 data Destroy a
 destroy :: (FindOp a (Destroy ()) (Match r), Op (Destroy ()) r a impl) => Ref a -> impl
@@ -946,6 +951,9 @@ getW = dispatch (undefined :: GetW ())
 data GetH a
 getH :: (FindOp a (GetH ()) (Match r), Op (GetH ()) r a impl) => Ref a -> impl
 getH = dispatch (undefined :: GetH ())
+data GetRectangle a
+getRectangle :: (FindOp a (GetRectangle ()) (Match r), Op (GetRectangle ()) r a impl) => Ref a -> impl
+getRectangle = dispatch (undefined :: GetRectangle ())
 data SetAlign a
 setAlign :: (FindOp a (SetAlign ()) (Match r), Op (SetAlign ()) r a impl) => Ref a -> impl
 setAlign = dispatch (undefined :: SetAlign ())
@@ -1658,7 +1666,7 @@ type Slider =
     (GetSlider
     (SetSlider
     ()))))))
-    Widget
+    Valuator
 
 data Scrollvalue a
 scrollvalue :: (FindOp a (Scrollvalue ()) (Match r), Op (Scrollvalue ()) r a impl) => Ref a -> impl
@@ -1680,30 +1688,31 @@ data CFillSlider fs parent
 type FillSlider =
   CFillSlider
     ()
-    Widget
+    Slider
 
 data CHorSlider fs parent
 type HorSlider =
   CHorSlider
     ()
-    Widget
+    Slider
 
 data CHorFillSlider fs parent
 type HorFillSlider =
   CHorFillSlider
     ()
-    Widget
+    Slider
 
 data CNiceSlider fs parent
 type NiceSlider =
   CNiceSlider
     ()
-    Widget
+    Slider
+
 data CHorNiceSlider fs parent
 type HorNiceSlider =
   CHorNiceSlider
     ()
-    Widget
+    Slider
 
 data CMenuItem fs parent
 type MenuItem =
@@ -2203,6 +2212,12 @@ type ValueSlider =
   (SetTextcolor
   ()))))))))
   Slider
+
+data CHorValueSlider fs parent
+type HorValueSlider =
+  CHorValueSlider
+    ()
+    ValueSlider
 
 data CInput fs parent
 type Input =

@@ -140,7 +140,7 @@ myBuildHook pkg_descr local_bld_info user_hooks bld_flags =
                       _ -> False)
                (componentsConfigs new_local_bld_info)
          lib_lbi = new_local_bld_info{componentsConfigs = libs}
-     buildHook simpleUserHooks new_pkg_descr lib_lbi user_hooks bld_flags
+     buildHook autoconfUserHooks new_pkg_descr lib_lbi user_hooks bld_flags
      let distPref = fromFlag (buildDistPref bld_flags)
          dbFile = distPref </> "package.conf.inplace"
          verbosity = fromFlag (buildVerbosity bld_flags)
@@ -176,6 +176,7 @@ myBuildHook pkg_descr local_bld_info user_hooks bld_flags =
 
 copyCBindings :: PackageDescription -> LocalBuildInfo -> UserHooks -> CopyFlags -> IO ()
 copyCBindings pkg_descr lbi uhs flags = do
+    (copyHook autoconfUserHooks) pkg_descr lbi uhs flags
     let libPref = libdir . absoluteInstallDirs pkg_descr lbi
                 . fromFlag . copyDest
                 $ flags
@@ -183,8 +184,7 @@ copyCBindings pkg_descr lbi uhs flags = do
         ["c-lib/libfltkc.a", libPref]
     rawSystemExit (fromFlag $ copyVerbosity flags) "cp"
         ["c-lib/libfltkc.so", libPref]
-    (copyHook autoconfUserHooks) pkg_descr lbi uhs flags
 
-myCleanHook pd _ uh cf = do
+myCleanHook pd x uh cf = do
   rawSystemExit normal "make" ["clean"]
-  cleanHook autoconfUserHooks pd () uh cf
+  cleanHook autoconfUserHooks pd x uh cf

@@ -60,7 +60,7 @@ EXAMPLES= \
 .SUFFIXES: .c $(EXEEXT)
 .SILENT:
 EXECUTABLEDIR = ../executables
-LIBDIR = ../lib
+LIBDIR = ../c-lib
 OBJECTS = $(EXAMPLES:.c=$(EXEEXT))
 
 all: $(OBJECTS)

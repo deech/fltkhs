@@ -19,13 +19,13 @@ drawHeader table s rectangle = do
   rhc <- getRowHeaderColor table
   flcDrawBox ThinUpBox rectangle rhc
   flcSetColor blackColor
-  flcDrawInBox s rectangle AlignCenter Nothing Nothing
+  flcDrawInBox s rectangle alignCenter Nothing Nothing
   flcPopClip
 drawData :: Ref Table -> String -> Rectangle -> IO ()
 drawData table s rectangle = do
   flcPushClip rectangle
   flcSetColor whiteColor >> flcRectf rectangle
-  flcSetColor gray0Color >> flcDrawInBox s rectangle AlignCenter Nothing Nothing
+  flcSetColor gray0Color >> flcDrawInBox s rectangle alignCenter Nothing Nothing
   color' <- getColor table
   flcSetColor color' >> flcRect rectangle
   flcPopClip

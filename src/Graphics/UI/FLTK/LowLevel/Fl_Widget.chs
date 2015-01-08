@@ -216,12 +216,12 @@ instance (impl ~ IO (Word8)) => Op (GetType_ ()) Widget orig impl where
 instance (impl ~ (Word8 ->  IO ())) => Op (SetType ()) Widget orig impl where
   runOp _ _ widget t = withRef widget $ \widgetPtr -> setType' widgetPtr t
 {# fun Fl_Widget_draw_label as drawLabel' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
-{# fun Fl_Widget_draw_label_with_xywh_alignment as drawLabelWithXywhAlignment' { id `Ptr ()',`Int',`Int',`Int',`Int',cFromEnum `AlignType' } -> `()' supressWarningAboutRes #}
-instance (impl ~ (Maybe (Rectangle,AlignType)->  IO ())) => Op (DrawLabel ()) Widget orig impl where
+{# fun Fl_Widget_draw_label_with_xywh_alignment as drawLabelWithXywhAlignment' { id `Ptr ()',`Int',`Int',`Int',`Int', `Int' } -> `()' supressWarningAboutRes #}
+instance (impl ~ (Maybe (Rectangle,Alignments)->  IO ())) => Op (DrawLabel ()) Widget orig impl where
   runOp _ _ widget Nothing = withRef widget $ \widgetPtr -> drawLabel' widgetPtr
   runOp _ _ widget (Just (rectangle,align_)) = withRef widget $ \widgetPtr -> do
     let (x_pos,y_pos,w_pos,h_pos) = fromRectangle rectangle
-    drawLabelWithXywhAlignment' widgetPtr x_pos y_pos w_pos h_pos align_
+    drawLabelWithXywhAlignment' widgetPtr x_pos y_pos w_pos h_pos (alignmentsToInt align_)
 
 {# fun Fl_Widget_x as x' { id `Ptr ()' } -> `Int' #}
 instance (impl ~ IO (Int)) => Op (GetX ()) Widget orig impl where
@@ -235,12 +235,19 @@ instance (impl ~ IO (Int)) => Op (GetW ()) Widget orig impl where
 {# fun Fl_Widget_h as h' { id `Ptr ()' } -> `Int' #}
 instance (impl ~ IO (Int)) => Op (GetH ()) Widget orig impl where
   runOp _ _ widget = withRef widget $ \widgetPtr -> h' widgetPtr
-{# fun Fl_Widget_set_align as setAlign' { id `Ptr ()',cFromEnum `AlignType' } -> `()' supressWarningAboutRes #}
-instance (impl ~ (AlignType ->  IO ())) => Op (SetAlign ()) Widget orig impl where
-  runOp _ _ widget _align = withRef widget $ \widgetPtr -> setAlign' widgetPtr _align
-{# fun Fl_Widget_align as align' { id `Ptr ()' } -> `AlignType' cToEnum #}
-instance (impl ~ IO (AlignType)) => Op (GetAlign ()) Widget orig impl where
-  runOp _ _ widget = withRef widget $ \widgetPtr -> align' widgetPtr
+instance (impl ~ IO Rectangle) => Op (GetRectangle ()) Widget orig impl where
+  runOp _ _ widget = do
+    _x <- getX widget
+    _y <- getY widget
+    _w <- getW widget
+    _h <- getH widget
+    return (toRectangle (_x,_y,_w,_h))
+{# fun Fl_Widget_set_align as setAlign' { id `Ptr ()', `Int' } -> `()' supressWarningAboutRes #}
+instance (impl ~ (Alignments ->  IO ())) => Op (SetAlign ()) Widget orig impl where
+  runOp _ _ widget _align = withRef widget $ \widgetPtr -> setAlign' widgetPtr (alignmentsToInt _align)
+{# fun Fl_Widget_align as align' { id `Ptr ()' } -> `CUInt' id #}
+instance (impl ~ IO Alignments) => Op (GetAlign ()) Widget orig impl where
+  runOp _ _ widget = withRef widget $ \widgetPtr -> align' widgetPtr >>= return . intToAlignments . fromIntegral
 {# fun Fl_Widget_box as box' { id `Ptr ()' } -> `Boxtype' cToEnum #}
 instance (impl ~ IO (Boxtype)) => Op (GetBox ()) Widget orig impl where
   runOp _ _ widget = withRef widget $ \widgetPtr -> box' widgetPtr

@@ -77,7 +77,7 @@ drawCell tableState table tc row' col' rectangle' =
                   flcDrawInBox
                     (dirHeaders !! col')
                     (toRectangle ((x'+2),y',w',h'))
-                    AlignLeft
+                    alignLeft
                     Nothing
                     Nothing
                   if (col' == sortLastCol')
@@ -100,7 +100,7 @@ drawCell tableState table tc row' col' rectangle' =
               flcDrawInBox
                 (indexOr "" col' currentRow)
                 (toRectangle $ (x'+2,y',w',h'))
-                AlignLeft
+                alignLeft
                 Nothing
                 Nothing
               flcSetColor light2Color

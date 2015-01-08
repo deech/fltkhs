@@ -22,6 +22,7 @@ module Graphics.UI.FLTK.LowLevel.FLTKHS
          module Graphics.UI.FLTK.LowLevel.Fl_Fill_Slider,
          module Graphics.UI.FLTK.LowLevel.Fl_Hor_Fill_Slider,
          module Graphics.UI.FLTK.LowLevel.Fl_Hor_Nice_Slider,
+         module Graphics.UI.FLTK.LowLevel.Fl_Hor_Value_Slider,
          module Graphics.UI.FLTK.LowLevel.Fl_Nice_Slider,
          module Graphics.UI.FLTK.LowLevel.Fl_Menu_Item,
          module Graphics.UI.FLTK.LowLevel.Fl_Menu_,
@@ -76,6 +77,7 @@ import Graphics.UI.FLTK.LowLevel.Fl_Slider
 import Graphics.UI.FLTK.LowLevel.Fl_Fill_Slider
 import Graphics.UI.FLTK.LowLevel.Fl_Hor_Fill_Slider
 import Graphics.UI.FLTK.LowLevel.Fl_Hor_Nice_Slider
+import Graphics.UI.FLTK.LowLevel.Fl_Hor_Value_Slider
 import Graphics.UI.FLTK.LowLevel.Fl_Nice_Slider
 import Graphics.UI.FLTK.LowLevel.Fl_Menu_Item
 import Graphics.UI.FLTK.LowLevel.Fl_Menu_
