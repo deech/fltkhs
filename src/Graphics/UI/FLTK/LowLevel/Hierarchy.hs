@@ -7,7 +7,6 @@ module Graphics.UI.FLTK.LowLevel.Hierarchy
          GlContext,
          -- * Widget
          Widget,
-         CWidget,
          Destroy,
          destroy,
          Handle,
@@ -816,6 +815,82 @@ module Graphics.UI.FLTK.LowLevel.Hierarchy
          hideOverlay,
          MakeOverlayCurrent,
          makeOverlayCurrent,
+         -- * Box
+         Box,
+         -- * Browser
+         Browser,
+         Move,
+         move,
+         Load,
+         load,
+         Swap,
+         swap,
+         GetTopline,
+         getTopline,
+         Lineposition,
+         lineposition,
+         SetTopline,
+         setTopline,
+         SetBottomline,
+         setBottomline,
+         SetMiddleline,
+         setMiddleline,
+         Select,
+         select,
+         Selected,
+         selected,
+         ShowWidgetLine,
+         showWidgetLine,
+         HideLine,
+         hideLine,
+         SetText,
+         setText,
+         GetFormatChar,
+         getFormatChar,
+         SetFormatChar,
+         setFormatChar,
+         GetColumnChar,
+         getColumnChar,
+         SetColumnChar,
+         setColumnChar,
+         GetColumnWidths,
+         getColumnWidths,
+         SetColumnWidths,
+         setColumnWidths,
+         Displayed,
+         displayed,
+         MakeVisible,
+         makeVisible,
+         RemoveIcon,
+         removeIcon,
+         SelectOnly,
+         selectOnly,
+         SelectOnlyAndCallback,
+         selectOnlyAndCallback,
+         Deselect,
+         deselect,
+         DeselectAndCallback,
+         deselectAndCallback,
+         GetHposition,
+         getHposition,
+         SetHposition,
+         setHposition,
+         GetHasScrollbar,
+         getHasScrollbar,
+         SetHasScrollbar,
+         setHasScrollbar,
+         GetScrollbarSize,
+         getScrollbarSize,
+         SetScrollbarSize,
+         setScrollbarSize,
+         GetScrollbarWidth,
+         getScrollbarWidth,
+         SetScrollbarWidth,
+         setScrollbarWidth,
+         -- * SelectBrowser
+         SelectBrowser,
+         -- * IntInput
+         IntInput
        )
 where
 import Prelude hiding (round)
@@ -2853,3 +2928,186 @@ hideOverlay = dispatch (undefined :: HideOverlay ())
 data MakeOverlayCurrent a
 makeOverlayCurrent :: (FindOp a (MakeOverlayCurrent ()) (Match r), Op (MakeOverlayCurrent ()) r a impl) => Ref a -> impl
 makeOverlayCurrent = dispatch (undefined :: MakeOverlayCurrent ())
+
+data CBox fs parent
+type Box =
+  CBox
+  ()
+  Widget
+
+data CBrowser fs parent
+type Browser =
+  CBrowser
+    (Handle
+    (Destroy
+    (Remove
+    (Add
+    (Insert
+    (Move
+    (Load
+    (Swap
+    (Clear
+    (GetSize
+    (SetSize
+    (GetTopline
+    (Lineposition
+    (SetTopline
+    (SetBottomline
+    (SetMiddleline
+    (Select
+    (Selected
+    (ShowWidgetLine
+    (ShowWidget
+    (HideLine
+    (Hide
+    (Visible
+    (GetValue
+    (SetValue
+    (GetText
+    (SetText
+    (GetFormatChar
+    (SetFormatChar
+    (GetColumnChar
+    (SetColumnChar
+    (GetColumnWidths
+    (SetColumnWidths
+    (Displayed
+    (MakeVisible
+    (SetIcon
+    (GetIcon
+    (RemoveIcon
+    (Deselect
+    (DeselectAndCallback
+    (GetPosition
+    (SetPosition
+    (GetHposition
+    (SetHposition
+    (GetHasScrollbar
+    (SetHasScrollbar
+    (GetTextfont
+    (SetTextfont
+    (GetTextsize
+    (SetTextsize
+    (GetTextcolor
+    (SetTextcolor
+    (GetScrollbarSize
+    (SetScrollbarSize
+    (GetScrollbarWidth
+    (SetScrollbarWidth
+    ()))))))))))))))))))))))))))))))))))))))))))))))))))))))))
+    Group
+
+data Move a
+move :: (FindOp a (Move ()) (Match r), Op (Move ()) r a impl) => Ref a -> impl
+move = dispatch (undefined :: Move ())
+data Load a
+load :: (FindOp a (Load ()) (Match r), Op (Load ()) r a impl) => Ref a -> impl
+load = dispatch (undefined :: Load ())
+data Swap a
+swap :: (FindOp a (Swap ()) (Match r), Op (Swap ()) r a impl) => Ref a -> impl
+swap = dispatch (undefined :: Swap ())
+data GetTopline a
+getTopline :: (FindOp a (GetTopline ()) (Match r), Op (GetTopline ()) r a impl) => Ref a -> impl
+getTopline = dispatch (undefined :: GetTopline ())
+data Lineposition a
+lineposition :: (FindOp a (Lineposition ()) (Match r), Op (Lineposition ()) r a impl) => Ref a -> impl
+lineposition = dispatch (undefined :: Lineposition ())
+data SetTopline a
+setTopline :: (FindOp a (SetTopline ()) (Match r), Op (SetTopline ()) r a impl) => Ref a -> impl
+setTopline = dispatch (undefined :: SetTopline ())
+data SetBottomline a
+setBottomline :: (FindOp a (SetBottomline ()) (Match r), Op (SetBottomline ()) r a impl) => Ref a -> impl
+setBottomline = dispatch (undefined :: SetBottomline ())
+data SetMiddleline a
+setMiddleline :: (FindOp a (SetMiddleline ()) (Match r), Op (SetMiddleline ()) r a impl) => Ref a -> impl
+setMiddleline = dispatch (undefined :: SetMiddleline ())
+data Select a
+select :: (FindOp a (Select ()) (Match r), Op (Select ()) r a impl) => Ref a -> impl
+select = dispatch (undefined :: Select ())
+data Selected a
+selected :: (FindOp a (Selected ()) (Match r), Op (Selected ()) r a impl) => Ref a -> impl
+selected = dispatch (undefined :: Selected ())
+data ShowWidgetLine a
+showWidgetLine :: (FindOp a (ShowWidgetLine ()) (Match r), Op (ShowWidgetLine ()) r a impl) => Ref a -> impl
+showWidgetLine = dispatch (undefined :: ShowWidgetLine ())
+data HideLine a
+hideLine :: (FindOp a (HideLine ()) (Match r), Op (HideLine ()) r a impl) => Ref a -> impl
+hideLine = dispatch (undefined :: HideLine ())
+data SetText a
+setText :: (FindOp a (SetText ()) (Match r), Op (SetText ()) r a impl) => Ref a -> impl
+setText = dispatch (undefined :: SetText ())
+data GetFormatChar a
+getFormatChar :: (FindOp a (GetFormatChar ()) (Match r), Op (GetFormatChar ()) r a impl) => Ref a -> impl
+getFormatChar = dispatch (undefined :: GetFormatChar ())
+data SetFormatChar a
+setFormatChar :: (FindOp a (SetFormatChar ()) (Match r), Op (SetFormatChar ()) r a impl) => Ref a -> impl
+setFormatChar = dispatch (undefined :: SetFormatChar ())
+data GetColumnChar a
+getColumnChar :: (FindOp a (GetColumnChar ()) (Match r), Op (GetColumnChar ()) r a impl) => Ref a -> impl
+getColumnChar = dispatch (undefined :: GetColumnChar ())
+data SetColumnChar a
+setColumnChar :: (FindOp a (SetColumnChar ()) (Match r), Op (SetColumnChar ()) r a impl) => Ref a -> impl
+setColumnChar = dispatch (undefined :: SetColumnChar ())
+data GetColumnWidths a
+getColumnWidths :: (FindOp a (GetColumnWidths ()) (Match r), Op (GetColumnWidths ()) r a impl) => Ref a -> impl
+getColumnWidths = dispatch (undefined :: GetColumnWidths ())
+data SetColumnWidths a
+setColumnWidths :: (FindOp a (SetColumnWidths ()) (Match r), Op (SetColumnWidths ()) r a impl) => Ref a -> impl
+setColumnWidths = dispatch (undefined :: SetColumnWidths ())
+data Displayed a
+displayed :: (FindOp a (Displayed ()) (Match r), Op (Displayed ()) r a impl) => Ref a -> impl
+displayed = dispatch (undefined :: Displayed ())
+data MakeVisible a
+makeVisible :: (FindOp a (MakeVisible ()) (Match r), Op (MakeVisible ()) r a impl) => Ref a -> impl
+makeVisible = dispatch (undefined :: MakeVisible ())
+data RemoveIcon a
+removeIcon :: (FindOp a (RemoveIcon ()) (Match r), Op (RemoveIcon ()) r a impl) => Ref a -> impl
+removeIcon = dispatch (undefined :: RemoveIcon ())
+data SelectOnly a
+selectOnly :: (FindOp a (SelectOnly ()) (Match r), Op (SelectOnly ()) r a impl) => Ref a -> impl
+selectOnly = dispatch (undefined :: SelectOnly ())
+data SelectOnlyAndCallback a
+selectOnlyAndCallback :: (FindOp a (SelectOnlyAndCallback ()) (Match r), Op (SelectOnlyAndCallback ()) r a impl) => Ref a -> impl
+selectOnlyAndCallback = dispatch (undefined :: SelectOnlyAndCallback ())
+data Deselect a
+deselect :: (FindOp a (Deselect ()) (Match r), Op (Deselect ()) r a impl) => Ref a -> impl
+deselect = dispatch (undefined :: Deselect ())
+data DeselectAndCallback a
+deselectAndCallback :: (FindOp a (DeselectAndCallback ()) (Match r), Op (DeselectAndCallback ()) r a impl) => Ref a -> impl
+deselectAndCallback = dispatch (undefined :: DeselectAndCallback ())
+data GetHposition a
+getHposition :: (FindOp a (GetHposition ()) (Match r), Op (GetHposition ()) r a impl) => Ref a -> impl
+getHposition = dispatch (undefined :: GetHposition ())
+data SetHposition a
+setHposition :: (FindOp a (SetHposition ()) (Match r), Op (SetHposition ()) r a impl) => Ref a -> impl
+setHposition = dispatch (undefined :: SetHposition ())
+data GetHasScrollbar a
+getHasScrollbar :: (FindOp a (GetHasScrollbar ()) (Match r), Op (GetHasScrollbar ()) r a impl) => Ref a -> impl
+getHasScrollbar = dispatch (undefined :: GetHasScrollbar ())
+data SetHasScrollbar a
+setHasScrollbar :: (FindOp a (SetHasScrollbar ()) (Match r), Op (SetHasScrollbar ()) r a impl) => Ref a -> impl
+setHasScrollbar = dispatch (undefined :: SetHasScrollbar ())
+data GetScrollbarSize a
+getScrollbarSize :: (FindOp a (GetScrollbarSize ()) (Match r), Op (GetScrollbarSize ()) r a impl) => Ref a -> impl
+getScrollbarSize = dispatch (undefined :: GetScrollbarSize ())
+data SetScrollbarSize a
+setScrollbarSize :: (FindOp a (SetScrollbarSize ()) (Match r), Op (SetScrollbarSize ()) r a impl) => Ref a -> impl
+setScrollbarSize = dispatch (undefined :: SetScrollbarSize ())
+data GetScrollbarWidth a
+getScrollbarWidth :: (FindOp a (GetScrollbarWidth ()) (Match r), Op (GetScrollbarWidth ()) r a impl) => Ref a -> impl
+getScrollbarWidth = dispatch (undefined :: GetScrollbarWidth ())
+data SetScrollbarWidth a
+setScrollbarWidth :: (FindOp a (SetScrollbarWidth ()) (Match r), Op (SetScrollbarWidth ()) r a impl) => Ref a -> impl
+setScrollbarWidth = dispatch (undefined :: SetScrollbarWidth ())
+
+data CSelectBrowser fs parent
+type SelectBrowser =
+  CSelectBrowser
+    ()
+    Browser
+
+data CIntInput fs parent
+type IntInput =
+  CIntInput
+    ()
+    Input

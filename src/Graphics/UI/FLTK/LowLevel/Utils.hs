@@ -133,7 +133,7 @@ arrayToRefs arrayPtr numElements =
         ref <- toRef curr
         go (currPtr `plusPtr` (sizeOf (undefined :: Ptr (Ptr a))))
            (numLeft - 1)
-           ([ref] ++ accum)
+           (accum ++ [ref])
 
 refOrError :: String -> Ptr () -> IO (Ref b)
 refOrError errorMessage p = wrapNonNull p errorMessage >>=

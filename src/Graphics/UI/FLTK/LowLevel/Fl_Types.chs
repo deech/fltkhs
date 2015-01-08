@@ -74,7 +74,7 @@ import qualified Data.ByteString as B
      MenuDivider = FL_MENU_DIVIDER,
      MenuHorizontal = FL_MENU_HORIZONTAL
   };
-  enum Orientation {
+  enum ScrollbarMode {
     Horizontal = HORIZONTAL,
     Vertical = VERTICAL,
     Both = BOTH,
@@ -192,6 +192,7 @@ import qualified Data.ByteString as B
 {#enum TableRowSelectMode {} #}
 {#enum TableContext {} deriving (Show) #}
 {#enum LinePosition {} #}
+{#enum ScrollbarMode {} deriving (Show, Eq) #}
 data GLUTproc = GLUTproc {#type GLUTproc#}
 newtype GLUTIdleFunction = GLUTIdleFunction (FunPtr (IO ()))
 newtype GLUTMenuStateFunction = GLUTMenuStateFunction (FunPtr (CInt -> IO()))
@@ -339,4 +340,3 @@ swapRef ref@(Ref fptr) f = do
 
 wrapInRef :: ForeignPtr (Ptr ()) -> Ref a
 wrapInRef = Ref . castForeignPtr
-xb

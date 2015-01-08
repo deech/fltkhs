@@ -34,6 +34,7 @@ library
                    Graphics.UI.FLTK.LowLevel.Hierarchy
                    Graphics.UI.FLTK.LowLevel.Fl_Group
                    Graphics.UI.FLTK.LowLevel.Fl_Widget
+                   Graphics.UI.FLTK.LowLevel.Fl_Box
                    Graphics.UI.FLTK.LowLevel.Fl_Valuator
                    Graphics.UI.FLTK.LowLevel.Fl_Slider
                    Graphics.UI.FLTK.LowLevel.Fl_Fill_Slider
@@ -43,6 +44,8 @@ library
                    Graphics.UI.FLTK.LowLevel.Fl_Nice_Slider
                    Graphics.UI.FLTK.LowLevel.Fl_Menu_Item
                    Graphics.UI.FLTK.LowLevel.Fl_Menu_
+                   Graphics.UI.FLTK.LowLevel.Fl_Browser
+                   Graphics.UI.FLTK.LowLevel.Fl_Select_Browser
                    Graphics.UI.FLTK.LowLevel.Fl_Sys_Menu_Bar
                    Graphics.UI.FLTK.LowLevel.Fl_Choice
                    Graphics.UI.FLTK.LowLevel.Fl_Menu_Button
@@ -67,6 +70,7 @@ library
                    Graphics.UI.FLTK.LowLevel.Fl_Progress
                    Graphics.UI.FLTK.LowLevel.Fl_Positioner
                    Graphics.UI.FLTK.LowLevel.Fl_Input
+                   Graphics.UI.FLTK.LowLevel.Fl_Int_Input
                    Graphics.UI.FLTK.LowLevel.Fl_Wizard
                    Graphics.UI.FLTK.LowLevel.Fl_Table
                    Graphics.UI.FLTK.LowLevel.Fl_Table_Row
@@ -119,6 +123,13 @@ Executable arc
 
 Executable bitmap
   Main-Is: bitmap.hs
+  Hs-Source-Dirs: src/Examples
+  Build-Depends: base,fltkhs,bytestring
+  ghc-Options: -Wall -threaded -fcontext-stack=200
+  ghc-Options: -pgml g++ "-optl-Wl,--whole-archive" "-optl-Wl,-Bstatic" "-optl-Wl,-lfltkc" "-optl-Wl,-Bdynamic" "-optl-Wl,--no-whole-archive"
+
+Executable boxtype
+  Main-Is: boxtype.hs
   Hs-Source-Dirs: src/Examples
   Build-Depends: base,fltkhs,bytestring
   ghc-Options: -Wall -threaded -fcontext-stack=200

@@ -53,6 +53,10 @@ module Graphics.UI.FLTK.LowLevel.FLTKHS
          module Graphics.UI.FLTK.LowLevel.Fl_Wizard,
          module Graphics.UI.FLTK.LowLevel.Fl_Table,
          module Graphics.UI.FLTK.LowLevel.Fl_Table_Row,
+         module Graphics.UI.FLTK.LowLevel.Fl_Box,
+         module Graphics.UI.FLTK.LowLevel.Fl_Browser,
+         module Graphics.UI.FLTK.LowLevel.Fl_Select_Browser,
+         module Graphics.UI.FLTK.LowLevel.Fl_Int_Input
        )
 where
 import Graphics.UI.FLTK.LowLevel.Fl_Gl_Window
@@ -108,3 +112,7 @@ import Graphics.UI.FLTK.LowLevel.Fl_Input
 import Graphics.UI.FLTK.LowLevel.Fl_Wizard
 import Graphics.UI.FLTK.LowLevel.Fl_Table
 import Graphics.UI.FLTK.LowLevel.Fl_Table_Row
+import Graphics.UI.FLTK.LowLevel.Fl_Box
+import Graphics.UI.FLTK.LowLevel.Fl_Browser
+import Graphics.UI.FLTK.LowLevel.Fl_Select_Browser
+import Graphics.UI.FLTK.LowLevel.Fl_Int_Input

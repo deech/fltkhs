@@ -235,13 +235,25 @@ instance (impl ~ IO (Int)) => Op (GetW ()) Widget orig impl where
 {# fun Fl_Widget_h as h' { id `Ptr ()' } -> `Int' #}
 instance (impl ~ IO (Int)) => Op (GetH ()) Widget orig impl where
   runOp _ _ widget = withRef widget $ \widgetPtr -> h' widgetPtr
-instance (impl ~ IO Rectangle) => Op (GetRectangle ()) Widget orig impl where
-  runOp _ _ widget = do
-    _x <- getX widget
-    _y <- getY widget
-    _w <- getW widget
-    _h <- getH widget
-    return (toRectangle (_x,_y,_w,_h))
+instance (
+         FindOp orig (GetX ()) (Match obj),
+         FindOp orig (GetY ()) (Match obj),
+         FindOp orig (GetW ()) (Match obj),
+         FindOp orig (GetH ()) (Match obj),
+         Op (GetX ()) obj orig (IO Int),
+         Op (GetY ()) obj orig (IO Int),
+         Op (GetW ()) obj orig (IO Int),
+         Op (GetH ()) obj orig (IO Int),
+         impl ~ IO Rectangle
+         )
+         =>
+         Op (GetRectangle ()) Widget orig impl where
+   runOp _ _ widget = do
+     _x <- getX (castTo widget :: Ref orig)
+     _y <- getY (castTo widget :: Ref orig)
+     _w <- getW (castTo widget :: Ref orig)
+     _h <- getH (castTo widget :: Ref orig)
+     return (toRectangle (_x,_y,_w,_h))
 {# fun Fl_Widget_set_align as setAlign' { id `Ptr ()', `Int' } -> `()' supressWarningAboutRes #}
 instance (impl ~ (Alignments ->  IO ())) => Op (SetAlign ()) Widget orig impl where
   runOp _ _ widget _align = withRef widget $ \widgetPtr -> setAlign' widgetPtr (alignmentsToInt _align)
