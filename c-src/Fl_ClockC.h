@@ -9,6 +9,10 @@
 #include "Fl_CallbackC.h"
 EXPORT {
 #endif
+#define FL_SQUARE_CLOCK		0
+#define FL_ROUND_CLOCK		1
+#define FL_ANALOG_CLOCK FL_SQUARE_CLOCK
+#define FL_DIGITAL_CLOCK FL_SQUARE_CLOCK
   /* Inherited from Fl_Widget */
   FL_EXPORT_C(int,Fl_Clock_handle)(fl_Clock self, int event);
   FL_EXPORT_C(fl_Group,     Fl_Clock_parent)(fl_Clock clock);
@@ -96,6 +100,7 @@ EXPORT {
   /* Fl_Clock specific functions */
   FL_EXPORT_C(fl_Clock,    Fl_Clock_New_WithLabel)(int x, int y, int w, int h, const char* label);
   FL_EXPORT_C(fl_Clock,    Fl_Clock_New)(int x, int y, int w, int h);
+  FL_EXPORT_C(fl_Clock,    Fl_Clock_New_WithClockType)(uchar t, int x, int y, int w, int h, const char* label);
   FL_EXPORT_C(void, Fl_Clock_set_value)(fl_Clock clock, ulong v);
   FL_EXPORT_C(void, Fl_Clock_set_value_with_hms)(fl_Clock clock, int H, int m, int s);
   FL_EXPORT_C(ulong, Fl_Clock_value)(fl_Clock clock);

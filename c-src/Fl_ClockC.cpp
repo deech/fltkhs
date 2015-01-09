@@ -113,12 +113,12 @@ EXPORT {
     (static_cast<Fl_Clock*>(b))->tooltip(text);
   }
   FL_EXPORT_C(void,Fl_Clock_set_callback_with_user_data)(fl_Clock b,fl_Callback* cb,void* p){
-    Fl_Clock* castedButton = (static_cast<Fl_Clock*>(b));
-    new C_to_Fl_Callback(castedButton, cb, p);
+    Fl_Clock* castedClock = (static_cast<Fl_Clock*>(b));
+    new C_to_Fl_Callback(castedClock, cb, p);
   }
   FL_EXPORT_C(void,Fl_Clock_set_callback)(fl_Clock b,fl_Callback* cb){
-    Fl_Clock* castedButton = (static_cast<Fl_Clock*>(b));
-    new C_to_Fl_Callback(castedButton, cb);
+    Fl_Clock* castedClock = (static_cast<Fl_Clock*>(b));
+    new C_to_Fl_Callback(castedClock, cb);
   }
   FL_EXPORT_C(void*,Fl_Clock_user_data)(fl_Clock b){
     C_to_Fl_Callback* stored_cb = (static_cast<C_to_Fl_Callback*>((static_cast<Fl_Clock*>(b))->user_data()));
@@ -267,15 +267,19 @@ EXPORT {
     return (fl_Gl_Window) (static_cast<Fl_Clock*>(clock))->as_gl_window();
   }
   FL_EXPORT_C(fl_Clock, Fl_Clock_New_WithLabel)(int x, int y, int w, int h, const char* label) {
-    Fl_Clock* button = new Fl_Clock(x,y,w,h,label);
-    return (static_cast<fl_Clock>(button));
+    Fl_Clock* clock = new Fl_Clock(x,y,w,h,label);
+    return (static_cast<fl_Clock>(clock));
   }
   FL_EXPORT_C(fl_Clock, Fl_Clock_New)(int x, int y, int w, int h) {
-    Fl_Clock* button = new Fl_Clock(x,y,w,h,0);
-    return (fl_Clock)button;
+    Fl_Clock* clock = new Fl_Clock(x,y,w,h,0);
+    return (fl_Clock)clock;
   }
-  FL_EXPORT_C(void,Fl_Clock_Destroy)(fl_Clock button){
-    delete (static_cast<Fl_Clock*>(button));
+  FL_EXPORT_C(fl_Clock, Fl_Clock_New_WithClockType)(uchar t, int x, int y, int w, int h, const char* label) {
+    Fl_Clock* clock = new Fl_Clock(t,x,y,w,h,label);
+    return (fl_Clock)clock;
+  }
+  FL_EXPORT_C(void,Fl_Clock_Destroy)(fl_Clock clock){
+    delete (static_cast<Fl_Clock*>(clock));
   }
   FL_EXPORT_C(void,Fl_Clock_set_value)(fl_Clock clock,ulong v){
     return (static_cast<Fl_Clock*>(clock))->value(v);

@@ -39,12 +39,12 @@ instance (impl ~ (Int -> Int -> Int -> Int ->  IO (Int))) => Op (SetValue ()) Sc
   runOp _ _ slider pos size first total = withRef slider $ \sliderPtr -> scrollvalue' sliderPtr pos size first total
 
 {# fun unsafe Fl_Scrollbar_set_linesize as setLinesize' { id `Ptr ()',`Int' } -> `()' #}
-instance (impl ~ (Int ->  IO ())) => Op (SetLinesize ()) Scrollbar orig impl where
-  runOp _ _ slider i = withRef slider $ \sliderPtr -> setLinesize' sliderPtr i
+instance (impl ~ (LineSize ->  IO ())) => Op (SetLinesize ()) Scrollbar orig impl where
+  runOp _ _ slider (LineSize i) = withRef slider $ \sliderPtr -> setLinesize' sliderPtr i
 
 {# fun unsafe Fl_Scrollbar_linesize as linesize' { id `Ptr ()' } -> `Int' #}
-instance (impl ~ ( IO (Int))) => Op (GetLinesize ()) Scrollbar orig impl where
-  runOp _ _ slider = withRef slider $ \sliderPtr -> linesize' sliderPtr
+instance (impl ~ ( IO LineSize)) => Op (GetLinesize ()) Scrollbar orig impl where
+  runOp _ _ slider = withRef slider $ \sliderPtr -> linesize' sliderPtr >>= return . LineSize
 
 {#fun Fl_Scrollbar_handle as scrollbarHandle'
       { id `Ptr ()', id `CInt' } -> `Int' #}

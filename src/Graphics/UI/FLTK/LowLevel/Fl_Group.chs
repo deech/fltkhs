@@ -63,7 +63,7 @@ instance (impl ~ (IO ())) => Op (Clear ()) Group orig impl where
   runOp _ _ group = withRef group $ \groupPtr -> clear' groupPtr
 
 {# fun Fl_Group_set_resizable as setResizable' { id `Ptr ()',id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance (Parent a Group, impl ~ (Ref a -> IO ())) => Op (SetResizable ()) Group orig impl where
+instance (Parent a Widget, impl ~ (Ref a -> IO ())) => Op (SetResizable ()) Group orig impl where
   runOp _ _ group o = withRef group $ \groupPtr -> withRef o $ \oPtr -> setResizable' groupPtr oPtr
 
 {# fun Fl_Group_resizable as resizable' { id `Ptr ()' } -> `Ptr ()' id #}

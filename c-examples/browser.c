@@ -123,7 +123,6 @@ int main (int argc, char** argv){
     fname = "../test/browser.cxx";
     done = Fl_Select_Browser_load(browser,fname);
 #elif defined(__APPLE__)
-    puts("apple");
     char buf[2048];
     strcpy(buf, argv[0]);
     char *slash = strrchr(buf, '/');
@@ -131,10 +130,8 @@ int main (int argc, char** argv){
 #if defined(USING_XCODE)
       strcpy(slash, "/../Resources/browser.cxx");
 #else
-    puts("else");
     strcpy(slash, "/../../../browser.cxx");
 #endif
-    puts("here");
     done = Fl_Select_Browser_load(browser,buf);
 #endif
     if ( !done )

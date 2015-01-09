@@ -24,7 +24,7 @@ import Graphics.UI.FLTK.LowLevel.Fl_Widget
 newtype MenuItemIndex = MenuItemIndex Int
 data MenuItemPointer = MenuItemPointer (Ref MenuItem)
 newtype MenuItemName = MenuItemName String
-data MenuItemReference = MenuItemIndexReference MenuItemIndex | MenuItemPointerReference MenuItemPointer
+data MenuItemReference = MenuItemByIndex MenuItemIndex | MenuItemByPointer MenuItemPointer
 data MenuItemLocator = MenuItemPointerLocator MenuItemPointer | MenuItemNameLocator MenuItemName
 
 {# fun unsafe Fl_Menu_Item_New as new' { } -> `Ptr ()' id #}

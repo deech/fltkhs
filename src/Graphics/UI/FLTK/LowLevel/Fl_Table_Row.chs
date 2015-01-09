@@ -12,6 +12,7 @@ where
 import C2HS hiding (cFromEnum, cFromBool, cToBool,cToEnum)
 import Foreign.C.Types
 import Graphics.UI.FLTK.LowLevel.Fl_Types
+import Graphics.UI.FLTK.LowLevel.Fl_Enumerations
 import Graphics.UI.FLTK.LowLevel.Fl_Widget
 import Graphics.UI.FLTK.LowLevel.Fl_Table
 import Graphics.UI.FLTK.LowLevel.Utils
@@ -61,8 +62,8 @@ instance (impl ~ (Int ->  IO ())) => Op (SetRowsSuper ()) TableRow orig impl whe
 {# fun Fl_Table_Row_set_cols_super as setColsSuper' { id `Ptr ()',`Int' } -> `()' #}
 instance (impl ~ (Int ->  IO ())) => Op (SetColsSuper ()) TableRow orig impl where
   runOp _ _ table val = withRef table $ \tablePtr -> setColsSuper' tablePtr val
-{# fun unsafe Fl_Table_Row_handle as handle' { id `Ptr ()',`Int' } -> `Int' #}
-instance (impl ~ (Int ->  IO (Int))) => Op (Handle ()) TableRow orig impl where
+{# fun unsafe Fl_Table_Row_handle as handle' { id `Ptr ()', cFromEnum `Event' } -> `Int' #}
+instance (impl ~ (Event ->  IO (Int))) => Op (Handle ()) TableRow orig impl where
   runOp _ _ table event = withRef table $ \tablePtr -> handle' tablePtr event
 {# fun unsafe Fl_Table_Row_resize_super as resizeSuper' { id `Ptr ()',`Int',`Int',`Int',`Int' } -> `()' #}
 instance (impl ~ (Rectangle ->  IO ())) => Op (ResizeSuper ()) TableRow orig impl where

@@ -506,6 +506,9 @@ FL_EXPORT_C(void, Fl_Browser_draw_label)(fl_Browser Browser){
   FL_EXPORT_C(int,Fl_Browser_load)(fl_Browser browser,const char* filename){
     return (static_cast<Fl_DerivedBrowser*>(browser))->load(filename);
   }
+  FL_EXPORT_C(void,Fl_Browser_swap)(fl_Browser browser,int a, int b){
+    (static_cast<Fl_DerivedBrowser*>(browser))->swap(a,b);
+  }
   FL_EXPORT_C(void,Fl_Browser_clear)(fl_Browser browser){
     return (static_cast<Fl_DerivedBrowser*>(browser))->clear();
   }

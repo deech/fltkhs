@@ -2,7 +2,8 @@
 module Graphics.UI.FLTK.LowLevel.Dispatch
        (
          FindOp,
-         FindObj,
+         Functions,
+         FindInHierarchy,
          Match,
          Op,
          Same,
@@ -45,7 +46,7 @@ instance Contains () b Different
 -- Move down the "object" hierarchy
 -- eg. Downcast Rectangle Shape
 class Downcast aas as | aas -> as
-instance Downcast (a fs as) as
+instance Downcast (a as) as
 instance (as ~ Base) => Downcast Base as
 
 -- Find an the first "object" with given
@@ -57,22 +58,28 @@ instance (Downcast aas as, FindOp as f r) => FindOp' aas f Different r
 instance (r ~ (Match a)) => FindOp' a b Same r
 
 class FindOp a b c | a b -> c
-instance (Contains fs f match, FindOp' (a fs as) f match r) => FindOp (a fs as) f r
+instance (Functions (a as) fs, Contains fs f match, FindOp' (a as) f match r) => FindOp (a as) f r
 instance FindOp Base f (NoFunction f)
 
 -- Find the first "object" of the given type
 -- in the hierarchy.
-class FindObj' a b c r | a b c -> r
-instance (Downcast aas as, FindObj as o r) => FindObj' aas o Different r
-instance (r ~ Same) => FindObj' a b Same r
+data InHierarchy
+data NotInHierarchy a b
 
-class FindObj a b c | a b -> c
-instance (TypeEqual (a () ()) (o () ()) match, FindObj' (a fs as) (o ofs oos) match r) => FindObj (a fs as) (o ofs oos) r
-instance (r ~ Different) => FindObj Base o r
-instance FindObj Base Base Same
+class FindInHierarchy' orig a b c r | orig a b c -> r
+instance (Downcast aas as, FindInHierarchy orig as o r) => FindInHierarchy' orig aas o Different r
+instance (r ~ InHierarchy) => FindInHierarchy' orig a b Same r
+
+class FindInHierarchy orig a b c | orig a b -> c
+instance (TypeEqual as oos match, FindInHierarchy' orig as oos match r) => FindInHierarchy orig as oos r
+instance (r ~ NotInHierarchy orig o) => FindInHierarchy orig Base o r
+instance FindInHierarchy orig Base Base InHierarchy
 
 class Parent a b
-instance (FindObj a b Same) => Parent a b
+instance (FindInHierarchy a a b InHierarchy) => Parent a b
+
+-- Associate a "class" with it's member functions
+class Functions a b | a -> b
 
 -- Implementations of methods on various types
 -- of objects

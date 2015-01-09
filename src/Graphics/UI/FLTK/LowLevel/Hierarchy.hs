@@ -1,4 +1,4 @@
-{-# LANGUAGE TypeFamilies, GADTs, FlexibleContexts, ScopedTypeVariables, EmptyDataDecls #-}
+{-# LANGUAGE TypeSynonymInstances, FlexibleInstances, MultiParamTypeClasses, FunctionalDependencies, TypeFamilies, GADTs, FlexibleContexts, ScopedTypeVariables, EmptyDataDecls #-}
 module Graphics.UI.FLTK.LowLevel.Hierarchy
        (
          -- * Region
@@ -339,6 +339,8 @@ module Graphics.UI.FLTK.LowLevel.Hierarchy
          setDownColor,
          -- * LightButton
          LightButton,
+         -- * RadioLightButton
+         RadioLightButton,
          -- * CheckButton
          CheckButton,
          -- * ReturnButton
@@ -457,6 +459,8 @@ module Graphics.UI.FLTK.LowLevel.Hierarchy
          getMenu,
          SetMenu,
          setMenu,
+         AddName,
+         addName,
          Copy,
          copy,
          SetSize,
@@ -887,10 +891,18 @@ module Graphics.UI.FLTK.LowLevel.Hierarchy
          getScrollbarWidth,
          SetScrollbarWidth,
          setScrollbarWidth,
+         Sort,
+         sort,
+         SortWithSortType,
+         sortWithSortType,
          -- * SelectBrowser
          SelectBrowser,
          -- * IntInput
-         IntInput
+         IntInput,
+         -- * Clock
+         Clock,
+         GetValueSinceEpoch,
+         getValueSinceEpoch
        )
 where
 import Prelude hiding (round)
@@ -898,101 +910,105 @@ import Graphics.UI.FLTK.LowLevel.Fl_Types
 import Graphics.UI.FLTK.LowLevel.Dispatch
 
 -- * Region
-data CRegion fs parent
-type Region = CRegion () Base
+data CRegion parent
+type Region = CRegion Base
+instance Functions Region ()
 
 -- * GlContext
-data CGlContext fs parent
-type GlContext = CGlContext () Base
+data CGlContext parent
+type GlContext = CGlContext Base
+instance Functions GlContext ()
 
 -- * Widget
-data CWidget fs parent
-type Widget = CWidget
-               (Destroy
-               (Handle
-               (GetParent
-               (SetParent
-               (GetType_
-               (SetType
-               (DrawLabel
-               (GetX
-               (GetY
-               (GetW
-               (GetH
-               (GetRectangle
-               (SetAlign
-               (GetAlign
-               (GetBox
-               (SetBox
-               (GetColor
-               (SetColor
-               (SetColorWithBgSel
-               (GetSelectionColor
-               (SetSelectionColor
-               (GetLabel
-               (CopyLabel
-               (SetLabel
-               (GetLabeltype
-               (SetLabeltype
-               (GetLabelcolor
-               (SetLabelcolor
-               (GetLabelfont
-               (SetLabelfont
-               (GetLabelsize
-               (SetLabelsize
-               (GetImage
-               (SetImage
-               (GetDeimage
-               (SetDeimage
-               (GetTooltip
-               (CopyTooltip
-               (SetTooltip
-               (GetWhen
-               (SetWhen
-               (GetVisible
-               (GetVisibleR
-               (ShowWidgetSuper
-               (ShowWidget
-               (HideSuper
-               (Hide
-               (SetVisible
-               (ClearVisible
-               (Active
-               (ActiveR
-               (Activate
-               (Deactivate
-               (GetOutput
-               (SetOutput
-               (Takesevents
-               (SetChanged
-               (GetClearChanged
-               (TakeFocus
-               (SetVisibleFocus
-               (ClearVisibleFocus
-               (ModifyVisibleFocus
-               (GetVisibleFocus
-               (Contains
-               (Inside
-               (Redraw
-               (RedrawLabel
-               (GetDamage
-               (ClearDamageWithBitmask
-               (ClearDamage
-               (GetDamageWithText
-               (GetDamageInsideWidget
-               (MeasureLabel
-               (GetWindow
-               (GetTopWindow
-               (GetTopWindowOffset
-               (ResizeSuper
-               (Resize
-               (SetCallback
-               (DrawBox
-               (DrawBoxWithBoxtype
-               (DrawBackdrop
-               (DrawFocus
-               ())))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))
-              Base
+data CWidget parent
+type Widget = CWidget Base
+type WidgetFuncs =
+  (Destroy
+  (Handle
+  (GetParent
+  (SetParent
+  (GetType_
+  (SetType
+  (DrawLabel
+  (GetX
+  (GetY
+  (GetW
+  (GetH
+  (GetRectangle
+  (SetAlign
+  (GetAlign
+  (GetBox
+  (SetBox
+  (GetColor
+  (SetColor
+  (SetColorWithBgSel
+  (GetSelectionColor
+  (SetSelectionColor
+  (GetLabel
+  (CopyLabel
+  (SetLabel
+  (GetLabeltype
+  (SetLabeltype
+  (GetLabelcolor
+  (SetLabelcolor
+  (GetLabelfont
+  (SetLabelfont
+  (GetLabelsize
+  (SetLabelsize
+  (GetImage
+  (SetImage
+  (GetDeimage
+  (SetDeimage
+  (GetTooltip
+  (CopyTooltip
+  (SetTooltip
+  (GetWhen
+  (SetWhen
+  (GetVisible
+  (GetVisibleR
+  (ShowWidgetSuper
+  (ShowWidget
+  (HideSuper
+  (Hide
+  (SetVisible
+  (ClearVisible
+  (Active
+  (ActiveR
+  (Activate
+  (Deactivate
+  (GetOutput
+  (SetOutput
+  (Takesevents
+  (SetChanged
+  (GetClearChanged
+  (TakeFocus
+  (SetVisibleFocus
+  (ClearVisibleFocus
+  (ModifyVisibleFocus
+  (GetVisibleFocus
+  (Contains
+  (Inside
+  (Redraw
+  (RedrawLabel
+  (GetDamage
+  (ClearDamageWithBitmask
+  (ClearDamage
+  (GetDamageWithText
+  (GetDamageInsideWidget
+  (MeasureLabel
+  (GetWindow
+  (GetTopWindow
+  (GetTopWindowOffset
+  (ResizeSuper
+  (Resize
+  (SetCallback
+  (DrawBox
+  (DrawBoxWithBoxtype
+  (DrawBackdrop
+  (DrawFocus
+  ())))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))
+instance Functions Widget WidgetFuncs
+
 data Destroy a
 destroy :: (FindOp a (Destroy ()) (Match r), Op (Destroy ()) r a impl) => Ref a -> impl
 destroy = dispatch (undefined :: Destroy ())
@@ -1247,9 +1263,10 @@ drawFocus :: (FindOp a (DrawFocus ()) (Match r), Op (DrawFocus ()) r a impl) => 
 drawFocus = dispatch (undefined :: DrawFocus ())
 
 -- * Group
-data CGroup fs parent
-type Group = CGroup
-               (Destroy
+data CGroup parent
+type Group = CGroup Widget
+type GroupFuncs =
+  (Destroy
                (Begin
                (End
                (Find
@@ -1271,7 +1288,8 @@ type Group = CGroup
                (GetArray
                (GetChild
                ())))))))))))))))))))))
-               Widget
+instance Functions Group GroupFuncs
+
 
 data Begin a
 begin :: (FindOp a (Begin ()) (Match r), Op (Begin ()) r a impl) => Ref a -> impl
@@ -1334,10 +1352,10 @@ data GetChild a
 getChild :: (FindOp a (GetChild ()) (Match r), Op (GetChild ()) r a impl) => Ref a -> impl
 getChild = dispatch (undefined :: GetChild ())
 
-data CWindow fs parent
-type Window =
-    CWindow
-      (Destroy
+data CWindow parent
+type Window = CWindow Group
+type WindowFuncs =
+  (Destroy
       (DrawSuper
       (HandleSuper
       (Resize
@@ -1385,7 +1403,7 @@ type Window =
       (GetDecoratedH
       (WaitForExpose
       ())))))))))))))))))))))))))))))))))))))))))))))))
-      Group
+instance Functions Window WindowFuncs
 
 data DrawSuper a
 drawSuper :: (FindOp a (DrawSuper ()) (Match r), Op (DrawSuper ()) r a impl) => Ref a -> impl
@@ -1514,52 +1532,55 @@ data WaitForExpose a
 waitForExpose :: (FindOp a (WaitForExpose ()) (Match r), Op (WaitForExpose ()) r a impl) => Ref a -> impl
 waitForExpose = dispatch (undefined :: WaitForExpose ())
 
-data CSingleWindow fs parent
-type SingleWindow =
-    CSingleWindow
-      (Destroy
-      (DrawSuper
-      (HandleSuper
-      (ResizeSuper
-      (ShowWidgetSuper
-      (HideSuper
-      (Hide
-      (FlushSuper
-      (ShowWidget
-      (Handle
-      (Resize
-      ())))))))))))
-      Window
+data CSingleWindow parent
+type SingleWindow = CSingleWindow Window
+type SingleWindowFuncs =
+  (Destroy
+  (DrawSuper
+  (HandleSuper
+  (ResizeSuper
+  (ShowWidgetSuper
+  (HideSuper
+  (Hide
+  (FlushSuper
+  (ShowWidget
+  (Handle
+  (Resize
+  ())))))))))))
+instance Functions SingleWindow SingleWindowFuncs
 
-data CDoubleWindow fs parent
-type DoubleWindow =
-    CDoubleWindow
-      (Destroy
-      (DrawSuper
-      (HandleSuper
-      (ResizeSuper
-      (ShowWidgetSuper
-      (HideSuper
-      (Hide
-      (FlushSuper
-      (ShowWidget
-      (Handle
-      (Resize
-      ())))))))))))
-      Window
 
-data COverlayWindow fs parent
-type OverlayWindow =
-     COverlayWindow
-       (Destroy
-       (ShowWidget
-       (Flush
-       (Resize
-       (Hide
-       (CanDoOverlay
-       (RedrawOverlay
-       ())))))))
-       DoubleWindow
+data CDoubleWindow parent
+type DoubleWindow = CDoubleWindow Window
+type DoubleWindowFuncs =
+  (Destroy
+  (DrawSuper
+  (HandleSuper
+  (ResizeSuper
+  (ShowWidgetSuper
+  (HideSuper
+  (Hide
+  (FlushSuper
+  (ShowWidget
+  (Handle
+  (Resize
+  ())))))))))))
+instance Functions DoubleWindow DoubleWindowFuncs
+
+
+data COverlayWindow parent
+type OverlayWindow = COverlayWindow DoubleWindow
+type OverlayWindowFuncs =
+  (Destroy
+  (ShowWidget
+  (Flush
+  (Resize
+  (Hide
+  (CanDoOverlay
+  (RedrawOverlay
+  ())))))))
+instance Functions OverlayWindow OverlayWindowFuncs
+
 
 data CanDoOverlay a
 canDoOverlay :: (FindOp a (CanDoOverlay ()) (Match r), Op (CanDoOverlay ()) r a impl) => Ref a -> impl
@@ -1573,35 +1594,35 @@ data Flush a
 flush :: (FindOp a (Flush ()) (Match r), Op (Flush ()) r a impl) => Ref a -> impl
 flush = dispatch (undefined :: Flush ())
 
-data CButton fs parent
-type Button =
-    CButton
-     (Destroy
-     (DrawSuper
-     (HandleSuper
-     (Handle
-     (ResizeSuper
-     (Resize
-     (HideSuper
-     (Hide
-     (ShowWidgetSuper
-     (ShowWidget
-     (GetValue
-     (SetValue
-     (Set
-     (Clear
-     (Setonly
-     (GetShortcut
-     (SetShortcut
-     (GetDownBox
-     (SetDownBox
-     (GetDownColor
-     (SetDownColor
-     (DrawBox
-     (DrawBackdrop
-     (DrawFocus
-     ()))))))))))))))))))))))))
-     Widget
+data CButton parent
+type Button = CButton Widget
+type ButtonFuncs =
+  (Destroy
+  (DrawSuper
+  (HandleSuper
+  (Handle
+  (ResizeSuper
+  (Resize
+  (HideSuper
+  (Hide
+  (ShowWidgetSuper
+  (ShowWidget
+  (GetValue
+  (SetValue
+  (Set
+  (Clear
+  (Setonly
+  (GetShortcut
+  (SetShortcut
+  (GetDownBox
+  (SetDownBox
+  (GetDownColor
+  (SetDownColor
+  (DrawBox
+  (DrawBackdrop
+  (DrawFocus
+  ()))))))))))))))))))))))))
+instance Functions Button ButtonFuncs
 
 data GetValue a
 getValue :: (FindOp a (GetValue ()) (Match r), Op (GetValue ()) r a impl) => Ref a -> impl
@@ -1634,62 +1655,75 @@ data SetDownColor a
 setDownColor :: (FindOp a (SetDownColor ()) (Match r), Op (SetDownColor ()) r a impl) => Ref a -> impl
 setDownColor = dispatch (undefined :: SetDownColor ())
 
-data CLightButton fs parent
-type LightButton =
-    CLightButton (Destroy ()) Button
+data CLightButton parent
+type LightButtonFuncs =
+  (Destroy ())
+type LightButton = CLightButton Button
+instance Functions LightButton LightButtonFuncs
 
-data CCheckButton fs parent
-type CheckButton =
-    CCheckButton (Destroy ()) Button
+data CRadioLightButton parent
+type RadioLightButton = CRadioLightButton LightButton
+instance Functions RadioLightButton ()
 
-data CReturnButton fs parent
-type ReturnButton =
-    CReturnButton
-      (Destroy
-      (Handle ()))
-      Button
+data CCheckButton parent
+type CheckButtonFuncs =
+  (Destroy ())
+type CheckButton = CCheckButton Button
+instance Functions CheckButton CheckButtonFuncs
 
-data CRoundButton fs parent
-type RoundButton =
-    CRoundButton (Destroy ()) Button
+data CReturnButton parent
+type ReturnButton = CReturnButton Button
+type ReturnButtonFuncs =
+  (Destroy
+  (Handle ()))
+instance Functions ReturnButton ReturnButtonFuncs
 
-data CRepeatButton fs parent
-type RepeatButton =
-    CRepeatButton
-     (Destroy
-     (Handle
-     (Deactivate
-      ())))
-     Button
+data CRoundButton parent
+type RoundButton = CRoundButton Button
+type RoundButtonFuncs =
+  (Destroy ())
+instance Functions RoundButton RoundButtonFuncs
 
-data CToggleButton fs parent
-type ToggleButton =
-    CToggleButton (Destroy ()) Button
+data CRepeatButton parent
+type RepeatButton = CRepeatButton Button
+type RepeatButtonFuncs =
+  (Destroy
+  (Handle
+  (Deactivate
+  ())))
+instance Functions RepeatButton RepeatButtonFuncs
 
-data CValuator fs parent
-type Valuator =
-    CValuator
-     (Destroy
-     (Handle
-     (ResizeSuper
-     (Resize
-     (GetBounds
-     (GetMinimum
-     (SetMinimum
-     (GetMaximum
-     (SetMaximum
-     (GetRange
-     (SetStep
-     (GetStep
-     (Precision
-     (GetValue
-     (SetValue
-     (Format
-     (Round
-     (Clamp
-     (Increment
-     ())))))))))))))))))))
-     Widget
+
+data CToggleButton parent
+type ToggleButton = CToggleButton Button
+type ToggleButtonFuncs =
+  (Destroy ())
+instance Functions ToggleButton ToggleButtonFuncs
+
+data CValuator parent
+type Valuator = CValuator Widget
+type ValuatorFuncs =
+  (Destroy
+  (Handle
+  (ResizeSuper
+  (Resize
+  (GetBounds
+  (GetMinimum
+  (SetMinimum
+  (GetMaximum
+  (SetMaximum
+  (GetRange
+  (SetStep
+  (GetStep
+  (Precision
+  (GetValue
+  (SetValue
+  (Format
+  (Round
+  (Clamp
+  (Increment
+  ())))))))))))))))))))
+instance Functions Valuator ValuatorFuncs
 
 data GetBounds a
 getBounds :: (FindOp a (GetBounds ()) (Match r), Op (GetBounds ()) r a impl) => Ref a -> impl
@@ -1731,17 +1765,17 @@ data Increment a
 increment :: (FindOp a (Increment ()) (Match r), Op (Increment ()) r a impl) => Ref a -> impl
 increment = dispatch (undefined :: Increment())
 
-data CSlider fs parent
-type Slider =
-  CSlider
-    (Destroy
-    (Scrollvalue
-    (SetSliderSize
-    (GetSliderSize
-    (GetSlider
-    (SetSlider
-    ()))))))
-    Valuator
+data CSlider parent
+type Slider = CSlider Valuator
+type SliderFuncs =
+  (Destroy
+  (Scrollvalue
+  (SetSliderSize
+  (GetSliderSize
+  (GetSlider
+  (SetSlider
+  ()))))))
+instance Functions Slider SliderFuncs
 
 data Scrollvalue a
 scrollvalue :: (FindOp a (Scrollvalue ()) (Match r), Op (Scrollvalue ()) r a impl) => Ref a -> impl
@@ -1759,87 +1793,77 @@ data SetSlider a
 setSlider :: (FindOp a (SetSlider ()) (Match r), Op (SetSlider ()) r a impl) => Ref a -> impl
 setSlider = dispatch (undefined :: SetSlider ())
 
-data CFillSlider fs parent
-type FillSlider =
-  CFillSlider
-    ()
-    Slider
+data CFillSlider parent
+type FillSlider = CFillSlider Slider
+instance Functions FillSlider ()
 
-data CHorSlider fs parent
-type HorSlider =
-  CHorSlider
-    ()
-    Slider
+data CHorSlider parent
+type HorSlider = CHorSlider Slider
+instance Functions HorSlider ()
 
-data CHorFillSlider fs parent
-type HorFillSlider =
-  CHorFillSlider
-    ()
-    Slider
+data CHorFillSlider parent
+type HorFillSlider = CHorFillSlider Slider
+instance Functions HorFillSlider ()
 
-data CNiceSlider fs parent
-type NiceSlider =
-  CNiceSlider
-    ()
-    Slider
+data CNiceSlider parent
+type NiceSlider = CNiceSlider Slider
+instance Functions NiceSlider ()
 
-data CHorNiceSlider fs parent
-type HorNiceSlider =
-  CHorNiceSlider
-    ()
-    Slider
+data CHorNiceSlider parent
+type HorNiceSlider = CHorNiceSlider Slider
+instance Functions HorNiceSlider ()
 
-data CMenuItem fs parent
-type MenuItem =
-  CMenuItem
-   (Destroy
-   (NextWithStep
-   (Next
-   (GetFirst
-   (GetLabel
-   (SetLabel
-   (SetLabelWithLabeltype
-   (GetLabeltype
-   (SetLabeltype
-   (GetLabelcolor
-   (SetLabelcolor
-   (GetLabelfont
-   (SetLabelfont
-   (GetLabelsize
-   (SetLabelsize
-   (SetCallback
-   (GetShortcut
-   (SetShortcut
-   (Submenu
-   (Checkbox
-   (Radio
-   (GetValue
-   (Set
-   (Clear
-   (Setonly
-   (Visible
-   (ShowWidget
-   (Hide
-   (Active
-   (Activate
-   (Deactivate
-   (Activevisible
-   (Measure
-   (DrawWithT
-   (Draw
-   (GetFlags
-   (SetFlags
-   (GetText
-   (Pulldown
-   (Popup
-   (TestShortcut
-   (FindShortcut
-   (DoCallback
-   (Add
-   (Insert
-   (GetSize
-   ()))))))))))))))))))))))))))))))))))))))))))))))
-   Base
+data CMenuItem parent
+type MenuItem = CMenuItem Base
+type MenuItemFuncs =
+  (Destroy
+  (NextWithStep
+  (Next
+  (GetFirst
+  (GetLabel
+  (SetLabel
+  (SetLabelWithLabeltype
+  (GetLabeltype
+  (SetLabeltype
+  (GetLabelcolor
+  (SetLabelcolor
+  (GetLabelfont
+  (SetLabelfont
+  (GetLabelsize
+  (SetLabelsize
+  (SetCallback
+  (GetShortcut
+  (SetShortcut
+  (Submenu
+  (Checkbox
+  (Radio
+  (GetValue
+  (Set
+  (Clear
+  (Setonly
+  (Visible
+  (ShowWidget
+  (Hide
+  (Active
+  (Activate
+  (Deactivate
+  (Activevisible
+  (Measure
+  (DrawWithT
+  (Draw
+  (GetFlags
+  (SetFlags
+  (GetText
+  (Pulldown
+  (Popup
+  (TestShortcut
+  (FindShortcut
+  (DoCallback
+  (Add
+  (Insert
+  (GetSize
+  ()))))))))))))))))))))))))))))))))))))))))))))))
+instance Functions MenuItem MenuItemFuncs
 
 data NextWithStep a
 nextWithStep :: (FindOp a (NextWithStep  ()) (Match r), Op (NextWithStep  ()) r a impl) => Ref a -> impl
@@ -1902,54 +1926,55 @@ data GetSize a
 getSize :: (FindOp a (GetSize  ()) (Match r), Op (GetSize  ()) r a impl) => Ref a -> impl
 getSize = dispatch (undefined :: GetSize ())
 
-data CMenuPrim fs parent
-type MenuPrim =
-  CMenuPrim
-    (Destroy
-    (HandleSuper
-    (Handle
-    (ResizeSuper
-    (Resize
-    (HideSuper
-    (Hide
-    (ShowWidgetSuper
-    (ShowWidget
-    (ItemPathname
-    (Picked
-    (FindIndex
-    (TestShortcut
-    (Global
-    (GetMenu
-    (SetMenu
-    (Copy
-    (Insert
-    (Add
-    (GetSize
-    (SetSize
-    (Clear
-    (ClearSubmenu
-    (Replace
-    (Remove
-    (SetShortcut
-    (SetMode
-    (GetMode
-    (Mvalue
-    (GetValue
-    (SetValue
-    (GetText
-    (GetTextWithIndex
-    (GetTextfont
-    (SetTextfont
-    (GetTextsize
-    (SetTextsize
-    (GetTextcolor
-    (SetTextcolor
-    (GetDownBox
-    (SetDownBox
-    (GetDownColor
-    (SetDownColor
-    ())))))))))))))))))))))))))))))))))))))))))))
-    Widget
+data CMenuPrim parent
+type MenuPrim = CMenuPrim Widget
+type MenuPrimFuncs =
+  (Destroy
+  (HandleSuper
+  (Handle
+  (ResizeSuper
+  (Resize
+  (HideSuper
+  (Hide
+  (ShowWidgetSuper
+  (ShowWidget
+  (ItemPathname
+  (Picked
+  (FindIndex
+  (TestShortcut
+  (Global
+  (GetMenu
+  (SetMenu
+  (Copy
+  (Insert
+  (Add
+  (AddName
+  (GetSize
+  (SetSize
+  (Clear
+  (ClearSubmenu
+  (Replace
+  (Remove
+  (SetShortcut
+  (SetMode
+  (GetMode
+  (Mvalue
+  (GetValue
+  (SetValue
+  (GetText
+  (GetTextWithIndex
+  (GetTextfont
+  (SetTextfont
+  (GetTextsize
+  (SetTextsize
+  (GetTextcolor
+  (SetTextcolor
+  (GetDownBox
+  (SetDownBox
+  (GetDownColor
+  (SetDownColor
+  ()))))))))))))))))))))))))))))))))))))))))))))
+instance Functions MenuPrim MenuPrimFuncs
 
 data ItemPathname a
 itemPathname :: (FindOp a (ItemPathname ()) (Match r), Op (ItemPathname ()) r a impl) => Ref a -> impl
@@ -1978,6 +2003,9 @@ setSize = dispatch (undefined :: SetSize ())
 data ClearSubmenu a
 clearSubmenu :: (FindOp a (ClearSubmenu  ()) (Match r), Op (ClearSubmenu  ()) r a impl) => Ref a -> impl
 clearSubmenu = dispatch (undefined :: ClearSubmenu ())
+data AddName a
+addName :: (FindOp a (AddName  ()) (Match r), Op (AddName  ()) r a impl) => Ref a -> impl
+addName = dispatch (undefined :: AddName ())
 data Replace a
 replace :: (FindOp a (Replace  ()) (Match r), Op (Replace  ()) r a impl) => Ref a -> impl
 replace = dispatch (undefined :: Replace ())
@@ -2021,48 +2049,49 @@ data DownBox a
 downBox :: (FindOp a (DownBox  ()) (Match r), Op (DownBox  ()) r a impl) => Ref a -> impl
 downBox = dispatch (undefined :: DownBox ())
 
-data CSysMenuBar fs parent
-type SysMenuBar =
-  CSysMenuBar
-   (Destroy
-   (GetMenu
-   (SetMenu
-   (Add
-   (Insert
-   (Remove
-   (Replace
-   (Clear
-   (ClearSubmenu
-   (Global
-   (SetMode
-   (GetMode
-   (SetShortcut
-   (Handle
-   ()))))))))))))))
-   MenuPrim
+data CSysMenuBar parent
+type SysMenuBar = CSysMenuBar MenuPrim
+type SysMenuBarFuncs =
+  (Destroy
+  (GetMenu
+  (SetMenu
+  (Add
+  (Insert
+  (Remove
+  (Replace
+  (Clear
+  (ClearSubmenu
+  (Global
+  (SetMode
+  (GetMode
+  (SetShortcut
+  (Handle
+  ()))))))))))))))
+instance Functions SysMenuBar SysMenuBarFuncs
 
-data CChoice fs parent
-type Choice =
-  CChoice
+data CChoice parent
+type Choice = CChoice MenuPrim
+type ChoiceFuncs =
   (Destroy
   (Handle
   (GetValue
   (SetValue
   ()))))
-  MenuPrim
+instance Functions Choice ChoiceFuncs
 
-data CMenuButton fs parent
-type MenuButton =
-  CMenuButton
+
+data CMenuButton parent
+type MenuButton = CMenuButton MenuPrim
+type MenuButtonFuncs =
   (Destroy
   (Handle
   (Popup
   ())))
-  MenuPrim
+instance Functions MenuButton MenuButtonFuncs
 
-data CImage fs parent
-type Image =
-  CImage
+data CImage parent
+type Image = CImage Base
+type ImageFuncs =
   (Destroy
   (GetW
   (GetH
@@ -2077,7 +2106,8 @@ type Image =
   (Draw
   (Uncache
   ())))))))))))))
-  Base
+instance Functions Image ImageFuncs
+
 data GetD a
 getD :: (FindOp a (GetD ()) (Match r), Op (GetD ()) r a impl) => Ref a -> impl
 getD = dispatch (undefined :: GetD ())
@@ -2103,9 +2133,28 @@ data Uncache a
 uncache :: (FindOp a (Uncache ()) (Match r), Op (Uncache ()) r a impl) => Ref a -> impl
 uncache = dispatch (undefined :: Uncache ())
 
-data CBitmap fs parent
-type Bitmap =
-  CBitmap
+data CBitmap parent
+type Bitmap = CBitmap Image
+type BitmapFuncs =
+  (Destroy
+ (GetW
+ (GetH
+ (GetD
+ (GetLd
+ (GetCount
+ (Copy
+ (ColorAverage
+ (Inactive
+ (Desaturate
+ (DrawResize
+ (Draw
+ (Uncache
+ ())))))))))))))
+instance Functions Bitmap BitmapFuncs
+
+data CPixmap parent
+type Pixmap = CPixmap Image
+type PixmapFuncs =
   (Destroy
   (GetW
   (GetH
@@ -2120,36 +2169,18 @@ type Bitmap =
   (Draw
   (Uncache
   ())))))))))))))
-  Image
+instance Functions Pixmap PixmapFuncs
 
-data CPixmap fs parent
-type Pixmap =
-  CPixmap
-  (Destroy
-  (GetW
-  (GetH
-  (GetD
-  (GetLd
-  (GetCount
-  (Copy
-  (ColorAverage
-  (Inactive
-  (Desaturate
-  (DrawResize
-  (Draw
-  (Uncache
-  ())))))))))))))
-  Image
-
-data CCopySurface fs parent
-type CopySurface =
-  CCopySurface
+data CCopySurface parent
+type CopySurface = CCopySurface Base
+type CopySurfaceFuncs =
   (Destroy
   (ClassName
   (SetCurrent
   (Draw
   ()))))
-  Base
+instance Functions CopySurface CopySurfaceFuncs
+
 data ClassName a
 className :: (FindOp a (ClassName ()) (Match r), Op (ClassName ()) r a impl) => Ref a -> impl
 className = dispatch (undefined :: ClassName ())
@@ -2157,24 +2188,26 @@ data SetCurrent a
 setCurrent :: (FindOp a (SetCurrent ()) (Match r), Op (SetCurrent ()) r a impl) => Ref a -> impl
 setCurrent = dispatch (undefined :: SetCurrent ())
 
-data CImageSurface fs parent
-type ImageSurface =
-  CImageSurface
+data CImageSurface parent
+type ImageSurface = CImageSurface Base
+type ImageSurfaceFuncs =
   (Destroy
   (ClassName
   (SetCurrent
   (Draw
   ()))))
-  Base
+instance Functions ImageSurface ImageSurfaceFuncs
 
-data CAdjuster fs parent
-type Adjuster =
-  CAdjuster
+
+data CAdjuster parent
+type Adjuster = CAdjuster Valuator
+type AdjusterFuncs =
   (Destroy
   (SetSoft
   (GetSoft
   ())))
-  Valuator
+instance Functions Adjuster AdjusterFuncs
+
 
 data SetSoft a
 setSoft :: (FindOp a (SetSoft ()) (Match r), Op (SetSoft ()) r a impl) => Ref a -> impl
@@ -2183,17 +2216,17 @@ data GetSoft a
 getSoft :: (FindOp a (GetSoft ()) (Match r), Op (GetSoft ()) r a impl) => Ref a -> impl
 getSoft = dispatch (undefined :: GetSoft ())
 
-data CDial fs parent
-type Dial =
-  CDial
+data CDial parent
+type Dial = CDial Valuator
+type DialFuncs =
   (Destroy
-  (GetAngle1
-  (SetAngle1
-  (GetAngle2
-  (SetAngle2
-  (SetAngles
-  ()))))))
-  Valuator
+ (GetAngle1
+ (SetAngle1
+ (GetAngle2
+ (SetAngle2
+ (SetAngles
+ ()))))))
+instance Functions Dial DialFuncs
 
 data GetAngle1 a
 getAngle1 :: (FindOp a (GetAngle1 ()) (Match r), Op (GetAngle1 ()) r a impl) => Ref a -> impl
@@ -2211,29 +2244,25 @@ data SetAngles a
 setAngles :: (FindOp a (SetAngles ()) (Match r), Op (SetAngles ()) r a impl) => Ref a -> impl
 setAngles = dispatch (undefined :: SetAngles ())
 
-data CFillDial fs parent
-type FillDial =
-  CFillDial
-  ()
-  Dial
+data CFillDial parent
+type FillDial = CFillDial Dial
+instance Functions FillDial ()
 
-data CLineDial fs parent
-type LineDial =
-  CLineDial
-  ()
-  Dial
+data CLineDial parent
+type LineDial = CLineDial Dial
+instance Functions LineDial ()
 
-data CRoller fs parent
-type Roller =
-  CRoller
+data CRoller parent
+type Roller = CRoller Valuator
+type RollerFuncs =
   (Destroy
   (Handle
   ()))
-  Valuator
+instance Functions Roller RollerFuncs
 
-data CCounter fs parent
-type Counter =
-  CCounter
+data CCounter parent
+type Counter = CCounter Valuator
+type CounterFuncs =
   (Destroy
   (Handle
   (SetLstep
@@ -2244,28 +2273,26 @@ type Counter =
   (SetTextcolor
   (GetTextcolor
   ())))))))))
-  Valuator
+instance Functions Counter CounterFuncs
 
 data SetLstep a
 setLstep :: (FindOp a (SetLstep ()) (Match r), Op (SetLstep ()) r a impl) => Ref a -> impl
 setLstep = dispatch (undefined :: SetLstep ())
 
-data CSimpleCounter fs parent
-type SimpleCounter =
-  CSimpleCounter
-  ()
-  Counter
+data CSimpleCounter parent
+type SimpleCounter = CSimpleCounter Counter
+instance Functions SimpleCounter ()
 
-data CScrollbar fs parent
-type Scrollbar =
- CScrollbar
- (Destroy
+data CScrollbar parent
+type Scrollbar = CScrollbar Slider
+type ScrollbarFuncs =
+  (Destroy
  (SetValue
  (Handle
  (SetLinesize
  (GetLinesize
  ())))))
- Slider
+instance Functions Scrollbar ScrollbarFuncs
 
 data SetLinesize a
 setLinesize :: (FindOp a (SetLinesize ()) (Match r), Op (SetLinesize ()) r a impl) => Ref a -> impl
@@ -2274,9 +2301,9 @@ data GetLinesize a
 getLinesize :: (FindOp a (GetLinesize ()) (Match r), Op (GetLinesize ()) r a impl) => Ref a -> impl
 getLinesize = dispatch (undefined :: GetLinesize ())
 
-data CValueSlider fs parent
-type ValueSlider =
-  CValueSlider
+data CValueSlider parent
+type ValueSlider = CValueSlider Slider
+type ValueSliderFuncs =
   (Destroy
   (Handle
   (GetTextfont
@@ -2286,60 +2313,58 @@ type ValueSlider =
   (GetTextcolor
   (SetTextcolor
   ()))))))))
-  Slider
+instance Functions ValueSlider ValueSliderFuncs
 
-data CHorValueSlider fs parent
-type HorValueSlider =
-  CHorValueSlider
-    ()
-    ValueSlider
+data CHorValueSlider parent
+type HorValueSlider = CHorValueSlider ValueSlider
+instance Functions HorValueSlider ()
 
-data CInput fs parent
-type Input =
-  CInput
-   (Destroy
-   (Handle
-   (SetValue
-   (StaticValue
-   (GetValue
-   (Index
-   (SetSize
-   (GetMaximumSize
-   (GetSize
-   (SetMaximumSize
-   (GetPosition
-   (GetMark
-   (SetPosition
-   (SetMark
-   (Replace
-   (Cut
-   (CutFromCursor
-   (CutRange
-   (Insert
-   (InsertWithLength
-   (Copy
-   (Undo
-   (CopyCuts
-   (GetShortcut
-   (SetShortcut
-   (GetTextfont
-   (SetTextfont
-   (GetTextsize
-   (SetTextsize
-   (GetTextcolor
-   (SetTextcolor
-   (GetCursorColor
-   (SetCursorColor
-   (GetInputType
-   (SetInputType
-   (GetReadonly
-   (SetReadonly
-   (GetWrap
-   (SetWrap
-   (GetTabNav
-   (SetTabNav
-   ())))))))))))))))))))))))))))))))))))))))))
-   Widget
+data CInput parent
+type Input = CInput Widget
+type InputFuncs =
+  (Destroy
+  (Handle
+  (SetValue
+  (StaticValue
+  (GetValue
+  (Index
+  (SetSize
+  (GetMaximumSize
+  (GetSize
+  (SetMaximumSize
+  (GetPosition
+  (GetMark
+  (SetPosition
+  (SetMark
+  (Replace
+  (Cut
+  (CutFromCursor
+  (CutRange
+  (Insert
+  (InsertWithLength
+  (Copy
+  (Undo
+  (CopyCuts
+  (GetShortcut
+  (SetShortcut
+  (GetTextfont
+  (SetTextfont
+  (GetTextsize
+  (SetTextsize
+  (GetTextcolor
+  (SetTextcolor
+  (GetCursorColor
+  (SetCursorColor
+  (GetInputType
+  (SetInputType
+  (GetReadonly
+  (SetReadonly
+  (GetWrap
+  (SetWrap
+  (GetTabNav
+  (SetTabNav
+  ())))))))))))))))))))))))))))))))))))))))))
+instance Functions Input InputFuncs
 
 data StaticValue a
 staticValue :: (FindOp a (StaticValue ()) (Match r), Op (StaticValue ()) r a impl) => Ref a -> impl
@@ -2414,9 +2439,9 @@ data SetTabNav a
 setTabNav :: (FindOp a (SetTabNav ()) (Match r), Op (SetTabNav ()) r a impl) => Ref a -> impl
 setTabNav = dispatch (undefined :: SetTabNav ())
 
-data CValueInput fs parent
-type ValueInput =
-  CValueInput
+data CValueInput parent
+type ValueInput = CValueInput Valuator
+type ValueInputFuncs =
   (Destroy
   (Handle
   (GetSoft
@@ -2430,37 +2455,37 @@ type ValueInput =
   (SetTextcolor
   (GetTextcolor
   ()))))))))))))
-  Valuator
+instance Functions ValueInput ValueInputFuncs
 
-data CValueOutput fs parent
-type ValueOutput =
-  CValueOutput
-   (Destroy
-   (Handle
-   (GetSoft
-   (SetSoft
-   (SetTextfont
-   (GetTextfont
-   (SetTextsize
-   (GetTextsize
-   (SetTextcolor
-   (GetTextcolor
-   ()))))))))))
-   Valuator
+data CValueOutput parent
+type ValueOutput = CValueOutput Valuator
+type ValueOutputFuncs =
+  (Destroy
+  (Handle
+  (GetSoft
+  (SetSoft
+  (SetTextfont
+  (GetTextfont
+  (SetTextsize
+  (GetTextsize
+  (SetTextcolor
+  (GetTextcolor
+  ()))))))))))
+instance Functions ValueOutput ValueOutputFuncs
 
-data CTimer fs parent
-type Timer =
-  CTimer
-   (Destroy
-   (Handle
-   (GetDirection
-   (SetDirection
-   (GetValue
-   (SetValue
-   (GetSuspended
-   (SetSuspended
-   ()))))))))
-   Widget
+data CTimer parent
+type Timer = CTimer Widget
+type TimerFuncs =
+  (Destroy
+  (Handle
+  (GetDirection
+  (SetDirection
+  (GetValue
+  (SetValue
+  (GetSuspended
+  (SetSuspended
+  ()))))))))
+instance Functions Timer TimerFuncs
 
 data GetDirection a
 getDirection :: (FindOp a (GetDirection ()) (Match r), Op (GetDirection ()) r a impl) => Ref a -> impl
@@ -2475,54 +2500,51 @@ data SetSuspended a
 setSuspended :: (FindOp a (SetSuspended ()) (Match r), Op (SetSuspended ()) r a impl) => Ref a -> impl
 setSuspended = dispatch (undefined :: SetSuspended ())
 
-data CHiddenTimer fs parent
-type HiddenTimer =
-  CHiddenTimer
-   ()
-   Widget
+data CHiddenTimer parent
+type HiddenTimer = CHiddenTimer Widget
+instance Functions HiddenTimer ()
 
-data CValueTimer fs parent
-type ValueTimer =
-  CValueTimer
-   ()
-   Widget
+data CValueTimer parent
+type ValueTimer = CValueTimer Widget
+instance Functions ValueTimer ()
 
-data CProgress fs parent
-type Progress =
-  CProgress
-   (Destroy
-   (SetMaximum
-   (GetMaximum
-   (SetMinimum
-   (GetMinimum
-   (SetValue
-   (GetValue
-   ())))))))
-   Widget
+data CProgress parent
+type Progress = CProgress Widget
+type ProgressFuncs =
+  (Destroy
+  (SetMaximum
+  (GetMaximum
+  (SetMinimum
+  (GetMinimum
+  (SetValue
+  (GetValue
+  ())))))))
+instance Functions Progress ProgressFuncs
 
-data CPositioner fs parent
-type Positioner =
-  CPositioner
-   (Destroy
-   (Handle
-   (SetXvalue
-   (GetXvalue
-   (SetYvalue
-   (GetYvalue
-   (SetXminimum
-   (GetXminimum
-   (SetYminimum
-   (GetYminimum
-   (SetXmaximum
-   (GetXmaximum
-   (SetYmaximum
-   (GetYmaximum
-   (SetXbounds
-   (SetYbounds
-   (SetXstep
-   (SetYstep
-   ()))))))))))))))))))
-   Widget
+data CPositioner parent
+type Positioner = CPositioner Widget
+type PositionerFuncs =
+  (Destroy
+  (Handle
+  (SetXvalue
+  (GetXvalue
+  (SetYvalue
+  (GetYvalue
+  (SetXminimum
+  (GetXminimum
+  (SetYminimum
+  (GetYminimum
+  (SetXmaximum
+  (GetXmaximum
+  (SetYmaximum
+  (GetYmaximum
+  (SetXbounds
+  (SetYbounds
+  (SetXstep
+  (SetYstep
+  ()))))))))))))))))))
+instance Functions Positioner PositionerFuncs
+
 data SetXvalue a
 setXvalue :: (FindOp a (SetXvalue ()) (Match r), Op (SetXvalue ()) r a impl) => Ref a -> impl
 setXvalue = dispatch (undefined :: SetXvalue ())
@@ -2572,99 +2594,99 @@ data SetYstep a
 setYstep :: (FindOp a (SetYstep ()) (Match r), Op (SetYstep ()) r a impl) => Ref a -> impl
 setYstep = dispatch (undefined :: SetYstep ())
 
-data CWizard fs parent
-type Wizard =
-  CWizard
+data CWizard parent
+type Wizard = CWizard Widget
+type WizardFuncs =
   (Destroy
   (Next
   (Prev
   (SetValue
   (GetValue
   ())))))
-  Widget
+instance Functions Wizard WizardFuncs
 
 data Prev a
 prev :: (FindOp a (Prev ()) (Match r), Op (Prev ()) r a impl) => Ref a -> impl
 prev = dispatch (undefined :: Prev ())
 
-data CTable fs parent
-type Table =
-  CTable
-   (Destroy
-   (SetTableBox
-   (GetTableBox
-   (SetRows
-   (GetRows
-   (SetCols
-   (GetCols
-   (SetVisibleCells
-   (IsInteractiveResize
-   (GetRowResize
-   (SetRowResize
-   (GetColResize
-   (SetColResize
-   (GetColResizeMin
-   (SetColResizeMin
-   (GetRowResizeMin
-   (SetRowResizeMin
-   (GetRowHeader
-   (SetRowHeader
-   (GetColHeader
-   (SetColHeader
-   (SetColHeaderHeight
-   (GetColHeaderHeight
-   (SetRowHeaderWidth
-   (GetRowHeaderWidth
-   (SetRowHeaderColor
-   (GetRowHeaderColor
-   (SetColHeaderColor
-   (GetColHeaderColor
-   (SetRowHeight
-   (GetRowHeight
-   (SetColWidth
-   (GetColWidth
-   (SetRowHeightAll
-   (SetColWidthAll
-   (SetRowPosition
-   (SetColPosition
-   (GetRowPosition
-   (GetColPosition
-   (SetTopRow
-   (GetTopRow
-   (IsSelected
-   (GetSelection
-   (SetSelection
-   (MoveCursor
-   (InitSizes
-   (Add
-   (Insert
-   (InsertWithBefore
-   (Begin
-   (End
-   (GetArray
-   (GetChild
-   (Children
-   (Find
-   (CallbackRow
-   (CallbackCol
-   (CallbackContext
-   (DoCallback
-   (FindCell
-   (DrawSuper
-   (Draw
-   (Handle
-   (ResizeSuper
-   (Resize
-   (ClearSuper
-   (Clear
-   (SetRowsSuper
-   (SetColsSuper
-   (ShowWidget
-   (ShowWidgetSuper
-   (Hide
-   (HideSuper
-   ())))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))
-   Group
+data CTable parent
+type Table = CTable Group
+type TableFuncs =
+  (Destroy
+  (SetTableBox
+  (GetTableBox
+  (SetRows
+  (GetRows
+  (SetCols
+  (GetCols
+  (SetVisibleCells
+  (IsInteractiveResize
+  (GetRowResize
+  (SetRowResize
+  (GetColResize
+  (SetColResize
+  (GetColResizeMin
+  (SetColResizeMin
+  (GetRowResizeMin
+  (SetRowResizeMin
+  (GetRowHeader
+  (SetRowHeader
+  (GetColHeader
+  (SetColHeader
+  (SetColHeaderHeight
+  (GetColHeaderHeight
+  (SetRowHeaderWidth
+  (GetRowHeaderWidth
+  (SetRowHeaderColor
+  (GetRowHeaderColor
+  (SetColHeaderColor
+  (GetColHeaderColor
+  (SetRowHeight
+  (GetRowHeight
+  (SetColWidth
+  (GetColWidth
+  (SetRowHeightAll
+  (SetColWidthAll
+  (SetRowPosition
+  (SetColPosition
+  (GetRowPosition
+  (GetColPosition
+  (SetTopRow
+  (GetTopRow
+  (IsSelected
+  (GetSelection
+  (SetSelection
+  (MoveCursor
+  (InitSizes
+  (Add
+  (Insert
+  (InsertWithBefore
+  (Begin
+  (End
+  (GetArray
+  (GetChild
+  (Children
+  (Find
+  (CallbackRow
+  (CallbackCol
+  (CallbackContext
+  (DoCallback
+  (FindCell
+  (DrawSuper
+  (Draw
+  (Handle
+  (ResizeSuper
+  (Resize
+  (ClearSuper
+  (Clear
+  (SetRowsSuper
+  (SetColsSuper
+  (ShowWidget
+  (ShowWidgetSuper
+  (Hide
+  (HideSuper
+  ())))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))
+instance Functions Table TableFuncs
 
 data SetTableBox a
 setTableBox :: (FindOp a (SetTableBox ()) (Match r), Op (SetTableBox ()) r a impl) => Ref a -> impl
@@ -2820,26 +2842,27 @@ data SetColsSuper a
 setColsSuper :: (FindOp a (SetColsSuper ()) (Match r), Op (SetColsSuper ()) r a impl) => Ref a -> impl
 setColsSuper = dispatch (undefined :: SetColsSuper ())
 
-data CTableRow fs parent
-type TableRow =
-  CTableRow
-    (Destroy
-    (GetRows
-    (SetType
-    (GetType
-    (SetRows
-    (SetCols
-    (ClearSuper
-    (Clear
-    (SetRowsSuper
-    (SetColsSuper
-    (Handle
-    (ResizeSuper
-    (Resize
-    (GetRowSelected
-    (SelectAllRows
-    ())))))))))))))))
-    Table
+data CTableRow parent
+type TableRow = CTableRow Table
+type TableRowFuncs =
+  (Destroy
+  (GetRows
+  (SetType
+  (GetType
+  (SetRows
+  (SetCols
+  (ClearSuper
+  (Clear
+  (SetRowsSuper
+  (SetColsSuper
+  (Handle
+  (ResizeSuper
+  (Resize
+  (GetRowSelected
+  (SelectAllRows
+  ())))))))))))))))
+instance Functions TableRow TableRowFuncs
+
 data GetType a
 getType :: (FindOp a (GetType ()) (Match r), Op (GetType ()) r a impl) => Ref a -> impl
 getType = dispatch (undefined :: GetType ())
@@ -2850,41 +2873,41 @@ data SelectAllRows a
 selectAllRows :: (FindOp a (SelectAllRows ()) (Match r), Op (SelectAllRows ()) r a impl) => Ref a -> impl
 selectAllRows = dispatch (undefined :: SelectAllRows ())
 
-data CGlWindow fs parent
-type GlWindow =
-  CGlWindow
-    (DrawSuper
-    (HideSuper
-    (FlushSuper
-    (Flush
-    (ShowWidgetSuper
-    (ResizeSuper
-    (Hide
-    (ShowWidget
-    (Resize
-    (Handle
-    (HandleSuper
-    (Destroy
-    (GetValid
-    (SetValid
-    (Invalidate
-    (GetContextValid
-    (SetContextValid
-    (CanDoWithM
-    (CanDo
-    (GetMode
-    (SetMode
-    (GetContext
-    (SetContext
-    (SetContextWithDestroyFlag
-    (SwapBuffers
-    (Ortho
-    (CanDoOverlay
-    (RedrawOverlay
-    (HideOverlay
-    (MakeOverlayCurrent
-    ()))))))))))))))))))))))))))))))
-    Window
+data CGlWindow parent
+type GlWindow = CGlWindow Window
+type GlWindowFuncs =
+  (DrawSuper
+  (HideSuper
+  (FlushSuper
+  (Flush
+  (ShowWidgetSuper
+  (ResizeSuper
+  (Hide
+  (ShowWidget
+  (Resize
+  (Handle
+  (HandleSuper
+  (Destroy
+  (GetValid
+  (SetValid
+  (Invalidate
+  (GetContextValid
+  (SetContextValid
+  (CanDoWithM
+  (CanDo
+  (GetMode
+  (SetMode
+  (GetContext
+  (SetContext
+  (SetContextWithDestroyFlag
+  (SwapBuffers
+  (Ortho
+  (CanDoOverlay
+  (RedrawOverlay
+  (HideOverlay
+  (MakeOverlayCurrent
+  ()))))))))))))))))))))))))))))))
+instance Functions GlWindow GlWindowFuncs
 
 data GetValid a
 getValid :: (FindOp a (GetValid ()) (Match r), Op (GetValid ()) r a impl) => Ref a -> impl
@@ -2929,73 +2952,73 @@ data MakeOverlayCurrent a
 makeOverlayCurrent :: (FindOp a (MakeOverlayCurrent ()) (Match r), Op (MakeOverlayCurrent ()) r a impl) => Ref a -> impl
 makeOverlayCurrent = dispatch (undefined :: MakeOverlayCurrent ())
 
-data CBox fs parent
-type Box =
-  CBox
-  ()
-  Widget
+data CBox parent
+type Box = CBox Widget
+instance Functions Box ()
 
-data CBrowser fs parent
-type Browser =
-  CBrowser
-    (Handle
-    (Destroy
-    (Remove
-    (Add
-    (Insert
-    (Move
-    (Load
-    (Swap
-    (Clear
-    (GetSize
-    (SetSize
-    (GetTopline
-    (Lineposition
-    (SetTopline
-    (SetBottomline
-    (SetMiddleline
-    (Select
-    (Selected
-    (ShowWidgetLine
-    (ShowWidget
-    (HideLine
-    (Hide
-    (Visible
-    (GetValue
-    (SetValue
-    (GetText
-    (SetText
-    (GetFormatChar
-    (SetFormatChar
-    (GetColumnChar
-    (SetColumnChar
-    (GetColumnWidths
-    (SetColumnWidths
-    (Displayed
-    (MakeVisible
-    (SetIcon
-    (GetIcon
-    (RemoveIcon
-    (Deselect
-    (DeselectAndCallback
-    (GetPosition
-    (SetPosition
-    (GetHposition
-    (SetHposition
-    (GetHasScrollbar
-    (SetHasScrollbar
-    (GetTextfont
-    (SetTextfont
-    (GetTextsize
-    (SetTextsize
-    (GetTextcolor
-    (SetTextcolor
-    (GetScrollbarSize
-    (SetScrollbarSize
-    (GetScrollbarWidth
-    (SetScrollbarWidth
-    ()))))))))))))))))))))))))))))))))))))))))))))))))))))))))
-    Group
+data CBrowser parent
+type Browser = CBrowser Group
+type BrowserFuncs =
+  (Handle
+  (Destroy
+  (Remove
+  (Add
+  (Insert
+  (Move
+  (Load
+  (Swap
+  (Clear
+  (GetSize
+  (SetSize
+  (GetTopline
+  (Lineposition
+  (SetTopline
+  (SetBottomline
+  (SetMiddleline
+  (Select
+  (Selected
+  (ShowWidgetLine
+  (ShowWidget
+  (HideLine
+  (Hide
+  (Visible
+  (GetValue
+  (SetValue
+  (GetText
+  (SetText
+  (GetFormatChar
+  (SetFormatChar
+  (GetColumnChar
+  (SetColumnChar
+  (GetColumnWidths
+  (SetColumnWidths
+  (Displayed
+  (MakeVisible
+  (SetIcon
+  (GetIcon
+  (RemoveIcon
+  (Deselect
+  (DeselectAndCallback
+  (GetPosition
+  (SetPosition
+  (GetHposition
+  (SetHposition
+  (GetHasScrollbar
+  (SetHasScrollbar
+  (GetTextfont
+  (SetTextfont
+  (GetTextsize
+  (SetTextsize
+  (GetTextcolor
+  (SetTextcolor
+  (GetScrollbarSize
+  (SetScrollbarSize
+  (GetScrollbarWidth
+  (SetScrollbarWidth
+  (Sort
+  (SortWithSortType
+  ()))))))))))))))))))))))))))))))))))))))))))))))))))))))))))
+instance Functions Browser BrowserFuncs
 
 data Move a
 move :: (FindOp a (Move ()) (Match r), Op (Move ()) r a impl) => Ref a -> impl
@@ -3099,15 +3122,31 @@ getScrollbarWidth = dispatch (undefined :: GetScrollbarWidth ())
 data SetScrollbarWidth a
 setScrollbarWidth :: (FindOp a (SetScrollbarWidth ()) (Match r), Op (SetScrollbarWidth ()) r a impl) => Ref a -> impl
 setScrollbarWidth = dispatch (undefined :: SetScrollbarWidth ())
+data SortWithSortType a
+sortWithSortType :: (FindOp a (SortWithSortType ()) (Match r), Op (SortWithSortType ()) r a impl) => Ref a -> impl
+sortWithSortType = dispatch (undefined :: SortWithSortType ())
+data Sort a
+sort :: (FindOp a (Sort ()) (Match r), Op (Sort ()) r a impl) => Ref a -> impl
+sort = dispatch (undefined :: Sort ())
 
-data CSelectBrowser fs parent
-type SelectBrowser =
-  CSelectBrowser
-    ()
-    Browser
+data CSelectBrowser parent
+type SelectBrowser = CSelectBrowser Browser
+instance Functions SelectBrowser ()
 
-data CIntInput fs parent
-type IntInput =
-  CIntInput
-    ()
-    Input
+data CIntInput parent
+type IntInput = CIntInput Input
+instance Functions IntInput ()
+
+data CClock parent
+type Clock = CClock Widget
+type ClockFuncs =
+  (Handle
+  (GetValue
+  (GetValueSinceEpoch
+  (SetValue
+  ()))))
+
+instance Functions Clock ClockFuncs
+data GetValueSinceEpoch a
+getValueSinceEpoch :: (FindOp a (GetValueSinceEpoch ()) (Match r), Op (GetValueSinceEpoch ()) r a impl) => Ref a -> impl
+getValueSinceEpoch = dispatch (undefined :: GetValueSinceEpoch ())

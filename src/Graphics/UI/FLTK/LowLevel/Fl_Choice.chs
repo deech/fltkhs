@@ -44,8 +44,8 @@ instance (impl ~ (MenuItemReference -> IO (Int))) => Op (SetValue ()) Choice ori
   runOp _ _ menu_ menu_item_reference =
     withRef menu_ $ \menu_Ptr ->
         case menu_item_reference of
-          (MenuItemIndexReference (MenuItemIndex index')) -> valueWithIndex' menu_Ptr index'
-          (MenuItemPointerReference (MenuItemPointer menu_item)) ->
+          (MenuItemByIndex (MenuItemIndex index')) -> valueWithIndex' menu_Ptr index'
+          (MenuItemByPointer (MenuItemPointer menu_item)) ->
               withRef menu_item $ \menu_itemPtr ->
                   valueWithItem' menu_Ptr menu_itemPtr
 {#fun Fl_Choice_handle as menu_Handle' { id `Ptr ()', id `CInt' } -> `Int' #}

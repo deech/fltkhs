@@ -83,9 +83,9 @@ instance (impl ~ (Int ->  IO ())) => Op (SetBottomline ()) Browser orig impl whe
 {# fun unsafe Fl_Browser_middleline as middleline' { id `Ptr ()',`Int' } -> `()' #}
 instance (impl ~ (Int ->  IO ())) => Op (SetMiddleline ()) Browser orig impl where
   runOp _ _ browser line = withRef browser $ \browserPtr -> middleline' browserPtr line
-{# fun unsafe Fl_Browser_select as select' { id `Ptr ()',`Int' } -> `Int' #}
-instance (impl ~ (Int ->  IO (Int))) => Op (Select ()) Browser orig impl where
-  runOp _ _ browser line = withRef browser $ \browserPtr -> select' browserPtr line
+{# fun unsafe Fl_Browser_select_with_val as select' { id `Ptr ()',`Int', cFromBool `Bool' } -> `Int' #}
+instance (impl ~ (Int -> Bool -> IO (Int))) => Op (Select ()) Browser orig impl where
+  runOp _ _ browser selectType line = withRef browser $ \browserPtr -> select' browserPtr selectType line
 {# fun unsafe Fl_Browser_selected as selected' { id `Ptr ()',`Int' } -> `Bool' cToBool #}
 instance (impl ~ (Int ->  IO (Bool))) => Op (Selected ()) Browser orig impl where
   runOp _ _ browser line = withRef browser $ \browserPtr -> selected' browserPtr line
@@ -217,3 +217,9 @@ instance (impl ~ ( IO (Int))) => Op (GetScrollbarWidth ()) Browser orig impl whe
 {# fun unsafe Fl_Browser_set_scrollbar_width as setScrollbarWidth' { id `Ptr ()', `Int' } -> `()' #}
 instance (impl ~ (Int ->  IO ())) => Op (SetScrollbarWidth ()) Browser orig impl where
   runOp _ _ browser width = withRef browser $ \browserPtr -> setScrollbarWidth' browserPtr width
+{# fun unsafe Fl_Browser_sort_with_flags as sortWithFlags' {id `Ptr ()', cFromEnum `SortType'} -> `()' #}
+instance (impl ~ (SortType -> IO ())) => Op (SortWithSortType ()) Browser orig impl where
+  runOp _ _ browser sorttype' = withRef browser $ \browserPtr -> sortWithFlags' browserPtr sorttype'
+{# fun unsafe Fl_Browser_sort as sort' {id `Ptr ()'} -> `()' #}
+instance (impl ~ IO ()) => Op (Sort ()) Browser orig impl where
+  runOp _ _ browser = withRef browser $ \browserPtr -> sort' browserPtr

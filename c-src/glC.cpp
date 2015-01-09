@@ -70,10 +70,10 @@ EXPORT {
   FL_EXPORT_C(void,flc_gl_draw_image_with_d)(const uchar* str,int x,int y,int w,int h,int d){
     gl_draw_image(str,x,y,w,h,d);
   }
-  FL_EXPORT_C(void,flc_gl_draw_image_with_d_ld)(const uchar* str,int x,int y,int w,int h,int ld){
+  FL_EXPORT_C(void,flc_gl_draw_image_with_ld)(const uchar* str,int x,int y,int w,int h,int ld){
     gl_draw_image(str,x,y,w,h,3,ld);
   }
-  FL_EXPORT_C(void,flc_gl_draw_image_with_ld)(const uchar* str,int x,int y,int w,int h,int d,int ld){
+  FL_EXPORT_C(void,flc_gl_draw_image_with_d_ld)(const uchar* str,int x,int y,int w,int h,int d,int ld){
     gl_draw_image(str,x,y,w,h,d,ld);
   }
 #ifdef __cplusplus

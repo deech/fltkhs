@@ -38,8 +38,8 @@ EXPORT {
 #endif
   FL_EXPORT_C(void, flc_gl_draw_image)(const uchar* str, int x,int y,int w,int h);
   FL_EXPORT_C(void, flc_gl_draw_image_with_d)(const uchar* str, int x,int y,int w,int h, int d);
-  FL_EXPORT_C(void, flc_gl_draw_image_with_d_ld)(const uchar* str, int x,int y,int w,int h, int ld);
-  FL_EXPORT_C(void, flc_gl_draw_image_with_ld)(const uchar* str, int x,int y,int w,int h, int d, int ld);
+  FL_EXPORT_C(void, flc_gl_draw_image_with_ld)(const uchar* str, int x,int y,int w,int h, int ld);
+  FL_EXPORT_C(void, flc_gl_draw_image_with_d_ld)(const uchar* str, int x,int y,int w,int h, int d, int ld);
 #ifdef __cplusplus
 }
 #endif

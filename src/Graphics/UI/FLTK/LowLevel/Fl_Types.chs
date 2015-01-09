@@ -214,8 +214,8 @@ type FlUIntPtr            = {#type fl_uintptr_t#}
 type ID                   = {#type ID#}
 data Ref a                = Ref !(ForeignPtr (Ptr ())) deriving Show
 -- * The FLTK widget hierarchy
-data CBase fs parent
-type Base = CBase () ()
+data CBase parent
+type Base = CBase ()
 
 type GlobalCallback              = IO ()
 type CallbackWithUserDataPrim    = Ptr () -> Ptr () -> IO ()
@@ -237,6 +237,7 @@ type BoxDrawFPrim                = CInt -> CInt -> CInt -> CInt -> FlColor -> IO
 newtype Width = Width Int
 newtype Height = Height Int
 newtype Depth = Depth Int
+newtype LineSize = LineSize Int
 newtype X = X Int
 newtype Y = Y Int
 newtype ByX = ByX Double

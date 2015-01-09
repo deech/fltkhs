@@ -7,6 +7,7 @@ module Graphics.UI.FLTK.LowLevel.FLTKHS
          module Graphics.UI.FLTK.LowLevel.Fl_Overlay_Window,
          module Graphics.UI.FLTK.LowLevel.Fl_Button,
          module Graphics.UI.FLTK.LowLevel.Fl_Light_Button,
+         module Graphics.UI.FLTK.LowLevel.Fl_Radio_Light_Button,
          module Graphics.UI.FLTK.LowLevel.Fl_Check_Button,
          module Graphics.UI.FLTK.LowLevel.Fl_Return_Button,
          module Graphics.UI.FLTK.LowLevel.Fl_Round_Button,
@@ -56,7 +57,8 @@ module Graphics.UI.FLTK.LowLevel.FLTKHS
          module Graphics.UI.FLTK.LowLevel.Fl_Box,
          module Graphics.UI.FLTK.LowLevel.Fl_Browser,
          module Graphics.UI.FLTK.LowLevel.Fl_Select_Browser,
-         module Graphics.UI.FLTK.LowLevel.Fl_Int_Input
+         module Graphics.UI.FLTK.LowLevel.Fl_Int_Input,
+         module Graphics.UI.FLTK.LowLevel.Fl_Clock
        )
 where
 import Graphics.UI.FLTK.LowLevel.Fl_Gl_Window
@@ -66,6 +68,7 @@ import Graphics.UI.FLTK.LowLevel.Fl_Double_Window
 import Graphics.UI.FLTK.LowLevel.Fl_Overlay_Window
 import Graphics.UI.FLTK.LowLevel.Fl_Button
 import Graphics.UI.FLTK.LowLevel.Fl_Light_Button
+import Graphics.UI.FLTK.LowLevel.Fl_Radio_Light_Button
 import Graphics.UI.FLTK.LowLevel.Fl_Check_Button
 import Graphics.UI.FLTK.LowLevel.Fl_Return_Button
 import Graphics.UI.FLTK.LowLevel.Fl_Round_Button
@@ -116,3 +119,4 @@ import Graphics.UI.FLTK.LowLevel.Fl_Box
 import Graphics.UI.FLTK.LowLevel.Fl_Browser
 import Graphics.UI.FLTK.LowLevel.Fl_Select_Browser
 import Graphics.UI.FLTK.LowLevel.Fl_Int_Input
+import Graphics.UI.FLTK.LowLevel.Fl_Clock

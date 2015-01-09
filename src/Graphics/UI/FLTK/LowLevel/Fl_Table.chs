@@ -311,8 +311,8 @@ instance (impl ~ (  IO ())) => Op (DrawSuper ()) Table orig impl where
 {# fun Fl_Table_draw as draw' { id `Ptr ()' } -> `()' #}
 instance (impl ~ (  IO ())) => Op (Draw ()) Table orig impl where
   runOp _ _ table = withRef table $ \tablePtr -> draw' tablePtr
-{# fun unsafe Fl_Table_handle as handle' { id `Ptr ()',`Int' } -> `Int' #}
-instance (impl ~ ( Int ->  IO (Int))) => Op (Handle ()) Table orig impl where
+{# fun unsafe Fl_Table_handle as handle' { id `Ptr ()', cFromEnum `Event' } -> `Int' #}
+instance (impl ~ ( Event ->  IO (Int))) => Op (Handle ()) Table orig impl where
   runOp _ _ table event = withRef table $ \tablePtr -> handle' tablePtr event
 {# fun unsafe Fl_Table_resize_super as resizeSuper' { id `Ptr ()',`Int',`Int',`Int',`Int' } -> `()' #}
 instance (impl ~ ( Rectangle ->  IO ())) => Op (ResizeSuper ()) Table orig impl where

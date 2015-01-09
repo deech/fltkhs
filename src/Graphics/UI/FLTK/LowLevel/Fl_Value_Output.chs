@@ -29,7 +29,7 @@ valueOutputNew rectangle l'=
                                toRef
 
 {# fun Fl_Value_Output_Destroy as valueOutputDestroy' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance Op (Destroy ()) ValueOutput orig (  IO ()) where
+instance (impl ~ IO ()) => Op (Destroy ()) ValueOutput orig impl where
   runOp _ _ win = swapRef win $ \winPtr -> do
     valueOutputDestroy' winPtr
     return nullPtr

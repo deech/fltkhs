@@ -153,6 +153,9 @@ instance (Parent a MenuPrim, impl ~ ( Int -> String -> Maybe Shortcut -> (Ref a 
             0
             (castFunPtr ptr)
             combinedFlags
+{# fun Fl_Menu__add_with_name as add' { id `Ptr ()',`String'} -> `()' #}
+instance (impl ~ (String -> IO ())) => Op (AddName ()) MenuPrim orig impl where
+  runOp _ _ menu_ name' = withRef menu_ $ \menu_Ptr -> add' menu_Ptr name'
 {# fun Fl_Menu__add_with_flags as addWithFlags' { id `Ptr ()',`String',id `CInt',id `FunPtr CallbackWithUserDataPrim',`Int' } -> `Int' #}
 {# fun Fl_Menu__add_with_shortcutname_flags as addWithShortcutnameFlags' { id `Ptr ()',`String',`String',id `FunPtr CallbackWithUserDataPrim',`Int' } -> `Int' #}
 instance (Parent a MenuPrim, impl ~ ( String -> Maybe Shortcut -> (Ref a-> IO ()) -> [MenuProps] -> IO (Int))) => Op (Add ()) MenuPrim orig (impl) where
@@ -226,8 +229,8 @@ instance (impl ~ (MenuItemReference -> IO (Int))) => Op (SetValue ()) MenuPrim o
   runOp _ _ menu_ menu_item_reference =
     withRef menu_ $ \menu_Ptr ->
         case menu_item_reference of
-          (MenuItemIndexReference (MenuItemIndex index')) -> valueWithIndex' menu_Ptr index'
-          (MenuItemPointerReference (MenuItemPointer menu_item)) ->
+          (MenuItemByIndex (MenuItemIndex index')) -> valueWithIndex' menu_Ptr index'
+          (MenuItemByPointer (MenuItemPointer menu_item)) ->
               withRef menu_item $ \menu_itemPtr ->
                   valueWithItem' menu_Ptr menu_itemPtr
 {# fun unsafe Fl_Menu__text as text' { id `Ptr ()' } -> `String' #}

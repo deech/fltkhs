@@ -85,8 +85,10 @@ instance (impl ~ ( IO ())) => Op (Flush ()) GlWindow orig impl where
 instance (impl ~ ( IO ())) => Op (ShowWidgetSuper ()) GlWindow orig impl where
   runOp _ _ win = withRef win $ \winPtr -> showSuper' winPtr
 {# fun unsafe Fl_Gl_Window_resize_super as resizeSuper' { id `Ptr ()',`Int',`Int',`Int',`Int' } -> `()' supressWarningAboutRes #}
-instance (impl ~ (Int -> Int -> Int -> Int ->  IO ())) => Op (ResizeSuper ()) GlWindow orig impl where
-  runOp _ _ win x y w h = withRef win $ \winPtr -> resizeSuper' winPtr x y w h
+instance (impl ~ (Rectangle ->  IO ())) => Op (ResizeSuper ()) GlWindow orig impl where
+  runOp _ _ win rectangle' =
+    let (x_pos', y_pos', width', height') = fromRectangle rectangle' in
+    withRef win $ \winPtr -> resizeSuper' winPtr x_pos' y_pos' width' height'
 {# fun unsafe Fl_Gl_Window_hide as hide' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
 instance (impl ~ ( IO ())) => Op (Hide ()) GlWindow orig impl where
   runOp _ _ win = withRef win $ \winPtr -> hide' winPtr
@@ -94,13 +96,15 @@ instance (impl ~ ( IO ())) => Op (Hide ()) GlWindow orig impl where
 instance (impl ~ ( IO ())) => Op (ShowWidget ()) GlWindow orig impl where
   runOp _ _ win = withRef win $ \winPtr -> show' winPtr
 {# fun unsafe Fl_Gl_Window_resize as resize' { id `Ptr ()',`Int',`Int',`Int',`Int' } -> `()' supressWarningAboutRes #}
-instance (impl ~ (Int -> Int -> Int -> Int ->  IO ())) => Op (Resize ()) GlWindow orig impl where
-  runOp _ _ win x y w h = withRef win $ \winPtr -> resize' winPtr x y w h
-{# fun unsafe Fl_Gl_Window_handle as handle' { id `Ptr ()',`Int' } -> `Int' #}
-instance (impl ~ (Int ->  IO (Int))) => Op (Handle ()) GlWindow orig impl where
+instance (impl ~ (Rectangle ->  IO ())) => Op (Resize ()) GlWindow orig impl where
+  runOp _ _ win rectangle' =
+    let (x_pos', y_pos', width', height') = fromRectangle rectangle' in
+    withRef win $ \winPtr -> resize' winPtr x_pos' y_pos' width' height'
+{# fun unsafe Fl_Gl_Window_handle as handle' { id `Ptr ()', cFromEnum `Event' } -> `Int' #}
+instance (impl ~ (Event ->  IO (Int))) => Op (Handle ()) GlWindow orig impl where
   runOp _ _ self event = withRef self $ \selfPtr -> handle' selfPtr event
-{# fun unsafe Fl_Gl_Window_handle_super as handleSuper' { id `Ptr ()',`Int' } -> `Int' #}
-instance (impl ~ (Int ->  IO (Int))) => Op (HandleSuper ()) GlWindow orig impl where
+{# fun unsafe Fl_Gl_Window_handle_super as handleSuper' { id `Ptr ()', cFromEnum `Event' } -> `Int' #}
+instance (impl ~ (Event ->  IO (Int))) => Op (HandleSuper ()) GlWindow orig impl where
   runOp _ _ self event = withRef self $ \selfPtr -> handleSuper' selfPtr event
 {# fun Fl_Gl_Window_Destroy as windowDestroy' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
 instance (impl ~ (IO ())) => Op (Destroy ()) GlWindow orig impl where

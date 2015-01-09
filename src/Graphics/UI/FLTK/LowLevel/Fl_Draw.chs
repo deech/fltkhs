@@ -197,8 +197,8 @@ flcSetClipRegion :: Ref Region ->  IO ()
 flcSetClipRegion r = withRef r $ \rPtr -> flcSetClipRegion' rPtr
 
 {# fun unsafe flc_clip_region as flcClipRegion' {  } -> `Ptr ()' id #}
-flcClipRegion ::  IO (Ptr ())
-flcClipRegion  = flcClipRegion'
+flcClipRegion ::  IO (Ref Region)
+flcClipRegion  = flcClipRegion' >>= toRef
 
 {# fun unsafe flc_point as flcPoint' { `Int',`Int' } -> `()' #}
 flcPoint :: Position ->  IO ()

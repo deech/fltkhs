@@ -23,6 +23,7 @@ library
                    Graphics.UI.FLTK.LowLevel.Fl_Overlay_Window
                    Graphics.UI.FLTK.LowLevel.Fl_Button
                    Graphics.UI.FLTK.LowLevel.Fl_Light_Button
+                   Graphics.UI.FLTK.LowLevel.Fl_Radio_Light_Button
                    Graphics.UI.FLTK.LowLevel.Fl_Check_Button
                    Graphics.UI.FLTK.LowLevel.Fl_Return_Button
                    Graphics.UI.FLTK.LowLevel.Fl_Round_Button
@@ -35,6 +36,7 @@ library
                    Graphics.UI.FLTK.LowLevel.Fl_Group
                    Graphics.UI.FLTK.LowLevel.Fl_Widget
                    Graphics.UI.FLTK.LowLevel.Fl_Box
+                   Graphics.UI.FLTK.LowLevel.Fl_Clock
                    Graphics.UI.FLTK.LowLevel.Fl_Valuator
                    Graphics.UI.FLTK.LowLevel.Fl_Slider
                    Graphics.UI.FLTK.LowLevel.Fl_Fill_Slider
@@ -75,6 +77,7 @@ library
                    Graphics.UI.FLTK.LowLevel.Fl_Table
                    Graphics.UI.FLTK.LowLevel.Fl_Table_Row
                    Graphics.UI.FLTK.LowLevel.FL
+                   Graphics.UI.FLTK.LowLevel.Gl
                    Graphics.UI.FLTK.LowLevel.Utils
   build-depends: base, stm, bytestring
   build-tools: c2hs
@@ -130,6 +133,20 @@ Executable bitmap
 
 Executable boxtype
   Main-Is: boxtype.hs
+  Hs-Source-Dirs: src/Examples
+  Build-Depends: base,fltkhs,bytestring
+  ghc-Options: -Wall -threaded -fcontext-stack=200
+  ghc-Options: -pgml g++ "-optl-Wl,--whole-archive" "-optl-Wl,-Bstatic" "-optl-Wl,-lfltkc" "-optl-Wl,-Bdynamic" "-optl-Wl,--no-whole-archive"
+
+Executable browser
+  Main-Is: browser.hs
+  Hs-Source-Dirs: src/Examples
+  Build-Depends: base,fltkhs,bytestring
+  ghc-Options: -Wall -threaded -fcontext-stack=200
+  ghc-Options: -pgml g++ "-optl-Wl,--whole-archive" "-optl-Wl,-Bstatic" "-optl-Wl,-lfltkc" "-optl-Wl,-Bdynamic" "-optl-Wl,--no-whole-archive"
+
+Executable clock
+  Main-Is: clock.hs
   Hs-Source-Dirs: src/Examples
   Build-Depends: base,fltkhs,bytestring
   ghc-Options: -Wall -threaded -fcontext-stack=200
