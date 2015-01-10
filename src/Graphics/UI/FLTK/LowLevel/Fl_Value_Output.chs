@@ -61,6 +61,6 @@ instance (impl ~ (FontSize ->  IO ())) => Op (SetTextsize ()) ValueOutput orig i
 {# fun unsafe Fl_Value_Output_textcolor as textcolor' { id `Ptr ()' } -> `Color' cToColor #}
 instance (impl ~ ( IO (Color))) => Op (GetTextcolor ()) ValueOutput orig impl where
   runOp _ _ value_input = withRef value_input $ \value_inputPtr -> textcolor' value_inputPtr
-{# fun unsafe Fl_Value_Output_set_textcolor as setTextcolor' { id `Ptr ()',`Int' } -> `()' #}
-instance (impl ~ (Int ->  IO ())) => Op (SetTextcolor ()) ValueOutput orig impl where
-  runOp _ _ value_input v = withRef value_input $ \value_inputPtr -> setTextcolor' value_inputPtr v
+{# fun unsafe Fl_Value_Output_set_textcolor as setTextcolor' { id `Ptr ()', id `CInt' } -> `()' #}
+instance (impl ~ (Color ->  IO ())) => Op (SetTextcolor ()) ValueOutput orig impl where
+  runOp _ _ value_input (Color v) = withRef value_input $ \value_inputPtr -> setTextcolor' value_inputPtr (fromIntegral v)

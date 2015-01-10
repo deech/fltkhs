@@ -1,4 +1,4 @@
-{-# LANGUAGE CPP, TypeSynonymInstances, FlexibleInstances, MultiParamTypeClasses, FlexibleContexts, UndecidableInstances #-}
+{-# LANGUAGE CPP, ExistentialQuantification, TypeSynonymInstances, FlexibleInstances, MultiParamTypeClasses, FlexibleContexts, UndecidableInstances #-}
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 module Graphics.UI.FLTK.LowLevel.Fl_Menu_Item
   (
@@ -22,7 +22,7 @@ import Graphics.UI.FLTK.LowLevel.Dispatch
 import Graphics.UI.FLTK.LowLevel.Fl_Widget
 
 newtype MenuItemIndex = MenuItemIndex Int
-data MenuItemPointer = MenuItemPointer (Ref MenuItem)
+data MenuItemPointer = forall a. (Parent a MenuItem) => MenuItemPointer (Ref a)
 newtype MenuItemName = MenuItemName String
 data MenuItemReference = MenuItemByIndex MenuItemIndex | MenuItemByPointer MenuItemPointer
 data MenuItemLocator = MenuItemPointerLocator MenuItemPointer | MenuItemNameLocator MenuItemName
