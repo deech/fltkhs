@@ -6,6 +6,7 @@ import Distribution.Simple.Configure
 import Distribution.Simple.LocalBuildInfo
 import Distribution.PackageDescription
 import Distribution.Simple
+import Distribution.System
 import Distribution.Simple.Setup
 import Distribution.Simple.Utils
 import Distribution.Verbosity
@@ -178,8 +179,10 @@ copyCBindings pkg_descr lbi uhs flags = do
                 $ flags
     rawSystemExit (fromFlag $ copyVerbosity flags) "cp"
         ["c-lib/libfltkc.a", libPref]
-    rawSystemExit (fromFlag $ copyVerbosity flags) "cp"
-        ["c-lib/libfltkc.so", libPref]
+    case buildOS of
+     Linux -> rawSystemExit (fromFlag $ copyVerbosity flags) "cp"
+              ["c-lib/libfltkc.so", libPref]
+     _ -> return ()
 
 myCleanHook pd x uh cf = do
   rawSystemExit normal "make" ["clean"]
