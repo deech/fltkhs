@@ -1,4 +1,4 @@
-FltkHs - A Haskell Binding to the FLTK GUI Library
+Fltkhs - A Haskell Binding to the FLTK GUI Library
 =============================================
 
 Fltkhs aims to be a complete Haskell binding to the [FLTK GUI library] [1].
