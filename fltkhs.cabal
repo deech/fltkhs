@@ -84,7 +84,7 @@ library
   hs-source-dirs: src
   other-modules: C2HS
   include-dirs: ./c-src, ./
-  Default-Extensions: TypeFamilies
+  default-extensions: GADTs
   default-language: Haskell2010
   ghc-options: -Wall -fcontext-stack=200
 
@@ -94,60 +94,87 @@ Executable test_call
   Build-Depends: base,fltkhs
   default-language: Haskell2010
   ghc-Options: -Wall -threaded -fcontext-stack=200
-  ghc-Options: -pgml g++ "-optl-Wl,--whole-archive" "-optl-Wl,-Bstatic" "-optl-Wl,-lfltkc" "-optl-Wl,-Bdynamic" "-optl-Wl,--no-whole-archive"
+  if os(linux)
+     ghc-Options: -pgml g++ "-optl-Wl,--whole-archive" "-optl-Wl,-Bstatic" "-optl-Wl,-lfltkc" "-optl-Wl,-Bdynamic" "-optl-Wl,--no-whole-archive"
+  else 
+     ghc-Options:
 
 Executable buttons
   Main-Is: Buttons.hs
   Hs-Source-Dirs: src/TestPrograms
   Build-Depends: base,fltkhs
   ghc-Options: -Wall -threaded -fcontext-stack=200
-  ghc-Options: -pgml g++ "-optl-Wl,--whole-archive" "-optl-Wl,-Bstatic" "-optl-Wl,-lfltkc" "-optl-Wl,-Bdynamic" "-optl-Wl,--no-whole-archive"
+  if os(linux)
+     ghc-Options: -pgml g++ "-optl-Wl,--whole-archive" "-optl-Wl,-Bstatic" "-optl-Wl,-lfltkc" "-optl-Wl,-Bdynamic" "-optl-Wl,--no-whole-archive"
+  else 
+     ghc-Options:
 
 Executable table-simple
   Main-Is: table-simple.hs
   Hs-Source-Dirs: src/Examples
   Build-Depends: base,fltkhs
   ghc-Options: -Wall -threaded -fcontext-stack=200
-  ghc-Options: -pgml g++ "-optl-Wl,--whole-archive" "-optl-Wl,-Bstatic" "-optl-Wl,-lfltkc" "-optl-Wl,-Bdynamic" "-optl-Wl,--no-whole-archive"
+  if os(linux)
+     ghc-Options: -pgml g++ "-optl-Wl,--whole-archive" "-optl-Wl,-Bstatic" "-optl-Wl,-lfltkc" "-optl-Wl,-Bdynamic" "-optl-Wl,--no-whole-archive"
+  else 
+     ghc-Options:
 
 Executable table-sort
   Main-Is: table-sort.hs
   Hs-Source-Dirs: src/Examples
   Build-Depends: base,fltkhs,process
   ghc-Options: -Wall -threaded -fcontext-stack=200
-  ghc-Options: -pgml g++ "-optl-Wl,--whole-archive" "-optl-Wl,-Bstatic" "-optl-Wl,-lfltkc" "-optl-Wl,-Bdynamic" "-optl-Wl,--no-whole-archive"
+  if os(linux)
+     ghc-Options: -pgml g++ "-optl-Wl,--whole-archive" "-optl-Wl,-Bstatic" "-optl-Wl,-lfltkc" "-optl-Wl,-Bdynamic" "-optl-Wl,--no-whole-archive"
+  else 
+     ghc-Options:
 
 Executable arc
   Main-Is: arc.hs
   Hs-Source-Dirs: src/Examples
   Build-Depends: base,fltkhs
   ghc-Options: -Wall -threaded -fcontext-stack=200
-  ghc-Options: -pgml g++ "-optl-Wl,--whole-archive" "-optl-Wl,-Bstatic" "-optl-Wl,-lfltkc" "-optl-Wl,-Bdynamic" "-optl-Wl,--no-whole-archive"
+  if os(linux)
+     ghc-Options: -pgml g++ "-optl-Wl,--whole-archive" "-optl-Wl,-Bstatic" "-optl-Wl,-lfltkc" "-optl-Wl,-Bdynamic" "-optl-Wl,--no-whole-archive"
+  else 
+     ghc-Options:
 
 Executable bitmap
   Main-Is: bitmap.hs
   Hs-Source-Dirs: src/Examples
   Build-Depends: base,fltkhs,bytestring
   ghc-Options: -Wall -threaded -fcontext-stack=200
-  ghc-Options: -pgml g++ "-optl-Wl,--whole-archive" "-optl-Wl,-Bstatic" "-optl-Wl,-lfltkc" "-optl-Wl,-Bdynamic" "-optl-Wl,--no-whole-archive"
+  if os(linux)
+     ghc-Options: -pgml g++ "-optl-Wl,--whole-archive" "-optl-Wl,-Bstatic" "-optl-Wl,-lfltkc" "-optl-Wl,-Bdynamic" "-optl-Wl,--no-whole-archive"
+  else 
+     ghc-Options:
 
 Executable boxtype
   Main-Is: boxtype.hs
   Hs-Source-Dirs: src/Examples
   Build-Depends: base,fltkhs,bytestring
   ghc-Options: -Wall -threaded -fcontext-stack=200
-  ghc-Options: -pgml g++ "-optl-Wl,--whole-archive" "-optl-Wl,-Bstatic" "-optl-Wl,-lfltkc" "-optl-Wl,-Bdynamic" "-optl-Wl,--no-whole-archive"
+  if os(linux)
+     ghc-Options: -pgml g++ "-optl-Wl,--whole-archive" "-optl-Wl,-Bstatic" "-optl-Wl,-lfltkc" "-optl-Wl,-Bdynamic" "-optl-Wl,--no-whole-archive"
+  else 
+     ghc-Options:
 
 Executable browser
   Main-Is: browser.hs
   Hs-Source-Dirs: src/Examples
   Build-Depends: base,fltkhs,bytestring
   ghc-Options: -Wall -threaded -fcontext-stack=200
-  ghc-Options: -pgml g++ "-optl-Wl,--whole-archive" "-optl-Wl,-Bstatic" "-optl-Wl,-lfltkc" "-optl-Wl,-Bdynamic" "-optl-Wl,--no-whole-archive"
+  if os(linux)
+     ghc-Options: -pgml g++ "-optl-Wl,--whole-archive" "-optl-Wl,-Bstatic" "-optl-Wl,-lfltkc" "-optl-Wl,-Bdynamic" "-optl-Wl,--no-whole-archive"
+  else 
+     ghc-Options:
 
 Executable clock
   Main-Is: clock.hs
   Hs-Source-Dirs: src/Examples
   Build-Depends: base,fltkhs,bytestring
   ghc-Options: -Wall -threaded -fcontext-stack=200
-  ghc-Options: -pgml g++ "-optl-Wl,--whole-archive" "-optl-Wl,-Bstatic" "-optl-Wl,-lfltkc" "-optl-Wl,-Bdynamic" "-optl-Wl,--no-whole-archive"
+  if os(linux)
+     ghc-Options: -pgml g++ "-optl-Wl,--whole-archive" "-optl-Wl,-Bstatic" "-optl-Wl,-lfltkc" "-optl-Wl,-Bdynamic" "-optl-Wl,--no-whole-archive"
+  else 
+     ghc-Options:

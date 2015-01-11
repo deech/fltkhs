@@ -24,8 +24,6 @@ import Data.Graph
 import qualified Distribution.Simple.GHC  as GHC
 import qualified Distribution.Simple.JHC  as JHC
 import qualified Distribution.Simple.LHC  as LHC
-import qualified Distribution.Simple.NHC  as NHC
-import qualified Distribution.Simple.Hugs as Hugs
 import qualified Distribution.Simple.UHC  as UHC
 
 main = defaultMainWithHooks autoconfUserHooks {
@@ -117,8 +115,6 @@ buildExe verbosity numJobs pkg_descr lbi exe clbi =
     GHC  -> GHC.buildExe  verbosity numJobs pkg_descr lbi exe clbi
     JHC  -> JHC.buildExe  verbosity         pkg_descr lbi exe clbi
     LHC  -> LHC.buildExe  verbosity         pkg_descr lbi exe clbi
-    Hugs -> Hugs.buildExe verbosity         pkg_descr lbi exe clbi
-    NHC  -> NHC.buildExe  verbosity         pkg_descr lbi exe clbi
     UHC  -> UHC.buildExe  verbosity         pkg_descr lbi exe clbi
     _    -> die "Building is not supported with this compiler."
 

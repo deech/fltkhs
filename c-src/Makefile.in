@@ -1,7 +1,6 @@
 FLTKCONFIG=@FLTKCONFIG@
 CXX = $(shell $(FLTKCONFIG) --cxx) $(shell $(FLTKCONFIG) --cxxflags) -Wall -Werror -DINTERNAL_LINKAGE -g -Icpp -I../
 CXXSHARED = $(CXX)
-LD = $(CXX) -shared -Wl
 CXXSTATIC = $(CXX) -static
 
 CPPFILES= \
@@ -100,13 +99,20 @@ CPPFILES= \
 	Fl_WidgetC.cpp \
 	Fl_WindowC.cpp \
 	Fl_WizardC.cpp
-
+LIBNAME = libfltkc
 OBJECTS = $(CPPFILES:.cpp=.o)
 LIBDIR = ../c-lib
 SHARED_OBJECT_FILES = ../shared_object_files
 STATIC_OBJECT_FILES = ../static_object_files
+ifeq ($(shell uname) , Darwin)
+	SHARED_EXT=dylib
+	SONAME_FLAGS=-dynamiclib -install_name
+else
+        SHARED_EXT=so
+	SONAME_FLAGS= -shared -Wl,-soname,
+endif
 .SILENT:
-all: libfltkc.a libfltkc.so
+all: libfltkc.a libfltkc.$(SHARED_EXT)
 .SUFFIXES: .cpp .o
 .cpp.o:
 	test -d $(STATIC_OBJECT_FILES) || mkdir $(STATIC_OBJECT_FILES)
@@ -123,7 +129,9 @@ libfltkc.so : $(OBJECTS)
 	test -d $(LIBDIR) || mkdir $(LIBDIR)
 	@echo "*** Linking $@..."
 	(cd $(SHARED_OBJECT_FILES); \
-  $(LD),-soname,$(LIBDIR)/$@ -o $(LIBDIR)/$@ $^);
+	$(CXX) $(SONAME_FLAGS) $(LIBNAME).$(SHARED_EXT) -o $(LIBDIR)/$(LIBNAME).$(SHARED_EXT) $^)
+libfltkc.dylib: $(OBJECTS)
+	@echo "*** Not linking $@ because of bugs in ./c-src/Makefile.in, help appreciated."
 clean:
 	test -d $(LIBDIR) && rm -rf $(LIBDIR)
 	test -d $(SHARED_OBJECT_FILES) && rm -rf $(SHARED_OBJECT_FILES)

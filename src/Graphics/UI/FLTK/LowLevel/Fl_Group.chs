@@ -1,4 +1,4 @@
-{-# LANGUAGE CPP, EmptyDataDecls, TypeSynonymInstances, FlexibleInstances, MultiParamTypeClasses, FlexibleContexts, UndecidableInstances #-}
+{-# LANGUAGE CPP,EmptyDataDecls, TypeSynonymInstances, FlexibleInstances, MultiParamTypeClasses, FlexibleContexts, UndecidableInstances #-}
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 module Graphics.UI.FLTK.LowLevel.Fl_Group
     (
