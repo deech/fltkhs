@@ -1,4 +1,4 @@
-{-# LANGUAGE ScopedTypeVariables #-}
+{-# LANGUAGE FlexibleContexts, ScopedTypeVariables #-}
 module Main where
 import Graphics.UI.FLTK.LowLevel.FLTKHS
 import Graphics.UI.FLTK.LowLevel.Fl_Enumerations
@@ -14,7 +14,7 @@ showOverride wptr = do
 
 drawOverride :: Ref Window -> IO ()
 drawOverride wptr = do
-  print "here"
+  print "drawOverride"
   drawSuper wptr
 
 addButton :: Int -> Int -> String -> IO (Ref Button)
@@ -115,7 +115,7 @@ main = do
   _ <- FL.addAwakeHandler (print "awake handler's callback data")
   print "added awake handler"
   _ <- runAwakeHandler
-  _ <- FL.setEventDispatch eventIntercept
+  -- _ <- FL.setEventDispatch eventIntercept
   _ <- FL.setHandler globalEventHandler
   print "ran awake handler"
   _ <- FL.run

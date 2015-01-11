@@ -66,7 +66,6 @@ keySequenceToCInt (ShortcutKeySequence modifiers char) =
 
 wrapNonNull :: Ptr a -> String -> IO (ForeignPtr (Ptr a))
 wrapNonNull ptr msg = if (ptr == nullPtr)
-
                       then error msg
                       else do
                         pptr <- malloc
