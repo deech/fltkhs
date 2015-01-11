@@ -22,7 +22,7 @@ First make sure you have OpenGL and then download and install [FLTK 1.3.3] [2]. 
     > make
     > make install
 
-Only on Linux and OSX, once FLTK is installed the standard Cabal build command `cabal build` from the top-level directory should build everything including the C/C++ wrappers.
+Only on Linux and OSX, once FLTK is installed the standard Cabal build command `cabal build` from the top-level directory should build everything including the C/C++ wrappers and Haskell demos.
 
 The effort to have the library and demos build/install seamlessly on Windows is on-going.
 
