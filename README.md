@@ -22,6 +22,8 @@ First make sure you have OpenGL and then download and install [FLTK 1.3.3] [2]. 
     > make
     > make install
 
+If you didn't install FLTK from source you'll need `make`, `autoconf`, `autoheader` to build the Haskell bindings.
+
 Only on Linux and OSX, once FLTK is installed the standard Cabal build command `cabal build` from the top-level directory should build everything including the C/C++ wrappers and Haskell demos.
 
 The available demos are listed in `fltkhs.cabal` as separate `Executable` components. Once it is done building, `dist/build/<demo-name>/<demo-name>` should run any of them. For example to run the `buttons` demo, from the top-level directory do:
