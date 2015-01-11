@@ -1,23 +1,27 @@
 FltkHs - A Haskell Binding to the FLTK GUI Library
 =============================================
 
-FltkHs aims to be a complete Haskell binding to the [FLTK GUI library] [1].
+Fltkhs aims to be a complete Haskell binding to the [FLTK GUI library] [1].
 
 It also comes with the requisite C-wrappers around FLTK. These wrappers will be published as independent library but for now they are bundled because the API is not yet suitable for C programmers.
 
-The ``c-src'' directory contains the C-wrappers around the FLTK widgets and functions.
+The `c-src` directory contains the C-wrappers around the FLTK widgets and functions.
 
-The ``c-examples'' directory contains C ports of some of the examples provided with the FLTK distribution.
+The `c-examples` directory contains C ports of some of the examples provided with the FLTK distribution.
 
-The ``src'' directory contains the Haskell bindings.
+The `src` directory contains the Haskell bindings.
+
+The Haskell demo examples are in `src/Examples`.
 
 Building
 ________
 
-The standard Cabal install command ``cabal install'' from the top-level directory should build and install all the is required including the C-wrappers.
+First download and install FLTK. On OSX and Linux it should build using the standard:
 
-The C and Haskell bindings are not installed seperately but linked into one big library ``fltkhs-<version-number>.a''.
+    > ./configure
+    > make
+    > make install
 
-This README will be more complete once the bindings are ready for release.
+Once FLTK is installed the standard Cabal install command `cabal build` from the top-level directory should build everything including the C/C++ wrappers.
 
   [1]: http://www.fltk.org/index.php      "FLTK"
