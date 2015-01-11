@@ -16,7 +16,7 @@ The Haskell demo examples are in `src/Examples`.
 Building
 ________
 
-First download and install FLTK. On OSX and Linux it should build using the standard:
+First make sure you have OpenGL and then download and install [FLTK 1.3.3] [2]. On OSX and Linux it should build and install smoothly using the standard:
 
     > ./configure
     > make
@@ -24,7 +24,7 @@ First download and install FLTK. On OSX and Linux it should build using the stan
 
 Only on Linux and OSX, once FLTK is installed the standard Cabal build command `cabal build` from the top-level directory should build everything including the C/C++ wrappers.
 
-The effort to have the library and demos build/install seamlessly on Windows in on-going.
+The effort to have the library and demos build/install seamlessly on Windows is on-going.
 
 While most of the bindings are complete, the following still needs to be done:
 
@@ -36,3 +36,4 @@ While most of the bindings are complete, the following still needs to be done:
 Once the work is complete this README will include more extensive instructions.
 
   [1]: http://www.fltk.org/index.php      "FLTK"
+  [2]: http://www.fltk.org/software.php?VERSION=1.3.3&FILE=fltk/1.3.3/fltk-1.3.3-source.tar.gz
