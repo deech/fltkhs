@@ -12,7 +12,7 @@ homepage: http://github.com/deech/fltkc
 -- copyright:
 category: UI
 build-type: Custom
-cabal-version: >=1.18
+cabal-version: >=1.20
 library
   exposed-modules:
                    Graphics.UI.FLTK.LowLevel.FLTKHS
@@ -96,7 +96,7 @@ Executable test_call
   ghc-Options: -Wall -threaded -fcontext-stack=200
   if os(linux)
      ghc-Options: -pgml g++ "-optl-Wl,--whole-archive" "-optl-Wl,-Bstatic" "-optl-Wl,-lfltkc" "-optl-Wl,-Bdynamic" "-optl-Wl,--no-whole-archive"
-  else 
+  else
      ghc-Options:
 
 Executable buttons
@@ -106,7 +106,7 @@ Executable buttons
   ghc-Options: -Wall -threaded -fcontext-stack=200
   if os(linux)
      ghc-Options: -pgml g++ "-optl-Wl,--whole-archive" "-optl-Wl,-Bstatic" "-optl-Wl,-lfltkc" "-optl-Wl,-Bdynamic" "-optl-Wl,--no-whole-archive"
-  else 
+  else
      ghc-Options:
 
 Executable table-simple
@@ -116,7 +116,7 @@ Executable table-simple
   ghc-Options: -Wall -threaded -fcontext-stack=200
   if os(linux)
      ghc-Options: -pgml g++ "-optl-Wl,--whole-archive" "-optl-Wl,-Bstatic" "-optl-Wl,-lfltkc" "-optl-Wl,-Bdynamic" "-optl-Wl,--no-whole-archive"
-  else 
+  else
      ghc-Options:
 
 Executable table-sort
@@ -126,7 +126,7 @@ Executable table-sort
   ghc-Options: -Wall -threaded -fcontext-stack=200
   if os(linux)
      ghc-Options: -pgml g++ "-optl-Wl,--whole-archive" "-optl-Wl,-Bstatic" "-optl-Wl,-lfltkc" "-optl-Wl,-Bdynamic" "-optl-Wl,--no-whole-archive"
-  else 
+  else
      ghc-Options:
 
 Executable arc
@@ -136,7 +136,7 @@ Executable arc
   ghc-Options: -Wall -threaded -fcontext-stack=200
   if os(linux)
      ghc-Options: -pgml g++ "-optl-Wl,--whole-archive" "-optl-Wl,-Bstatic" "-optl-Wl,-lfltkc" "-optl-Wl,-Bdynamic" "-optl-Wl,--no-whole-archive"
-  else 
+  else
      ghc-Options:
 
 Executable bitmap
@@ -146,7 +146,7 @@ Executable bitmap
   ghc-Options: -Wall -threaded -fcontext-stack=200
   if os(linux)
      ghc-Options: -pgml g++ "-optl-Wl,--whole-archive" "-optl-Wl,-Bstatic" "-optl-Wl,-lfltkc" "-optl-Wl,-Bdynamic" "-optl-Wl,--no-whole-archive"
-  else 
+  else
      ghc-Options:
 
 Executable boxtype
@@ -156,7 +156,7 @@ Executable boxtype
   ghc-Options: -Wall -threaded -fcontext-stack=200
   if os(linux)
      ghc-Options: -pgml g++ "-optl-Wl,--whole-archive" "-optl-Wl,-Bstatic" "-optl-Wl,-lfltkc" "-optl-Wl,-Bdynamic" "-optl-Wl,--no-whole-archive"
-  else 
+  else
      ghc-Options:
 
 Executable browser
@@ -166,7 +166,7 @@ Executable browser
   ghc-Options: -Wall -threaded -fcontext-stack=200
   if os(linux)
      ghc-Options: -pgml g++ "-optl-Wl,--whole-archive" "-optl-Wl,-Bstatic" "-optl-Wl,-lfltkc" "-optl-Wl,-Bdynamic" "-optl-Wl,--no-whole-archive"
-  else 
+  else
      ghc-Options:
 
 Executable clock
@@ -176,5 +176,5 @@ Executable clock
   ghc-Options: -Wall -threaded -fcontext-stack=200
   if os(linux)
      ghc-Options: -pgml g++ "-optl-Wl,--whole-archive" "-optl-Wl,-Bstatic" "-optl-Wl,-lfltkc" "-optl-Wl,-Bdynamic" "-optl-Wl,--no-whole-archive"
-  else 
+  else
      ghc-Options:

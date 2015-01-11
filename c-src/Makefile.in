@@ -108,8 +108,8 @@ ifeq ($(shell uname) , Darwin)
 	SHARED_EXT=dylib
 	SONAME_FLAGS=-dynamiclib -install_name
 else
-        SHARED_EXT=so
-	SONAME_FLAGS= -shared -Wl,-soname,
+	SHARED_EXT=so
+	SONAME_FLAGS= -shared -Wl,-soname
 endif
 .SILENT:
 all: libfltkc.a libfltkc.$(SHARED_EXT)
@@ -129,7 +129,7 @@ libfltkc.so : $(OBJECTS)
 	test -d $(LIBDIR) || mkdir $(LIBDIR)
 	@echo "*** Linking $@..."
 	(cd $(SHARED_OBJECT_FILES); \
-	$(CXX) $(SONAME_FLAGS) $(LIBNAME).$(SHARED_EXT) -o $(LIBDIR)/$(LIBNAME).$(SHARED_EXT) $^)
+	$(CXX) $(SONAME_FLAGS),$(LIBDIR)/$@ -o $(LIBDIR)/$@ $^);
 libfltkc.dylib: $(OBJECTS)
 	@echo "*** Not linking $@ because of bugs in ./c-src/Makefile.in, help appreciated."
 clean:
