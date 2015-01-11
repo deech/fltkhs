@@ -95,11 +95,10 @@ buttonCb state' _ =
   do
     (toggleButtons', b, win) <- readIORef state'
     i <- newIORef []
-    let addIf b' alignType' = do
+    let addIf :: (ToggleButtons -> Ref ToggleButton) -> AlignType -> IO ()
+        addIf b' alignType' = do
           v' <- getValue (b' toggleButtons')
-          when
-            v'
-            (modifyIORef i ((++) [alignType']))
+          when v' (modifyIORef i ((++) [alignType']))
     addIf leftb AlignTypeLeft
     addIf rightb AlignTypeRight
     addIf topb AlignTypeTop
