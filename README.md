@@ -22,6 +22,15 @@ First download and install FLTK. On OSX and Linux it should build using the stan
     > make
     > make install
 
-Once FLTK is installed the standard Cabal install command `cabal build` from the top-level directory should build everything including the C/C++ wrappers.
+Once FLTK is installed the standard Cabal build command `cabal build` from the top-level directory should build everything including the C/C++ wrappers.
+
+While most of the bindings are complete, the following still needs to be done:
+
+- the rest of the bindings
+- More Haskell demos
+- Documentation
+- make the library portable across Windows/Linux/OSX.
+
+Once the work is complete this README will include more extensive instructions.
 
   [1]: http://www.fltk.org/index.php      "FLTK"
