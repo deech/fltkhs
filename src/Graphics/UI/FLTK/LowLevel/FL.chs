@@ -151,7 +151,7 @@ module Graphics.UI.FLTK.LowLevel.FL
 where
 #include "Fl_C.h"
 import C2HS hiding (cFromEnum, cToBool,cToEnum)
-import Control.Concurrent.STM hiding (check)
+import Data.IORef
 import Foreign.C.Types
 import Graphics.UI.FLTK.LowLevel.Fl_Enumerations
 import Graphics.UI.FLTK.LowLevel.Fl_Types
@@ -181,10 +181,10 @@ import System.IO.Unsafe (unsafePerformIO)
 
 {#enum Option {} deriving (Show) #}
 
-ptrToGlobalEventHandler :: TVar (FunPtr GlobalEventHandlerPrim)
+ptrToGlobalEventHandler :: IORef (FunPtr GlobalEventHandlerPrim)
 ptrToGlobalEventHandler = unsafePerformIO $ do
                             initialHandler <- toGlobalEventHandlerPrim (\_ -> return (-1))
-                            newTVarIO initialHandler
+                            newIORef initialHandler
 
 type EventDispatchPrim = (CInt ->
                           Ptr () ->
@@ -460,10 +460,10 @@ setFocus wp = withRef wp setFocus'
 setHandler :: GlobalEventHandlerF -> IO ()
 setHandler eh = do
   newGlobalEventHandler <- toGlobalEventHandlerPrim eh
-  curr <- atomically $ do
-                  old <- readTVar ptrToGlobalEventHandler
-                  writeTVar ptrToGlobalEventHandler newGlobalEventHandler
-                  return old
+  curr <- do
+    old <- readIORef ptrToGlobalEventHandler
+    writeIORef ptrToGlobalEventHandler newGlobalEventHandler
+    return old
   removeHandler' curr
   addHandler' newGlobalEventHandler
 

@@ -79,7 +79,7 @@ library
                    Graphics.UI.FLTK.LowLevel.FL
                    Graphics.UI.FLTK.LowLevel.Gl
                    Graphics.UI.FLTK.LowLevel.Utils
-  build-depends: base, stm, bytestring
+  build-depends: base, bytestring
   build-tools: c2hs
   hs-source-dirs: src
   other-modules: C2HS
