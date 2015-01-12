@@ -22,9 +22,17 @@ First make sure you have OpenGL and then download and install [FLTK 1.3.3] [2]. 
     > make
     > make install
 
-If you didn't install FLTK from source you'll need `make`, `autoconf`, and `autoheader` to build the Haskell bindings.
+If you are customizing your installation process it is important to enable OpenGL and Cairo when compiling FLTK like so:
+
+    > ./configure --enable-gl --enable-cairo
+
+If you didn't install FLTK from source you'll need, along with the standard FLTK library, `fltk_gl`, and `fltk_cairo`. You will also need `make`, `autoconf`, and `autoheader` to build the Haskell bindings.
 
 Make sure `c2hs` is also installed with `cabal install c2hs`.
+
+Then clone this repository:
+
+    > git clone https://github.com/deech/fltkhs
 
 Then, only on Linux and OSX, once FLTK is installed, the standard Cabal build command `cabal build` from the top-level directory should build everything including the C/C++ wrappers and Haskell demos.
 
