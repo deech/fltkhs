@@ -30,7 +30,7 @@ If you are customizing your `configure` step it is important to at least enable 
 
     > ./configure --enable-gl --enable-cairo
 
-If you didn't install FLTK from source you will need, along with the standard FLTK library, `fltk_gl`, and `fltk_cairo` are also in the library path. You will also need the `make`, `autoconf`, and `autoheader` tools to build the Haskell bindings.
+If you didn't install FLTK from source you will need to ensure that, along with the standard FLTK library, `fltk_gl`, and `fltk_cairo` are also in the library path. You will also need the `make`, `autoconf`, and `autoheader` tools to build the Haskell bindings.
 
 Make sure `c2hs` is also installed with `cabal install c2hs`.
 
