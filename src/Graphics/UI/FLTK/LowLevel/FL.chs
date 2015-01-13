@@ -168,7 +168,7 @@ import Graphics.UI.FLTK.LowLevel.Hierarchy hiding (
                                                    focus
                                                   )
 import Graphics.UI.FLTK.LowLevel.Dispatch
-import System.IO.Unsafe (unsafePerformIO)
+import qualified System.IO.Unsafe as Unsafe (unsafePerformIO)
 #c
  enum Option {
    ArrowFocus = OPTION_ARROW_FOCUS,
@@ -182,7 +182,7 @@ import System.IO.Unsafe (unsafePerformIO)
 {#enum Option {} deriving (Show) #}
 
 ptrToGlobalEventHandler :: IORef (FunPtr GlobalEventHandlerPrim)
-ptrToGlobalEventHandler = unsafePerformIO $ do
+ptrToGlobalEventHandler = Unsafe.unsafePerformIO $ do
                             initialHandler <- toGlobalEventHandlerPrim (\_ -> return (-1))
                             newIORef initialHandler
 
@@ -209,7 +209,7 @@ option :: Option -> IO Int
 option o = {#call Fl_option as fl_option #} (cFromEnum o) >>= return . fromIntegral
 
 unsafeToCallbackPrim :: GlobalCallback -> FunPtr CallbackPrim
-unsafeToCallbackPrim = unsafePerformIO . toGlobalCallbackPrim
+unsafeToCallbackPrim = (Unsafe.unsafePerformIO) . toGlobalCallbackPrim
 
 {# fun Fl_add_awake_handler_ as addAwakeHandler'
   {id `FunPtr CallbackPrim', id `(Ptr ())'} -> `Int' #}
@@ -266,6 +266,10 @@ background2 (r,g,b) = {#call Fl_background2 as fl_background2 #}
                     (fromIntegral r)
                     (fromIntegral g)
                     (fromIntegral b)
+-- | In the function below marked `pure`, c2hs uses `unsafePerformIO` unqualified causing
+-- | a compile error if it imported qualifed. This is a workaround.
+unsafePerformIO :: IO a -> a
+unsafePerformIO = Unsafe.unsafePerformIO
 {# fun pure Fl_scheme as scheme
   {} -> `String' #}
 setScheme :: String -> IO Int
