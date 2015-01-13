@@ -1,1 +1,2 @@
+ghc-options: @FLTKCONFIGCOMMAND@ -lstdc++
 ld-options: @FLTKCONFIGCOMMAND@ -lstdc++

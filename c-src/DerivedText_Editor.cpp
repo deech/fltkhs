@@ -83,7 +83,7 @@ void DerivedText_Editor::remove_all_key_bindings(){
 }
 void DerivedText_Editor::remove_key_binding(int key, int state, Key_Binding_With_Callback** list) {
   Key_Binding_With_Callback* curr = *list;
-  Key_Binding_With_Callback* last;
+  Key_Binding_With_Callback* last = NULL;
   for (;curr;last = curr, curr = curr->next){
      if (curr->key == key && curr->state == state) break;
   }

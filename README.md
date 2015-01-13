@@ -16,17 +16,21 @@ The Haskell demo examples are in `src/Examples`.
 Building
 ________
 
-First make sure you have OpenGL and then download and install [FLTK 1.3.3] [2]. On OSX and Linux it should build and install smoothly using the standard:
+Unfortunately this package does not currently install in Windows. The instructions below are only for OSX and Linux.
+
+First make sure you have OpenGL and then download and install [FLTK 1.3.3] [2].
+
+The recommended way to install FLTK on Linux is from source. The reason is that some package managers seem to put the headers and libraries in a non-standard locations. On OSX and Linux it should build and install smoothly using the standard:
 
     > ./configure
     > make
     > make install
 
-If you are customizing your installation process it is important to enable OpenGL and Cairo when compiling FLTK like so:
+If you are customizing your `configure` step it is important to at least enable OpenGL and Cairo like so:
 
     > ./configure --enable-gl --enable-cairo
 
-If you didn't install FLTK from source you'll need, along with the standard FLTK library, `fltk_gl`, and `fltk_cairo`. You will also need `make`, `autoconf`, and `autoheader` to build the Haskell bindings.
+If you didn't install FLTK from source you will need, along with the standard FLTK library, `fltk_gl`, and `fltk_cairo` are also in the library path. You will also need the `make`, `autoconf`, and `autoheader` tools to build the Haskell bindings.
 
 Make sure `c2hs` is also installed with `cabal install c2hs`.
 
@@ -35,6 +39,8 @@ Then clone this repository:
     > git clone https://github.com/deech/fltkhs
 
 Then, only on Linux and OSX, once FLTK is installed, the standard Cabal build command `cabal build` from the top-level directory should build everything including the C/C++ wrappers and Haskell demos.
+
+NOTE: If are getting a flood of `undefined reference` errors please install FLTK from source as outlined above. It seems as though some package managers put the libraries and headers in non-standard places.
 
 The available demos are listed in `fltkhs.cabal` as separate `Executable` components. Once it is done building, `dist/build/<demo-name>/<demo-name>` should run any of them. For example to run the `buttons` demo, from the top-level directory do:
 
