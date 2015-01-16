@@ -12,7 +12,8 @@ module Graphics.UI.FLTK.LowLevel.Fl_Enumerations
      TreeConnector(..),
      TreeSelect(..),
      -- * Keyboard and mouse codes
-     KeyboardCode(..),
+     SpecialKey(..),
+     allSpecialKeys,
      MouseButton(..),
      EventState(..),
      kb_CommandState, kb_ControlState, kb_KpLast,
@@ -63,6 +64,7 @@ module Graphics.UI.FLTK.LowLevel.Fl_Enumerations
      alignBottomLeft,
      alignBottomRight,
      allAlignTypes,
+     allWhen,
      -- * Box types
      Boxtype(..),
      frame,frameBox, circleBox, diamondBox,
@@ -229,7 +231,7 @@ enum TreeSelect{
   TreeSelectSingle = FL_TREE_SELECT_SINGLE,
   TreeSelectMulti = FL_TREE_SELECT_MULTI
 };
-enum KeyboardCode {
+enum SpecialKey {
   Button = FL_Button,
   Kb_Backspace = FL_BackSpace,
   Kb_Tab = FL_Tab,
@@ -487,7 +489,7 @@ enum AlignType {
 };
 #endc
 {#enum Event {} deriving (Show, Eq) #}
-{#enum When {} deriving (Show, Eq) #}
+{#enum When {} deriving (Show, Eq, Ord) #}
 {#enum FdWhen {} deriving (Show, Eq) #}
 {#enum TreeSort {} deriving (Show, Eq) #}
 {#enum TreeConnector {} deriving (Show, Eq) #}
@@ -496,7 +498,64 @@ enum AlignType {
 {#enum TreeItemReselectMode {} deriving (Show, Eq) #}
 {#enum TreeItemDrawMode {} deriving (Show, Eq) #}
 #endif /*FLTK_ABI_VERSION*/
-{#enum KeyboardCode {} deriving (Show, Eq) #}
+{#enum SpecialKey {} deriving (Show, Eq) #}
+allSpecialKeys :: [SpecialKey]
+allSpecialKeys = [
+    Button,
+    Kb_Backspace,
+    Kb_Tab,
+    Kb_IsoKey,
+    Kb_Enter,
+    Kb_Pause,
+    Kb_Escape,
+    Kb_Kana,
+    Kb_Eisu,
+    Kb_Yen,
+    Kb_JisUnderscore,
+    Kb_Home,
+    Kb_Left,
+    Kb_Up,
+    Kb_Right,
+    Kb_Down,
+    Kb_PageUp,
+    Kb_PageDown,
+    Kb_End,
+    Kb_Print,
+    Kb_Insert,
+    Kb_Menu,
+    Kb_Help,
+    Kb_Kp,
+    Kb_KpEnter,
+    Kb_F,
+    Kb_Flast,
+    Kb_ShiftL,
+    Kb_ShiftR,
+    Kb_ControlL,
+    Kb_ControlR,
+    Kb_CapsLock,
+    Kb_MetaL,
+    Kb_MetaR,
+    Kb_AltL,
+    Kb_AltR,
+    Kb_Delete,
+    Kb_VolumeDown,
+    Kb_VolumeMute,
+    Kb_VolumeUp,
+    Kb_MediaPlay,
+    Kb_MediaStop,
+    Kb_MediaPrev,
+    Kb_MediaNext,
+    Kb_HomePage,
+    Kb_Mail,
+    Kb_Search,
+    Kb_Back,
+    Kb_Forward,
+    Kb_Stop,
+    Kb_Refresh,
+    Kb_Sleep,
+    Kb_Favorites
+  ]
+
 {#enum MouseButton {} deriving (Show, Eq) #}
 {#enum EventState {} deriving (Show, Eq) #}
 kb_CommandState, kb_ControlState :: EventState
@@ -507,7 +566,7 @@ kb_ControlState = Kb_CtrlState
 kb_CommandState = Kb_CtrlState
 kb_ControlState = Kb_MetaState
 #endif
-kb_KpLast :: KeyboardCode
+kb_KpLast :: SpecialKey
 kb_KpLast = Kb_F
 {#enum Damage {} deriving (Show) #}
 {#enum GlutDraw {} deriving (Show) #}
@@ -593,6 +652,17 @@ allAlignTypes = [
       AlignTypeLeftBottom,
       AlignTypeRightBottom
       ]
+allWhen :: [When]
+allWhen = [
+    WhenNever,
+    WhenChanged,
+    WhenNotChanged,
+    WhenRelease,
+    WhenReleaseAlways,
+    WhenEnterKey,
+    WhenEnterKeyAlways,
+    WhenEnterKeyChanged
+  ]
 data Boxtype = NoBox
              | FlatBox
              | UpBox
@@ -775,7 +845,6 @@ cToFontAttribute attributeCode =
       where
         has :: CInt -> Font -> Bool
         has code (Font f) = code .&. (fromIntegral f) /= 0
-
 helvetica :: Font
 helvetica = Font 0
 helveticaBold :: Font

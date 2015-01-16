@@ -88,6 +88,17 @@ library
   default-language: Haskell2010
   ghc-options: -Wall -fcontext-stack=200
 
+
+Executable table-spreadsheet-with-keyboard-nav
+  Main-Is: table-spreadsheet-with-keyboard-nav.hs
+  Hs-Source-Dirs: src/Examples
+  Build-Depends: base,fltkhs
+  ghc-Options: -Wall -threaded -fcontext-stack=200
+  if os(linux)
+     ghc-Options: -pgml g++ "-optl-Wl,--whole-archive" "-optl-Wl,-Bstatic" "-optl-Wl,-lfltkc" "-optl-Wl,-Bdynamic" "-optl-Wl,--no-whole-archive"
+  else
+     ghc-Options:
+
 Executable test_call
   Main-Is: TestCall.hs
   Hs-Source-Dirs: src/TestPrograms

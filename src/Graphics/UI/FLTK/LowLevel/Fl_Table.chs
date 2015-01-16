@@ -2,6 +2,9 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 module Graphics.UI.FLTK.LowLevel.Fl_Table
     (
+     TableCoordinate(..),
+     Row(..),
+     Column(..),
      CustomTableFuncs(..),
      mkSetInt,
      mkDrawCell,
@@ -24,7 +27,9 @@ import Graphics.UI.FLTK.LowLevel.Fl_Types
 import Graphics.UI.FLTK.LowLevel.Utils
 import Graphics.UI.FLTK.LowLevel.Hierarchy
 import Graphics.UI.FLTK.LowLevel.Dispatch
-
+data Row = Row Int
+data Column = Column Int
+data TableCoordinate = TableCoordinate Row Column
 foreign import ccall "wrapper"
         mkSetInt ::  (Ptr () -> CInt -> IO ())-> IO (FunPtr (Ptr () -> CInt -> IO ()))
 foreign import ccall "wrapper"
@@ -237,15 +242,15 @@ instance (impl ~ ( Int ->  IO ())) => Op (SetTopRow ()) Table orig impl where
 {# fun unsafe Fl_Table_top_row as topRow' { id `Ptr ()' } -> `Int' #}
 instance (impl ~ (  IO (Int))) => Op (GetTopRow ()) Table orig impl where
   runOp _ _ table = withRef table $ \tablePtr -> topRow' tablePtr
-{# fun unsafe Fl_Table_is_selected as isSelected' { id `Ptr ()',`Int',`Int' } -> `Int' #}
-instance (impl ~ ( Int -> Int ->  IO (Int))) => Op (IsSelected ()) Table orig impl where
+{# fun unsafe Fl_Table_is_selected as isSelected' { id `Ptr ()',`Int',`Int' } -> `Bool' cToBool #}
+instance (impl ~ ( Int -> Int ->  IO Bool)) => Op (IsSelected ()) Table orig impl where
   runOp _ _ table r c = withRef table $ \tablePtr -> isSelected' tablePtr r c
 {# fun unsafe Fl_Table_get_selection as getSelection' { id `Ptr ()',alloca- `Int' peekIntConv*, alloca- `Int' peekIntConv*, alloca- `Int' peekIntConv*, alloca- `Int' peekIntConv*} -> `()' #}
-instance (impl ~ ( IO (Position, Position))) => Op (GetSelection ()) Table orig impl where
+instance (impl ~ IO (TableCoordinate, TableCoordinate)) => Op (GetSelection ()) Table orig impl where
   runOp _ _ table =
     withRef table $ \tablePtr ->
-        getSelection' tablePtr >>= \(rt, cl, rb, cr) ->
-            return $ (Position (X rt) (Y cl), Position (X rb) (Y cr))
+        getSelection' tablePtr >>= \(top', left',bottom',right') ->
+            return ((TableCoordinate (Row top') (Column left')), (TableCoordinate (Row bottom') (Column right')))
 {# fun Fl_Table_set_selection as setSelection' { id `Ptr ()',`Int',`Int',`Int',`Int' } -> `()' #}
 instance (impl ~ ( Int -> Int -> Int -> Int ->  IO ())) => Op (SetSelection ()) Table orig impl where
   runOp _ _ table row_top col_left row_bot col_right = withRef table $ \tablePtr -> setSelection' tablePtr row_top col_left row_bot col_right
@@ -301,8 +306,8 @@ instance (impl ~ ( TableContext -> Int -> Int ->  IO ())) => Op (DoCallback ()) 
 instance (impl ~ ( TableContext -> Int -> Int -> IO (Maybe Rectangle))) => Op (FindCell ()) Table orig impl where
   runOp _ _ table context r c  =
     withRef table $ \tablePtr ->
-        findCell' tablePtr context r c >>= \(result, x_pos', y_pos', width', height') ->
-            if (cToBool result)
+        findCell' tablePtr context r c >>= \(result, x_pos', y_pos', width', height') -> do
+          if (result /= -1)
             then return $ Just $ toRectangle (x_pos', y_pos', width', height')
             else return $ Nothing
 {# fun Fl_Table_draw_super as drawSuper' { id `Ptr ()' } -> `()' #}

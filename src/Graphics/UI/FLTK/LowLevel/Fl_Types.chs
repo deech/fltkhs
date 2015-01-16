@@ -10,6 +10,14 @@ import Debug.Trace
 import Control.Exception
 import qualified Data.ByteString as B
 #c
+  enum SliderType {
+    VertSliderType = FL_VERT_SLIDER,
+    HorSliderType = FL_HOR_SLIDER,
+    VertFillSlideType = FL_VERT_FILL_SLIDER,
+    HorFillSliderType = FL_HOR_FILL_SLIDER,
+    VertNiceSliderType = FL_VERT_NICE_SLIDER,
+    HorNiceSliderType = FL_HOR_NICE_SLIDER
+  };
   enum BrowserType {
     NormalBrowserType = FL_NORMAL_BROWSER,
     SelectBrowserType = FL_SELECT_BROWSER,
@@ -174,24 +182,25 @@ import qualified Data.ByteString as B
   };
   typedef FL_SOCKET Fl_Socket;
 #endc
-{#enum BrowserType {}#}
-{#enum SortType {}#}
-{#enum FileBrowserType {}#}
-{#enum FileIconType {}#}
-{#enum FileIconProps {}#}
-{#enum FileChooserType {}#}
-{#enum ButtonType {}#}
-{#enum TreeReasonType {}#}
-{#enum MenuProps {}#}
-{#enum CursorType {}#}
-{#enum PositionType {}#}
-{#enum DragType {}#}
-{#enum WrapType {}#}
-{#enum PageFormat {}#}
-{#enum PageLayout {}#}
-{#enum TableRowSelectMode {} #}
-{#enum TableContext {} deriving (Show) #}
-{#enum LinePosition {} #}
+{#enum SliderType {} deriving (Show, Eq) #}
+{#enum BrowserType {} deriving (Show, Eq) #}
+{#enum SortType {} deriving (Show, Eq) #}
+{#enum FileBrowserType {} deriving (Show, Eq) #}
+{#enum FileIconType {} deriving (Show, Eq) #}
+{#enum FileIconProps {} deriving (Show, Eq) #}
+{#enum FileChooserType {} deriving (Show, Eq) #}
+{#enum ButtonType {} deriving (Show, Eq) #}
+{#enum TreeReasonType {} deriving (Show, Eq) #}
+{#enum MenuProps {} deriving (Show, Eq) #}
+{#enum CursorType {} deriving (Show, Eq) #}
+{#enum PositionType {} deriving (Show, Eq) #}
+{#enum DragType {} deriving (Show, Eq) #}
+{#enum WrapType {} deriving (Show, Eq) #}
+{#enum PageFormat {} deriving (Show, Eq) #}
+{#enum PageLayout {} deriving (Show, Eq) #}
+{#enum TableRowSelectMode {} deriving (Show, Eq)  #}
+{#enum TableContext {} deriving (Show, Eq) #}
+{#enum LinePosition {} deriving (Show, Eq)  #}
 {#enum ScrollbarMode {} deriving (Show, Eq) #}
 data GLUTproc = GLUTproc {#type GLUTproc#}
 newtype GLUTIdleFunction = GLUTIdleFunction (FunPtr (IO ()))
@@ -234,24 +243,24 @@ type SharedImageHandler          = FunPtr (CString -> CUChar -> CInt -> Ptr ())
 type BoxDrawF                    = Rectangle -> Color -> IO ()
 type BoxDrawFPrim                = CInt -> CInt -> CInt -> CInt -> FlColor -> IO ()
 
-newtype Width = Width Int
-newtype Height = Height Int
+newtype Width = Width Int deriving (Eq, Show)
+newtype Height = Height Int deriving (Eq, Show)
 newtype Depth = Depth Int
 newtype LineSize = LineSize Int
-newtype X = X Int
-newtype Y = Y Int
+newtype X = X Int deriving (Eq, Show)
+newtype Y = Y Int deriving (Eq, Show)
 newtype ByX = ByX Double
 newtype ByY = ByY Double
 newtype Angle = Angle CShort
-data Position = Position X Y
+data Position = Position X Y deriving (Eq,Show)
 data CountDirection = CountUp | CountDown
 data DPI = DPI Float Float
-data Rectangle = Rectangle Position Size
+data Rectangle = Rectangle Position Size deriving (Eq,Show)
 data ByXY = ByXY ByX ByY
 data Intersection = Contained | Partial
-data Size = Size Width Height
-data KeyboardInput = KeyboardInputCode KeyboardCode | KeyboardInputChar Char
-data ShortcutKeySequence = ShortcutKeySequence [EventState] KeyboardInput
+data Size = Size Width Height deriving (Eq, Show)
+data KeyType = SpecialKeyType SpecialKey | NormalKeyType Char deriving (Show, Eq)
+data ShortcutKeySequence = ShortcutKeySequence [EventState] KeyType
 data Shortcut = KeySequence ShortcutKeySequence | KeyFormat String
 data ScreenLocation = Intersect Rectangle
                     | ScreenNumber Int

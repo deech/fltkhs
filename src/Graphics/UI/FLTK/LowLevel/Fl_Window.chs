@@ -383,13 +383,13 @@ currentWindow = current' >>= toRef
 instance (impl ~ ( IO ())) => Op (MakeCurrent ()) Window orig impl where
   runOp _ _ win = withRef win $ \winPtr -> makeCurrent' winPtr
 
-{# fun Fl_Window_set_cursor_with_bg as setCursorWithBg' { id `Ptr ()',cFromEnum `CursorType',cFromColor `Color' } -> `()' supressWarningAboutRes #}
-{# fun Fl_Window_set_cursor_with_fg as setCursorWithFg' { id `Ptr ()',cFromEnum `CursorType',cFromColor `Color' } -> `()' supressWarningAboutRes #}
-{# fun Fl_Window_set_cursor_with_fg_bg as setCursorWithFgBg' { id `Ptr ()',cFromEnum `CursorType',cFromColor `Color',cFromColor `Color' } -> `()' supressWarningAboutRes #}
-{# fun Fl_Window_set_cursor as setCursor' { id `Ptr ()',cFromEnum `CursorType' } -> `()' supressWarningAboutRes #}
-instance (impl ~ (CursorType -> IO ())) => Op (SetCursor ()) Window orig impl where
+{# fun Fl_Window_set_cursor_with_bg as setCursorWithBg' { id `Ptr ()',cFromEnum `Cursor',cFromColor `Color' } -> `()' supressWarningAboutRes #}
+{# fun Fl_Window_set_cursor_with_fg as setCursorWithFg' { id `Ptr ()',cFromEnum `Cursor',cFromColor `Color' } -> `()' supressWarningAboutRes #}
+{# fun Fl_Window_set_cursor_with_fg_bg as setCursorWithFgBg' { id `Ptr ()',cFromEnum `Cursor',cFromColor `Color',cFromColor `Color' } -> `()' supressWarningAboutRes #}
+{# fun Fl_Window_set_cursor as setCursor' { id `Ptr ()',cFromEnum `Cursor' } -> `()' supressWarningAboutRes #}
+instance (impl ~ (Cursor -> IO ())) => Op (SetCursor ()) Window orig impl where
   runOp _ _ win cursor =  withRef win $ \winPtr -> setCursor' winPtr cursor
-instance (impl ~ (CursorType -> (Maybe Color, Maybe Color) ->  IO ())) => Op (SetCursorWithFgBg ()) Window orig impl where
+instance (impl ~ (Cursor -> (Maybe Color, Maybe Color) ->  IO ())) => Op (SetCursorWithFgBg ()) Window orig impl where
   runOp _ _ win cursor fgbg =
     case fgbg of
       ((Just fg), (Just bg)) -> withRef win $ \winPtr -> setCursorWithFgBg' winPtr cursor fg bg

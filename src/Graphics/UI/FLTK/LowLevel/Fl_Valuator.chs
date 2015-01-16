@@ -53,7 +53,7 @@ instance (impl ~ (Rectangle -> IO ())) => Op (Resize ()) Valuator orig impl wher
                                  let (x_pos,y_pos,w_pos,h_pos) = fromRectangle rectangle
                                  resize' valuatorPtr x_pos y_pos w_pos h_pos
 {# fun unsafe Fl_Valuator_bounds as bounds' { id `Ptr ()',`Double',`Double' } -> `()' supressWarningAboutRes #}
-instance (impl ~ (Double -> Double ->  IO ())) => Op (GetBounds ()) Valuator orig impl where
+instance (impl ~ (Double -> Double ->  IO ())) => Op (Bounds ()) Valuator orig impl where
   runOp _ _ valuator a b = withRef valuator $ \valuatorPtr -> bounds' valuatorPtr a b
 {# fun unsafe Fl_Valuator_minimum as minimum' { id `Ptr ()' } -> `Double' #}
 instance (impl ~ ( IO (Double))) => Op (GetMinimum ()) Valuator orig impl where

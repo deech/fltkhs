@@ -335,17 +335,19 @@ instance (impl ~ ( String ->  IO ())) => Op (CopyTooltip ()) Widget orig impl wh
 {# fun Fl_Widget_set_tooltip as setTooltip' { id `Ptr ()',`String' } -> `()' supressWarningAboutRes #}
 instance (impl ~ ( String ->  IO ())) => Op (SetTooltip ()) Widget orig impl where
   runOp _ _ widget text = withRef widget $ \widgetPtr -> setTooltip' widgetPtr text
-{# fun Fl_Widget_when as when' { id `Ptr ()' } -> `When' cToEnum #}
-instance (impl ~ (IO (When))) => Op (GetWhen ()) Widget orig impl where
-  runOp _ _ widget = withRef widget $ \widgetPtr -> when' widgetPtr
+{# fun Fl_Widget_when as when' { id `Ptr ()' } -> `CInt' id #}
+instance (impl ~ IO [When]) => Op (GetWhen ()) Widget orig impl where
+  runOp _ _ widget = withRef widget $ \widgetPtr ->
+      when' widgetPtr >>= return . extract allWhen
 {# fun Fl_Widget_set_when as setWhen' { id `Ptr ()',`Word8' } -> `()' supressWarningAboutRes #}
-instance (impl ~ ( When ->  IO ())) => Op (SetWhen ()) Widget orig impl where
-  runOp _ _ widget i = withRef widget $ \widgetPtr -> setWhen' widgetPtr (fromIntegral $ fromEnum i)
-{# fun Fl_Widget_visible as visible' { id `Ptr ()' } -> `Int' #}
-instance (impl ~ (IO (Int))) => Op (GetVisible ()) Widget orig impl where
+instance (impl ~ ( [When] ->  IO ())) => Op (SetWhen ()) Widget orig impl where
+  runOp _ _ widget i = withRef widget $ \widgetPtr ->
+    setWhen' widgetPtr (fromIntegral . combine $ i)
+{# fun Fl_Widget_visible as visible' { id `Ptr ()' } -> `Bool' cToBool #}
+instance (impl ~ (IO Bool)) => Op (GetVisible ()) Widget orig impl where
   runOp _ _ widget = withRef widget $ \widgetPtr -> visible' widgetPtr
-{# fun Fl_Widget_visible_r as visibleR' { id `Ptr ()' } -> `Int' #}
-instance (impl ~ (IO (Int))) => Op (GetVisibleR ()) Widget orig impl where
+{# fun Fl_Widget_visible_r as visibleR' { id `Ptr ()' } -> `Bool' cToBool #}
+instance (impl ~ (IO Bool)) => Op (GetVisibleR ()) Widget orig impl where
   runOp _ _ widget = withRef widget $ \widgetPtr -> visibleR' widgetPtr
 {# fun Fl_Widget_show_super as showSuper' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
 instance (impl ~ (IO ())) => Op (ShowWidgetSuper ()) Widget orig impl where

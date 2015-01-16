@@ -353,8 +353,8 @@ module Graphics.UI.FLTK.LowLevel.Hierarchy
          ToggleButton,
          -- * Valuator
          Valuator,
-         GetBounds,
-         getBounds,
+         Bounds,
+         bounds,
          GetMinimum,
          getMinimum,
          SetMinimum,
@@ -1707,7 +1707,7 @@ type ValuatorFuncs =
   (Handle
   (ResizeSuper
   (Resize
-  (GetBounds
+  (Bounds
   (GetMinimum
   (SetMinimum
   (GetMaximum
@@ -1725,9 +1725,9 @@ type ValuatorFuncs =
   ())))))))))))))))))))
 instance Functions Valuator ValuatorFuncs
 
-data GetBounds a
-getBounds :: (FindOp a (GetBounds ()) (Match r), Op (GetBounds ()) r a impl) => Ref a -> impl
-getBounds = dispatch (undefined :: GetBounds())
+data Bounds a
+bounds :: (FindOp a (Bounds ()) (Match r), Op (Bounds ()) r a impl) => Ref a -> impl
+bounds = dispatch (undefined :: Bounds())
 data GetMinimum a
 getMinimum :: (FindOp a (GetMinimum ()) (Match r), Op (GetMinimum ()) r a impl) => Ref a -> impl
 getMinimum = dispatch (undefined :: GetMinimum())
@@ -1769,12 +1769,14 @@ data CSlider parent
 type Slider = CSlider Valuator
 type SliderFuncs =
   (Destroy
+  (Handle
+  (Bounds
   (Scrollvalue
   (SetSliderSize
   (GetSliderSize
   (GetSlider
   (SetSlider
-  ()))))))
+  ()))))))))
 instance Functions Slider SliderFuncs
 
 data Scrollvalue a

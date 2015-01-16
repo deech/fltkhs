@@ -223,7 +223,7 @@ main = do
   setColHeader table True
   setColResize table True
   setSelectionColor table yellowColor
-  setWhen table WhenRelease
+  setWhen table [WhenRelease]
   readIORef rowData' >>= setRows table . length
   readIORef rowData' >>= setCols table . maximum . map length
   setRowHeightAll table 18

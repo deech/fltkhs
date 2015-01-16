@@ -7,6 +7,7 @@ import qualified Foreign.Concurrent as FC
 import Foreign.C
 import qualified Data.ByteString as B
 import qualified System.IO.Unsafe as Unsafe
+import Data.List
 
 foreign import ccall "wrapper"
         mkWidgetCallbackPtr :: CallbackWithUserDataPrim -> IO (FunPtr CallbackWithUserDataPrim)
@@ -60,8 +61,8 @@ masks compoundCode code = (code .|. compoundCode) /= 0
 keySequenceToCInt :: ShortcutKeySequence -> CInt
 keySequenceToCInt (ShortcutKeySequence modifiers char) =
   let charCode = case char of
-        KeyboardInputCode c' -> fromIntegral $ fromEnum c'
-        KeyboardInputChar c' -> fromIntegral $ castCharToCChar c'
+        SpecialKeyType c' -> fromIntegral $ fromEnum c'
+        NormalKeyType c' -> fromIntegral $ castCharToCChar c'
   in (sum $ map (fromIntegral . fromEnum) modifiers) + charCode
 
 wrapNonNull :: Ptr a -> String -> IO (ForeignPtr (Ptr a))
@@ -137,8 +138,30 @@ arrayToRefs arrayPtr numElements =
 refOrError :: String -> Ptr () -> IO (Ref b)
 refOrError errorMessage p = wrapNonNull p errorMessage >>=
                                return . wrapInRef
-toShortcut :: [KeyboardCode] -> FlShortcut
-toShortcut = fromIntegral . sum . (map fromEnum)
+toShortcut :: [KeyType] -> FlShortcut
+toShortcut =
+  fromIntegral .
+  sum .
+  map
+   (\k -> case k of
+     (SpecialKeyType sk') -> fromEnum sk'
+     (NormalKeyType c') -> fromEnum c'
+   )
+
+cToKeyType :: CInt -> KeyType
+cToKeyType cint =
+  let findSpecialKey = find
+                        (\sk -> cint == (fromIntegral $ fromEnum sk))
+                        allSpecialKeys
+  in
+  case findSpecialKey of
+    Just sk -> SpecialKeyType sk
+    Nothing -> NormalKeyType (toEnum $ fromIntegral cint)
+
+cFromKeyType :: KeyType -> CInt
+cFromKeyType kt = case kt of
+  SpecialKeyType sk -> fromIntegral $ fromEnum sk
+  NormalKeyType nk -> fromIntegral $ fromEnum nk
 
 toRef ::  Ptr () -> IO (Ref a)
 toRef ptr = throwStackOnError $

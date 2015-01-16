@@ -6,6 +6,7 @@ module Graphics.UI.FLTK.LowLevel.FL
      check,
      ready,
      option,
+     setOption,
      addAwakeHandler,
      getAwakeHandler_,
      display,
@@ -171,11 +172,11 @@ import Graphics.UI.FLTK.LowLevel.Dispatch
 import qualified System.IO.Unsafe as Unsafe (unsafePerformIO)
 #c
  enum Option {
-   ArrowFocus = OPTION_ARROW_FOCUS,
-   VisibleFocus = OPTION_VISIBLE_FOCUS,
-   DndText = OPTION_DND_TEXT,
-   ShowTooltips = OPTION_SHOW_TOOLTIPS,
-   Last = OPTION_LAST
+   OptionArrowFocus = OPTION_ARROW_FOCUS,
+   OptionVisibleFocus = OPTION_VISIBLE_FOCUS,
+   OptionDndText = OPTION_DND_TEXT,
+   OptionShowTooltips = OPTION_SHOW_TOOLTIPS,
+   OptionLast = OPTION_LAST
  };
 #endc
 
@@ -205,8 +206,11 @@ ready :: IO Int
 ready = {#call Fl_ready as fl_ready #} >>= return . fromIntegral
 
 
-option :: Option -> IO Int
-option o = {#call Fl_option as fl_option #} (cFromEnum o) >>= return . fromIntegral
+option :: Option -> IO Bool
+option o = {#call Fl_option as fl_option #} (cFromEnum o) >>= \(c::CInt) -> return $ cToBool $ ((fromIntegral c) :: Int)
+
+setOption :: Option -> Bool -> IO ()
+setOption o t = {#call Fl_set_option as fl_set_option #} (cFromEnum o) (Graphics.UI.FLTK.LowLevel.Utils.cFromBool t)
 
 unsafeToCallbackPrim :: GlobalCallback -> FunPtr CallbackPrim
 unsafeToCallbackPrim = (Unsafe.unsafePerformIO) . toGlobalCallbackPrim
@@ -388,13 +392,13 @@ extractEventStates = extract eventStates
 {# fun Fl_contains_event_state as containsEventState
        {cFromEnum `EventState' } -> `Bool' toBool #}
 {# fun Fl_event_key as eventKey
-       {  } -> `KeyboardCode' cToEnum #}
+       {  } -> `KeyType' cToKeyType #}
 {# fun Fl_event_original_key as eventOriginalKey
-       {  } -> `KeyboardCode' cToEnum #}
+       {  } -> `KeyType' cToKeyType #}
 {# fun Fl_event_key_pressed as eventKeyPressed
-       {cFromEnum `KeyboardCode' } -> `Bool' toBool #}
+       {cFromKeyType `KeyType' } -> `Bool' toBool #}
 {# fun Fl_get_key as getKey
-       {cFromEnum `KeyboardCode' } -> `Bool' toBool #}
+       {cFromKeyType `KeyType' } -> `Bool' toBool #}
 {# fun Fl_event_text as eventText
        {  } -> `String' #}
 {# fun Fl_event_length as eventLength

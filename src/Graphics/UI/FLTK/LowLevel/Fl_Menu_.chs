@@ -92,13 +92,13 @@ instance (Parent a MenuItem, Parent b MenuItem, impl ~ (Ref a -> IO (Ref b))) =>
   runOp _ _ menu_ item = withRef menu_ $ \menu_Ptr -> withRef item $ \itemPtr -> picked' menu_Ptr itemPtr >>= toRef
 {# fun unsafe Fl_Menu__find_index_with_name as findIndexWithName' { id `Ptr ()',`String' } -> `Int' #}
 {# fun unsafe Fl_Menu__find_index_with_item as findIndexWithItem' { id `Ptr ()',id `Ptr ()' } -> `Int' #}
-instance (impl ~ (MenuItemLocator -> IO (Int))) => Op (FindIndex ()) MenuPrim orig impl where
+instance (impl ~ (MenuItemLocator -> IO (Maybe Int))) => Op (FindIndex ()) MenuPrim orig impl where
   runOp _ _ menu_ menu_item_referene =
     withRef menu_ $ \menu_Ptr ->
         case menu_item_referene of
-          MenuItemNameLocator (MenuItemName name) -> findIndexWithName' menu_Ptr name
+          MenuItemNameLocator (MenuItemName name) -> findIndexWithName' menu_Ptr name >>= \r -> if (r == -1) then (return Nothing) else (return $ Just r)
           MenuItemPointerLocator (MenuItemPointer menu_item) ->
-              withRef menu_item $ \menu_itemPtr -> findIndexWithItem' menu_Ptr menu_itemPtr
+              withRef menu_item $ \menu_itemPtr -> findIndexWithItem' menu_Ptr menu_itemPtr >>= \r -> if (r == -1) then (return Nothing) else (return $ Just r)
 {# fun unsafe Fl_Menu__test_shortcut as testShortcut' { id `Ptr ()' } -> `Ptr ()' id #}
 instance (impl ~ ( IO (Ref MenuItem))) => Op (TestShortcut ()) MenuPrim orig impl where
   runOp _ _ menu_ = withRef menu_ $ \menu_Ptr -> testShortcut' menu_Ptr >>= toRef
