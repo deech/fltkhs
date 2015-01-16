@@ -1,5 +1,5 @@
 FLTKCONFIG=@FLTKCONFIG@
-CXX = $(shell $(FLTKCONFIG) --cxx) $(shell $(FLTKCONFIG) --cxxflags) -Wall -Werror -DINTERNAL_LINKAGE -g -Icpp -I../
+CXX = $(shell $(FLTKCONFIG) --cxx) $(shell $(FLTKCONFIG) --cxxflags) -Wall -DINTERNAL_LINKAGE -g -Icpp -I../
 CXXSHARED = $(CXX)
 CXXSTATIC = $(CXX) -static
 
