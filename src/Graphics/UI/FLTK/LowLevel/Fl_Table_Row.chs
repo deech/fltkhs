@@ -71,9 +71,11 @@ instance (impl ~ (Rectangle ->  IO ())) => Op (ResizeSuper ()) TableRow orig imp
 {# fun unsafe Fl_Table_Row_resize as resize' { id `Ptr ()',`Int',`Int',`Int',`Int' } -> `()' #}
 instance (impl ~ (Rectangle ->  IO ())) => Op (Resize ()) TableRow orig impl where
   runOp _ _ table rectangle = let (x_pos', y_pos', width', height') = fromRectangle rectangle in withRef table $ \tablePtr -> resize' tablePtr x_pos' y_pos' width' height'
-{# fun Fl_Table_Row_row_selected as rowSelected' { id `Ptr ()', `Int'} -> `Bool' cToBool #}
-instance (impl ~ ( Int -> IO (Bool))) => Op (GetRowSelected ()) TableRow orig impl where
-  runOp _ _ table idx' = withRef table $ \tablePtr -> rowSelected' tablePtr idx'
+{# fun Fl_Table_Row_row_selected as rowSelected' { id `Ptr ()', `Int'} -> `CInt' id #}
+instance (impl ~ ( Int -> IO (Either OutOfRange Bool))) => Op (GetRowSelected ()) TableRow orig impl where
+  runOp _ _ table idx' = withRef table $ \tablePtr -> do
+    ret' <- rowSelected' tablePtr idx'
+    if ret' == -1 then (return $ Left OutOfRange) else (return $ Right $ cToBool ret')
 {# fun Fl_Table_Row_select_all_rows_with_flag as selectAllRows' {id `Ptr ()', `Int'} -> `()' #}
 instance (impl ~ ( TableRowSelectFlag -> IO ())) => Op (SelectAllRows ()) TableRow orig impl where
   runOp _ _ table flag' = withRef table $

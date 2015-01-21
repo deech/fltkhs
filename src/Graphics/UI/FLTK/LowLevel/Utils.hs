@@ -7,7 +7,6 @@ import qualified Foreign.Concurrent as FC
 import Foreign.C
 import qualified Data.ByteString as B
 import qualified System.IO.Unsafe as Unsafe
-import Data.List
 
 foreign import ccall "wrapper"
         mkWidgetCallbackPtr :: CallbackWithUserDataPrim -> IO (FunPtr CallbackWithUserDataPrim)

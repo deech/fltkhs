@@ -902,7 +902,97 @@ module Graphics.UI.FLTK.LowLevel.Hierarchy
          -- * Clock
          Clock,
          GetValueSinceEpoch,
-         getValueSinceEpoch
+         getValueSinceEpoch,
+         -- * TreePrefs
+         TreePrefs,
+         GetItemLabelfont,
+         getItemLabelfont,
+         GetItemLabelsize,
+         getItemLabelsize,
+         SetItemLabelsize,
+         setItemLabelsize,
+         SetItemLabelfgcolor,
+         setItemLabelfgcolor,
+         GetItemLabelbgcolor,
+         getItemLabelbgcolor,
+         SetItemLabelbgcolor,
+         setItemLabelbgcolor,
+         GetLabelfgcolor,
+         getLabelfgcolor,
+         SetLabelfgcolor,
+         setLabelfgcolor,
+         GetLabelbgcolor,
+         getLabelbgcolor,
+         SetLabelbgcolor,
+         setLabelbgcolor,
+         GetMarginleft,
+         getMarginleft,
+         SetMarginleft,
+         setMarginleft,
+         GetMargintop,
+         getMargintop,
+         SetMargintop,
+         setMargintop,
+         GetOpenchildMarginbottom,
+         getOpenchildMarginbottom,
+         SetOpenchildMarginbottom,
+         setOpenchildMarginbottom,
+         GetUsericonmarginleft,
+         getUsericonmarginleft,
+         SetUsericonmarginleft,
+         setUsericonmarginleft,
+         GetLabelmarginleft,
+         getLabelmarginleft,
+         SetLabelmarginleft,
+         setLabelmarginleft,
+         GetLinespacing,
+         getLinespacing,
+         SetLinespacing,
+         setLinespacing,
+         GetConnectorcolor,
+         getConnectorcolor,
+         SetConnectorcolor,
+         setConnectorcolor,
+         GetConnectorstyle,
+         getConnectorstyle,
+         SetConnectorstyle,
+         setConnectorstyle,
+         GetConnectorwidth,
+         getConnectorwidth,
+         SetConnectorwidth,
+         setConnectorwidth,
+         GetOpenicon,
+         getOpenicon,
+         SetOpenicon,
+         setOpenicon,
+         GetCloseicon,
+         getCloseicon,
+         SetCloseicon,
+         setCloseicon,
+         GetUsericon,
+         getUsericon,
+         SetUsericon,
+         setUsericon,
+         GetShowcollapse,
+         getShowcollapse,
+         SetShowcollapse,
+         setShowcollapse,
+         GetSortorder,
+         getSortorder,
+         SetSortorder,
+         setSortorder,
+         GetSelectbox,
+         getSelectbox,
+         SetSelectbox,
+         setSelectbox,
+         GetShowroot,
+         getShowroot,
+         SetShowroot,
+         setShowroot,
+         GetSelectmode,
+         getSelectmode,
+         SetSelectmode,
+         setSelectmode
        )
 where
 import Prelude hiding (round)
@@ -3152,3 +3242,190 @@ instance Functions Clock ClockFuncs
 data GetValueSinceEpoch a
 getValueSinceEpoch :: (FindOp a (GetValueSinceEpoch ()) (Match r), Op (GetValueSinceEpoch ()) r a impl) => Ref a -> impl
 getValueSinceEpoch = dispatch (undefined :: GetValueSinceEpoch ())
+
+data CTreePrefs parent
+type TreePrefs = CTreePrefs Base
+type TreePrefsFuncs =
+  (GetItemLabelfont
+  (GetItemLabelsize
+  (SetItemLabelsize
+  (SetItemLabelfgcolor
+  (GetItemLabelbgcolor
+  (SetItemLabelbgcolor
+  (GetLabelfont
+  (SetLabelfont
+  (GetLabelsize
+  (SetLabelsize
+  (GetLabelfgcolor
+  (SetLabelfgcolor
+  (GetLabelbgcolor
+  (SetLabelbgcolor
+  (GetMarginleft
+  (SetMarginleft
+  (GetMargintop
+  (SetMargintop
+  (GetOpenchildMarginbottom
+  (SetOpenchildMarginbottom
+  (GetUsericonmarginleft
+  (SetUsericonmarginleft
+  (GetLabelmarginleft
+  (SetLabelmarginleft
+  (GetLinespacing
+  (SetLinespacing
+  (GetConnectorcolor
+  (SetConnectorcolor
+  (GetConnectorstyle
+  (SetConnectorstyle
+  (GetConnectorwidth
+  (SetConnectorwidth
+  (GetOpenicon
+  (SetOpenicon
+  (GetCloseicon
+  (SetCloseicon
+  (GetUsericon
+  (SetUsericon
+  (GetShowcollapse
+  (SetShowcollapse
+  (GetSortorder
+  (SetSortorder
+  (GetSelectbox
+  (SetSelectbox
+  (GetShowroot
+  (SetShowroot
+  (GetSelectmode
+  (SetSelectmode
+  ()))))))))))))))))))))))))))))))))))))))))))))))))
+instance Functions TreePrefs TreePrefsFuncs
+
+data GetItemLabelfont a
+getItemLabelfont :: (FindOp a (GetItemLabelfont ()) (Match r), Op (GetItemLabelfont ()) r a impl) => Ref a -> impl
+getItemLabelfont = dispatch (undefined :: GetItemLabelfont ())
+data GetItemLabelsize a
+getItemLabelsize :: (FindOp a (GetItemLabelsize ()) (Match r), Op (GetItemLabelsize ()) r a impl) => Ref a -> impl
+getItemLabelsize = dispatch (undefined :: GetItemLabelsize ())
+data SetItemLabelsize a
+setItemLabelsize :: (FindOp a (SetItemLabelsize ()) (Match r), Op (SetItemLabelsize ()) r a impl) => Ref a -> impl
+setItemLabelsize = dispatch (undefined :: SetItemLabelsize ())
+data SetItemLabelfgcolor a
+setItemLabelfgcolor :: (FindOp a (SetItemLabelfgcolor ()) (Match r), Op (SetItemLabelfgcolor ()) r a impl) => Ref a -> impl
+setItemLabelfgcolor = dispatch (undefined :: SetItemLabelfgcolor ())
+data GetItemLabelbgcolor a
+getItemLabelbgcolor :: (FindOp a (GetItemLabelbgcolor ()) (Match r), Op (GetItemLabelbgcolor ()) r a impl) => Ref a -> impl
+getItemLabelbgcolor = dispatch (undefined :: GetItemLabelbgcolor ())
+data SetItemLabelbgcolor a
+setItemLabelbgcolor :: (FindOp a (SetItemLabelbgcolor ()) (Match r), Op (SetItemLabelbgcolor ()) r a impl) => Ref a -> impl
+setItemLabelbgcolor = dispatch (undefined :: SetItemLabelbgcolor ())
+data GetLabelfgcolor a
+getLabelfgcolor :: (FindOp a (GetLabelfgcolor ()) (Match r), Op (GetLabelfgcolor ()) r a impl) => Ref a -> impl
+getLabelfgcolor = dispatch (undefined :: GetLabelfgcolor ())
+data SetLabelfgcolor a
+setLabelfgcolor :: (FindOp a (SetLabelfgcolor ()) (Match r), Op (SetLabelfgcolor ()) r a impl) => Ref a -> impl
+setLabelfgcolor = dispatch (undefined :: SetLabelfgcolor ())
+data GetLabelbgcolor a
+getLabelbgcolor :: (FindOp a (GetLabelbgcolor ()) (Match r), Op (GetLabelbgcolor ()) r a impl) => Ref a -> impl
+getLabelbgcolor = dispatch (undefined :: GetLabelbgcolor ())
+data SetLabelbgcolor a
+setLabelbgcolor :: (FindOp a (SetLabelbgcolor ()) (Match r), Op (SetLabelbgcolor ()) r a impl) => Ref a -> impl
+setLabelbgcolor = dispatch (undefined :: SetLabelbgcolor ())
+data GetMarginleft a
+getMarginleft :: (FindOp a (GetMarginleft ()) (Match r), Op (GetMarginleft ()) r a impl) => Ref a -> impl
+getMarginleft = dispatch (undefined :: GetMarginleft ())
+data SetMarginleft a
+setMarginleft :: (FindOp a (SetMarginleft ()) (Match r), Op (SetMarginleft ()) r a impl) => Ref a -> impl
+setMarginleft = dispatch (undefined :: SetMarginleft ())
+data GetMargintop a
+getMargintop :: (FindOp a (GetMargintop ()) (Match r), Op (GetMargintop ()) r a impl) => Ref a -> impl
+getMargintop = dispatch (undefined :: GetMargintop ())
+data SetMargintop a
+setMargintop :: (FindOp a (SetMargintop ()) (Match r), Op (SetMargintop ()) r a impl) => Ref a -> impl
+setMargintop = dispatch (undefined :: SetMargintop ())
+data GetOpenchildMarginbottom a
+getOpenchildMarginbottom :: (FindOp a (GetOpenchildMarginbottom ()) (Match r), Op (GetOpenchildMarginbottom ()) r a impl) => Ref a -> impl
+getOpenchildMarginbottom = dispatch (undefined :: GetOpenchildMarginbottom ())
+data SetOpenchildMarginbottom a
+setOpenchildMarginbottom :: (FindOp a (SetOpenchildMarginbottom ()) (Match r), Op (SetOpenchildMarginbottom ()) r a impl) => Ref a -> impl
+setOpenchildMarginbottom = dispatch (undefined :: SetOpenchildMarginbottom ())
+data GetUsericonmarginleft a
+getUsericonmarginleft :: (FindOp a (GetUsericonmarginleft ()) (Match r), Op (GetUsericonmarginleft ()) r a impl) => Ref a -> impl
+getUsericonmarginleft = dispatch (undefined :: GetUsericonmarginleft ())
+data SetUsericonmarginleft a
+setUsericonmarginleft :: (FindOp a (SetUsericonmarginleft ()) (Match r), Op (SetUsericonmarginleft ()) r a impl) => Ref a -> impl
+setUsericonmarginleft = dispatch (undefined :: SetUsericonmarginleft ())
+data GetLabelmarginleft a
+getLabelmarginleft :: (FindOp a (GetLabelmarginleft ()) (Match r), Op (GetLabelmarginleft ()) r a impl) => Ref a -> impl
+getLabelmarginleft = dispatch (undefined :: GetLabelmarginleft ())
+data SetLabelmarginleft a
+setLabelmarginleft :: (FindOp a (SetLabelmarginleft ()) (Match r), Op (SetLabelmarginleft ()) r a impl) => Ref a -> impl
+setLabelmarginleft = dispatch (undefined :: SetLabelmarginleft ())
+data GetLinespacing a
+getLinespacing :: (FindOp a (GetLinespacing ()) (Match r), Op (GetLinespacing ()) r a impl) => Ref a -> impl
+getLinespacing = dispatch (undefined :: GetLinespacing ())
+data SetLinespacing a
+setLinespacing :: (FindOp a (SetLinespacing ()) (Match r), Op (SetLinespacing ()) r a impl) => Ref a -> impl
+setLinespacing = dispatch (undefined :: SetLinespacing ())
+data GetConnectorcolor a
+getConnectorcolor :: (FindOp a (GetConnectorcolor ()) (Match r), Op (GetConnectorcolor ()) r a impl) => Ref a -> impl
+getConnectorcolor = dispatch (undefined :: GetConnectorcolor ())
+data SetConnectorcolor a
+setConnectorcolor :: (FindOp a (SetConnectorcolor ()) (Match r), Op (SetConnectorcolor ()) r a impl) => Ref a -> impl
+setConnectorcolor = dispatch (undefined :: SetConnectorcolor ())
+data GetConnectorstyle a
+getConnectorstyle :: (FindOp a (GetConnectorstyle ()) (Match r), Op (GetConnectorstyle ()) r a impl) => Ref a -> impl
+getConnectorstyle = dispatch (undefined :: GetConnectorstyle ())
+data SetConnectorstyle a
+setConnectorstyle :: (FindOp a (SetConnectorstyle ()) (Match r), Op (SetConnectorstyle ()) r a impl) => Ref a -> impl
+setConnectorstyle = dispatch (undefined :: SetConnectorstyle ())
+data GetConnectorwidth a
+getConnectorwidth :: (FindOp a (GetConnectorwidth ()) (Match r), Op (GetConnectorwidth ()) r a impl) => Ref a -> impl
+getConnectorwidth = dispatch (undefined :: GetConnectorwidth ())
+data SetConnectorwidth a
+setConnectorwidth :: (FindOp a (SetConnectorwidth ()) (Match r), Op (SetConnectorwidth ()) r a impl) => Ref a -> impl
+setConnectorwidth = dispatch (undefined :: SetConnectorwidth ())
+data GetOpenicon a
+getOpenicon :: (FindOp a (GetOpenicon ()) (Match r), Op (GetOpenicon ()) r a impl) => Ref a -> impl
+getOpenicon = dispatch (undefined :: GetOpenicon ())
+data SetOpenicon a
+setOpenicon :: (FindOp a (SetOpenicon ()) (Match r), Op (SetOpenicon ()) r a impl) => Ref a -> impl
+setOpenicon = dispatch (undefined :: SetOpenicon ())
+data GetCloseicon a
+getCloseicon :: (FindOp a (GetCloseicon ()) (Match r), Op (GetCloseicon ()) r a impl) => Ref a -> impl
+getCloseicon = dispatch (undefined :: GetCloseicon ())
+data SetCloseicon a
+setCloseicon :: (FindOp a (SetCloseicon ()) (Match r), Op (SetCloseicon ()) r a impl) => Ref a -> impl
+setCloseicon = dispatch (undefined :: SetCloseicon ())
+data GetUsericon a
+getUsericon :: (FindOp a (GetUsericon ()) (Match r), Op (GetUsericon ()) r a impl) => Ref a -> impl
+getUsericon = dispatch (undefined :: GetUsericon ())
+data SetUsericon a
+setUsericon :: (FindOp a (SetUsericon ()) (Match r), Op (SetUsericon ()) r a impl) => Ref a -> impl
+setUsericon = dispatch (undefined :: SetUsericon ())
+data GetShowcollapse a
+getShowcollapse :: (FindOp a (GetShowcollapse ()) (Match r), Op (GetShowcollapse ()) r a impl) => Ref a -> impl
+getShowcollapse = dispatch (undefined :: GetShowcollapse ())
+data SetShowcollapse a
+setShowcollapse :: (FindOp a (SetShowcollapse ()) (Match r), Op (SetShowcollapse ()) r a impl) => Ref a -> impl
+setShowcollapse = dispatch (undefined :: SetShowcollapse ())
+data GetSortorder a
+getSortorder :: (FindOp a (GetSortorder ()) (Match r), Op (GetSortorder ()) r a impl) => Ref a -> impl
+getSortorder = dispatch (undefined :: GetSortorder ())
+data SetSortorder a
+setSortorder :: (FindOp a (SetSortorder ()) (Match r), Op (SetSortorder ()) r a impl) => Ref a -> impl
+setSortorder = dispatch (undefined :: SetSortorder ())
+data GetSelectbox a
+getSelectbox :: (FindOp a (GetSelectbox ()) (Match r), Op (GetSelectbox ()) r a impl) => Ref a -> impl
+getSelectbox = dispatch (undefined :: GetSelectbox ())
+data SetSelectbox a
+setSelectbox :: (FindOp a (SetSelectbox ()) (Match r), Op (SetSelectbox ()) r a impl) => Ref a -> impl
+setSelectbox = dispatch (undefined :: SetSelectbox ())
+data GetShowroot a
+getShowroot :: (FindOp a (GetShowroot ()) (Match r), Op (GetShowroot ()) r a impl) => Ref a -> impl
+getShowroot = dispatch (undefined :: GetShowroot ())
+data SetShowroot a
+setShowroot :: (FindOp a (SetShowroot ()) (Match r), Op (SetShowroot ()) r a impl) => Ref a -> impl
+setShowroot = dispatch (undefined :: SetShowroot ())
+data GetSelectmode a
+getSelectmode :: (FindOp a (GetSelectmode ()) (Match r), Op (GetSelectmode ()) r a impl) => Ref a -> impl
+getSelectmode = dispatch (undefined :: GetSelectmode ())
+data SetSelectmode a
+setSelectmode :: (FindOp a (SetSelectmode ()) (Match r), Op (SetSelectmode ()) r a impl) => Ref a -> impl
+setSelectmode = dispatch (undefined :: SetSelectmode ())

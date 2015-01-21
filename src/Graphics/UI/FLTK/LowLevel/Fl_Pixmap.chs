@@ -39,10 +39,12 @@ instance (impl ~ ( IO (Int))) => Op (GetCount ()) Pixmap orig impl where
   runOp _ _ pixmap = withRef pixmap $ \pixmapPtr -> count' pixmapPtr
 {# fun unsafe Fl_Pixmap_copy_with_w_h as copyWithWH' { id `Ptr ()',`Int',`Int' } -> `Ptr ()' id #}
 {# fun unsafe Fl_Pixmap_copy as copy' { id `Ptr ()' } -> `Ptr ()' id #}
-instance (impl ~ ( Maybe Size -> IO (Ref Pixmap))) => Op (Copy ()) Pixmap orig impl where
-  runOp _ _ pixmap size' = case size' of
-    Just (Size (Width w) (Height h)) -> withRef pixmap $ \pixmapPtr -> copyWithWH' pixmapPtr w h >>= toRef
-    Nothing -> withRef pixmap $ \pixmapPtr -> copy' pixmapPtr >>= toRef
+instance (impl ~ ( Maybe Size -> IO (Maybe (Ref Pixmap)))) => Op (Copy ()) Pixmap orig impl where
+  runOp _ _ pixmap size' = do
+     ref' <- case size' of
+              Just (Size (Width w) (Height h)) -> withRef pixmap $ \pixmapPtr -> copyWithWH' pixmapPtr w h
+              Nothing -> withRef pixmap $ \pixmapPtr -> copy' pixmapPtr
+     if ref' == nullPtr then return Nothing else (toRef ref' >>= return . Just)
 {# fun unsafe Fl_Pixmap_color_average as colorAverage' { id `Ptr ()',cFromColor `Color',`Float' } -> `()' #}
 instance (impl ~ (Color -> Float ->  IO ())) => Op (ColorAverage ()) Pixmap orig impl where
   runOp _ _ pixmap c i = withRef pixmap $ \pixmapPtr -> colorAverage' pixmapPtr c i

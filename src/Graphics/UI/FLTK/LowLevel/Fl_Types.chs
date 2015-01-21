@@ -271,6 +271,8 @@ newtype PixmapHs = PixmapHs [B.ByteString]
 data BitmapHs = BitmapHs B.ByteString Size
 data Clipboard = InternalClipboard | SharedClipboard
 
+data OutOfRange = OutOfRange deriving Show
+
 toRectangle :: (Int,Int,Int,Int) -> Rectangle
 toRectangle (x_pos, y_pos, width, height) =
     Rectangle (Position

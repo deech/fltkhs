@@ -76,6 +76,7 @@ library
                    Graphics.UI.FLTK.LowLevel.Fl_Wizard
                    Graphics.UI.FLTK.LowLevel.Fl_Table
                    Graphics.UI.FLTK.LowLevel.Fl_Table_Row
+                   Graphics.UI.FLTK.LowLevel.Fl_Tree_Prefs
                    Graphics.UI.FLTK.LowLevel.FL
                    Graphics.UI.FLTK.LowLevel.Gl
                    Graphics.UI.FLTK.LowLevel.Utils

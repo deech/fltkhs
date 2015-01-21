@@ -89,9 +89,11 @@ drawCell tableState table tc row' col' rectangle' =
               flcPushClip rectangle'
               bgColor <- do
                 isSelected' <- getRowSelected table row'
-                if isSelected'
-                  then getSelectionColor table
-                  else return whiteColor
+                case isSelected' of
+                  Right is' -> if is'
+                               then getSelectionColor table
+                               else return whiteColor
+                  Left _ -> error $ "Row: " ++ (show row') ++ " is out of range."
               flcSetColor bgColor
               flcRectf rectangle'
               flcSetFont rowFontFace rowFontSize

@@ -77,12 +77,12 @@ instance (impl ~ ( Maybe (Ref MenuItem) -> IO (Maybe String))) => Op (ItemPathna
     \ menu_Ref ->
      allocaBytes oneKb
      (\ptr -> do
-         _ <- case menu_item of
+         retVal' <- case menu_item of
                Just menu_item' ->
                  withRef menu_item' $ \ menu_item'Ref -> do
                    itemPathnameWithFinditem' menu_Ref (castPtr ptr) oneKb menu_item'Ref
                Nothing -> itemPathname' menu_Ref (castPtr ptr) oneKb
-         if (ptr == nullPtr)
+         if (retVal' == -1)
            then return Nothing
            else (peekCString (castPtr ptr) >>= return . Just)
      )
@@ -198,8 +198,8 @@ instance (impl ~ (Int -> Int ->  IO ())) => Op (SetSize ()) MenuPrim orig impl w
 instance (impl ~ ( IO ())) => Op (Clear ()) MenuPrim orig impl where
   runOp _ _ menu_ = withRef menu_ $ \menu_Ptr -> clear' menu_Ptr
 {# fun unsafe Fl_Menu__clear_submenu as clearSubmenu' { id `Ptr ()',`Int' } -> `Int' #}
-instance (impl ~ (Int ->  IO (Int))) => Op (ClearSubmenu ()) MenuPrim orig impl where
-  runOp _ _ menu_ index' = withRef menu_ $ \menu_Ptr -> clearSubmenu' menu_Ptr index'
+instance (impl ~ (Int ->  IO (Either OutOfRange ()))) => Op (ClearSubmenu ()) MenuPrim orig impl where
+  runOp _ _ menu_ index' = withRef menu_ $ \menu_Ptr -> clearSubmenu' menu_Ptr index' >>= \ret' -> if ret' == -1 then return (Left OutOfRange) else return (Right ())
 {# fun unsafe Fl_Menu__replace as replace' { id `Ptr ()',`Int',`String' } -> `()' #}
 instance (impl ~ (Int -> String ->  IO ())) => Op (Replace ()) MenuPrim orig impl where
   runOp _ _ menu_ index' name = withRef menu_ $ \menu_Ptr -> replace' menu_Ptr index' name
