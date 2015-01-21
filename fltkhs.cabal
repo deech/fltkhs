@@ -94,6 +94,7 @@ Executable table-spreadsheet-with-keyboard-nav
   Main-Is: table-spreadsheet-with-keyboard-nav.hs
   Hs-Source-Dirs: src/Examples
   Build-Depends: base,fltkhs
+  default-language: Haskell2010
   ghc-Options: -Wall -threaded -fcontext-stack=200
   if os(linux)
      ghc-Options: -pgml g++ "-optl-Wl,--whole-archive" "-optl-Wl,-Bstatic" "-optl-Wl,-lfltkc" "-optl-Wl,-Bdynamic" "-optl-Wl,--no-whole-archive"
@@ -115,6 +116,7 @@ Executable buttons
   Main-Is: Buttons.hs
   Hs-Source-Dirs: src/TestPrograms
   Build-Depends: base,fltkhs
+  default-language: Haskell2010
   ghc-Options: -Wall -threaded -fcontext-stack=200
   if os(linux)
      ghc-Options: -pgml g++ "-optl-Wl,--whole-archive" "-optl-Wl,-Bstatic" "-optl-Wl,-lfltkc" "-optl-Wl,-Bdynamic" "-optl-Wl,--no-whole-archive"
@@ -125,6 +127,7 @@ Executable table-simple
   Main-Is: table-simple.hs
   Hs-Source-Dirs: src/Examples
   Build-Depends: base,fltkhs
+  default-language: Haskell2010
   ghc-Options: -Wall -threaded -fcontext-stack=200
   if os(linux)
      ghc-Options: -pgml g++ "-optl-Wl,--whole-archive" "-optl-Wl,-Bstatic" "-optl-Wl,-lfltkc" "-optl-Wl,-Bdynamic" "-optl-Wl,--no-whole-archive"
@@ -135,6 +138,7 @@ Executable table-sort
   Main-Is: table-sort.hs
   Hs-Source-Dirs: src/Examples
   Build-Depends: base,fltkhs,process
+  default-language: Haskell2010
   ghc-Options: -Wall -threaded -fcontext-stack=200
   if os(linux)
      ghc-Options: -pgml g++ "-optl-Wl,--whole-archive" "-optl-Wl,-Bstatic" "-optl-Wl,-lfltkc" "-optl-Wl,-Bdynamic" "-optl-Wl,--no-whole-archive"
@@ -145,6 +149,7 @@ Executable arc
   Main-Is: arc.hs
   Hs-Source-Dirs: src/Examples
   Build-Depends: base,fltkhs
+  default-language: Haskell2010
   ghc-Options: -Wall -threaded -fcontext-stack=200
   if os(linux)
      ghc-Options: -pgml g++ "-optl-Wl,--whole-archive" "-optl-Wl,-Bstatic" "-optl-Wl,-lfltkc" "-optl-Wl,-Bdynamic" "-optl-Wl,--no-whole-archive"
@@ -155,6 +160,7 @@ Executable bitmap
   Main-Is: bitmap.hs
   Hs-Source-Dirs: src/Examples
   Build-Depends: base,fltkhs,bytestring
+  default-language: Haskell2010
   ghc-Options: -Wall -threaded -fcontext-stack=200
   if os(linux)
      ghc-Options: -pgml g++ "-optl-Wl,--whole-archive" "-optl-Wl,-Bstatic" "-optl-Wl,-lfltkc" "-optl-Wl,-Bdynamic" "-optl-Wl,--no-whole-archive"
@@ -165,6 +171,7 @@ Executable boxtype
   Main-Is: boxtype.hs
   Hs-Source-Dirs: src/Examples
   Build-Depends: base,fltkhs,bytestring
+  default-language: Haskell2010
   ghc-Options: -Wall -threaded -fcontext-stack=200
   if os(linux)
      ghc-Options: -pgml g++ "-optl-Wl,--whole-archive" "-optl-Wl,-Bstatic" "-optl-Wl,-lfltkc" "-optl-Wl,-Bdynamic" "-optl-Wl,--no-whole-archive"
@@ -175,6 +182,7 @@ Executable browser
   Main-Is: browser.hs
   Hs-Source-Dirs: src/Examples
   Build-Depends: base,fltkhs,bytestring
+  default-language: Haskell2010
   ghc-Options: -Wall -threaded -fcontext-stack=200
   if os(linux)
      ghc-Options: -pgml g++ "-optl-Wl,--whole-archive" "-optl-Wl,-Bstatic" "-optl-Wl,-lfltkc" "-optl-Wl,-Bdynamic" "-optl-Wl,--no-whole-archive"
@@ -185,6 +193,7 @@ Executable clock
   Main-Is: clock.hs
   Hs-Source-Dirs: src/Examples
   Build-Depends: base,fltkhs,bytestring
+  default-language: Haskell2010
   ghc-Options: -Wall -threaded -fcontext-stack=200
   if os(linux)
      ghc-Options: -pgml g++ "-optl-Wl,--whole-archive" "-optl-Wl,-Bstatic" "-optl-Wl,-lfltkc" "-optl-Wl,-Bdynamic" "-optl-Wl,--no-whole-archive"
