@@ -5,6 +5,7 @@ import Data.List
 import Foreign
 import qualified Foreign.Concurrent as FC
 import Foreign.C
+import qualified Data.ByteString.Char8 as C
 import qualified Data.ByteString as B
 import qualified System.IO.Unsafe as Unsafe
 
@@ -172,6 +173,9 @@ toRef ptr = throwStackOnError $
 unsafeToRef :: Ptr () -> (Ref a)
 unsafeToRef = Unsafe.unsafePerformIO . toRef
 
+toMaybeRef :: Ptr () -> IO (Maybe (Ref a))
+toMaybeRef ptr' = if ptr' == nullPtr then return Nothing else toRef ptr' >>= return . Just
+
 supressWarningAboutRes :: a -> ()
 supressWarningAboutRes _ = ()
 
@@ -181,18 +185,6 @@ foldl1WithDefault _ f as = foldl1 f as
 
 integralToMaybe :: (Integral a, Integral b) => a -> Maybe b
 integralToMaybe n = if (n == 0) then Nothing else (Just $ fromIntegral n)
-
-withPixmap :: PixmapHs -> ((Ptr (Ptr CChar)) -> IO a) -> IO a
-withPixmap (PixmapHs pixmap) f =
-    B.useAsCString
-      (foldl1 B.append pixmap)
-      (\ptr -> new ptr >>= f)
-
-withBitmap :: BitmapHs -> ((Ptr CChar) -> Int -> Int -> IO a) -> IO a
-withBitmap (BitmapHs bitmap (Size (Width width') (Height height'))) f =
-   B.useAsCString
-     bitmap
-     (\ptr -> f ptr width' height')
 
 countDirectionToCChar :: CountDirection -> CChar
 countDirectionToCChar d =
@@ -210,3 +202,18 @@ alignmentsToInt :: Alignments -> Int
 alignmentsToInt (Alignments aligntypes') = combine aligntypes'
 intToAlignments :: Int -> Alignments
 intToAlignments = Alignments . extract allAlignTypes . fromIntegral
+
+withByteStrings :: [B.ByteString] -> (Ptr (Ptr CChar) -> IO a) -> IO a
+withByteStrings bs f = B.useAsCString (foldl1 B.append bs) (\ptr -> new ptr >>= f)
+
+withPixmap :: PixmapHs -> ((Ptr (Ptr CChar)) -> IO a) -> IO a
+withPixmap (PixmapHs pixmap) f = withByteStrings pixmap f
+
+withBitmap :: BitmapHs -> ((Ptr CChar) -> Int -> Int -> IO a) -> IO a
+withBitmap (BitmapHs bitmap (Size (Width width') (Height height'))) f =
+   B.useAsCString
+     bitmap
+     (\ptr -> f ptr width' height')
+
+withStrings :: [String] -> (Ptr (Ptr CChar) -> IO a) -> IO a
+withStrings ss f = withByteStrings (map C.pack ss) f

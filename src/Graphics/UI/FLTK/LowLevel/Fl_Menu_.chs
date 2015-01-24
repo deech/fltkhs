@@ -71,7 +71,7 @@ instance (impl ~ (IO ())) => Op (ShowWidget ()) MenuPrim orig impl where
 
 {# fun unsafe Fl_Menu__item_pathname_with_finditem as itemPathnameWithFinditem' { id `Ptr ()',id `Ptr CChar',`Int',id `Ptr ()' } -> `Int' #}
 {# fun unsafe Fl_Menu__item_pathname as itemPathname' { id `Ptr ()',id `Ptr CChar',`Int' } -> `Int' #}
-instance (impl ~ ( Maybe (Ref MenuItem) -> IO (Maybe String))) => Op (ItemPathname ()) MenuPrim orig impl where
+instance (Parent a MenuItem, impl ~ ( Maybe (Ref a) -> IO (Maybe String))) => Op (ItemPathname ()) MenuPrim orig impl where
   runOp _ _ menu_ menu_item =
     withRef menu_ $
     \ menu_Ref ->
@@ -100,7 +100,7 @@ instance (impl ~ (MenuItemLocator -> IO (Maybe Int))) => Op (FindIndex ()) MenuP
           MenuItemPointerLocator (MenuItemPointer menu_item) ->
               withRef menu_item $ \menu_itemPtr -> findIndexWithItem' menu_Ptr menu_itemPtr >>= \r -> if (r == -1) then (return Nothing) else (return $ Just r)
 {# fun unsafe Fl_Menu__test_shortcut as testShortcut' { id `Ptr ()' } -> `Ptr ()' id #}
-instance (impl ~ ( IO (Ref MenuItem))) => Op (TestShortcut ()) MenuPrim orig impl where
+instance (Parent a MenuItem, impl ~ ( IO (Ref a))) => Op (TestShortcut ()) MenuPrim orig impl where
   runOp _ _ menu_ = withRef menu_ $ \menu_Ptr -> testShortcut' menu_Ptr >>= toRef
 {# fun unsafe Fl_Menu__global as global' { id `Ptr ()' } -> `()' #}
 instance (impl ~ ( IO ())) => Op (Global ()) MenuPrim orig impl where
@@ -109,13 +109,13 @@ instance (impl ~ ( IO ())) => Op (Global ()) MenuPrim orig impl where
 instance (impl ~ ( IO (Ref MenuItem))) => Op (GetMenu ()) MenuPrim orig impl where
   runOp _ _ menu_ = withRef menu_ $ \menu_Ptr -> menu' menu_Ptr >>= toRef
 {# fun unsafe Fl_Menu__menu_with_m as menuWithM' { id `Ptr ()',id `Ptr ( Ptr () )',`Int' } -> `()' #}
-instance (impl ~ ([Ref MenuItem] -> IO ())) => Op (SetMenu ()) MenuPrim orig impl where
+instance (Parent a MenuItem, impl ~ ([Ref a] -> IO ())) => Op (SetMenu ()) MenuPrim orig impl where
   runOp _ _ menu_ items =
     withRef menu_ $ \menu_Ptr ->
         withRefs items $ \menu_itemsPtr ->
             menuWithM' menu_Ptr menu_itemsPtr (length items)
 {# fun unsafe Fl_Menu__copy as copy' { id `Ptr ()',id `Ptr ()' } -> `()' #}
-instance (impl ~ (Ref MenuItem  ->  IO ())) => Op (Copy ()) MenuPrim orig impl where
+instance (Parent a MenuItem, impl ~ (Ref a->  IO ())) => Op (Copy ()) MenuPrim orig impl where
   runOp _ _ menu_ m = withRef menu_ $ \menu_Ptr -> withRef m $ \mPtr -> copy' menu_Ptr mPtr
 
 {# fun Fl_Menu__insert_with_flags as insertWithFlags' { id `Ptr ()',`Int',`String',id `CInt',id `FunPtr CallbackWithUserDataPrim',`Int'} -> `Int' #}

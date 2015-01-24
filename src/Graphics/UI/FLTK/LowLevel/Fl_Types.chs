@@ -226,6 +226,8 @@ data Ref a                = Ref !(ForeignPtr (Ptr ())) deriving Show
 data CBase parent
 type Base = CBase ()
 
+data UnknownError = UnknownError
+
 type GlobalCallback              = IO ()
 type CallbackWithUserDataPrim    = Ptr () -> Ptr () -> IO ()
 type CallbackPrim                = Ptr () -> IO ()

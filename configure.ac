@@ -32,7 +32,6 @@ AC_CHECK_LIB([fltk_forms],
 
 AC_SUBST(FLTKCONFIGCOMMAND,`fltk-config --ldstaticflags $GlFlag $ImagesFlag $CairoFlag $FormsFlag`)
 # Checks for typedefs, structures, and compiler characteristics.
-AC_CHECK_HEADER_STDBOOL
 AC_TYPE_SIZE_T
 
 # Checks for library functions.

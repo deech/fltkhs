@@ -111,6 +111,22 @@ EXPORT {
   FL_EXPORT_C(int,Fl_Tree_Item_has_children)(fl_Tree_Item tree_item){
     return (static_cast<Fl_Tree_Item*>(tree_item))->has_children();
   }
+  FL_EXPORT_C(fl_Tree_Item, Fl_Tree_Item_add_with)(fl_Tree_Item tree_item,  const fl_Tree_Prefs prefs,  const char* new_label, fl_Tree_Item new_item) {
+    Fl_Tree_Prefs* casted = static_cast<Fl_Tree_Prefs*>(prefs);
+    return (static_cast<Fl_Tree_Item*>(tree_item))->add((static_cast<Fl_Tree_Prefs&>(*casted)), new_label, (static_cast<Fl_Tree_Item*>(new_item)));
+  }
+  FL_EXPORT_C(fl_Tree_Item, Fl_Tree_Item_add_with_at)(fl_Tree_Item tree_item,  fl_Tree_Prefs prefs, fl_Tree_Item new_item, char** arr) {
+    Fl_Tree_Prefs* casted = static_cast<Fl_Tree_Prefs*>(prefs);
+    return (fl_Tree_Item)(static_cast<Fl_Tree_Item*>(tree_item))->add((static_cast<Fl_Tree_Prefs&>(*casted)), arr, (static_cast<Fl_Tree_Item*>(new_item)));
+  }
+  FL_EXPORT_C(fl_Tree_Item, Fl_Tree_Item_add)(fl_Tree_Item tree_item,  fl_Tree_Prefs prefs, const char* new_label) {
+    Fl_Tree_Prefs* casted = static_cast<Fl_Tree_Prefs*>(prefs);
+    return (fl_Tree_Item)(static_cast<Fl_Tree_Item*>(tree_item))->add((static_cast<Fl_Tree_Prefs&>(*casted)), new_label);
+  }
+  FL_EXPORT_C(fl_Tree_Item, Fl_Tree_Item_add_at)(fl_Tree_Item tree_item,  fl_Tree_Prefs prefs, char** arr) {
+    Fl_Tree_Prefs* casted = static_cast<Fl_Tree_Prefs*>(prefs);
+    return (static_cast<Fl_Tree_Item*>(tree_item))->add((static_cast<Fl_Tree_Prefs&>(*casted)), arr);
+  }
   FL_EXPORT_C(int,Fl_Tree_Item_find_child)(fl_Tree_Item tree_item,char* name){
     return (static_cast<Fl_Tree_Item*>(tree_item))->find_child(name);
   }
@@ -131,6 +147,36 @@ EXPORT {
   }
   FL_EXPORT_C(int,Fl_Tree_Item_swap_children_by_tree_item)(fl_Tree_Item tree_item,fl_Tree_Item a,fl_Tree_Item b){
     return (static_cast<Fl_Tree_Item*>(tree_item))->swap_children((static_cast<Fl_Tree_Item*>(a)),(static_cast<Fl_Tree_Item*>(b)));
+  }
+  FL_EXPORT_C(fl_Tree_Item, Fl_Tree_Item_find_child_item_by_children)(fl_Tree_Item tree_item, char** arr) {
+    return (static_cast<Fl_Tree_Item*>(tree_item))->find_child_item(arr);
+  }
+  FL_EXPORT_C(fl_Tree_Item, Fl_Tree_Item_find_child_item_by_name)(fl_Tree_Item tree_item, const char* name) {
+    return (static_cast<Fl_Tree_Item*>(tree_item))->find_child_item(name);
+  }
+  FL_EXPORT_C(fl_Tree_Item, Fl_Tree_Item_find_item)(fl_Tree_Item tree_item, char** arr) {
+    return (static_cast<Fl_Tree_Item*>(tree_item))->find_item(arr);
+  }
+  FL_EXPORT_C(fl_Tree_Item, Fl_Tree_Item_deparent    )(fl_Tree_Item tree_item, int index){
+    return (static_cast<Fl_Tree_Item*>(tree_item))->deparent(index);
+  }
+  FL_EXPORT_C(int         , Fl_Tree_Item_reparent    )(fl_Tree_Item tree_item, fl_Tree_Item new_item, int index){
+    return (static_cast<Fl_Tree_Item*>(tree_item))->reparent((static_cast<Fl_Tree_Item*>(new_item)), index);
+  }
+  FL_EXPORT_C(int         , Fl_Tree_Item_move        )(fl_Tree_Item tree_item, int to, int from) {
+    return (static_cast<Fl_Tree_Item*>(tree_item))->move(to, from);
+  }
+  FL_EXPORT_C(int         , Fl_Tree_Item_move_item   )(fl_Tree_Item tree_item, fl_Tree_Item child_item, int op, int pos){
+    return (static_cast<Fl_Tree_Item*>(tree_item))->move((static_cast<Fl_Tree_Item*>(child_item)),op, pos);
+  }
+  FL_EXPORT_C(int         , Fl_Tree_Item_move_above  )(fl_Tree_Item tree_item, fl_Tree_Item child_item){
+    return (static_cast<Fl_Tree_Item*>(tree_item))->move_above((static_cast<Fl_Tree_Item*>(child_item)));
+  }
+  FL_EXPORT_C(int         , Fl_Tree_Item_move_below  )(fl_Tree_Item tree_item, fl_Tree_Item child_item){
+    return (static_cast<Fl_Tree_Item*>(tree_item))->move_below((static_cast<Fl_Tree_Item*>(child_item)));
+  }
+  FL_EXPORT_C(int         , Fl_Tree_Item_move_into   )(fl_Tree_Item tree_item, fl_Tree_Item child_item, int pos){
+    return (static_cast<Fl_Tree_Item*>(tree_item))->move_into((static_cast<Fl_Tree_Item*>(child_item)), pos);
   }
   FL_EXPORT_C(int,Fl_Tree_Item_depth)(fl_Tree_Item tree_item){
     return (static_cast<Fl_Tree_Item*>(tree_item))->depth();

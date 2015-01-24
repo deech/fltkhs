@@ -415,6 +415,7 @@ simpleTypeMap =
     ,("fl_Widget", "Ptr ()")
     ,("fl_Tree_Prefs", "Ptr ()")
     ,("fl_Tree_Item", "Ptr ()")
+    ,("fl_Tree", "Ptr ()")
     ,("fl_Browser", "Ptr ()")
     ,("fl_Table", "Ptr ()")
     ,("fl_Adjuster", "Ptr ()")
@@ -476,6 +477,7 @@ haskellEquivalent =
      ("fl_Widget"         , "Widget"),
      ("fl_Tree_Prefs"     , "TreePrefs"),
      ("fl_Tree_Item"      , "TreeItem"),
+     ("fl_Tree"           , "Tree"),
      ("fl_Browser"        , "Browser"),
      ("fl_Table"          , "Table"),
      ("fl_Adjuster"       , "Adjuster"),

@@ -48,13 +48,25 @@ EXPORT {
   FL_EXPORT_C(void, Fl_Tree_Item_clear_children)(fl_Tree_Item tree_item);
   FL_EXPORT_C(void, Fl_Tree_Item_swap_children)(fl_Tree_Item tree_item, int ax, int bx);
   FL_EXPORT_C(int, Fl_Tree_Item_swap_children_by_tree_item)(fl_Tree_Item tree_item, fl_Tree_Item a, fl_Tree_Item b);
+  FL_EXPORT_C(fl_Tree_Item, Fl_Tree_Item_find_child_item_by_children)(fl_Tree_Item tree_item, char** arr);
+  FL_EXPORT_C(fl_Tree_Item, Fl_Tree_Item_find_child_item_by_name)(fl_Tree_Item tree_item, const char* name);
   FL_EXPORT_C(fl_Tree_Item, Fl_Tree_Item_find_child_item)(fl_Tree_Item tree_item, char** arr);
   FL_EXPORT_C(fl_Tree_Item, Fl_Tree_Item_find_item)(fl_Tree_Item tree_item, char** arr);
-  FL_EXPORT_C(fl_Tree_Item, Fl_Tree_Item_add_with)(fl_Tree_Item tree_item,  fl_Tree_Prefs prefs,  char* new_label);
-  FL_EXPORT_C(fl_Tree_Item, Fl_Tree_Item_add)(fl_Tree_Item tree_item,  fl_Tree_Prefs prefs, char** arr);
+
+  FL_EXPORT_C(fl_Tree_Item, Fl_Tree_Item_add_with)(fl_Tree_Item tree_item,  fl_Tree_Prefs prefs,  const char* new_label, fl_Tree_Item new_item);
+  FL_EXPORT_C(fl_Tree_Item, Fl_Tree_Item_add_with_at)(fl_Tree_Item tree_item,  fl_Tree_Prefs prefs, fl_Tree_Item new_item, char** arr);
+  FL_EXPORT_C(fl_Tree_Item, Fl_Tree_Item_add)(fl_Tree_Item tree_item,  fl_Tree_Prefs prefs, const char* new_label);
+  FL_EXPORT_C(fl_Tree_Item, Fl_Tree_Item_add_at)(fl_Tree_Item tree_item,  fl_Tree_Prefs prefs, char** arr);
   FL_EXPORT_C(fl_Tree_Item, Fl_Tree_Item_insert)(fl_Tree_Item tree_item,  fl_Tree_Prefs prefs,  char* new_label);
   FL_EXPORT_C(fl_Tree_Item, Fl_Tree_Item_insert_with_pos)(fl_Tree_Item tree_item,  fl_Tree_Prefs prefs,  char *new_label, int pos);
   FL_EXPORT_C(fl_Tree_Item, Fl_Tree_Item_insert_above)(fl_Tree_Item tree_item,  fl_Tree_Prefs prefs,  char *new_label);
+  FL_EXPORT_C(fl_Tree_Item, Fl_Tree_Item_deparent    )(fl_Tree_Item tree_item, int index);
+  FL_EXPORT_C(int         , Fl_Tree_Item_reparent    )(fl_Tree_Item tree_item, fl_Tree_Item new_item, int index);
+  FL_EXPORT_C(int         , Fl_Tree_Item_move        )(fl_Tree_Item tree_item, int to, int from);
+  FL_EXPORT_C(int         , Fl_Tree_Item_move_item   )(fl_Tree_Item tree_item, fl_Tree_Item child_item, int op, int pos);
+  FL_EXPORT_C(int         , Fl_Tree_Item_move_above  )(fl_Tree_Item tree_item, fl_Tree_Item child_item);
+  FL_EXPORT_C(int         , Fl_Tree_Item_move_below  )(fl_Tree_Item tree_item, fl_Tree_Item child_item);
+  FL_EXPORT_C(int         , Fl_Tree_Item_move_into   )(fl_Tree_Item tree_item, fl_Tree_Item child_item, int pos);
   FL_EXPORT_C(int, Fl_Tree_Item_depth)(fl_Tree_Item tree_item);
   FL_EXPORT_C(fl_Tree_Item, Fl_Tree_Item_prev)(fl_Tree_Item tree_item);
   FL_EXPORT_C(fl_Tree_Item, Fl_Tree_Item_next)(fl_Tree_Item tree_item);

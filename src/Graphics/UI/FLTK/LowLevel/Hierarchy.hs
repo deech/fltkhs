@@ -992,7 +992,97 @@ module Graphics.UI.FLTK.LowLevel.Hierarchy
          GetSelectmode,
          getSelectmode,
          SetSelectmode,
-         setSelectmode
+         setSelectmode,
+         -- * TreeItem
+         TreeItem,
+         ShowSelf,
+         showSelf,
+         SetWidget,
+         setWidget,
+         GetWidget,
+         getWidget,
+         Child,
+         child,
+         HasChildren,
+         hasChildren,
+         FindChild,
+         findChild,
+         RemoveChild,
+         removeChild,
+         ClearChildren,
+         clearChildren,
+         SwapChildren,
+         swapChildren,
+         SwapChildrenByTreeItem,
+         swapChildrenByTreeItem,
+         FindInChildren,
+         findInChildren,
+         FindItem,
+         findItem,
+         AddAt,
+         addAt,
+         InsertAbove,
+         insertAbove,
+         Deparent,
+         deparent,
+         Reparent,
+         reparent,
+         MoveTo,
+         moveTo,
+         GetDepth,
+         getDepth,
+         NextSibling,
+         nextSibling,
+         PrevSibling,
+         prevSibling,
+         UpdatePrevNext,
+         updatePrevNext,
+         NextDisplayed,
+         nextDisplayed,
+         PrevDisplayed,
+         prevDisplayed,
+         Open,
+         open,
+         Close,
+         close,
+         IsOpen,
+         isOpen,
+         IsClose,
+         isClose,
+         OpenToggle,
+         openToggle,
+         SelectWithVal,
+         selectWithVal,
+         SelectToggle,
+         selectToggle,
+         SelectAll,
+         selectAll,
+         DeselectAll,
+         deselectAll,
+         ActivateWithVal,
+         activateWithVal,
+         IsActive,
+         isActive,
+         IsVisible,
+         isVisible,
+         VisibleR,
+         visibleR,
+         FindClicked,
+         findClicked,
+         EventOnCollapseIcon,
+         eventOnCollapseIcon,
+         EventOnLabel,
+         eventOnLabel,
+         IsRoot,
+         isRoot,
+         LabelX,
+         labelX,
+         LabelY,
+         labelY,
+         LabelW,
+         labelW,
+         LabelH,
+         labelH
        )
 where
 import Prelude hiding (round)
@@ -3429,3 +3519,221 @@ getSelectmode = dispatch (undefined :: GetSelectmode ())
 data SetSelectmode a
 setSelectmode :: (FindOp a (SetSelectmode ()) (Match r), Op (SetSelectmode ()) r a impl) => Ref a -> impl
 setSelectmode = dispatch (undefined :: SetSelectmode ())
+
+data CTreeItem parent
+type TreeItem = CTreeItem Base
+type TreeItemFuncs =
+  (Destroy
+  (GetX
+  (GetY
+  (GetW
+  (GetH
+  (GetX
+  (ShowSelf
+  (SetLabel
+  (GetLabel
+  (SetLabelfont
+  (GetLabelfont
+  (SetLabelsize
+  (GetLabelsize
+  (SetLabelcolor
+  (GetLabelcolor
+  (GetLabelfgcolor
+  (SetLabelfgcolor
+  (SetLabelbgcolor
+  (GetLabelbgcolor
+  (SetWidget
+  (GetWidget
+  (Children
+  (Child
+  (HasChildren
+  (FindChild
+  (RemoveChild
+  (RemoveChild
+  (ClearChildren
+  (SwapChildren
+  (SwapChildrenByTreeItem
+  (FindInChildren
+  (FindItem
+  (Add
+  (AddAt
+  (Insert
+  (InsertAbove
+  (Deparent
+  (Reparent
+  (Move
+  (MoveTo
+  (GetDepth
+  (Prev
+  (Next
+  (NextSibling
+  (PrevSibling
+  (UpdatePrevNext
+  (NextDisplayed
+  (PrevDisplayed
+  (GetParent
+  (SetParent
+  (Open
+  (Close
+  (IsOpen
+  (IsClose
+  (OpenToggle
+  (Select
+  (SelectWithVal
+  (SelectToggle
+  (SelectAll
+  (Deselect
+  (DeselectAll
+  (IsSelected
+  (Activate
+  (ActivateWithVal
+  (IsActive
+  (Visible
+  (IsVisible
+  (VisibleR
+  (SetUsericon
+  (GetUsericon
+  (FindClicked
+  (EventOnCollapseIcon
+  (EventOnLabel
+  (IsRoot
+  (LabelX
+  (LabelY
+  (LabelW
+  (LabelH
+  ()))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))
+
+instance Functions TreeItem TreeItemFuncs
+
+data ShowSelf a
+showSelf :: (FindOp a (ShowSelf ()) (Match r), Op (ShowSelf ()) r a impl) => Ref a -> impl
+showSelf = dispatch (undefined :: ShowSelf ())
+data SetWidget a
+setWidget :: (FindOp a (SetWidget ()) (Match r), Op (SetWidget ()) r a impl) => Ref a -> impl
+setWidget = dispatch (undefined :: SetWidget ())
+data GetWidget a
+getWidget :: (FindOp a (GetWidget ()) (Match r), Op (GetWidget ()) r a impl) => Ref a -> impl
+getWidget = dispatch (undefined :: GetWidget ())
+data Child a
+child :: (FindOp a (Child ()) (Match r), Op (Child ()) r a impl) => Ref a -> impl
+child = dispatch (undefined :: Child ())
+data HasChildren a
+hasChildren :: (FindOp a (HasChildren ()) (Match r), Op (HasChildren ()) r a impl) => Ref a -> impl
+hasChildren = dispatch (undefined :: HasChildren ())
+data FindChild a
+findChild :: (FindOp a (FindChild ()) (Match r), Op (FindChild ()) r a impl) => Ref a -> impl
+findChild = dispatch (undefined :: FindChild ())
+data RemoveChild a
+removeChild :: (FindOp a (RemoveChild ()) (Match r), Op (RemoveChild ()) r a impl) => Ref a -> impl
+removeChild = dispatch (undefined :: RemoveChild ())
+data ClearChildren a
+clearChildren :: (FindOp a (ClearChildren ()) (Match r), Op (ClearChildren ()) r a impl) => Ref a -> impl
+clearChildren = dispatch (undefined :: ClearChildren ())
+data SwapChildren a
+swapChildren :: (FindOp a (SwapChildren ()) (Match r), Op (SwapChildren ()) r a impl) => Ref a -> impl
+swapChildren = dispatch (undefined :: SwapChildren ())
+data SwapChildrenByTreeItem a
+swapChildrenByTreeItem :: (FindOp a (SwapChildrenByTreeItem ()) (Match r), Op (SwapChildrenByTreeItem ()) r a impl) => Ref a -> impl
+swapChildrenByTreeItem = dispatch (undefined :: SwapChildrenByTreeItem ())
+data FindInChildren a
+findInChildren :: (FindOp a (FindInChildren ()) (Match r), Op (FindInChildren ()) r a impl) => Ref a -> impl
+findInChildren = dispatch (undefined :: FindInChildren ())
+data FindItem a
+findItem :: (FindOp a (FindItem ()) (Match r), Op (FindItem ()) r a impl) => Ref a -> impl
+findItem = dispatch (undefined :: FindItem ())
+data AddAt a
+addAt :: (FindOp a (AddAt ()) (Match r), Op (AddAt ()) r a impl) => Ref a -> impl
+addAt = dispatch (undefined :: AddAt ())
+data InsertAbove a
+insertAbove :: (FindOp a (InsertAbove ()) (Match r), Op (InsertAbove ()) r a impl) => Ref a -> impl
+insertAbove = dispatch (undefined :: InsertAbove ())
+data Deparent a
+deparent :: (FindOp a (Deparent ()) (Match r), Op (Deparent ()) r a impl) => Ref a -> impl
+deparent = dispatch (undefined :: Deparent ())
+data Reparent a
+reparent :: (FindOp a (Reparent ()) (Match r), Op (Reparent ()) r a impl) => Ref a -> impl
+reparent = dispatch (undefined :: Reparent ())
+data MoveTo a
+moveTo :: (FindOp a (MoveTo ()) (Match r), Op (MoveTo ()) r a impl) => Ref a -> impl
+moveTo = dispatch (undefined :: MoveTo ())
+data GetDepth a
+getDepth :: (FindOp a (GetDepth ()) (Match r), Op (GetDepth ()) r a impl) => Ref a -> impl
+getDepth = dispatch (undefined :: GetDepth ())
+data NextSibling a
+nextSibling :: (FindOp a (NextSibling ()) (Match r), Op (NextSibling ()) r a impl) => Ref a -> impl
+nextSibling = dispatch (undefined :: NextSibling ())
+data PrevSibling a
+prevSibling :: (FindOp a (PrevSibling ()) (Match r), Op (PrevSibling ()) r a impl) => Ref a -> impl
+prevSibling = dispatch (undefined :: PrevSibling ())
+data UpdatePrevNext a
+updatePrevNext :: (FindOp a (UpdatePrevNext ()) (Match r), Op (UpdatePrevNext ()) r a impl) => Ref a -> impl
+updatePrevNext = dispatch (undefined :: UpdatePrevNext ())
+data NextDisplayed a
+nextDisplayed :: (FindOp a (NextDisplayed ()) (Match r), Op (NextDisplayed ()) r a impl) => Ref a -> impl
+nextDisplayed = dispatch (undefined :: NextDisplayed ())
+data PrevDisplayed a
+prevDisplayed :: (FindOp a (PrevDisplayed ()) (Match r), Op (PrevDisplayed ()) r a impl) => Ref a -> impl
+prevDisplayed = dispatch (undefined :: PrevDisplayed ())
+data Open a
+open :: (FindOp a (Open ()) (Match r), Op (Open ()) r a impl) => Ref a -> impl
+open = dispatch (undefined :: Open ())
+data Close a
+close :: (FindOp a (Close ()) (Match r), Op (Close ()) r a impl) => Ref a -> impl
+close = dispatch (undefined :: Close ())
+data IsOpen a
+isOpen :: (FindOp a (IsOpen ()) (Match r), Op (IsOpen ()) r a impl) => Ref a -> impl
+isOpen = dispatch (undefined :: IsOpen ())
+data IsClose a
+isClose :: (FindOp a (IsClose ()) (Match r), Op (IsClose ()) r a impl) => Ref a -> impl
+isClose = dispatch (undefined :: IsClose ())
+data OpenToggle a
+openToggle :: (FindOp a (OpenToggle ()) (Match r), Op (OpenToggle ()) r a impl) => Ref a -> impl
+openToggle = dispatch (undefined :: OpenToggle ())
+data SelectWithVal a
+selectWithVal :: (FindOp a (SelectWithVal ()) (Match r), Op (SelectWithVal ()) r a impl) => Ref a -> impl
+selectWithVal = dispatch (undefined :: SelectWithVal ())
+data SelectToggle a
+selectToggle :: (FindOp a (SelectToggle ()) (Match r), Op (SelectToggle ()) r a impl) => Ref a -> impl
+selectToggle = dispatch (undefined :: SelectToggle ())
+data SelectAll a
+selectAll :: (FindOp a (SelectAll ()) (Match r), Op (SelectAll ()) r a impl) => Ref a -> impl
+selectAll = dispatch (undefined :: SelectAll ())
+data DeselectAll a
+deselectAll :: (FindOp a (DeselectAll ()) (Match r), Op (DeselectAll ()) r a impl) => Ref a -> impl
+deselectAll = dispatch (undefined :: DeselectAll ())
+data ActivateWithVal a
+activateWithVal :: (FindOp a (ActivateWithVal ()) (Match r), Op (ActivateWithVal ()) r a impl) => Ref a -> impl
+activateWithVal = dispatch (undefined :: ActivateWithVal ())
+data IsActive a
+isActive :: (FindOp a (IsActive ()) (Match r), Op (IsActive ()) r a impl) => Ref a -> impl
+isActive = dispatch (undefined :: IsActive ())
+data IsVisible a
+isVisible :: (FindOp a (IsVisible ()) (Match r), Op (IsVisible ()) r a impl) => Ref a -> impl
+isVisible = dispatch (undefined :: IsVisible ())
+data VisibleR a
+visibleR :: (FindOp a (VisibleR ()) (Match r), Op (VisibleR ()) r a impl) => Ref a -> impl
+visibleR = dispatch (undefined :: VisibleR ())
+data FindClicked a
+findClicked :: (FindOp a (FindClicked ()) (Match r), Op (FindClicked ()) r a impl) => Ref a -> impl
+findClicked = dispatch (undefined :: FindClicked ())
+data EventOnCollapseIcon a
+eventOnCollapseIcon :: (FindOp a (EventOnCollapseIcon ()) (Match r), Op (EventOnCollapseIcon ()) r a impl) => Ref a -> impl
+eventOnCollapseIcon = dispatch (undefined :: EventOnCollapseIcon ())
+data EventOnLabel a
+eventOnLabel :: (FindOp a (EventOnLabel ()) (Match r), Op (EventOnLabel ()) r a impl) => Ref a -> impl
+eventOnLabel = dispatch (undefined :: EventOnLabel ())
+data IsRoot a
+isRoot :: (FindOp a (IsRoot ()) (Match r), Op (IsRoot ()) r a impl) => Ref a -> impl
+isRoot = dispatch (undefined :: IsRoot ())
+data LabelX a
+labelX :: (FindOp a (LabelX ()) (Match r), Op (LabelX ()) r a impl) => Ref a -> impl
+labelX = dispatch (undefined :: LabelX ())
+data LabelY a
+labelY :: (FindOp a (LabelY ()) (Match r), Op (LabelY ()) r a impl) => Ref a -> impl
+labelY = dispatch (undefined :: LabelY ())
+data LabelW a
+labelW :: (FindOp a (LabelW ()) (Match r), Op (LabelW ()) r a impl) => Ref a -> impl
+labelW = dispatch (undefined :: LabelW ())
+data LabelH a
+labelH :: (FindOp a (LabelH ()) (Match r), Op (LabelH ()) r a impl) => Ref a -> impl
+labelH = dispatch (undefined :: LabelH ())

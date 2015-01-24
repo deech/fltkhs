@@ -197,8 +197,8 @@ instance (impl ~ (Event -> IO Int)) => Op (Handle ()) Widget orig impl where
   runOp _ _ widget event = withRef widget (\p -> widgetHandle' p (fromIntegral . fromEnum $ event))
 
 {#fun Fl_Widget_parent as widgetParent' { id `Ptr ()'} -> `Ptr ()' id #}
-instance (impl ~  IO (Ref Group)) => Op (GetParent ()) Widget orig impl where
-  runOp _ _ widget = withRef widget widgetParent' >>= toRef
+instance (impl ~  IO (Maybe (Ref Group))) => Op (GetParent ()) Widget orig impl where
+  runOp _ _ widget = withRef widget widgetParent' >>= toMaybeRef
 
 {#fun Fl_Widget_set_parent as widgetSetParent' { id `Ptr ()', id `Ptr ()' } -> `()' supressWarningAboutRes #}
 instance (Parent a Group, impl ~ (Ref a -> IO ())) => Op (SetParent ()) Widget orig impl where
