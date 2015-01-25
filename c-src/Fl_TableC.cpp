@@ -537,7 +537,7 @@ FL_EXPORT_C(void, Fl_Table_draw_label)(fl_Table Table){
   FL_EXPORT_C(void,Fl_Table_set_cols)(fl_Table table, int val){
     (static_cast<Fl_DerivedTable*>(table))->cols(val);
   }
-  FL_EXPORT_C(void, Fl_Table_set_visible_cells)(fl_Table table,int* r1, int* r2, int* c1, int* c2){
+  FL_EXPORT_C(void, Fl_Table_visible_cells)(fl_Table table,int* r1, int* r2, int* c1, int* c2){
     return (static_cast<Fl_DerivedTable*>(table))->visible_cells(*r1,*r2,*c1,*c2);
   };
   FL_EXPORT_C(int,Fl_Table_is_interactive_resize)(fl_Table table){

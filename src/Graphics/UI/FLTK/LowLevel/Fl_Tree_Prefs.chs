@@ -116,20 +116,20 @@ instance (impl ~ (IO (Int))) => Op (GetConnectorwidth ()) TreePrefs orig impl wh
 instance (impl ~ (Int ->  IO ())) => Op (SetConnectorwidth ()) TreePrefs orig impl where
   runOp _ _ tree_prefs val = withRef tree_prefs $ \tree_prefsPtr -> setConnectorwidth' tree_prefsPtr val
 {# fun unsafe Fl_Tree_Prefs_openicon as openicon' { id `Ptr ()' } -> `Ptr ()' id #}
-instance (impl ~ (IO (Ptr ()))) => Op (GetOpenicon ()) TreePrefs orig impl where
-  runOp _ _ tree_prefs = withRef tree_prefs $ \tree_prefsPtr -> openicon' tree_prefsPtr
+instance (impl ~ (IO (Maybe (Ref Image)))) => Op (GetOpenicon ()) TreePrefs orig impl where
+  runOp _ _ tree_prefs = withRef tree_prefs $ \tree_prefsPtr -> openicon' tree_prefsPtr >>= toMaybeRef
 {# fun unsafe Fl_Tree_Prefs_set_openicon as setOpenicon' { id `Ptr ()',id `Ptr ()' } -> `()' #}
 instance (Parent a Image, impl ~ (Ref a  ->  IO ())) => Op (SetOpenicon ()) TreePrefs orig impl where
   runOp _ _ tree_prefs val = withRef tree_prefs $ \tree_prefsPtr -> withRef val $ \valPtr -> setOpenicon' tree_prefsPtr valPtr
 {# fun unsafe Fl_Tree_Prefs_closeicon as closeicon' { id `Ptr ()' } -> `Ptr ()' id #}
-instance (impl ~ (IO (Ptr ()))) => Op (GetCloseicon ()) TreePrefs orig impl where
-  runOp _ _ tree_prefs = withRef tree_prefs $ \tree_prefsPtr -> closeicon' tree_prefsPtr
+instance (impl ~ (IO (Maybe (Ref Image)))) => Op (GetCloseicon ()) TreePrefs orig impl where
+  runOp _ _ tree_prefs = withRef tree_prefs $ \tree_prefsPtr -> closeicon' tree_prefsPtr >>= toMaybeRef
 {# fun unsafe Fl_Tree_Prefs_set_closeicon as setCloseicon' { id `Ptr ()',id `Ptr ()' } -> `()' #}
 instance (Parent a Image, impl ~ (Ref a  ->  IO ())) => Op (SetCloseicon ()) TreePrefs orig impl where
   runOp _ _ tree_prefs val = withRef tree_prefs $ \tree_prefsPtr -> withRef val $ \valPtr -> setCloseicon' tree_prefsPtr valPtr
 {# fun unsafe Fl_Tree_Prefs_usericon as usericon' { id `Ptr ()' } -> `Ptr ()' id #}
-instance (impl ~ (IO (Ptr ()))) => Op (GetUsericon ()) TreePrefs orig impl where
-  runOp _ _ tree_prefs = withRef tree_prefs $ \tree_prefsPtr -> usericon' tree_prefsPtr
+instance (impl ~ (IO (Maybe (Ref Image)))) => Op (GetUsericon ()) TreePrefs orig impl where
+  runOp _ _ tree_prefs = withRef tree_prefs $ \tree_prefsPtr -> usericon' tree_prefsPtr >>= toMaybeRef
 {# fun unsafe Fl_Tree_Prefs_set_usericon as setUsericon' { id `Ptr ()',id `Ptr ()' } -> `()' #}
 instance (Parent a Image, impl ~ (Ref a  ->  IO ())) => Op (SetUsericon ()) TreePrefs orig impl where
   runOp _ _ tree_prefs val = withRef tree_prefs $ \tree_prefsPtr -> withRef val $ \valPtr -> setUsericon' tree_prefsPtr valPtr

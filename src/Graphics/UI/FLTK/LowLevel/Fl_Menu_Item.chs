@@ -41,12 +41,12 @@ instance (Parent a MenuItem, impl ~ (Int -> IO (Ref a))) => Op (NextWithStep ())
     withRef menu_item $ \menu_itemPtr -> nextWithStep' menu_itemPtr step >>= toRef
 
 {# fun unsafe Fl_Menu_Item_next as next' { id `Ptr ()' } -> `Ptr ()' id #}
-instance (impl ~  IO (Ptr ())) => Op (Next ()) MenuItem orig impl where
-  runOp _ _ menu_item = withRef menu_item $ \menu_itemPtr -> next' menu_itemPtr
+instance (impl ~  IO (Maybe (Ref MenuItem))) => Op (Next ()) MenuItem orig impl where
+  runOp _ _ menu_item = withRef menu_item $ \menu_itemPtr -> next' menu_itemPtr >>= toMaybeRef
 
 {# fun unsafe Fl_Menu_Item_first as first' { id `Ptr ()' } -> `Ptr ()' id #}
-instance (impl ~  IO (Ptr ())) => Op (GetFirst ()) MenuItem orig impl where
-  runOp _ _ menu_item = withRef menu_item $ \menu_itemPtr -> first' menu_itemPtr
+instance (impl ~  IO (Maybe (Ref MenuItem))) => Op (GetFirst ()) MenuItem orig impl where
+  runOp _ _ menu_item = withRef menu_item $ \menu_itemPtr -> first' menu_itemPtr >>=toMaybeRef
 
 {# fun unsafe Fl_Menu_Item_label as label' { id `Ptr ()' } -> `String' #}
 instance (impl ~  IO (String)) => Op (GetLabel ()) MenuItem orig impl where

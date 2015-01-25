@@ -1,4 +1,4 @@
-{-# LANGUAGE CPP, TypeSynonymInstances, FlexibleInstances, MultiParamTypeClasses, FlexibleContexts, ExistentialQuantification #-}
+{-# LANGUAGE CPP, UndecidableInstances, TypeSynonymInstances, FlexibleInstances, MultiParamTypeClasses, FlexibleContexts, ExistentialQuantification #-}
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 module Graphics.UI.FLTK.LowLevel.Fl_Window
     (
@@ -352,12 +352,12 @@ instance (impl ~ (String ->  IO ())) => Op (SetXclass ()) Window orig impl where
   runOp _ _ win c = withRef win $ \winPtr -> setXclass' winPtr c
 
 {# fun Fl_Window_icon as icon' { id `Ptr ()' } -> `Ptr ()' id #}
-instance (impl ~ ( IO (Ptr ()))) => Op (GetIcon ()) Window orig impl where
-  runOp _ _ win = withRef win $ \winPtr -> icon' winPtr
+instance (impl ~ ( IO (Maybe (Ref Image)))) => Op (GetIcon ()) Window orig impl where
+  runOp _ _ win = withRef win $ \winPtr -> icon' winPtr >>= toMaybeRef
 
 {# fun Fl_Window_set_icon as setIcon' { id `Ptr ()', id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance (impl ~ (Ptr () ->  IO ())) => Op (SetIcon ()) Window orig impl where
-  runOp _ _ win bitmap = withRef win $ \winPtr -> setIcon' winPtr bitmap
+instance (Parent a Image, impl ~ (Ref a ->  IO ())) => Op (SetIcon ()) Window orig impl where
+  runOp _ _ win bitmap = withRef win $ \winPtr -> withRef bitmap $ \bitmapPtr -> setIcon' winPtr bitmapPtr
 
 {# fun Fl_Window_shown as shown' { id `Ptr ()' } -> `Bool' toBool #}
 instance (impl ~ ( IO (Bool))) => Op (Shown ()) Window orig impl where

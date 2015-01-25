@@ -181,7 +181,7 @@ FL_EXPORT_C(void, Fl_Table_draw_label)(fl_Table Table);
   FL_EXPORT_C(void, Fl_Table_set_cols_super)(fl_Table table, int val);
   FL_EXPORT_C(void, Fl_Table_set_cols)(fl_Table table, int val);
   FL_EXPORT_C(int, Fl_Table_cols)(fl_Table table);
-  FL_EXPORT_C(void, Fl_Table_set_visible_cells)(fl_Table table,int* r1, int* r2, int* c1, int* c2);
+  FL_EXPORT_C(void, Fl_Table_visible_cells)(fl_Table table,int* r1, int* r2, int* c1, int* c2);
   FL_EXPORT_C(int, Fl_Table_is_interactive_resize)(fl_Table table);
   FL_EXPORT_C(int, Fl_Table_row_resize)(fl_Table table);
   FL_EXPORT_C(void, Fl_Table_set_row_resize)(fl_Table table,int flag);

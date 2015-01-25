@@ -1131,10 +1131,6 @@ module Graphics.UI.FLTK.LowLevel.Hierarchy
          setItemLabelfont,
          GetItemLabelfgcolor,
          getItemLabelfgcolor,
-         Openicon,
-         openicon,
-         Closeicon,
-         closeicon,
          Selectmode,
          selectmode,
          ShowItemWithYoff,
@@ -3894,9 +3890,9 @@ type TreeFuncs =
   (SetConnectorwidth
   (GetUsericon
   (SetUsericon
-  (Openicon
+  (GetOpenicon
   (SetOpenicon
-  (Closeicon
+  (GetCloseicon
   (SetCloseicon
   (GetShowcollapse
   (SetShowcollapse
@@ -3999,12 +3995,6 @@ setItemLabelfont = dispatch (undefined :: SetItemLabelfont ())
 data GetItemLabelfgcolor a
 getItemLabelfgcolor :: (FindOp a (GetItemLabelfgcolor ()) (Match r), Op (GetItemLabelfgcolor ()) r a impl) => Ref a -> impl
 getItemLabelfgcolor = dispatch (undefined :: GetItemLabelfgcolor ())
-data Openicon a
-openicon :: (FindOp a (Openicon ()) (Match r), Op (Openicon ()) r a impl) => Ref a -> impl
-openicon = dispatch (undefined :: Openicon ())
-data Closeicon a
-closeicon :: (FindOp a (Closeicon ()) (Match r), Op (Closeicon ()) r a impl) => Ref a -> impl
-closeicon = dispatch (undefined :: Closeicon ())
 data Selectmode a
 selectmode :: (FindOp a (Selectmode ()) (Match r), Op (Selectmode ()) r a impl) => Ref a -> impl
 selectmode = dispatch (undefined :: Selectmode ())

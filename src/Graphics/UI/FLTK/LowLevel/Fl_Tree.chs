@@ -315,13 +315,13 @@ instance (impl ~ ( IO (Maybe (Ref Image))) ) => Op (GetUsericon ()) Tree orig im
 instance (Parent a Image, impl ~ (Ref a  ->  IO ()) ) => Op (SetUsericon ()) Tree orig impl where
   runOp _ _ tree val = withRef tree $ \treePtr -> withRef val $ \valPtr -> setUsericon' treePtr valPtr
 {# fun unsafe Fl_Tree_openicon as openicon' { id `Ptr ()' } -> `Ptr ()' id #}
-instance (impl ~ ( IO (Maybe (Ref Image))) ) => Op (Openicon ()) Tree orig impl where
+instance (impl ~ ( IO (Maybe (Ref Image))) ) => Op (GetOpenicon ()) Tree orig impl where
   runOp _ _ tree = withRef tree $ \treePtr -> openicon' treePtr >>= toMaybeRef
 {# fun unsafe Fl_Tree_set_openicon as setOpenicon' { id `Ptr ()',id `Ptr ()' } -> `()' #}
 instance (Parent a Image , impl ~ (Ref a  ->  IO ()) ) => Op (SetOpenicon ()) Tree orig impl where
   runOp _ _ tree val = withRef tree $ \treePtr -> withRef val $ \valPtr -> setOpenicon' treePtr valPtr
 {# fun unsafe Fl_Tree_closeicon as closeicon' { id `Ptr ()' } -> `Ptr ()' id #}
-instance (impl ~ ( IO (Maybe (Ref Image))) ) => Op (Closeicon ()) Tree orig impl where
+instance (impl ~ ( IO (Maybe (Ref Image))) ) => Op (GetCloseicon ()) Tree orig impl where
   runOp _ _ tree = withRef tree $ \treePtr -> closeicon' treePtr >>= toMaybeRef
 {# fun unsafe Fl_Tree_set_closeicon as setCloseicon' { id `Ptr ()',id `Ptr ()' } -> `()' #}
 instance (Parent a Image, impl ~ (Ref a  ->  IO ()) ) => Op (SetCloseicon ()) Tree orig impl where

@@ -140,9 +140,12 @@ instance (impl ~ ( Int ->  IO ())) => Op (SetCols ()) Table orig impl where
 {# fun unsafe Fl_Table_cols as cols' { id `Ptr ()' } -> `Int' #}
 instance (impl ~ (  IO (Int))) => Op (GetCols ()) Table orig impl where
   runOp _ _ table = withRef table $ \tablePtr -> cols' tablePtr
-{# fun Fl_Table_set_visible_cells as setVisibleCells' { id `Ptr ()',id `Ptr CInt',id `Ptr CInt',id `Ptr CInt',id `Ptr CInt' } -> `()' #}
-instance (impl ~ ( Ptr CInt -> Ptr CInt -> Ptr CInt -> Ptr CInt ->  IO ())) => Op (SetVisibleCells ()) Table orig impl where
-  runOp _ _ table r1 r2 c1 c2 = withRef table $ \tablePtr -> setVisibleCells' tablePtr r1 r2 c1 c2
+{# fun Fl_Table_visible_cells as visibleCells' { id `Ptr ()',alloca- `Int' peekIntConv*,alloca- `Int' peekIntConv*,alloca- `Int' peekIntConv*,alloca- `Int' peekIntConv*} -> `()' #}
+instance (impl ~ (IO (TableCoordinate,TableCoordinate))) => Op (SetVisibleCells ()) Table orig impl where
+  runOp _ _ table =
+    withRef table $ \tablePtr ->
+    visibleCells' tablePtr >>= \(r1', r2', c1', c2') ->
+    return ((TableCoordinate (Row r1') (Column c1')), (TableCoordinate (Row r2') (Column c2')))
 {# fun unsafe Fl_Table_is_interactive_resize as isInteractiveResize' { id `Ptr ()' } -> `Int' #}
 instance (impl ~ (  IO (Int))) => Op (IsInteractiveResize ()) Table orig impl where
   runOp _ _ table = withRef table $ \tablePtr -> isInteractiveResize' tablePtr
