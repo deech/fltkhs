@@ -166,7 +166,8 @@ import Graphics.UI.FLTK.LowLevel.Hierarchy hiding (
                                                    copy,
                                                    setColor,
                                                    getColor,
-                                                   focus
+                                                   focus,
+                                                   display
                                                   )
 import Graphics.UI.FLTK.LowLevel.Dispatch
 import qualified System.IO.Unsafe as Unsafe (unsafePerformIO)

@@ -1082,7 +1082,87 @@ module Graphics.UI.FLTK.LowLevel.Hierarchy
          LabelW,
          labelW,
          LabelH,
-         labelH
+         labelH,
+         -- * Tree
+         Tree,
+         RootLabel,
+         rootLabel,
+         Root,
+         root,
+         ItemClicked,
+         itemClicked,
+         FirstVisible,
+         firstVisible,
+         NextWithItem,
+         nextWithItem,
+         PrevWithItem,
+         prevWithItem,
+         GetLast,
+         getLast,
+         LastVisible,
+         lastVisible,
+         FirstSelectedItem,
+         firstSelectedItem,
+         NextSelectedItem,
+         nextSelectedItem,
+         NextSelectedItemWithItem,
+         nextSelectedItemWithItem,
+         OpenAndCallback,
+         openAndCallback,
+         OpenToggleAndCallback,
+         openToggleAndCallback,
+         TreeMenuItemLocator,
+         treeMenuItemLocator,
+         CloseAndCallback,
+         closeAndCallback,
+         SelectAndCallback,
+         selectAndCallback,
+         SelectToggleAndCallback,
+         selectToggleAndCallback,
+         SelectAllAndCallback,
+         selectAllAndCallback,
+         SetItemFocus,
+         setItemFocus,
+         GetItemFocus,
+         getItemFocus,
+         IsSelectedWithItem,
+         isSelectedWithItem,
+         SetItemLabelfont,
+         setItemLabelfont,
+         GetItemLabelfgcolor,
+         getItemLabelfgcolor,
+         Openicon,
+         openicon,
+         Closeicon,
+         closeicon,
+         Selectmode,
+         selectmode,
+         ShowItemWithYoff,
+         showItemWithYoff,
+         ShowItemTop,
+         showItemTop,
+         ShowItemMiddle,
+         showItemMiddle,
+         ShowItemBottom,
+         showItemBottom,
+         Display,
+         display,
+         GetVposition,
+         getVposition,
+         SetVposition,
+         setVposition,
+         IsScrollbar,
+         isScrollbar,
+         IsVscrollVisible,
+         isVscrollVisible,
+         SetCallbackItem,
+         setCallbackItem,
+         CallbackItem,
+         callbackItem,
+         SetCallbackReason,
+         setCallbackReason,
+         GetCallbackReason,
+         getCallbackReason
        )
 where
 import Prelude hiding (round)
@@ -3737,3 +3817,233 @@ labelW = dispatch (undefined :: LabelW ())
 data LabelH a
 labelH :: (FindOp a (LabelH ()) (Match r), Op (LabelH ()) r a impl) => Ref a -> impl
 labelH = dispatch (undefined :: LabelH ())
+
+data CTree parent
+type Tree = CTree Group
+type TreeFuncs =
+  (Destroy
+  (Handle
+  (Draw
+  (ShowSelf
+  (RootLabel
+  (Root
+  (Add
+  (InsertAbove
+  (Insert
+  (Remove
+  (Clear
+  (ClearChildren
+  (FindItem
+  (ItemPathname
+  (ItemClicked
+  (GetFirst
+  (FirstVisible
+  (Next
+  (NextWithItem
+  (Prev
+  (PrevWithItem
+  (GetLast
+  (LastVisible
+  (FirstSelectedItem
+  (NextSelectedItem
+  (NextSelectedItemWithItem
+  (Open
+  (OpenAndCallback
+  (OpenToggle
+  (OpenToggleAndCallback
+  (Close
+  (CloseAndCallback
+  (IsOpen
+  (IsClose
+  (Select
+  (SelectAndCallback
+  (SelectToggle
+  (SelectToggleAndCallback
+  (Deselect
+  (DeselectAndCallback
+  (SelectOnly
+  (SelectOnlyAndCallback
+  (SelectAll
+  (SelectAllAndCallback
+  (SetItemFocus
+  (GetItemFocus
+  (IsSelectedWithItem
+  (GetItemLabelfont
+  (SetItemLabelfont
+  (GetItemLabelsize
+  (SetItemLabelsize
+  (GetItemLabelfgcolor
+  (SetItemLabelfgcolor
+  (GetItemLabelbgcolor
+  (SetItemLabelbgcolor
+  (GetConnectorcolor
+  (SetConnectorcolor
+  (GetMarginleft
+  (SetMarginleft
+  (GetMargintop
+  (SetMargintop
+  (GetLinespacing
+  (SetLinespacing
+  (GetOpenchildMarginbottom
+  (SetOpenchildMarginbottom
+  (GetUsericonmarginleft
+  (SetUsericonmarginleft
+  (GetLabelmarginleft
+  (SetLabelmarginleft
+  (GetConnectorwidth
+  (SetConnectorwidth
+  (GetUsericon
+  (SetUsericon
+  (Openicon
+  (SetOpenicon
+  (Closeicon
+  (SetCloseicon
+  (GetShowcollapse
+  (SetShowcollapse
+  (GetShowroot
+  (SetShowroot
+  (GetConnectorstyle
+  (SetConnectorstyle
+  (GetSortorder
+  (SetSortorder
+  (GetSelectbox
+  (SetSelectbox
+  (Selectmode
+  (SetSelectmode
+  (Displayed
+  (ShowItemWithYoff
+  (ShowItemTop
+  (ShowItemMiddle
+  (ShowItemBottom
+  (Display
+  (GetVposition
+  (SetVposition
+  (IsScrollbar
+  (GetScrollbarSize
+  (SetScrollbarSize
+  (IsVscrollVisible
+  (SetCallbackItem
+  (CallbackItem
+  (SetCallbackReason
+  (GetCallbackReason
+  ())))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))
+
+instance Functions Tree TreeFuncs
+
+data RootLabel a
+rootLabel :: (FindOp a (RootLabel ()) (Match r), Op (RootLabel ()) r a impl) => Ref a -> impl
+rootLabel = dispatch (undefined :: RootLabel ())
+data Root a
+root :: (FindOp a (Root ()) (Match r), Op (Root ()) r a impl) => Ref a -> impl
+root = dispatch (undefined :: Root ())
+data ItemClicked a
+itemClicked :: (FindOp a (ItemClicked ()) (Match r), Op (ItemClicked ()) r a impl) => Ref a -> impl
+itemClicked = dispatch (undefined :: ItemClicked ())
+data FirstVisible a
+firstVisible :: (FindOp a (FirstVisible ()) (Match r), Op (FirstVisible ()) r a impl) => Ref a -> impl
+firstVisible = dispatch (undefined :: FirstVisible ())
+data NextWithItem a
+nextWithItem :: (FindOp a (NextWithItem ()) (Match r), Op (NextWithItem ()) r a impl) => Ref a -> impl
+nextWithItem = dispatch (undefined :: NextWithItem ())
+data PrevWithItem a
+prevWithItem :: (FindOp a (PrevWithItem ()) (Match r), Op (PrevWithItem ()) r a impl) => Ref a -> impl
+prevWithItem = dispatch (undefined :: PrevWithItem ())
+data GetLast a
+getLast :: (FindOp a (GetLast ()) (Match r), Op (GetLast ()) r a impl) => Ref a -> impl
+getLast = dispatch (undefined :: GetLast ())
+data LastVisible a
+lastVisible :: (FindOp a (LastVisible ()) (Match r), Op (LastVisible ()) r a impl) => Ref a -> impl
+lastVisible = dispatch (undefined :: LastVisible ())
+data FirstSelectedItem a
+firstSelectedItem :: (FindOp a (FirstSelectedItem ()) (Match r), Op (FirstSelectedItem ()) r a impl) => Ref a -> impl
+firstSelectedItem = dispatch (undefined :: FirstSelectedItem ())
+data NextSelectedItem a
+nextSelectedItem :: (FindOp a (NextSelectedItem ()) (Match r), Op (NextSelectedItem ()) r a impl) => Ref a -> impl
+nextSelectedItem = dispatch (undefined :: NextSelectedItem ())
+data NextSelectedItemWithItem a
+nextSelectedItemWithItem :: (FindOp a (NextSelectedItemWithItem ()) (Match r), Op (NextSelectedItemWithItem ()) r a impl) => Ref a -> impl
+nextSelectedItemWithItem = dispatch (undefined :: NextSelectedItemWithItem ())
+data OpenAndCallback a
+openAndCallback :: (FindOp a (OpenAndCallback ()) (Match r), Op (OpenAndCallback ()) r a impl) => Ref a -> impl
+openAndCallback = dispatch (undefined :: OpenAndCallback ())
+data OpenToggleAndCallback a
+openToggleAndCallback :: (FindOp a (OpenToggleAndCallback ()) (Match r), Op (OpenToggleAndCallback ()) r a impl) => Ref a -> impl
+openToggleAndCallback = dispatch (undefined :: OpenToggleAndCallback ())
+data TreeMenuItemLocator a
+treeMenuItemLocator :: (FindOp a (TreeMenuItemLocator ()) (Match r), Op (TreeMenuItemLocator ()) r a impl) => Ref a -> impl
+treeMenuItemLocator = dispatch (undefined :: TreeMenuItemLocator ())
+data CloseAndCallback a
+closeAndCallback :: (FindOp a (CloseAndCallback ()) (Match r), Op (CloseAndCallback ()) r a impl) => Ref a -> impl
+closeAndCallback = dispatch (undefined :: CloseAndCallback ())
+data SelectAndCallback a
+selectAndCallback :: (FindOp a (SelectAndCallback ()) (Match r), Op (SelectAndCallback ()) r a impl) => Ref a -> impl
+selectAndCallback = dispatch (undefined :: SelectAndCallback ())
+data SelectToggleAndCallback a
+selectToggleAndCallback :: (FindOp a (SelectToggleAndCallback ()) (Match r), Op (SelectToggleAndCallback ()) r a impl) => Ref a -> impl
+selectToggleAndCallback = dispatch (undefined :: SelectToggleAndCallback ())
+data SelectAllAndCallback a
+selectAllAndCallback :: (FindOp a (SelectAllAndCallback ()) (Match r), Op (SelectAllAndCallback ()) r a impl) => Ref a -> impl
+selectAllAndCallback = dispatch (undefined :: SelectAllAndCallback ())
+data SetItemFocus a
+setItemFocus :: (FindOp a (SetItemFocus ()) (Match r), Op (SetItemFocus ()) r a impl) => Ref a -> impl
+setItemFocus = dispatch (undefined :: SetItemFocus ())
+data GetItemFocus a
+getItemFocus :: (FindOp a (GetItemFocus ()) (Match r), Op (GetItemFocus ()) r a impl) => Ref a -> impl
+getItemFocus = dispatch (undefined :: GetItemFocus ())
+data IsSelectedWithItem a
+isSelectedWithItem :: (FindOp a (IsSelectedWithItem ()) (Match r), Op (IsSelectedWithItem ()) r a impl) => Ref a -> impl
+isSelectedWithItem = dispatch (undefined :: IsSelectedWithItem ())
+data SetItemLabelfont a
+setItemLabelfont :: (FindOp a (SetItemLabelfont ()) (Match r), Op (SetItemLabelfont ()) r a impl) => Ref a -> impl
+setItemLabelfont = dispatch (undefined :: SetItemLabelfont ())
+data GetItemLabelfgcolor a
+getItemLabelfgcolor :: (FindOp a (GetItemLabelfgcolor ()) (Match r), Op (GetItemLabelfgcolor ()) r a impl) => Ref a -> impl
+getItemLabelfgcolor = dispatch (undefined :: GetItemLabelfgcolor ())
+data Openicon a
+openicon :: (FindOp a (Openicon ()) (Match r), Op (Openicon ()) r a impl) => Ref a -> impl
+openicon = dispatch (undefined :: Openicon ())
+data Closeicon a
+closeicon :: (FindOp a (Closeicon ()) (Match r), Op (Closeicon ()) r a impl) => Ref a -> impl
+closeicon = dispatch (undefined :: Closeicon ())
+data Selectmode a
+selectmode :: (FindOp a (Selectmode ()) (Match r), Op (Selectmode ()) r a impl) => Ref a -> impl
+selectmode = dispatch (undefined :: Selectmode ())
+data ShowItemWithYoff a
+showItemWithYoff :: (FindOp a (ShowItemWithYoff ()) (Match r), Op (ShowItemWithYoff ()) r a impl) => Ref a -> impl
+showItemWithYoff = dispatch (undefined :: ShowItemWithYoff ())
+data ShowItemTop a
+showItemTop :: (FindOp a (ShowItemTop ()) (Match r), Op (ShowItemTop ()) r a impl) => Ref a -> impl
+showItemTop = dispatch (undefined :: ShowItemTop ())
+data ShowItemMiddle a
+showItemMiddle :: (FindOp a (ShowItemMiddle ()) (Match r), Op (ShowItemMiddle ()) r a impl) => Ref a -> impl
+showItemMiddle = dispatch (undefined :: ShowItemMiddle ())
+data ShowItemBottom a
+showItemBottom :: (FindOp a (ShowItemBottom ()) (Match r), Op (ShowItemBottom ()) r a impl) => Ref a -> impl
+showItemBottom = dispatch (undefined :: ShowItemBottom ())
+data Display a
+display :: (FindOp a (Display ()) (Match r), Op (Display ()) r a impl) => Ref a -> impl
+display = dispatch (undefined :: Display ())
+data GetVposition a
+getVposition :: (FindOp a (GetVposition ()) (Match r), Op (GetVposition ()) r a impl) => Ref a -> impl
+getVposition = dispatch (undefined :: GetVposition ())
+data SetVposition a
+setVposition :: (FindOp a (SetVposition ()) (Match r), Op (SetVposition ()) r a impl) => Ref a -> impl
+setVposition = dispatch (undefined :: SetVposition ())
+data IsScrollbar a
+isScrollbar :: (FindOp a (IsScrollbar ()) (Match r), Op (IsScrollbar ()) r a impl) => Ref a -> impl
+isScrollbar = dispatch (undefined :: IsScrollbar ())
+data IsVscrollVisible a
+isVscrollVisible :: (FindOp a (IsVscrollVisible ()) (Match r), Op (IsVscrollVisible ()) r a impl) => Ref a -> impl
+isVscrollVisible = dispatch (undefined :: IsVscrollVisible ())
+data SetCallbackItem a
+setCallbackItem :: (FindOp a (SetCallbackItem ()) (Match r), Op (SetCallbackItem ()) r a impl) => Ref a -> impl
+setCallbackItem = dispatch (undefined :: SetCallbackItem ())
+data CallbackItem a
+callbackItem :: (FindOp a (CallbackItem ()) (Match r), Op (CallbackItem ()) r a impl) => Ref a -> impl
+callbackItem = dispatch (undefined :: CallbackItem ())
+data SetCallbackReason a
+setCallbackReason :: (FindOp a (SetCallbackReason ()) (Match r), Op (SetCallbackReason ()) r a impl) => Ref a -> impl
+setCallbackReason = dispatch (undefined :: SetCallbackReason ())
+data GetCallbackReason a
+getCallbackReason :: (FindOp a (GetCallbackReason ()) (Match r), Op (GetCallbackReason ()) r a impl) => Ref a -> impl
+getCallbackReason = dispatch (undefined :: GetCallbackReason ())

@@ -394,8 +394,8 @@ EXPORT {
   FL_EXPORT_C(int,Fl_Tree_open_with_path)(fl_Tree tree,const char *path){
     return (static_cast<Fl_Tree*>(tree))->open(path);
   }
-  FL_EXPORT_C(int,Fl_Tree_open_with_path_docallback)(fl_Tree tree,fl_Tree_Item item,int docallback){
-    return (static_cast<Fl_Tree*>(tree))->open((static_cast<Fl_Tree_Item*>(item)),docallback);
+  FL_EXPORT_C(int,Fl_Tree_open_with_path_docallback)(fl_Tree tree,const char* path,int docallback){
+    return (static_cast<Fl_Tree*>(tree))->open(path,docallback);
   }
   FL_EXPORT_C(void,Fl_Tree_open_toggle)(fl_Tree tree,fl_Tree_Item item){
     return (static_cast<Fl_Tree*>(tree))->open_toggle((static_cast<Fl_Tree_Item*>(item)));
@@ -412,8 +412,8 @@ EXPORT {
   FL_EXPORT_C(int,Fl_Tree_close_with_path)(fl_Tree tree,const char *path){
     return (static_cast<Fl_Tree*>(tree))->close(path);
   }
-  FL_EXPORT_C(int,Fl_Tree_close_with_path_docallback)(fl_Tree tree,fl_Tree_Item item,int docallback){
-    return (static_cast<Fl_Tree*>(tree))->close((static_cast<Fl_Tree_Item*>(item)),docallback);
+  FL_EXPORT_C(int,Fl_Tree_close_with_path_docallback)(fl_Tree tree,const char* path,int docallback){
+    return (static_cast<Fl_Tree*>(tree))->close(path,docallback);
   }
   FL_EXPORT_C(int,Fl_Tree_is_open_with_item)(fl_Tree tree,fl_Tree_Item item){
     return (static_cast<Fl_Tree*>(tree))->is_open((static_cast<Fl_Tree_Item*>(item)));
@@ -436,8 +436,8 @@ EXPORT {
   FL_EXPORT_C(int,Fl_Tree_select_with_path)(fl_Tree tree,const char *path){
     return (static_cast<Fl_Tree*>(tree))->select(path);
   }
-  FL_EXPORT_C(int,Fl_Tree_select_with_path_docallback)(fl_Tree tree,fl_Tree_Item item,int docallback){
-    return (static_cast<Fl_Tree*>(tree))->select((static_cast<Fl_Tree_Item*>(item)),docallback);
+  FL_EXPORT_C(int,Fl_Tree_select_with_path_docallback)(fl_Tree tree,const char* path,int docallback){
+    return (static_cast<Fl_Tree*>(tree))->select(path,docallback);
   }
   FL_EXPORT_C(void,Fl_Tree_select_toggle)(fl_Tree tree,fl_Tree_Item item){
     return (static_cast<Fl_Tree*>(tree))->select_toggle((static_cast<Fl_Tree_Item*>(item)));
@@ -454,8 +454,8 @@ EXPORT {
   FL_EXPORT_C(int,Fl_Tree_deselect_with_path)(fl_Tree tree,const char *path){
     return (static_cast<Fl_Tree*>(tree))->deselect(path);
   }
-  FL_EXPORT_C(int,Fl_Tree_deselect_with_path_docallback)(fl_Tree tree,fl_Tree_Item item,int docallback){
-    return (static_cast<Fl_Tree*>(tree))->deselect((static_cast<Fl_Tree_Item*>(item)),docallback);
+  FL_EXPORT_C(int,Fl_Tree_deselect_with_path_docallback)(fl_Tree tree,const char* path,int docallback){
+    return (static_cast<Fl_Tree*>(tree))->deselect(path,docallback);
   }
   FL_EXPORT_C(int,Fl_Tree_deselect_all_with_item)(fl_Tree tree,fl_Tree_Item item){
     return (static_cast<Fl_Tree*>(tree))->deselect_all((static_cast<Fl_Tree_Item*>(item)),1);

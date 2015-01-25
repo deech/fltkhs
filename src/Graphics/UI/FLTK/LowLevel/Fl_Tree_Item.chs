@@ -10,6 +10,7 @@ module Graphics.UI.FLTK.LowLevel.Fl_Tree_Item
     MoveError(..),
     MoveType(..),
     SiblingPosition(..),
+    TreeItemNotFound(..),
     newTreeItem
   )
 where
@@ -30,6 +31,7 @@ data TreeItemReference = TreeItemByIndex TreeItemIndex | TreeItemByPointer TreeI
 data TreeItemLocator = TreeItemPointerLocator TreeItemPointer | TreeItemNameLocator TreeItemName
 data MoveError = NoParent | NoIndexFound | IndexRangeError | CouldNotDeparent | CouldNotReparent
 data MoveType = MoveAbove | MoveBelow | MoveInto SiblingPosition
+data TreeItemNotFound = TreeItemNotFound
 data SiblingPosition = SiblingPosition (Maybe Int)
 instance Enum MoveError where
   fromEnum NoParent = (-1)
