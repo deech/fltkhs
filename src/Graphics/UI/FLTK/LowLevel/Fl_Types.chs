@@ -1,4 +1,4 @@
-{-# LANGUAGE CPP, EmptyDataDecls #-}
+{-# LANGUAGE CPP, EmptyDataDecls, ExistentialQuantification #-}
 module Graphics.UI.FLTK.LowLevel.Fl_Types where
 #include "Fl_Types.h"
 #include "Fl_Text_EditorC.h"
@@ -226,8 +226,6 @@ data Ref a                = Ref !(ForeignPtr (Ptr ())) deriving Show
 data CBase parent
 type Base = CBase ()
 
-data UnknownError = UnknownError
-
 type GlobalCallback              = IO ()
 type CallbackWithUserDataPrim    = Ptr () -> Ptr () -> IO ()
 type CallbackPrim                = Ptr () -> IO ()
@@ -273,6 +271,7 @@ newtype PixmapHs = PixmapHs [B.ByteString]
 data BitmapHs = BitmapHs B.ByteString Size
 data Clipboard = InternalClipboard | SharedClipboard
 
+data UnknownError = UnknownError
 data OutOfRange = OutOfRange deriving Show
 
 toRectangle :: (Int,Int,Int,Int) -> Rectangle

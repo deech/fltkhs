@@ -449,6 +449,8 @@ module Graphics.UI.FLTK.LowLevel.Hierarchy
          MenuPrim,
          ItemPathname,
          itemPathname,
+         ItemPathnameRecent,
+         itemPathnameRecent,
          Picked,
          picked,
          FindIndex,
@@ -1153,8 +1155,8 @@ module Graphics.UI.FLTK.LowLevel.Hierarchy
          isVscrollVisible,
          SetCallbackItem,
          setCallbackItem,
-         CallbackItem,
-         callbackItem,
+         GetCallbackItem,
+         getCallbackItem,
          SetCallbackReason,
          setCallbackReason,
          GetCallbackReason,
@@ -2197,6 +2199,7 @@ type MenuPrimFuncs =
   (ShowWidgetSuper
   (ShowWidget
   (ItemPathname
+  (ItemPathnameRecent
   (Picked
   (FindIndex
   (TestShortcut
@@ -2231,12 +2234,15 @@ type MenuPrimFuncs =
   (SetDownBox
   (GetDownColor
   (SetDownColor
-  ()))))))))))))))))))))))))))))))))))))))))))))
+  ())))))))))))))))))))))))))))))))))))))))))))))
 instance Functions MenuPrim MenuPrimFuncs
 
 data ItemPathname a
 itemPathname :: (FindOp a (ItemPathname ()) (Match r), Op (ItemPathname ()) r a impl) => Ref a -> impl
 itemPathname = dispatch (undefined :: ItemPathname ())
+data ItemPathnameRecent a
+itemPathnameRecent :: (FindOp a (ItemPathnameRecent ()) (Match r), Op (ItemPathnameRecent ()) r a impl) => Ref a -> impl
+itemPathnameRecent = dispatch (undefined :: ItemPathnameRecent ())
 data Picked a
 picked :: (FindOp a (Picked ()) (Match r), Op (Picked ()) r a impl) => Ref a -> impl
 picked = dispatch (undefined :: Picked ())
@@ -3824,6 +3830,7 @@ type TreeFuncs =
   (RootLabel
   (Root
   (Add
+  (AddAt
   (InsertAbove
   (Insert
   (Remove
@@ -3919,10 +3926,10 @@ type TreeFuncs =
   (SetScrollbarSize
   (IsVscrollVisible
   (SetCallbackItem
-  (CallbackItem
+  (GetCallbackItem
   (SetCallbackReason
   (GetCallbackReason
-  ())))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))
+  ()))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))
 
 instance Functions Tree TreeFuncs
 
@@ -4028,9 +4035,9 @@ isVscrollVisible = dispatch (undefined :: IsVscrollVisible ())
 data SetCallbackItem a
 setCallbackItem :: (FindOp a (SetCallbackItem ()) (Match r), Op (SetCallbackItem ()) r a impl) => Ref a -> impl
 setCallbackItem = dispatch (undefined :: SetCallbackItem ())
-data CallbackItem a
-callbackItem :: (FindOp a (CallbackItem ()) (Match r), Op (CallbackItem ()) r a impl) => Ref a -> impl
-callbackItem = dispatch (undefined :: CallbackItem ())
+data GetCallbackItem a
+getCallbackItem :: (FindOp a (GetCallbackItem ()) (Match r), Op (GetCallbackItem ()) r a impl) => Ref a -> impl
+getCallbackItem = dispatch (undefined :: GetCallbackItem ())
 data SetCallbackReason a
 setCallbackReason :: (FindOp a (SetCallbackReason ()) (Match r), Op (SetCallbackReason ()) r a impl) => Ref a -> impl
 setCallbackReason = dispatch (undefined :: SetCallbackReason ())

@@ -18,6 +18,7 @@ import Graphics.UI.FLTK.LowLevel.Utils
 import Graphics.UI.FLTK.LowLevel.Dispatch
 import Graphics.UI.FLTK.LowLevel.Hierarchy
 import Graphics.UI.FLTK.LowLevel.Fl_Menu_Item
+import qualified Data.ByteString.Char8 as C
 
 {# fun Fl_Menu__New as widgetNew' { `Int',`Int',`Int',`Int' } -> `Ptr ()' id #}
 {# fun Fl_Menu__New_WithLabel as widgetNewWithLabel' { `Int',`Int',`Int',`Int',`String'} -> `Ptr ()' id #}
@@ -71,21 +72,27 @@ instance (impl ~ (IO ())) => Op (ShowWidget ()) MenuPrim orig impl where
 
 {# fun unsafe Fl_Menu__item_pathname_with_finditem as itemPathnameWithFinditem' { id `Ptr ()',id `Ptr CChar',`Int',id `Ptr ()' } -> `Int' #}
 {# fun unsafe Fl_Menu__item_pathname as itemPathname' { id `Ptr ()',id `Ptr CChar',`Int' } -> `Int' #}
-instance (Parent a MenuItem, impl ~ ( Maybe (Ref a) -> IO (Maybe String))) => Op (ItemPathname ()) MenuPrim orig impl where
-  runOp _ _ menu_ menu_item =
+instance (Parent a MenuItem, impl ~ (Ref a -> IO (Maybe String))) => Op (ItemPathname ()) MenuPrim orig impl where
+  runOp _ _ menu_ menu_item' =
     withRef menu_ $
     \ menu_Ref ->
-     allocaBytes oneKb
-     (\ptr -> do
-         retVal' <- case menu_item of
-               Just menu_item' ->
-                 withRef menu_item' $ \ menu_item'Ref -> do
-                   itemPathnameWithFinditem' menu_Ref (castPtr ptr) oneKb menu_item'Ref
-               Nothing -> itemPathname' menu_Ref (castPtr ptr) oneKb
-         if (retVal' == -1)
-           then return Nothing
-           else (peekCString (castPtr ptr) >>= return . Just)
-     )
+     allocaBytes oneKb $ \ptr -> do
+       retVal' <- withRef menu_item' $ \ menu_item'Ref -> itemPathnameWithFinditem' menu_Ref (castPtr ptr) oneKb menu_item'Ref
+       if (retVal' == -1)
+         then return Nothing
+         else do
+           b' <- C.packCString (castPtr ptr)
+           return $ Just (C.unpack b')
+instance (impl ~ (IO (Maybe String))) => Op (ItemPathnameRecent ()) MenuPrim orig impl where
+  runOp _ _ menu_ =
+    withRef menu_ $ \menu_Ptr ->
+    allocaBytes oneKb $ \pathPtr -> do
+      retVal' <- itemPathname' menu_Ptr (castPtr pathPtr) oneKb
+      if (retVal' == -1)
+        then return Nothing
+        else do
+          b' <- C.packCString (castPtr pathPtr)
+          return $ Just (C.unpack b')
 
 {# fun unsafe Fl_Menu__picked as picked' { id `Ptr ()',id `Ptr ()' } -> `Ptr ()' id #}
 instance (Parent a MenuItem, Parent b MenuItem, impl ~ (Ref a -> IO (Ref b))) => Op (Picked ()) MenuPrim orig impl where

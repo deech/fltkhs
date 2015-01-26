@@ -15,6 +15,7 @@ import Graphics.UI.FLTK.LowLevel.Fl_Types
 import Graphics.UI.FLTK.LowLevel.Utils
 import Graphics.UI.FLTK.LowLevel.Hierarchy
 import Graphics.UI.FLTK.LowLevel.Dispatch
+import qualified Data.ByteString.Char8 as C
 
 {# fun Fl_Tree_New as treeNew' { `Int',`Int',`Int',`Int' } -> `Ptr ()' id #}
 {# fun Fl_Tree_New_WithLabel as treeNewWithLabel' { `Int',`Int',`Int',`Int',`String'} -> `Ptr ()' id #}
@@ -49,11 +50,13 @@ instance (impl ~ ( IO (Maybe (Ref TreeItem))) ) => Op (Root ()) Tree orig impl w
   runOp _ _  tree = withRef tree $ \treePtr -> root' treePtr >>= toMaybeRef
 {# fun unsafe Fl_Tree_add as add' { id `Ptr ()',`String' } -> `Ptr ()' id #}
 {# fun unsafe Fl_Tree_add_with_item_name as addWithItemName' { id `Ptr ()',id `Ptr ()',`String' } -> `Ptr ()' id #}
-instance (Parent a TreeItem, impl ~ (String ->  Maybe (Ref a) -> IO (Maybe (Ref a)))) => Op (Add ()) Tree orig impl where
-  runOp _ _  tree path' item' = withRef tree $ \treePtr ->
-    case item' of
-      Just i' -> withRef i' $ \i'Ptr -> addWithItemName' treePtr i'Ptr path' >>= toMaybeRef
-      Nothing -> add' treePtr path' >>= toMaybeRef
+instance (impl ~ (String ->  IO (Maybe (Ref TreeItem)))) => Op (Add ()) Tree orig impl where
+  runOp _ _  tree path' = withRef tree $ \treePtr -> add' treePtr path' >>= toMaybeRef
+instance (Parent a TreeItem, impl ~ (String -> Ref a -> IO (Maybe (Ref TreeItem)))) => Op (AddAt ()) Tree orig impl where
+  runOp _ _ tree path' item' =
+    withRef tree  $ \treePtr ->
+    withRef item' $ \itemPtr ->
+    addWithItemName' treePtr itemPtr path' >>= toMaybeRef
 {# fun unsafe Fl_Tree_insert_above as insertAbove' { id `Ptr ()',id `Ptr ()',`String' } -> `Ptr ()' id #}
 instance (Parent a TreeItem, impl ~ (Ref a -> String ->  IO (Maybe (Ref a)))) => Op (InsertAbove ()) Tree orig impl where
   runOp _ _  tree above name = withRef tree $ \treePtr -> withRef above $ \abovePtr -> insertAbove' treePtr abovePtr name >>= toMaybeRef
@@ -80,10 +83,12 @@ instance (Parent a TreeItem, impl ~ (Ref a ->  IO (Maybe String)) ) => Op (ItemP
     withRef tree $ \treePtr ->
     withRef item $ \itemPtr ->
     allocaBytes oneKb $ \pathPtr -> do
-    retVal' <- itemPathname' treePtr itemPtr oneKb pathPtr
+    retVal' <- itemPathname' treePtr pathPtr oneKb itemPtr
     if retVal' < 0
       then return Nothing
-      else (peekCString (castPtr pathPtr) >>= return . Just)
+      else do
+       b' <- C.packCString (castPtr pathPtr)
+       return $ Just (C.unpack b')
 {# fun unsafe Fl_Tree_item_clicked as itemClicked' { id `Ptr ()' } -> `Ptr ()' id #}
 instance (impl ~ ( IO (Maybe (Ref TreeItem))) ) => Op (ItemClicked ()) Tree orig impl where
   runOp _ _ tree = withRef tree $ \treePtr -> itemClicked' treePtr >>= toMaybeRef
@@ -239,13 +244,13 @@ instance (impl ~ (TreeItemLocator ->  IO (Bool)) ) => Op (IsSelectedWithItem ())
 {# fun unsafe Fl_Tree_item_labelfont as itemLabelfont' { id `Ptr ()' } -> `Font' cToFont #}
 instance (impl ~ ( IO (Font)) ) => Op (GetItemLabelfont ()) Tree orig impl where
   runOp _ _ tree = withRef tree $ \treePtr -> itemLabelfont' treePtr
-{# fun unsafe Fl_Tree_item_set_labelfont as itemSetLabelfont' { id `Ptr ()',cFromFont `Font' } -> `()' #}
+{# fun unsafe Fl_Tree_set_item_labelfont as itemSetLabelfont' { id `Ptr ()',cFromFont `Font' } -> `()' #}
 instance (impl ~ (Font ->  IO ()) ) => Op (SetItemLabelfont ()) Tree orig impl where
   runOp _ _ tree val = withRef tree $ \treePtr -> itemSetLabelfont' treePtr val
 {# fun unsafe Fl_Tree_item_labelsize as itemLabelsize' { id `Ptr ()' } -> `CInt' id #}
 instance (impl ~ ( IO (FontSize)) ) => Op (GetItemLabelsize ()) Tree orig impl where
   runOp _ _ tree = withRef tree $ \treePtr -> itemLabelsize' treePtr >>= return . FontSize
-{# fun unsafe Fl_Tree_item_set_labelsize as itemSetLabelsize' { id `Ptr ()', id `CInt' } -> `()' #}
+{# fun unsafe Fl_Tree_set_item_labelsize as itemSetLabelsize' { id `Ptr ()', id `CInt' } -> `()' #}
 instance (impl ~ (FontSize ->  IO ()) ) => Op (SetItemLabelsize ()) Tree orig impl where
   runOp _ _ tree (FontSize val) = withRef tree $ \treePtr -> itemSetLabelsize' treePtr val
 {# fun unsafe Fl_Tree_item_labelfgcolor as itemLabelfgcolor' { id `Ptr ()' } -> `Color' cToColor #}
@@ -332,11 +337,11 @@ instance (impl ~ ( IO (Int)) ) => Op (GetShowcollapse ()) Tree orig impl where
 {# fun unsafe Fl_Tree_set_showcollapse as setShowcollapse' { id `Ptr ()',`Int' } -> `()' #}
 instance (impl ~ (Int ->  IO ()) ) => Op (SetShowcollapse ()) Tree orig impl where
   runOp _ _ tree val = withRef tree $ \treePtr -> setShowcollapse' treePtr val
-{# fun unsafe Fl_Tree_showroot as showroot' { id `Ptr ()' } -> `Int' #}
-instance (impl ~ ( IO (Int)) ) => Op (GetShowroot ()) Tree orig impl where
+{# fun unsafe Fl_Tree_showroot as showroot' { id `Ptr ()' } -> `Bool' cToBool #}
+instance (impl ~ ( IO (Bool)) ) => Op (GetShowroot ()) Tree orig impl where
   runOp _ _ tree = withRef tree $ \treePtr -> showroot' treePtr
-{# fun unsafe Fl_Tree_set_showroot as setShowroot' { id `Ptr ()',`Int' } -> `()' #}
-instance (impl ~ (Int ->  IO ()) ) => Op (SetShowroot ()) Tree orig impl where
+{# fun unsafe Fl_Tree_set_showroot as setShowroot' { id `Ptr ()', cFromBool `Bool' } -> `()' #}
+instance (impl ~ (Bool ->  IO ()) ) => Op (SetShowroot ()) Tree orig impl where
   runOp _ _ tree val = withRef tree $ \treePtr -> setShowroot' treePtr val
 {# fun unsafe Fl_Tree_connectorstyle as connectorstyle' { id `Ptr ()' } -> `TreeConnector' cToEnum #}
 instance (impl ~ ( IO (TreeConnector)) ) => Op (GetConnectorstyle ()) Tree orig impl where
@@ -408,7 +413,7 @@ instance (impl ~ ( IO (Bool)) ) => Op (IsVscrollVisible ()) Tree orig impl where
 instance (Parent a TreeItem, impl ~ (Ref a ->  IO ()) ) => Op (SetCallbackItem ()) Tree orig impl where
   runOp _ _ tree item = withRef tree $ \treePtr -> withRef item $ \itemPtr -> setCallbackItem' treePtr itemPtr
 {# fun unsafe Fl_Tree_callback_item as callbackItem' { id `Ptr ()' } -> `Ptr ()' id #}
-instance (impl ~ ( IO (Maybe (Ref TreeItem))) ) => Op (CallbackItem ()) Tree orig impl where
+instance (impl ~ ( IO (Maybe (Ref TreeItem))) ) => Op (GetCallbackItem ()) Tree orig impl where
   runOp _ _ tree = withRef tree $ \treePtr -> callbackItem' treePtr >>= toMaybeRef
 {# fun unsafe Fl_Tree_set_callback_reason as setCallbackReason' { id `Ptr ()', cFromEnum `TreeReasonType' } -> `()' #}
 instance (impl ~ (TreeReasonType ->  IO ()) ) => Op (SetCallbackReason ()) Tree orig impl where

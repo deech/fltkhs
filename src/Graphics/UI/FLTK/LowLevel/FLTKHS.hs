@@ -58,7 +58,10 @@ module Graphics.UI.FLTK.LowLevel.FLTKHS
          module Graphics.UI.FLTK.LowLevel.Fl_Browser,
          module Graphics.UI.FLTK.LowLevel.Fl_Select_Browser,
          module Graphics.UI.FLTK.LowLevel.Fl_Int_Input,
-         module Graphics.UI.FLTK.LowLevel.Fl_Clock
+         module Graphics.UI.FLTK.LowLevel.Fl_Clock,
+         module Graphics.UI.FLTK.LowLevel.Fl_Tree_Prefs,
+         module Graphics.UI.FLTK.LowLevel.Fl_Tree_Item,
+         module Graphics.UI.FLTK.LowLevel.Fl_Tree
        )
 where
 import Graphics.UI.FLTK.LowLevel.Fl_Gl_Window
@@ -120,3 +123,6 @@ import Graphics.UI.FLTK.LowLevel.Fl_Browser
 import Graphics.UI.FLTK.LowLevel.Fl_Select_Browser
 import Graphics.UI.FLTK.LowLevel.Fl_Int_Input
 import Graphics.UI.FLTK.LowLevel.Fl_Clock
+import Graphics.UI.FLTK.LowLevel.Fl_Tree_Prefs
+import Graphics.UI.FLTK.LowLevel.Fl_Tree_Item
+import Graphics.UI.FLTK.LowLevel.Fl_Tree

@@ -460,6 +460,9 @@ EXPORT {
   FL_EXPORT_C(int,Fl_Tree_deselect_all_with_item)(fl_Tree tree,fl_Tree_Item item){
     return (static_cast<Fl_Tree*>(tree))->deselect_all((static_cast<Fl_Tree_Item*>(item)),1);
   }
+  FL_EXPORT_C(fl_Tree_Item, Fl_Tree_insert)(fl_Tree tree,fl_Tree_Item item, const char *name, int pos){
+    return (static_cast<Fl_Tree*>(tree))->insert((static_cast<Fl_Tree_Item*>(item)), name, pos);
+  }
   FL_EXPORT_C(int,Fl_Tree_deselect_all_with_docallback)(fl_Tree tree,int docallback){
     return (static_cast<Fl_Tree*>(tree))->deselect_all(0,docallback);
   }
@@ -490,13 +493,13 @@ EXPORT {
   FL_EXPORT_C(int,Fl_Tree_is_selected_with_path)(fl_Tree tree,const char *path){
     return (static_cast<Fl_Tree*>(tree))->is_selected(path);
   }
-  FL_EXPORT_C(Fl_Font,Fl_Tree_labelfont)(fl_Tree tree){
+  FL_EXPORT_C(Fl_Font,Fl_Tree_item_labelfont)(fl_Tree tree){
     return (static_cast<Fl_Tree*>(tree))->labelfont();
   }
   FL_EXPORT_C(void,Fl_Tree_set_item_labelfont)(fl_Tree tree,Fl_Font val){
     return (static_cast<Fl_Tree*>(tree))->item_labelfont(val);
   }
-  FL_EXPORT_C(Fl_Fontsize,Fl_Tree_labelsize)(fl_Tree tree){
+  FL_EXPORT_C(Fl_Fontsize,Fl_Tree_item_labelsize)(fl_Tree tree){
     return (static_cast<Fl_Tree*>(tree))->labelsize();
   }
   FL_EXPORT_C(void,Fl_Tree_set_item_labelsize)(fl_Tree tree,Fl_Fontsize val){

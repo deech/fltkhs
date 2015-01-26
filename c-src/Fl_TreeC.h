@@ -178,10 +178,6 @@ EXPORT {
   FL_EXPORT_C(fl_Tree_Item, Fl_Tree_get_item_focus)(fl_Tree tree);
   FL_EXPORT_C(int, Fl_Tree_is_selected_with_item)(fl_Tree tree,fl_Tree_Item item);
   FL_EXPORT_C(int, Fl_Tree_is_selected_with_path)(fl_Tree tree,const char *path);
-  FL_EXPORT_C(Fl_Font    , Fl_Tree_item_labelfont)(fl_Tree tree);
-  FL_EXPORT_C(void       , Fl_Tree_item_set_labelfont)(fl_Tree tree,Fl_Font val);
-  FL_EXPORT_C(Fl_Fontsize, Fl_Tree_item_labelsize)(fl_Tree tree);
-  FL_EXPORT_C(void       , Fl_Tree_item_set_labelsize)(fl_Tree tree,Fl_Fontsize val);
   FL_EXPORT_C(Fl_Color   , Fl_Tree_item_labelfgcolor)(fl_Tree tree);
   FL_EXPORT_C(void       , Fl_Tree_set_item_labelfgcolor)(fl_Tree tree,Fl_Color val);
   FL_EXPORT_C(Fl_Color   , Fl_Tree_item_labelbgcolor)(fl_Tree tree);

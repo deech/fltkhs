@@ -265,6 +265,24 @@ EXPORT {
   FL_EXPORT_C(int,Fl_Tree_Item_deselect_all)(fl_Tree_Item tree_item){
     return (static_cast<Fl_Tree_Item*>(tree_item))->deselect_all();
   }
+  FL_EXPORT_C(void, Fl_Tree_Item_deselect)(fl_Tree_Item tree_item) {
+    return (static_cast<Fl_Tree_Item*>(tree_item))->deselect();
+  }
+  FL_EXPORT_C(fl_Tree_Item, Fl_Tree_Item_insert_above)(fl_Tree_Item tree_item,  fl_Tree_Prefs prefs,  char *new_label) {
+    Fl_Tree_Prefs* casted = static_cast<Fl_Tree_Prefs*>(prefs);
+    return (static_cast<Fl_Tree_Item*>(tree_item))->insert_above((static_cast<Fl_Tree_Prefs&>(*casted)), new_label);
+  }
+  FL_EXPORT_C(fl_Tree_Item, Fl_Tree_Item_insert)(fl_Tree_Item tree_item,  fl_Tree_Prefs prefs,  char* new_label) {
+    Fl_Tree_Prefs* casted = static_cast<Fl_Tree_Prefs*>(prefs);
+    return (static_cast<Fl_Tree_Item*>(tree_item))->insert((static_cast<Fl_Tree_Prefs&>(*casted)), new_label);
+  }
+  FL_EXPORT_C(fl_Tree_Item, Fl_Tree_Item_insert_with_pos)(fl_Tree_Item tree_item,  fl_Tree_Prefs prefs,  char *new_label, int pos){
+    Fl_Tree_Prefs* casted = static_cast<Fl_Tree_Prefs*>(prefs);
+    return (static_cast<Fl_Tree_Item*>(tree_item))->insert((static_cast<Fl_Tree_Prefs&>(*casted)), new_label, pos);
+  }
+  FL_EXPORT_C(fl_Tree_Item, Fl_Tree_Item_find_child_item)(fl_Tree_Item tree_item, char** arr) {
+    return (static_cast<Fl_Tree_Item*>(tree_item))->find_child_item(arr);
+  }
   FL_EXPORT_C(int,Fl_Tree_Item_select_all)(fl_Tree_Item tree_item){
     return (static_cast<Fl_Tree_Item*>(tree_item))->select_all();
   }
