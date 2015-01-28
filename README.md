@@ -1,6 +1,8 @@
 Fltkhs - A Haskell Binding to the FLTK GUI Library
 =============================================
 
+[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/deech/fltkhs?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 Fltkhs aims to be a complete Haskell binding to the [FLTK GUI library] [1].
 
 It also comes with the requisite C-wrappers around FLTK. These wrappers will be published as independent library but for now they are bundled because the API is not yet suitable for C programmers.
