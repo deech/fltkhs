@@ -64,12 +64,13 @@ fillCustomWindowFunctionStruct structPtr (CustomWindowFuncs _flush') =
 defaultCustomWindowFuncs :: forall a. (Parent a Window) => CustomWindowFuncs a
 defaultCustomWindowFuncs = CustomWindowFuncs Nothing
 
+{# fun unsafe Fl_Window_default_virtual_funcs as virtualFuncs' {} -> `Ptr ()' id #}
 windowMaker :: forall a b. (Parent a Window, Parent b Widget) =>
                Size ->
                Maybe Position ->
                Maybe String ->
-               Maybe ( CustomWidgetFuncs b ) ->
-               Maybe ( CustomWindowFuncs a ) ->
+               CustomWidgetFuncs b ->
+               CustomWindowFuncs a ->
                (Int -> Int -> IO (Ptr ())) ->
                (Int -> Int -> String -> IO (Ptr ())) ->
                (Int -> Int -> Int -> Int -> IO (Ptr ())) ->
@@ -92,21 +93,11 @@ windowMaker (Size (Width w) (Height h))
             customWithLabel'
             customXY'
             customXYWithLabel' =
-    case (position, title, customWidgetFuncs', customWindowFuncs') of
-     (Nothing,Nothing,Nothing,Nothing) -> new' w h >>= toRef
-     (Just (Position (X x) (Y y)), Nothing, Nothing, Nothing) ->  newXY' x y w h >>= toRef
-     (Just (Position (X x) (Y y)), (Just l'), Nothing, Nothing) -> newXYWithLabel' x y w h l' >>= toRef
-     (Nothing, (Just l'), Nothing, Nothing) -> newWithLabel' w h l' >>= toRef
-     (_position, _title, widgetFuncs', windowFuncs') -> do
-       p <- mallocBytes {#sizeof fl_Window_Virtual_Funcs #}
-       case (widgetFuncs', windowFuncs') of
-        (Just widgetfs, Just windowfs) -> do
-          fillCustomWidgetFunctionStruct p widgetfs
-          fillCustomWindowFunctionStruct p windowfs
-        (Just widgetfs, Nothing) -> fillCustomWidgetFunctionStruct p widgetfs
-        (Nothing, Just windowfs) -> fillCustomWindowFunctionStruct p windowfs
-        (Nothing, Nothing) -> return ()
-       case (_position, _title) of
+     do
+       p <- virtualFuncs'
+       fillCustomWidgetFunctionStruct p customWidgetFuncs'
+       fillCustomWindowFunctionStruct p customWindowFuncs'
+       case (position, title) of
         (Nothing, Nothing) -> custom' w h p >>= toRef
         (Just (Position (X x) (Y y)), Nothing) -> customXY' x y w h p >>= toRef
         (Just (Position (X x) (Y y)), (Just l')) -> customXYWithLabel' x y w h l' p >>= toRef
@@ -123,8 +114,8 @@ windowMaker (Size (Width w) (Height h))
 windowCustom :: Size ->
                 Maybe Position ->
                 Maybe String ->
-                Maybe (CustomWidgetFuncs Window) ->
-                Maybe (CustomWindowFuncs Window) ->
+                CustomWidgetFuncs Window ->
+                CustomWindowFuncs Window ->
                 IO (Ref Window)
 windowCustom size position title customWidgetFuncs' customWindowFuncs' =
   windowMaker
@@ -151,8 +142,8 @@ windowNew size position title =
     size
     position
     title
-    (Nothing :: (Maybe (CustomWidgetFuncs Window)))
-    (Nothing :: (Maybe (CustomWindowFuncs Window)))
+    (defaultCustomWidgetFuncs :: CustomWidgetFuncs Window)
+    (defaultCustomWindowFuncs :: CustomWindowFuncs Window)
     windowNew'
     windowNewWithLabel'
     windowNewXY'

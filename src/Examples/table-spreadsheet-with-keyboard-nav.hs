@@ -123,8 +123,8 @@ setColsCb table' slider' = setBySlider slider' table' setCols
 setRowsCb :: Ref Table -> Ref ValueSlider -> IO ()
 setRowsCb table' slider' = setBySlider slider' table' setRows
 
-drawCell :: IORef SpreadsheetProperties -> Ref IntInput -> Ref Table -> TableContext -> Int -> Int -> Rectangle -> IO ()
-drawCell props' intInput' table' context' row' col' rectangle' = do
+drawCell :: IORef SpreadsheetProperties -> Ref IntInput -> Ref Table -> TableContext -> TableCoordinate -> Rectangle -> IO ()
+drawCell props' intInput' table' context' (TableCoordinate (Row row') (Column col')) rectangle' = do
   _p <- readIORef props'
   numRows' <- getRows table'
   numCols' <- getCols table'
@@ -161,7 +161,7 @@ drawCell props' intInput' table' context' row' col' rectangle' = do
               then flcDrawBox ThinUpBox rectangle' yellowColor
               else if (col' < numCols' - 1 && row' < numRows' - 1)
                    then do
-                     selected' <- isSelected table' row' col'
+                     selected' <- isSelected table' (TableCoordinate (Row row') (Column col'))
                      flcDrawBox ThinUpBox rectangle' (if selected' then yellowColor else whiteColor)
                    else flcDrawBox ThinUpBox rectangle' (Color 0xbbddbb00)
             flcPushClip rectangle'

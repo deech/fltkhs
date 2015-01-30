@@ -57,8 +57,8 @@ drawSortArrow (Rectangle (Position (X x') (Y y')) (Size (Width w') (Height h')))
      flcSetColorWithC 41
      flcLine (Position (X xlft) (Y ybot)) (Position (X xctr) (Y ytop))
 
-drawCell ::  TableState -> Ref TableRow -> TableContext -> Int -> Int -> Rectangle -> IO ()
-drawCell tableState table tc row' col' rectangle' =
+drawCell ::  TableState -> Ref TableRow -> TableContext -> TableCoordinate -> Rectangle -> IO ()
+drawCell tableState table tc (TableCoordinate (Row row') (Column col')) rectangle' =
   let (x',y',w',h') = fromRectangle rectangle'
   in do
     sortReverse' <- readIORef (sortReverse tableState)

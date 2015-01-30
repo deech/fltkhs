@@ -29,8 +29,8 @@ drawData table s rectangle = do
   color' <- getColor table
   flcSetColor color' >> flcRect rectangle
   flcPopClip
-drawCell :: Ref Table -> TableContext -> Int -> Int -> Rectangle -> IO ()
-drawCell table context row col rectangle = do
+drawCell :: Ref Table -> TableContext -> TableCoordinate -> Rectangle -> IO ()
+drawCell table context (TableCoordinate (Row row) (Column col)) rectangle = do
   case context of
    ContextStartPage -> flcSetFont helvetica (FontSize 16)
    ContextColHeader ->

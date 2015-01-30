@@ -31,8 +31,8 @@ import C2HS hiding (cFromEnum, toBool,cToEnum)
 glWindowCustom :: Size ->
                   Maybe Position ->
                   Maybe String ->
-                  Maybe (CustomWidgetFuncs GlWindow) ->
-                  Maybe (CustomWindowFuncs GlWindow) ->
+                  CustomWidgetFuncs GlWindow ->
+                  CustomWindowFuncs GlWindow ->
                   IO (Ref GlWindow)
 glWindowCustom size position title customWidgetFuncs' customWindowFuncs' =
   windowMaker
@@ -52,14 +52,14 @@ glWindowCustom size position title customWidgetFuncs' customWindowFuncs' =
 glWindowNew :: Size ->
              Maybe Position ->
              Maybe String ->
-             IO (Ref Window)
+             IO (Ref GlWindow)
 glWindowNew size position title =
   windowMaker
     size
     position
     title
-    (Nothing :: (Maybe (CustomWidgetFuncs Window)))
-    (Nothing :: (Maybe (CustomWindowFuncs Window)))
+    (defaultCustomWidgetFuncs :: CustomWidgetFuncs GlWindow)
+    (defaultCustomWindowFuncs :: CustomWindowFuncs GlWindow)
     windowNew'
     windowNewWithLabel'
     windowNewXY'

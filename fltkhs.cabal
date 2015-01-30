@@ -39,6 +39,7 @@ library
                    Graphics.UI.FLTK.LowLevel.Fl_Clock
                    Graphics.UI.FLTK.LowLevel.Fl_Valuator
                    Graphics.UI.FLTK.LowLevel.Fl_Slider
+                   Graphics.UI.FLTK.LowLevel.Fl_Hor_Slider
                    Graphics.UI.FLTK.LowLevel.Fl_Fill_Slider
                    Graphics.UI.FLTK.LowLevel.Fl_Hor_Fill_Slider
                    Graphics.UI.FLTK.LowLevel.Fl_Hor_Nice_Slider
@@ -89,7 +90,29 @@ library
   include-dirs: ./c-src, ./
   default-extensions: GADTs
   default-language: Haskell2010
-  ghc-options: -Wall -fcontext-stack=220
+  ghc-options: -Wall -threaded -fcontext-stack=220
+
+Executable doublebuffer
+  Main-Is: doublebuffer.hs
+  Hs-Source-Dirs: src/Examples
+  Build-Depends: base,fltkhs
+  default-language: Haskell2010
+  ghc-Options: -Wall -threaded -fcontext-stack=220
+  if os(linux)
+     ghc-Options: -pgml g++ "-optl-Wl,--whole-archive" "-optl-Wl,-Bstatic" "-optl-Wl,-lfltkc" "-optl-Wl,-Bdynamic" "-optl-Wl,--no-whole-archive"
+  else
+     ghc-Options:
+
+Executable make-tree
+  Main-Is: make-tree.hs
+  Hs-Source-Dirs: src/Examples
+  Build-Depends: base,fltkhs
+  default-language: Haskell2010
+  ghc-Options: -Wall -threaded -fcontext-stack=220
+  if os(linux)
+     ghc-Options: -pgml g++ "-optl-Wl,--whole-archive" "-optl-Wl,-Bstatic" "-optl-Wl,-lfltkc" "-optl-Wl,-Bdynamic" "-optl-Wl,--no-whole-archive"
+  else
+     ghc-Options:
 
 Executable tree-simple
   Main-Is: tree-simple.hs

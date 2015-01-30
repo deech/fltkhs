@@ -177,6 +177,14 @@ module Graphics.UI.FLTK.LowLevel.Hierarchy
          drawFocus,
          -- * Group
          Group,
+         DrawChild,
+         drawChild,
+         DrawChildren,
+         drawChildren,
+         DrawOutsideLabel,
+         drawOutsideLabel,
+         UpdateChild,
+         updateChild,
          Begin,
          begin,
          End,
@@ -363,8 +371,8 @@ module Graphics.UI.FLTK.LowLevel.Hierarchy
          getMaximum,
          SetMaximum,
          setMaximum,
-         GetRange,
-         getRange,
+         Range,
+         range,
          SetStep,
          setStep,
          GetStep,
@@ -1525,30 +1533,45 @@ data CGroup parent
 type Group = CGroup Widget
 type GroupFuncs =
   (Destroy
-               (Begin
-               (End
-               (Find
-               (Add
-               (Insert
-               (RemoveIndex
-               (RemoveWidget
-               (Clear
-               (SetResizable
-               (GetResizable
-               (AddResizable
-               (InitSizes
-               (Children
-               (SetClipChildren
-               (ClipChildren
-               (Focus
-               (DdfdesignKludge
-               (InsertWithBefore
-               (GetArray
-               (GetChild
-               ())))))))))))))))))))))
+  (DrawChild
+  (DrawChildren
+  (DrawOutsideLabel
+  (UpdateChild
+  (Begin
+  (End
+  (Find
+  (Add
+  (Insert
+  (RemoveIndex
+  (RemoveWidget
+  (Clear
+  (SetResizable
+  (GetResizable
+  (AddResizable
+  (InitSizes
+  (Children
+  (SetClipChildren
+  (ClipChildren
+  (Focus
+  (DdfdesignKludge
+  (InsertWithBefore
+  (GetArray
+  (GetChild
+  ())))))))))))))))))))))))))
 instance Functions Group GroupFuncs
 
-
+data DrawChild a
+drawChild :: (FindOp a (DrawChild ()) (Match r), Op (DrawChild ()) r a impl) => Ref a -> impl
+drawChild = dispatch (undefined :: DrawChild ())
+data DrawChildren a
+drawChildren :: (FindOp a (DrawChildren ()) (Match r), Op (DrawChildren ()) r a impl) => Ref a -> impl
+drawChildren = dispatch (undefined :: DrawChildren ())
+data DrawOutsideLabel a
+drawOutsideLabel :: (FindOp a (DrawOutsideLabel ()) (Match r), Op (DrawOutsideLabel ()) r a impl) => Ref a -> impl
+drawOutsideLabel = dispatch (undefined :: DrawOutsideLabel ())
+data UpdateChild a
+updateChild :: (FindOp a (UpdateChild ()) (Match r), Op (UpdateChild ()) r a impl) => Ref a -> impl
+updateChild = dispatch (undefined :: UpdateChild ())
 data Begin a
 begin :: (FindOp a (Begin ()) (Match r), Op (Begin ()) r a impl) => Ref a -> impl
 begin = dispatch (undefined :: Begin ())
@@ -1970,7 +1993,7 @@ type ValuatorFuncs =
   (SetMinimum
   (GetMaximum
   (SetMaximum
-  (GetRange
+  (Range
   (SetStep
   (GetStep
   (Precision
@@ -1998,9 +2021,9 @@ getMaximum = dispatch (undefined :: GetMaximum())
 data SetMaximum a
 setMaximum :: (FindOp a (SetMaximum ()) (Match r), Op (SetMaximum ()) r a impl) => Ref a -> impl
 setMaximum = dispatch (undefined :: SetMaximum())
-data GetRange a
-getRange :: (FindOp a (GetRange ()) (Match r), Op (GetRange ()) r a impl) => Ref a -> impl
-getRange = dispatch (undefined :: GetRange())
+data Range a
+range :: (FindOp a (Range ()) (Match r), Op (Range ()) r a impl) => Ref a -> impl
+range = dispatch (undefined :: Range())
 data SetStep a
 setStep :: (FindOp a (SetStep ()) (Match r), Op (SetStep ()) r a impl) => Ref a -> impl
 setStep = dispatch (undefined :: SetStep())
@@ -3419,6 +3442,7 @@ data CTreePrefs parent
 type TreePrefs = CTreePrefs Base
 type TreePrefsFuncs =
   (GetItemLabelfont
+  (SetItemLabelfont
   (GetItemLabelsize
   (SetItemLabelsize
   (SetItemLabelfgcolor
@@ -3466,7 +3490,7 @@ type TreePrefsFuncs =
   (SetShowroot
   (GetSelectmode
   (SetSelectmode
-  ()))))))))))))))))))))))))))))))))))))))))))))))))
+  ())))))))))))))))))))))))))))))))))))))))))))))))))
 instance Functions TreePrefs TreePrefsFuncs
 
 data GetItemLabelfont a

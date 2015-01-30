@@ -133,14 +133,14 @@ fillCustomWidgetFunctionStruct structPtr (CustomWidgetFuncs _draw' _handle' _res
       toCallbackPrim `orNullFunPtr` _show'       >>= {#set fl_Widget_Virtual_Funcs->show#} structPtr
       toCallbackPrim `orNullFunPtr` _hide'       >>= {#set fl_Widget_Virtual_Funcs->hide#} structPtr
 
+{# fun unsafe Fl_Widget_default_virtual_funcs as virtualFuncs' {} -> `Ptr ()' id #}
 customWidgetFunctionStruct :: forall a. (Parent a Widget) =>
                               CustomWidgetFuncs a ->
                               IO (Ptr ())
 customWidgetFunctionStruct customWidgetFuncs' = do
-  p <- mallocBytes {#sizeof fl_Widget_Virtual_Funcs #}
+  p <- virtualFuncs'
   fillCustomWidgetFunctionStruct p customWidgetFuncs'
   return p
-
 
 defaultCustomWidgetFuncs :: forall a. (Parent a Widget) => CustomWidgetFuncs a
 defaultCustomWidgetFuncs = CustomWidgetFuncs

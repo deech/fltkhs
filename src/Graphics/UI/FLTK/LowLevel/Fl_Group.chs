@@ -30,6 +30,23 @@ groupNew rectangle label' =
 instance (impl ~ ( IO ())) => Op (Destroy ()) Group orig impl where
   runOp _ _ group = withRef group $ \groupPtr -> groupDestroy' groupPtr
 
+
+{# fun unsafe Fl_Group_draw_child as drawChild' { id `Ptr ()',id `Ptr ()' } -> `()' #}
+instance (Parent a Widget, impl ~ (Ref a -> IO ())) => Op (DrawChild ()) Group orig impl where
+  runOp _ _ group widget = withRef group $ \groupPtr -> withRef widget $ \widgetPtr -> drawChild' groupPtr widgetPtr
+
+{# fun unsafe Fl_Group_draw_children as drawChildren' { id `Ptr ()' } -> `()' #}
+instance (impl ~ (IO ())) => Op (DrawChildren ()) Group orig impl where
+  runOp _ _ group = withRef group $ \groupPtr -> drawChildren' groupPtr
+
+{# fun unsafe Fl_Group_draw_outside_label as drawOutsideLabel' { id `Ptr ()',id `Ptr ()' } -> `()' #}
+instance (Parent a Widget, impl ~ (Ref a -> IO ())) => Op (DrawOutsideLabel ()) Group orig impl where
+  runOp _ _ group widget = withRef group $ \groupPtr -> withRef widget $ \widgetPtr -> drawOutsideLabel' groupPtr widgetPtr
+
+{# fun unsafe Fl_Group_update_child as updateChild' { id `Ptr ()',id `Ptr ()' } -> `()' #}
+instance (Parent a Widget, impl ~ (Ref a -> IO ())) => Op (UpdateChild ()) Group orig impl where
+  runOp _ _ group widget = withRef group $ \groupPtr -> withRef widget $ \widgetPtr -> updateChild' groupPtr widgetPtr
+
 {# fun Fl_Group_begin as begin' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
 instance (impl ~ ( IO ())) => Op (Begin ()) Group orig impl where
   runOp _ _ group = withRef group $ \groupPtr -> begin' groupPtr

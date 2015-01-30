@@ -70,9 +70,11 @@ data ImageFuncs a b =
     imageDesaturateOverride :: Maybe (Ref Image -> IO ()),
     imageUncacheOverride :: Maybe (Ref Image -> IO ())
   }
+
+{# fun unsafe Fl_Image_default_virtual_funcs as virtualFuncs' {} -> `Ptr ()' id #}
 imageFunctionStruct :: (ImageFuncs a b) -> IO (Ptr ())
 imageFunctionStruct funcs = do
-  p <- mallocBytes {# sizeof fl_Image_Virtual_Funcs #}
+  p <- virtualFuncs'
   toImageDrawCallbackPrim `orNullFunPtr` (imageDrawOverride funcs) >>=
                             {# set fl_Image_Virtual_Funcs->draw #} p
   toColorAverageCallbackPrim `orNullFunPtr` (imageColorAverageOverride funcs) >>=

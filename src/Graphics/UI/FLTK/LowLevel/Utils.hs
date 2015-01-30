@@ -90,12 +90,6 @@ toDrawCallback f = mkDrawCallbackPrimPtr
                       f str' (Position (X (fromIntegral x')) (Y (fromIntegral y'))))
 
 
-runPointerF :: (Ref a -> IO (Ref b)) -> Ptr () -> String -> IO (Ptr c)
-runPointerF f ptr msg = do
-   pp <- wrapNonNull ptr msg
-   result <- f (wrapInRef pp)
-   withRef result (return . castPtr)
-
 toBoxDrawF :: BoxDrawFPrim -> BoxDrawF
 toBoxDrawF boxDrawPrim =
     (\r c ->

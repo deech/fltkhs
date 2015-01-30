@@ -28,7 +28,7 @@ import C2HS hiding (cFromEnum, toBool,cToEnum)
 {# fun Fl_OverriddenDouble_Window_NewXY as overriddenWindowNewXY' {`Int',`Int', `Int', `Int', id `Ptr ()'} -> `Ptr ()' id #}
 {# fun Fl_OverriddenDouble_Window_NewXY_WithLabel as overriddenWindowNewXYWithLabel' { `Int',`Int',`Int',`Int',`String', id `Ptr ()'} -> `Ptr ()' id #}
 {# fun Fl_OverriddenDouble_Window_New_WithLabel as overriddenWindowNewWithLabel' { `Int',`Int', `String', id `Ptr ()'} -> `Ptr ()' id #}
-doubleWindowCustom :: Size -> Maybe Position -> Maybe String -> Maybe (CustomWidgetFuncs DoubleWindow) -> Maybe (CustomWindowFuncs DoubleWindow) -> IO (Ref DoubleWindow)
+doubleWindowCustom :: Size -> Maybe Position -> Maybe String -> CustomWidgetFuncs DoubleWindow -> CustomWindowFuncs DoubleWindow -> IO (Ref DoubleWindow)
 doubleWindowCustom size position title customWidgetFuncs' customWindowFuncs' =
   windowMaker
     size
@@ -51,8 +51,8 @@ doubleWindowNew size position title =
     size
     position
     title
-    (Nothing :: (Maybe (CustomWidgetFuncs DoubleWindow)))
-    (Nothing :: (Maybe (CustomWindowFuncs DoubleWindow)))
+    (defaultCustomWidgetFuncs :: CustomWidgetFuncs DoubleWindow)
+    (defaultCustomWindowFuncs :: CustomWindowFuncs DoubleWindow)
     windowNew'
     windowNewWithLabel'
     windowNewXY'

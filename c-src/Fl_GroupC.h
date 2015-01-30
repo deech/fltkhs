@@ -7,6 +7,15 @@
 #include "FL/Fl.H"
 #include "FL/Fl_Group.H"
 #include "Fl_CallbackC.h"
+class Fl_DerivedGroup : public Fl_Group {
+public:
+  void draw_child(Fl_Widget* widget);
+  void draw_children();
+  void draw_outside_label(Fl_Widget* widget);
+  void update_child(Fl_Widget* widget);
+  Fl_DerivedGroup(int X, int Y, int W, int H, const char *l) : Fl_Group(X,Y,W,H,l){};
+  Fl_DerivedGroup(int X, int Y, int W, int H):Fl_Group(X,Y,W,H,0){};
+};
 EXPORT {
 #endif
   /* Inherited from Fl_Widget */
@@ -106,6 +115,10 @@ EXPORT {
   FL_EXPORT_C(void ,   Fl_Group_current)(fl_Group g);
 
   /* Fl_Group specific */
+  FL_EXPORT_C(void,         Fl_Group_draw_child)(fl_Group group, fl_Widget widget);
+  FL_EXPORT_C(void,         Fl_Group_draw_children)(fl_Group group);
+  FL_EXPORT_C(void,         Fl_Group_draw_outside_label)(fl_Group group, fl_Widget widget);
+  FL_EXPORT_C(void,         Fl_Group_update_child)(fl_Group group, fl_Widget widget);
   FL_EXPORT_C(void,         Fl_Group_begin)(fl_Group group);
   FL_EXPORT_C(void,         Fl_Group_end)(fl_Group group);
   FL_EXPORT_C(int,          Fl_Group_find)(fl_Group group, fl_Widget w);
@@ -116,7 +129,7 @@ EXPORT {
   FL_EXPORT_C(void,         Fl_Group_clear)(fl_Group group);
   FL_EXPORT_C(void,         Fl_Group_set_resizable_by_reference)(fl_Group group,fl_Widget o);
   FL_EXPORT_C(void,         Fl_Group_set_resizable)(fl_Group group,fl_Widget o);
-  FL_EXPORT_C(fl_Widget,         Fl_Group_resizable)(fl_Group group);
+  FL_EXPORT_C(fl_Widget,    Fl_Group_resizable)(fl_Group group);
   FL_EXPORT_C(void,         Fl_Group_add_resizable)(fl_Group group,fl_Widget o);
   FL_EXPORT_C(void,         Fl_Group_init_sizes)(fl_Group group);
   FL_EXPORT_C(int,          Fl_Group_children)(fl_Group group);

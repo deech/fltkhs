@@ -54,7 +54,7 @@ toSetIntPrim f =
        f (wrapInRef pp) (fromIntegral num')
     )
 
-toDrawCellPrim :: (Ref a -> TableContext -> Int -> Int -> Rectangle -> IO ()) ->
+toDrawCellPrim :: (Ref a -> TableContext -> TableCoordinate -> Rectangle -> IO ()) ->
                        IO (FunPtr (Ptr () ->
                                    CInt ->
                                    CInt -> CInt ->
@@ -71,13 +71,13 @@ toDrawCellPrim f =
           in
           do
            pp <- wrapNonNull ptr "Null pointer. toDrawCellPrim"
-           f (wrapInRef pp) (toEnum $ fromIntegral context') (fromIntegral row') (fromIntegral col') rectangle
+           f (wrapInRef pp) (toEnum $ fromIntegral context') (TableCoordinate (Row (fromIntegral row')) (Column (fromIntegral col'))) rectangle
      )
 
 data CustomTableFuncs a =
     CustomTableFuncs
     {
-     drawCellCustom   :: Maybe (Ref a -> TableContext -> Int -> Int -> Rectangle -> IO ())
+     drawCellCustom   :: Maybe (Ref a -> TableContext -> TableCoordinate -> Rectangle -> IO ())
     ,clearCustom      :: Maybe (Ref a -> IO ())
     ,setRowsCustom    :: Maybe (Ref a -> Int -> IO ())
     ,setColsCustom    :: Maybe (Ref a -> Int -> IO ())
@@ -96,6 +96,7 @@ fillCustomTableFunctionStruct structPtr (CustomTableFuncs _drawCell' _clear' _se
 defaultCustomTableFuncs :: forall a. (Parent a Table) => CustomTableFuncs a
 defaultCustomTableFuncs = CustomTableFuncs Nothing Nothing Nothing Nothing
 
+{# fun unsafe Fl_Table_default_virtual_funcs as virtualFuncs' {} -> `Ptr ()' id #}
 tableCustomFunctionStruct :: (Parent a Widget,
                               Parent b Table) =>
                              CustomWidgetFuncs a ->
@@ -103,7 +104,7 @@ tableCustomFunctionStruct :: (Parent a Widget,
                              IO (Ptr ())
 tableCustomFunctionStruct customWidgetFuncs' customTableFuncs' =
   do
-   ptr <- mallocBytes {#sizeof fl_Table_Virtual_Funcs #}
+   ptr <- virtualFuncs'
    fillCustomWidgetFunctionStruct ptr customWidgetFuncs'
    fillCustomTableFunctionStruct ptr customTableFuncs'
    return ptr
@@ -246,8 +247,8 @@ instance (impl ~ ( Int ->  IO ())) => Op (SetTopRow ()) Table orig impl where
 instance (impl ~ (  IO (Int))) => Op (GetTopRow ()) Table orig impl where
   runOp _ _ table = withRef table $ \tablePtr -> topRow' tablePtr
 {# fun unsafe Fl_Table_is_selected as isSelected' { id `Ptr ()',`Int',`Int' } -> `Bool' cToBool #}
-instance (impl ~ ( Int -> Int ->  IO Bool)) => Op (IsSelected ()) Table orig impl where
-  runOp _ _ table r c = withRef table $ \tablePtr -> isSelected' tablePtr r c
+instance (impl ~ (TableCoordinate ->  IO Bool)) => Op (IsSelected ()) Table orig impl where
+  runOp _ _ table (TableCoordinate (Row r) (Column c)) = withRef table $ \tablePtr -> isSelected' tablePtr r c
 {# fun unsafe Fl_Table_get_selection as getSelection' { id `Ptr ()',alloca- `Int' peekIntConv*, alloca- `Int' peekIntConv*, alloca- `Int' peekIntConv*, alloca- `Int' peekIntConv*} -> `()' #}
 instance (impl ~ IO (TableCoordinate, TableCoordinate)) => Op (GetSelection ()) Table orig impl where
   runOp _ _ table =

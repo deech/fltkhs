@@ -242,12 +242,12 @@ getAwakeHandler_ =
 display :: String -> IO ()
 display text = withCString text $ \str -> {#call Fl_display as fl_display #} str
 {# fun Fl_visual as visual
-  {cFromEnum `Mode'} -> `Int' #}
+  {cFromEnum `Mode'} -> `Bool' cToBool #}
 #if !defined(__APPLE__)
 {# fun Fl_gl_visual as glVisual
-  {cFromEnum `Mode'} -> `Int' #}
+  {cFromEnum `Mode'} -> `Bool' cToBool #}
 {# fun Fl_gl_visual_with_alist as glVisualWithAlist
-  {cFromEnum `Mode', id `Ptr CInt'} -> `Int' #}
+  {cFromEnum `Mode', id `Ptr CInt'} -> `Bool' cToBool #}
 #endif
 
 ownColormap :: IO ()

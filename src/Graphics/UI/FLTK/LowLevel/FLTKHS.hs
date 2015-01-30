@@ -21,6 +21,7 @@ module Graphics.UI.FLTK.LowLevel.FLTKHS
          module Graphics.UI.FLTK.LowLevel.Fl_Valuator,
          module Graphics.UI.FLTK.LowLevel.Fl_Slider,
          module Graphics.UI.FLTK.LowLevel.Fl_Fill_Slider,
+         module Graphics.UI.FLTK.LowLevel.Fl_Hor_Slider,
          module Graphics.UI.FLTK.LowLevel.Fl_Hor_Fill_Slider,
          module Graphics.UI.FLTK.LowLevel.Fl_Hor_Nice_Slider,
          module Graphics.UI.FLTK.LowLevel.Fl_Hor_Value_Slider,
@@ -84,6 +85,7 @@ import Graphics.UI.FLTK.LowLevel.Fl_Group
 import Graphics.UI.FLTK.LowLevel.Fl_Widget
 import Graphics.UI.FLTK.LowLevel.Fl_Valuator
 import Graphics.UI.FLTK.LowLevel.Fl_Slider
+import Graphics.UI.FLTK.LowLevel.Fl_Hor_Slider
 import Graphics.UI.FLTK.LowLevel.Fl_Fill_Slider
 import Graphics.UI.FLTK.LowLevel.Fl_Hor_Fill_Slider
 import Graphics.UI.FLTK.LowLevel.Fl_Hor_Nice_Slider

@@ -11,7 +11,7 @@ module Graphics.UI.FLTK.LowLevel.Fl_Tree_Item
     MoveType(..),
     SiblingPosition(..),
     TreeItemNotFound(..),
-    newTreeItem
+    treeItemNew
   )
 where
 #include "Fl_ExportMacros.h"
@@ -47,8 +47,8 @@ instance Enum MoveError where
   toEnum (-6) = CouldNotReparent
   toEnum e = error $ "No MoveError found for " ++ (show e)
 {# fun unsafe Fl_Tree_Item_New_WithPrefs as newTreeItem' {id `Ptr ()'} -> `Ptr ()' id #}
-newTreeItem :: Ref TreePrefs -> IO (Ref TreeItem)
-newTreeItem prefs' = withRef prefs' $ \prefs'Ptr -> newTreeItem' prefs'Ptr >>= toRef
+treeItemNew :: Ref TreePrefs -> IO (Ref TreeItem)
+treeItemNew prefs' = withRef prefs' $ \prefs'Ptr -> newTreeItem' prefs'Ptr >>= toRef
 {# fun Fl_Tree_Item_Destroy as destroy' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
 instance (impl ~ (IO ())) => Op (Destroy ()) MenuPrim orig impl where
   runOp _ _ menu_ = swapRef menu_ $ \menu_Ptr -> destroy' menu_Ptr >> return nullPtr

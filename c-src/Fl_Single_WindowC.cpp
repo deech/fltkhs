@@ -143,46 +143,46 @@ void Fl_DerivedSingle_Window::draw(){
   }
 }
 void Fl_DerivedSingle_Window::draw_super(){
-Fl_Single_Window::draw();
+  Fl_Single_Window::draw();
 }
 Fl_Window* Fl_DerivedSingle_Window::as_window(){
-Fl_Window* win;
-if (this->overriddenFuncs->as_window != NULL) {
-win = (static_cast<Fl_Window*>(this->overriddenFuncs->as_window((fl_Window) this)));
-}
-else {
-win = Fl_Single_Window::as_window();
-}
-return win;
+  Fl_Window* win;
+  if (this->overriddenFuncs->as_window != NULL) {
+    win = (static_cast<Fl_Window*>(this->overriddenFuncs->as_window((fl_Window) this)));
+  }
+  else {
+    win = Fl_Single_Window::as_window();
+  }
+  return win;
 }
 Fl_Window* Fl_DerivedSingle_Window::as_window_super(){
-return Fl_Single_Window::as_window();
+  return Fl_Single_Window::as_window();
 }
 Fl_Group* Fl_DerivedSingle_Window::as_group(){
-Fl_Group* grp;
-if (this->overriddenFuncs->as_group != NULL) {
-grp= (static_cast<Fl_Window*>(this->overriddenFuncs->as_group((fl_Window) this)));
-}
-else {
-grp= Fl_Single_Window::as_group();
-}
-return grp;
+  Fl_Group* grp;
+  if (this->overriddenFuncs->as_group != NULL) {
+    grp= (static_cast<Fl_Window*>(this->overriddenFuncs->as_group((fl_Window) this)));
+  }
+  else {
+    grp= Fl_Single_Window::as_group();
+  }
+  return grp;
 }
 Fl_Group* Fl_DerivedSingle_Window::as_group_super(){
-return Fl_Single_Window::as_group();
+  return Fl_Single_Window::as_group();
 }
 Fl_Gl_Window* Fl_DerivedSingle_Window::as_gl_window(){
-Fl_Gl_Window* win;
-if (this->overriddenFuncs->as_gl_window != NULL) {
-win = (static_cast<Fl_Gl_Window*>(this->overriddenFuncs->as_gl_window((fl_Window) this)));
-}
-else {
-win = Fl_Single_Window::as_gl_window();
-}
-return win;
+  Fl_Gl_Window* win;
+  if (this->overriddenFuncs->as_gl_window != NULL) {
+    win = (static_cast<Fl_Gl_Window*>(this->overriddenFuncs->as_gl_window((fl_Window) this)));
+  }
+  else {
+    win = Fl_Single_Window::as_gl_window();
+  }
+  return win;
 }
 Fl_Gl_Window* Fl_DerivedSingle_Window::as_gl_window_super(){
-return Fl_Single_Window::as_gl_window();
+  return Fl_Single_Window::as_gl_window();
 }
 EXPORT {
 #endif

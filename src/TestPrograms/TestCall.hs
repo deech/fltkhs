@@ -30,11 +30,10 @@ addWindow = do
               (Size (Width 100) (Height 100))
               Nothing
               (Just "Test")
-              (Just (defaultCustomWidgetFuncs {
-                        drawCustom = (Just drawOverride)
-                        }
-                    ))
-              (Just defaultCustomWindowFuncs)
+              (defaultCustomWidgetFuncs {
+                  drawCustom = (Just drawOverride)
+                  })
+              defaultCustomWindowFuncs
   button1 <- addButton 10 30 "button 1"
   button2 <- addButton 10 70 "button 2"
   setCallback button1 (\btn -> setLabel btn "New Label")

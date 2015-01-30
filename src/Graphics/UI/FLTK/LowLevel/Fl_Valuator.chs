@@ -68,7 +68,7 @@ instance (impl ~ ( IO (Double))) => Op (GetMaximum ()) Valuator orig impl where
 instance (impl ~ (Double ->  IO ())) => Op (SetMaximum ()) Valuator orig impl where
   runOp _ _ valuator a = withRef valuator $ \valuatorPtr -> setMaximum' valuatorPtr a
 {# fun unsafe Fl_Valuator_range as range' { id `Ptr ()',`Double',`Double' } -> `()' supressWarningAboutRes #}
-instance (impl ~ (Double -> Double ->  IO ())) => Op (GetRange ()) Valuator orig impl where
+instance (impl ~ (Double -> Double ->  IO ())) => Op (Range ()) Valuator orig impl where
   runOp _ _ valuator a b = withRef valuator $ \valuatorPtr -> range' valuatorPtr a b
 {# fun unsafe Fl_Valuator_set_step_with_a_b as setStepWithAB' { id `Ptr ()', `Double', `Int' } -> `()' supressWarningAboutRes #}
 instance (impl ~ (Rational -> IO ())) => Op (SetStep ()) Valuator orig impl where
