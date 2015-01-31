@@ -53,7 +53,7 @@ startEditing props' intInput' table' row' col' = do
   modifyIORef props' (\p' -> p' {rowEdit = row', colEdit = col'})
   _p <- readIORef props'
   setSelection table' (rowEdit _p) (colEdit _p) (rowEdit _p) (colEdit _p)
-  rectangle' <- findCell table' ContextCell (rowEdit _p) (colEdit _p)
+  rectangle' <- findCell table' ContextCell (TableCoordinate (Row (rowEdit _p)) (Column  (colEdit _p)))
   case rectangle' of
     Just rect' -> do
       resize intInput' rect'
@@ -76,8 +76,8 @@ doneEditing props' intInput' table' = do
 eventCallback :: IORef SpreadsheetProperties -> Ref IntInput -> Ref Table -> IO ()
 eventCallback props' intInput' table' = do
   _p <- readIORef props'
-  r' <- callbackRow table'
-  c' <- callbackCol table'
+  (Row r') <- callbackRow table'
+  (Column c') <- callbackCol table'
   context' <- callbackContext table'
   numRows' <- getRows table'
   numCols' <- getCols table'
@@ -190,7 +190,7 @@ drawCell props' intInput' table' context' (TableCoordinate (Row row') (Column co
      if (not visible')
        then return ()
        else do
-         cellRectangle' <- findCell table' ContextTable row' col'
+         cellRectangle' <- findCell table' ContextTable (TableCoordinate (Row row') (Column  col'))
          case cellRectangle' of
            Just cr' -> if (cr' == rectangle')
                        then return ()

@@ -1,6 +1,7 @@
 module Graphics.UI.FLTK.LowLevel.Utils where
 import Graphics.UI.FLTK.LowLevel.Fl_Types
 import Graphics.UI.FLTK.LowLevel.Fl_Enumerations
+import Graphics.UI.FLTK.LowLevel.Dispatch
 import Data.List
 import Foreign
 import qualified Foreign.Concurrent as FC
@@ -32,6 +33,20 @@ foreign import ccall "dynamic"
 foreign import ccall "dynamic"
         unwrapBoxDrawFPrim :: FunPtr BoxDrawFPrim -> BoxDrawFPrim
 
+
+toCallbackPrim :: (Ref a -> IO ()) ->
+                  IO (FunPtr (Ptr () -> IO ()))
+toCallbackPrim f = mkCallbackPtr $ \ptr -> do
+  pp <- wrapNonNull ptr "Null pointer. toCallbackPrim"
+  f (castTo (wrapInRef pp))
+
+
+toCallbackPrimWithUserData :: (Ref a -> IO ()) ->
+                              IO (FunPtr (Ptr () -> Ptr () -> IO ()))
+toCallbackPrimWithUserData f = mkWidgetCallbackPtr $ \ptr _ -> do
+  pp <- wrapNonNull ptr "Null pointer: toWidgetCallbackPrim"
+  f (castTo (wrapInRef pp))
+
 cFromEnum :: (Enum a, Integral b) => a -> b
 cFromEnum = fromIntegral . fromEnum
 cToEnum :: (Integral b, Enum a) => b -> a
@@ -53,7 +68,7 @@ extract allCodes compoundCode
       map cFromEnum allCodes
 
 combine :: (Enum a, Ord a) => [a] -> Int
-combine = sum . map (fromEnum. head) . group . sort
+combine = sum . map (fromEnum . head) . group . sort
 
 masks :: CInt -> CInt -> Bool
 masks compoundCode code = (code .|. compoundCode) /= 0
@@ -196,6 +211,11 @@ alignmentsToInt :: Alignments -> Int
 alignmentsToInt (Alignments aligntypes') = combine aligntypes'
 intToAlignments :: Int -> Alignments
 intToAlignments = Alignments . extract allAlignTypes . fromIntegral
+
+menuItemFlagsToInt :: MenuItemFlags -> Int
+menuItemFlagsToInt (MenuItemFlags menuItemFlags') = combine menuItemFlags'
+intToMenuItemFlags :: Int -> MenuItemFlags
+intToMenuItemFlags = MenuItemFlags . extract allMenuItemFlags . fromIntegral
 
 withByteStrings :: [B.ByteString] -> (Ptr (Ptr CChar) -> IO a) -> IO a
 withByteStrings bs f = B.useAsCString (foldl1 B.append bs) (\ptr -> new ptr >>= f)

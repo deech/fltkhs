@@ -123,8 +123,14 @@ module Graphics.UI.FLTK.LowLevel.Hierarchy
          takesevents,
          SetChanged,
          setChanged,
-         GetClearChanged,
-         getClearChanged,
+         ClearChanged,
+         clearChanged,
+         Changed,
+         changed,
+         SetActive,
+         setActive,
+         ClearActive,
+         clearActive,
          TakeFocus,
          takeFocus,
          SetVisibleFocus,
@@ -233,8 +239,6 @@ module Graphics.UI.FLTK.LowLevel.Hierarchy
          handleSuper,
          FlushSuper,
          flushSuper,
-         Changed,
-         changed,
          MakeFullscreen,
          makeFullscreen,
          FullscreenOff,
@@ -1175,17 +1179,14 @@ import Prelude hiding (round)
 import Graphics.UI.FLTK.LowLevel.Fl_Types
 import Graphics.UI.FLTK.LowLevel.Dispatch
 
--- * Region
 data CRegion parent
 type Region = CRegion Base
 instance Functions Region ()
 
--- * GlContext
 data CGlContext parent
 type GlContext = CGlContext Base
 instance Functions GlContext ()
 
--- * Widget
 data CWidget parent
 type Widget = CWidget Base
 type WidgetFuncs =
@@ -1245,8 +1246,11 @@ type WidgetFuncs =
   (GetOutput
   (SetOutput
   (Takesevents
+  (Changed
   (SetChanged
-  (GetClearChanged
+  (ClearChanged
+  (SetActive
+  (ClearActive
   (TakeFocus
   (SetVisibleFocus
   (ClearVisibleFocus
@@ -1272,7 +1276,7 @@ type WidgetFuncs =
   (DrawBoxWithBoxtype
   (DrawBackdrop
   (DrawFocus
-  ())))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))
+  ()))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))
 instance Functions Widget WidgetFuncs
 
 data Destroy a
@@ -1449,9 +1453,15 @@ takesevents = dispatch (undefined :: Takesevents ())
 data SetChanged a
 setChanged :: (FindOp a (SetChanged ()) (Match r), Op (SetChanged ()) r a impl) => Ref a -> impl
 setChanged = dispatch (undefined :: SetChanged ())
-data GetClearChanged a
-getClearChanged :: (FindOp a (GetClearChanged ()) (Match r), Op (GetClearChanged ()) r a impl) => Ref a -> impl
-getClearChanged = dispatch (undefined :: GetClearChanged ())
+data ClearChanged a
+clearChanged :: (FindOp a (ClearChanged ()) (Match r), Op (ClearChanged ()) r a impl) => Ref a -> impl
+clearChanged = dispatch (undefined :: ClearChanged ())
+data SetActive a
+setActive :: (FindOp a (SetActive ()) (Match r), Op (SetActive ()) r a impl) => Ref a -> impl
+setActive = dispatch (undefined :: SetActive ())
+data ClearActive a
+clearActive :: (FindOp a (ClearActive ()) (Match r), Op (ClearActive ()) r a impl) => Ref a -> impl
+clearActive = dispatch (undefined :: ClearActive ())
 data TakeFocus a
 takeFocus :: (FindOp a (TakeFocus ()) (Match r), Op (TakeFocus ()) r a impl) => Ref a -> impl
 takeFocus = dispatch (undefined :: TakeFocus ())

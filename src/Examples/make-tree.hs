@@ -11,7 +11,7 @@ main = do
   tree' <- treeNew (toRectangle (50,50,200,200)) (Just "Tree")
   rootLabel tree' "Root Label With Items"
   prefs' <- treePrefsNew
-  forM_ [0..9] $ \idx -> do
+  forM_ [0..(9 :: Int)] $ \_ -> do
     item' <- treeItemNew prefs'
     setLabel item' "test"
     addAt tree' "test" item'

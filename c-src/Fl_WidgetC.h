@@ -107,6 +107,9 @@ EXPORT {
   FL_EXPORT_C(unsigned int, Fl_Widget_takesevents)(fl_Widget widget);
   FL_EXPORT_C(void,         Fl_Widget_set_changed)(fl_Widget widget);
   FL_EXPORT_C(void,         Fl_Widget_clear_changed)(fl_Widget widget);
+  FL_EXPORT_C(unsigned int, Fl_Widget_changed)(fl_Widget widget);
+  FL_EXPORT_C(void,         Fl_Widget_set_active)(fl_Widget widget);
+  FL_EXPORT_C(void,         Fl_Widget_clear_active)(fl_Widget widget);
   FL_EXPORT_C(int,          Fl_Widget_take_focus)(fl_Widget widget);
   FL_EXPORT_C(void,         Fl_Widget_set_visible_focus)(fl_Widget widget);
   FL_EXPORT_C(void,         Fl_Widget_clear_visible_focus)(fl_Widget widget);

@@ -128,7 +128,7 @@ indexOr fallback idx xs =
 
 eventCallback :: TableState -> Ref TableRow -> IO ()
 eventCallback tableState table = do
-  col' <- callbackCol table
+  (Column  col') <- callbackCol table
   context' <- callbackContext table
   case context' of
    ContextColHeader -> do

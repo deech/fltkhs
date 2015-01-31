@@ -7,95 +7,115 @@ license: MIT
 license-file: LICENSE
 author: Aditya Siram
 maintainer: aditya.siram@gmail.com
-homepage: http://github.com/deech/fltkc
+homepage: http://github.com/deech/fltkhs
 -- bug-reports:
 -- copyright:
-category: UI
+category: UI,Graphics
 build-type: Custom
 cabal-version: >=1.20
+source-repository head
+  type: git
+  location: http://github.com/deech/fltkhs
 library
   exposed-modules:
                    Graphics.UI.FLTK.LowLevel.FLTKHS
-                   Graphics.UI.FLTK.LowLevel.Fl_Gl_Window
-                   Graphics.UI.FLTK.LowLevel.Fl_Single_Window
-                   Graphics.UI.FLTK.LowLevel.Fl_Window
-                   Graphics.UI.FLTK.LowLevel.Fl_Double_Window
-                   Graphics.UI.FLTK.LowLevel.Fl_Overlay_Window
-                   Graphics.UI.FLTK.LowLevel.Fl_Button
-                   Graphics.UI.FLTK.LowLevel.Fl_Light_Button
-                   Graphics.UI.FLTK.LowLevel.Fl_Radio_Light_Button
-                   Graphics.UI.FLTK.LowLevel.Fl_Check_Button
-                   Graphics.UI.FLTK.LowLevel.Fl_Return_Button
-                   Graphics.UI.FLTK.LowLevel.Fl_Round_Button
-                   Graphics.UI.FLTK.LowLevel.Fl_Repeat_Button
-                   Graphics.UI.FLTK.LowLevel.Fl_Toggle_Button
+                   Graphics.UI.FLTK.LowLevel.GlWindow
+                   Graphics.UI.FLTK.LowLevel.SingleWindow
+                   Graphics.UI.FLTK.LowLevel.Window
+                   Graphics.UI.FLTK.LowLevel.DoubleWindow
+                   Graphics.UI.FLTK.LowLevel.OverlayWindow
+                   Graphics.UI.FLTK.LowLevel.Button
+                   Graphics.UI.FLTK.LowLevel.LightButton
+                   Graphics.UI.FLTK.LowLevel.RadioLightButton
+                   Graphics.UI.FLTK.LowLevel.CheckButton
+                   Graphics.UI.FLTK.LowLevel.ReturnButton
+                   Graphics.UI.FLTK.LowLevel.RoundButton
+                   Graphics.UI.FLTK.LowLevel.RepeatButton
+                   Graphics.UI.FLTK.LowLevel.ToggleButton
                    Graphics.UI.FLTK.LowLevel.Fl_Enumerations
                    Graphics.UI.FLTK.LowLevel.Fl_Types
                    Graphics.UI.FLTK.LowLevel.Dispatch
                    Graphics.UI.FLTK.LowLevel.Hierarchy
-                   Graphics.UI.FLTK.LowLevel.Fl_Group
-                   Graphics.UI.FLTK.LowLevel.Fl_Widget
-                   Graphics.UI.FLTK.LowLevel.Fl_Box
-                   Graphics.UI.FLTK.LowLevel.Fl_Clock
-                   Graphics.UI.FLTK.LowLevel.Fl_Valuator
-                   Graphics.UI.FLTK.LowLevel.Fl_Slider
-                   Graphics.UI.FLTK.LowLevel.Fl_Hor_Slider
-                   Graphics.UI.FLTK.LowLevel.Fl_Fill_Slider
-                   Graphics.UI.FLTK.LowLevel.Fl_Hor_Fill_Slider
-                   Graphics.UI.FLTK.LowLevel.Fl_Hor_Nice_Slider
-                   Graphics.UI.FLTK.LowLevel.Fl_Hor_Value_Slider
-                   Graphics.UI.FLTK.LowLevel.Fl_Nice_Slider
-                   Graphics.UI.FLTK.LowLevel.Fl_Menu_Item
-                   Graphics.UI.FLTK.LowLevel.Fl_Menu_
-                   Graphics.UI.FLTK.LowLevel.Fl_Browser
-                   Graphics.UI.FLTK.LowLevel.Fl_Select_Browser
-                   Graphics.UI.FLTK.LowLevel.Fl_Sys_Menu_Bar
-                   Graphics.UI.FLTK.LowLevel.Fl_Choice
-                   Graphics.UI.FLTK.LowLevel.Fl_Menu_Button
-                   Graphics.UI.FLTK.LowLevel.Fl_Image
-                   Graphics.UI.FLTK.LowLevel.Fl_Bitmap
-                   Graphics.UI.FLTK.LowLevel.Fl_Pixmap
-                   Graphics.UI.FLTK.LowLevel.Fl_Draw
-                   Graphics.UI.FLTK.LowLevel.Fl_Copy_Surface
-                   Graphics.UI.FLTK.LowLevel.Fl_Image_Surface
-                   Graphics.UI.FLTK.LowLevel.Fl_Adjuster
-                   Graphics.UI.FLTK.LowLevel.Fl_Dial
-                   Graphics.UI.FLTK.LowLevel.Fl_Fill_Dial
-                   Graphics.UI.FLTK.LowLevel.Fl_Line_Dial
-                   Graphics.UI.FLTK.LowLevel.Fl_Roller
-                   Graphics.UI.FLTK.LowLevel.Fl_Counter
-                   Graphics.UI.FLTK.LowLevel.Fl_Simple_Counter
-                   Graphics.UI.FLTK.LowLevel.Fl_Scrollbar
-                   Graphics.UI.FLTK.LowLevel.Fl_Value_Slider
-                   Graphics.UI.FLTK.LowLevel.Fl_Value_Input
-                   Graphics.UI.FLTK.LowLevel.Fl_Value_Output
-                   Graphics.UI.FLTK.LowLevel.Fl_Timer
-                   Graphics.UI.FLTK.LowLevel.Fl_Progress
-                   Graphics.UI.FLTK.LowLevel.Fl_Positioner
-                   Graphics.UI.FLTK.LowLevel.Fl_Input
-                   Graphics.UI.FLTK.LowLevel.Fl_Int_Input
-                   Graphics.UI.FLTK.LowLevel.Fl_Wizard
-                   Graphics.UI.FLTK.LowLevel.Fl_Table
-                   Graphics.UI.FLTK.LowLevel.Fl_Table_Row
-                   Graphics.UI.FLTK.LowLevel.Fl_Tree_Prefs
-                   Graphics.UI.FLTK.LowLevel.Fl_Tree_Item
-                   Graphics.UI.FLTK.LowLevel.Fl_Tree
+                   Graphics.UI.FLTK.LowLevel.Group
+                   Graphics.UI.FLTK.LowLevel.Widget
+                   Graphics.UI.FLTK.LowLevel.Box
+                   Graphics.UI.FLTK.LowLevel.Clock
+                   Graphics.UI.FLTK.LowLevel.Valuator
+                   Graphics.UI.FLTK.LowLevel.Slider
+                   Graphics.UI.FLTK.LowLevel.HorSlider
+                   Graphics.UI.FLTK.LowLevel.FillSlider
+                   Graphics.UI.FLTK.LowLevel.HorFillSlider
+                   Graphics.UI.FLTK.LowLevel.HorNiceSlider
+                   Graphics.UI.FLTK.LowLevel.HorValueSlider
+                   Graphics.UI.FLTK.LowLevel.NiceSlider
+                   Graphics.UI.FLTK.LowLevel.MenuItem
+                   Graphics.UI.FLTK.LowLevel.MenuPrim
+                   Graphics.UI.FLTK.LowLevel.Browser
+                   Graphics.UI.FLTK.LowLevel.SelectBrowser
+                   Graphics.UI.FLTK.LowLevel.SysMenuBar
+                   Graphics.UI.FLTK.LowLevel.Choice
+                   Graphics.UI.FLTK.LowLevel.MenuButton
+                   Graphics.UI.FLTK.LowLevel.Image
+                   Graphics.UI.FLTK.LowLevel.Bitmap
+                   Graphics.UI.FLTK.LowLevel.Pixmap
+                   Graphics.UI.FLTK.LowLevel.Draw
+                   Graphics.UI.FLTK.LowLevel.CopySurface
+                   Graphics.UI.FLTK.LowLevel.ImageSurface
+                   Graphics.UI.FLTK.LowLevel.Adjuster
+                   Graphics.UI.FLTK.LowLevel.Dial
+                   Graphics.UI.FLTK.LowLevel.FillDial
+                   Graphics.UI.FLTK.LowLevel.LineDial
+                   Graphics.UI.FLTK.LowLevel.Roller
+                   Graphics.UI.FLTK.LowLevel.Counter
+                   Graphics.UI.FLTK.LowLevel.SimpleCounter
+                   Graphics.UI.FLTK.LowLevel.Scrollbar
+                   Graphics.UI.FLTK.LowLevel.ValueSlider
+                   Graphics.UI.FLTK.LowLevel.ValueInput
+                   Graphics.UI.FLTK.LowLevel.ValueOutput
+                   Graphics.UI.FLTK.LowLevel.Timer
+                   Graphics.UI.FLTK.LowLevel.Progress
+                   Graphics.UI.FLTK.LowLevel.Positioner
+                   Graphics.UI.FLTK.LowLevel.Input
+                   Graphics.UI.FLTK.LowLevel.IntInput
+                   Graphics.UI.FLTK.LowLevel.Wizard
+                   Graphics.UI.FLTK.LowLevel.Table
+                   Graphics.UI.FLTK.LowLevel.TableRow
+                   Graphics.UI.FLTK.LowLevel.TreePrefs
+                   Graphics.UI.FLTK.LowLevel.TreeItem
+                   Graphics.UI.FLTK.LowLevel.Tree
                    Graphics.UI.FLTK.LowLevel.FL
                    Graphics.UI.FLTK.LowLevel.Gl
                    Graphics.UI.FLTK.LowLevel.Utils
-  build-depends: base, bytestring
+  build-depends:
+    base == 4.*,
+    bytestring
   build-tools: c2hs
   hs-source-dirs: src
   other-modules: C2HS
   include-dirs: ./c-src, ./
   default-extensions: GADTs
   default-language: Haskell2010
-  ghc-options: -Wall -threaded -fcontext-stack=220
+  ghc-options: -Wall -fcontext-stack=220
 
-Executable doublebuffer
+Executable fltkhs-hello-world
+  Main-Is: hello-world.hs
+  Hs-Source-Dirs: src/Examples
+  Build-Depends:
+    base == 4.*,
+    fltkhs
+  default-language: Haskell2010
+  ghc-Options: -Wall -threaded -fcontext-stack=220
+  if os(linux)
+     ghc-Options: -pgml g++ "-optl-Wl,--whole-archive" "-optl-Wl,-Bstatic" "-optl-Wl,-lfltkc" "-optl-Wl,-Bdynamic" "-optl-Wl,--no-whole-archive"
+  else
+     ghc-Options:
+
+Executable fltkhs-doublebuffer
   Main-Is: doublebuffer.hs
   Hs-Source-Dirs: src/Examples
-  Build-Depends: base,fltkhs
+  Build-Depends:
+    base == 4.*,
+    fltkhs
   default-language: Haskell2010
   ghc-Options: -Wall -threaded -fcontext-stack=220
   if os(linux)
@@ -103,10 +123,12 @@ Executable doublebuffer
   else
      ghc-Options:
 
-Executable make-tree
+Executable fltkhs-make-tree
   Main-Is: make-tree.hs
   Hs-Source-Dirs: src/Examples
-  Build-Depends: base,fltkhs
+  Build-Depends:
+    base == 4.*,
+    fltkhs
   default-language: Haskell2010
   ghc-Options: -Wall -threaded -fcontext-stack=220
   if os(linux)
@@ -114,10 +136,12 @@ Executable make-tree
   else
      ghc-Options:
 
-Executable tree-simple
+Executable fltkhs-tree-simple
   Main-Is: tree-simple.hs
   Hs-Source-Dirs: src/Examples
-  Build-Depends: base,fltkhs
+  Build-Depends:
+    base == 4.*,
+    fltkhs
   default-language: Haskell2010
   ghc-Options: -Wall -threaded -fcontext-stack=220
   if os(linux)
@@ -125,10 +149,12 @@ Executable tree-simple
   else
      ghc-Options:
 
-Executable table-spreadsheet-with-keyboard-nav
+Executable fltkhs-table-spreadsheet-with-keyboard-nav
   Main-Is: table-spreadsheet-with-keyboard-nav.hs
   Hs-Source-Dirs: src/Examples
-  Build-Depends: base,fltkhs
+  Build-Depends:
+    base == 4.*,
+    fltkhs
   default-language: Haskell2010
   ghc-Options: -Wall -threaded -fcontext-stack=220
   if os(linux)
@@ -136,10 +162,12 @@ Executable table-spreadsheet-with-keyboard-nav
   else
      ghc-Options:
 
-Executable test_call
+Executable fltkhs-test_call
   Main-Is: TestCall.hs
   Hs-Source-Dirs: src/TestPrograms
-  Build-Depends: base,fltkhs
+  Build-Depends:
+    base == 4.*,
+    fltkhs
   default-language: Haskell2010
   ghc-Options: -Wall -threaded -fcontext-stack=220
   if os(linux)
@@ -147,10 +175,12 @@ Executable test_call
   else
      ghc-Options:
 
-Executable buttons
+Executable fltkhs-buttons
   Main-Is: Buttons.hs
   Hs-Source-Dirs: src/TestPrograms
-  Build-Depends: base,fltkhs
+  Build-Depends:
+    base == 4.*,
+    fltkhs
   default-language: Haskell2010
   ghc-Options: -Wall -threaded -fcontext-stack=220
   if os(linux)
@@ -158,10 +188,12 @@ Executable buttons
   else
      ghc-Options:
 
-Executable table-simple
+Executable fltkhs-table-simple
   Main-Is: table-simple.hs
   Hs-Source-Dirs: src/Examples
-  Build-Depends: base,fltkhs
+  Build-Depends:
+    base == 4.*,
+    fltkhs
   default-language: Haskell2010
   ghc-Options: -Wall -threaded -fcontext-stack=220
   if os(linux)
@@ -169,10 +201,13 @@ Executable table-simple
   else
      ghc-Options:
 
-Executable table-sort
+Executable fltkhs-table-sort
   Main-Is: table-sort.hs
   Hs-Source-Dirs: src/Examples
-  Build-Depends: base,fltkhs,process
+  Build-Depends:
+    base == 4.*,
+    fltkhs,
+    process
   default-language: Haskell2010
   ghc-Options: -Wall -threaded -fcontext-stack=220
   if os(linux)
@@ -180,10 +215,12 @@ Executable table-sort
   else
      ghc-Options:
 
-Executable arc
+Executable fltkhs-arc
   Main-Is: arc.hs
   Hs-Source-Dirs: src/Examples
-  Build-Depends: base,fltkhs
+  Build-Depends:
+    base == 4.*,
+    fltkhs
   default-language: Haskell2010
   ghc-Options: -Wall -threaded -fcontext-stack=220
   if os(linux)
@@ -191,10 +228,12 @@ Executable arc
   else
      ghc-Options:
 
-Executable bitmap
+Executable fltkhs-bitmap
   Main-Is: bitmap.hs
   Hs-Source-Dirs: src/Examples
-  Build-Depends: base,fltkhs,bytestring
+  Build-Depends:
+     base == 4.*,
+     fltkhs,bytestring
   default-language: Haskell2010
   ghc-Options: -Wall -threaded -fcontext-stack=220
   if os(linux)
@@ -202,10 +241,12 @@ Executable bitmap
   else
      ghc-Options:
 
-Executable boxtype
+Executable fltkhs-boxtype
   Main-Is: boxtype.hs
   Hs-Source-Dirs: src/Examples
-  Build-Depends: base,fltkhs,bytestring
+  Build-Depends:
+     base == 4.*,
+     fltkhs,bytestring
   default-language: Haskell2010
   ghc-Options: -Wall -threaded -fcontext-stack=220
   if os(linux)
@@ -213,10 +254,13 @@ Executable boxtype
   else
      ghc-Options:
 
-Executable browser
+Executable fltkhs-browser
   Main-Is: browser.hs
   Hs-Source-Dirs: src/Examples
-  Build-Depends: base,fltkhs,bytestring
+  Build-Depends:
+     base == 4.*,
+     fltkhs,
+     bytestring
   default-language: Haskell2010
   ghc-Options: -Wall -threaded -fcontext-stack=220
   if os(linux)
@@ -224,10 +268,13 @@ Executable browser
   else
      ghc-Options:
 
-Executable clock
+Executable fltkhs-clock
   Main-Is: clock.hs
   Hs-Source-Dirs: src/Examples
-  Build-Depends: base,fltkhs,bytestring
+  Build-Depends:
+     base == 4.*,
+     fltkhs,
+     bytestring
   default-language: Haskell2010
   ghc-Options: -Wall -threaded -fcontext-stack=220
   if os(linux)

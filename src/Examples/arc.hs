@@ -73,14 +73,14 @@ main = do
   myArgs' <- newIORef [140, 140, 50, 0, 360,0]
   window' <- doubleWindowNew (Size (Width 300) (Height 500)) Nothing Nothing
   begin window'
-  widget <- widgetNew
+  widget <- widgetCustom
              (Rectangle
                (Position (X 10) (Y 10))
                (Size (Width 280) (Height 280)))
              Nothing
-             (Just $ defaultCustomWidgetFuncs {
+             defaultCustomWidgetFuncs {
                  drawCustom = Just (drawArc myArgs')
-               })
+               }
   forM_ (take 6 (zip (iterate ((+) 25) 300) [0..])) $ \(y, sliderNumber') -> do
     s <- horValueSliderNew
          (toRectangle $ (50, y, 240, 25))

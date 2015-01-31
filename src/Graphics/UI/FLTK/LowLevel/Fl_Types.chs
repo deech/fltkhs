@@ -71,16 +71,16 @@ import qualified Data.ByteString as B
     TreeReasonOpened = FL_TREE_REASON_OPENED,
     TreeReasonClosed = FL_TREE_REASON_CLOSED
   };
-  enum MenuProps{
-     MenuInactive = FL_MENU_INACTIVE,
-     MenuToggle = FL_MENU_TOGGLE,
-     MenuValue = FL_MENU_VALUE,
-     MenuRadio = FL_MENU_RADIO,
-     MenuInvisible = FL_MENU_INVISIBLE,
+  enum MenuItemFlag{
+     MenuItemInactive = FL_MENU_INACTIVE,
+     MenuItemToggle = FL_MENU_TOGGLE,
+     MenuItemValue = FL_MENU_VALUE,
+     MenuItemRadio = FL_MENU_RADIO,
+     MenuItemInvisible = FL_MENU_INVISIBLE,
      SubmenuPointer = FL_SUBMENU_POINTER,
      Submenu = FL_SUBMENU,
-     MenuDivider = FL_MENU_DIVIDER,
-     MenuHorizontal = FL_MENU_HORIZONTAL
+     MenuItemDivider = FL_MENU_DIVIDER,
+     MenuItemHorizontal = FL_MENU_HORIZONTAL
   };
   enum ScrollbarMode {
     Horizontal = HORIZONTAL,
@@ -191,7 +191,21 @@ import qualified Data.ByteString as B
 {#enum FileChooserType {} deriving (Show, Eq) #}
 {#enum ButtonType {} deriving (Show, Eq) #}
 {#enum TreeReasonType {} deriving (Show, Eq) #}
-{#enum MenuProps {} deriving (Show, Eq) #}
+{#enum MenuItemFlag {} deriving (Show, Eq, Ord) #}
+newtype MenuItemFlags = MenuItemFlags [MenuItemFlag]
+allMenuItemFlags :: [MenuItemFlag]
+allMenuItemFlags =
+  [
+     MenuItemInactive,
+     MenuItemToggle,
+     MenuItemValue,
+     MenuItemRadio,
+     MenuItemInvisible,
+     SubmenuPointer,
+     Submenu,
+     MenuItemDivider,
+     MenuItemHorizontal
+  ]
 {#enum CursorType {} deriving (Show, Eq) #}
 {#enum PositionType {} deriving (Show, Eq) #}
 {#enum DragType {} deriving (Show, Eq) #}
@@ -273,6 +287,9 @@ data Clipboard = InternalClipboard | SharedClipboard
 
 data UnknownError = UnknownError
 data OutOfRange = OutOfRange deriving Show
+data NoChange = NoChange
+statusToEither :: Int -> Either NoChange ()
+statusToEither status = if (status == 0) then Left NoChange else Right ()
 
 toRectangle :: (Int,Int,Int,Int) -> Rectangle
 toRectangle (x_pos, y_pos, width, height) =

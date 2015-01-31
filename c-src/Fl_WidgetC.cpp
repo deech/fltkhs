@@ -359,8 +359,17 @@ FL_EXPORT_C(void, Fl_Widget_draw_label)(fl_Widget Widget){
   FL_EXPORT_C(void,Fl_Widget_clear_changed)(fl_Widget widget){
     (static_cast<Fl_DerivedWidget*>(widget))->clear_changed();
   }
+  FL_EXPORT_C(unsigned int,Fl_Widget_changed)(fl_Widget widget){
+    return (static_cast<Fl_DerivedWidget*>(widget))->changed();
+  }
   FL_EXPORT_C(int,Fl_Widget_take_focus)(fl_Widget widget){
     return (static_cast<Fl_DerivedWidget*>(widget))->take_focus();
+  }
+  FL_EXPORT_C(void,Fl_Widget_set_active)(fl_Widget widget){
+    (static_cast<Fl_DerivedWidget*>(widget))->active();
+  }
+  FL_EXPORT_C(void,Fl_Widget_clear_active)(fl_Widget widget){
+    (static_cast<Fl_DerivedWidget*>(widget))->clear_active();
   }
   FL_EXPORT_C(void,Fl_Widget_set_visible_focus)(fl_Widget widget){
     (static_cast<Fl_DerivedWidget*>(widget))->set_visible_focus();

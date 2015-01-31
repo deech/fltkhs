@@ -34,6 +34,22 @@ badDraw sides w h which = do
   flcSetColor blackColor >> flcRectf (toRectangle (0,0,w,h))
   flcSetColor whiteColor >> readIORef sides >>= star w h . which
 
+
+drawWindow :: forall a r1 r2 r3 r4.
+              (
+               FindOp a (DrawChild ())(Match r1),
+               FindOp a (GetChild ()) (Match r2),
+               FindOp a (GetH ())     (Match r3),
+               FindOp a (GetW ())     (Match r4),
+               Op (DrawChild ())  r1 a (Ref Widget -> IO ()),
+               Op (GetChild ())   r2 a (Int -> IO (Ref Widget)),
+               Op (GetH ())       r3 a (IO Int),
+               Op (GetW ())       r4 a (IO Int)
+              ) =>
+              IORef (Double, Double) ->
+              ((Double, Double) -> Double) ->
+              Ref a ->
+              IO ()
 drawWindow sides' whichf' w' = do
   ww' <- getW w'
   wh' <- getH w'
