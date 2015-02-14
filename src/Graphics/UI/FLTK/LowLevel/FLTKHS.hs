@@ -87,6 +87,9 @@ module Graphics.UI.FLTK.LowLevel.FLTKHS
          module Graphics.UI.FLTK.LowLevel.Widget,
          module Graphics.UI.FLTK.LowLevel.Window,
          module Graphics.UI.FLTK.LowLevel.Wizard,
+         module Graphics.UI.FLTK.LowLevel.TextSelection,
+         module Graphics.UI.FLTK.LowLevel.TextBuffer,
+         module Graphics.UI.FLTK.LowLevel.TextDisplay,
          -- * Machinery for static dispatch
          module Graphics.UI.FLTK.LowLevel.Dispatch,
          -- * Association of widgets and functions
@@ -156,6 +159,9 @@ import Graphics.UI.FLTK.LowLevel.Clock
 import Graphics.UI.FLTK.LowLevel.TreePrefs
 import Graphics.UI.FLTK.LowLevel.TreeItem
 import Graphics.UI.FLTK.LowLevel.Tree
+import Graphics.UI.FLTK.LowLevel.TextSelection()
+import Graphics.UI.FLTK.LowLevel.TextBuffer
+import Graphics.UI.FLTK.LowLevel.TextDisplay
 
 -- $Module Documentation
 -- This module re-exports all the available widgets and their core types. The types and list
