@@ -90,9 +90,12 @@ instance (impl ~ (IO ())) => Op (Clear ()) Group orig impl where
 instance (Parent a Widget, impl ~ (Ref a -> IO ())) => Op (SetResizable ()) Group orig impl where
   runOp _ _ group o = withRef group $ \groupPtr -> withRef o $ \oPtr -> setResizable' groupPtr oPtr
 
+instance (impl ~ IO ()) => Op (SetNotResizable ()) Group orig impl where
+  runOp _ _ group = withRef group $ \groupPtr -> setResizable' groupPtr nullPtr
+
 {# fun Fl_Group_resizable as resizable' { id `Ptr ()' } -> `Ptr ()' id #}
-instance (impl ~ ( IO (Ref Widget))) => Op (GetResizable ()) Group orig impl where
-  runOp _ _ group = withRef group $ \groupPtr -> resizable' groupPtr >>= toRef
+instance (impl ~ ( IO (Maybe (Ref Widget)))) => Op (GetResizable ()) Group orig impl where
+  runOp _ _ group = withRef group $ \groupPtr -> resizable' groupPtr >>= toMaybeRef
 
 {# fun Fl_Group_add_resizable as addResizable' { id `Ptr ()',id `Ptr ()' } -> `()' supressWarningAboutRes #}
 instance (Parent a Widget, impl ~ (Ref a ->  IO ())) => Op (AddResizable ()) Group orig impl where
@@ -171,7 +174,7 @@ instance (impl ~ (Int ->  IO (Ref Widget))) => Op (GetChild ()) Group orig impl 
 --
 -- getChild :: 'Ref' 'Group' -> 'Int' -> 'IO' ('Ref' 'Widget')
 --
--- getResizable :: 'Ref' 'Group' -> 'IO' ('Ref' 'Widget')
+-- getResizable :: 'Ref' 'Group' -> 'IO' ('Maybe' ('Ref' 'Widget'))
 --
 -- initSizes :: 'Ref' 'Group' -> 'IO' ()
 --
@@ -184,6 +187,8 @@ instance (impl ~ (Int ->  IO (Ref Widget))) => Op (GetChild ()) Group orig impl 
 -- removeWidget:: ('Parent' a 'Widget') => 'Ref' 'Group' -> 'Ref' a -> 'IO' ())
 --
 -- setClipChildren :: 'Ref' 'Group' -> 'Int' -> 'IO' ()
+--
+-- setNotResizable :: 'Ref' 'Group' -> 'IO' ()
 --
 -- setResizable:: ('Parent' a 'Widget') => 'Ref' 'Group' -> 'Ref' a -> 'IO' ())
 --

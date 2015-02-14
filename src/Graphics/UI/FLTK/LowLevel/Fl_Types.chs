@@ -8,6 +8,7 @@ import Graphics.UI.FLTK.LowLevel.Fl_Enumerations
 import qualified Foreign.ForeignPtr.Unsafe as Unsafe
 import Debug.Trace
 import Control.Exception
+import C2HS hiding (cFromEnum, cFromBool, cToBool,cToEnum)
 import qualified Data.ByteString as B
 #c
   enum SliderType {
@@ -216,6 +217,8 @@ allMenuItemFlags =
 {#enum TableContext {} deriving (Show, Eq) #}
 {#enum LinePosition {} deriving (Show, Eq)  #}
 {#enum ScrollbarMode {} deriving (Show, Eq) #}
+data StyleTableEntry = StyleTableEntry (Maybe Color) (Maybe Font) (Maybe FontSize)
+
 data GLUTproc = GLUTproc {#type GLUTproc#}
 newtype GLUTIdleFunction = GLUTIdleFunction (FunPtr (IO ()))
 newtype GLUTMenuStateFunction = GLUTMenuStateFunction (FunPtr (CInt -> IO()))
@@ -251,11 +254,16 @@ type GlobalEventHandlerF         = Event -> IO Int
 type DrawCallback                = String -> Position -> IO ()
 type DrawCallbackPrim            = CString -> CInt -> CInt -> CInt -> IO ()
 type TextBufferCallback          = FunPtr (Ptr () -> IO ())
-type UnfinishedStyleCb           = FunPtr (CInt -> Ptr () -> IO ())
 type FileChooserCallback         = FunPtr (Ptr () -> Ptr () -> IO())
 type SharedImageHandler          = FunPtr (CString -> CUChar -> CInt -> Ptr ())
 type BoxDrawF                    = Rectangle -> Color -> IO ()
 type BoxDrawFPrim                = CInt -> CInt -> CInt -> CInt -> FlColor -> IO ()
+type TextModifyCb                = Int -> Int -> Int -> Int -> String -> IO ()
+type TextModifyCbPrim            = CInt -> CInt -> CInt -> CInt -> Ptr CChar -> Ptr () -> IO ()
+type TextPredeleteCb             = BufferOffset -> Int -> IO ()
+type TextPredeleteCbPrim         = CInt -> CInt -> Ptr () -> IO ()
+type UnfinishedStyleCb           = BufferOffset -> IO ()
+type UnfinishedStyleCbPrim       = CInt -> Ptr () -> IO ()
 
 newtype Width = Width Int deriving (Eq, Show)
 newtype Height = Height Int deriving (Eq, Show)
@@ -269,6 +277,20 @@ newtype Angle = Angle CShort
 data Position = Position X Y deriving (Eq,Show)
 data CountDirection = CountUp | CountDown
 data DPI = DPI Float Float
+newtype TextDisplayStyle = TextDisplayStyle CInt
+newtype BufferOffset = BufferOffset Int
+data BufferRange = BufferRange BufferOffset BufferOffset
+statusToBufferRange :: (Ptr CInt -> Ptr CInt -> IO Int) -> IO (Maybe BufferRange)
+statusToBufferRange f =
+  alloca $ \start' ->
+  alloca $ \end' ->
+  f start' end' >>= \status' ->
+  case status' of
+    0 -> return Nothing
+    _ -> do
+      start'' <- peekIntConv start'
+      end'' <- peekIntConv end'
+      return (Just (BufferRange (BufferOffset start'') (BufferOffset end'')))
 data Rectangle = Rectangle Position Size deriving (Eq,Show)
 data ByXY = ByXY ByX ByY
 data Intersection = Contained | Partial
@@ -279,18 +301,26 @@ data Shortcut = KeySequence ShortcutKeySequence | KeyFormat String
 data ScreenLocation = Intersect Rectangle
                     | ScreenNumber Int
                     | ScreenPosition Position
-data CutInput = CutSelection | CutRange Int Int | CutFromCursor Int
 newtype FontSize = FontSize CInt
 newtype PixmapHs = PixmapHs [B.ByteString]
 data BitmapHs = BitmapHs B.ByteString Size
 data Clipboard = InternalClipboard | SharedClipboard
 
 data UnknownError = UnknownError
+data NotFound = NotFound
 data OutOfRange = OutOfRange deriving Show
+successOrOutOfRange :: a -> Bool -> (a -> IO b) -> IO (Either OutOfRange b)
+successOrOutOfRange a pred' tr = if pred' then return (Left OutOfRange) else tr a >>= return . Right
 data NoChange = NoChange
-statusToEither :: Int -> Either NoChange ()
-statusToEither status = if (status == 0) then Left NoChange else Right ()
-
+successOrNoChange :: Int -> Either NoChange ()
+successOrNoChange status = if (status == 0) then Left NoChange else Right ()
+data DataProcessingError = NoDataProcessedError | PartialDataProcessedError | UnknownDataError Int
+successOrDataProcessingError :: Int -> Either DataProcessingError ()
+successOrDataProcessingError status = case status of
+  0 -> Right ()
+  1 -> Left NoDataProcessedError
+  2 -> Left PartialDataProcessedError
+  x -> Left $ UnknownDataError x
 toRectangle :: (Int,Int,Int,Int) -> Rectangle
 toRectangle (x_pos, y_pos, width, height) =
     Rectangle (Position

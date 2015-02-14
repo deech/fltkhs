@@ -85,6 +85,9 @@ library
                    Graphics.UI.FLTK.LowLevel.Tree
                    Graphics.UI.FLTK.LowLevel.FL
                    Graphics.UI.FLTK.LowLevel.Gl
+                   Graphics.UI.FLTK.LowLevel.TextSelection
+                   Graphics.UI.FLTK.LowLevel.TextBuffer
+                   Graphics.UI.FLTK.LowLevel.TextDisplay
                    Graphics.UI.FLTK.LowLevel.Utils
   build-depends:
     base == 4.*,

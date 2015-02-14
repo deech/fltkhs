@@ -25,21 +25,27 @@ foreign import ccall "wrapper"
 foreign import ccall "wrapper"
         mkImageCopyCallbackPrimPtr :: ImageCopyCallbackPrim -> IO (FunPtr ImageCopyCallbackPrim)
 foreign import ccall "wrapper"
+        mkUnfinishedStyleCbPrim :: UnfinishedStyleCbPrim -> IO (FunPtr UnfinishedStyleCbPrim)
+foreign import ccall "wrapper"
         mkFinalizer :: (Ptr a -> IO ()) -> IO (FinalizerPtr a)
+foreign import ccall "wrapper"
+        mkFinalizerEnv :: (Ptr env -> Ptr a -> IO ()) -> IO (FinalizerEnvPtr env a)
 foreign import ccall "wrapper"
         wrapBoxDrawFPrim :: BoxDrawFPrim -> IO (FunPtr BoxDrawFPrim)
 foreign import ccall "dynamic"
         unwrapGlobalCallbackPtr :: FunPtr GlobalCallback -> GlobalCallback
 foreign import ccall "dynamic"
         unwrapBoxDrawFPrim :: FunPtr BoxDrawFPrim -> BoxDrawFPrim
-
+foreign import ccall "wrapper"
+        mkTextModifyCb :: TextModifyCbPrim -> IO (FunPtr TextModifyCbPrim)
+foreign import ccall "wrapper"
+        mkTextPredeleteCb :: TextPredeleteCbPrim -> IO (FunPtr TextPredeleteCbPrim)
 
 toCallbackPrim :: (Ref a -> IO ()) ->
                   IO (FunPtr (Ptr () -> IO ()))
 toCallbackPrim f = mkCallbackPtr $ \ptr -> do
   pp <- wrapNonNull ptr "Null pointer. toCallbackPrim"
   f (castTo (wrapInRef pp))
-
 
 toCallbackPrimWithUserData :: (Ref a -> IO ()) ->
                               IO (FunPtr (Ptr () -> Ptr () -> IO ()))
@@ -104,7 +110,6 @@ toDrawCallback f = mkDrawCallbackPrimPtr
                       str' <- peekCStringLen (string', fromIntegral length')
                       f str' (Position (X (fromIntegral x')) (Y (fromIntegral y'))))
 
-
 toBoxDrawF :: BoxDrawFPrim -> BoxDrawF
 toBoxDrawF boxDrawPrim =
     (\r c ->
@@ -128,6 +133,33 @@ toBoxDrawFPrim f =
            c = cToColor colorPrim
        in
            f r c)
+
+toTextModifyCbPrim :: TextModifyCb -> IO (FunPtr TextModifyCbPrim)
+toTextModifyCbPrim f =
+  mkTextModifyCb
+    (
+      \pos' nInserted' nDeleted' nRestyled' stringPtr _ ->
+       peekCString stringPtr >>=
+       f (fromIntegral pos')
+         (fromIntegral nInserted')
+         (fromIntegral nDeleted')
+         (fromIntegral nRestyled')
+    )
+
+toTextPredeleteCbPrim :: TextPredeleteCb -> IO (FunPtr TextPredeleteCbPrim)
+toTextPredeleteCbPrim f =
+  mkTextPredeleteCb
+    (
+      \pos' nDeleted' _ ->
+       f (BufferOffset (fromIntegral pos')) (fromIntegral nDeleted')
+    )
+
+toUnfinishedStyleCbPrim :: UnfinishedStyleCb -> IO (FunPtr UnfinishedStyleCbPrim)
+toUnfinishedStyleCbPrim f =
+    mkUnfinishedStyleCbPrim
+     (
+       \pos' _ -> f (BufferOffset (fromIntegral pos'))
+     )
 
 orNullFunPtr :: (a -> IO (FunPtr b)) -> Maybe a -> IO (FunPtr b)
 orNullFunPtr = maybe (return nullFunPtr)

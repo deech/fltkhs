@@ -330,163 +330,211 @@ EXPORT {
     Fl_Text_Display* g = new Fl_Text_Display(x,y,w,h,t);
     return (fl_Text_Display)g;
   }
-  FL_EXPORT_C(void,Fl_Text_Display_set_buffer)(fl_Text_Display text_display,fl_Text_Buffer buf){
- return (static_cast<Fl_Text_Display*>(text_display))->buffer((static_cast<Fl_Text_Buffer*>(buf)));
-}
-FL_EXPORT_C(fl_Text_Buffer,Fl_Text_Display_buffer)(fl_Text_Display text_display){
- return (static_cast<Fl_Text_Display*>(text_display))->buffer();
-}
-FL_EXPORT_C(void,Fl_Text_Display_redisplay_range)(fl_Text_Display text_display,int start,int end){
- return (static_cast<Fl_Text_Display*>(text_display))->redisplay_range(start,end);
-}
-FL_EXPORT_C(void,Fl_Text_Display_scroll)(fl_Text_Display text_display,int topLineNum,int horizOffset){
- return (static_cast<Fl_Text_Display*>(text_display))->scroll(topLineNum,horizOffset);
-}
-FL_EXPORT_C(void,Fl_Text_Display_insert)(fl_Text_Display text_display,const char* text){
- return (static_cast<Fl_Text_Display*>(text_display))->insert(text);
-}
-FL_EXPORT_C(void,Fl_Text_Display_overstrike)(fl_Text_Display text_display,const char* text){
- return (static_cast<Fl_Text_Display*>(text_display))->overstrike(text);
-}
-FL_EXPORT_C(void,Fl_Text_Display_set_insert_position)(fl_Text_Display text_display,int newPos){
- return (static_cast<Fl_Text_Display*>(text_display))->insert_position(newPos);
-}
-FL_EXPORT_C(int,Fl_Text_Display_insert_position)(fl_Text_Display text_display){
- return (static_cast<Fl_Text_Display*>(text_display))->insert_position();
-}
-FL_EXPORT_C(int,Fl_Text_Display_position_to_xy)(fl_Text_Display text_display,int pos,int* x,int* y){
- return (static_cast<Fl_Text_Display*>(text_display))->position_to_xy(pos,x,y);
-}
-FL_EXPORT_C(int,Fl_Text_Display_in_selection)(fl_Text_Display text_display,int x,int y){
- return (static_cast<Fl_Text_Display*>(text_display))->in_selection(x,y);
-}
-FL_EXPORT_C(void,Fl_Text_Display_show_insert_position)(fl_Text_Display text_display){
- return (static_cast<Fl_Text_Display*>(text_display))->show_insert_position();
-}
-FL_EXPORT_C(int,Fl_Text_Display_move_right)(fl_Text_Display text_display){
- return (static_cast<Fl_Text_Display*>(text_display))->move_right();
-}
-FL_EXPORT_C(int,Fl_Text_Display_move_left)(fl_Text_Display text_display){
- return (static_cast<Fl_Text_Display*>(text_display))->move_left();
-}
-FL_EXPORT_C(int,Fl_Text_Display_move_up)(fl_Text_Display text_display){
- return (static_cast<Fl_Text_Display*>(text_display))->move_up();
-}
-FL_EXPORT_C(int,Fl_Text_Display_move_down)(fl_Text_Display text_display){
- return (static_cast<Fl_Text_Display*>(text_display))->move_down();
-}
-FL_EXPORT_C(int,Fl_Text_Display_count_lines)(fl_Text_Display text_display,int start,int end,int start_pos_is_line_start){
-  return (static_cast<Fl_Text_Display*>(text_display))->count_lines(start,end,start_pos_is_line_start >= 1 ? true : false);
-}
-FL_EXPORT_C(int,Fl_Text_Display_line_start)(fl_Text_Display text_display,int pos){
- return (static_cast<Fl_Text_Display*>(text_display))->line_start(pos);
-}
-FL_EXPORT_C(int,Fl_Text_Display_line_end)(fl_Text_Display text_display,int startPos,int startPosIsLineStart){
- return (static_cast<Fl_Text_Display*>(text_display))->line_end(startPos,startPosIsLineStart >= 1 ? true : false);
-}
-FL_EXPORT_C(int,Fl_Text_Display_skip_lines)(fl_Text_Display text_display,int startPos,int nLines,int startPosIsLineStart){
- return (static_cast<Fl_Text_Display*>(text_display))->skip_lines(startPos,nLines,startPosIsLineStart>= 1 ? true : false);
-}
-FL_EXPORT_C(int,Fl_Text_Display_rewind_lines)(fl_Text_Display text_display,int startPos,int nLines){
- return (static_cast<Fl_Text_Display*>(text_display))->rewind_lines(startPos,nLines);
-}
-FL_EXPORT_C(void,Fl_Text_Display_next_word)(fl_Text_Display text_display){
- return (static_cast<Fl_Text_Display*>(text_display))->next_word();
-}
- FL_EXPORT_C(void,Fl_Text_Display_previous_word)(fl_Text_Display text_display){
- return (static_cast<Fl_Text_Display*>(text_display))->previous_word();
-}
-FL_EXPORT_C(void,Fl_Text_Display_show_cursor)(fl_Text_Display text_display){
- return (static_cast<Fl_Text_Display*>(text_display))->show_cursor();
-}
-FL_EXPORT_C(void,Fl_Text_Display_show_cursor_with_b)(fl_Text_Display text_display,int b){
- return (static_cast<Fl_Text_Display*>(text_display))->show_cursor(b);
-}
-FL_EXPORT_C(void,Fl_Text_Display_hide_cursor)(fl_Text_Display text_display){
- return (static_cast<Fl_Text_Display*>(text_display))->hide_cursor();
-}
-FL_EXPORT_C(void,Fl_Text_Display_cursor_style)(fl_Text_Display text_display,int style){
- return (static_cast<Fl_Text_Display*>(text_display))->cursor_style(style);
-}
-FL_EXPORT_C(Fl_Color,Fl_Text_Display_cursor_color)(fl_Text_Display text_display){
- return (static_cast<Fl_Text_Display*>(text_display))->cursor_color();
-}
-FL_EXPORT_C(void,Fl_Text_Display_set_cursor_color)(fl_Text_Display text_display,Fl_Color n){
- return (static_cast<Fl_Text_Display*>(text_display))->cursor_color(n);
-}
-FL_EXPORT_C(int,Fl_Text_Display_scrollbar_width)(fl_Text_Display text_display){
- return (static_cast<Fl_Text_Display*>(text_display))->scrollbar_width();
-}
-FL_EXPORT_C(void,Fl_Text_Display_set_scrollbar_width)(fl_Text_Display text_display,int W){
- return (static_cast<Fl_Text_Display*>(text_display))->scrollbar_width(W);
-}
-FL_EXPORT_C(Fl_Align,Fl_Text_Display_scrollbar_align)(fl_Text_Display text_display){
- return (static_cast<Fl_Text_Display*>(text_display))->scrollbar_align();
-}
-FL_EXPORT_C(void,Fl_Text_Display_set_scrollbar_align)(fl_Text_Display text_display,Fl_Align a){
- return (static_cast<Fl_Text_Display*>(text_display))->scrollbar_align(a);
-}
-FL_EXPORT_C(int,Fl_Text_Display_word_start)(fl_Text_Display text_display,int pos){
- return (static_cast<Fl_Text_Display*>(text_display))->word_start(pos);
-}
-FL_EXPORT_C(int,Fl_Text_Display_word_end)(fl_Text_Display text_display,int pos){
- return (static_cast<Fl_Text_Display*>(text_display))->word_end(pos);
-}
-FL_EXPORT_C(void,Fl_Text_Display_highlight_data)(fl_Text_Display text_display,fl_Text_Buffer styleBuffer,Style_Table_Entry *styleTable,int nStyles,char unfinishedStyle,Unfinished_Style_Cb unfinishedHighlightCB,void *cbArg){
-  Fl_Text_Display::Style_Table_Entry* s = new Fl_Text_Display::Style_Table_Entry[nStyles]();
-  int i = 0;
-  for (;i<nStyles;i++){
-    Fl_Text_Display::Style_Table_Entry x =  Fl_Text_Display::Style_Table_Entry();
-    x.color = styleTable[i].color;
-    x.font = styleTable[i].font;
-    x.size = styleTable[i].size;
-    x.attr = styleTable[i].attr;
-    s[i] = x;
+  FL_EXPORT_C(void, Fl_Text_Display_Destroy)(fl_Text_Display text_display){
+    delete (static_cast<Fl_Text_Display*>(text_display));
   }
- (static_cast<Fl_Text_Display*>(text_display))->highlight_data((static_cast<Fl_Text_Buffer*>(styleBuffer)),s,nStyles,unfinishedStyle,unfinishedHighlightCB,cbArg);
-}
-FL_EXPORT_C(int,Fl_Text_Display_position_style)(fl_Text_Display text_display,int lineStartPos,int lineLen,int lineIndex){
- return (static_cast<Fl_Text_Display*>(text_display))->position_style(lineStartPos,lineLen,lineIndex);
-}
-FL_EXPORT_C(int,Fl_Text_Display_shortcut)(fl_Text_Display text_display){
- return (static_cast<Fl_Text_Display*>(text_display))->shortcut();
-}
-FL_EXPORT_C(void,Fl_Text_Display_set_shortcut)(fl_Text_Display text_display,int s){
- return (static_cast<Fl_Text_Display*>(text_display))->shortcut(s);
-}
-FL_EXPORT_C(Fl_Font,Fl_Text_Display_textfont)(fl_Text_Display text_display){
- return (static_cast<Fl_Text_Display*>(text_display))->textfont();
-}
-FL_EXPORT_C(void,Fl_Text_Display_set_textfont)(fl_Text_Display text_display,Fl_Font s){
- return (static_cast<Fl_Text_Display*>(text_display))->textfont(s);
-}
-FL_EXPORT_C(Fl_Fontsize,Fl_Text_Display_textsize)(fl_Text_Display text_display){
- return (static_cast<Fl_Text_Display*>(text_display))->textsize();
-}
-FL_EXPORT_C(void,Fl_Text_Display_set_textsize)(fl_Text_Display text_display,Fl_Fontsize s){
- return (static_cast<Fl_Text_Display*>(text_display))->textsize(s);
-}
-FL_EXPORT_C(Fl_Color,Fl_Text_Display_textcolor)(fl_Text_Display text_display){
- return (static_cast<Fl_Text_Display*>(text_display))->textcolor();
-}
-FL_EXPORT_C(void,Fl_Text_Display_set_textcolor)(fl_Text_Display text_display,Fl_Color n){
- return (static_cast<Fl_Text_Display*>(text_display))->textcolor(n);
-}
-FL_EXPORT_C(int,Fl_Text_Display_wrapped_column)(fl_Text_Display text_display,int row,int column){
- return (static_cast<Fl_Text_Display*>(text_display))->wrapped_column(row,column);
-}
-FL_EXPORT_C(int,Fl_Text_Display_wrapped_row)(fl_Text_Display text_display,int row){
- return (static_cast<Fl_Text_Display*>(text_display))->wrapped_row(row);
-}
-FL_EXPORT_C(void,Fl_Text_Display_wrap_mode)(fl_Text_Display text_display,int wrap,int wrap_margin){
- return (static_cast<Fl_Text_Display*>(text_display))->wrap_mode(wrap,wrap_margin);
-}
-FL_EXPORT_C(double,Fl_Text_Display_x_to_col)(fl_Text_Display text_display,double x){
- return (static_cast<Fl_Text_Display*>(text_display))->x_to_col(x);
-}
-FL_EXPORT_C(double,Fl_Text_Display_col_to_x)(fl_Text_Display text_display,double col){
- return (static_cast<Fl_Text_Display*>(text_display))->col_to_x(col);
-}
+  FL_EXPORT_C(void,Fl_Text_Display_set_buffer)(fl_Text_Display text_display,fl_Text_Buffer buf){
+    return (static_cast<Fl_Text_Display*>(text_display))->buffer((static_cast<Fl_Text_Buffer*>(buf)));
+  }
+  FL_EXPORT_C(fl_Text_Buffer,Fl_Text_Display_buffer)(fl_Text_Display text_display){
+    return (static_cast<Fl_Text_Display*>(text_display))->buffer();
+  }
+  FL_EXPORT_C(void,Fl_Text_Display_redisplay_range)(fl_Text_Display text_display,int start,int end){
+    return (static_cast<Fl_Text_Display*>(text_display))->redisplay_range(start,end);
+  }
+  FL_EXPORT_C(void,Fl_Text_Display_scroll)(fl_Text_Display text_display,int topLineNum,int horizOffset){
+    return (static_cast<Fl_Text_Display*>(text_display))->scroll(topLineNum,horizOffset);
+  }
+  FL_EXPORT_C(void,Fl_Text_Display_insert)(fl_Text_Display text_display,const char* text){
+    return (static_cast<Fl_Text_Display*>(text_display))->insert(text);
+  }
+  FL_EXPORT_C(void,Fl_Text_Display_overstrike)(fl_Text_Display text_display,const char* text){
+    return (static_cast<Fl_Text_Display*>(text_display))->overstrike(text);
+  }
+  FL_EXPORT_C(void,Fl_Text_Display_set_insert_position)(fl_Text_Display text_display,int newPos){
+    return (static_cast<Fl_Text_Display*>(text_display))->insert_position(newPos);
+  }
+  FL_EXPORT_C(int,Fl_Text_Display_insert_position)(fl_Text_Display text_display){
+    return (static_cast<Fl_Text_Display*>(text_display))->insert_position();
+  }
+  FL_EXPORT_C(int,Fl_Text_Display_position_to_xy)(fl_Text_Display text_display,int pos,int* x,int* y){
+    return (static_cast<Fl_Text_Display*>(text_display))->position_to_xy(pos,x,y);
+  }
+  FL_EXPORT_C(int,Fl_Text_Display_in_selection)(fl_Text_Display text_display,int x,int y){
+    return (static_cast<Fl_Text_Display*>(text_display))->in_selection(x,y);
+  }
+  FL_EXPORT_C(void,Fl_Text_Display_show_insert_position)(fl_Text_Display text_display){
+    return (static_cast<Fl_Text_Display*>(text_display))->show_insert_position();
+  }
+  FL_EXPORT_C(int,Fl_Text_Display_move_right)(fl_Text_Display text_display){
+    return (static_cast<Fl_Text_Display*>(text_display))->move_right();
+  }
+  FL_EXPORT_C(int,Fl_Text_Display_move_left)(fl_Text_Display text_display){
+    return (static_cast<Fl_Text_Display*>(text_display))->move_left();
+  }
+  FL_EXPORT_C(int,Fl_Text_Display_move_up)(fl_Text_Display text_display){
+    return (static_cast<Fl_Text_Display*>(text_display))->move_up();
+  }
+  FL_EXPORT_C(int,Fl_Text_Display_move_down)(fl_Text_Display text_display){
+    return (static_cast<Fl_Text_Display*>(text_display))->move_down();
+  }
+  FL_EXPORT_C(int,Fl_Text_Display_count_lines)(fl_Text_Display text_display,int start,int end,int start_pos_is_line_start){
+    return (static_cast<Fl_Text_Display*>(text_display))->count_lines(start,end,start_pos_is_line_start >= 1 ? true : false);
+  }
+  FL_EXPORT_C(int,Fl_Text_Display_line_start)(fl_Text_Display text_display,int pos){
+    return (static_cast<Fl_Text_Display*>(text_display))->line_start(pos);
+  }
+  FL_EXPORT_C(int,Fl_Text_Display_line_end)(fl_Text_Display text_display,int startPos,int startPosIsLineStart){
+    return (static_cast<Fl_Text_Display*>(text_display))->line_end(startPos,startPosIsLineStart >= 1 ? true : false);
+  }
+  FL_EXPORT_C(int,Fl_Text_Display_skip_lines)(fl_Text_Display text_display,int startPos,int nLines,int startPosIsLineStart){
+    return (static_cast<Fl_Text_Display*>(text_display))->skip_lines(startPos,nLines,startPosIsLineStart>= 1 ? true : false);
+  }
+  FL_EXPORT_C(int,Fl_Text_Display_rewind_lines)(fl_Text_Display text_display,int startPos,int nLines){
+    return (static_cast<Fl_Text_Display*>(text_display))->rewind_lines(startPos,nLines);
+  }
+  FL_EXPORT_C(void,Fl_Text_Display_next_word)(fl_Text_Display text_display){
+    return (static_cast<Fl_Text_Display*>(text_display))->next_word();
+  }
+  FL_EXPORT_C(void,Fl_Text_Display_previous_word)(fl_Text_Display text_display){
+    return (static_cast<Fl_Text_Display*>(text_display))->previous_word();
+  }
+  FL_EXPORT_C(void,Fl_Text_Display_show_cursor)(fl_Text_Display text_display){
+    return (static_cast<Fl_Text_Display*>(text_display))->show_cursor();
+  }
+  FL_EXPORT_C(void,Fl_Text_Display_show_cursor_with_b)(fl_Text_Display text_display,int b){
+    return (static_cast<Fl_Text_Display*>(text_display))->show_cursor(b);
+  }
+  FL_EXPORT_C(void,Fl_Text_Display_hide_cursor)(fl_Text_Display text_display){
+    return (static_cast<Fl_Text_Display*>(text_display))->hide_cursor();
+  }
+  // FL_EXPORT_C(int ,Fl_Text_Display_cursor_style)(fl_Text_Display text_display){
+  //  return (static_cast<Fl_Text_Display*>(text_display))->cursor_style();
+  // }
+  FL_EXPORT_C(void,Fl_Text_Display_set_cursor_style)(fl_Text_Display text_display,int style){
+    (static_cast<Fl_Text_Display*>(text_display))->cursor_style(style);
+  }
+  FL_EXPORT_C(Fl_Color,Fl_Text_Display_cursor_color)(fl_Text_Display text_display){
+    return (static_cast<Fl_Text_Display*>(text_display))->cursor_color();
+  }
+  FL_EXPORT_C(void,Fl_Text_Display_set_cursor_color)(fl_Text_Display text_display,Fl_Color n){
+    return (static_cast<Fl_Text_Display*>(text_display))->cursor_color(n);
+  }
+  FL_EXPORT_C(int,Fl_Text_Display_scrollbar_width)(fl_Text_Display text_display){
+    return (static_cast<Fl_Text_Display*>(text_display))->scrollbar_width();
+  }
+  FL_EXPORT_C(void,Fl_Text_Display_set_scrollbar_width)(fl_Text_Display text_display,int W){
+    return (static_cast<Fl_Text_Display*>(text_display))->scrollbar_width(W);
+  }
+  FL_EXPORT_C(Fl_Align,Fl_Text_Display_scrollbar_align)(fl_Text_Display text_display){
+    return (static_cast<Fl_Text_Display*>(text_display))->scrollbar_align();
+  }
+  FL_EXPORT_C(void,Fl_Text_Display_set_scrollbar_align)(fl_Text_Display text_display,Fl_Align a){
+    return (static_cast<Fl_Text_Display*>(text_display))->scrollbar_align(a);
+  }
+  FL_EXPORT_C(int,Fl_Text_Display_word_start)(fl_Text_Display text_display,int pos){
+    return (static_cast<Fl_Text_Display*>(text_display))->word_start(pos);
+  }
+  FL_EXPORT_C(int,Fl_Text_Display_word_end)(fl_Text_Display text_display,int pos){
+    return (static_cast<Fl_Text_Display*>(text_display))->word_end(pos);
+  }
+  FL_EXPORT_C(void,Fl_Text_Display_highlight_data)(fl_Text_Display text_display,fl_Text_Buffer styleBuffer,Style_Table_Entry *styleTable,int nStyles,char unfinishedStyle,Unfinished_Style_Cb unfinishedHighlightCB,void *cbArg){
+    Fl_Text_Display::Style_Table_Entry* s = new Fl_Text_Display::Style_Table_Entry[nStyles]();
+    int i = 0;
+    for (;i<nStyles;i++){
+      Fl_Text_Display::Style_Table_Entry x =  Fl_Text_Display::Style_Table_Entry();
+      x.color = styleTable[i].color;
+      x.font = styleTable[i].font;
+      x.size = styleTable[i].size;
+      x.attr = styleTable[i].attr;
+      s[i] = x;
+    }
+    (static_cast<Fl_Text_Display*>(text_display))->highlight_data((static_cast<Fl_Text_Buffer*>(styleBuffer)),s,nStyles,unfinishedStyle,unfinishedHighlightCB,cbArg);
+  }
+  FL_EXPORT_C(int,Fl_Text_Display_position_style)(fl_Text_Display text_display,int lineStartPos,int lineLen,int lineIndex){
+    return (static_cast<Fl_Text_Display*>(text_display))->position_style(lineStartPos,lineLen,lineIndex);
+  }
+  FL_EXPORT_C(int,Fl_Text_Display_shortcut)(fl_Text_Display text_display){
+    return (static_cast<Fl_Text_Display*>(text_display))->shortcut();
+  }
+  FL_EXPORT_C(void,Fl_Text_Display_set_shortcut)(fl_Text_Display text_display,int s){
+    return (static_cast<Fl_Text_Display*>(text_display))->shortcut(s);
+  }
+  FL_EXPORT_C(Fl_Font,Fl_Text_Display_textfont)(fl_Text_Display text_display){
+    return (static_cast<Fl_Text_Display*>(text_display))->textfont();
+  }
+  FL_EXPORT_C(void,Fl_Text_Display_set_textfont)(fl_Text_Display text_display,Fl_Font s){
+    return (static_cast<Fl_Text_Display*>(text_display))->textfont(s);
+  }
+  FL_EXPORT_C(Fl_Fontsize,Fl_Text_Display_textsize)(fl_Text_Display text_display){
+    return (static_cast<Fl_Text_Display*>(text_display))->textsize();
+  }
+  FL_EXPORT_C(void,Fl_Text_Display_set_textsize)(fl_Text_Display text_display,Fl_Fontsize s){
+    return (static_cast<Fl_Text_Display*>(text_display))->textsize(s);
+  }
+  FL_EXPORT_C(Fl_Color,Fl_Text_Display_textcolor)(fl_Text_Display text_display){
+    return (static_cast<Fl_Text_Display*>(text_display))->textcolor();
+  }
+  FL_EXPORT_C(void,Fl_Text_Display_set_textcolor)(fl_Text_Display text_display,Fl_Color n){
+    return (static_cast<Fl_Text_Display*>(text_display))->textcolor(n);
+  }
+  FL_EXPORT_C(int,Fl_Text_Display_wrapped_column)(fl_Text_Display text_display,int row,int column){
+    return (static_cast<Fl_Text_Display*>(text_display))->wrapped_column(row,column);
+  }
+  FL_EXPORT_C(int,Fl_Text_Display_wrapped_row)(fl_Text_Display text_display,int row){
+    return (static_cast<Fl_Text_Display*>(text_display))->wrapped_row(row);
+  }
+  FL_EXPORT_C(void,Fl_Text_Display_wrap_mode)(fl_Text_Display text_display,int wrap,int wrap_margin){
+    return (static_cast<Fl_Text_Display*>(text_display))->wrap_mode(wrap,wrap_margin);
+  }
+  FL_EXPORT_C(double,Fl_Text_Display_x_to_col)(fl_Text_Display text_display,double x){
+    return (static_cast<Fl_Text_Display*>(text_display))->x_to_col(x);
+  }
+  FL_EXPORT_C(double,Fl_Text_Display_col_to_x)(fl_Text_Display text_display,double col){
+    return (static_cast<Fl_Text_Display*>(text_display))->col_to_x(col);
+  }
+ FL_EXPORT_C(void,set_linenumber_width)(fl_Text_Display text_display,int width){
+   (static_cast<Fl_Text_Display*>(text_display))->linenumber_width(width);
+ }
+ FL_EXPORT_C(int         ,linenumber_width)(fl_Text_Display text_display){
+   return (static_cast<Fl_Text_Display*>(text_display))->linenumber_width();
+ }
+ FL_EXPORT_C(void        ,set_linenumber_font)(fl_Text_Display text_display,Fl_Font val){
+   (static_cast<Fl_Text_Display*>(text_display))->linenumber_font(val);
+ }
+ FL_EXPORT_C(Fl_Font     ,linenumber_font)(fl_Text_Display text_display){
+   return (static_cast<Fl_Text_Display*>(text_display))->linenumber_font();
+ }
+ FL_EXPORT_C(void        ,set_linenumber_size)(fl_Text_Display text_display,Fl_Fontsize val){
+   (static_cast<Fl_Text_Display*>(text_display))->linenumber_size(val);
+ }
+ FL_EXPORT_C(Fl_Fontsize ,linenumber_size)(fl_Text_Display text_display){
+   return (static_cast<Fl_Text_Display*>(text_display))->linenumber_size();
+ }
+ FL_EXPORT_C(void        ,set_linenumber_fgcolor)(fl_Text_Display text_display,Fl_Color val){
+   (static_cast<Fl_Text_Display*>(text_display))->linenumber_fgcolor(val);
+ }
+ FL_EXPORT_C(Fl_Color    ,linenumber_fgcolor)(fl_Text_Display text_display){
+   return (static_cast<Fl_Text_Display*>(text_display))->linenumber_fgcolor();
+ }
+ FL_EXPORT_C(void        ,set_linenumber_bgcolor)(fl_Text_Display text_display,Fl_Color val){
+   (static_cast<Fl_Text_Display*>(text_display))->linenumber_bgcolor(val);
+ }
+ FL_EXPORT_C(Fl_Color    ,linenumber_bgcolor)(fl_Text_Display text_display){
+   return (static_cast<Fl_Text_Display*>(text_display))->linenumber_bgcolor();
+ }
+ FL_EXPORT_C(void        ,set_linenumber_align)(fl_Text_Display text_display,Fl_Align val){
+   (static_cast<Fl_Text_Display*>(text_display))->linenumber_align(val);
+ }
+ FL_EXPORT_C(Fl_Align    ,linenumber_align)(fl_Text_Display text_display){
+   return (static_cast<Fl_Text_Display*>(text_display))->linenumber_align();
+ }
+ FL_EXPORT_C(void        ,set_linenumber_format)(fl_Text_Display text_display,const char* val){
+   (static_cast<Fl_Text_Display*>(text_display))->linenumber_format(val);
+ }
+ FL_EXPORT_C(const char* ,linenumber_format)(fl_Text_Display text_display){
+   return (static_cast<Fl_Text_Display*>(text_display))->linenumber_format();
+ }
 #ifdef __cplusplus
 }
 #endif

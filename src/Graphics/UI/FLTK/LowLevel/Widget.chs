@@ -378,7 +378,7 @@ instance (impl ~ (IO (Bool))) => Op (Changed ()) Widget orig impl where
   runOp _ _ widget = withRef widget $ \widgetPtr -> changed' widgetPtr
 {# fun Fl_Widget_take_focus as takeFocus' { id `Ptr ()' } -> `Int' #}
 instance (impl ~ (IO (Either NoChange ()))) => Op (TakeFocus ()) Widget orig impl where
-  runOp _ _ widget = withRef widget $ \widgetPtr -> takeFocus' widgetPtr >>= return . statusToEither
+  runOp _ _ widget = withRef widget $ \widgetPtr -> takeFocus' widgetPtr >>= return . successOrNoChange
 {# fun Fl_Widget_set_visible_focus as setVisibleFocus' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
 instance (impl ~ (IO ())) => Op (SetVisibleFocus ()) Widget orig impl where
   runOp _ _ widget = withRef widget $ \widgetPtr -> setVisibleFocus' widgetPtr
@@ -477,6 +477,7 @@ instance (impl ~ ( Maybe (Boxtype, Rectangle) -> IO ())) => Op (DrawFocus ()) Wi
 
 -- $widgetfunctions
 -- @
+--
 -- activate :: 'Ref' 'Widget' -> 'IO' ()
 --
 -- active :: 'Ref' 'Widget' -> 'IO' 'Bool'
@@ -650,7 +651,6 @@ instance (impl ~ ( Maybe (Boxtype, Rectangle) -> IO ())) => Op (DrawFocus ()) Wi
 -- takeFocus :: 'Ref' 'Widget' -> 'IO' ('Either' 'NoChange' ())
 --
 -- takesevents :: 'Ref' 'Widget' -> 'IO' 'Bool'
-
 -- @
 
 

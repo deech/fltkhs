@@ -155,7 +155,7 @@ printHaskell (Haskell (prefix, oldName, name, returnType, haskellArgs)) =
         nameToPtrName n = (cppNameToHaskellName n) ++ "Ptr"
         haskellFunction hArg =
             if ((fst . snd $ hArg) == "Ptr ()")
-            then ("withObject " ++ (cppNameToHaskellName (fst hArg))
+            then ("withRef " ++ (cppNameToHaskellName (fst hArg))
                                     ++ " $ \\" ++ (nameToPtrName (fst hArg)) ++ " -> ")
             else ""
         toHaskellType arg = case (lookup arg haskellEquivalent) of
@@ -163,8 +163,9 @@ printHaskell (Haskell (prefix, oldName, name, returnType, haskellArgs)) =
                               Nothing -> case (lookup arg simpleTypeMap) of
                                            Just a' -> a'
                                            Nothing -> arg
+        functionName = [(toUpper . head $ name)] ++ (tail name)
         haskellFunctionName = case prefix of
-                               (Just p) -> p ++ [(toUpper . head $ name)] ++ (tail name)
+                               (Just p) -> p ++ functionName
                                Nothing -> name
         detectRectangleOrPosition (x@("X",(_,"int*")):y@("Y",(_,"int*")):w@("W",(_,"int*")):h@("H",(_,"int*")):args) =
            [ReturnRectangle x y w h] ++ detectRectangleOrPosition args
@@ -223,7 +224,7 @@ printHaskell (Haskell (prefix, oldName, name, returnType, haskellArgs)) =
              )
             )
     in
-    printf "{# fun unsafe %s as %s { %s } -> %s #}\n%s\n%s"
+    printf "{# fun unsafe %s as %s { %s } -> %s #}\ninstance (impl ~ (%s)) => Op (%s ()) xxx orig impl where\n   runOp _ _ %s"
            oldName
            (name ++ "'")
            (intercalate ","
@@ -264,9 +265,7 @@ printHaskell (Haskell (prefix, oldName, name, returnType, haskellArgs)) =
             )
            )
            (addOutMarshaller (fst returnType))
-           (haskellFunctionName ++
-            " :: " ++
-            (intercalate
+           (intercalate
              " -> "
              ((map
                (
@@ -294,10 +293,8 @@ printHaskell (Haskell (prefix, oldName, name, returnType, haskellArgs)) =
               ]
              )
             )
-           )
-           (haskellFunctionName
-            ++ " "
-            ++ (intercalate " " (map
+           functionName
+           ((intercalate " " (map
                                  (
                                   \a -> case a of
                                           StandAlone arg -> (cppNameToHaskellName . fst) arg
@@ -413,6 +410,9 @@ simpleTypeMap =
     ,("Fl_Boxtype", "Boxtype")
     ,("Fl_Mode", "Mode")
     ,("fl_Widget", "Ptr ()")
+    ,("fl_Text_Buffer", "Ptr ()")
+    ,("fl_Text_Selection", "Ptr ()")
+    ,("fl_Text_Display"  , "Ptr ()")
     ,("fl_Tree_Prefs", "Ptr ()")
     ,("fl_Tree_Item", "Ptr ()")
     ,("fl_Tree", "Ptr ()")
@@ -475,6 +475,9 @@ haskellEquivalent =
     [
      ("fl_Region"         , "Region"),
      ("fl_Widget"         , "Widget"),
+     ("fl_Text_Buffer"    , "TextBuffer"),
+     ("fl_Text_Selection" , "TextSelection"),
+     ("fl_Text_Display"   , "TextDisplay"),
      ("fl_Tree_Prefs"     , "TreePrefs"),
      ("fl_Tree_Item"      , "TreeItem"),
      ("fl_Tree"           , "Tree"),

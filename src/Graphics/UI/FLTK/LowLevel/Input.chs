@@ -104,7 +104,7 @@ instance (impl ~ (String -> Maybe Int ->  IO (Either NoChange ()))) => Op (Stati
     status' <- case l' of
       Nothing -> withRef input $ \inputPtr -> staticValue' inputPtr text
       Just l -> withRef input $ \inputPtr -> staticValueWithLength' inputPtr text l
-    return $ statusToEither status'
+    return $ successOrNoChange status'
 {# fun unsafe Fl_Input_value as value' { id `Ptr ()' } -> `String' #}
 instance (impl ~ ( IO (String))) => Op (GetValue ()) Input orig impl where
   runOp _ _ input = withRef input $ \inputPtr -> value' inputPtr
@@ -136,41 +136,41 @@ instance (impl ~ (Int -> Maybe Int -> IO (Either NoChange ()))) => Op (SetPositi
    status' <- case mark of
       Just m ->  withRef input $ \inputPtr -> setPositionWithCursorMark' inputPtr point m
       Nothing -> withRef input $ \inputPtr -> setPositionNN' inputPtr point
-   return $ statusToEither status'
+   return $ successOrNoChange status'
 {# fun unsafe Fl_Input_set_mark as setMark' { id `Ptr ()',`Int' } -> `Int' #}
 instance (impl ~ (Int ->  IO (Either NoChange ()))) => Op (SetMark ()) Input orig impl where
-  runOp _ _ input m = withRef input $ \inputPtr -> setMark' inputPtr m >>= return . statusToEither
+  runOp _ _ input m = withRef input $ \inputPtr -> setMark' inputPtr m >>= return . successOrNoChange
 {# fun unsafe Fl_Input_replace as replace' { id `Ptr ()',`Int',`Int',`String' } -> `Int' #}
 instance (impl ~ (Int -> Int -> String ->  IO (Either NoChange ()))) => Op (Replace ()) Input orig impl where
-  runOp _ _ input b e text = withRef input $ \inputPtr -> replace' inputPtr b e  text >>= return . statusToEither
+  runOp _ _ input b e text = withRef input $ \inputPtr -> replace' inputPtr b e  text >>= return . successOrNoChange
 {# fun unsafe Fl_Input_cut as cut' { id `Ptr ()' } -> `Int' #}
 instance (impl ~ ( IO (Either NoChange ()))) => Op (Cut ()) Input orig impl where
-  runOp _ _ input = withRef input $ \inputPtr -> cut' inputPtr >>= return . statusToEither
+  runOp _ _ input = withRef input $ \inputPtr -> cut' inputPtr >>= return . successOrNoChange
 {# fun unsafe Fl_Input_cut_bytes as cutBytes' { id `Ptr ()',`Int' } -> `Int' #}
 instance (impl ~ (Int ->  IO (Either NoChange ()))) => Op (CutFromCursor ()) Input orig impl where
-  runOp _ _ input n = withRef input $ \inputPtr -> cutBytes' inputPtr n >>= return . statusToEither
+  runOp _ _ input n = withRef input $ \inputPtr -> cutBytes' inputPtr n >>= return . successOrNoChange
 {# fun unsafe Fl_Input_cut_range as cutRange' { id `Ptr ()',`Int',`Int' } -> `Int' #}
 instance (impl ~ (Int -> Int ->  IO (Either NoChange ()))) => Op (CutRange ()) Input orig impl where
-  runOp _ _ input a b = withRef input $ \inputPtr -> cutRange' inputPtr a b >>= return . statusToEither
+  runOp _ _ input a b = withRef input $ \inputPtr -> cutRange' inputPtr a b >>= return . successOrNoChange
 {# fun unsafe Fl_Input_insert as insert' { id `Ptr ()',`String' } -> `Int' #}
 instance (impl ~ (String ->  IO (Either NoChange ()))) => Op (Insert ()) Input orig impl where
-  runOp _ _ input t = withRef input $ \inputPtr -> insert' inputPtr t >>= return . statusToEither
+  runOp _ _ input t = withRef input $ \inputPtr -> insert' inputPtr t >>= return . successOrNoChange
 {# fun unsafe Fl_Input_insert_with_length as insertWithLength' { id `Ptr ()',`String',`Int' } -> `Int' #}
 instance (impl ~ (String -> Int ->  IO (Either NoChange ()))) => Op (InsertWithLength ()) Input orig impl where
-  runOp _ _ input t l = withRef input $ \inputPtr -> insertWithLength' inputPtr t l >>= return . statusToEither
+  runOp _ _ input t l = withRef input $ \inputPtr -> insertWithLength' inputPtr t l >>= return . successOrNoChange
 {# fun unsafe Fl_Input_copy as copy' { id `Ptr ()',`Int' } -> `Int' #}
 instance (impl ~ (Clipboard ->  IO (Either NoChange ()))) => Op (Copy ()) Input orig impl where
   runOp _ _ input clipboard = do
     status' <- case clipboard of
       InternalClipboard -> withRef input $ \inputPtr -> copy' inputPtr 1
       SharedClipboard -> withRef input $ \inputPtr -> copy' inputPtr 0
-    return $ statusToEither status'
+    return $ successOrNoChange status'
 {# fun unsafe Fl_Input_undo as undo' { id `Ptr ()' } -> `Int' #}
 instance (impl ~ ( IO (Either NoChange ()))) => Op (Undo ()) Input orig impl where
-  runOp _ _ input = withRef input $ \inputPtr -> undo' inputPtr >>= return . statusToEither
+  runOp _ _ input = withRef input $ \inputPtr -> undo' inputPtr >>= return . successOrNoChange
 {# fun unsafe Fl_Input_copy_cuts as copyCuts' { id `Ptr ()' } -> `Int' #}
 instance (impl ~ ( IO (Either NoChange ()))) => Op (CopyCuts ()) Input orig impl where
-  runOp _ _ input = withRef input $ \inputPtr -> copyCuts' inputPtr >>= return . statusToEither
+  runOp _ _ input = withRef input $ \inputPtr -> copyCuts' inputPtr >>= return . successOrNoChange
 {# fun unsafe Fl_Input_shortcut as shortcut' { id `Ptr ()' } -> `Int' #}
 instance (impl ~ ( IO (Int))) => Op (GetShortcut ()) Input orig impl where
   runOp _ _ input = withRef input $ \inputPtr -> shortcut' inputPtr

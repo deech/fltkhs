@@ -129,6 +129,7 @@ EXPORT {
   /* Fl_Text_Display specific */
   FL_EXPORT_C(fl_Text_Display, Fl_Text_Display_New)(int X, int Y, int W, int H);
   FL_EXPORT_C(fl_Text_Display, Fl_Text_Display_New_WithLabel)(int X, int Y, int W, int H, const char* l);
+  FL_EXPORT_C(void, Fl_Text_Display_Destroy)(fl_Text_Display text_display);
   FL_EXPORT_C(int, Fl_Text_Display_handle)(fl_Text_Display text_display, int e);
   FL_EXPORT_C(void, Fl_Text_Display_set_buffer)(fl_Text_Display text_display, fl_Text_Buffer buf);
   FL_EXPORT_C(fl_Text_Buffer, Fl_Text_Display_buffer)(fl_Text_Display text_display);
@@ -154,7 +155,8 @@ EXPORT {
   FL_EXPORT_C(void, Fl_Text_Display_show_cursor)(fl_Text_Display text_display);
   FL_EXPORT_C(void, Fl_Text_Display_show_cursor_with_b)(fl_Text_Display text_display, int b);
   FL_EXPORT_C(void, Fl_Text_Display_hide_cursor)(fl_Text_Display text_display);
-  FL_EXPORT_C(void, Fl_Text_Display_cursor_style)(fl_Text_Display text_display, int style);
+  FL_EXPORT_C(void, Fl_Text_Display_set_cursor_style)(fl_Text_Display text_display, int style);
+  // FL_EXPORT_C(int, Fl_Text_Display_cursor_style)(fl_Text_Display text_display);
   FL_EXPORT_C(Fl_Color, Fl_Text_Display_cursor_color)(fl_Text_Display text_display);
   FL_EXPORT_C(void, Fl_Text_Display_set_cursor_color)(fl_Text_Display text_display, Fl_Color n);
   FL_EXPORT_C(int, Fl_Text_Display_scrollbar_width)(fl_Text_Display text_display);
@@ -178,6 +180,20 @@ EXPORT {
   FL_EXPORT_C(void, Fl_Text_Display_wrap_mode)(fl_Text_Display text_display, int wrap, int wrap_margin);
   FL_EXPORT_C(double, Fl_Text_Display_x_to_col)(fl_Text_Display text_display, double x);
   FL_EXPORT_C(double, Fl_Text_Display_col_to_x)(fl_Text_Display text_display,double col);
+  FL_EXPORT_C(void        ,set_linenumber_width)(fl_Text_Display text_display,int width);
+  FL_EXPORT_C(int         ,linenumber_width)(fl_Text_Display text_display);
+  FL_EXPORT_C(void        ,set_linenumber_font)(fl_Text_Display text_display,Fl_Font val);
+  FL_EXPORT_C(Fl_Font     ,linenumber_font)(fl_Text_Display text_display);
+  FL_EXPORT_C(void        ,set_linenumber_size)(fl_Text_Display text_display,Fl_Fontsize val);
+  FL_EXPORT_C(Fl_Fontsize ,linenumber_size)(fl_Text_Display text_display);
+  FL_EXPORT_C(void        ,set_linenumber_fgcolor)(fl_Text_Display text_display,Fl_Color val);
+  FL_EXPORT_C(Fl_Color    ,linenumber_fgcolor)(fl_Text_Display text_display);
+  FL_EXPORT_C(void        ,set_linenumber_bgcolor)(fl_Text_Display text_display,Fl_Color val);
+  FL_EXPORT_C(Fl_Color    ,linenumber_bgcolor)(fl_Text_Display text_display);
+  FL_EXPORT_C(void        ,set_linenumber_align)(fl_Text_Display text_display,Fl_Align val);
+  FL_EXPORT_C(Fl_Align    ,linenumber_align)(fl_Text_Display text_display);
+  FL_EXPORT_C(void        ,set_linenumber_format)(fl_Text_Display text_display,const char* val);
+  FL_EXPORT_C(const char* ,linenumber_format)(fl_Text_Display text_display);
 #ifdef __cplusplus
 }
 #endif

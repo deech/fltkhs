@@ -209,6 +209,8 @@ module Graphics.UI.FLTK.LowLevel.Hierarchy
          clear,
          SetResizable,
          setResizable,
+         SetNotResizable,
+         setNotResizable,
          GetResizable,
          getResizable,
          AddResizable,
@@ -1172,7 +1174,227 @@ module Graphics.UI.FLTK.LowLevel.Hierarchy
          SetCallbackReason,
          setCallbackReason,
          GetCallbackReason,
-         getCallbackReason
+         getCallbackReason,
+         -- * TextSelection
+         TextSelection,
+         Update,
+         update,
+         Start,
+         start,
+         SetSelected,
+         setSelected,
+         Includes,
+         includes,
+         -- * TextBuffer
+         TextBuffer,
+         InputFileWasTranscoded,
+         inputFileWasTranscoded,
+         FileEncodingWarningMessage,
+         fileEncodingWarningMessage,
+         GetLength,
+         getLength,
+         TextRange,
+         textRange,
+         CharAt,
+         charAt,
+         ByteAt,
+         byteAt,
+         AppendToBuffer,
+         appendToBuffer,
+         CanUndo,
+         canUndo,
+         Insertfile,
+         insertfile,
+         InsertfileWithBuflen,
+         insertfileWithBuflen,
+         Appendfile,
+         appendfile,
+         AppendfileWithBuflen,
+         appendfileWithBuflen,
+         Loadfile,
+         loadfile,
+         LoadfileWithBuflen,
+         loadfileWithBuflen,
+         Outputfile,
+         outputfile,
+         OutputfileWithBuflen,
+         outputfileWithBuflen,
+         Savefile,
+         savefile,
+         SavefileWithBuflen,
+         savefileWithBuflen,
+         GetTabDistance,
+         getTabDistance,
+         SetTabDistance,
+         setTabDistance,
+         Unselect,
+         unselect,
+         SelectionPosition,
+         selectionPosition,
+         SelectionText,
+         selectionText,
+         RemoveSelection,
+         removeSelection,
+         ReplaceSelection,
+         replaceSelection,
+         SecondarySelect,
+         secondarySelect,
+         SecondarySelected,
+         secondarySelected,
+         SecondaryUnselect,
+         secondaryUnselect,
+         SecondarySelectionPosition,
+         secondarySelectionPosition,
+         SecondarySelectionText,
+         secondarySelectionText,
+         RemoveSecondarySelection,
+         removeSecondarySelection,
+         ReplaceSecondarySelection,
+         replaceSecondarySelection,
+         GetHighlight,
+         getHighlight,
+         SetHighlight,
+         setHighlight,
+         Unhighlight,
+         unhighlight,
+         HighlightPosition,
+         highlightPosition,
+         HighlightText,
+         highlightText,
+         AddModifyCallback,
+         addModifyCallback,
+         RemoveModifyCallback,
+         removeModifyCallback,
+         CallModifyCallbacks,
+         callModifyCallbacks,
+         AddPredeleteCallback,
+         addPredeleteCallback,
+         RemovePredeleteCallback,
+         removePredeleteCallback,
+         CallPredeleteCallbacks,
+         callPredeleteCallbacks,
+         LineText,
+         lineText,
+         LineStart,
+         lineStart,
+         LineEnd,
+         lineEnd,
+         WordStart,
+         wordStart,
+         WordEnd,
+         wordEnd,
+         CountDisplayedCharacters,
+         countDisplayedCharacters,
+         SkipDisplayedCharacters,
+         skipDisplayedCharacters,
+         CountLines,
+         countLines,
+         SkipLines,
+         skipLines,
+         RewindLines,
+         rewindLines,
+         FindcharForward,
+         findcharForward,
+         FindcharBackward,
+         findcharBackward,
+         SearchForwardWithMatchcase,
+         searchForwardWithMatchcase,
+         SearchBackwardWithMatchcase,
+         searchBackwardWithMatchcase,
+         PrimarySelection,
+         primarySelection,
+         SecondarySelection,
+         secondarySelection,
+         HighlightSelection,
+         highlightSelection,
+         PrevChar,
+         prevChar,
+         PrevCharClipped,
+         prevCharClipped,
+         NextChar,
+         nextChar,
+         NextCharClipped,
+         nextCharClipped,
+         Utf8Align,
+         utf8Align,
+         -- * TextDisplay,
+         TextDisplay,
+         SetBuffer,
+         setBuffer,
+         GetBuffer,
+         getBuffer,
+         RedisplayRange,
+         redisplayRange,
+         Scroll,
+         scroll,
+         Overstrike,
+         overstrike,
+         SetInsertPosition,
+         setInsertPosition,
+         GetInsertPosition,
+         getInsertPosition,
+         PositionToXy,
+         positionToXy,
+         InSelection,
+         inSelection,
+         ShowInsertPosition,
+         showInsertPosition,
+         MoveRight,
+         moveRight,
+         MoveLeft,
+         moveLeft,
+         MoveUp,
+         moveUp,
+         MoveDown,
+         moveDown,
+         NextWord,
+         nextWord,
+         PreviousWord,
+         previousWord,
+         ShowCursor,
+         showCursor,
+         SetCursorStyle,
+         setCursorStyle,
+         GetScrollbarAlign,
+         getScrollbarAlign,
+         SetScrollbarAlign,
+         setScrollbarAlign,
+         HighlightData,
+         highlightData,
+         PositionStyle,
+         positionStyle,
+         XToCol,
+         xToCol,
+         ColToX,
+         colToX,
+         SetLinenumberWidth,
+         setLinenumberWidth,
+         GetLinenumberWidth,
+         getLinenumberWidth,
+         SetLinenumberFont,
+         setLinenumberFont,
+         GetLinenumberFont,
+         getLinenumberFont,
+         SetLinenumberSize,
+         setLinenumberSize,
+         GetLinenumberSize,
+         getLinenumberSize,
+         SetLinenumberFgcolor,
+         setLinenumberFgcolor,
+         GetLinenumberFgcolor,
+         getLinenumberFgcolor,
+         SetLinenumberBgcolor,
+         setLinenumberBgcolor,
+         GetLinenumberBgcolor,
+         getLinenumberBgcolor,
+         SetLinenumberAlign,
+         setLinenumberAlign,
+         GetLinenumberAlign,
+         getLinenumberAlign,
+         SetLinenumberFormat,
+         setLinenumberFormat,
+         GetLinenumberFormat,
+         getLinenumberFormat
        )
 where
 import Prelude hiding (round)
@@ -1556,6 +1778,7 @@ type GroupFuncs =
   (RemoveWidget
   (Clear
   (SetResizable
+  (SetNotResizable
   (GetResizable
   (AddResizable
   (InitSizes
@@ -1567,7 +1790,7 @@ type GroupFuncs =
   (InsertWithBefore
   (GetArray
   (GetChild
-  ())))))))))))))))))))))))))
+  ()))))))))))))))))))))))))))
 instance Functions Group GroupFuncs
 
 data DrawChild a
@@ -1609,6 +1832,9 @@ clear = dispatch (undefined :: Clear ())
 data SetResizable a
 setResizable :: (FindOp a (SetResizable ()) (Match r), Op (SetResizable ()) r a impl) => Ref a -> impl
 setResizable = dispatch (undefined :: SetResizable ())
+data SetNotResizable a
+setNotResizable :: (FindOp a (SetNotResizable ()) (Match r), Op (SetNotResizable ()) r a impl) => Ref a -> impl
+setNotResizable = dispatch (undefined :: SetNotResizable ())
 data GetResizable a
 getResizable :: (FindOp a (GetResizable ()) (Match r), Op (GetResizable ()) r a impl) => Ref a -> impl
 getResizable = dispatch (undefined :: GetResizable ())
@@ -4078,3 +4304,486 @@ setCallbackReason = dispatch (undefined :: SetCallbackReason ())
 data GetCallbackReason a
 getCallbackReason :: (FindOp a (GetCallbackReason ()) (Match r), Op (GetCallbackReason ()) r a impl) => Ref a -> impl
 getCallbackReason = dispatch (undefined :: GetCallbackReason ())
+
+data CTextSelection parent
+type TextSelection = CTextSelection Base
+type TextSelectionFuncs =
+  (Set
+  (Update
+  (Start
+  (End
+  (Selected
+  (SetSelected
+  (Includes
+  (GetPosition
+  ()))))))))
+instance Functions TextSelection TextSelectionFuncs
+data Update a
+update :: (FindOp a (Update ()) (Match r), Op (Update ()) r a impl) => Ref a -> impl
+update = dispatch (undefined :: Update ())
+data Start a
+start :: (FindOp a (Start ()) (Match r), Op (Start ()) r a impl) => Ref a -> impl
+start = dispatch (undefined :: Start ())
+data SetSelected a
+setSelected :: (FindOp a (SetSelected ()) (Match r), Op (SetSelected ()) r a impl) => Ref a -> impl
+setSelected = dispatch (undefined :: SetSelected ())
+data Includes a
+includes :: (FindOp a (Includes ()) (Match r), Op (Includes ()) r a impl) => Ref a -> impl
+includes = dispatch (undefined :: Includes ())
+
+data CTextBuffer parent
+type TextBuffer = CTextBuffer Base
+type TextBufferFuncs =
+  (Destroy
+  (InputFileWasTranscoded
+  (FileEncodingWarningMessage
+  (GetLength
+  (GetText
+  (SetText
+  (TextRange
+  (CharAt
+  (ByteAt
+  (Insert
+  (AppendToBuffer
+  (Remove
+  (Replace
+  (Copy
+  (Undo
+  (CanUndo
+  (Insertfile
+  (InsertfileWithBuflen
+  (Appendfile
+  (AppendfileWithBuflen
+  (Loadfile
+  (LoadfileWithBuflen
+  (Outputfile
+  (OutputfileWithBuflen
+  (Savefile
+  (SavefileWithBuflen
+  (GetTabDistance
+  (SetTabDistance
+  (Select
+  (Selected
+  (Unselect
+  (SelectionPosition
+  (SelectionText
+  (RemoveSelection
+  (ReplaceSelection
+  (SecondarySelect
+  (SecondarySelected
+  (SecondaryUnselect
+  (SecondarySelectionPosition
+  (SecondarySelectionText
+  (RemoveSecondarySelection
+  (ReplaceSecondarySelection
+  (SetHighlight
+  (GetHighlight
+  (Unhighlight
+  (HighlightPosition
+  (HighlightText
+  (AddModifyCallback
+  (RemoveModifyCallback
+  (CallModifyCallbacks
+  (AddPredeleteCallback
+  (RemovePredeleteCallback
+  (CallPredeleteCallbacks
+  (LineText
+  (LineStart
+  (LineEnd
+  (WordStart
+  (WordEnd
+  (CountDisplayedCharacters
+  (SkipDisplayedCharacters
+  (CountLines
+  (SkipLines
+  (RewindLines
+  (FindcharForward
+  (FindcharBackward
+  (SearchForwardWithMatchcase
+  (SearchBackwardWithMatchcase
+  (PrimarySelection
+  (SecondarySelection
+  (HighlightSelection
+  (PrevChar
+  (PrevCharClipped
+  (NextChar
+  (NextCharClipped
+  (Utf8Align
+  ())))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))
+instance Functions TextBuffer TextBufferFuncs
+
+data InputFileWasTranscoded a
+inputFileWasTranscoded :: (FindOp a (InputFileWasTranscoded ()) (Match r), Op (InputFileWasTranscoded ()) r a impl) => Ref a -> impl
+inputFileWasTranscoded = dispatch (undefined :: InputFileWasTranscoded ())
+data FileEncodingWarningMessage a
+fileEncodingWarningMessage :: (FindOp a (FileEncodingWarningMessage ()) (Match r), Op (FileEncodingWarningMessage ()) r a impl) => Ref a -> impl
+fileEncodingWarningMessage = dispatch (undefined :: FileEncodingWarningMessage ())
+data GetLength a
+getLength :: (FindOp a (GetLength ()) (Match r), Op (GetLength ()) r a impl) => Ref a -> impl
+getLength = dispatch (undefined :: GetLength ())
+data TextRange a
+textRange :: (FindOp a (TextRange ()) (Match r), Op (TextRange ()) r a impl) => Ref a -> impl
+textRange = dispatch (undefined :: TextRange ())
+data CharAt a
+charAt :: (FindOp a (CharAt ()) (Match r), Op (CharAt ()) r a impl) => Ref a -> impl
+charAt = dispatch (undefined :: CharAt ())
+data ByteAt a
+byteAt :: (FindOp a (ByteAt ()) (Match r), Op (ByteAt ()) r a impl) => Ref a -> impl
+byteAt = dispatch (undefined :: ByteAt ())
+data AppendToBuffer a
+appendToBuffer :: (FindOp a (AppendToBuffer ()) (Match r), Op (AppendToBuffer ()) r a impl) => Ref a -> impl
+appendToBuffer = dispatch (undefined :: AppendToBuffer ())
+data CanUndo a
+canUndo :: (FindOp a (CanUndo ()) (Match r), Op (CanUndo ()) r a impl) => Ref a -> impl
+canUndo = dispatch (undefined :: CanUndo ())
+data Insertfile a
+insertfile :: (FindOp a (Insertfile ()) (Match r), Op (Insertfile ()) r a impl) => Ref a -> impl
+insertfile = dispatch (undefined :: Insertfile ())
+data InsertfileWithBuflen a
+insertfileWithBuflen :: (FindOp a (InsertfileWithBuflen ()) (Match r), Op (InsertfileWithBuflen ()) r a impl) => Ref a -> impl
+insertfileWithBuflen = dispatch (undefined :: InsertfileWithBuflen ())
+data Appendfile a
+appendfile :: (FindOp a (Appendfile ()) (Match r), Op (Appendfile ()) r a impl) => Ref a -> impl
+appendfile = dispatch (undefined :: Appendfile ())
+data AppendfileWithBuflen a
+appendfileWithBuflen :: (FindOp a (AppendfileWithBuflen ()) (Match r), Op (AppendfileWithBuflen ()) r a impl) => Ref a -> impl
+appendfileWithBuflen = dispatch (undefined :: AppendfileWithBuflen ())
+data Loadfile a
+loadfile :: (FindOp a (Loadfile ()) (Match r), Op (Loadfile ()) r a impl) => Ref a -> impl
+loadfile = dispatch (undefined :: Loadfile ())
+data LoadfileWithBuflen a
+loadfileWithBuflen :: (FindOp a (LoadfileWithBuflen ()) (Match r), Op (LoadfileWithBuflen ()) r a impl) => Ref a -> impl
+loadfileWithBuflen = dispatch (undefined :: LoadfileWithBuflen ())
+data Outputfile a
+outputfile :: (FindOp a (Outputfile ()) (Match r), Op (Outputfile ()) r a impl) => Ref a -> impl
+outputfile = dispatch (undefined :: Outputfile ())
+data OutputfileWithBuflen a
+outputfileWithBuflen :: (FindOp a (OutputfileWithBuflen ()) (Match r), Op (OutputfileWithBuflen ()) r a impl) => Ref a -> impl
+outputfileWithBuflen = dispatch (undefined :: OutputfileWithBuflen ())
+data Savefile a
+savefile :: (FindOp a (Savefile ()) (Match r), Op (Savefile ()) r a impl) => Ref a -> impl
+savefile = dispatch (undefined :: Savefile ())
+data SavefileWithBuflen a
+savefileWithBuflen :: (FindOp a (SavefileWithBuflen ()) (Match r), Op (SavefileWithBuflen ()) r a impl) => Ref a -> impl
+savefileWithBuflen = dispatch (undefined :: SavefileWithBuflen ())
+data GetTabDistance a
+getTabDistance :: (FindOp a (GetTabDistance ()) (Match r), Op (GetTabDistance ()) r a impl) => Ref a -> impl
+getTabDistance = dispatch (undefined :: GetTabDistance ())
+data SetTabDistance a
+setTabDistance :: (FindOp a (SetTabDistance ()) (Match r), Op (SetTabDistance ()) r a impl) => Ref a -> impl
+setTabDistance = dispatch (undefined :: SetTabDistance ())
+data Unselect a
+unselect :: (FindOp a (Unselect ()) (Match r), Op (Unselect ()) r a impl) => Ref a -> impl
+unselect = dispatch (undefined :: Unselect ())
+data SelectionPosition a
+selectionPosition :: (FindOp a (SelectionPosition ()) (Match r), Op (SelectionPosition ()) r a impl) => Ref a -> impl
+selectionPosition = dispatch (undefined :: SelectionPosition ())
+data SelectionText a
+selectionText :: (FindOp a (SelectionText ()) (Match r), Op (SelectionText ()) r a impl) => Ref a -> impl
+selectionText = dispatch (undefined :: SelectionText ())
+data RemoveSelection a
+removeSelection :: (FindOp a (RemoveSelection ()) (Match r), Op (RemoveSelection ()) r a impl) => Ref a -> impl
+removeSelection = dispatch (undefined :: RemoveSelection ())
+data ReplaceSelection a
+replaceSelection :: (FindOp a (ReplaceSelection ()) (Match r), Op (ReplaceSelection ()) r a impl) => Ref a -> impl
+replaceSelection = dispatch (undefined :: ReplaceSelection ())
+data SecondarySelect a
+secondarySelect :: (FindOp a (SecondarySelect ()) (Match r), Op (SecondarySelect ()) r a impl) => Ref a -> impl
+secondarySelect = dispatch (undefined :: SecondarySelect ())
+data SecondarySelected a
+secondarySelected :: (FindOp a (SecondarySelected ()) (Match r), Op (SecondarySelected ()) r a impl) => Ref a -> impl
+secondarySelected = dispatch (undefined :: SecondarySelected ())
+data SecondaryUnselect a
+secondaryUnselect :: (FindOp a (SecondaryUnselect ()) (Match r), Op (SecondaryUnselect ()) r a impl) => Ref a -> impl
+secondaryUnselect = dispatch (undefined :: SecondaryUnselect ())
+data SecondarySelectionPosition a
+secondarySelectionPosition :: (FindOp a (SecondarySelectionPosition ()) (Match r), Op (SecondarySelectionPosition ()) r a impl) => Ref a -> impl
+secondarySelectionPosition = dispatch (undefined :: SecondarySelectionPosition ())
+data SecondarySelectionText a
+secondarySelectionText :: (FindOp a (SecondarySelectionText ()) (Match r), Op (SecondarySelectionText ()) r a impl) => Ref a -> impl
+secondarySelectionText = dispatch (undefined :: SecondarySelectionText ())
+data RemoveSecondarySelection a
+removeSecondarySelection :: (FindOp a (RemoveSecondarySelection ()) (Match r), Op (RemoveSecondarySelection ()) r a impl) => Ref a -> impl
+removeSecondarySelection = dispatch (undefined :: RemoveSecondarySelection ())
+data ReplaceSecondarySelection a
+replaceSecondarySelection :: (FindOp a (ReplaceSecondarySelection ()) (Match r), Op (ReplaceSecondarySelection ()) r a impl) => Ref a -> impl
+replaceSecondarySelection = dispatch (undefined :: ReplaceSecondarySelection ())
+data GetHighlight a
+getHighlight :: (FindOp a (GetHighlight ()) (Match r), Op (GetHighlight ()) r a impl) => Ref a -> impl
+getHighlight = dispatch (undefined :: GetHighlight ())
+data SetHighlight a
+setHighlight :: (FindOp a (SetHighlight ()) (Match r), Op (SetHighlight ()) r a impl) => Ref a -> impl
+setHighlight = dispatch (undefined :: SetHighlight ())
+data Unhighlight a
+unhighlight :: (FindOp a (Unhighlight ()) (Match r), Op (Unhighlight ()) r a impl) => Ref a -> impl
+unhighlight = dispatch (undefined :: Unhighlight ())
+data HighlightPosition a
+highlightPosition :: (FindOp a (HighlightPosition ()) (Match r), Op (HighlightPosition ()) r a impl) => Ref a -> impl
+highlightPosition = dispatch (undefined :: HighlightPosition ())
+data HighlightText a
+highlightText :: (FindOp a (HighlightText ()) (Match r), Op (HighlightText ()) r a impl) => Ref a -> impl
+highlightText = dispatch (undefined :: HighlightText ())
+data AddModifyCallback a
+addModifyCallback :: (FindOp a (AddModifyCallback ()) (Match r), Op (AddModifyCallback ()) r a impl) => Ref a -> impl
+addModifyCallback = dispatch (undefined :: AddModifyCallback ())
+data RemoveModifyCallback a
+removeModifyCallback :: (FindOp a (RemoveModifyCallback ()) (Match r), Op (RemoveModifyCallback ()) r a impl) => Ref a -> impl
+removeModifyCallback = dispatch (undefined :: RemoveModifyCallback ())
+data CallModifyCallbacks a
+callModifyCallbacks :: (FindOp a (CallModifyCallbacks ()) (Match r), Op (CallModifyCallbacks ()) r a impl) => Ref a -> impl
+callModifyCallbacks = dispatch (undefined :: CallModifyCallbacks ())
+data AddPredeleteCallback a
+addPredeleteCallback :: (FindOp a (AddPredeleteCallback ()) (Match r), Op (AddPredeleteCallback ()) r a impl) => Ref a -> impl
+addPredeleteCallback = dispatch (undefined :: AddPredeleteCallback ())
+data RemovePredeleteCallback a
+removePredeleteCallback :: (FindOp a (RemovePredeleteCallback ()) (Match r), Op (RemovePredeleteCallback ()) r a impl) => Ref a -> impl
+removePredeleteCallback = dispatch (undefined :: RemovePredeleteCallback ())
+data CallPredeleteCallbacks a
+callPredeleteCallbacks :: (FindOp a (CallPredeleteCallbacks ()) (Match r), Op (CallPredeleteCallbacks ()) r a impl) => Ref a -> impl
+callPredeleteCallbacks = dispatch (undefined :: CallPredeleteCallbacks ())
+data LineText a
+lineText :: (FindOp a (LineText ()) (Match r), Op (LineText ()) r a impl) => Ref a -> impl
+lineText = dispatch (undefined :: LineText ())
+data LineStart a
+lineStart :: (FindOp a (LineStart ()) (Match r), Op (LineStart ()) r a impl) => Ref a -> impl
+lineStart = dispatch (undefined :: LineStart ())
+data LineEnd a
+lineEnd :: (FindOp a (LineEnd ()) (Match r), Op (LineEnd ()) r a impl) => Ref a -> impl
+lineEnd = dispatch (undefined :: LineEnd ())
+data WordStart a
+wordStart :: (FindOp a (WordStart ()) (Match r), Op (WordStart ()) r a impl) => Ref a -> impl
+wordStart = dispatch (undefined :: WordStart ())
+data WordEnd a
+wordEnd :: (FindOp a (WordEnd ()) (Match r), Op (WordEnd ()) r a impl) => Ref a -> impl
+wordEnd = dispatch (undefined :: WordEnd ())
+data CountDisplayedCharacters a
+countDisplayedCharacters :: (FindOp a (CountDisplayedCharacters ()) (Match r), Op (CountDisplayedCharacters ()) r a impl) => Ref a -> impl
+countDisplayedCharacters = dispatch (undefined :: CountDisplayedCharacters ())
+data SkipDisplayedCharacters a
+skipDisplayedCharacters :: (FindOp a (SkipDisplayedCharacters ()) (Match r), Op (SkipDisplayedCharacters ()) r a impl) => Ref a -> impl
+skipDisplayedCharacters = dispatch (undefined :: SkipDisplayedCharacters ())
+data CountLines a
+countLines :: (FindOp a (CountLines ()) (Match r), Op (CountLines ()) r a impl) => Ref a -> impl
+countLines = dispatch (undefined :: CountLines ())
+data SkipLines a
+skipLines :: (FindOp a (SkipLines ()) (Match r), Op (SkipLines ()) r a impl) => Ref a -> impl
+skipLines = dispatch (undefined :: SkipLines ())
+data RewindLines a
+rewindLines :: (FindOp a (RewindLines ()) (Match r), Op (RewindLines ()) r a impl) => Ref a -> impl
+rewindLines = dispatch (undefined :: RewindLines ())
+data FindcharForward a
+findcharForward :: (FindOp a (FindcharForward ()) (Match r), Op (FindcharForward ()) r a impl) => Ref a -> impl
+findcharForward = dispatch (undefined :: FindcharForward ())
+data FindcharBackward a
+findcharBackward :: (FindOp a (FindcharBackward ()) (Match r), Op (FindcharBackward ()) r a impl) => Ref a -> impl
+findcharBackward = dispatch (undefined :: FindcharBackward ())
+data SearchForwardWithMatchcase a
+searchForwardWithMatchcase :: (FindOp a (SearchForwardWithMatchcase ()) (Match r), Op (SearchForwardWithMatchcase ()) r a impl) => Ref a -> impl
+searchForwardWithMatchcase = dispatch (undefined :: SearchForwardWithMatchcase ())
+data SearchBackwardWithMatchcase a
+searchBackwardWithMatchcase :: (FindOp a (SearchBackwardWithMatchcase ()) (Match r), Op (SearchBackwardWithMatchcase ()) r a impl) => Ref a -> impl
+searchBackwardWithMatchcase = dispatch (undefined :: SearchBackwardWithMatchcase ())
+data PrimarySelection a
+primarySelection :: (FindOp a (PrimarySelection ()) (Match r), Op (PrimarySelection ()) r a impl) => Ref a -> impl
+primarySelection = dispatch (undefined :: PrimarySelection ())
+data SecondarySelection a
+secondarySelection :: (FindOp a (SecondarySelection ()) (Match r), Op (SecondarySelection ()) r a impl) => Ref a -> impl
+secondarySelection = dispatch (undefined :: SecondarySelection ())
+data HighlightSelection a
+highlightSelection :: (FindOp a (HighlightSelection ()) (Match r), Op (HighlightSelection ()) r a impl) => Ref a -> impl
+highlightSelection = dispatch (undefined :: HighlightSelection ())
+data PrevChar a
+prevChar :: (FindOp a (PrevChar ()) (Match r), Op (PrevChar ()) r a impl) => Ref a -> impl
+prevChar = dispatch (undefined :: PrevChar ())
+data PrevCharClipped a
+prevCharClipped :: (FindOp a (PrevCharClipped ()) (Match r), Op (PrevCharClipped ()) r a impl) => Ref a -> impl
+prevCharClipped = dispatch (undefined :: PrevCharClipped ())
+data NextChar a
+nextChar :: (FindOp a (NextChar ()) (Match r), Op (NextChar ()) r a impl) => Ref a -> impl
+nextChar = dispatch (undefined :: NextChar ())
+data NextCharClipped a
+nextCharClipped :: (FindOp a (NextCharClipped ()) (Match r), Op (NextCharClipped ()) r a impl) => Ref a -> impl
+nextCharClipped = dispatch (undefined :: NextCharClipped ())
+data Utf8Align a
+utf8Align :: (FindOp a (Utf8Align ()) (Match r), Op (Utf8Align ()) r a impl) => Ref a -> impl
+utf8Align = dispatch (undefined :: Utf8Align ())
+
+data CTextDisplay parent
+type TextDisplay = CTextDisplay Base
+type TextDisplayFuncs =
+  (Destroy
+  (Resize
+  (Handle
+  (SetBuffer
+  (GetBuffer
+  (RedisplayRange
+  (Scroll
+  (Overstrike
+  (SetInsertPosition
+  (GetInsertPosition
+  (PositionToXy
+  (InSelection
+  (ShowInsertPosition
+  (MoveRight
+  (MoveLeft
+  (MoveUp
+  (MoveDown
+  (CountLines
+  (LineStart
+  (LineEnd
+  (SkipLines
+  (RewindLines
+  (NextWord
+  (PreviousWord
+  (ShowCursor
+  (SetCursorStyle
+  (GetCursorColor
+  (SetCursorColor
+  (GetScrollbarWidth
+  (SetScrollbarWidth
+  (GetScrollbarAlign
+  (SetScrollbarAlign
+  (WordStart
+  (WordEnd
+  (HighlightData
+  (PositionStyle
+  (GetShortcut
+  (SetShortcut
+  (GetTextfont
+  (GetTextsize
+  (SetTextsize
+  (GetTextcolor
+  (SetTextcolor
+  (XToCol
+  (ColToX
+  (SetLinenumberWidth
+  (GetLinenumberWidth
+  (SetLinenumberFont
+  (GetLinenumberFont
+  (SetLinenumberSize
+  (GetLinenumberSize
+  (SetLinenumberFgcolor
+  (GetLinenumberFgcolor
+  (SetLinenumberBgcolor
+  (GetLinenumberBgcolor
+  (SetLinenumberAlign
+  (GetLinenumberAlign
+  (SetLinenumberFormat
+  (GetLinenumberFormat
+  ())))))))))))))))))))))))))))))))))))))))))))))))))))))))))))
+instance Functions TextDisplay TextDisplayFuncs
+
+data SetBuffer a
+setBuffer :: (FindOp a (SetBuffer ()) (Match r), Op (SetBuffer ()) r a impl) => Ref a -> impl
+setBuffer = dispatch (undefined :: SetBuffer ())
+data GetBuffer a
+getBuffer :: (FindOp a (GetBuffer ()) (Match r), Op (GetBuffer ()) r a impl) => Ref a -> impl
+getBuffer = dispatch (undefined :: GetBuffer ())
+data RedisplayRange a
+redisplayRange :: (FindOp a (RedisplayRange ()) (Match r), Op (RedisplayRange ()) r a impl) => Ref a -> impl
+redisplayRange = dispatch (undefined :: RedisplayRange ())
+data Scroll a
+scroll :: (FindOp a (Scroll ()) (Match r), Op (Scroll ()) r a impl) => Ref a -> impl
+scroll = dispatch (undefined :: Scroll ())
+data Overstrike a
+overstrike :: (FindOp a (Overstrike ()) (Match r), Op (Overstrike ()) r a impl) => Ref a -> impl
+overstrike = dispatch (undefined :: Overstrike ())
+data SetInsertPosition a
+setInsertPosition :: (FindOp a (SetInsertPosition ()) (Match r), Op (SetInsertPosition ()) r a impl) => Ref a -> impl
+setInsertPosition = dispatch (undefined :: SetInsertPosition ())
+data GetInsertPosition a
+getInsertPosition :: (FindOp a (GetInsertPosition ()) (Match r), Op (GetInsertPosition ()) r a impl) => Ref a -> impl
+getInsertPosition = dispatch (undefined :: GetInsertPosition ())
+data PositionToXy a
+positionToXy :: (FindOp a (PositionToXy ()) (Match r), Op (PositionToXy ()) r a impl) => Ref a -> impl
+positionToXy = dispatch (undefined :: PositionToXy ())
+data InSelection a
+inSelection :: (FindOp a (InSelection ()) (Match r), Op (InSelection ()) r a impl) => Ref a -> impl
+inSelection = dispatch (undefined :: InSelection ())
+data ShowInsertPosition a
+showInsertPosition :: (FindOp a (ShowInsertPosition ()) (Match r), Op (ShowInsertPosition ()) r a impl) => Ref a -> impl
+showInsertPosition = dispatch (undefined :: ShowInsertPosition ())
+data MoveRight a
+moveRight :: (FindOp a (MoveRight ()) (Match r), Op (MoveRight ()) r a impl) => Ref a -> impl
+moveRight = dispatch (undefined :: MoveRight ())
+data MoveLeft a
+moveLeft :: (FindOp a (MoveLeft ()) (Match r), Op (MoveLeft ()) r a impl) => Ref a -> impl
+moveLeft = dispatch (undefined :: MoveLeft ())
+data MoveUp a
+moveUp :: (FindOp a (MoveUp ()) (Match r), Op (MoveUp ()) r a impl) => Ref a -> impl
+moveUp = dispatch (undefined :: MoveUp ())
+data MoveDown a
+moveDown :: (FindOp a (MoveDown ()) (Match r), Op (MoveDown ()) r a impl) => Ref a -> impl
+moveDown = dispatch (undefined :: MoveDown ())
+data NextWord a
+nextWord :: (FindOp a (NextWord ()) (Match r), Op (NextWord ()) r a impl) => Ref a -> impl
+nextWord = dispatch (undefined :: NextWord ())
+data PreviousWord a
+previousWord :: (FindOp a (PreviousWord ()) (Match r), Op (PreviousWord ()) r a impl) => Ref a -> impl
+previousWord = dispatch (undefined :: PreviousWord ())
+data ShowCursor a
+showCursor :: (FindOp a (ShowCursor ()) (Match r), Op (ShowCursor ()) r a impl) => Ref a -> impl
+showCursor = dispatch (undefined :: ShowCursor ())
+data SetCursorStyle a
+setCursorStyle :: (FindOp a (SetCursorStyle ()) (Match r), Op (SetCursorStyle ()) r a impl) => Ref a -> impl
+setCursorStyle = dispatch (undefined :: SetCursorStyle ())
+data GetScrollbarAlign a
+getScrollbarAlign :: (FindOp a (GetScrollbarAlign ()) (Match r), Op (GetScrollbarAlign ()) r a impl) => Ref a -> impl
+getScrollbarAlign = dispatch (undefined :: GetScrollbarAlign ())
+data SetScrollbarAlign a
+setScrollbarAlign :: (FindOp a (SetScrollbarAlign ()) (Match r), Op (SetScrollbarAlign ()) r a impl) => Ref a -> impl
+setScrollbarAlign = dispatch (undefined :: SetScrollbarAlign ())
+data HighlightData a
+highlightData :: (FindOp a (HighlightData ()) (Match r), Op (HighlightData ()) r a impl) => Ref a -> impl
+highlightData = dispatch (undefined :: HighlightData ())
+data PositionStyle a
+positionStyle :: (FindOp a (PositionStyle ()) (Match r), Op (PositionStyle ()) r a impl) => Ref a -> impl
+positionStyle = dispatch (undefined :: PositionStyle ())
+data XToCol a
+xToCol :: (FindOp a (XToCol ()) (Match r), Op (XToCol ()) r a impl) => Ref a -> impl
+xToCol = dispatch (undefined :: XToCol ())
+data ColToX a
+colToX :: (FindOp a (ColToX ()) (Match r), Op (ColToX ()) r a impl) => Ref a -> impl
+colToX = dispatch (undefined :: ColToX ())
+data SetLinenumberWidth a
+setLinenumberWidth :: (FindOp a (SetLinenumberWidth ()) (Match r), Op (SetLinenumberWidth ()) r a impl) => Ref a -> impl
+setLinenumberWidth = dispatch (undefined :: SetLinenumberWidth ())
+data GetLinenumberWidth a
+getLinenumberWidth :: (FindOp a (GetLinenumberWidth ()) (Match r), Op (GetLinenumberWidth ()) r a impl) => Ref a -> impl
+getLinenumberWidth = dispatch (undefined :: GetLinenumberWidth ())
+data SetLinenumberFont a
+setLinenumberFont :: (FindOp a (SetLinenumberFont ()) (Match r), Op (SetLinenumberFont ()) r a impl) => Ref a -> impl
+setLinenumberFont = dispatch (undefined :: SetLinenumberFont ())
+data GetLinenumberFont a
+getLinenumberFont :: (FindOp a (GetLinenumberFont ()) (Match r), Op (GetLinenumberFont ()) r a impl) => Ref a -> impl
+getLinenumberFont = dispatch (undefined :: GetLinenumberFont ())
+data SetLinenumberSize a
+setLinenumberSize :: (FindOp a (SetLinenumberSize ()) (Match r), Op (SetLinenumberSize ()) r a impl) => Ref a -> impl
+setLinenumberSize = dispatch (undefined :: SetLinenumberSize ())
+data GetLinenumberSize a
+getLinenumberSize :: (FindOp a (GetLinenumberSize ()) (Match r), Op (GetLinenumberSize ()) r a impl) => Ref a -> impl
+getLinenumberSize = dispatch (undefined :: GetLinenumberSize ())
+data SetLinenumberFgcolor a
+setLinenumberFgcolor :: (FindOp a (SetLinenumberFgcolor ()) (Match r), Op (SetLinenumberFgcolor ()) r a impl) => Ref a -> impl
+setLinenumberFgcolor = dispatch (undefined :: SetLinenumberFgcolor ())
+data GetLinenumberFgcolor a
+getLinenumberFgcolor :: (FindOp a (GetLinenumberFgcolor ()) (Match r), Op (GetLinenumberFgcolor ()) r a impl) => Ref a -> impl
+getLinenumberFgcolor = dispatch (undefined :: GetLinenumberFgcolor ())
+data SetLinenumberBgcolor a
+setLinenumberBgcolor :: (FindOp a (SetLinenumberBgcolor ()) (Match r), Op (SetLinenumberBgcolor ()) r a impl) => Ref a -> impl
+setLinenumberBgcolor = dispatch (undefined :: SetLinenumberBgcolor ())
+data GetLinenumberBgcolor a
+getLinenumberBgcolor :: (FindOp a (GetLinenumberBgcolor ()) (Match r), Op (GetLinenumberBgcolor ()) r a impl) => Ref a -> impl
+getLinenumberBgcolor = dispatch (undefined :: GetLinenumberBgcolor ())
+data SetLinenumberAlign a
+setLinenumberAlign :: (FindOp a (SetLinenumberAlign ()) (Match r), Op (SetLinenumberAlign ()) r a impl) => Ref a -> impl
+setLinenumberAlign = dispatch (undefined :: SetLinenumberAlign ())
+data GetLinenumberAlign a
+getLinenumberAlign :: (FindOp a (GetLinenumberAlign ()) (Match r), Op (GetLinenumberAlign ()) r a impl) => Ref a -> impl
+getLinenumberAlign = dispatch (undefined :: GetLinenumberAlign ())
+data SetLinenumberFormat a
+setLinenumberFormat :: (FindOp a (SetLinenumberFormat ()) (Match r), Op (SetLinenumberFormat ()) r a impl) => Ref a -> impl
+setLinenumberFormat = dispatch (undefined :: SetLinenumberFormat ())
+data GetLinenumberFormat a
+getLinenumberFormat :: (FindOp a (GetLinenumberFormat ()) (Match r), Op (GetLinenumberFormat ()) r a impl) => Ref a -> impl
+getLinenumberFormat = dispatch (undefined :: GetLinenumberFormat ())
