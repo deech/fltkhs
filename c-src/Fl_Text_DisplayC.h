@@ -98,7 +98,6 @@ EXPORT {
   FL_EXPORT_C(fl_Text_Display,     Fl_Text_Display_as_text_display)(fl_Text_Display text_display);
   FL_EXPORT_C(fl_Gl_Window, Fl_Text_Display_as_gl_window_super)(fl_Text_Display text_display);
   FL_EXPORT_C(fl_Gl_Window, Fl_Text_Display_as_gl_window)(fl_Text_Display text_display);
-  FL_EXPORT_C(void,         Fl_Text_Display_resize_super)(fl_Text_Display text_display,int X, int Y, int W, int H);
   FL_EXPORT_C(void,         Fl_Text_Display_resize)(fl_Text_Display text_display,int X, int Y, int W, int H);
 
   /* Fl_Group specific */

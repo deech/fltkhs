@@ -4609,7 +4609,7 @@ utf8Align :: (FindOp a (Utf8Align ()) (Match r), Op (Utf8Align ()) r a impl) => 
 utf8Align = dispatch (undefined :: Utf8Align ())
 
 data CTextDisplay parent
-type TextDisplay = CTextDisplay Base
+type TextDisplay = CTextDisplay Group
 type TextDisplayFuncs =
   (Destroy
   (Resize

@@ -19,6 +19,7 @@ where
 #include "Fl_Text_DisplayC.h"
 import C2HS hiding (cFromEnum, cFromBool, cToBool,cToEnum)
 import Foreign.C.Types
+import qualified Foreign.Concurrent as FC
 import Graphics.UI.FLTK.LowLevel.Fl_Types
 import Graphics.UI.FLTK.LowLevel.Fl_Enumerations
 import Graphics.UI.FLTK.LowLevel.Utils
@@ -40,17 +41,12 @@ mkStyleTableEntriesPtr td stes = do
     )
     (zip [0..] stes)
   textDisplayAsPtr <- unsafeRefToPtr td
-  finalizerF <- mkFinalizerEnv
-                 (
-                   \textDisplayPtr' styleTableEntriesPtr' ->
-                     if (textDisplayPtr' == nullPtr)
-                     then free styleTableEntriesPtr'
-                     else return ()
-                 )
-  newForeignPtrEnv
-   finalizerF
-   textDisplayAsPtr
+  let finalizerF = if (textDisplayAsPtr == nullPtr)
+                   then free styleTableEntriesPtr
+                   else return ()
+  FC.newForeignPtr
    styleTableEntriesPtr
+   finalizerF
 
 indexStyleTableEntries :: [StyleTableEntry] -> [(Char, StyleTableEntry)]
 indexStyleTableEntries = zip ['A'..]
