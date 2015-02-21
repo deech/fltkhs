@@ -239,11 +239,11 @@ instance (Parent a MenuItem, impl ~ (String -> Maybe Shortcut -> (Ref a -> IO ()
       ptr <- toCallbackPrim cb
       idx' <- case shortcut of
                Just s' -> case s' of
-                 KeySequence ks ->
+                 KeySequence (ShortcutKeySequence modifiers char) ->
                    addWithFlags'
                      menu_itemPtr
                      name
-                     (keySequenceToCInt ks)
+                     (keySequenceToCInt modifiers char)
                      (castFunPtr ptr)
                      combinedFlags
                  KeyFormat format' ->
@@ -267,18 +267,18 @@ instance (Parent a MenuItem, impl ~ (String -> Maybe Shortcut -> (Ref a -> IO ()
 instance (Parent a MenuItem, impl ~ (Int -> String -> Maybe ShortcutKeySequence -> (Ref a -> IO ()) -> MenuItemFlags -> IO (MenuItemIndex))) => Op (Insert ()) MenuItem orig impl where
   runOp _ _ menu_item index' name ks cb flags =
     withRef menu_item $ \menu_itemPtr ->
-                            let combinedFlags = menuItemFlagsToInt flags
-                                shortcutCode = maybe 0 keySequenceToCInt ks
-                            in do
-                              ptr <- toCallbackPrim cb
-                              idx' <- insertWithFlags'
-                                       menu_itemPtr
-                                       index'
-                                       name
-                                       shortcutCode
-                                       (castFunPtr ptr)
-                                       combinedFlags
-                              return (MenuItemIndex idx')
+      let combinedFlags = menuItemFlagsToInt flags
+          shortcutCode = maybe 0 (\(ShortcutKeySequence modifiers char) -> keySequenceToCInt modifiers char ) ks
+      in do
+        ptr <- toCallbackPrim cb
+        idx' <- insertWithFlags'
+                 menu_itemPtr
+                 index'
+                 name
+                 shortcutCode
+                 (castFunPtr ptr)
+                 combinedFlags
+        return (MenuItemIndex idx')
 
 {# fun unsafe Fl_Menu_Item_size as size' { id `Ptr ()' } -> `Int' #}
 instance (impl ~ ( IO (Int))) => Op (GetSize ()) MenuItem orig impl where

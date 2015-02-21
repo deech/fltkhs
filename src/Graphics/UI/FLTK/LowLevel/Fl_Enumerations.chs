@@ -16,6 +16,7 @@ module Graphics.UI.FLTK.LowLevel.Fl_Enumerations
      allSpecialKeys,
      MouseButton(..),
      EventState(..),
+     allEventStates,
      kb_CommandState, kb_ControlState, kb_KpLast,
      -- * Widget damage types
      Damage(..),
@@ -557,7 +558,7 @@ allSpecialKeys = [
   ]
 
 {#enum MouseButton {} deriving (Show, Eq) #}
-{#enum EventState {} deriving (Show, Eq) #}
+{#enum EventState {} deriving (Show, Eq, Ord) #}
 kb_CommandState, kb_ControlState :: EventState
 #ifdef __APPLE__
 kb_CommandState = Kb_MetaState
@@ -662,6 +663,20 @@ allWhen = [
     WhenEnterKey,
     WhenEnterKeyAlways,
     WhenEnterKeyChanged
+  ]
+
+allEventStates :: [EventState]
+allEventStates = [
+    Kb_ShiftState,
+    Kb_CapsLockState,
+    Kb_CtrlState,
+    Kb_AltState,
+    Kb_NumLockState,
+    Kb_MetaState,
+    Kb_ScrollLockState,
+    Mouse_Button1State,
+    Mouse_Button2State,
+    Mouse_Button3State
   ]
 data Boxtype = NoBox
              | FlatBox

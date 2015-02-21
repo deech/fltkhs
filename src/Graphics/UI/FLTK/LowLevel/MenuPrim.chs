@@ -141,12 +141,12 @@ instance (Parent a MenuPrim, impl ~ ( Int -> String -> Maybe Shortcut -> (Ref a 
       ptr <- toCallbackPrim cb
       idx' <- case shortcut of
                Just s' -> case s' of
-                 KeySequence ks ->
+                 KeySequence (ShortcutKeySequence modifiers char) ->
                    insertWithFlags'
                     menu_Ptr
                     index'
                     name
-                    (keySequenceToCInt ks)
+                    (keySequenceToCInt modifiers char)
                     (castFunPtr ptr)
                     combinedFlags
                  KeyFormat format' ->
@@ -180,11 +180,11 @@ instance (Parent a MenuPrim, impl ~ ( String -> Maybe Shortcut -> (Ref a-> IO ()
       ptr <- toCallbackPrim cb
       idx' <- case shortcut of
                Just s' -> case s' of
-                 KeySequence ks ->
+                 KeySequence (ShortcutKeySequence modifiers char) ->
                    addWithFlags'
                     menu_Ptr
                     name
-                    (keySequenceToCInt ks)
+                    (keySequenceToCInt modifiers char)
                     (castFunPtr ptr)
                     combinedFlags
                  KeyFormat format' ->
@@ -224,9 +224,9 @@ instance (impl ~ (Int  ->  IO ())) => Op (Remove ()) MenuPrim orig impl where
   runOp _ _ menu_ index' = withRef menu_ $ \menu_Ptr -> remove' menu_Ptr index'
 {# fun unsafe Fl_Menu__shortcut as shortcut' { id `Ptr ()',`Int',id `CInt' } -> `()' #}
 instance (impl ~ (Int -> ShortcutKeySequence ->  IO ())) => Op (SetShortcut ()) MenuPrim orig impl where
-  runOp _ _ menu_ index' ks =
+  runOp _ _ menu_ index' (ShortcutKeySequence modifiers char) =
     withRef menu_ $ \menu_Ptr ->
-        shortcut' menu_Ptr index' (keySequenceToCInt ks)
+        shortcut' menu_Ptr index' (keySequenceToCInt modifiers char)
 {# fun unsafe Fl_Menu__set_mode as setMode' { id `Ptr ()',`Int',`Int' } -> `()' #}
 instance (impl ~ (Int -> Int ->  IO ())) => Op (SetMode ()) MenuPrim orig impl where
   runOp _ _ menu_ i fl = withRef menu_ $ \menu_Ptr -> setMode' menu_Ptr i fl

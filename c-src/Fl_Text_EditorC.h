@@ -188,7 +188,7 @@ EXPORT {
   FL_EXPORT_C(void, Fl_Text_Editor_remove_key_binding)(fl_Text_Editor text_editor, int key, int state);
   FL_EXPORT_C(void, Fl_Text_Editor_remove_all_key_bindings_with_list)(fl_Text_Editor text_editor, Key_BindingC* list);
   FL_EXPORT_C(void, Fl_Text_Editor_remove_all_key_bindings)(fl_Text_Editor text_editor);
-  FL_EXPORT_C(void, Fl_Text_Editor_add_default_key_bindings)(fl_Text_Editor text_editor, Key_BindingC* list);
+  FL_EXPORT_C(Key_BindingC*, Fl_Text_Editor_add_default_key_bindings)(fl_Text_Editor text_editor, Key_BindingC* list);
 
     // functions for the built in default bindings
   FL_EXPORT_C(int, Fl_Text_Editor_kf_default)(int c, fl_Text_Editor e);
@@ -216,6 +216,8 @@ EXPORT {
   FL_EXPORT_C(int, Fl_Text_Editor_kf_paste)(int c, fl_Text_Editor e);
   FL_EXPORT_C(int, Fl_Text_Editor_kf_select_all)(int c, fl_Text_Editor e);
   FL_EXPORT_C(int, Fl_Text_Editor_kf_undo)(int c, fl_Text_Editor e);
+  FL_EXPORT_C(void,Fl_Text_Editor_replace_key_bindings)(fl_Text_Editor text_editor, Key_BindingC* list);
+  FL_EXPORT_C(void,Fl_Text_Editor_replace_key_bindings_with_list)(fl_Text_Editor text_editor, Key_BindingC* list1, Key_BindingC* list2);
 #ifdef __cplusplus
 }
 #endif

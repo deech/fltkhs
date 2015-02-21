@@ -20,7 +20,7 @@ class DerivedText_Editor : public Fl_Text_Editor {
   // points to the head of the list after it's done converting
   static Key_Binding_With_Callback* convert_keybindings (Fl_Text_Editor::Key_Binding* bindings);
   Key_Binding_With_Callback* get_default_keybindings(){
-    Fl_Text_Editor::Key_Binding* default_bindings = new Fl_Text_Editor::Key_Binding();
+    Fl_Text_Editor::Key_Binding* default_bindings = 0;
     Fl_Text_Editor::add_default_key_bindings(&default_bindings);
     return DerivedText_Editor::convert_keybindings(default_bindings);
   }
@@ -34,12 +34,12 @@ class DerivedText_Editor : public Fl_Text_Editor {
   void add_key_binding(int key, int state, C_to_Fl_Callback* callback_context,
 		       Key_Binding_With_Callback** list);
 
-  void add_key_binding(Key_Binding_With_Callback* back,
-		       Key_Binding_With_Callback** front){
-    Key_Binding_With_Callback* curr = *front;
+  void add_key_binding(Key_Binding_With_Callback* new_bindings,
+		       Key_Binding_With_Callback** old_bindings){
+    Key_Binding_With_Callback* curr = *old_bindings;
     // iterate to the last binding
     while(curr->next){curr = curr->next;}
-    curr->next = back;
+    curr->next = new_bindings;
   }
   void default_callback_context(C_to_Fl_Callback* context) {
     default_callback_context_ = context;
@@ -52,6 +52,8 @@ class DerivedText_Editor : public Fl_Text_Editor {
   void remove_all_key_bindings();
   void remove_key_binding(int key, int state, Key_Binding_With_Callback** list);
   void remove_key_binding(int key, int state);
+  void replace_key_bindings(Key_Binding_With_Callback** l1, Key_Binding_With_Callback** l2);
+  void replace_key_bindings(Key_Binding_With_Callback** l);
   Key_Binding_With_Callback* key_bindings;
   C_to_Fl_Callback* get_curr_callback_context();
   C_to_Fl_Callback* get_default_callback_context();

@@ -6,6 +6,7 @@ DerivedText_Editor::Key_Binding_With_Callback* DerivedText_Editor::global_key_bi
 #endif
 
 DerivedText_Editor::DerivedText_Editor(int x,int y,int w,int h,const char* t) : Fl_Text_Editor(x,y,w,h,t){
+    key_bindings = 0;
     key_bindings = get_default_keybindings();
     curr_callback_context = 0;
     default_callback_context_ = 0;
@@ -23,6 +24,14 @@ static void kill_selection(Fl_Text_Editor* e) {
     e->insert_position(e->buffer()->primary_selection()->start());
     e->buffer()->remove_selection();
   }
+}
+
+void DerivedText_Editor::replace_key_bindings(Key_Binding_With_Callback** l1, Key_Binding_With_Callback** l2){
+  remove_all_key_bindings(l1);
+  l1 = l2;
+}
+void DerivedText_Editor::replace_key_bindings(Key_Binding_With_Callback** l) {
+  replace_key_bindings(&key_bindings, l);
 }
 void DerivedText_Editor::add_key_binding(int key,
 					 int state,

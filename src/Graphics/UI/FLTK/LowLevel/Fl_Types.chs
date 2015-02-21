@@ -228,17 +228,18 @@ newtype GLUTMenuStatusFunction = GLUTMenuStatusFunction
 {#pointer *Fl_Glut_StrokeVertex as GlutStrokeVertexPtr newtype#}
 {#pointer *Fl_Glut_StrokeStrip as GlutStrokeStripPtr newtype#}
 {#pointer *Fl_Glut_StrokeFont as GlutStrokeFontPtr newtype#}
-type FlShortcut           = {#type Fl_Shortcut #}
-type FlColor              = {#type Fl_Color #}
-type FlFont               = {#type Fl_Font #}
-type FlAlign              = {#type Fl_Align #}
-type RGB                  = (Word8, Word8, Word8)
-type LineDelta            = Maybe Int
-type Delta                = Maybe Int
-type FlIntPtr             = {#type fl_intptr_t #}
-type FlUIntPtr            = {#type fl_uintptr_t#}
-type ID                   = {#type ID#}
-data Ref a                = Ref !(ForeignPtr (Ptr ())) deriving Show
+type FlShortcut = {#type Fl_Shortcut #}
+type FlColor    = {#type Fl_Color #}
+type FlFont     = {#type Fl_Font #}
+type FlAlign    = {#type Fl_Align #}
+type RGB        = (Word8, Word8, Word8)
+type LineDelta  = Maybe Int
+type Delta      = Maybe Int
+type FlIntPtr   = {#type fl_intptr_t #}
+type FlUIntPtr  = {#type fl_uintptr_t#}
+type ID         = {#type ID#}
+data Ref a      = Ref !(ForeignPtr (Ptr ())) deriving Show
+data FunRef     = FunRef !(FunPtr ())
 -- * The FLTK widget hierarchy
 data CBase parent
 type Base = CBase ()
@@ -291,6 +292,7 @@ statusToBufferRange f =
       start'' <- peekIntConv start'
       end'' <- peekIntConv end'
       return (Just (BufferRange (BufferOffset start'') (BufferOffset end'')))
+
 data Rectangle = Rectangle Position Size deriving (Eq,Show)
 data ByXY = ByXY ByX ByY
 data Intersection = Contained | Partial
@@ -298,6 +300,7 @@ data Size = Size Width Height deriving (Eq, Show)
 data KeyType = SpecialKeyType SpecialKey | NormalKeyType Char deriving (Show, Eq)
 data ShortcutKeySequence = ShortcutKeySequence [EventState] KeyType
 data Shortcut = KeySequence ShortcutKeySequence | KeyFormat String
+data KeyBindingKeySequence = KeyBindingKeySequence (Maybe [EventState]) KeyType
 data ScreenLocation = Intersect Rectangle
                     | ScreenNumber Int
                     | ScreenPosition Position
@@ -305,7 +308,6 @@ newtype FontSize = FontSize CInt
 newtype PixmapHs = PixmapHs [B.ByteString]
 data BitmapHs = BitmapHs B.ByteString Size
 data Clipboard = InternalClipboard | SharedClipboard
-
 data UnknownError = UnknownError
 data NotFound = NotFound
 data OutOfRange = OutOfRange deriving Show
@@ -400,3 +402,9 @@ swapRef ref@(Ref fptr) f = do
 
 wrapInRef :: ForeignPtr (Ptr ()) -> Ref a
 wrapInRef = Ref . castForeignPtr
+
+toFunRef :: FunPtr a -> FunRef
+toFunRef fptr = FunRef $ castFunPtr fptr
+
+fromFunRef :: FunRef -> (FunPtr ())
+fromFunRef (FunRef f) = castFunPtr f

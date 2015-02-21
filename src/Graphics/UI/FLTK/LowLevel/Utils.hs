@@ -77,14 +77,14 @@ combine :: (Enum a, Ord a) => [a] -> Int
 combine = sum . map (fromEnum . head) . group . sort
 
 masks :: CInt -> CInt -> Bool
-masks compoundCode code = (code .|. compoundCode) /= 0
+masks compoundCode code = (compoundCode .&. code) /= 0
 
-keySequenceToCInt :: ShortcutKeySequence -> CInt
-keySequenceToCInt (ShortcutKeySequence modifiers char) =
+keySequenceToCInt :: [EventState] -> KeyType -> CInt
+keySequenceToCInt modifiers char =
   let charCode = case char of
         SpecialKeyType c' -> fromIntegral $ fromEnum c'
         NormalKeyType c' -> fromIntegral $ castCharToCChar c'
-  in (sum $ map (fromIntegral . fromEnum) modifiers) + charCode
+    in (fromIntegral $ combine modifiers) + charCode
 
 wrapNonNull :: Ptr a -> String -> IO (ForeignPtr (Ptr a))
 wrapNonNull ptr msg = if (ptr == nullPtr)

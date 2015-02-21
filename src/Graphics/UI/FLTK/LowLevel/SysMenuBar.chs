@@ -56,9 +56,9 @@ instance (impl ~ (Int ->  IO (Int))) => Op (ClearSubmenu ()) SysMenuBar orig imp
   runOp _ _ menu_ index' = withRef menu_ $ \menu_Ptr -> clearSubmenu' menu_Ptr index'
 {# fun unsafe Fl_Sys_Menu_Bar_shortcut as shortcut' { id `Ptr ()',`Int',id `CInt' } -> `()' #}
 instance (impl ~ (Int -> ShortcutKeySequence ->  IO ())) => Op (SetShortcut ()) SysMenuBar orig impl where
-  runOp _ _ menu_ index' ks =
+  runOp _ _ menu_ index' (ShortcutKeySequence modifiers char) =
     withRef menu_ $ \menu_Ptr ->
-        shortcut' menu_Ptr index' (keySequenceToCInt ks)
+        shortcut' menu_Ptr index' (keySequenceToCInt modifiers char)
 {# fun unsafe Fl_Sys_Menu_Bar_set_mode as setMode' { id `Ptr ()',`Int',`Int' } -> `()' #}
 instance (impl ~ (Int -> Int ->  IO ())) => Op (SetMode ()) SysMenuBar orig impl where
   runOp _ _ menu_ i fl = withRef menu_ $ \menu_Ptr -> setMode' menu_Ptr i fl

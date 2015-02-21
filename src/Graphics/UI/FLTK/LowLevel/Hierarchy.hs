@@ -1394,8 +1394,18 @@ module Graphics.UI.FLTK.LowLevel.Hierarchy
          SetLinenumberFormat,
          setLinenumberFormat,
          GetLinenumberFormat,
-         getLinenumberFormat
-       )
+         getLinenumberFormat,
+         -- * TextEditor
+         TextEditor,
+         SetInsertMode,
+         setInsertMode,
+         GetInsertMode,
+         getInsertMode,
+         GetDefaultKeyBindings,
+         getDefaultKeyBindings,
+         ReplaceKeyBindings,
+         replaceKeyBindings
+  )
 where
 import Prelude hiding (round)
 import Graphics.UI.FLTK.LowLevel.Fl_Types
@@ -4787,3 +4797,30 @@ setLinenumberFormat = dispatch (undefined :: SetLinenumberFormat ())
 data GetLinenumberFormat a
 getLinenumberFormat :: (FindOp a (GetLinenumberFormat ()) (Match r), Op (GetLinenumberFormat ()) r a impl) => Ref a -> impl
 getLinenumberFormat = dispatch (undefined :: GetLinenumberFormat ())
+
+data CTextEditor parent
+type TextEditor = CTextEditor TextDisplay
+type TextEditorFuncs =
+  (Destroy
+  (SetInsertMode
+  (GetInsertMode
+  (GetDefaultKeyBindings
+  (ReplaceKeyBindings
+  ())))))
+instance Functions TextEditor TextEditorFuncs
+
+data SetInsertMode a
+setInsertMode :: (FindOp a (SetInsertMode ()) (Match r), Op (SetInsertMode ()) r a impl) => Ref a -> impl
+setInsertMode = dispatch (undefined :: SetInsertMode ())
+
+data GetInsertMode a
+getInsertMode :: (FindOp a (GetInsertMode ()) (Match r), Op (GetInsertMode ()) r a impl) => Ref a -> impl
+getInsertMode = dispatch (undefined :: GetInsertMode ())
+
+data GetDefaultKeyBindings a
+getDefaultKeyBindings :: (FindOp a (GetDefaultKeyBindings ()) (Match r), Op (GetDefaultKeyBindings ()) r a impl) => Ref a -> impl
+getDefaultKeyBindings = dispatch (undefined :: GetDefaultKeyBindings ())
+
+data ReplaceKeyBindings a
+replaceKeyBindings :: (FindOp a (ReplaceKeyBindings ()) (Match r), Op (ReplaceKeyBindings ()) r a impl) => Ref a -> impl
+replaceKeyBindings = dispatch (undefined :: ReplaceKeyBindings ())

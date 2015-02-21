@@ -413,6 +413,7 @@ simpleTypeMap =
     ,("fl_Text_Buffer", "Ptr ()")
     ,("fl_Text_Selection", "Ptr ()")
     ,("fl_Text_Display"  , "Ptr ()")
+    ,("fl_Text_Editor"  , "Ptr ()")
     ,("fl_Tree_Prefs", "Ptr ()")
     ,("fl_Tree_Item", "Ptr ()")
     ,("fl_Tree", "Ptr ()")
@@ -478,6 +479,7 @@ haskellEquivalent =
      ("fl_Text_Buffer"    , "TextBuffer"),
      ("fl_Text_Selection" , "TextSelection"),
      ("fl_Text_Display"   , "TextDisplay"),
+     ("fl_Text_Editor"    , "TextEditor"),
      ("fl_Tree_Prefs"     , "TreePrefs"),
      ("fl_Tree_Item"      , "TreeItem"),
      ("fl_Tree"           , "Tree"),
