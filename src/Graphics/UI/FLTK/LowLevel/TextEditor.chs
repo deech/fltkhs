@@ -104,7 +104,7 @@ arrayToKeyBindings p =
       go (accum ++ [currKb]) next'
 
 {# fun Fl_Text_Editor_New as textEditorNew' { `Int',`Int',`Int',`Int' } -> `Ptr ()' id #}
-{# fun Fl_Text_Editor_New_WithLabel as textEditorNewWithLabel' { `Int',`Int',`Int',`Int',`String'} -> `Ptr ()' id #}
+{# fun Fl_Text_Editor_New_WithLabel as textEditorNewWithLabel' { `Int',`Int',`Int',`Int', unsafeToCString `String'} -> `Ptr ()' id #}
 textEditorNew :: Rectangle -> Maybe String -> IO (Ref TextEditor)
 textEditorNew rectangle l' =
     let (x_pos, y_pos, width, height) = fromRectangle rectangle

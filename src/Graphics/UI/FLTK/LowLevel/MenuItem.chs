@@ -54,11 +54,11 @@ instance (impl ~  IO (Maybe (Ref MenuItem))) => Op (GetFirst ()) MenuItem orig i
 instance (impl ~  IO (String)) => Op (GetLabel ()) MenuItem orig impl where
   runOp _ _ menu_item = withRef menu_item $ \menu_itemPtr -> label' menu_itemPtr
 
-{# fun unsafe Fl_Menu_Item_set_label as setLabel' { id `Ptr ()',`String' } -> `()' #}
+{# fun unsafe Fl_Menu_Item_set_label as setLabel' { id `Ptr ()', unsafeToCString `String' } -> `()' #}
 instance (impl ~ (String ->  IO ())) => Op (SetLabel ()) MenuItem orig impl where
   runOp _ _ menu_item a = withRef menu_item $ \menu_itemPtr -> setLabel' menu_itemPtr a
 
-{# fun unsafe Fl_Menu_Item_set_label_with_labeltype as setLabelWithLabeltype' { id `Ptr ()',cFromEnum `Labeltype',`String' } -> `()' #}
+{# fun unsafe Fl_Menu_Item_set_label_with_labeltype as setLabelWithLabeltype' { id `Ptr ()',cFromEnum `Labeltype', unsafeToCString `String' } -> `()' #}
 instance (impl ~ (Labeltype -> String ->  IO ())) => Op (SetLabelWithLabeltype ()) MenuItem orig impl where
   runOp _ _ menu_item labeltype b = withRef menu_item $ \menu_itemPtr -> setLabelWithLabeltype' menu_itemPtr labeltype b
 
@@ -229,9 +229,9 @@ instance (Parent a MenuItem, impl ~ (Maybe Int -> Bool -> IO (Ref a))) => Op (Fi
 instance (impl ~ (Ref Widget  ->  IO ())) => Op (DoCallback ()) MenuItem orig impl where
   runOp _ _ menu_item o = withRef menu_item $ \menu_itemPtr -> withRef o $ \oPtr -> doCallback' menu_itemPtr oPtr
 
-{# fun Fl_Menu_Item_insert_with_flags as insertWithFlags' { id `Ptr ()',`Int',`String',id `CInt',id `FunPtr CallbackWithUserDataPrim',`Int'} -> `Int' #}
-{# fun Fl_Menu_Item_add_with_flags as addWithFlags' { id `Ptr ()',`String',id `CInt',id `FunPtr CallbackWithUserDataPrim',`Int'} -> `Int' #}
-{# fun Fl_Menu_Item_add_with_shortcutname_flags as addWithShortcutnameFlags' { id `Ptr ()',`String',`String',id `FunPtr CallbackWithUserDataPrim',`Int' } -> `Int' #}
+{# fun Fl_Menu_Item_insert_with_flags as insertWithFlags' { id `Ptr ()',`Int', unsafeToCString `String',id `CInt',id `FunPtr CallbackWithUserDataPrim',`Int'} -> `Int' #}
+{# fun Fl_Menu_Item_add_with_flags as addWithFlags' { id `Ptr ()', unsafeToCString `String',id `CInt',id `FunPtr CallbackWithUserDataPrim',`Int'} -> `Int' #}
+{# fun Fl_Menu_Item_add_with_shortcutname_flags as addWithShortcutnameFlags' { id `Ptr ()', unsafeToCString `String', unsafeToCString `String',id `FunPtr CallbackWithUserDataPrim',`Int' } -> `Int' #}
 instance (Parent a MenuItem, impl ~ (String -> Maybe Shortcut -> (Ref a -> IO ()) -> MenuItemFlags -> IO (MenuItemIndex))) => Op (Add ()) MenuItem orig impl where
   runOp _ _ menu_item name shortcut cb flags =
     withRef menu_item $ \menu_itemPtr -> do

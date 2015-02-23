@@ -23,7 +23,7 @@ import Graphics.UI.FLTK.LowLevel.Utils
 import Graphics.UI.FLTK.LowLevel.Hierarchy
 
 {# fun Fl_Radio_Light_Button_New as widgetNew' { `Int',`Int',`Int',`Int' } -> `Ptr ()' id #}
-{# fun Fl_Radio_Light_Button_New_WithLabel as widgetNewWithLabel' { `Int',`Int',`Int',`Int',`String'} -> `Ptr ()' id #}
+{# fun Fl_Radio_Light_Button_New_WithLabel as widgetNewWithLabel' { `Int',`Int',`Int',`Int', unsafeToCString `String'} -> `Ptr ()' id #}
 radioLightButtonNew :: Rectangle -> Maybe String -> IO (Ref RadioLightButton)
 radioLightButtonNew rectangle l' =
     let (x_pos, y_pos, width, height) = fromRectangle rectangle

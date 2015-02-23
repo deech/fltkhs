@@ -678,7 +678,7 @@ getFontName f = getFontNameWithAttributes' f
 {# fun Fl_get_font_sizes as getFontSizes
        { cFromFont `Font', alloca- `Int' peekIntConv* } -> `Int' #}
 {# fun Fl_set_font_by_string as setFontByString
-       { cFromFont `Font',`String' } -> `()' supressWarningAboutRes #}
+       { cFromFont `Font', unsafeToCString `String' } -> `()' supressWarningAboutRes #}
 {# fun Fl_set_font_by_font as setFontByFont
        { cFromFont `Font',cFromFont `Font' } -> `()' supressWarningAboutRes #}
 {# fun Fl_set_fonts as setFonts

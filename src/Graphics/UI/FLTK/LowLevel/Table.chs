@@ -117,7 +117,7 @@ tableCustomFunctionStruct customWidgetFuncs' customTableFuncs' =
    return ptr
 
 {# fun unsafe Fl_Table_New as tableNew' {  `Int',`Int', `Int', `Int', id `Ptr ()'} -> `Ptr ()' id #}
-{# fun unsafe Fl_Table_New_WithLabel as tableNewWithLabel' { `Int',`Int',`Int',`Int',`String', id `Ptr ()'} -> `Ptr ()' id #}
+{# fun unsafe Fl_Table_New_WithLabel as tableNewWithLabel' { `Int',`Int',`Int',`Int',unsafeToCString `String', id `Ptr ()'} -> `Ptr ()' id #}
 tableCustom :: Rectangle -> Maybe String -> CustomWidgetFuncs Table -> CustomTableFuncs Table -> IO (Ref Table)
 tableCustom rectangle label' customWidgetFuncs' customTableFuncs' =
     do
@@ -339,7 +339,7 @@ instance (impl ~ ( Rectangle ->  IO ())) => Op (Resize ()) Table orig impl where
 {# fun unsafe Fl_Table_clear_super as clearSuper' { id `Ptr ()' } -> `()' #}
 instance (impl ~ (  IO ())) => Op (ClearSuper ()) Table orig impl where
   runOp _ _ table = withRef table $ \tablePtr -> clearSuper' tablePtr
-{# fun unsafe Fl_Table_clear as clear' { id `Ptr ()' } -> `()' #}
+{# fun Fl_Table_clear as clear' { id `Ptr ()' } -> `()' #}
 instance (impl ~ (  IO ())) => Op (Clear ()) Table orig impl where
   runOp _ _ table = withRef table $ \tablePtr -> clear' tablePtr
 {# fun Fl_Table_set_rows_super as setRowsSuper' { id `Ptr ()',`Int' } -> `()' #}

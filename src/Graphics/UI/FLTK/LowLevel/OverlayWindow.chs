@@ -22,9 +22,9 @@ import Graphics.UI.FLTK.LowLevel.Hierarchy
 import Graphics.UI.FLTK.LowLevel.Dispatch
 import C2HS hiding (cFromEnum, toBool,cToEnum)
 
-{# fun Fl_Overlay_Window_New_WithLabel as windowNewWithLabel' { `Int', `Int', `String', id `FunPtr CallbackPrim' } -> `Ptr ()' id #}
+{# fun Fl_Overlay_Window_New_WithLabel as windowNewWithLabel' { `Int', `Int', unsafeToCString `String', id `FunPtr CallbackPrim' } -> `Ptr ()' id #}
 {# fun Fl_Overlay_Window_New as windowNew' { `Int', `Int', id `FunPtr CallbackPrim' } -> `Ptr ()' id #}
-{# fun Fl_Overlay_Window_NewXY_WithLabel as windowNewWithXYLabel' { `Int', `Int', `Int', `Int', `String', id `FunPtr CallbackPrim' } -> `Ptr ()' id #}
+{# fun Fl_Overlay_Window_NewXY_WithLabel as windowNewWithXYLabel' { `Int', `Int', `Int', `Int', unsafeToCString `String', id `FunPtr CallbackPrim' } -> `Ptr ()' id #}
 {# fun Fl_Overlay_Window_NewXY as windowNewWithXY' { `Int', `Int', `Int', `Int', id `FunPtr CallbackPrim' } -> `Ptr ()' id #}
 
 overlayWindowNew :: forall a. (Parent a OverlayWindow) => Size -> Maybe String -> Maybe Position -> (Ref a -> IO ()) -> IO (Ref OverlayWindow)

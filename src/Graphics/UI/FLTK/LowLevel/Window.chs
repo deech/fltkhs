@@ -108,8 +108,8 @@ windowMaker (Size (Width w) (Height h))
 
 {# fun Fl_OverriddenWindow_New as overriddenWindowNew' {`Int',`Int', id `Ptr ()'} -> `Ptr ()' id #}
 {# fun Fl_OverriddenWindow_NewXY as overriddenWindowNewXY' {`Int',`Int', `Int', `Int', id `Ptr ()'} -> `Ptr ()' id #}
-{# fun Fl_OverriddenWindow_NewXY_WithLabel as overriddenWindowNewXYWithLabel' { `Int',`Int',`Int',`Int',`String', id `Ptr ()'} -> `Ptr ()' id #}
-{# fun Fl_OverriddenWindow_New_WithLabel as overriddenWindowNewWithLabel' { `Int',`Int', `String', id `Ptr ()'} -> `Ptr ()' id #}
+{# fun Fl_OverriddenWindow_NewXY_WithLabel as overriddenWindowNewXYWithLabel' { `Int',`Int',`Int',`Int',unsafeToCString `String', id `Ptr ()'} -> `Ptr ()' id #}
+{# fun Fl_OverriddenWindow_New_WithLabel as overriddenWindowNewWithLabel' { `Int',`Int', unsafeToCString `String', id `Ptr ()'} -> `Ptr ()' id #}
 windowCustom :: Size ->
                 Maybe Position ->
                 Maybe String ->
@@ -306,19 +306,19 @@ instance (impl ~ ( IO (String))) => Op (GetLabel ()) Window orig impl where
 instance (impl ~ ( IO (String))) => Op (GetIconlabel ()) Window orig impl where
   runOp _ _ win = withRef win $ \winPtr -> iconlabel' winPtr
 
-{# fun Fl_Window_set_label as setLabel' { id `Ptr ()',`String' } -> `()' supressWarningAboutRes #}
+{# fun Fl_Window_set_label as setLabel' { id `Ptr ()',unsafeToCString `String' } -> `()' supressWarningAboutRes #}
 instance (impl ~ (String ->  IO ())) => Op (SetLabel ()) Window orig impl where
   runOp _ _ win l' = withRef win $ \winPtr -> setLabel' winPtr l'
 
-{# fun Fl_Window_set_iconlabel as setIconlabel' { id `Ptr ()',`String' } -> `()' supressWarningAboutRes #}
+{# fun Fl_Window_set_iconlabel as setIconlabel' { id `Ptr ()',unsafeToCString `String' } -> `()' supressWarningAboutRes #}
 instance (impl ~ (String ->  IO ())) => Op (SetIconlabel ()) Window orig impl where
   runOp _ _ win l' = withRef win $ \winPtr -> setIconlabel' winPtr l'
 
-{# fun Fl_Window_set_label_with_iconlabel as setLabelWithIconlabel' { id `Ptr ()',`String',`String' } -> `()' supressWarningAboutRes #}
+{# fun Fl_Window_set_label_with_iconlabel as setLabelWithIconlabel' { id `Ptr ()',unsafeToCString `String',unsafeToCString `String' } -> `()' supressWarningAboutRes #}
 instance (impl ~ (String -> String ->  IO ())) => Op (SetLabelWithIconlabel ()) Window orig impl where
   runOp _ _ win label iconlabel = withRef win $ \winPtr -> setLabelWithIconlabel' winPtr label iconlabel
 
-{# fun Fl_Window_copy_label as copyLabel' { id `Ptr ()',`String' } -> `()' supressWarningAboutRes #}
+{# fun Fl_Window_copy_label as copyLabel' { id `Ptr ()',unsafeToCString `String' } -> `()' supressWarningAboutRes #}
 instance (impl ~ (String ->  IO ())) => Op (CopyLabel ()) Window orig impl where
   runOp _ _ win a = withRef win $ \winPtr -> copyLabel' winPtr a
 
@@ -326,7 +326,7 @@ instance (impl ~ (String ->  IO ())) => Op (CopyLabel ()) Window orig impl where
 instance (impl ~ ( IO (String))) => Op (GetXclass ()) Window orig impl where
   runOp _ _ win = withRef win $ \winPtr -> xclass' winPtr
 
-{# fun Fl_Window_set_xclass as setXclass' { id `Ptr ()',`String' } -> `()' supressWarningAboutRes #}
+{# fun Fl_Window_set_xclass as setXclass' { id `Ptr ()',unsafeToCString `String' } -> `()' supressWarningAboutRes #}
 instance (impl ~ (String ->  IO ())) => Op (SetXclass ()) Window orig impl where
   runOp _ _ win c = withRef win $ \winPtr -> setXclass' winPtr c
 

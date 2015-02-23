@@ -29,7 +29,7 @@ import Graphics.UI.FLTK.LowLevel.Dispatch
 data TableRowSelectFlag = TableRowSelect | TableRowDeselect | TableRowToggle
 
 {# fun unsafe Fl_OverriddenTable_Row_New as tableRowNew' {  `Int',`Int', `Int', `Int', id `Ptr ()'} -> `Ptr ()' id #}
-{# fun unsafe Fl_OverriddenTable_Row_New_WithLabel as tableRowNewWithLabel' { `Int',`Int',`Int',`Int',`String', id `Ptr ()'} -> `Ptr ()' id #}
+{# fun unsafe Fl_OverriddenTable_Row_New_WithLabel as tableRowNewWithLabel' { `Int',`Int',`Int',`Int', unsafeToCString `String', id `Ptr ()'} -> `Ptr ()' id #}
 tableRowNew :: Rectangle -> Maybe String -> CustomWidgetFuncs TableRow -> CustomTableFuncs TableRow -> IO (Ref TableRow)
 tableRowNew rectangle label' customWidgetFuncs' customTableFuncs' =
     do

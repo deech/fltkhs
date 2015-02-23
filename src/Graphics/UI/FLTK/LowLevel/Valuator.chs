@@ -27,8 +27,8 @@ import Graphics.UI.FLTK.LowLevel.Widget
 import Data.Ratio
 
 {# fun Fl_Valuator_New as valuatorNew' { `Int',`Int',`Int',`Int' } -> `Ptr ()' id #}
-{# fun Fl_Valuator_New_WithLabel as valuatorNewWithLabel' { `Int',`Int',`Int',`Int',`String'} -> `Ptr ()' id #}
-{# fun Fl_OverriddenValuator_New_WithLabel as overriddenValuatorNewWithLabel' { `Int',`Int',`Int',`Int',`String', id `Ptr ()'} -> `Ptr ()' id #}
+{# fun Fl_Valuator_New_WithLabel as valuatorNewWithLabel' { `Int',`Int',`Int',`Int', unsafeToCString `String'} -> `Ptr ()' id #}
+{# fun Fl_OverriddenValuator_New_WithLabel as overriddenValuatorNewWithLabel' { `Int',`Int',`Int',`Int', unsafeToCString `String', id `Ptr ()'} -> `Ptr ()' id #}
 {# fun Fl_OverriddenValuator_New as overriddenValuatorNew' { `Int',`Int',`Int',`Int', id `Ptr ()'} -> `Ptr ()' id #}
 valuatorNew :: Rectangle -> Maybe String -> Maybe (CustomWidgetFuncs Valuator) -> IO (Ref Valuator)
 valuatorNew rectangle l' funcs' =
@@ -92,7 +92,7 @@ instance (impl ~ ( IO (Double))) => Op (GetValue ()) Valuator orig impl where
 {# fun unsafe Fl_Valuator_set_value as setValue' { id `Ptr ()',`Double' } -> `Int' #}
 instance (impl ~ (Double ->  IO (Int))) => Op (SetValue ()) Valuator orig impl where
   runOp _ _ valuator v = withRef valuator $ \valuatorPtr -> setValue' valuatorPtr v
-{# fun unsafe Fl_Valuator_format as format' { id `Ptr ()',`String' } -> `Int' #}
+{# fun unsafe Fl_Valuator_format as format' { id `Ptr ()', unsafeToCString `String' } -> `Int' #}
 instance (impl ~ (String ->  IO (Int))) => Op (Format ()) Valuator orig impl where
   runOp _ _ valuator f = withRef valuator $ \valuatorPtr -> format' valuatorPtr f
 {# fun unsafe Fl_Valuator_round as round' { id `Ptr ()',`Double' } -> `Double' #}

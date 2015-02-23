@@ -25,7 +25,7 @@ import Graphics.UI.FLTK.LowLevel.Hierarchy
 import Graphics.UI.FLTK.LowLevel.Dispatch
 
 {# fun Fl_Value_Slider_New as valueSliderNew' { `Int',`Int',`Int',`Int' } -> `Ptr ()' id #}
-{# fun Fl_Value_Slider_New_WithLabel as valueSliderNewWithLabel' { `Int',`Int',`Int',`Int',`String'} -> `Ptr ()' id #}
+{# fun Fl_Value_Slider_New_WithLabel as valueSliderNewWithLabel' { `Int',`Int',`Int',`Int', unsafeToCString `String'} -> `Ptr ()' id #}
 valueSliderNew :: Rectangle -> Maybe String -> IO (Ref ValueSlider)
 valueSliderNew rectangle l'=
     let (x_pos, y_pos, width, height) = fromRectangle rectangle
@@ -34,7 +34,7 @@ valueSliderNew rectangle l'=
         Just l -> valueSliderNewWithLabel' x_pos y_pos width height l >>= toRef
 
 -- {# fun Fl_Hor_Value_Slider_New as horValueSliderNew' { `Int',`Int',`Int',`Int' } -> `Ptr ()' id #}
--- {# fun Fl_Hor_Value_Slider_New_WithLabel as horValueSliderNewWithLabel' { `Int',`Int',`Int',`Int',`String'} -> `Ptr ()' id #}
+-- {# fun Fl_Hor_Value_Slider_New_WithLabel as horValueSliderNewWithLabel' { `Int',`Int',`Int',`Int', unsafeToCString `String'} -> `Ptr ()' id #}
 -- horValueSliderNew :: Rectangle -> Maybe String -> IO (HorValueSlider ())
 -- horValueSliderNew rectangle l'=
 --     let (x_pos, y_pos, width, height) = fromRectangle rectangle

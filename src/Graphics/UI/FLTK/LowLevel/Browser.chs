@@ -26,8 +26,8 @@ import Graphics.UI.FLTK.LowLevel.Dispatch
 import Graphics.UI.FLTK.LowLevel.Widget
 
 {# fun Fl_Browser_New as browserNew' { `Int',`Int',`Int',`Int' } -> `Ptr ()' id #}
-{# fun Fl_Browser_New_WithLabel as browserNewWithLabel' { `Int',`Int',`Int',`Int',`String'} -> `Ptr ()' id #}
-{# fun Fl_OverriddenBrowser_New_WithLabel as overriddenBrowserNewWithLabel' { `Int',`Int',`Int',`Int',`String', id `Ptr ()'} -> `Ptr ()' id #}
+{# fun Fl_Browser_New_WithLabel as browserNewWithLabel' { `Int',`Int',`Int',`Int',unsafeToCString `String'} -> `Ptr ()' id #}
+{# fun Fl_OverriddenBrowser_New_WithLabel as overriddenBrowserNewWithLabel' { `Int',`Int',`Int',`Int',unsafeToCString `String', id `Ptr ()'} -> `Ptr ()' id #}
 {# fun Fl_OverriddenBrowser_New as overriddenBrowserNew' { `Int',`Int',`Int',`Int', id `Ptr ()'} -> `Ptr ()' id #}
 browserNew :: Rectangle -> Maybe String -> Maybe (CustomWidgetFuncs Browser) -> IO (Ref Browser)
 browserNew rectangle l' funcs' =
@@ -51,16 +51,16 @@ instance (impl ~ (IO ())) => Op (Destroy ()) Browser orig impl where
 {# fun unsafe Fl_Browser_remove as remove' { id `Ptr ()',`Int' } -> `()' #}
 instance (impl ~ (Int ->  IO ())) => Op (Remove ()) Browser orig impl where
   runOp _ _ browser line = withRef browser $ \browserPtr -> remove' browserPtr line
-{# fun unsafe Fl_Browser_add as add' { id `Ptr ()',`String' } -> `()' #}
+{# fun unsafe Fl_Browser_add as add' { id `Ptr ()',unsafeToCString `String' } -> `()' #}
 instance (impl ~ (String ->  IO ())) => Op (Add ()) Browser orig impl where
   runOp _ _ browser newtext = withRef browser $ \browserPtr -> add' browserPtr newtext
-{# fun unsafe Fl_Browser_insert as insert' { id `Ptr ()',`Int',`String' } -> `()' #}
+{# fun unsafe Fl_Browser_insert as insert' { id `Ptr ()',`Int',unsafeToCString `String' } -> `()' #}
 instance (impl ~ (Int -> String ->  IO ())) => Op (Insert ()) Browser orig impl where
   runOp _ _ browser line newtext = withRef browser $ \browserPtr -> insert' browserPtr line newtext
 {# fun unsafe Fl_Browser_move as move' { id `Ptr ()',`Int',`Int' } -> `()' #}
 instance (impl ~ (Int -> Int ->  IO ())) => Op (Move ()) Browser orig impl where
   runOp _ _ browser to from = withRef browser $ \browserPtr -> move' browserPtr to from
-{# fun unsafe Fl_Browser_load as load' { id `Ptr ()',`String' } -> `Int' #}
+{# fun unsafe Fl_Browser_load as load' { id `Ptr ()',unsafeToCString `String' } -> `Int' #}
 instance (impl ~ (String ->  IO (Int))) => Op (Load ()) Browser orig impl where
   runOp _ _ browser filename = withRef browser $ \browserPtr -> load' browserPtr filename
 {# fun unsafe Fl_Browser_swap as swap' { id `Ptr ()',`Int',`Int' } -> `()' #}
@@ -120,7 +120,7 @@ instance (impl ~ (Int ->  IO ())) => Op (SetValue ()) Browser orig impl where
 {# fun unsafe Fl_Browser_text as text' { id `Ptr ()',`Int' } -> `String' #}
 instance (impl ~ (Int ->  IO (String))) => Op (GetText ()) Browser orig impl where
   runOp _ _ browser line = withRef browser $ \browserPtr -> text' browserPtr line
-{# fun unsafe Fl_Browser_set_text as setText' { id `Ptr ()',`Int',`String' } -> `()' #}
+{# fun unsafe Fl_Browser_set_text as setText' { id `Ptr ()',`Int', unsafeToCString `String' } -> `()' #}
 instance (impl ~ (Int -> String ->  IO ())) => Op (SetText ()) Browser orig impl where
   runOp _ _ browser line newtext = withRef browser $ \browserPtr -> setText' browserPtr line newtext
 {# fun unsafe Fl_Browser_format_char as formatChar' { id `Ptr ()' } -> `CChar' id #}

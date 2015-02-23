@@ -22,7 +22,7 @@ import Graphics.UI.FLTK.LowLevel.Hierarchy
 import Graphics.UI.FLTK.LowLevel.Dispatch
 
 {# fun Fl_Counter_New as counterNew' { `Int',`Int',`Int',`Int' } -> `Ptr ()' id #}
-{# fun Fl_Counter_New_WithLabel as counterNewWithLabel' { `Int',`Int',`Int',`Int',`String'} -> `Ptr ()' id #}
+{# fun Fl_Counter_New_WithLabel as counterNewWithLabel' { `Int',`Int',`Int',`Int', unsafeToCString `String'} -> `Ptr ()' id #}
 counterNew :: Rectangle -> Maybe String -> IO (Ref Counter)
 counterNew rectangle l'=
     let (x_pos, y_pos, width, height) = fromRectangle rectangle

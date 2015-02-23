@@ -25,7 +25,7 @@ import Graphics.UI.FLTK.LowLevel.Dispatch
 import Graphics.UI.FLTK.LowLevel.Hierarchy
 
 {# fun Fl_Sys_Menu_Bar_New as sysMenuBarNew' { `Int',`Int',`Int',`Int' } -> `Ptr ()' id #}
-{# fun Fl_Sys_Menu_Bar_New_WithLabel as sysMenuBarNewWithLabel' { `Int',`Int',`Int',`Int',`String'} -> `Ptr ()' id #}
+{# fun Fl_Sys_Menu_Bar_New_WithLabel as sysMenuBarNewWithLabel' { `Int',`Int',`Int',`Int', unsafeToCString `String'} -> `Ptr ()' id #}
 sysMenuBarNew :: Rectangle -> Maybe String -> IO (Ref SysMenuBar)
 sysMenuBarNew rectangle l'=
     let (x_pos, y_pos, width, height) = fromRectangle rectangle
@@ -45,7 +45,7 @@ instance (impl ~ ( Event -> IO Int)) => Op (Handle ()) SysMenuBar orig impl wher
 {# fun unsafe Fl_Sys_Menu_Bar_remove as remove' { id `Ptr ()',`Int' } -> `()' #}
 instance (impl ~ (Int  ->  IO ())) => Op (Remove ()) SysMenuBar orig impl where
   runOp _ _ menu_ index' = withRef menu_ $ \menu_Ptr -> remove' menu_Ptr index'
-{# fun unsafe Fl_Sys_Menu_Bar_replace as replace' { id `Ptr ()',`Int',`String' } -> `()' #}
+{# fun unsafe Fl_Sys_Menu_Bar_replace as replace' { id `Ptr ()',`Int', unsafeToCString `String' } -> `()' #}
 instance (impl ~ (Int -> String ->  IO ())) => Op (Replace ()) SysMenuBar orig impl where
   runOp _ _ menu_ index' name = withRef menu_ $ \menu_Ptr -> replace' menu_Ptr index' name
 {# fun unsafe Fl_Sys_Menu_Bar_clear as clear' { id `Ptr ()' } -> `()' #}

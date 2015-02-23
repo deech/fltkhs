@@ -22,7 +22,7 @@ import Graphics.UI.FLTK.LowLevel.Utils
 import Graphics.UI.FLTK.LowLevel.Hierarchy
 
 {# fun Fl_Select_Browser_New as selectBrowserNew' { `Int',`Int',`Int',`Int' } -> `Ptr ()' id #}
-{# fun Fl_Select_Browser_New_WithLabel as selectBrowserNewWithLabel' { `Int',`Int',`Int',`Int',`String'} -> `Ptr ()' id #}
+{# fun Fl_Select_Browser_New_WithLabel as selectBrowserNewWithLabel' { `Int',`Int',`Int',`Int',unsafeToCString `String'} -> `Ptr ()' id #}
 selectBrowserNew :: Rectangle -> Maybe String -> IO (Ref SelectBrowser)
 selectBrowserNew rectangle l' =
     let (x_pos, y_pos, width, height) = fromRectangle rectangle

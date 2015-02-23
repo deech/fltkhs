@@ -138,8 +138,8 @@ widgetMaker rectangle _label' customFuncs' new' newWithLabel' newWithCustomFuncs
           newWithCustomFuncs' x_pos y_pos width height (castPtr ptr) >>= toRef
 
 {# fun Fl_Widget_New as widgetNew' { `Int',`Int',`Int',`Int' } -> `Ptr ()' id #}
-{# fun Fl_Widget_New_WithLabel as widgetNewWithLabel' { `Int',`Int',`Int',`Int',`String'} -> `Ptr ()' id #}
-{# fun Fl_OverriddenWidget_New_WithLabel as overriddenWidgetNewWithLabel' { `Int',`Int',`Int',`Int',`String', id `Ptr ()'} -> `Ptr ()' id #}
+{# fun Fl_Widget_New_WithLabel as widgetNewWithLabel' { `Int',`Int',`Int',`Int', unsafeToCString `String'} -> `Ptr ()' id #}
+{# fun Fl_OverriddenWidget_New_WithLabel as overriddenWidgetNewWithLabel' { `Int',`Int',`Int',`Int', unsafeToCString `String', id `Ptr ()'} -> `Ptr ()' id #}
 {# fun Fl_OverriddenWidget_New as overriddenWidgetNew' { `Int',`Int',`Int',`Int', id `Ptr ()'} -> `Ptr ()' id #}
 -- | Widget constructor.
 widgetCustom :: Rectangle
@@ -254,10 +254,10 @@ instance (impl ~ (Color ->  IO ())) => Op (SetSelectionColor ()) Widget orig imp
 {# fun Fl_Widget_label as label' { id `Ptr ()' } -> `String' #}
 instance (impl ~ IO (String)) => Op (GetLabel ()) Widget orig impl where
   runOp _ _ widget = withRef widget $ \widgetPtr -> label' widgetPtr
-{# fun Fl_Widget_copy_label as copyLabel' { id `Ptr ()',`String' } -> `()' supressWarningAboutRes #}
+{# fun Fl_Widget_copy_label as copyLabel' { id `Ptr ()', unsafeToCString `String' } -> `()' supressWarningAboutRes #}
 instance (impl ~ (String ->  IO ())) => Op (CopyLabel ()) Widget orig impl where
   runOp _ _ widget new_label = withRef widget $ \widgetPtr -> copyLabel' widgetPtr new_label
-{# fun Fl_Widget_set_label as setLabel' { id `Ptr ()',`String' } -> `()' supressWarningAboutRes #}
+{# fun Fl_Widget_set_label as setLabel' { id `Ptr ()', unsafeToCString `String' } -> `()' supressWarningAboutRes #}
 instance (impl ~ ( String -> IO ())) => Op (SetLabel ()) Widget orig impl where
   runOp _ _ widget text = withRef widget $ \widgetPtr -> setLabel' widgetPtr text
 {# fun Fl_Widget_labeltype as labeltype' { id `Ptr ()' } -> `Labeltype' cToEnum #}
@@ -299,10 +299,10 @@ instance (Parent a Image, impl ~ (Ref a ->  IO ())) => Op (SetDeimage ()) Widget
 {# fun Fl_Widget_tooltip as tooltip' { id `Ptr ()' } -> `String' #}
 instance (impl ~ (IO (String))) => Op (GetTooltip ()) Widget orig impl where
   runOp _ _ widget = withRef widget $ \widgetPtr -> tooltip' widgetPtr
-{# fun Fl_Widget_copy_tooltip as copyTooltip' { id `Ptr ()',`String' } -> `()' supressWarningAboutRes #}
+{# fun Fl_Widget_copy_tooltip as copyTooltip' { id `Ptr ()', unsafeToCString `String' } -> `()' supressWarningAboutRes #}
 instance (impl ~ ( String ->  IO ())) => Op (CopyTooltip ()) Widget orig impl where
   runOp _ _ widget text = withRef widget $ \widgetPtr -> copyTooltip' widgetPtr text
-{# fun Fl_Widget_set_tooltip as setTooltip' { id `Ptr ()',`String' } -> `()' supressWarningAboutRes #}
+{# fun Fl_Widget_set_tooltip as setTooltip' { id `Ptr ()', unsafeToCString `String' } -> `()' supressWarningAboutRes #}
 instance (impl ~ ( String ->  IO ())) => Op (SetTooltip ()) Widget orig impl where
   runOp _ _ widget text = withRef widget $ \widgetPtr -> setTooltip' widgetPtr text
 {# fun Fl_Widget_when as when' { id `Ptr ()' } -> `CInt' id #}

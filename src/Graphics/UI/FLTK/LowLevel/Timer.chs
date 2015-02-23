@@ -26,19 +26,19 @@ import Graphics.UI.FLTK.LowLevel.Utils
 import Graphics.UI.FLTK.LowLevel.Hierarchy
 import Graphics.UI.FLTK.LowLevel.Dispatch
 
-{# fun Fl_Timer_New as timerNewWithLabel' { `Int',`Int',`Int',`Int',`String'} -> `Ptr ()' id #}
+{# fun Fl_Timer_New as timerNewWithLabel' { `Int',`Int',`Int',`Int', unsafeToCString `String'} -> `Ptr ()' id #}
 timerNew :: Rectangle -> String -> IO (Ref Timer)
 timerNew rectangle l'=
     let (x_pos, y_pos, width, height) = fromRectangle rectangle
     in timerNewWithLabel' x_pos y_pos width height l' >>= toRef
-{# fun Fl_Value_Timer_New as valueTimerNewWithLabel' { `Int',`Int',`Int',`Int',`String'} -> `Ptr ()' id #}
+{# fun Fl_Value_Timer_New as valueTimerNewWithLabel' { `Int',`Int',`Int',`Int', unsafeToCString `String'} -> `Ptr ()' id #}
 valueTimerNew :: Rectangle -> String -> IO (Ref ValueTimer)
 valueTimerNew rectangle l'=
     let (x_pos, y_pos, width, height) = fromRectangle rectangle
     in
     valueTimerNewWithLabel' x_pos y_pos width height l' >>= toRef
 
-{# fun Fl_Hidden_Timer_New as hiddenTimerNewWithLabel' { `Int',`Int',`Int',`Int',`String'} -> `Ptr ()' id #}
+{# fun Fl_Hidden_Timer_New as hiddenTimerNewWithLabel' { `Int',`Int',`Int',`Int', unsafeToCString `String'} -> `Ptr ()' id #}
 hiddenTimerNew :: Rectangle -> String -> IO (Ref HiddenTimer)
 hiddenTimerNew rectangle l'=
     let (x_pos, y_pos, width, height) = fromRectangle rectangle

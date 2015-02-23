@@ -214,6 +214,9 @@ toRef ptr = throwStackOnError $
 unsafeToRef :: Ptr () -> (Ref a)
 unsafeToRef = Unsafe.unsafePerformIO . toRef
 
+unsafeToCString :: String -> CString
+unsafeToCString = Unsafe.unsafePerformIO . newCString
+
 toMaybeRef :: Ptr () -> IO (Maybe (Ref a))
 toMaybeRef ptr' = if ptr' == nullPtr then return Nothing else toRef ptr' >>= return . Just
 

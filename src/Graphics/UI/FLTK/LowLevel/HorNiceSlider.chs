@@ -19,7 +19,7 @@ import Graphics.UI.FLTK.LowLevel.Utils
 import Graphics.UI.FLTK.LowLevel.Hierarchy
 
 {# fun Fl_Hor_Nice_Slider_New as horNiceSliderNew' { `Int',`Int',`Int',`Int' } -> `Ptr ()' id #}
-{# fun Fl_Hor_Nice_Slider_New_WithLabel as horNiceSliderNewWithLabel' { `Int',`Int',`Int',`Int',`String'} -> `Ptr ()' id #}
+{# fun Fl_Hor_Nice_Slider_New_WithLabel as horNiceSliderNewWithLabel' { `Int',`Int',`Int',`Int',unsafeToCString `String'} -> `Ptr ()' id #}
 horNiceSliderNew :: Rectangle -> Maybe String -> IO (Ref HorNiceSlider)
 horNiceSliderNew rectangle l' =
     let (x_pos, y_pos, width, height) = fromRectangle rectangle

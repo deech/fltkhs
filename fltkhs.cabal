@@ -101,6 +101,19 @@ library
   default-language: Haskell2010
   ghc-options: -Wall -fcontext-stack=220
 
+Executable fltkhs-table-as-container
+  Main-Is: table-as-container.hs
+  Hs-Source-Dirs: src/Examples
+  Build-Depends:
+    base == 4.*,
+    fltkhs
+  default-language: Haskell2010
+  ghc-Options: -Wall -threaded -fcontext-stack=220
+  if os(linux)
+     ghc-Options: -pgml g++ "-optl-Wl,--whole-archive" "-optl-Wl,-Bstatic" "-optl-Wl,-lfltkc" "-optl-Wl,-Bdynamic" "-optl-Wl,--no-whole-archive"
+  else
+     ghc-Options:
+
 Executable fltkhs-texteditor-simple
   Main-Is: texteditor-simple.hs
   Hs-Source-Dirs: src/Examples

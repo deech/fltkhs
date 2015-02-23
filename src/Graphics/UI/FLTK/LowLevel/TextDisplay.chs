@@ -52,7 +52,7 @@ indexStyleTableEntries :: [StyleTableEntry] -> [(Char, StyleTableEntry)]
 indexStyleTableEntries = zip ['A'..]
 
 {# fun Fl_Text_Display_New as textDisplayNew' { `Int',`Int',`Int',`Int' } -> `Ptr ()' id #}
-{# fun Fl_Text_Display_New_WithLabel as textDisplayNewWithLabel' { `Int',`Int',`Int',`Int',`String'} -> `Ptr ()' id #}
+{# fun Fl_Text_Display_New_WithLabel as textDisplayNewWithLabel' { `Int',`Int',`Int',`Int',unsafeToCString `String'} -> `Ptr ()' id #}
 textDisplayNew :: Rectangle -> Maybe String -> IO (Ref TextDisplay)
 textDisplayNew rectangle l' =
     let (x_pos, y_pos, width, height) = fromRectangle rectangle
@@ -86,7 +86,7 @@ instance (impl ~ (BufferRange -> IO ())) => Op (RedisplayRange ()) TextDisplay o
 {# fun unsafe Fl_Text_Display_scroll as scroll' { id `Ptr ()',`Int',`Int' } -> `()' #}
 instance (impl ~ (Int -> BufferOffset ->  IO ())) => Op (Scroll ()) TextDisplay orig impl where
   runOp _ _ text_display toplinenum (BufferOffset  horizoffset) = withRef text_display $ \text_displayPtr -> scroll' text_displayPtr toplinenum horizoffset
-{# fun unsafe Fl_Text_Display_overstrike as overstrike' { id `Ptr ()',`String' } -> `()' #}
+{# fun unsafe Fl_Text_Display_overstrike as overstrike' { id `Ptr ()',unsafeToCString `String' } -> `()' #}
 instance (impl ~ (String ->  IO ())) => Op (Overstrike ()) TextDisplay orig impl where
    runOp _ _ text_display text = withRef text_display $ \text_displayPtr -> overstrike' text_displayPtr text
 {# fun unsafe Fl_Text_Display_set_insert_position as setInsertPosition' { id `Ptr ()',`Int' } -> `()' #}
@@ -265,7 +265,7 @@ instance (impl ~ (AlignType ->  IO ())) => Op (SetLinenumberAlign ()) TextDispla
 {# fun unsafe linenumber_align as linenumberAlign' { id `Ptr ()' } -> `AlignType' cToEnum #}
 instance (impl ~ ( IO (AlignType))) => Op (GetLinenumberAlign ()) TextDisplay orig impl where
    runOp _ _ text_display = withRef text_display $ \text_displayPtr -> linenumberAlign' text_displayPtr
-{# fun unsafe set_linenumber_format as setLinenumberFormat' { id `Ptr ()',`String' } -> `()' #}
+{# fun unsafe set_linenumber_format as setLinenumberFormat' { id `Ptr ()',unsafeToCString `String' } -> `()' #}
 instance (impl ~ (String ->  IO ())) => Op (SetLinenumberFormat ()) TextDisplay orig impl where
    runOp _ _ text_display val = withRef text_display $ \text_displayPtr -> setLinenumberFormat' text_displayPtr val
 {# fun unsafe linenumber_format as linenumberFormat' { id `Ptr ()' } -> `String' #}

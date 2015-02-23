@@ -44,19 +44,19 @@ enum FlInputType {
 #endc
 {#enum FlInputType {}#}
 {# fun Fl_Input_New as inputNew' { `Int',`Int',`Int',`Int' } -> `Ptr ()' id #}
-{# fun Fl_Input_New_WithLabel as inputNewWithLabel' { `Int',`Int',`Int',`Int',`String'} -> `Ptr ()' id #}
+{# fun Fl_Input_New_WithLabel as inputNewWithLabel' { `Int',`Int',`Int',`Int', unsafeToCString `String'} -> `Ptr ()' id #}
 {# fun Fl_Multiline_Input_New as multilineInputNew' { `Int',`Int',`Int',`Int' } -> `Ptr ()' id #}
-{# fun Fl_Multiline_Input_New_WithLabel as multilineInputNewWithLabel' { `Int',`Int',`Int',`Int',`String'} -> `Ptr ()' id #}
+{# fun Fl_Multiline_Input_New_WithLabel as multilineInputNewWithLabel' { `Int',`Int',`Int',`Int', unsafeToCString `String'} -> `Ptr ()' id #}
 {# fun Fl_Float_Input_New as floatInputNew' { `Int',`Int',`Int',`Int' } -> `Ptr ()' id #}
-{# fun Fl_Float_Input_New_WithLabel as floatInputNewWithLabel' { `Int',`Int',`Int',`Int',`String'} -> `Ptr ()' id #}
+{# fun Fl_Float_Input_New_WithLabel as floatInputNewWithLabel' { `Int',`Int',`Int',`Int', unsafeToCString `String'} -> `Ptr ()' id #}
 {# fun Fl_Int_Input_New as intInputNew' { `Int',`Int',`Int',`Int' } -> `Ptr ()' id #}
-{# fun Fl_Int_Input_New_WithLabel as intInputNewWithLabel' { `Int',`Int',`Int',`Int',`String'} -> `Ptr ()' id #}
+{# fun Fl_Int_Input_New_WithLabel as intInputNewWithLabel' { `Int',`Int',`Int',`Int', unsafeToCString `String'} -> `Ptr ()' id #}
 {# fun Fl_Secret_Input_New as secretInputNew' { `Int',`Int',`Int',`Int' } -> `Ptr ()' id #}
-{# fun Fl_Secret_Input_New_WithLabel as secretInputNewWithLabel' { `Int',`Int',`Int',`Int',`String'} -> `Ptr ()' id #}
+{# fun Fl_Secret_Input_New_WithLabel as secretInputNewWithLabel' { `Int',`Int',`Int',`Int', unsafeToCString `String'} -> `Ptr ()' id #}
 {# fun Fl_Output_New as outputNew' { `Int',`Int',`Int',`Int' } -> `Ptr ()' id #}
-{# fun Fl_Output_New_WithLabel as outputNewWithLabel' { `Int',`Int',`Int',`Int',`String'} -> `Ptr ()' id #}
+{# fun Fl_Output_New_WithLabel as outputNewWithLabel' { `Int',`Int',`Int',`Int', unsafeToCString `String'} -> `Ptr ()' id #}
 {# fun Fl_Multiline_Output_New as multilineOutputNew' { `Int',`Int',`Int',`Int' } -> `Ptr ()' id #}
-{# fun Fl_Multiline_Output_New_WithLabel as multilineOutputNewWithLabel' { `Int',`Int',`Int',`Int',`String'} -> `Ptr ()' id #}
+{# fun Fl_Multiline_Output_New_WithLabel as multilineOutputNewWithLabel' { `Int',`Int',`Int',`Int', unsafeToCString `String'} -> `Ptr ()' id #}
 inputNew :: Maybe FlInputType -> Rectangle -> Maybe String -> IO (Ref Input)
 inputNew flInputType rectangle l'=
     let (x_pos, y_pos, width, height) = fromRectangle rectangle
@@ -90,15 +90,15 @@ instance (impl ~ (Event -> IO Int)) => Op (Handle ()) Input orig impl where
            FlSecretInput -> secretInputHandle' p (fromIntegral . fromEnum $ event)
            _             -> inputHandle' p (fromIntegral . fromEnum $ event)
       )
-{# fun unsafe Fl_Input_set_value as setValue' { id `Ptr ()',`String' } -> `Int' #}
-{# fun unsafe Fl_Input_set_value_with_length as setValueWithLength' { id `Ptr ()',`String',`Int' } -> `Int' #}
+{# fun unsafe Fl_Input_set_value as setValue' { id `Ptr ()', unsafeToCString `String' } -> `Int' #}
+{# fun unsafe Fl_Input_set_value_with_length as setValueWithLength' { id `Ptr ()', unsafeToCString `String',`Int' } -> `Int' #}
 instance (impl ~ (String -> Maybe Int -> IO (Int))) => Op (SetValue ()) Input orig impl where
   runOp _ _ input text l' =
     case l' of
      Nothing -> withRef input $ \inputPtr -> setValue' inputPtr text
      Just l -> withRef input $ \inputPtr -> setValueWithLength' inputPtr text l
-{# fun unsafe Fl_Input_static_value as staticValue' { id `Ptr ()',`String' } -> `Int' #}
-{# fun unsafe Fl_Input_static_value_with_length as staticValueWithLength' { id `Ptr ()',`String',`Int' } -> `Int' #}
+{# fun unsafe Fl_Input_static_value as staticValue' { id `Ptr ()', unsafeToCString `String' } -> `Int' #}
+{# fun unsafe Fl_Input_static_value_with_length as staticValueWithLength' { id `Ptr ()', unsafeToCString `String',`Int' } -> `Int' #}
 instance (impl ~ (String -> Maybe Int ->  IO (Either NoChange ()))) => Op (StaticValue ()) Input orig impl where
   runOp _ _ input text l'= do
     status' <- case l' of
@@ -140,7 +140,7 @@ instance (impl ~ (Int -> Maybe Int -> IO (Either NoChange ()))) => Op (SetPositi
 {# fun unsafe Fl_Input_set_mark as setMark' { id `Ptr ()',`Int' } -> `Int' #}
 instance (impl ~ (Int ->  IO (Either NoChange ()))) => Op (SetMark ()) Input orig impl where
   runOp _ _ input m = withRef input $ \inputPtr -> setMark' inputPtr m >>= return . successOrNoChange
-{# fun unsafe Fl_Input_replace as replace' { id `Ptr ()',`Int',`Int',`String' } -> `Int' #}
+{# fun unsafe Fl_Input_replace as replace' { id `Ptr ()',`Int',`Int', unsafeToCString `String' } -> `Int' #}
 instance (impl ~ (Int -> Int -> String ->  IO (Either NoChange ()))) => Op (Replace ()) Input orig impl where
   runOp _ _ input b e text = withRef input $ \inputPtr -> replace' inputPtr b e  text >>= return . successOrNoChange
 {# fun unsafe Fl_Input_cut as cut' { id `Ptr ()' } -> `Int' #}
@@ -152,10 +152,10 @@ instance (impl ~ (Int ->  IO (Either NoChange ()))) => Op (CutFromCursor ()) Inp
 {# fun unsafe Fl_Input_cut_range as cutRange' { id `Ptr ()',`Int',`Int' } -> `Int' #}
 instance (impl ~ (Int -> Int ->  IO (Either NoChange ()))) => Op (CutRange ()) Input orig impl where
   runOp _ _ input a b = withRef input $ \inputPtr -> cutRange' inputPtr a b >>= return . successOrNoChange
-{# fun unsafe Fl_Input_insert as insert' { id `Ptr ()',`String' } -> `Int' #}
+{# fun unsafe Fl_Input_insert as insert' { id `Ptr ()', unsafeToCString `String' } -> `Int' #}
 instance (impl ~ (String ->  IO (Either NoChange ()))) => Op (Insert ()) Input orig impl where
   runOp _ _ input t = withRef input $ \inputPtr -> insert' inputPtr t >>= return . successOrNoChange
-{# fun unsafe Fl_Input_insert_with_length as insertWithLength' { id `Ptr ()',`String',`Int' } -> `Int' #}
+{# fun unsafe Fl_Input_insert_with_length as insertWithLength' { id `Ptr ()', unsafeToCString `String',`Int' } -> `Int' #}
 instance (impl ~ (String -> Int ->  IO (Either NoChange ()))) => Op (InsertWithLength ()) Input orig impl where
   runOp _ _ input t l = withRef input $ \inputPtr -> insertWithLength' inputPtr t l >>= return . successOrNoChange
 {# fun unsafe Fl_Input_copy as copy' { id `Ptr ()',`Int' } -> `Int' #}
