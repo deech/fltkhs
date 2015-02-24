@@ -161,7 +161,7 @@ autowidth table pad rowData' = do
   mapM_
     (\(colNum, colName) -> do
         (Size (Width w') _) <- flcMeasure colName Nothing
-        setColWidth table colNum (w' + pad)
+        setColWidth table (Column colNum) (w' + pad)
     )
     (zip [0 ..] dirHeaders)
   flcSetFont rowFontFace rowFontSize
@@ -170,9 +170,9 @@ autowidth table pad rowData' = do
       mapM_
         (\(colIdx,col) -> do
             (Size (Width wc') _) <- flcMeasure col Nothing
-            colWidth' <- getColWidth table colIdx
+            colWidth' <- getColWidth table (Column colIdx)
             if (wc' + pad > colWidth')
-              then setColWidth table colIdx (wc' + pad)
+              then setColWidth table (Column colIdx) (wc' + pad)
               else return ()
         )
         (zip [0..] row')
@@ -187,7 +187,7 @@ resize_window :: Ref DoubleWindow -> Ref TableRow -> IO ()
 resize_window window table = do
   let width = (4 :: Int)
   numCols <- getCols table
-  colWidthTotal <- liftM sum $ mapM (getColWidth table) [0..(numCols - 1)]
+  colWidthTotal <- liftM sum $ mapM (getColWidth table . Column) [0..(numCols - 1)]
   let totalWidth = width + colWidthTotal + (margin * 2)
   appWidth <- FL.w
   if (totalWidth < 200 || totalWidth > appWidth)

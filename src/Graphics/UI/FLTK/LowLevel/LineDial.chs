@@ -5,10 +5,6 @@ module Graphics.UI.FLTK.LowLevel.LineDial
      -- * Hierarchy
      --
      -- $hierarchy
-
-     -- * Functions
-     --
-     -- $functions
     )
 where
 #include "Fl_ExportMacros.h"
@@ -30,11 +26,6 @@ lineDialNew rectangle l'=
                              toRef
         Just l -> lineDialNewWithLabel' x_pos y_pos width height l >>=
                                toRef
--- $functions
--- @
---
-
--- @
 
 -- $hierarchy
 -- @

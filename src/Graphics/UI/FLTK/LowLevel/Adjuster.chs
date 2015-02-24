@@ -4,6 +4,10 @@ module Graphics.UI.FLTK.LowLevel.Adjuster
     (
      -- * Constructor
      adjusterNew,
+     -- * Hierarchy
+     --
+     -- $hierarchy
+
      -- *  Functions
      --
      -- $functions
@@ -42,6 +46,18 @@ instance (impl ~ ( IO (Int))) => Op (GetSoft ()) Adjuster orig impl where
 {# fun unsafe Fl_Adjuster_set_soft as setSoft' { id `Ptr ()',`Int' } -> `()' #}
 instance (impl ~ (Int ->  IO ())) => Op (SetSoft ()) Adjuster orig impl where
   runOp _ _ adjuster soft = withRef adjuster $ \adjusterPtr -> setSoft' adjusterPtr soft
+
+-- $hierarchy
+-- @
+-- "Graphics.UI.FLTK.LowLevel.Widget"
+--  |
+--  v
+-- "Graphics.UI.FLTK.LowLevel.Valuator"
+--  |
+--  v
+-- "Graphics.UI.FLTK.LowLevel.Adjuster"
+-- @
+
 
 -- $functions
 -- @

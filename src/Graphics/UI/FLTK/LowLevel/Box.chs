@@ -60,7 +60,7 @@ instance (impl ~ (Event -> IO Int)) => Op (Handle ()) Box orig impl where
 
 -- $functions
 -- @
---
+-- handle :: 'Ref' 'Box' -> 'Event' -> 'IO' 'Int'
 -- @
 
 -- $hierarchy

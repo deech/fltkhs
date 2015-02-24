@@ -8,6 +8,11 @@ module Graphics.UI.FLTK.LowLevel.MenuItem
    MenuItemPointer(..),
    MenuItemReference(..),
    MenuItemLocator(..)
+   -- * Hierarchy
+   --
+   -- $hierarchy
+   --
+
    -- * Functions
    --
    -- $functions
@@ -283,6 +288,11 @@ instance (Parent a MenuItem, impl ~ (Int -> String -> Maybe ShortcutKeySequence 
 {# fun unsafe Fl_Menu_Item_size as size' { id `Ptr ()' } -> `Int' #}
 instance (impl ~ ( IO (Int))) => Op (GetSize ()) MenuItem orig impl where
   runOp _ _ menu_item = withRef menu_item $ \menu_itemPtr -> size' menu_itemPtr
+
+-- $hierarchy
+-- @
+-- "Graphics.UI.FLTK.LowLevel.MenuItem"
+-- @
 
 -- $functions
 -- @

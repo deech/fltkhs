@@ -149,22 +149,22 @@ instance (impl ~ ( Int ->  IO ())) => Op (SetCols ()) Table orig impl where
 instance (impl ~ (  IO (Int))) => Op (GetCols ()) Table orig impl where
   runOp _ _ table = withRef table $ \tablePtr -> cols' tablePtr
 {# fun Fl_Table_visible_cells as visibleCells' { id `Ptr ()',alloca- `Int' peekIntConv*,alloca- `Int' peekIntConv*,alloca- `Int' peekIntConv*,alloca- `Int' peekIntConv*} -> `()' #}
-instance (impl ~ (IO (TableCoordinate,TableCoordinate))) => Op (SetVisibleCells ()) Table orig impl where
+instance (impl ~ (IO (TableCoordinate,TableCoordinate))) => Op (GetVisibleCells ()) Table orig impl where
   runOp _ _ table =
     withRef table $ \tablePtr ->
     visibleCells' tablePtr >>= \(r1', r2', c1', c2') ->
     return ((TableCoordinate (Row r1') (Column c1')), (TableCoordinate (Row r2') (Column c2')))
-{# fun unsafe Fl_Table_is_interactive_resize as isInteractiveResize' { id `Ptr ()' } -> `Int' #}
-instance (impl ~ (  IO (Int))) => Op (IsInteractiveResize ()) Table orig impl where
+{# fun unsafe Fl_Table_is_interactive_resize as isInteractiveResize' { id `Ptr ()' } -> `Bool' cToBool #}
+instance (impl ~ (  IO (Bool))) => Op (IsInteractiveResize ()) Table orig impl where
   runOp _ _ table = withRef table $ \tablePtr -> isInteractiveResize' tablePtr
-{# fun unsafe Fl_Table_row_resize as rowResize' { id `Ptr ()' } -> `Int' #}
-instance (impl ~ (  IO (Int))) => Op (GetRowResize ()) Table orig impl where
+{# fun unsafe Fl_Table_row_resize as rowResize' { id `Ptr ()' } -> `Bool' cToBool #}
+instance (impl ~ (  IO (Bool))) => Op (GetRowResize ()) Table orig impl where
   runOp _ _ table = withRef table $ \tablePtr -> rowResize' tablePtr
 {# fun Fl_Table_set_row_resize as setRowResize' { id `Ptr ()',`Int' } -> `()' #}
 instance (impl ~ ( Bool ->  IO ())) => Op (SetRowResize ()) Table orig impl where
   runOp _ _ table flag = withRef table $ \tablePtr -> setRowResize' tablePtr (cFromBool flag)
-{# fun unsafe Fl_Table_col_resize as colResize' { id `Ptr ()' } -> `Int' #}
-instance (impl ~ (  IO (Int))) => Op (GetColResize ()) Table orig impl where
+{# fun unsafe Fl_Table_col_resize as colResize' { id `Ptr ()' } -> `Bool' cToBool #}
+instance (impl ~ (  IO (Bool))) => Op (GetColResize ()) Table orig impl where
   runOp _ _ table = withRef table $ \tablePtr -> colResize' tablePtr
 {# fun Fl_Table_set_col_resize as setColResize' { id `Ptr ()',`Int' } -> `()' #}
 instance (impl ~ ( Bool ->  IO ())) => Op (SetColResize ()) Table orig impl where
@@ -218,17 +218,17 @@ instance (impl ~ ( Color ->  IO ())) => Op (SetColHeaderColor ()) Table orig imp
 instance (impl ~ (  IO (Color))) => Op (GetColHeaderColor ()) Table orig impl where
   runOp _ _ table = withRef table $ \tablePtr -> colHeaderColor' tablePtr
 {# fun Fl_Table_set_row_height as setRowHeight' { id `Ptr ()',`Int',`Int' } -> `()' #}
-instance (impl ~ ( Int -> Int ->  IO ())) => Op (SetRowHeight ()) Table orig impl where
-  runOp _ _ table row height = withRef table $ \tablePtr -> setRowHeight' tablePtr row height
+instance (impl ~ ( Row -> Int ->  IO ())) => Op (SetRowHeight ()) Table orig impl where
+  runOp _ _ table (Row row) height = withRef table $ \tablePtr -> setRowHeight' tablePtr row height
 {# fun unsafe Fl_Table_row_height as rowHeight' { id `Ptr ()',`Int' } -> `Int' #}
-instance (impl ~ ( Int ->  IO (Int))) => Op (GetRowHeight ()) Table orig impl where
-  runOp _ _ table row = withRef table $ \tablePtr -> rowHeight' tablePtr row
+instance (impl ~ ( Row ->  IO (Int))) => Op (GetRowHeight ()) Table orig impl where
+  runOp _ _ table (Row row) = withRef table $ \tablePtr -> rowHeight' tablePtr row
 {# fun Fl_Table_set_col_width as setColWidth' { id `Ptr ()',`Int',`Int' } -> `()' #}
-instance (impl ~ ( Int -> Int ->  IO ())) => Op (SetColWidth ()) Table orig impl where
-  runOp _ _ table col width = withRef table $ \tablePtr -> setColWidth' tablePtr col width
+instance (impl ~ ( Column -> Int ->  IO ())) => Op (SetColWidth ()) Table orig impl where
+  runOp _ _ table (Column col) width = withRef table $ \tablePtr -> setColWidth' tablePtr col width
 {# fun unsafe Fl_Table_col_width as colWidth' { id `Ptr ()',`Int' } -> `Int' #}
-instance (impl ~ ( Int ->  IO (Int))) => Op (GetColWidth ()) Table orig impl where
-  runOp _ _ table col = withRef table $ \tablePtr -> colWidth' tablePtr col
+instance (impl ~ ( Column ->  IO (Int))) => Op (GetColWidth ()) Table orig impl where
+  runOp _ _ table (Column col) = withRef table $ \tablePtr -> colWidth' tablePtr col
 {# fun Fl_Table_set_row_height_all as setRowHeightAll' { id `Ptr ()',`Int' } -> `()' #}
 instance (impl ~ ( Int ->  IO ())) => Op (SetRowHeightAll ()) Table orig impl where
   runOp _ _ table height = withRef table $ \tablePtr -> setRowHeightAll' tablePtr height
@@ -236,17 +236,17 @@ instance (impl ~ ( Int ->  IO ())) => Op (SetRowHeightAll ()) Table orig impl wh
 instance (impl ~ ( Int ->  IO ())) => Op (SetColWidthAll ()) Table orig impl where
   runOp _ _ table width = withRef table $ \tablePtr -> setColWidthAll' tablePtr width
 {# fun Fl_Table_set_row_position as setRowPosition' { id `Ptr ()',`Int' } -> `()' #}
-instance (impl ~ ( Int ->  IO ())) => Op (SetRowPosition ()) Table orig impl where
-  runOp _ _ table row = withRef table $ \tablePtr -> setRowPosition' tablePtr row
+instance (impl ~ ( Row ->  IO ())) => Op (SetRowPosition ()) Table orig impl where
+  runOp _ _ table (Row row) = withRef table $ \tablePtr -> setRowPosition' tablePtr row
 {# fun Fl_Table_set_col_position as setColPosition' { id `Ptr ()',`Int' } -> `()' #}
-instance (impl ~ ( Int ->  IO ())) => Op (SetColPosition ()) Table orig impl where
-  runOp _ _ table col = withRef table $ \tablePtr -> setColPosition' tablePtr col
+instance (impl ~ ( Column ->  IO ())) => Op (SetColPosition ()) Table orig impl where
+  runOp _ _ table (Column col) = withRef table $ \tablePtr -> setColPosition' tablePtr col
 {# fun unsafe Fl_Table_row_position as rowPosition' { id `Ptr ()' } -> `Int' #}
-instance (impl ~ (  IO (Int))) => Op (GetRowPosition ()) Table orig impl where
-  runOp _ _ table = withRef table $ \tablePtr -> rowPosition' tablePtr
+instance (impl ~ (  IO (Row))) => Op (GetRowPosition ()) Table orig impl where
+  runOp _ _ table = withRef table $ \tablePtr -> rowPosition' tablePtr >>= return . Row
 {# fun unsafe Fl_Table_col_position as colPosition' { id `Ptr ()' } -> `Int' #}
-instance (impl ~ (  IO (Int))) => Op (GetColPosition ()) Table orig impl where
-  runOp _ _ table = withRef table $ \tablePtr -> colPosition' tablePtr
+instance (impl ~ (  IO (Column))) => Op (GetColPosition ()) Table orig impl where
+  runOp _ _ table = withRef table $ \tablePtr -> colPosition' tablePtr >>= return . Column
 {# fun Fl_Table_set_top_row as setTopRow' { id `Ptr ()',`Int' } -> `()' #}
 instance (impl ~ ( Row ->  IO ())) => Op (SetTopRow ()) Table orig impl where
   runOp _ _ table (Row row) = withRef table $ \tablePtr -> setTopRow' tablePtr row
@@ -266,8 +266,8 @@ instance (impl ~ IO (TableCoordinate, TableCoordinate)) => Op (GetSelection ()) 
 instance (impl ~ ( Int -> Int -> Int -> Int ->  IO ())) => Op (SetSelection ()) Table orig impl where
   runOp _ _ table row_top col_left row_bot col_right = withRef table $ \tablePtr -> setSelection' tablePtr row_top col_left row_bot col_right
 {# fun unsafe Fl_Table_move_cursor as moveCursor' { id `Ptr ()',`Int',`Int' } -> `Int' #}
-instance (impl ~ ( Int -> Int ->  IO (Int))) => Op (MoveCursor ()) Table orig impl where
-  runOp _ _ table r c = withRef table $ \tablePtr -> moveCursor' tablePtr r c
+instance (impl ~ ( TableCoordinate ->  IO (Int))) => Op (MoveCursor ()) Table orig impl where
+  runOp _ _ table (TableCoordinate (Row r) (Column c)) = withRef table $ \tablePtr -> moveCursor' tablePtr r c
 {# fun unsafe Fl_Table_init_sizes as initSizes' { id `Ptr ()' } -> `()' #}
 instance (impl ~ (  IO ())) => Op (InitSizes ()) Table orig impl where
   runOp _ _ table = withRef table $ \tablePtr -> initSizes' tablePtr
@@ -311,8 +311,8 @@ instance (impl ~ (  IO (Column))) => Op (CallbackCol ()) Table orig impl where
 instance (impl ~ (  IO (TableContext))) => Op (CallbackContext ()) Table orig impl where
   runOp _ _ table = withRef table $ \tablePtr -> callbackContext' tablePtr
 {# fun unsafe Fl_Table_do_callback as doCallback' { id `Ptr ()',cFromEnum `TableContext',`Int',`Int' } -> `()' #}
-instance (impl ~ ( TableContext -> Int -> Int ->  IO ())) => Op (DoCallback ()) Table orig impl where
-  runOp _ _ table tablecontext row col = withRef table $ \tablePtr -> doCallback' tablePtr tablecontext row col
+instance (impl ~ ( TableContext -> TableCoordinate ->  IO ())) => Op (DoCallback ()) Table orig impl where
+  runOp _ _ table tablecontext (TableCoordinate (Row row) (Column col)) = withRef table $ \tablePtr -> doCallback' tablePtr tablecontext row col
 {# fun unsafe Fl_Table_find_cell as findCell' { id `Ptr ()',cFromEnum `TableContext',`Int',`Int',alloca- `Int' peekIntConv*,alloca- `Int' peekIntConv*,alloca- `Int' peekIntConv*,alloca- `Int' peekIntConv* } -> `CInt' id #}
 instance (impl ~ ( TableContext -> TableCoordinate -> IO (Maybe Rectangle))) => Op (FindCell ()) Table orig impl where
   runOp _ _ table context (TableCoordinate (Row r) (Column c))  =
@@ -363,7 +363,6 @@ instance (impl ~ ( IO ())) => Op (Hide ()) Table orig impl where
 
 -- $Tablefunctions
 -- @
---
 -- add:: ('Parent' a 'Widget') => 'Ref' 'Table' -> 'Ref' a -> 'IO' ())
 --
 -- begin :: 'Ref' 'Table' -> 'IO' ()
@@ -382,7 +381,7 @@ instance (impl ~ ( IO ())) => Op (Hide ()) Table orig impl where
 --
 -- destroy :: 'Ref' 'Table' -> 'IO' ()
 --
--- doCallback :: 'Ref' 'Table' -> 'TableContext' -> 'Int' -> 'Int' -> 'IO' ()
+-- doCallback :: 'Ref' 'Table' -> 'TableContext' -> 'TableCoordinate' -> 'IO' ()
 --
 -- draw :: 'Ref' 'Table' -> 'IO' ()
 --
@@ -404,13 +403,13 @@ instance (impl ~ ( IO ())) => Op (Hide ()) Table orig impl where
 --
 -- getColHeaderHeight :: 'Ref' 'Table' -> 'IO' 'Int'
 --
--- getColPosition :: 'Ref' 'Table' -> 'IO' 'Int'
+-- getColPosition :: 'Ref' 'Table' -> 'IO' 'Column'
 --
--- getColResize :: 'Ref' 'Table' -> 'IO' 'Int'
+-- getColResize :: 'Ref' 'Table' -> 'IO' 'Bool'
 --
 -- getColResizeMin :: 'Ref' 'Table' -> 'IO' 'Int'
 --
--- getColWidth :: 'Ref' 'Table' -> 'Int' -> 'IO' 'Int'
+-- getColWidth :: 'Ref' 'Table' -> 'Column' -> 'IO' 'Int'
 --
 -- getCols :: 'Ref' 'Table' -> 'IO' 'Int'
 --
@@ -420,11 +419,11 @@ instance (impl ~ ( IO ())) => Op (Hide ()) Table orig impl where
 --
 -- getRowHeaderWidth :: 'Ref' 'Table' -> 'IO' 'Int'
 --
--- getRowHeight :: 'Ref' 'Table' -> 'Int' -> 'IO' 'Int'
+-- getRowHeight :: 'Ref' 'Table' -> 'Row' -> 'IO' 'Int'
 --
--- getRowPosition :: 'Ref' 'Table' -> 'IO' 'Int'
+-- getRowPosition :: 'Ref' 'Table' -> 'IO' 'Row'
 --
--- getRowResize :: 'Ref' 'Table' -> 'IO' 'Int'
+-- getRowResize :: 'Ref' 'Table' -> 'IO' 'Bool'
 --
 -- getRowResizeMin :: 'Ref' 'Table' -> 'IO' 'Int'
 --
@@ -435,6 +434,8 @@ instance (impl ~ ( IO ())) => Op (Hide ()) Table orig impl where
 -- getTableBox :: 'Ref' 'Table' -> 'IO' 'Boxtype'
 --
 -- getTopRow :: 'Ref' 'Table' -> 'IO' 'Row'
+--
+-- getVisibleCells :: 'Ref' 'Table' -> 'IO' ('TableCoordinate', 'TableCoordinate')
 --
 -- handle :: 'Ref' 'Table' -> 'Event' -> 'IO' 'Int'
 --
@@ -448,11 +449,11 @@ instance (impl ~ ( IO ())) => Op (Hide ()) Table orig impl where
 --
 -- insertWithBefore:: ('Parent' a 'Widget', 'Parent' b 'Widget') => 'Ref' 'Table' -> 'Ref' a -> 'Ref' b -> 'IO' ())
 --
--- isInteractiveResize :: 'Ref' 'Table' -> 'IO' 'Int'
+-- isInteractiveResize :: 'Ref' 'Table' -> 'IO' 'Bool'
 --
 -- isSelected :: 'Ref' 'Table' -> 'TableCoordinate' -> 'IO' 'Bool'
 --
--- moveCursor :: 'Ref' 'Table' -> 'Int' -> 'Int' -> 'IO' 'Int'
+-- moveCursor :: 'Ref' 'Table' -> 'TableCoordinate' -> 'IO' 'Int'
 --
 -- resize :: 'Ref' 'Table' -> 'Rectangle' -> 'IO' ()
 --
@@ -464,13 +465,13 @@ instance (impl ~ ( IO ())) => Op (Hide ()) Table orig impl where
 --
 -- setColHeaderHeight :: 'Ref' 'Table' -> 'Int' -> 'IO' ()
 --
--- setColPosition :: 'Ref' 'Table' -> 'Int' -> 'IO' ()
+-- setColPosition :: 'Ref' 'Table' -> 'Column' -> 'IO' ()
 --
 -- setColResize :: 'Ref' 'Table' -> 'Bool' -> 'IO' ()
 --
 -- setColResizeMin :: 'Ref' 'Table' -> 'Int' -> 'IO' ()
 --
--- setColWidth :: 'Ref' 'Table' -> 'Int' -> 'Int' -> 'IO' ()
+-- setColWidth :: 'Ref' 'Table' -> 'Column' -> 'Int' -> 'IO' ()
 --
 -- setColWidthAll :: 'Ref' 'Table' -> 'Int' -> 'IO' ()
 --
@@ -484,11 +485,11 @@ instance (impl ~ ( IO ())) => Op (Hide ()) Table orig impl where
 --
 -- setRowHeaderWidth :: 'Ref' 'Table' -> 'Int' -> 'IO' ()
 --
--- setRowHeight :: 'Ref' 'Table' -> 'Int' -> 'Int' -> 'IO' ()
+-- setRowHeight :: 'Ref' 'Table' -> 'Row' -> 'Int' -> 'IO' ()
 --
 -- setRowHeightAll :: 'Ref' 'Table' -> 'Int' -> 'IO' ()
 --
--- setRowPosition :: 'Ref' 'Table' -> 'Int' -> 'IO' ()
+-- setRowPosition :: 'Ref' 'Table' -> 'Row' -> 'IO' ()
 --
 -- setRowResize :: 'Ref' 'Table' -> 'Bool' -> 'IO' ()
 --
@@ -504,12 +505,9 @@ instance (impl ~ ( IO ())) => Op (Hide ()) Table orig impl where
 --
 -- setTopRow :: 'Ref' 'Table' -> 'Row' -> 'IO' ()
 --
--- setVisibleCells :: 'Ref' 'Table' -> 'IO' ('TableCoordinate', 'TableCoordinate')
---
 -- showWidget :: 'Ref' 'Table' -> 'IO' ()
 --
 -- showWidgetSuper :: 'Ref' 'Table' -> 'IO' ()
-
 -- @
 
 

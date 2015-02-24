@@ -707,8 +707,8 @@ module Graphics.UI.FLTK.LowLevel.Hierarchy
          setCols,
          GetCols,
          getCols,
-         SetVisibleCells,
-         setVisibleCells,
+         GetVisibleCells,
+         getVisibleCells,
          IsInteractiveResize,
          isInteractiveResize,
          GetRowResize,
@@ -3152,7 +3152,7 @@ type TableFuncs =
   (GetRows
   (SetCols
   (GetCols
-  (SetVisibleCells
+  (GetVisibleCells
   (IsInteractiveResize
   (GetRowResize
   (SetRowResize
@@ -3239,9 +3239,9 @@ setCols = dispatch (undefined :: SetCols ())
 data GetCols a
 getCols :: (FindOp a (GetCols ()) (Match r), Op (GetCols ()) r a impl) => Ref a -> impl
 getCols = dispatch (undefined :: GetCols ())
-data SetVisibleCells a
-setVisibleCells :: (FindOp a (SetVisibleCells ()) (Match r), Op (SetVisibleCells ()) r a impl) => Ref a -> impl
-setVisibleCells = dispatch (undefined :: SetVisibleCells ())
+data GetVisibleCells a
+getVisibleCells :: (FindOp a (GetVisibleCells ()) (Match r), Op (GetVisibleCells ()) r a impl) => Ref a -> impl
+getVisibleCells = dispatch (undefined :: GetVisibleCells ())
 data IsInteractiveResize a
 isInteractiveResize :: (FindOp a (IsInteractiveResize ()) (Match r), Op (IsInteractiveResize ()) r a impl) => Ref a -> impl
 isInteractiveResize = dispatch (undefined :: IsInteractiveResize ())

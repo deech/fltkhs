@@ -3,6 +3,13 @@
 module Graphics.UI.FLTK.LowLevel.Bitmap
  (
   bitmapNew
+  -- * Hierarchy
+  --
+  -- $hierarchy
+
+  -- * Functions
+  --
+  -- $functions
  )
 where
 #include "Fl_ExportMacros.h"
@@ -75,3 +82,39 @@ instance (impl ~ (Position ->  IO ())) => Op (Draw ()) Bitmap orig impl where
 {# fun unsafe Fl_Bitmap_uncache as uncache' { id `Ptr ()' } -> `()' #}
 instance (impl ~ ( IO ())) => Op (Uncache ()) Bitmap orig impl where
   runOp _ _ bitmap = withRef bitmap $ \bitmapPtr -> uncache' bitmapPtr
+
+-- $hierarchy
+-- @
+-- "Graphics.UI.FLTK.LowLevel.Image"
+--  |
+--  v
+-- "Graphics.UI.FLTK.LowLevel.Bitmap"
+
+-- $functions
+-- @
+-- colorAverage :: 'Ref' 'Bitmap' -> 'Color' -> 'Float' -> 'IO' ()
+--
+-- copy :: 'Ref' 'Bitmap' -> 'Maybe' 'Size' -> 'IO' ('Ref' 'Bitmap')
+--
+-- desaturate :: 'Ref' 'Bitmap' -> 'IO' ()
+--
+-- destroy :: 'Ref' 'Bitmap' -> 'IO' ()
+--
+-- draw :: 'Ref' 'Bitmap' -> 'Position' -> 'IO' ()
+--
+-- drawResize :: 'Ref' 'Bitmap' -> 'Position' -> 'Size' -> 'Maybe' 'X' -> 'Maybe' 'Y' -> 'IO' ()
+--
+-- getCount :: 'Ref' 'Bitmap' -> 'IO' 'Int'
+--
+-- getD :: 'Ref' 'Bitmap' -> 'IO' 'Int'
+--
+-- getH :: 'Ref' 'Bitmap' -> 'IO' 'Int'
+--
+-- getLd :: 'Ref' 'Bitmap' -> 'IO' 'Int'
+--
+-- getW :: 'Ref' 'Bitmap' -> 'IO' 'Int'
+--
+-- inactive :: 'Ref' 'Bitmap' -> 'IO' ()
+--
+-- uncache :: 'Ref' 'Bitmap' -> 'IO' ()
+-- @

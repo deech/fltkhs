@@ -8,6 +8,10 @@ module Graphics.UI.FLTK.LowLevel.Counter
      --
      -- $hierarchy
 
+     -- * Functions
+     --
+     -- $Counterfunctions
+     --
     )
 where
 #include "Fl_ExportMacros.h"

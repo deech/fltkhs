@@ -5,10 +5,6 @@ module Graphics.UI.FLTK.LowLevel.SimpleCounter
      -- * Hierarchy
      --
      -- $hierarchy
-
-     -- * Functions
-     --
-     -- $functions
     )
 where
 #include "Fl_ExportMacros.h"
@@ -31,11 +27,6 @@ simpleCounterNew rectangle l'=
         Just l -> simpleCounterNewWithLabel' x_pos y_pos width height l >>=
                                toRef
 
--- $functions
--- @
---
-
--- @
 
 -- $hierarchy
 -- @

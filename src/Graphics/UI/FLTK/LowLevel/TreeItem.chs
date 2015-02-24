@@ -345,11 +345,6 @@ instance (impl ~ (IO (Int))) => Op (LabelW ()) TreeItem orig impl where
 instance (impl ~ (IO (Int))) => Op (LabelH ()) TreeItem orig impl where
   runOp _ _ tree_item = withRef tree_item $ \tree_itemPtr -> labelH' tree_itemPtr
 
--- $hierarchy
--- @
--- 'Base' -> 'TreeItem'
--- @
-
 -- $functions
 -- @
 --

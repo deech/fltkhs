@@ -101,6 +101,7 @@ instance (impl ~ (Event -> IO Int)) => Op (Handle ()) Clock orig impl where
 -- handle :: 'Ref' 'Clock' -> 'Event' -> 'IO' 'Int'
 --
 -- setValue :: 'Ref' 'Clock' -> 'ClockSetTimeType' -> 'IO' ()
+-- @
 
 -- $hierarchy
 -- @

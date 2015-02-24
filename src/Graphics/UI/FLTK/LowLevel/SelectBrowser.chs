@@ -6,10 +6,6 @@ module Graphics.UI.FLTK.LowLevel.SelectBrowser
      -- * Hierarchy
      --
      -- $hierarchy
-
-     -- * Functions
-     --
-     -- $functions
     )
 where
 #include "Fl_ExportMacros.h"
@@ -31,11 +27,6 @@ selectBrowserNew rectangle l' =
                              toRef
         Just l -> selectBrowserNewWithLabel' x_pos y_pos width height l >>=
                              toRef
--- $functions
--- @
---
-
--- @
 
 -- $hierarchy
 -- @

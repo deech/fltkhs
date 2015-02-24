@@ -6,10 +6,6 @@ module Graphics.UI.FLTK.LowLevel.IntInput
      -- * Hierarchy
      --
      -- $hierarchy
-
-     -- * Functions
-     --
-     -- $functions
     )
 where
 #include "Fl_ExportMacros.h"
@@ -31,11 +27,6 @@ intInputNew rectangle l' =
                              toRef
         Just l -> intInputNewWithLabel' x_pos y_pos width height l >>=
                              toRef
--- $functions
--- @
---
-
--- @
 
 -- $hierarchy
 -- @
