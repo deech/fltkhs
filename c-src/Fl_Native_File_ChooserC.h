@@ -28,6 +28,7 @@ EXPORT {
 #endif
   FL_EXPORT_C(fl_Native_File_Chooser, Fl_Native_File_Chooser_New_WithVal)(int val);
   FL_EXPORT_C(fl_Native_File_Chooser, Fl_Native_File_Chooser_New)();
+  FL_EXPORT_C(void, Fl_Native_File_Chooser_Destroy)(fl_Native_File_Chooser chooser);
   FL_EXPORT_C(void, Fl_Native_File_Chooser_set_type)(fl_Native_File_Chooser chooser, int type);
   FL_EXPORT_C(int, Fl_Native_File_Chooser_type)(fl_Native_File_Chooser chooser);
   FL_EXPORT_C(void, Fl_Native_File_Chooser_set_options)(fl_Native_File_Chooser chooser, int options);

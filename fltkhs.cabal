@@ -1,5 +1,5 @@
 name: fltkhs
-version: 0.1.0.0
+version: 0.1.0.1
 synopsis: FLTK bindings
 description:
     Low level bindings for the FLTK GUI toolkit.
@@ -89,6 +89,7 @@ library
                    Graphics.UI.FLTK.LowLevel.TextBuffer
                    Graphics.UI.FLTK.LowLevel.TextDisplay
                    Graphics.UI.FLTK.LowLevel.TextEditor
+                   Graphics.UI.FLTK.LowLevel.NativeFileChooser
                    Graphics.UI.FLTK.LowLevel.Utils
   build-depends:
     base == 4.*,
@@ -100,6 +101,20 @@ library
   default-extensions: GADTs
   default-language: Haskell2010
   ghc-options: -Wall -fcontext-stack=220
+
+Executable fltkhs-nativefilechooser-simple-app
+  Main-Is: nativefilechooser-simple-app.hs
+  Hs-Source-Dirs: src/Examples
+  Build-Depends:
+    base == 4.*,
+    directory,
+    fltkhs
+  default-language: Haskell2010
+  ghc-Options: -Wall -threaded -fcontext-stack=220
+  if os(linux)
+     ghc-Options: -pgml g++ "-optl-Wl,--whole-archive" "-optl-Wl,-Bstatic" "-optl-Wl,-lfltkc" "-optl-Wl,-Bdynamic" "-optl-Wl,--no-whole-archive"
+  else
+     ghc-Options:
 
 Executable fltkhs-table-as-container
   Main-Is: table-as-container.hs

@@ -1404,7 +1404,41 @@ module Graphics.UI.FLTK.LowLevel.Hierarchy
          GetDefaultKeyBindings,
          getDefaultKeyBindings,
          ReplaceKeyBindings,
-         replaceKeyBindings
+         replaceKeyBindings,
+         -- * NativeFileChooser
+         NativeFileChooser,
+         SetOptions,
+         setOptions,
+         GetOptions,
+         getOptions,
+         GetFilename,
+         getFilename,
+         GetFilenameAt,
+         getFilenameAt,
+         SetDirectory,
+         setDirectory,
+         GetDirectory,
+         getDirectory,
+         SetTitle,
+         setTitle,
+         GetTitle,
+         getTitle,
+         GetFilter,
+         getFilter,
+         SetFilter,
+         setFilter,
+         Filters,
+         filters,
+         SetFilterValue,
+         setFilterValue,
+         GetFilterValue,
+         getFilterValue,
+         SetPresetFile,
+         setPresetFile,
+         GetPresetFile,
+         getPresetFile,
+         GetErrmsg,
+         getErrmsg
   )
 where
 import Prelude hiding (round)
@@ -2588,7 +2622,6 @@ type SysMenuBarFuncs =
   (Destroy
   (GetMenu
   (SetMenu
-  (Add
   (Insert
   (Remove
   (Replace
@@ -2599,7 +2632,7 @@ type SysMenuBarFuncs =
   (GetMode
   (SetShortcut
   (Handle
-  ()))))))))))))))
+  ())))))))))))))
 instance Functions SysMenuBar SysMenuBarFuncs
 
 data CChoice parent
@@ -4824,3 +4857,79 @@ getDefaultKeyBindings = dispatch (undefined :: GetDefaultKeyBindings ())
 data ReplaceKeyBindings a
 replaceKeyBindings :: (FindOp a (ReplaceKeyBindings ()) (Match r), Op (ReplaceKeyBindings ()) r a impl) => Ref a -> impl
 replaceKeyBindings = dispatch (undefined :: ReplaceKeyBindings ())
+
+data CNativeFileChooser parent
+type NativeFileChooser = CNativeFileChooser Base
+type NativeFileChooserFuncs =
+  (Destroy
+  (SetType
+  (GetType
+  (SetOptions
+  (GetOptions
+  (GetCount
+  (GetFilename
+  (GetFilenameAt
+  (SetDirectory
+  (GetDirectory
+  (SetTitle
+  (GetTitle
+  (GetFilter
+  (SetFilter
+  (Filters
+  (SetFilterValue
+  (GetFilterValue
+  (SetPresetFile
+  (GetPresetFile
+  (GetErrmsg
+  (ShowWidget
+  ())))))))))))))))))))))
+instance Functions NativeFileChooser NativeFileChooserFuncs
+
+data SetOptions a
+setOptions :: (FindOp a (SetOptions ()) (Match r), Op (SetOptions ()) r a impl) => Ref a -> impl
+setOptions = dispatch (undefined :: SetOptions ())
+data GetOptions a
+getOptions :: (FindOp a (GetOptions ()) (Match r), Op (GetOptions ()) r a impl) => Ref a -> impl
+getOptions = dispatch (undefined :: GetOptions ())
+data GetFilename a
+getFilename :: (FindOp a (GetFilename ()) (Match r), Op (GetFilename ()) r a impl) => Ref a -> impl
+getFilename = dispatch (undefined :: GetFilename ())
+data GetFilenameAt a
+getFilenameAt :: (FindOp a (GetFilenameAt ()) (Match r), Op (GetFilenameAt ()) r a impl) => Ref a -> impl
+getFilenameAt = dispatch (undefined :: GetFilenameAt ())
+data SetDirectory a
+setDirectory :: (FindOp a (SetDirectory ()) (Match r), Op (SetDirectory ()) r a impl) => Ref a -> impl
+setDirectory = dispatch (undefined :: SetDirectory ())
+data GetDirectory a
+getDirectory :: (FindOp a (GetDirectory ()) (Match r), Op (GetDirectory ()) r a impl) => Ref a -> impl
+getDirectory = dispatch (undefined :: GetDirectory ())
+data SetTitle a
+setTitle :: (FindOp a (SetTitle ()) (Match r), Op (SetTitle ()) r a impl) => Ref a -> impl
+setTitle = dispatch (undefined :: SetTitle ())
+data GetTitle a
+getTitle :: (FindOp a (GetTitle ()) (Match r), Op (GetTitle ()) r a impl) => Ref a -> impl
+getTitle = dispatch (undefined :: GetTitle ())
+data GetFilter a
+getFilter :: (FindOp a (GetFilter ()) (Match r), Op (GetFilter ()) r a impl) => Ref a -> impl
+getFilter = dispatch (undefined :: GetFilter ())
+data SetFilter a
+setFilter :: (FindOp a (SetFilter ()) (Match r), Op (SetFilter ()) r a impl) => Ref a -> impl
+setFilter = dispatch (undefined :: SetFilter ())
+data Filters a
+filters :: (FindOp a (Filters ()) (Match r), Op (Filters ()) r a impl) => Ref a -> impl
+filters = dispatch (undefined :: Filters ())
+data SetFilterValue a
+setFilterValue :: (FindOp a (SetFilterValue ()) (Match r), Op (SetFilterValue ()) r a impl) => Ref a -> impl
+setFilterValue = dispatch (undefined :: SetFilterValue ())
+data GetFilterValue a
+getFilterValue :: (FindOp a (GetFilterValue ()) (Match r), Op (GetFilterValue ()) r a impl) => Ref a -> impl
+getFilterValue = dispatch (undefined :: GetFilterValue ())
+data SetPresetFile a
+setPresetFile :: (FindOp a (SetPresetFile ()) (Match r), Op (SetPresetFile ()) r a impl) => Ref a -> impl
+setPresetFile = dispatch (undefined :: SetPresetFile ())
+data GetPresetFile a
+getPresetFile :: (FindOp a (GetPresetFile ()) (Match r), Op (GetPresetFile ()) r a impl) => Ref a -> impl
+getPresetFile = dispatch (undefined :: GetPresetFile ())
+data GetErrmsg a
+getErrmsg :: (FindOp a (GetErrmsg ()) (Match r), Op (GetErrmsg ()) r a impl) => Ref a -> impl
+getErrmsg = dispatch (undefined :: GetErrmsg ())

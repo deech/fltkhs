@@ -410,6 +410,7 @@ simpleTypeMap =
     ,("Fl_Boxtype", "Boxtype")
     ,("Fl_Mode", "Mode")
     ,("fl_Widget", "Ptr ()")
+    ,("fl_Native_File_Chooser", "Ptr ()")
     ,("fl_Text_Buffer", "Ptr ()")
     ,("fl_Text_Selection", "Ptr ()")
     ,("fl_Text_Display"  , "Ptr ()")
@@ -476,6 +477,7 @@ haskellEquivalent =
     [
      ("fl_Region"         , "Region"),
      ("fl_Widget"         , "Widget"),
+     ("fl_Native_File_Chooser"         , "NativeFileChooser"),
      ("fl_Text_Buffer"    , "TextBuffer"),
      ("fl_Text_Selection" , "TextSelection"),
      ("fl_Text_Display"   , "TextDisplay"),
