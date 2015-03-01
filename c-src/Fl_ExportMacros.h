@@ -12,8 +12,6 @@
 #else
   #ifdef _WIN32
     #define FL_EXPORT_C(TYPE,FUNC_NAME) extern __declspec(dllexport) TYPE __cdecl FUNC_NAME
-    #undef EXPORT
-    #define EXPORT extern "C" __declspec(dllexport) 
   #else
     #define FL_EXPORT_C(TYPE,FUNC_NAME) extern TYPE FUNC_NAME
   #endif

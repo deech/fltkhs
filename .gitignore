@@ -21,3 +21,14 @@ object_files/*
 c-examples/Makefile
 c-src/Makefile
 dist/*
+/CMakeCache.txt
+/CMakeFiles/
+/c-lib/
+/c-src/CMakeFiles/
+/c-src/cmake_install.cmake
+/CMakeFiles/
+/CMakeCache.txt
+/c-src/CMakeFiles/
+/c-src/cmake_install.cmake
+/c-src/libfltkdyn.so
+/cmake_install.cmake

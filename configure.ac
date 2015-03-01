@@ -1,7 +1,6 @@
 AC_PREREQ([2.60])
 AC_INIT([fltkc], [0.1], [aditya dawt siram ayt gmail dawt com])
 AC_CONFIG_SRCDIR([c-src/Fl_C.h])
-AC_CONFIG_HEADERS([config.h])
 
 # Checks for programs.
 AC_PROG_CXX

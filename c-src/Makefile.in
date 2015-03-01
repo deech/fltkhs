@@ -112,25 +112,25 @@ else
 	SONAME_FLAGS= -shared -Wl,-soname
 endif
 .SILENT:
-all: libfltkc.a libfltkc.$(SHARED_EXT)
+all: libfltkc.a libfltkcdyn.$(SHARED_EXT)
 .SUFFIXES: .cpp .o
 .cpp.o:
 	test -d $(STATIC_OBJECT_FILES) || mkdir $(STATIC_OBJECT_FILES)
 	test -d $(SHARED_OBJECT_FILES) || mkdir $(SHARED_OBJECT_FILES)
 	@echo "*** Compiling $<..."
-	$(CXXSTATIC) -c $^ -o $(STATIC_OBJECT_FILES)/$@
+	$(CXXSTATIC) -c -fPIC $^ -o $(STATIC_OBJECT_FILES)/$@
 	$(CXXSHARED) -c -fPIC $^ -o $(SHARED_OBJECT_FILES)/$@
 libfltkc.a : $(OBJECTS)
 	test -d $(LIBDIR) || mkdir $(LIBDIR)
 	@echo "*** Linking $@..."
 	(cd $(STATIC_OBJECT_FILES); \
 	ar rcs $(LIBDIR)/$@ $^;)
-libfltkc.so : $(OBJECTS)
+libfltkcdyn.so : $(OBJECTS)
 	test -d $(LIBDIR) || mkdir $(LIBDIR)
 	@echo "*** Linking $@..."
 	(cd $(SHARED_OBJECT_FILES); \
 	$(CXX) $(SONAME_FLAGS),$(LIBDIR)/$@ -o $(LIBDIR)/$@ $^);
-libfltkc.dylib: $(OBJECTS)
+libfltkcdyn.dylib: $(OBJECTS)
 	@echo "*** Not linking $@ because of bugs in ./c-src/Makefile.in, help appreciated."
 clean:
 	test -d $(LIBDIR) && rm -rf $(LIBDIR)

@@ -4,9 +4,12 @@
 // always include the FL/*.H headers before local headers
 // X is included transitively and needed for
 // the callback mechanism included below to work.
+#ifdef _WIN32
+ #define FL_LIBRARY 1
+#endif
 #include "FL/Fl.H"
-#include "FL/x.H"
 #include "Fl_CallbackC.h"
+#include "FL/x.H"
 EXPORT {
 #endif
 #if !defined(WIN32) && !defined(__APPLE__)

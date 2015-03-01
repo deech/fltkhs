@@ -111,10 +111,8 @@ Executable fltkhs-nativefilechooser-simple-app
     fltkhs
   default-language: Haskell2010
   ghc-Options: -Wall -threaded -fcontext-stack=220
-  if os(linux)
-     ghc-Options: -pgml g++ "-optl-Wl,--whole-archive" "-optl-Wl,-Bstatic" "-optl-Wl,-lfltkc" "-optl-Wl,-Bdynamic" "-optl-Wl,--no-whole-archive"
-  else
-     ghc-Options:
+  if !os(darwin)
+    ghc-Options: -pgml g++ "-optl-Wl,--whole-archive" "-optl-Wl,-Bstatic" "-optl-Wl,-lfltkc" "-optl-Wl,-Bdynamic" "-optl-Wl,--no-whole-archive"
 
 Executable fltkhs-table-as-container
   Main-Is: table-as-container.hs
@@ -124,10 +122,8 @@ Executable fltkhs-table-as-container
     fltkhs
   default-language: Haskell2010
   ghc-Options: -Wall -threaded -fcontext-stack=220
-  if os(linux)
-     ghc-Options: -pgml g++ "-optl-Wl,--whole-archive" "-optl-Wl,-Bstatic" "-optl-Wl,-lfltkc" "-optl-Wl,-Bdynamic" "-optl-Wl,--no-whole-archive"
-  else
-     ghc-Options:
+  if !os(darwin)
+    ghc-Options: -pgml g++ "-optl-Wl,--whole-archive" "-optl-Wl,-Bstatic" "-optl-Wl,-lfltkc" "-optl-Wl,-Bdynamic" "-optl-Wl,--no-whole-archive"
 
 Executable fltkhs-texteditor-simple
   Main-Is: texteditor-simple.hs
@@ -137,10 +133,8 @@ Executable fltkhs-texteditor-simple
     fltkhs
   default-language: Haskell2010
   ghc-Options: -Wall -threaded -fcontext-stack=220
-  if os(linux)
-     ghc-Options: -pgml g++ "-optl-Wl,--whole-archive" "-optl-Wl,-Bstatic" "-optl-Wl,-lfltkc" "-optl-Wl,-Bdynamic" "-optl-Wl,--no-whole-archive"
-  else
-     ghc-Options:
+  if !os(darwin)
+    ghc-Options: -pgml g++ "-optl-Wl,--whole-archive" "-optl-Wl,-Bstatic" "-optl-Wl,-lfltkc" "-optl-Wl,-Bdynamic" "-optl-Wl,--no-whole-archive"
 
 Executable fltkhs-textdisplay-with-colors
   Main-Is: textdisplay-with-colors.hs
@@ -150,10 +144,8 @@ Executable fltkhs-textdisplay-with-colors
     fltkhs
   default-language: Haskell2010
   ghc-Options: -Wall -threaded -fcontext-stack=220
-  if os(linux)
-     ghc-Options: -pgml g++ "-optl-Wl,--whole-archive" "-optl-Wl,-Bstatic" "-optl-Wl,-lfltkc" "-optl-Wl,-Bdynamic" "-optl-Wl,--no-whole-archive"
-  else
-     ghc-Options:
+  if !os(darwin)
+    ghc-Options: -pgml g++ "-optl-Wl,--whole-archive" "-optl-Wl,-Bstatic" "-optl-Wl,-lfltkc" "-optl-Wl,-Bdynamic" "-optl-Wl,--no-whole-archive"
 
 Executable fltkhs-hello-world
   Main-Is: hello-world.hs
@@ -163,10 +155,8 @@ Executable fltkhs-hello-world
     fltkhs
   default-language: Haskell2010
   ghc-Options: -Wall -threaded -fcontext-stack=220
-  if os(linux)
-     ghc-Options: -pgml g++ "-optl-Wl,--whole-archive" "-optl-Wl,-Bstatic" "-optl-Wl,-lfltkc" "-optl-Wl,-Bdynamic" "-optl-Wl,--no-whole-archive"
-  else
-     ghc-Options:
+  if !os(darwin)
+    ghc-Options: -pgml g++ "-optl-Wl,--whole-archive" "-optl-Wl,-Bstatic" "-optl-Wl,-lfltkc" "-optl-Wl,-Bdynamic" "-optl-Wl,--no-whole-archive"
 
 Executable fltkhs-doublebuffer
   Main-Is: doublebuffer.hs
@@ -176,10 +166,8 @@ Executable fltkhs-doublebuffer
     fltkhs
   default-language: Haskell2010
   ghc-Options: -Wall -threaded -fcontext-stack=220
-  if os(linux)
-     ghc-Options: -pgml g++ "-optl-Wl,--whole-archive" "-optl-Wl,-Bstatic" "-optl-Wl,-lfltkc" "-optl-Wl,-Bdynamic" "-optl-Wl,--no-whole-archive"
-  else
-     ghc-Options:
+  if !os(darwin)
+    ghc-Options: -pgml g++ "-optl-Wl,--whole-archive" "-optl-Wl,-Bstatic" "-optl-Wl,-lfltkc" "-optl-Wl,-Bdynamic" "-optl-Wl,--no-whole-archive"
 
 Executable fltkhs-make-tree
   Main-Is: make-tree.hs
@@ -189,10 +177,8 @@ Executable fltkhs-make-tree
     fltkhs
   default-language: Haskell2010
   ghc-Options: -Wall -threaded -fcontext-stack=220
-  if os(linux)
-     ghc-Options: -pgml g++ "-optl-Wl,--whole-archive" "-optl-Wl,-Bstatic" "-optl-Wl,-lfltkc" "-optl-Wl,-Bdynamic" "-optl-Wl,--no-whole-archive"
-  else
-     ghc-Options:
+  if !os(darwin)
+    ghc-Options: -pgml g++ "-optl-Wl,--whole-archive" "-optl-Wl,-Bstatic" "-optl-Wl,-lfltkc" "-optl-Wl,-Bdynamic" "-optl-Wl,--no-whole-archive"
 
 Executable fltkhs-tree-simple
   Main-Is: tree-simple.hs
@@ -202,10 +188,8 @@ Executable fltkhs-tree-simple
     fltkhs
   default-language: Haskell2010
   ghc-Options: -Wall -threaded -fcontext-stack=220
-  if os(linux)
-     ghc-Options: -pgml g++ "-optl-Wl,--whole-archive" "-optl-Wl,-Bstatic" "-optl-Wl,-lfltkc" "-optl-Wl,-Bdynamic" "-optl-Wl,--no-whole-archive"
-  else
-     ghc-Options:
+  if !os(darwin)
+    ghc-Options: -pgml g++ "-optl-Wl,--whole-archive" "-optl-Wl,-Bstatic" "-optl-Wl,-lfltkc" "-optl-Wl,-Bdynamic" "-optl-Wl,--no-whole-archive"
 
 Executable fltkhs-table-spreadsheet-with-keyboard-nav
   Main-Is: table-spreadsheet-with-keyboard-nav.hs
@@ -215,10 +199,8 @@ Executable fltkhs-table-spreadsheet-with-keyboard-nav
     fltkhs
   default-language: Haskell2010
   ghc-Options: -Wall -threaded -fcontext-stack=220
-  if os(linux)
-     ghc-Options: -pgml g++ "-optl-Wl,--whole-archive" "-optl-Wl,-Bstatic" "-optl-Wl,-lfltkc" "-optl-Wl,-Bdynamic" "-optl-Wl,--no-whole-archive"
-  else
-     ghc-Options:
+  if !os(darwin)
+    ghc-Options: -pgml g++ "-optl-Wl,--whole-archive" "-optl-Wl,-Bstatic" "-optl-Wl,-lfltkc" "-optl-Wl,-Bdynamic" "-optl-Wl,--no-whole-archive"
 
 Executable fltkhs-test_call
   Main-Is: TestCall.hs
@@ -228,10 +210,8 @@ Executable fltkhs-test_call
     fltkhs
   default-language: Haskell2010
   ghc-Options: -Wall -threaded -fcontext-stack=220
-  if os(linux)
-     ghc-Options: -pgml g++ "-optl-Wl,--whole-archive" "-optl-Wl,-Bstatic" "-optl-Wl,-lfltkc" "-optl-Wl,-Bdynamic" "-optl-Wl,--no-whole-archive"
-  else
-     ghc-Options:
+  if !os(darwin)
+    ghc-Options: -pgml g++ "-optl-Wl,--whole-archive" "-optl-Wl,-Bstatic" "-optl-Wl,-lfltkc" "-optl-Wl,-Bdynamic" "-optl-Wl,--no-whole-archive"
 
 Executable fltkhs-buttons
   Main-Is: Buttons.hs
@@ -241,10 +221,8 @@ Executable fltkhs-buttons
     fltkhs
   default-language: Haskell2010
   ghc-Options: -Wall -threaded -fcontext-stack=220
-  if os(linux)
-     ghc-Options: -pgml g++ "-optl-Wl,--whole-archive" "-optl-Wl,-Bstatic" "-optl-Wl,-lfltkc" "-optl-Wl,-Bdynamic" "-optl-Wl,--no-whole-archive"
-  else
-     ghc-Options:
+  if !os(darwin)
+    ghc-Options: -pgml g++ "-optl-Wl,--whole-archive" "-optl-Wl,-Bstatic" "-optl-Wl,-lfltkc" "-optl-Wl,-Bdynamic" "-optl-Wl,--no-whole-archive"
 
 Executable fltkhs-table-simple
   Main-Is: table-simple.hs
@@ -254,10 +232,8 @@ Executable fltkhs-table-simple
     fltkhs
   default-language: Haskell2010
   ghc-Options: -Wall -threaded -fcontext-stack=220
-  if os(linux)
-     ghc-Options: -pgml g++ "-optl-Wl,--whole-archive" "-optl-Wl,-Bstatic" "-optl-Wl,-lfltkc" "-optl-Wl,-Bdynamic" "-optl-Wl,--no-whole-archive"
-  else
-     ghc-Options:
+  if !os(darwin)
+    ghc-Options: -pgml g++ "-optl-Wl,--whole-archive" "-optl-Wl,-Bstatic" "-optl-Wl,-lfltkc" "-optl-Wl,-Bdynamic" "-optl-Wl,--no-whole-archive"
 
 Executable fltkhs-table-sort
   Main-Is: table-sort.hs
@@ -268,10 +244,8 @@ Executable fltkhs-table-sort
     process
   default-language: Haskell2010
   ghc-Options: -Wall -threaded -fcontext-stack=220
-  if os(linux)
-     ghc-Options: -pgml g++ "-optl-Wl,--whole-archive" "-optl-Wl,-Bstatic" "-optl-Wl,-lfltkc" "-optl-Wl,-Bdynamic" "-optl-Wl,--no-whole-archive"
-  else
-     ghc-Options:
+  if !os(darwin)
+    ghc-Options: -pgml g++ "-optl-Wl,--whole-archive" "-optl-Wl,-Bstatic" "-optl-Wl,-lfltkc" "-optl-Wl,-Bdynamic" "-optl-Wl,--no-whole-archive"
 
 Executable fltkhs-arc
   Main-Is: arc.hs
@@ -281,10 +255,8 @@ Executable fltkhs-arc
     fltkhs
   default-language: Haskell2010
   ghc-Options: -Wall -threaded -fcontext-stack=220
-  if os(linux)
-     ghc-Options: -pgml g++ "-optl-Wl,--whole-archive" "-optl-Wl,-Bstatic" "-optl-Wl,-lfltkc" "-optl-Wl,-Bdynamic" "-optl-Wl,--no-whole-archive"
-  else
-     ghc-Options:
+  if !os(darwin)
+    ghc-Options: -pgml g++ "-optl-Wl,--whole-archive" "-optl-Wl,-Bstatic" "-optl-Wl,-lfltkc" "-optl-Wl,-Bdynamic" "-optl-Wl,--no-whole-archive"
 
 Executable fltkhs-bitmap
   Main-Is: bitmap.hs
@@ -294,10 +266,8 @@ Executable fltkhs-bitmap
      fltkhs,bytestring
   default-language: Haskell2010
   ghc-Options: -Wall -threaded -fcontext-stack=220
-  if os(linux)
-     ghc-Options: -pgml g++ "-optl-Wl,--whole-archive" "-optl-Wl,-Bstatic" "-optl-Wl,-lfltkc" "-optl-Wl,-Bdynamic" "-optl-Wl,--no-whole-archive"
-  else
-     ghc-Options:
+  if !os(darwin)
+    ghc-Options: -pgml g++ "-optl-Wl,--whole-archive" "-optl-Wl,-Bstatic" "-optl-Wl,-lfltkc" "-optl-Wl,-Bdynamic" "-optl-Wl,--no-whole-archive"
 
 Executable fltkhs-boxtype
   Main-Is: boxtype.hs
@@ -307,10 +277,8 @@ Executable fltkhs-boxtype
      fltkhs,bytestring
   default-language: Haskell2010
   ghc-Options: -Wall -threaded -fcontext-stack=220
-  if os(linux)
-     ghc-Options: -pgml g++ "-optl-Wl,--whole-archive" "-optl-Wl,-Bstatic" "-optl-Wl,-lfltkc" "-optl-Wl,-Bdynamic" "-optl-Wl,--no-whole-archive"
-  else
-     ghc-Options:
+  if !os(darwin)
+    ghc-Options: -pgml g++ "-optl-Wl,--whole-archive" "-optl-Wl,-Bstatic" "-optl-Wl,-lfltkc" "-optl-Wl,-Bdynamic" "-optl-Wl,--no-whole-archive"
 
 Executable fltkhs-browser
   Main-Is: browser.hs
@@ -321,10 +289,8 @@ Executable fltkhs-browser
      bytestring
   default-language: Haskell2010
   ghc-Options: -Wall -threaded -fcontext-stack=220
-  if os(linux)
-     ghc-Options: -pgml g++ "-optl-Wl,--whole-archive" "-optl-Wl,-Bstatic" "-optl-Wl,-lfltkc" "-optl-Wl,-Bdynamic" "-optl-Wl,--no-whole-archive"
-  else
-     ghc-Options:
+  if !os(darwin)
+    ghc-Options: -pgml g++ "-optl-Wl,--whole-archive" "-optl-Wl,-Bstatic" "-optl-Wl,-lfltkc" "-optl-Wl,-Bdynamic" "-optl-Wl,--no-whole-archive"
 
 Executable fltkhs-clock
   Main-Is: clock.hs
@@ -335,7 +301,5 @@ Executable fltkhs-clock
      bytestring
   default-language: Haskell2010
   ghc-Options: -Wall -threaded -fcontext-stack=220
-  if os(linux)
-     ghc-Options: -pgml g++ "-optl-Wl,--whole-archive" "-optl-Wl,-Bstatic" "-optl-Wl,-lfltkc" "-optl-Wl,-Bdynamic" "-optl-Wl,--no-whole-archive"
-  else
-     ghc-Options:
+  if !os(darwin)
+    ghc-Options: -pgml g++ "-optl-Wl,--whole-archive" "-optl-Wl,-Bstatic" "-optl-Wl,-lfltkc" "-optl-Wl,-Bdynamic" "-optl-Wl,--no-whole-archive"
