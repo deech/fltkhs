@@ -8,9 +8,13 @@ module Graphics.UI.FLTK.LowLevel.FLTKHS
          --
          -- $Goals
 
-         -- * Installation
+         -- * Installation (Linux & Mac)
          --
-         -- $Installation
+         -- $InstallationLinux
+
+         -- * Installation (Windows 64-bit)
+         --
+         -- $InstallationWindows
 
          -- * Demos
          --
@@ -213,8 +217,7 @@ import Graphics.UI.FLTK.LowLevel.NativeFileChooser
 -- (7) includes a lot of complete working demos so that the user can get up and running faster
 --
 
--- $Installation
--- Unfortunately this package does not currently install in Windows. The instructions below are only for OSX and Linux.
+-- $InstallationLinux
 --
 -- - Make sure you have OpenGL installed
 -- - Download and install <http://www.fltk.org/software.php?VERSION=1.3.3&FILE=fltk/1.3.3/fltk-1.3.3-source.tar.gz FLTK 1.3.3>.
@@ -249,6 +252,114 @@ import Graphics.UI.FLTK.LowLevel.NativeFileChooser
 --
 --     > > fltkhs-hello-world
 --
+
+-- $InstallationWindows
+--
+-- Note: Currently this package only works on 64-bit Windows.
+--
+-- This install guide has been tested on Windows 7 64-bit with 8GB of RAM.
+--
+--
+-- The general steps involved are:
+--
+--  - Install <https://github.com/fpco/minghc MinGHC> and upgrade cabal-install
+--  - Install <http://www.cmake.org/files/v3.2/cmake-3.2.1-win32-x86.exe CMake>
+--  - Download & compile <http://www.fltk.org/software.php?VERSION=1.3.3&FILE=fltk/1.3.3/fltk-1.3.3-source.tar.gz FLTK 1.3.3>
+--  - Install this package
+--
+-- == Install MinGHC
+-- MinGHC installers are available <https://github.com/fpco/minghc here>. This package has been tested with GHC 7.8.4 64-bit and may work with newer versions.
+--
+-- Once MinGHC is downloaded and installed per the instructions in the link above, install the newest version of cabal-install. This is an important step because the `Setup.hs` that ships with this package uses some of the newer features of the Cabal 1.2.x API.
+--
+-- @
+-- > cabal update
+-- > cabal install cabal-install
+-- @
+--
+-- == Install CMake
+-- Simply click through the <http://www.cmake.org/files/v3.2/cmake-3.2.1-win32-x86.exe CMake> with the default options. Once this process is complete the `cmake` executable should be available at the CMD prompt:
+--
+-- @
+-- > cmake --version
+-- cmake version 2.8.11.2
+-- @
+--
+-- Your version will likely be `cmake version 3.2.x` but so long as it is above `cmake version 2.6.x` the install should proceed smoothly.
+--
+-- == Download & compile FLTK-1.3.3
+-- Please make sure to only download version <http://www.fltk.org/software.php?VERSION=1.3.3&FILE=fltk/1.3.3/fltk-1.3.3-source.tar.gz FLTK 1.3.3>.
+--
+-- Once this is downloaded, since the `tar` and `gunzip` utilities ship with MinGHC, you should be able to unpack it at the command prompt:
+--
+-- @
+-- > tar -zxvf fltk-1.3.3-source.tar.gz
+-- @
+--
+-- Then descend into the source directory:
+--
+-- @
+-- > cd fltkh-1.3.3-source
+-- @
+--
+-- Make a build directory to hold the generated CMake files:
+--
+-- @
+-- > mkdir build
+-- @
+--
+-- Descend into the `build` directory:
+--
+-- @
+-- > cd build
+-- @
+--
+-- And run `cmake` telling it to work with the `make` utility that ships with MSYS:
+--
+-- @
+-- > cmake .. -G "MSYS Makefiles"
+-- @
+--
+-- Please note the `..` after `cmake` in the command. This is important because it tells CMake to build using the CMake specification found in the parent directory.
+--
+-- Once these steps have been completed you should be able to compile the source:
+--
+-- @
+-- > make
+-- @
+--
+--
+-- Each compile step may spit out a scary looking warning about a pointer to int cast, but this can be safely ignored. It seems to be an issue with the MinGW g++/gcc compiler.
+--
+-- Also, the final demo `windowFocus` may fail to compile and complain about a symbol being redefined. This is again an issue with MinGW and can be safely ignored.
+--
+-- Now it is necessary to define the `FLTK_HOME` environment variable so this package knows where to look for header and library files:
+--
+-- @
+-- > set FLTK_HOME=\<path-to-the-FLTK-root-directory\>
+-- @
+--
+-- == Install this package
+--
+-- At this point it is highly likely that running `cabal --version` at the command line still invokes the old version even though `cabal` was updated. This is because the location of the newly installed `cabal` has not been added to the PATH variable. You can do so with this command:
+--
+-- @
+-- > set PATH=C:\\Users\\\<your-username\>\\AppData\\Roaming\\cabal\\bin;%PATH%
+-- @
+--
+-- Now you can finally install this package:
+--
+-- @
+-- > > cabal install fltkhs
+-- @
+--
+-- Please note that compared to the Linux and Mac installs the compilation process takes a very long time. The reason for this is the MinGW gcc/g++ compilers are much slower.
+--
+-- Once this has completed, you can test it by:
+--
+-- @
+-- > fltkhs-hello-world
+-- @
 
 -- $Demos
 --
