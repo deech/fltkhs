@@ -243,6 +243,9 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Tile_damage_inside_widget)(fl_Tile tile,uchar c,int x,int y,int w,int h){
     (static_cast<Fl_Tile*>(tile))->damage(c,x,y,w,h);
   }
+  FL_EXPORT_C(void,Fl_Tile_position)(fl_Tile tile,int x,int y,int w,int h){
+    (static_cast<Fl_Tile*>(tile))->position(x,y,w,h);
+  }
   FL_EXPORT_C(void,Fl_Tile_draw_label_with_xywh_alignment)(fl_Tile tile,int x,int y,int w,int h,Fl_Align alignment){
     (static_cast<Fl_Tile*>(tile))->draw_label(x,y,w,h,alignment);
   }

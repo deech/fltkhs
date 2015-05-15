@@ -125,7 +125,7 @@ EXPORT {
   FL_EXPORT_C(fl_Widget,    Fl_Tile_child)(fl_Tile tile, int n);
   FL_EXPORT_C(fl_Group,     Fl_Tile_New)(int x, int y, int w, int h);
   FL_EXPORT_C(fl_Group,     Fl_Tile_New_WithLabel)(int x, int y, int w, int h, const char* t);
-  FL_EXPORT_C(void,         Fl_Tile_position)(int x, int y, int w, int h);
+  FL_EXPORT_C(void,         Fl_Tile_position)(fl_Tile tile, int x, int y, int w, int h);
 #ifdef __cplusplus
 }
 #endif

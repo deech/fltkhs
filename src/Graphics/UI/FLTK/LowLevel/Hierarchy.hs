@@ -1438,7 +1438,9 @@ module Graphics.UI.FLTK.LowLevel.Hierarchy
          GetPresetFile,
          getPresetFile,
          GetErrmsg,
-         getErrmsg
+         getErrmsg,
+         -- * Tile
+         Tile
   )
 where
 import Prelude hiding (round)
@@ -4933,3 +4935,12 @@ getPresetFile = dispatch (undefined :: GetPresetFile ())
 data GetErrmsg a
 getErrmsg :: (FindOp a (GetErrmsg ()) (Match r), Op (GetErrmsg ()) r a impl) => Ref a -> impl
 getErrmsg = dispatch (undefined :: GetErrmsg ())
+
+data CTile parent
+type Tile = CTile Group
+type TileFuncs =
+  (SetPosition
+  (Handle
+  (Resize
+  ())))
+instance Functions Tile TileFuncs

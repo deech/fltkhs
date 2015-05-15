@@ -96,6 +96,7 @@ module Graphics.UI.FLTK.LowLevel.FLTKHS
          module Graphics.UI.FLTK.LowLevel.TextDisplay,
          module Graphics.UI.FLTK.LowLevel.TextEditor,
          module Graphics.UI.FLTK.LowLevel.NativeFileChooser,
+         module Graphics.UI.FLTK.LowLevel.Tile,
          -- * Machinery for static dispatch
          module Graphics.UI.FLTK.LowLevel.Dispatch,
          -- * Association of widgets and functions
@@ -170,6 +171,7 @@ import Graphics.UI.FLTK.LowLevel.TextBuffer
 import Graphics.UI.FLTK.LowLevel.TextDisplay
 import Graphics.UI.FLTK.LowLevel.TextEditor
 import Graphics.UI.FLTK.LowLevel.NativeFileChooser
+import Graphics.UI.FLTK.LowLevel.Tile
 
 -- $Module Documentation
 -- This module re-exports all the available widgets and their core types. The types and list
