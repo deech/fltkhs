@@ -2,7 +2,7 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 module Graphics.UI.FLTK.LowLevel.Input
     (
-     FlInputType,
+     FlInputType(..),
      -- * Constructor
      inputNew
      -- * Hierarchy
