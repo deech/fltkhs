@@ -110,6 +110,10 @@ EXPORT {
     VERTICAL_ALWAYS = 6,
     BOTH_ALWAYS = 7
   };
+  enum { // values for type(int)
+    PACK_VERTICAL = 0,
+    PACK_HORIZONTAL = 1
+  };
   enum {
     NORMAL_CURSOR,
     CARET_CURSOR,

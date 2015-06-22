@@ -409,6 +409,7 @@ simpleTypeMap =
     ,("fl_Region", "Ptr ()")
     ,("Fl_Boxtype", "Boxtype")
     ,("Fl_Mode", "Mode")
+    ,("fl_Scroll", "Ptr ()")
     ,("fl_Widget", "Ptr ()")
     ,("fl_Native_File_Chooser", "Ptr ()")
     ,("fl_Text_Buffer", "Ptr ()")
@@ -427,6 +428,7 @@ simpleTypeMap =
     ,("fl_Positioner", "Ptr ()")
     ,("fl_Counter", "Ptr ()")
     ,("fl_Scrollbar", "Ptr ()")
+    ,("fl_Pack", "Ptr ()")
     ,("fl_Dial", "Ptr ()")
     ,("fl_Value_Slider", "Ptr ()")
     ,("fl_Value_Input", "Ptr ()")
@@ -494,6 +496,8 @@ haskellEquivalent =
      ("fl_Positioner"     , "Positioner"),
      ("fl_Counter"        , "Counter"),
      ("fl_Scrollbar"      , "Scrollbar"),
+     ("fl_Pack"           , "Pack"),
+     ("fl_Scroll"         , "Scroll"),
      ("fl_Dial"           , "Dial"),
      ("fl_Value_Slider"   , "ValueSlider"),
      ("fl_Value_Input"    , "ValueInput"),

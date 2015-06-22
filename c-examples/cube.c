@@ -1,4 +1,3 @@
-#include <config.h>
 #include <Fl_C.h>
 #include <Fl_WindowC.h>
 #include <Fl_BoxC.h>

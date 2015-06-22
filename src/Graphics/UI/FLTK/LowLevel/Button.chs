@@ -3,7 +3,8 @@
 module Graphics.UI.FLTK.LowLevel.Button
     (
      buttonCustom,
-     buttonNew
+     buttonNew,
+     ButtonType(..),
      -- * Hierarchy
      --
      -- $hierarchy
@@ -149,6 +150,13 @@ instance (impl ~ (Maybe (Boxtype, Rectangle) -> IO ())) => Op (DrawFocus ()) But
                   let (x_pos,y_pos,w_pos,h_pos) = fromRectangle r
                   buttonDrawFocusWithTXywh' buttonPtr bx x_pos y_pos w_pos h_pos
 
+{# fun unsafe Fl_Button_type as type' { id `Ptr ()' } -> `Word8' #}
+instance (impl ~ ( IO (ButtonType))) => Op (GetType ()) Button orig impl where
+   runOp _ _ widget = withRef widget $ \widgetPtr -> type' widgetPtr >>= return . cToEnum
+{# fun unsafe Fl_Button_set_type as setType' { id `Ptr ()',`Word8' } -> `()' #}
+instance (impl ~ (ButtonType ->  IO ())) => Op (SetType ()) Button orig impl where
+   runOp _ _ widget t = withRef widget $ \widgetPtr -> setType' widgetPtr (cFromEnum t)
+
 -- $Fl_Buttonfunctions
 -- @
 -- clear :: 'Ref' 'Button' -> 'IO' 'Bool'
@@ -170,6 +178,8 @@ instance (impl ~ (Maybe (Boxtype, Rectangle) -> IO ())) => Op (DrawFocus ()) But
 -- getDownColor :: 'Ref' 'Button' -> 'IO' 'Color'
 --
 -- getShortcut :: 'Ref' 'Button' -> 'IO' 'FlShortcut'
+--
+-- getType :: 'Ref' 'Button' -> 'IO' 'ButtonType'
 --
 -- getValue :: 'Ref' 'Button' -> 'IO' 'Bool'
 --
@@ -193,6 +203,8 @@ instance (impl ~ (Maybe (Boxtype, Rectangle) -> IO ())) => Op (DrawFocus ()) But
 --
 -- setShortcut :: 'Ref' 'Button' -> 'Int' -> 'IO' ()
 --
+-- setType :: 'Ref' 'Button' -> 'ButtonType' -> 'IO' ()
+--
 -- setValue :: 'Ref' 'Button' -> 'Bool' -> 'IO' 'Bool'
 --
 -- setonly :: 'Ref' 'Button' -> 'IO' ()
@@ -209,4 +221,5 @@ instance (impl ~ (Maybe (Boxtype, Rectangle) -> IO ())) => Op (DrawFocus ()) But
 --  |
 --  v
 -- "Graphics.UI.FLTK.LowLevel.Button"
+--
 -- @

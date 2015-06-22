@@ -1440,7 +1440,22 @@ module Graphics.UI.FLTK.LowLevel.Hierarchy
          GetErrmsg,
          getErrmsg,
          -- * Tile
-         Tile
+         Tile,
+         Pack,
+         setSpacing,
+         SetSpacing,
+         getSpacing,
+         GetSpacing,
+         isHorizontal,
+         IsHorizontal,
+         -- Scrolled AKA Scroll
+         Scrolled,
+         ScrollTo,
+         scrollTo,
+         Xposition,
+         xposition,
+         Yposition,
+         yposition
   )
 where
 import Prelude hiding (round)
@@ -2184,7 +2199,9 @@ type ButtonFuncs =
   (DrawBox
   (DrawBackdrop
   (DrawFocus
-  ()))))))))))))))))))))))))
+  (SetType
+  (GetType
+  ()))))))))))))))))))))))))))
 instance Functions Button ButtonFuncs
 
 data GetValue a
@@ -4944,3 +4961,53 @@ type TileFuncs =
   (Resize
   ())))
 instance Functions Tile TileFuncs
+
+data CPack parent
+type Pack = CPack Group
+type PackFuncs =
+  (GetType
+  (SetType
+  (SetSpacing
+  (GetSpacing
+  (IsHorizontal
+  ())))))
+instance Functions Pack PackFuncs
+
+data SetSpacing a
+setSpacing :: (FindOp a (SetSpacing ()) (Match r), Op (SetSpacing ()) r a impl) => Ref a -> impl
+setSpacing = dispatch (undefined :: SetSpacing ())
+
+data GetSpacing a
+getSpacing :: (FindOp a (GetSpacing ()) (Match r), Op (GetSpacing ()) r a impl) => Ref a -> impl
+getSpacing = dispatch (undefined :: GetSpacing ())
+
+data IsHorizontal a
+isHorizontal :: (FindOp a (IsHorizontal ()) (Match r), Op (IsHorizontal ()) r a impl) => Ref a -> impl
+isHorizontal = dispatch (undefined :: IsHorizontal ())
+
+data CScrolled parent
+type Scrolled = CScrolled Group
+type ScrolledFuncs =
+  (SetScrollbarSize
+  (GetScrollbarSize
+  (Clear
+  (ScrollTo
+  (Yposition
+  (Xposition
+  (GetType
+  (SetType
+  (Resize
+  (Handle ()))))))))))
+instance Functions Scrolled ScrolledFuncs
+
+data ScrollTo a
+scrollTo :: (FindOp a (ScrollTo ()) (Match r), Op (ScrollTo ()) r a impl) => Ref a -> impl
+scrollTo = dispatch (undefined :: ScrollTo ())
+
+data Xposition a
+xposition :: (FindOp a (Xposition ()) (Match r), Op (Xposition ()) r a impl) => Ref a -> impl
+xposition = dispatch (undefined :: Xposition ())
+
+data Yposition a
+yposition :: (FindOp a (Yposition ()) (Match r), Op (Yposition ()) r a impl) => Ref a -> impl
+yposition = dispatch (undefined :: Yposition ())

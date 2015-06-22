@@ -1,5 +1,5 @@
-#ifndef __FL_SLIDER_C__
-#define __FL_SLIDER_C__
+#ifndef __FL_SCROLLBAR_C__
+#define __FL_SCROLLBAR_C__
 #ifdef __cplusplus
 // always include the FL/*.H headers before local headers
 // Fl_Scrollbar is included transitively and needed for
@@ -127,4 +127,4 @@ EXPORT {
 #ifdef __cplusplus
 }
 #endif
-#endif /* __FL_SLIDER_C__ */
+#endif /* __FL_SCROLLBAR_C__ */

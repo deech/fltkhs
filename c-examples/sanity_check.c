@@ -10,6 +10,7 @@
 #include <Fl_Check_ButtonC.h>
 #include <Fl_ChoiceC.h>
 #include <Fl_ScrollbarC.h>
+#include <Fl_ScrollC.h>
 #include <Fl_Value_SliderC.h>
 #include <Fl_ClockC.h>
 #include <Fl_ClockC.h>
@@ -73,6 +74,7 @@
 #include <Fl_Text_EditorC.h>
 #include <Fl_Text_SelectionC.h>
 #include <Fl_TileC.h>
+#include <Fl_PackC.h>
 #include <Fl_Toggle_ButtonC.h>
 #include <Fl_TooltipC.h>
 #include <Fl_TreeC.h>

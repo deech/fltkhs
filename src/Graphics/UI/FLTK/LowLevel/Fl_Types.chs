@@ -181,6 +181,10 @@ import qualified Data.ByteString as B
     LinePositionMiddle = MIDDLE,
     LinePositionBottom = BOTTOM
   };
+  enum PackType {
+    PackVertical = PACK_VERTICAL,
+    PackHorizontal = PACK_HORIZONTAL
+  };
   typedef FL_SOCKET Fl_Socket;
 #endc
 {#enum SliderType {} deriving (Show, Eq) #}
@@ -218,6 +222,8 @@ allMenuItemFlags =
 {#enum LinePosition {} deriving (Show, Eq)  #}
 {#enum ScrollbarMode {} deriving (Show, Eq) #}
 data StyleTableEntry = StyleTableEntry (Maybe Color) (Maybe Font) (Maybe FontSize)
+
+{#enum PackType{} deriving (Show, Eq, Ord) #}
 
 data GLUTproc = GLUTproc {#type GLUTproc#}
 newtype GLUTIdleFunction = GLUTIdleFunction (FunPtr (IO ()))

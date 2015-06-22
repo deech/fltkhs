@@ -5,6 +5,7 @@ SET(SourceFiles
 	Fl_Value_OutputC.cpp
 	Fl_Value_SliderC.cpp
 	Fl_ScrollbarC.cpp
+	Fl_ScrollC.cpp
 	Fl_RollerC.cpp
 	Fl_DialC.cpp
 	Fl_CounterC.cpp
@@ -82,6 +83,7 @@ SET(SourceFiles
 	Fl_Text_EditorC.cpp
 	Fl_Text_SelectionC.cpp
 	Fl_TileC.cpp
+	Fl_PackC.cpp
 	Fl_Toggle_ButtonC.cpp
 	Fl_TooltipC.cpp
 	Fl_TreeC.cpp
