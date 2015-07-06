@@ -94,6 +94,7 @@ library
                    Graphics.UI.FLTK.LowLevel.Utils
                    Graphics.UI.FLTK.LowLevel.Tile
                    Graphics.UI.FLTK.LowLevel.Pack
+                   Graphics.UI.FLTK.LowLevel.Tabs
   build-depends:
     base == 4.*,
     bytestring
