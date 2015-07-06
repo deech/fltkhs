@@ -411,6 +411,7 @@ simpleTypeMap =
     ,("Fl_Mode", "Mode")
     ,("fl_Scroll", "Ptr ()")
     ,("fl_Widget", "Ptr ()")
+    ,("fl_Tabs", "Ptr ()")
     ,("fl_Native_File_Chooser", "Ptr ()")
     ,("fl_Text_Buffer", "Ptr ()")
     ,("fl_Text_Selection", "Ptr ()")
@@ -479,6 +480,7 @@ haskellEquivalent =
     [
      ("fl_Region"         , "Region"),
      ("fl_Widget"         , "Widget"),
+     ("fl_Tabs"         , "Tabs"),
      ("fl_Native_File_Chooser"         , "NativeFileChooser"),
      ("fl_Text_Buffer"    , "TextBuffer"),
      ("fl_Text_Selection" , "TextSelection"),

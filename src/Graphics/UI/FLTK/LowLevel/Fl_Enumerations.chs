@@ -212,6 +212,14 @@ enum When {
   WhenEnterKeyAlways = FL_WHEN_ENTER_KEY_ALWAYS,
   WhenEnterKeyChanged = FL_WHEN_ENTER_KEY_CHANGED
 };
+
+enum TabsWhen {
+  TabsWhenNever = FL_WHEN_NEVER,
+  TabsWhenChanged = FL_WHEN_CHANGED,
+  TabsWhenNotChanged = FL_WHEN_NOT_CHANGED,
+  TabsWhenRelease = FL_WHEN_RELEASE
+};
+
 enum FdWhen {
   CanRead = FL_READ,
   CanWrite = FL_WRITE,

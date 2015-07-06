@@ -1455,7 +1455,17 @@ module Graphics.UI.FLTK.LowLevel.Hierarchy
          Xposition,
          xposition,
          Yposition,
-         yposition
+         yposition,
+         -- Tabs
+         Tabs,
+         GetPush,
+         getPush,
+         SetPush,
+         setPush,
+         Which,
+         which,
+         ClientArea,
+         clientArea
   )
 where
 import Prelude hiding (round)
@@ -5011,3 +5021,33 @@ xposition = dispatch (undefined :: Xposition ())
 data Yposition a
 yposition :: (FindOp a (Yposition ()) (Match r), Op (Yposition ()) r a impl) => Ref a -> impl
 yposition = dispatch (undefined :: Yposition ())
+
+
+data CTabs parent
+type Tabs = CTabs Group
+type TabsFuncs =
+  (Handle
+  (GetValue
+  (SetValue
+  (GetPush
+  (SetPush
+  (Which
+  (ClientArea ())))))))
+
+instance Functions Tabs TabsFuncs
+
+data GetPush a
+getPush :: (FindOp a (GetPush ()) (Match r), Op (GetPush ()) r a impl) => Ref a -> impl
+getPush = dispatch (undefined :: GetPush ())
+
+data SetPush a
+setPush :: (FindOp a (SetPush ()) (Match r), Op (SetPush ()) r a impl) => Ref a -> impl
+setPush = dispatch (undefined :: SetPush ())
+
+data Which a
+which :: (FindOp a (Which ()) (Match r), Op (Which ()) r a impl) => Ref a -> impl
+which = dispatch (undefined :: Which ())
+
+data ClientArea a
+clientArea :: (FindOp a (ClientArea ()) (Match r), Op (ClientArea ()) r a impl) => Ref a -> impl
+clientArea = dispatch (undefined :: ClientArea ())
