@@ -3,7 +3,8 @@
 module Graphics.UI.FLTK.LowLevel.Dial
     (
      -- * Constructor
-     dialNew
+     dialNew,
+     DialType(..)
      -- * Hierarchy
      --
      -- $hierarchy
@@ -16,6 +17,7 @@ where
 #include "Fl_ExportMacros.h"
 #include "Fl_Types.h"
 #include "Fl_DialC.h"
+#include "Fl_WidgetC.h"
 import C2HS hiding (cFromEnum, cFromBool, cToBool,cToEnum)
 import Foreign.C.Types
 import Graphics.UI.FLTK.LowLevel.Fl_Enumerations
@@ -24,6 +26,14 @@ import Graphics.UI.FLTK.LowLevel.Utils
 import Graphics.UI.FLTK.LowLevel.Hierarchy
 import Graphics.UI.FLTK.LowLevel.Dispatch
 
+#c
+enum DialType {
+  NormalDialType = FL_NORMAL_DIALC,
+  LineDialType = FL_LINE_DIALC,
+  FillDialType = FL_FILL_DIALC
+};
+#endc
+{#enum DialType {} deriving (Show, Eq) #}
 {# fun Fl_Dial_New as dialNew' { `Int',`Int',`Int',`Int' } -> `Ptr ()' id #}
 {# fun Fl_Dial_New_WithLabel as dialNewWithLabel' { `Int',`Int',`Int',`Int',unsafeToCString `String'} -> `Ptr ()' id #}
 dialNew :: Rectangle -> Maybe String -> IO (Ref Dial)
@@ -41,16 +51,16 @@ instance (impl ~ (IO ())) => Op (Destroy ()) Dial orig impl where
     dialDestroy' winPtr
     return nullPtr
 
-{# fun unsafe Fl_Dial_set_angle1 as setAngle1' { id `Ptr ()',id `CShort' } -> `()' #}
+{# fun Fl_Dial_set_angle1 as setAngle1' { id `Ptr ()',id `CShort' } -> `()' #}
 instance (impl ~ ( Angle -> IO ())) => Op (SetAngle1 ()) Dial orig impl where
   runOp _ _ dial (Angle a) = withRef dial $ \dialPtr -> setAngle1' dialPtr a
-{# fun unsafe Fl_Dial_set_angle2 as setAngle2' { id `Ptr ()',id `CShort' } -> `()' #}
+{# fun Fl_Dial_set_angle2 as setAngle2' { id `Ptr ()',id `CShort' } -> `()' #}
 instance (impl ~ ( Angle -> IO ())) => Op (SetAngle2 ()) Dial orig impl where
   runOp _ _ dial (Angle a) = withRef dial $ \dialPtr -> setAngle2' dialPtr a
-{# fun unsafe Fl_Dial_angle1 as angle1' { id `Ptr ()' } -> `CShort' id #}
+{# fun Fl_Dial_angle1 as angle1' { id `Ptr ()' } -> `CShort' id #}
 instance (impl ~ ( IO (Angle))) => Op (GetAngle1 ()) Dial orig impl where
   runOp _ _ dial = withRef dial $ \dialPtr -> angle1' dialPtr >>= return . Angle
-{# fun unsafe Fl_Dial_angle2 as angle2' { id `Ptr ()' } -> `CShort' id #}
+{# fun Fl_Dial_angle2 as angle2' { id `Ptr ()' } -> `CShort' id #}
 instance (impl ~ ( IO (Angle))) => Op (GetAngle2 ()) Dial orig impl where
   runOp _ _ dial = withRef dial $ \dialPtr -> angle2' dialPtr >>= return . Angle
 {#fun Fl_Dial_handle as dialHandle' { id `Ptr ()', id `CInt' } -> `Int' #}
@@ -60,6 +70,12 @@ instance (impl ~ ( Angle -> Angle -> IO ())) => Op (SetAngles ()) Dial orig impl
   runOp _ _ dial a1' a2' = do
     setAngle1 dial a1'
     setAngle2 dial a2'
+{# fun Fl_Widget_set_type as setType' { id `Ptr ()',`Word8' } -> `()' supressWarningAboutRes #}
+instance (impl ~ (DialType ->  IO ())) => Op (SetType ()) Dial orig impl where
+  runOp _ _ widget t = withRef widget $ \widgetPtr -> setType' widgetPtr (fromInteger $ toInteger $ fromEnum t)
+{# fun Fl_Widget_type as type' { id `Ptr ()' } -> `Word8' #}
+instance (impl ~ IO (DialType)) => Op (GetType_ ()) Dial orig impl where
+  runOp _ _ widget = withRef widget $ \widgetPtr -> type' widgetPtr >>= return . toEnum . fromInteger . toInteger
 
 -- $Dialfunctions
 --

@@ -17,7 +17,7 @@ saveFile fp = do
     then writeFile fp "Hello world.\n"
     else return ()
 
-openCb :: Ref NativeFileChooser -> Ref SysMenuBar ->  IO ()
+openCb :: Ref NativeFileChooser -> Ref MenuItem ->  IO ()
 openCb fc _ = do
   setTitle fc "Open"
   res' <- showWidget fc
@@ -31,7 +31,7 @@ openCb fc _ = do
       _ -> return ()
    _ -> return ()
 
-saveAsCb :: Ref NativeFileChooser -> Ref SysMenuBar ->  IO ()
+saveAsCb :: Ref NativeFileChooser -> Ref MenuItem ->  IO ()
 saveAsCb fc _ = do
   setTitle fc "Open"
   res' <- showWidget fc
@@ -45,14 +45,14 @@ saveAsCb fc _ = do
       _ -> return ()
    _ -> return ()
 
-saveCb :: Ref NativeFileChooser -> Ref SysMenuBar ->  IO ()
+saveCb :: Ref NativeFileChooser -> Ref MenuItem ->  IO ()
 saveCb fc w' = do
   f' <- getFilename fc
   case f' of
    Nothing -> saveAsCb fc w'
    (Just f'') -> saveFile f''
 
-quitCb :: Ref SysMenuBar -> IO ()
+quitCb :: Ref MenuItem -> IO ()
 quitCb _ = exitSuccess
 
 initializeWindow :: Ref Window -> IO ()
@@ -62,10 +62,10 @@ initializeWindow w' = do
   setPresetFile chooser "untitiled.txt"
   begin w'
   menu <- sysMenuBarNew (toRectangle (0,0,400,25)) Nothing
-  _ <- add menu "&File/&Open" (Just (KeySequence (ShortcutKeySequence [kb_CommandState] (NormalKeyType 'o')))) (openCb chooser) (MenuItemFlags [])
-  _ <- add menu "&File/&Save" (Just (KeySequence (ShortcutKeySequence [kb_CommandState] (NormalKeyType 's')))) (saveCb chooser) (MenuItemFlags [])
-  _ <- add menu "&File/&Save As" Nothing (saveAsCb chooser) (MenuItemFlags [])
-  _ <- add menu "&File/&Quit" (Just (KeySequence (ShortcutKeySequence [kb_CommandState] (NormalKeyType 'q')))) quitCb (MenuItemFlags [])
+  _ <- add menu "&File/&Open" (Just (KeySequence (ShortcutKeySequence [kb_CommandState] (NormalKeyType 'o')))) (Just (openCb chooser)) (MenuItemFlags [])
+  _ <- add menu "&File/&Save" (Just (KeySequence (ShortcutKeySequence [kb_CommandState] (NormalKeyType 's')))) (Just (saveCb chooser)) (MenuItemFlags [])
+  _ <- add menu "&File/&Save As" Nothing (Just (saveAsCb chooser)) (MenuItemFlags [])
+  _ <- add menu "&File/&Quit" (Just (KeySequence (ShortcutKeySequence [kb_CommandState] (NormalKeyType 'q')))) (Just quitCb) (MenuItemFlags [])
   w_w' <- getW w'
   w_h' <- getH w'
   box' <- boxNew (toRectangle (20,25+20,w_w'-40,w_h'-40-25)) Nothing Nothing
@@ -73,12 +73,12 @@ initializeWindow w' = do
   setBox box' FlatBox
   setAlign box' (Alignments [AlignTypeCenter, AlignTypeInside, AlignTypeWrap])
   setLabel box' $ "This demo shows an example of implementing " ++
-  		  "common 'File' menu operations like:\n" ++
-  		  "    File/Open, File/Save, File/Save As\n" ++
-  		  "..using the Fl_Native_File_Chooser widget.\n\n" ++
-  		  "Note 'Save' and 'Save As' really *does* create files! " ++
-  		  "This is to show how behavior differs when " ++
-  		  "files exist vs. do not.";
+                  "common 'File' menu operations like:\n" ++
+                  "    File/Open, File/Save, File/Save As\n" ++
+                  "..using the Fl_Native_File_Chooser widget.\n\n" ++
+                  "Note 'Save' and 'Save As' really *does* create files! " ++
+                  "This is to show how behavior differs when " ++
+                  "files exist vs. do not.";
   setLabelsize box' (FontSize 12)
   end w'
 

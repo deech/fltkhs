@@ -11,7 +11,7 @@ import Data.Function
 import System.Process
 dirCommand :: ([Char], [[Char]])
 dirHeaders :: [[Char]]
-#ifdef ming32_HOST_OS
+#ifdef mingw32_HOST_OS
 dirCommand = ("dir", [])
 dirHeaders = ["Perms", "#L", "Own", "Group", "Size", "Date", "", "", "Filename"]
 #else
@@ -160,7 +160,7 @@ autowidth table pad rowData' = do
   flcSetFont headerFontFace headerFontSize
   mapM_
     (\(colNum, colName) -> do
-        (Size (Width w') _) <- flcMeasure colName Nothing
+        (Size (Width w') _) <- flcMeasure colName True True
         setColWidth table (Column colNum) (w' + pad)
     )
     (zip [0 ..] dirHeaders)
@@ -169,7 +169,7 @@ autowidth table pad rowData' = do
     (\row' -> do
       mapM_
         (\(colIdx,col) -> do
-            (Size (Width wc') _) <- flcMeasure col Nothing
+            (Size (Width wc') _) <- flcMeasure col True True
             colWidth' <- getColWidth table (Column colIdx)
             if (wc' + pad > colWidth')
               then setColWidth table (Column colIdx) (wc' + pad)
@@ -234,7 +234,7 @@ main = do
   setColor table whiteColor
   setCallback table (eventCallback tableState)
   end window
-  setResizable window table
+  setResizable window (Just table)
   resize_window window table
   _ <- showWidget window
   _ <- FL.run

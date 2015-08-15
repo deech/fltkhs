@@ -11,6 +11,14 @@
 #include "Fl_CallbackC.h"
 EXPORT {
 #endif
+#ifndef INTERNAL_LINKAGE
+  typedef enum Dial_Type {
+    FL_NORMAL_DIALC = 0,
+    FL_LINE_DIALC = 1,
+    FL_FILL_DIALC = 2
+  } Dial_Type;
+#endif
+
   FL_EXPORT_C(fl_Group,     Fl_Dial_parent)(fl_Dial dial);
   FL_EXPORT_C(void,         Fl_Dial_set_parent)(fl_Dial dial, fl_Group grp);
   FL_EXPORT_C(uchar,        Fl_Dial_type)(fl_Dial dial);

@@ -77,8 +77,8 @@ instance (impl ~ ( IO ())) => Op (ShowWidgetSuper ()) MenuPrim orig impl where
 instance (impl ~ (IO ())) => Op (ShowWidget ()) MenuPrim orig impl where
   runOp _ _ menu_ = withRef menu_ $ (\p -> menu_Show' p)
 
-{# fun unsafe Fl_Menu__item_pathname_with_finditem as itemPathnameWithFinditem' { id `Ptr ()',id `Ptr CChar',`Int',id `Ptr ()' } -> `Int' #}
-{# fun unsafe Fl_Menu__item_pathname as itemPathname' { id `Ptr ()',id `Ptr CChar',`Int' } -> `Int' #}
+{# fun Fl_Menu__item_pathname_with_finditem as itemPathnameWithFinditem' { id `Ptr ()',id `Ptr CChar',`Int',id `Ptr ()' } -> `Int' #}
+{# fun Fl_Menu__item_pathname as itemPathname' { id `Ptr ()',id `Ptr CChar',`Int' } -> `Int' #}
 instance (Parent a MenuItem, impl ~ (Ref a -> IO (Maybe String))) => Op (ItemPathname ()) MenuPrim orig impl where
   runOp _ _ menu_ menu_item' =
     withRef menu_ $
@@ -101,11 +101,11 @@ instance (impl ~ (IO (Maybe String))) => Op (ItemPathnameRecent ()) MenuPrim ori
           b' <- C.packCString (castPtr pathPtr)
           return $ Just (C.unpack b')
 
-{# fun unsafe Fl_Menu__picked as picked' { id `Ptr ()',id `Ptr ()' } -> `Ptr ()' id #}
-instance (Parent a MenuItem, Parent b MenuItem, impl ~ (Ref a -> IO (Ref b))) => Op (Picked ()) MenuPrim orig impl where
-  runOp _ _ menu_ item = withRef menu_ $ \menu_Ptr -> withRef item $ \itemPtr -> picked' menu_Ptr itemPtr >>= toRef
-{# fun unsafe Fl_Menu__find_index_with_name as findIndexWithName' { id `Ptr ()',unsafeToCString `String' } -> `Int' #}
-{# fun unsafe Fl_Menu__find_index_with_item as findIndexWithItem' { id `Ptr ()',id `Ptr ()' } -> `Int' #}
+{# fun Fl_Menu__picked as picked' { id `Ptr ()',id `Ptr ()' } -> `Ptr ()' id #}
+instance (Parent a MenuItem, Parent b MenuItem, impl ~ (Ref a -> IO (Maybe (Ref b)))) => Op (Picked ()) MenuPrim orig impl where
+  runOp _ _ menu_ item = withRef menu_ $ \menu_Ptr -> withRef item $ \itemPtr -> picked' menu_Ptr itemPtr >>= toMaybeRef
+{# fun Fl_Menu__find_index_with_name as findIndexWithName' { id `Ptr ()',unsafeToCString `String' } -> `Int' #}
+{# fun Fl_Menu__find_index_with_item as findIndexWithItem' { id `Ptr ()',id `Ptr ()' } -> `Int' #}
 instance (impl ~ (MenuItemLocator -> IO (Maybe Int))) => Op (FindIndex ()) MenuPrim orig impl where
   runOp _ _ menu_ menu_item_referene =
     withRef menu_ $ \menu_Ptr ->
@@ -113,22 +113,36 @@ instance (impl ~ (MenuItemLocator -> IO (Maybe Int))) => Op (FindIndex ()) MenuP
           MenuItemNameLocator (MenuItemName name) -> findIndexWithName' menu_Ptr name >>= \r -> if (r == -1) then (return Nothing) else (return $ Just r)
           MenuItemPointerLocator (MenuItemPointer menu_item) ->
               withRef menu_item $ \menu_itemPtr -> findIndexWithItem' menu_Ptr menu_itemPtr >>= \r -> if (r == -1) then (return Nothing) else (return $ Just r)
-{# fun unsafe Fl_Menu__test_shortcut as testShortcut' { id `Ptr ()' } -> `Ptr ()' id #}
-instance (Parent a MenuItem, impl ~ ( IO (Ref a))) => Op (TestShortcut ()) MenuPrim orig impl where
-  runOp _ _ menu_ = withRef menu_ $ \menu_Ptr -> testShortcut' menu_Ptr >>= toRef
-{# fun unsafe Fl_Menu__global as global' { id `Ptr ()' } -> `()' #}
+{# fun Fl_Menu__test_shortcut as testShortcut' { id `Ptr ()' } -> `Ptr ()' id #}
+instance (Parent a MenuItem, impl ~ ( IO (Maybe (Ref a)))) => Op (TestShortcut ()) MenuPrim orig impl where
+  runOp _ _ menu_ = withRef menu_ $ \menu_Ptr -> testShortcut' menu_Ptr >>= toMaybeRef
+{# fun Fl_Menu__global as global' { id `Ptr ()' } -> `()' #}
 instance (impl ~ ( IO ())) => Op (Global ()) MenuPrim orig impl where
   runOp _ _ menu_ = withRef menu_ $ \menu_Ptr -> global' menu_Ptr
-{# fun unsafe Fl_Menu__menu as menu' { id `Ptr ()' } -> `Ptr ()' id #}
-instance (impl ~ ( IO (Ref MenuItem))) => Op (GetMenu ()) MenuPrim orig impl where
-  runOp _ _ menu_ = withRef menu_ $ \menu_Ptr -> menu' menu_Ptr >>= toRef
-{# fun unsafe Fl_Menu__menu_with_m as menuWithM' { id `Ptr ()',id `Ptr ( Ptr () )',`Int' } -> `()' #}
+{# fun Fl_Menu__menu as menu' { id `Ptr ()' } -> `Ptr ()' id #}
+{# fun Fl_Menu__get_menu_item_by_index as getMenuItemByIndex' { id `Ptr ()', id `CInt' } -> `Ptr ()' id #}
+instance (impl ~ ( IO [(Maybe (Ref MenuItem))])) => Op (GetMenu ()) MenuPrim orig impl where
+  runOp _ _ menu_ = withRef menu_ $ \menu_Ptr -> do
+    n <- getSize menu_
+    if (n == 0)
+     then return []
+     else go menu_Ptr 0 (n-1) []
+      where
+        go _ _ 0 accum = return accum
+        go ptr offset left accum = do
+          ref <- getMenuItemByIndex' ptr offset >>= toMaybeRef
+          go ptr
+             (offset + 1)
+             (left - 1)
+             (accum ++ [ref])
+
+{# fun Fl_Menu__menu_with_m as menuWithM' { id `Ptr ()',id `Ptr (Ptr ())',`Int' } -> `()' #}
 instance (Parent a MenuItem, impl ~ ([Ref a] -> IO ())) => Op (SetMenu ()) MenuPrim orig impl where
   runOp _ _ menu_ items =
     withRef menu_ $ \menu_Ptr ->
         withRefs items $ \menu_itemsPtr ->
             menuWithM' menu_Ptr menu_itemsPtr (length items)
-{# fun unsafe Fl_Menu__copy as copy' { id `Ptr ()',id `Ptr ()' } -> `()' #}
+{# fun Fl_Menu__copy as copy' { id `Ptr ()',id `Ptr ()' } -> `()' #}
 instance (Parent a MenuItem, impl ~ (Ref a->  IO ())) => Op (Copy ()) MenuPrim orig impl where
   runOp _ _ menu_ m = withRef menu_ $ \menu_Ptr -> withRef m $ \mPtr -> copy' menu_Ptr mPtr
 
@@ -173,11 +187,11 @@ instance (impl ~ (String -> IO ())) => Op (AddName ()) MenuPrim orig impl where
   runOp _ _ menu_ name' = withRef menu_ $ \menu_Ptr -> add' menu_Ptr name'
 {# fun Fl_Menu__add_with_flags as addWithFlags' { id `Ptr ()',unsafeToCString `String',id `CInt',id `FunPtr CallbackWithUserDataPrim',`Int' } -> `Int' #}
 {# fun Fl_Menu__add_with_shortcutname_flags as addWithShortcutnameFlags' { id `Ptr ()', unsafeToCString `String', unsafeToCString `String',id `FunPtr CallbackWithUserDataPrim',`Int' } -> `Int' #}
-instance (Parent a MenuPrim, impl ~ ( String -> Maybe Shortcut -> (Ref a-> IO ()) -> MenuItemFlags -> IO (MenuItemIndex))) => Op (Add ()) MenuPrim orig (impl) where
+instance (Parent a MenuItem, impl ~ ( String -> Maybe Shortcut -> Maybe (Ref a-> IO ()) -> MenuItemFlags -> IO (MenuItemIndex))) => Op (Add ()) MenuPrim orig (impl) where
   runOp _ _ menu_ name shortcut cb flags =
     withRef menu_ $ \menu_Ptr -> do
       let combinedFlags = menuItemFlagsToInt flags
-      ptr <- toCallbackPrim cb
+      ptr <- maybe (return (castPtrToFunPtr nullPtr)) toCallbackPrim cb
       idx' <- case shortcut of
                Just s' -> case s' of
                  KeySequence (ShortcutKeySequence modifiers char) ->
@@ -204,43 +218,43 @@ instance (Parent a MenuPrim, impl ~ ( String -> Maybe Shortcut -> (Ref a-> IO ()
                     (castFunPtr ptr)
                     combinedFlags
       return (MenuItemIndex idx')
-{# fun unsafe Fl_Menu__size as size' { id `Ptr ()' } -> `Int' #}
+{# fun Fl_Menu__size as size' { id `Ptr ()' } -> `Int' #}
 instance (impl ~ ( IO (Int))) => Op (GetSize ()) MenuPrim orig impl where
   runOp _ _ menu_ = withRef menu_ $ \menu_Ptr -> size' menu_Ptr
-{# fun unsafe Fl_Menu__set_size as setSize' { id `Ptr ()',`Int',`Int' } -> `()' #}
+{# fun Fl_Menu__set_size as setSize' { id `Ptr ()',`Int',`Int' } -> `()' #}
 instance (impl ~ (Int -> Int ->  IO ())) => Op (SetSize ()) MenuPrim orig impl where
   runOp _ _ menu_ w h = withRef menu_ $ \menu_Ptr -> setSize' menu_Ptr w h
-{# fun unsafe Fl_Menu__clear as clear' { id `Ptr ()' } -> `()' #}
+{# fun Fl_Menu__clear as clear' { id `Ptr ()' } -> `()' #}
 instance (impl ~ ( IO ())) => Op (Clear ()) MenuPrim orig impl where
   runOp _ _ menu_ = withRef menu_ $ \menu_Ptr -> clear' menu_Ptr
-{# fun unsafe Fl_Menu__clear_submenu as clearSubmenu' { id `Ptr ()',`Int' } -> `Int' #}
+{# fun Fl_Menu__clear_submenu as clearSubmenu' { id `Ptr ()',`Int' } -> `Int' #}
 instance (impl ~ (Int ->  IO (Either OutOfRange ()))) => Op (ClearSubmenu ()) MenuPrim orig impl where
   runOp _ _ menu_ index' = withRef menu_ $ \menu_Ptr -> clearSubmenu' menu_Ptr index' >>= \ret' -> if ret' == -1 then return (Left OutOfRange) else return (Right ())
-{# fun unsafe Fl_Menu__replace as replace' { id `Ptr ()',`Int', unsafeToCString `String' } -> `()' #}
+{# fun Fl_Menu__replace as replace' { id `Ptr ()',`Int', unsafeToCString `String' } -> `()' #}
 instance (impl ~ (Int -> String ->  IO ())) => Op (Replace ()) MenuPrim orig impl where
   runOp _ _ menu_ index' name = withRef menu_ $ \menu_Ptr -> replace' menu_Ptr index' name
-{# fun unsafe Fl_Menu__remove as remove' { id `Ptr ()',`Int' } -> `()' #}
+{# fun Fl_Menu__remove as remove' { id `Ptr ()',`Int' } -> `()' #}
 instance (impl ~ (Int  ->  IO ())) => Op (Remove ()) MenuPrim orig impl where
   runOp _ _ menu_ index' = withRef menu_ $ \menu_Ptr -> remove' menu_Ptr index'
-{# fun unsafe Fl_Menu__shortcut as shortcut' { id `Ptr ()',`Int',id `CInt' } -> `()' #}
+{# fun Fl_Menu__shortcut as shortcut' { id `Ptr ()',`Int',id `CInt' } -> `()' #}
 instance (impl ~ (Int -> ShortcutKeySequence ->  IO ())) => Op (SetShortcut ()) MenuPrim orig impl where
   runOp _ _ menu_ index' (ShortcutKeySequence modifiers char) =
     withRef menu_ $ \menu_Ptr ->
         shortcut' menu_Ptr index' (keySequenceToCInt modifiers char)
-{# fun unsafe Fl_Menu__set_mode as setMode' { id `Ptr ()',`Int',`Int' } -> `()' #}
-instance (impl ~ (Int -> Int ->  IO ())) => Op (SetMode ()) MenuPrim orig impl where
-  runOp _ _ menu_ i fl = withRef menu_ $ \menu_Ptr -> setMode' menu_Ptr i fl
-{# fun unsafe Fl_Menu__mode as mode' { id `Ptr ()',`Int' } -> `Int' #}
+{# fun Fl_Menu__set_mode as setMode' { id `Ptr ()',`Int',`Int' } -> `()' #}
+instance (impl ~ (Int -> MenuItemFlags ->  IO ())) => Op (SetMode ()) MenuPrim orig impl where
+  runOp _ _ menu_ i fl = withRef menu_ $ \menu_Ptr -> setMode' menu_Ptr i (menuItemFlagsToInt fl)
+{# fun Fl_Menu__mode as mode' { id `Ptr ()',`Int' } -> `Int' #}
 instance (impl ~ (Int ->  IO (Int))) => Op (GetMode ()) MenuPrim orig impl where
   runOp _ _ menu_ i = withRef menu_ $ \menu_Ptr -> mode' menu_Ptr i
-{# fun unsafe Fl_Menu__mvalue as mvalue' { id `Ptr ()' } -> `Ptr ()' id #}
-instance (impl ~ (IO (Ref MenuItem))) => Op (Mvalue ()) MenuPrim orig impl where
-  runOp _ _ menu_ = withRef menu_ $ \menu_Ptr -> mvalue' menu_Ptr >>= toRef
-{# fun unsafe Fl_Menu__value as value' { id `Ptr ()' } -> `Int' #}
-instance (impl ~ ( IO (Int))) => Op (GetValue ()) MenuPrim orig impl where
-  runOp _ _ menu_ = withRef menu_ $ \menu_Ptr -> value' menu_Ptr
-{# fun unsafe Fl_Menu__value_with_item as valueWithItem' { id `Ptr ()',id `Ptr ()' } -> `Int' #}
-{# fun unsafe Fl_Menu__value_with_index as valueWithIndex' { id `Ptr ()',`Int' } -> `Int' #}
+{# fun Fl_Menu__mvalue as mvalue' { id `Ptr ()' } -> `Ptr ()' id #}
+instance (impl ~ (IO (Maybe (Ref MenuItem)))) => Op (Mvalue ()) MenuPrim orig impl where
+  runOp _ _ menu_ = withRef menu_ $ \menu_Ptr -> mvalue' menu_Ptr >>= toMaybeRef
+{# fun Fl_Menu__value as value' { id `Ptr ()' } -> `Int' #}
+instance (impl ~ ( IO (MenuItemIndex))) => Op (GetValue ()) MenuPrim orig impl where
+  runOp _ _ menu_ = withRef menu_ $ \menu_Ptr -> value' menu_Ptr >>= return . MenuItemIndex
+{# fun Fl_Menu__value_with_item as valueWithItem' { id `Ptr ()',id `Ptr ()' } -> `Int' #}
+{# fun Fl_Menu__value_with_index as valueWithIndex' { id `Ptr ()',`Int' } -> `Int' #}
 instance (impl ~ (MenuItemReference -> IO (Int))) => Op (SetValue ()) MenuPrim orig impl where
   runOp _ _ menu_ menu_item_reference =
     withRef menu_ $ \menu_Ptr ->
@@ -249,47 +263,47 @@ instance (impl ~ (MenuItemReference -> IO (Int))) => Op (SetValue ()) MenuPrim o
           (MenuItemByPointer (MenuItemPointer menu_item)) ->
               withRef menu_item $ \menu_itemPtr ->
                   valueWithItem' menu_Ptr menu_itemPtr
-{# fun unsafe Fl_Menu__text as text' { id `Ptr ()' } -> `String' #}
+{# fun Fl_Menu__text as text' { id `Ptr ()' } -> `String' unsafeFromCString #}
 instance (impl ~ ( IO (String))) => Op (GetText ()) MenuPrim orig impl where
   runOp _ _ menu_ = withRef menu_ $ \menu_Ptr -> text' menu_Ptr
-{# fun unsafe Fl_Menu__text_with_index as textWithIndex' { id `Ptr ()',`Int' } -> `String' #}
+{# fun Fl_Menu__text_with_index as textWithIndex' { id `Ptr ()',`Int' } -> `String' unsafeFromCString #}
 instance (impl ~ (Int ->  IO (String))) => Op (GetTextWithIndex ()) MenuPrim orig impl where
   runOp _ _ menu_ i = withRef menu_ $ \menu_Ptr -> textWithIndex' menu_Ptr i
-{# fun unsafe Fl_Menu__textfont as textfont' { id `Ptr ()' } -> `Font' cToFont #}
+{# fun Fl_Menu__textfont as textfont' { id `Ptr ()' } -> `Font' cToFont #}
 instance (impl ~ ( IO (Font))) => Op (GetTextfont ()) MenuPrim orig impl where
   runOp _ _ menu_ = withRef menu_ $ \menu_Ptr -> textfont' menu_Ptr
-{# fun unsafe Fl_Menu__set_textfont as setTextfont' { id `Ptr ()',cFromFont `Font' } -> `()' #}
+{# fun Fl_Menu__set_textfont as setTextfont' { id `Ptr ()',cFromFont `Font' } -> `()' #}
 instance (impl ~ (Font ->  IO ())) => Op (SetTextfont ()) MenuPrim orig impl where
   runOp _ _ menu_ c = withRef menu_ $ \menu_Ptr -> setTextfont' menu_Ptr c
-{# fun unsafe Fl_Menu__textsize as textsize' { id `Ptr ()' } -> `CInt' id #}
+{# fun Fl_Menu__textsize as textsize' { id `Ptr ()' } -> `CInt' id #}
 instance (impl ~ ( IO (FontSize))) => Op (GetTextsize ()) MenuPrim orig impl where
   runOp _ _ menu_ = withRef menu_ $ \menu_Ptr -> textsize' menu_Ptr >>= return . FontSize
-{# fun unsafe Fl_Menu__set_textsize as setTextsize' { id `Ptr ()',id `CInt' } -> `()' #}
+{# fun Fl_Menu__set_textsize as setTextsize' { id `Ptr ()',id `CInt' } -> `()' #}
 instance (impl ~ (FontSize ->  IO ())) => Op (SetTextsize ()) MenuPrim orig impl where
   runOp _ _ menu_ (FontSize c) = withRef menu_ $ \menu_Ptr -> setTextsize' menu_Ptr c
-{# fun unsafe Fl_Menu__textcolor as textcolor' { id `Ptr ()' } -> `Color' cToColor #}
+{# fun Fl_Menu__textcolor as textcolor' { id `Ptr ()' } -> `Color' cToColor #}
 instance (impl ~ ( IO (Color))) => Op (GetTextcolor ()) MenuPrim orig impl where
   runOp _ _ menu_ = withRef menu_ $ \menu_Ptr -> textcolor' menu_Ptr
-{# fun unsafe Fl_Menu__set_textcolor as setTextcolor' { id `Ptr ()',cFromColor `Color' } -> `()' #}
+{# fun Fl_Menu__set_textcolor as setTextcolor' { id `Ptr ()',cFromColor `Color' } -> `()' #}
 instance (impl ~ (Color ->  IO ())) => Op (SetTextcolor ()) MenuPrim orig impl where
   runOp _ _ menu_ c = withRef menu_ $ \menu_Ptr -> setTextcolor' menu_Ptr c
-{# fun unsafe Fl_Menu__down_box as downBox' { id `Ptr ()' } -> `Boxtype' cToEnum #}
+{# fun Fl_Menu__down_box as downBox' { id `Ptr ()' } -> `Boxtype' cToEnum #}
 instance (impl ~ ( IO (Boxtype))) => Op (GetDownBox ()) MenuPrim orig impl where
   runOp _ _ menu_ = withRef menu_ $ \menu_Ptr -> downBox' menu_Ptr
-{# fun unsafe Fl_Menu__set_down_box as setDownBox' { id `Ptr ()',cFromEnum `Boxtype' } -> `()' #}
+{# fun Fl_Menu__set_down_box as setDownBox' { id `Ptr ()',cFromEnum `Boxtype' } -> `()' #}
 instance (impl ~ (Boxtype ->  IO ())) => Op (SetDownBox ()) MenuPrim orig impl where
   runOp _ _ menu_ b = withRef menu_ $ \menu_Ptr -> setDownBox' menu_Ptr b
-{# fun unsafe Fl_Menu__down_color as downColor' { id `Ptr ()' } -> `Color' cToColor #}
+{# fun Fl_Menu__down_color as downColor' { id `Ptr ()' } -> `Color' cToColor #}
 instance (impl ~ ( IO (Color))) => Op (GetDownColor ()) MenuPrim orig impl where
   runOp _ _ menu_ = withRef menu_ $ \menu_Ptr -> downColor' menu_Ptr
-{# fun unsafe Fl_Menu__set_down_color as setDownColor' { id `Ptr ()',`Int' } -> `()' #}
+{# fun Fl_Menu__set_down_color as setDownColor' { id `Ptr ()',`Int' } -> `()' #}
 instance (impl ~ (Int ->  IO ())) => Op (SetDownColor ()) MenuPrim orig impl where
   runOp _ _ menu_ c = withRef menu_ $ \menu_Ptr -> setDownColor' menu_Ptr c
 
 -- $functions
 -- @
 --
--- add:: ('Parent' a 'MenuPrim') => 'Ref' 'MenuPrim' -> 'String' -> 'Maybe' 'Shortcut' -> ('Ref' a -> 'IO' ()) -> 'MenuItemFlags' -> 'IO' 'MenuItemIndex')
+-- add:: ('Parent' a 'MenuItem') => 'Ref' 'MenuPrim' -> 'String' -> 'Maybe' 'Shortcut' -> ('Ref' a-> 'IO' ()) -> 'MenuItemFlags' -> 'IO' ('MenuItemIndex')
 --
 -- addName :: 'Ref' 'MenuPrim' -> 'String' -> 'IO' ()
 --
@@ -297,53 +311,53 @@ instance (impl ~ (Int ->  IO ())) => Op (SetDownColor ()) MenuPrim orig impl whe
 --
 -- clearSubmenu :: 'Ref' 'MenuPrim' -> 'Int' -> 'IO' ('Either' 'OutOfRange' ())
 --
--- copy:: ('Parent' a 'MenuItem') => 'Ref' 'MenuPrim' -> 'Ref' a -> 'IO' ())
+-- copy:: ('Parent' a 'MenuItem') => 'Ref' 'MenuPrim' -> 'Ref' a-> 'IO' ()
 --
 -- destroy :: 'Ref' 'MenuPrim' -> 'IO' ()
 --
 -- findIndex :: 'Ref' 'MenuPrim' -> 'MenuItemLocator' -> 'IO' ('Maybe' 'Int')
 --
--- getDownBox :: 'Ref' 'MenuPrim' -> 'IO' 'Boxtype'
+-- getDownBox :: 'Ref' 'MenuPrim' -> 'IO' ('Boxtype')
 --
--- getDownColor :: 'Ref' 'MenuPrim' -> 'IO' 'Color'
+-- getDownColor :: 'Ref' 'MenuPrim' -> 'IO' ('Color')
 --
--- getMenu :: 'Ref' 'MenuPrim' -> 'IO' ('Ref' 'MenuItem')
+-- getMenu :: 'Ref' 'MenuPrim' -> 'IO' ['Ref' 'MenuItem']
 --
--- getMode :: 'Ref' 'MenuPrim' -> 'Int' -> 'IO' 'Int'
+-- getMode :: 'Ref' 'MenuPrim' -> 'Int' -> 'IO' ('Int')
 --
--- getSize :: 'Ref' 'MenuPrim' -> 'IO' 'Int'
+-- getSize :: 'Ref' 'MenuPrim' -> 'IO' ('Int')
 --
--- getText :: 'Ref' 'MenuPrim' -> 'IO' 'String'
+-- getText :: 'Ref' 'MenuPrim' -> 'IO' ('String')
 --
--- getTextWithIndex :: 'Ref' 'MenuPrim' -> 'Int' -> 'IO' 'String'
+-- getTextWithIndex :: 'Ref' 'MenuPrim' -> 'Int' -> 'IO' ('String')
 --
--- getTextcolor :: 'Ref' 'MenuPrim' -> 'IO' 'Color'
+-- getTextcolor :: 'Ref' 'MenuPrim' -> 'IO' ('Color')
 --
--- getTextfont :: 'Ref' 'MenuPrim' -> 'IO' 'Font'
+-- getTextfont :: 'Ref' 'MenuPrim' -> 'IO' ('Font')
 --
--- getTextsize :: 'Ref' 'MenuPrim' -> 'IO' 'FontSize'
+-- getTextsize :: 'Ref' 'MenuPrim' -> 'IO' ('FontSize')
 --
--- getValue :: 'Ref' 'MenuPrim' -> 'IO' 'Int'
+-- getValue :: 'Ref' 'MenuPrim' -> 'IO' ('MenuItemIndex')
 --
 -- global :: 'Ref' 'MenuPrim' -> 'IO' ()
 --
 -- handle :: 'Ref' 'MenuPrim' -> 'Event' -> 'IO' 'Int'
 --
--- handleSuper :: 'Ref' 'MenuPrim' -> 'Int' -> 'IO' 'Int'
+-- handleSuper :: 'Ref' 'MenuPrim' -> 'Int' -> 'IO' ('Int')
 --
 -- hide :: 'Ref' 'MenuPrim' -> 'IO' ()
 --
 -- hideSuper :: 'Ref' 'MenuPrim' -> 'IO' ()
 --
--- insert:: ('Parent' a 'MenuPrim') => 'Ref' 'MenuPrim' -> 'Int' -> 'String' -> 'Maybe' 'Shortcut' -> ('Ref' a -> 'IO' ()) -> 'MenuItemFlags' -> 'IO' 'MenuItemIndex')
+-- insert:: ('Parent' a 'MenuPrim') => 'Ref' 'MenuPrim' -> 'Int' -> 'String' -> 'Maybe' 'Shortcut' -> ('Ref' a -> 'IO' ()) -> 'MenuItemFlags' -> 'IO' ('MenuItemIndex')
 --
--- itemPathname:: ('Parent' a 'MenuItem') => 'Ref' 'MenuPrim' -> 'Ref' a -> 'IO' ('Maybe' 'String'))
+-- itemPathname:: ('Parent' a 'MenuItem') => 'Ref' 'MenuPrim' -> 'Ref' a -> 'IO' ('Maybe' 'String')
 --
 -- itemPathnameRecent :: 'Ref' 'MenuPrim' -> 'IO' ('Maybe' 'String')
 --
--- mvalue :: 'Ref' 'MenuPrim' -> 'IO' ('Ref' 'MenuItem')
+-- mvalue :: 'Ref' 'MenuPrim' -> 'IO' ('Maybe' ('Ref' 'MenuItem'))
 --
--- picked:: ('Parent' a 'MenuItem', 'Parent' b 'MenuItem') => 'Ref' 'MenuPrim' -> 'Ref' a -> 'IO' ('Ref' b))
+-- picked:: ('Parent' a 'MenuItem', 'Parent' b 'MenuItem') => 'Ref' 'MenuPrim' -> 'Ref' a -> 'IO' ('Maybe' ('Ref' b))
 --
 -- remove :: 'Ref' 'MenuPrim' -> 'Int' -> 'IO' ()
 --
@@ -357,9 +371,9 @@ instance (impl ~ (Int ->  IO ())) => Op (SetDownColor ()) MenuPrim orig impl whe
 --
 -- setDownColor :: 'Ref' 'MenuPrim' -> 'Int' -> 'IO' ()
 --
--- setMenu:: ('Parent' a 'MenuItem') => 'Ref' 'MenuPrim' -> ['Ref' a] -> 'IO' ())
+-- setMenu:: ('Parent' a 'MenuItem') => 'Ref' 'MenuPrim' -> ['Ref' a] -> 'IO' ()
 --
--- setMode :: 'Ref' 'MenuPrim' -> 'Int' -> 'Int' -> 'IO' ()
+-- setMode :: 'Ref' 'MenuPrim' -> 'Int' -> 'MenuItemFlags' -> 'IO' ()
 --
 -- setShortcut :: 'Ref' 'MenuPrim' -> 'Int' -> 'ShortcutKeySequence' -> 'IO' ()
 --
@@ -371,13 +385,13 @@ instance (impl ~ (Int ->  IO ())) => Op (SetDownColor ()) MenuPrim orig impl whe
 --
 -- setTextsize :: 'Ref' 'MenuPrim' -> 'FontSize' -> 'IO' ()
 --
--- setValue :: 'Ref' 'MenuPrim' -> 'MenuItemReference' -> 'IO' 'Int'
+-- setValue :: 'Ref' 'MenuPrim' -> 'MenuItemReference' -> 'IO' ('Int')
 --
 -- showWidget :: 'Ref' 'MenuPrim' -> 'IO' ()
 --
 -- showWidgetSuper :: 'Ref' 'MenuPrim' -> 'IO' ()
 --
--- testShortcut:: ('Parent' a 'MenuItem') => 'Ref' 'MenuPrim' -> 'IO' ('Ref' a))
+-- testShortcut:: ('Parent' a 'MenuItem') => 'Ref' 'MenuPrim' -> 'IO' ('Maybe' ('Ref' a))
 --
 -- @
 

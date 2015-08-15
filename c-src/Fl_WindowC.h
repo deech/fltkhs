@@ -47,6 +47,10 @@ public:
 };
 EXPORT {
 #endif
+#ifndef INTERNAL_LINKAGE
+#define FL_WINDOWC 0xF0
+#define FL_DOUBLE_WINDOWC 0xF1
+#endif
   /* Inherited from Fl_Widget */
   FL_EXPORT_C(int,Fl_Window_handle)(fl_Window self, int event);
   FL_EXPORT_C(fl_Group,     Fl_Window_parent)(fl_Window win);

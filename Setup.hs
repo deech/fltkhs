@@ -175,7 +175,8 @@ myBuildHook pkg_descr local_bld_info user_hooks bld_flags =
          verbosity = fromFlag (buildVerbosity bld_flags)
          with_in_place
            = local_bld_info{withPackageDB =
-                              withPackageDB local_bld_info ++ [SpecificPackageDB dbFile]}
+                              withPackageDB local_bld_info ++ [SpecificPackageDB dbFile]
+                           }
          pref = buildDir local_bld_info
      withAllComponentsInBuildOrder pkg_descr with_in_place $
        \ comp clbi ->
@@ -216,7 +217,7 @@ copyCBindings pkg_descr lbi uhs flags = do
     case buildOS of
      Linux -> rawSystemExit (fromFlag $ copyVerbosity flags) "cp"
               ["c-lib/libfltkcdyn.so", libPref]
-     _ -> return ()
+
 
 myCleanHook pd x uh cf = do
   rawSystemExit normal "make" ["clean"]

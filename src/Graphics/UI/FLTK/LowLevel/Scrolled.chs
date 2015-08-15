@@ -33,34 +33,34 @@ scrolledNew rectangle l'=
                              toRef
         Just l -> scrollNewWithLabel' x_pos y_pos width height l >>=
                                toRef
-{# fun unsafe Fl_Scroll_set_scrollbar_size as setScrollbarSize' { id `Ptr ()',`Int' } -> `()' #}
+{# fun Fl_Scroll_set_scrollbar_size as setScrollbarSize' { id `Ptr ()',`Int' } -> `()' #}
 instance (impl ~ (Int ->  IO ())) => Op (SetScrollbarSize ()) Scrolled orig impl where
    runOp _ _ widget size = withRef widget $ \widgetPtr -> setScrollbarSize' widgetPtr size
-{# fun unsafe Fl_Scroll_get_scrollbar_size as getScrollbarSize' { id `Ptr ()' } -> `Int' #}
+{# fun Fl_Scroll_get_scrollbar_size as getScrollbarSize' { id `Ptr ()' } -> `Int' #}
 instance (impl ~ ( IO (Int))) => Op (GetScrollbarSize ()) Scrolled orig impl where
    runOp _ _ widget = withRef widget $ \widgetPtr -> getScrollbarSize' widgetPtr
-{# fun unsafe Fl_Scroll_clear as clear' { id `Ptr ()' } -> `()' #}
+{# fun Fl_Scroll_clear as clear' { id `Ptr ()' } -> `()' #}
 instance (impl ~ ( IO ())) => Op (Clear ()) Scrolled orig impl where
    runOp _ _ widget = withRef widget $ \widgetPtr -> clear' widgetPtr
-{# fun unsafe Fl_Scroll_scroll_to as scrollTo' { id `Ptr ()',`Int',`Int' } -> `()' #}
+{# fun Fl_Scroll_scroll_to as scrollTo' { id `Ptr ()',`Int',`Int' } -> `()' #}
 instance (impl ~ (Position ->  IO ())) => Op (ScrollTo ()) Scrolled orig impl where
    runOp _ _ widget (Position (X x_pos') (Y y_pos')) = withRef widget $ \widgetPtr -> scrollTo' widgetPtr x_pos' y_pos'
-{# fun unsafe Fl_Scroll_yposition as yposition' { id `Ptr ()' } -> `Int' #}
+{# fun Fl_Scroll_yposition as yposition' { id `Ptr ()' } -> `Int' #}
 instance (impl ~ ( IO (Int))) => Op (Yposition ()) Scrolled orig impl where
    runOp _ _ widget = withRef widget $ \widgetPtr -> yposition' widgetPtr
-{# fun unsafe Fl_Scroll_xposition as xposition' { id `Ptr ()' } -> `Int' #}
+{# fun Fl_Scroll_xposition as xposition' { id `Ptr ()' } -> `Int' #}
 instance (impl ~ ( IO (Int))) => Op (Xposition ()) Scrolled orig impl where
    runOp _ _ widget = withRef widget $ \widgetPtr -> xposition' widgetPtr
-{# fun unsafe Fl_Scroll_type as type' { id `Ptr ()' } -> `Word8' #}
-instance (impl ~ ( IO (ScrollbarMode))) => Op (GetType ()) Scrolled orig impl where
+{# fun Fl_Scroll_type as type' { id `Ptr ()' } -> `Word8' #}
+instance (impl ~ ( IO (ScrollbarMode))) => Op (GetType_ ()) Scrolled orig impl where
    runOp _ _ widget = withRef widget $ \widgetPtr -> type' widgetPtr >>= return . cToEnum
-{# fun unsafe Fl_Scroll_set_type as setType' { id `Ptr ()',`Word8' } -> `()' #}
+{# fun Fl_Scroll_set_type as setType' { id `Ptr ()',`Word8' } -> `()' #}
 instance (impl ~ (ScrollbarMode ->  IO ())) => Op (SetType ()) Scrolled orig impl where
    runOp _ _ widget t = withRef widget $ \widgetPtr -> setType' widgetPtr (cFromEnum t)
-{# fun unsafe Fl_Scroll_resize as resize' { id `Ptr ()',`Int',`Int',`Int',`Int' } -> `()' #}
+{# fun Fl_Scroll_resize as resize' { id `Ptr ()',`Int',`Int',`Int',`Int' } -> `()' #}
 instance (impl ~ (Rectangle ->  IO ())) => Op (Resize ()) Scrolled orig impl where
    runOp _ _ widget rectangle = let (x_pos', y_pos', width', height') = fromRectangle rectangle in withRef widget $ \scrollPtr -> resize' scrollPtr x_pos' y_pos' width' height'
-{# fun unsafe Fl_Scroll_handle as handle' { id `Ptr ()',`Int' } -> `Int' #}
+{# fun Fl_Scroll_handle as handle' { id `Ptr ()',`Int' } -> `Int' #}
 instance (impl ~ (Int ->  IO (Int))) => Op (Handle ()) Scrolled orig impl where
    runOp _ _ widget event = withRef widget $ \scrollPtr -> handle' scrollPtr event
 

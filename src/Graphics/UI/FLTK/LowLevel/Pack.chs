@@ -34,23 +34,23 @@ packNew rectangle l' =
         Just l -> packNewWithLabel' x_pos y_pos width height l >>=
                              toRef
 
-{# fun unsafe Fl_Pack_get_spacing as getSpacing' { id `Ptr ()' } -> `Int' #}
+{# fun Fl_Pack_get_spacing as getSpacing' { id `Ptr ()' } -> `Int' #}
 instance (impl ~ (IO (Int))) => Op (GetSpacing ()) Pack orig impl where
    runOp _ _ p = withRef p $ \pPtr -> getSpacing' pPtr
-{# fun unsafe Fl_Pack_set_spacing as setSpacing' { id `Ptr ()',`Int' } -> `()' #}
+{# fun Fl_Pack_set_spacing as setSpacing' { id `Ptr ()',`Int' } -> `()' #}
 instance (impl ~ (Int ->  IO ())) => Op (SetSpacing ()) Pack orig impl where
    runOp _ _ p pixels = withRef p $ \pPtr -> setSpacing' pPtr pixels
-{# fun unsafe Fl_Pack_horizontal as horizontal' { id `Ptr ()' } -> `Word8' #}
+{# fun Fl_Pack_horizontal as horizontal' { id `Ptr ()' } -> `Word8' #}
 instance (impl ~ ( IO Bool)) => Op (IsHorizontal ()) Pack orig impl where
    runOp _ _ p = withRef p $ \pPtr -> do
      orientation <- horizontal' pPtr >>= return . cToEnum
      case orientation of
        PackHorizontal -> return True
        _  -> return False
-{# fun unsafe Fl_Pack_type as type' { id `Ptr ()' } -> `Word8' #}
-instance (impl ~ ( IO (PackType))) => Op (GetType ()) Pack orig impl where
+{# fun Fl_Pack_type as type' { id `Ptr ()' } -> `Word8' #}
+instance (impl ~ ( IO (PackType))) => Op (GetType_ ()) Pack orig impl where
    runOp _ _ widget = withRef widget $ \widgetPtr -> type' widgetPtr >>= return . cToEnum
-{# fun unsafe Fl_Pack_set_type as setType' { id `Ptr ()',`Word8' } -> `()' #}
+{# fun Fl_Pack_set_type as setType' { id `Ptr ()',`Word8' } -> `()' #}
 instance (impl ~ (PackType ->  IO ())) => Op (SetType ()) Pack orig impl where
    runOp _ _ widget t = withRef widget $ \widgetPtr -> setType' widgetPtr (cFromEnum t)
 

@@ -36,31 +36,31 @@ tabsNew rectangle l' =
         Nothing -> tabsNew' x_pos y_pos width height >>= toRef
         Just l -> tabsNewWithLabel' x_pos y_pos width height l >>= toRef
 
-{# fun unsafe Fl_Tabs_handle as handle' { id `Ptr ()',`Int' } -> `Int' #}
+{# fun Fl_Tabs_handle as handle' { id `Ptr ()',`Int' } -> `Int' #}
 instance (impl ~ (Event -> IO Int)) => Op (Handle ()) Tabs orig impl where
   runOp _ _ tabs event = withRef tabs (\p -> handle' p (fromIntegral . fromEnum $ event))
 
-{# fun unsafe Fl_Tabs_value as value' { id `Ptr ()' } -> `Ptr ()' id #}
+{# fun Fl_Tabs_value as value' { id `Ptr ()' } -> `Ptr ()' id #}
 instance (impl ~ (IO (Maybe (Ref Widget)))) => Op (GetValue ()) Tabs orig impl where
    runOp _ _ tabs = withRef tabs $ \tabsPtr -> value' tabsPtr >>= toMaybeRef
 
-{# fun unsafe Fl_Tabs_set_value as setValue' { id `Ptr ()',id `Ptr ()' } -> `Int' #}
-instance (Parent a Widget, impl ~ (Ref a ->  IO (Either NoChange ()))) => Op (SetValue ()) Tabs orig impl where
-   runOp _ _ tabs w = withRef tabs $ \tabsPtr -> withRef w $ \wPtr -> setValue' tabsPtr wPtr >>= return . successOrNoChange
+{# fun Fl_Tabs_set_value as setValue' { id `Ptr ()',id `Ptr ()' } -> `Int' #}
+instance (Parent a Widget, impl ~ (Maybe ( Ref a ) ->  IO (Either NoChange ()))) => Op (SetValue ()) Tabs orig impl where
+   runOp _ _ tabs w = withRef tabs $ \tabsPtr -> withMaybeRef w $ \wPtr -> setValue' tabsPtr wPtr >>= return . successOrNoChange
 
-{# fun unsafe Fl_Tabs_push as push' { id `Ptr ()' } -> `Ptr ()' id #}
+{# fun Fl_Tabs_push as push' { id `Ptr ()' } -> `Ptr ()' id #}
 instance (impl ~ (IO (Maybe (Ref Widget)))) => Op (GetPush ()) Tabs orig impl where
    runOp _ _ tabs = withRef tabs $ \tabsPtr -> push' tabsPtr >>= toMaybeRef
 
-{# fun unsafe Fl_Tabs_set_push as setPush' { id `Ptr ()',id `Ptr ()' } -> `Int' #}
-instance (Parent a Widget, impl ~ (Ref a ->  IO (Either NoChange ()))) => Op (SetPush ()) Tabs orig impl where
-   runOp _ _ tabs w = withRef tabs $ \tabsPtr -> withRef w $ \wPtr -> setPush' tabsPtr wPtr >>= return . successOrNoChange
+{# fun Fl_Tabs_set_push as setPush' { id `Ptr ()',id `Ptr ()' } -> `Int' #}
+instance (Parent a Widget, impl ~ (Maybe ( Ref a ) ->  IO (Either NoChange ()))) => Op (SetPush ()) Tabs orig impl where
+   runOp _ _ tabs w = withRef tabs $ \tabsPtr -> withMaybeRef w $ \wPtr -> setPush' tabsPtr wPtr >>= return . successOrNoChange
 
-{# fun unsafe Fl_Tabs_which as which' { id `Ptr ()',`Int',`Int' } -> `Ptr ()' id #}
+{# fun Fl_Tabs_which as which' { id `Ptr ()',`Int',`Int' } -> `Ptr ()' id #}
 instance (impl ~ (Position -> IO (Maybe (Ref Widget)))) => Op (Which ()) Tabs orig impl where
    runOp _ _ tabs (Position (X event_x) (Y event_y)) = withRef tabs $ \tabsPtr -> which' tabsPtr event_x event_y >>= toMaybeRef
 
-{# fun unsafe Fl_Tabs_client_area_with_tabh as clientAreaWithTabh' { id `Ptr ()', alloca- `Int' peekIntConv*,alloca- `Int' peekIntConv*,alloca- `Int' peekIntConv*,alloca- `Int' peekIntConv*, `Int'} -> `()' #}
+{# fun Fl_Tabs_client_area_with_tabh as clientAreaWithTabh' { id `Ptr ()', alloca- `Int' peekIntConv*,alloca- `Int' peekIntConv*,alloca- `Int' peekIntConv*,alloca- `Int' peekIntConv*, `Int'} -> `()' #}
 instance (impl ~ (TabsHeightOffset -> IO Rectangle)) => Op (ClientArea ()) Tabs orig impl where
    runOp _ _ tabs tabh =
      withRef tabs $ \tabsPtr ->
@@ -91,9 +91,9 @@ instance (impl ~ (TabsHeightOffset -> IO Rectangle)) => Op (ClientArea ()) Tabs 
 --
 -- handle :: 'Ref' 'Tabs' -> 'Event' -> 'IO' 'Int'
 --
--- setPush:: ('Parent' a 'Widget') => 'Ref' 'Tabs' -> 'Ref' a -> 'IO' ('Either' 'NoChange' ()))
+-- setPush:: ('Parent' a 'Widget') => 'Ref' 'Tabs' -> 'Maybe' ( 'Ref' a ) -> 'IO' ('Either' 'NoChange' ())
 --
--- setValue:: ('Parent' a 'Widget') => 'Ref' 'Tabs' -> 'Ref' a -> 'IO' ('Either' 'NoChange' ()))
+-- setValue:: ('Parent' a 'Widget') => 'Ref' 'Tabs' -> 'Maybe' ( 'Ref' a ) -> 'IO' ('Either' 'NoChange' ())
 --
 -- which :: 'Ref' 'Tabs' -> 'Position' -> 'IO' ('Maybe' ('Ref' 'Widget'))
 -- @

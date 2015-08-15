@@ -32,10 +32,22 @@ C_to_Fl_Callback::C_to_Fl_Callback(fl_Callback* callback, void* user_data){
   this->user_data = user_data;
 }
 void C_to_Fl_Callback::set_callback(Fl_File_Chooser* c){
-  c->callback(intercept, this);
+  if (this->callback) {
+    c->callback(intercept, this);
+  }
+  else {
+    void* p = 0;
+    c->callback(NULL,p);
+  }
 }
 void C_to_Fl_Callback::set_callback(Fl_Menu_Item* item){
-  item->callback(intercept,this);
+  if (this->callback) {
+    item->callback(intercept, this);
+  }
+  else {
+    void* p = 0;
+    item->callback(NULL,p);
+  }
 }
 void C_to_Fl_Callback::set_callback(Fl_Text_Buffer* b){
   b->transcoding_warning_action = intercept;
@@ -47,25 +59,67 @@ void C_to_Fl_Callback::set_user_data(void* user_data){
   this->user_data = user_data;
 }
 int C_to_Fl_Callback::menu_insert(Fl_Menu_Item* item, int index, char* name, int shortcut, int flags){
-  return item->insert(index,name,shortcut,intercept,this,flags);
+  if (this->callback) {
+    return item->insert(index,name,shortcut,intercept,this,flags);
+  }
+  else {
+    void* p = 0;
+    return item->insert(index,name,shortcut,NULL,p,flags);
+  }
 }
 int C_to_Fl_Callback::menu_insert(Fl_Menu_* menu_, int index, char* name, int shortcut, int flags){
-  return menu_->insert(index,name,shortcut,intercept,this,flags);
+  if (this->callback) {
+    return menu_->insert(index,name,shortcut,intercept,this,flags);
+  }
+  else {
+    void* p = 0;
+    return menu_->insert(index,name,shortcut,NULL,p,flags);
+  }
 }
 int C_to_Fl_Callback::menu_insert(Fl_Menu_* menu_, int index, char* name, char* shortcut, int flags){
-  return menu_->insert(index,name,shortcut,intercept,this,flags);
+  if (this->callback) {
+    return menu_->insert(index,name,shortcut,intercept,this,flags);
+  }
+  else {
+    void* p = 0;
+    return menu_->insert(index,name,shortcut,NULL,p,flags);
+  }
 }
 int C_to_Fl_Callback::menu_add(Fl_Menu_Item* item, char* name, int shortcut, int flags){
-  return item->add(name, shortcut, intercept, this, flags);
+  if (this->callback) {
+    return item->add(name, shortcut, intercept, this, flags);
+  }
+  else {
+    void* p = 0;
+    return item->add(name, shortcut, NULL, p, flags);
+  }
 }
 int C_to_Fl_Callback::menu_add(Fl_Menu_Item* item, char* name, char* shortcut, int flags){
-  return item->add(name, shortcut, intercept, this, flags);
+  if (this->callback) {
+    return item->add(name, shortcut, intercept, this, flags);
+  }
+  else {
+    void* p = 0;
+    return item->add(name, shortcut, NULL, p, flags);
+  }
 }
 int C_to_Fl_Callback::menu_add(Fl_Menu_* menu_, char* name, char* shortcut, int flags){
-  return menu_->add(name,shortcut,intercept,this,flags);
+  if (this->callback) {
+    return menu_->add(name,shortcut,intercept,this,flags);
+  }
+  else {
+    void* p = 0;
+    return menu_->add(name,shortcut,NULL,p,flags);
+  }
 }
 int C_to_Fl_Callback::menu_add(Fl_Menu_* menu_, char* name, int shortcut, int flags){
-  return menu_->add(name,shortcut,intercept,this,flags);
+  if (this->callback) {
+    return menu_->add(name,shortcut,intercept,this,flags);
+  }
+  else {
+    void* p = 0;
+    return menu_->add(name,shortcut,NULL,p,flags);
+  }
 }
 void C_to_Fl_Callback::runCallback(Fl_Widget* w) {
   (*callback)((fl_Widget) w, user_data);

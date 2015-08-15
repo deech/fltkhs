@@ -186,6 +186,12 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Group_deactivate)(fl_Group win){
     (static_cast<Fl_DerivedGroup*>(win))->deactivate();
   }
+  FL_EXPORT_C(fl_Group,Fl_Group_current)(){
+    return (fl_Group)Fl_DerivedGroup::current();
+  }
+  FL_EXPORT_C(void ,   Fl_Group_set_current)(fl_Group g){
+    Fl_DerivedGroup::current(static_cast<Fl_DerivedGroup*>(g));
+  }
   FL_EXPORT_C(unsigned int,Fl_Group_output)(fl_Group win){
     return (static_cast<Fl_DerivedGroup*>(win))->output();
   }

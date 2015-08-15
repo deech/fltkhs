@@ -44,56 +44,55 @@ instance (impl ~ IO ()) => Op (Destroy ()) ValueOutput orig impl where
 {#fun Fl_Value_Output_handle as valueOutputHandle' { id `Ptr ()', id `CInt' } -> `Int' #}
 instance (impl ~ (Event -> IO Int)) => Op (Handle ()) ValueOutput orig impl where
   runOp _ _ valueOutput event = withRef valueOutput (\p -> valueOutputHandle' p (fromIntegral . fromEnum $ event))
-{# fun unsafe Fl_Value_Output_soft as soft' { id `Ptr ()' } -> `Bool' cToBool #}
+{# fun Fl_Value_Output_soft as soft' { id `Ptr ()' } -> `Bool' cToBool #}
 instance (impl ~ ( IO (Bool))) => Op (GetSoft ()) ValueOutput orig impl where
   runOp _ _ value_input = withRef value_input $ \value_inputPtr -> soft' value_inputPtr
-{# fun unsafe Fl_Value_Output_resize as resize' { id `Ptr ()',`Int',`Int',`Int',`Int' } -> `()' #}
+{# fun Fl_Value_Output_resize as resize' { id `Ptr ()',`Int',`Int',`Int',`Int' } -> `()' #}
 instance (impl ~ (Rectangle ->  IO ())) => Op (Resize ()) ValueOutput orig impl where
   runOp _ _ value_input rectangle = let (x_pos', y_pos', width', height') = fromRectangle rectangle in withRef value_input $ \value_inputPtr -> resize' value_inputPtr x_pos' y_pos' width' height'
-{# fun unsafe Fl_Value_Output_set_soft as setSoft' { id `Ptr ()',cFromBool `Bool' } -> `()' #}
+{# fun Fl_Value_Output_set_soft as setSoft' { id `Ptr ()',cFromBool `Bool' } -> `()' #}
 instance (impl ~ (Bool->  IO ())) => Op (SetSoft ()) ValueOutput orig impl where
   runOp _ _ value_input s = withRef value_input $ \value_inputPtr -> setSoft' value_inputPtr s
-{# fun unsafe Fl_Value_Output_textfont as textfont' { id `Ptr ()' } -> `Font' cToFont #}
+{# fun Fl_Value_Output_textfont as textfont' { id `Ptr ()' } -> `Font' cToFont #}
 instance (impl ~ ( IO (Font))) => Op (GetTextfont ()) ValueOutput orig impl where
   runOp _ _ value_input = withRef value_input $ \value_inputPtr -> textfont' value_inputPtr
-{# fun unsafe Fl_Value_Output_set_textfont as setTextfont' { id `Ptr ()',`Int' } -> `()' #}
-instance (impl ~ (Int ->  IO ())) => Op (SetTextfont ()) ValueOutput orig impl where
-  runOp _ _ value_input v = withRef value_input $ \value_inputPtr -> setTextfont' value_inputPtr v
-{# fun unsafe Fl_Value_Output_textsize as textsize' { id `Ptr ()' } -> `CInt' id #}
+{# fun Fl_Value_Output_set_textfont as setTextfont' { id `Ptr ()',`Int' } -> `()' #}
+instance (impl ~ (Font ->  IO ())) => Op (SetTextfont ()) ValueOutput orig impl where
+  runOp _ _ value_input (Font v) = withRef value_input $ \value_inputPtr -> setTextfont' value_inputPtr v
+{# fun Fl_Value_Output_textsize as textsize' { id `Ptr ()' } -> `CInt' id #}
 instance (impl ~ ( IO (FontSize))) => Op (GetTextsize ()) ValueOutput orig impl where
   runOp _ _ value_input = withRef value_input $ \value_inputPtr -> textsize' value_inputPtr >>= return . FontSize
-{# fun unsafe Fl_Value_Output_set_textsize as setTextsize' { id `Ptr ()',id `CInt' } -> `()' #}
+{# fun Fl_Value_Output_set_textsize as setTextsize' { id `Ptr ()',id `CInt' } -> `()' #}
 instance (impl ~ (FontSize ->  IO ())) => Op (SetTextsize ()) ValueOutput orig impl where
   runOp _ _ value_input (FontSize v) = withRef value_input $ \value_inputPtr -> setTextsize' value_inputPtr v
-{# fun unsafe Fl_Value_Output_textcolor as textcolor' { id `Ptr ()' } -> `Color' cToColor #}
+{# fun Fl_Value_Output_textcolor as textcolor' { id `Ptr ()' } -> `Color' cToColor #}
 instance (impl ~ ( IO (Color))) => Op (GetTextcolor ()) ValueOutput orig impl where
   runOp _ _ value_input = withRef value_input $ \value_inputPtr -> textcolor' value_inputPtr
-{# fun unsafe Fl_Value_Output_set_textcolor as setTextcolor' { id `Ptr ()', id `CInt' } -> `()' #}
+{# fun Fl_Value_Output_set_textcolor as setTextcolor' { id `Ptr ()', id `CInt' } -> `()' #}
 instance (impl ~ (Color ->  IO ())) => Op (SetTextcolor ()) ValueOutput orig impl where
   runOp _ _ value_input (Color v) = withRef value_input $ \value_inputPtr -> setTextcolor' value_inputPtr (fromIntegral v)
 
 -- $functions
 -- @
---
 -- destroy :: 'Ref' 'ValueOutput' -> 'IO' ()
 --
--- getSoft :: 'Ref' 'ValueOutput' -> 'IO' 'Bool'
+-- getSoft :: 'Ref' 'ValueOutput' -> 'IO' ('Bool')
 --
--- getTextcolor :: 'Ref' 'ValueOutput' -> 'IO' 'Color'
+-- getTextcolor :: 'Ref' 'ValueOutput' -> 'IO' ('Color')
 --
--- getTextfont :: 'Ref' 'ValueOutput' -> 'IO' 'Font'
+-- getTextfont :: 'Ref' 'ValueOutput' -> 'IO' ('Font')
 --
--- getTextsize :: 'Ref' 'ValueOutput' -> 'IO' 'FontSize'
+-- getTextsize :: 'Ref' 'ValueOutput' -> 'IO' ('FontSize')
 --
 -- handle :: 'Ref' 'ValueOutput' -> 'Event' -> 'IO' 'Int'
 --
 -- resize :: 'Ref' 'ValueOutput' -> 'Rectangle' -> 'IO' ()
 --
--- setSoft :: 'Ref' 'ValueOutput' -> 'Bool' -> 'IO' ()
+-- setSoft :: 'Ref' 'ValueOutput' -> 'Bool'>- 'IO' ()
 --
 -- setTextcolor :: 'Ref' 'ValueOutput' -> 'Color' -> 'IO' ()
 --
--- setTextfont :: 'Ref' 'ValueOutput' -> 'Int' -> 'IO' ()
+-- setTextfont :: 'Ref' 'ValueOutput' -> 'Font' -> 'IO' ()
 --
 -- setTextsize :: 'Ref' 'ValueOutput' -> 'FontSize' -> 'IO' ()
 -- @

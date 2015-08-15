@@ -37,6 +37,12 @@ EXPORT {
     ~Fl_DerivedValuator();
   };
 #endif
+#ifndef INTERNAL_LINKAGE
+  typedef enum Valuator_Type {
+    FL_VERTICALC = 0,
+    FL_HORIZONTALC = 1
+  } Valuator_Type;
+#endif
   FL_EXPORT_C(int,Fl_Valuator_handle)(fl_Widget self, int event);
   FL_EXPORT_C(int,Fl_Valuator_handle_super)(fl_Widget self, int event);
   FL_EXPORT_C(fl_Group,     Fl_Valuator_parent)(fl_Valuator valuator);

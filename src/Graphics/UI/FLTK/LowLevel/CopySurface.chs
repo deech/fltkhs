@@ -30,24 +30,26 @@ copySurfaceNew (Size (Width w') (Height h')) = copySurfaceNew' w' h' >>= toRef
 instance (impl ~ (IO ())) => Op (Destroy ()) CopySurface orig impl where
   runOp _ _ copy_surface = withRef copy_surface $ \copy_surfacePtr -> copySurfaceDestroy' copy_surfacePtr
 
-{# fun unsafe Fl_Copy_Surface_class_name as className' { id `Ptr () ' } -> `String' #}
+{# fun Fl_Copy_Surface_class_name as className' { id `Ptr () ' } -> `String' unsafeFromCString #}
 instance (impl ~ (IO (String))) => Op (ClassName ()) Image orig impl where
   runOp _ _ copy_surface = withRef copy_surface $ \copy_surfacePtr -> className' copy_surfacePtr
 
-{# fun unsafe Fl_Copy_Surface_set_current as setCurrent' { id `Ptr ()' } -> `()' #}
+{# fun Fl_Copy_Surface_set_current as setCurrent' { id `Ptr ()' } -> `()' #}
 instance (impl ~ ( IO ())) => Op (SetCurrent ()) CopySurface orig impl where
   runOp _ _ copy_surface = withRef copy_surface $ \copy_surfacePtr -> setCurrent' copy_surfacePtr
 
-{# fun unsafe Fl_Copy_Surface_draw as draw' { id `Ptr ()',id `Ptr ()',`Int',`Int' } -> `()' #}
+{# fun Fl_Copy_Surface_draw as draw' { id `Ptr ()',id `Ptr ()',`Int',`Int' } -> `()' #}
 instance (Parent a Widget, impl ~ ( Ref a  -> Position -> IO ())) => Op (Draw ()) CopySurface orig impl where
   runOp _ _ copy_surface widget (Position (X delta_x) (Y delta_y)) = withRef copy_surface $ \copy_surfacePtr -> withRef widget $ \widgetPtr -> draw' copy_surfacePtr widgetPtr delta_x delta_y
 
 -- $CopySurfacefunctions
 --
 -- @
+-- className :: 'Ref' 'Image' -> 'IO' ('String')
+--
 -- destroy :: 'Ref' 'CopySurface' -> 'IO' ()
 --
--- draw:: ('Parent' a 'Widget') => 'Ref' 'CopySurface' -> 'Ref' a -> 'Position' -> 'IO' ())
+-- draw:: ('Parent' a 'Widget') => 'Ref' 'CopySurface' -> 'Ref' a -> 'Position' -> 'IO' ()
 --
 -- setCurrent :: 'Ref' 'CopySurface' -> 'IO' ()
 -- @

@@ -3,7 +3,8 @@
 module Graphics.UI.FLTK.LowLevel.Counter
     (
      -- * Constructor
-     counterNew
+     counterNew,
+     CounterType(..)
      -- * Hierarchy
      --
      -- $hierarchy
@@ -17,6 +18,7 @@ where
 #include "Fl_ExportMacros.h"
 #include "Fl_Types.h"
 #include "Fl_CounterC.h"
+#include "Fl_WidgetC.h"
 import C2HS hiding (cFromEnum, cFromBool, cToBool,cToEnum)
 import Foreign.C.Types
 import Graphics.UI.FLTK.LowLevel.Fl_Enumerations
@@ -24,7 +26,13 @@ import Graphics.UI.FLTK.LowLevel.Fl_Types
 import Graphics.UI.FLTK.LowLevel.Utils
 import Graphics.UI.FLTK.LowLevel.Hierarchy
 import Graphics.UI.FLTK.LowLevel.Dispatch
-
+#c
+enum CounterType {
+  NormalCounterType = FL_NORMAL_COUNTERC,
+  SimpleCounterType = FL_SIMPLE_COUNTERC
+};
+#endc
+{#enum CounterType {} deriving (Show, Eq) #}
 {# fun Fl_Counter_New as counterNew' { `Int',`Int',`Int',`Int' } -> `Ptr ()' id #}
 {# fun Fl_Counter_New_WithLabel as counterNewWithLabel' { `Int',`Int',`Int',`Int', unsafeToCString `String'} -> `Ptr ()' id #}
 counterNew :: Rectangle -> Maybe String -> IO (Ref Counter)
@@ -45,27 +53,33 @@ instance (impl ~ (IO ())) => Op (Destroy ()) Counter orig impl where
 {#fun Fl_Counter_handle as counterHandle' { id `Ptr ()', id `CInt' } -> `Int' #}
 instance (impl ~ (Event -> IO Int)) => Op (Handle ()) Counter orig impl where
   runOp _ _ counter event = withRef counter (\p -> counterHandle' p (fromIntegral . fromEnum $ event))
-{# fun unsafe Fl_Counter_lstep as lstep' { id `Ptr ()',`Double' } -> `()' #}
+{# fun Fl_Counter_lstep as lstep' { id `Ptr ()',`Double' } -> `()' #}
 instance (impl ~ (Double ->  IO ())) => Op (SetLstep ()) Counter orig impl where
   runOp _ _ counter lstep = withRef counter $ \counterPtr -> lstep' counterPtr lstep
-{# fun unsafe Fl_Counter_set_textfont as setTextfont' { id `Ptr ()',cFromFont `Font' } -> `()' #}
+{# fun Fl_Counter_set_textfont as setTextfont' { id `Ptr ()',cFromFont `Font' } -> `()' #}
 instance (impl ~ (Font ->  IO ())) => Op (SetTextfont ()) Counter orig impl where
   runOp _ _ counter text = withRef counter $ \counterPtr -> setTextfont' counterPtr text
-{# fun unsafe Fl_Counter_textfont as textfont' { id `Ptr ()' } -> `Font' cToFont #}
+{# fun Fl_Counter_textfont as textfont' { id `Ptr ()' } -> `Font' cToFont #}
 instance (impl ~ ( IO (Font))) => Op (GetTextfont ()) Counter orig impl where
   runOp _ _ counter = withRef counter $ \counterPtr -> textfont' counterPtr
-{# fun unsafe Fl_Counter_set_textsize as setTextsize' { id `Ptr ()', id `CInt' } -> `()' #}
+{# fun Fl_Counter_set_textsize as setTextsize' { id `Ptr ()', id `CInt' } -> `()' #}
 instance (impl ~ (FontSize ->  IO ())) => Op (SetTextsize ()) Counter orig impl where
   runOp _ _ counter (FontSize text) = withRef counter $ \counterPtr -> setTextsize' counterPtr text
-{# fun unsafe Fl_Counter_textsize as textsize' { id `Ptr ()' } -> `CInt' id #}
+{# fun Fl_Counter_textsize as textsize' { id `Ptr ()' } -> `CInt' id #}
 instance (impl ~ ( IO (FontSize))) => Op (GetTextsize ()) Counter orig impl where
   runOp _ _ counter = withRef counter $ \counterPtr -> textsize' counterPtr >>= return . FontSize
-{# fun unsafe Fl_Counter_set_textcolor as setTextcolor' { id `Ptr ()',cFromColor `Color' } -> `()' #}
+{# fun Fl_Counter_set_textcolor as setTextcolor' { id `Ptr ()',cFromColor `Color' } -> `()' #}
 instance (impl ~ (Color ->  IO ())) => Op (SetTextcolor ()) Counter orig impl where
   runOp _ _ counter text = withRef counter $ \counterPtr -> setTextcolor' counterPtr text
-{# fun unsafe Fl_Counter_textcolor as textcolor' { id `Ptr ()' } -> `Color' cToColor #}
+{# fun Fl_Counter_textcolor as textcolor' { id `Ptr ()' } -> `Color' cToColor #}
 instance (impl ~ ( IO (Color))) => Op (GetTextcolor ()) Counter orig impl where
   runOp _ _ counter = withRef counter $ \counterPtr -> textcolor' counterPtr
+{# fun Fl_Widget_set_type as setType' { id `Ptr ()',`Word8' } -> `()' supressWarningAboutRes #}
+instance (impl ~ (CounterType ->  IO ())) => Op (SetType ()) Counter orig impl where
+  runOp _ _ widget t = withRef widget $ \widgetPtr -> setType' widgetPtr (fromInteger $ toInteger $ fromEnum t)
+{# fun Fl_Widget_type as type' { id `Ptr ()' } -> `Word8' #}
+instance (impl ~ IO (CounterType)) => Op (GetType_ ()) Counter orig impl where
+  runOp _ _ widget = withRef widget $ \widgetPtr -> type' widgetPtr >>= return . toEnum . fromInteger . toInteger
 
 -- $Counterfunctions
 --

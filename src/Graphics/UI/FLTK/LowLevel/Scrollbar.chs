@@ -16,6 +16,7 @@ where
 #include "Fl_ExportMacros.h"
 #include "Fl_Types.h"
 #include "Fl_ScrollbarC.h"
+#include "Fl_WidgetC.h"
 import C2HS hiding (cFromEnum, cFromBool, cToBool,cToEnum)
 import Foreign.C.Types
 import Graphics.UI.FLTK.LowLevel.Fl_Enumerations
@@ -41,15 +42,15 @@ instance (impl ~ (IO ())) => Op (Destroy ()) Scrollbar orig impl where
     scrollbarDestroy' winPtr
     return nullPtr
 
-{# fun unsafe Fl_Scrollbar_scrollvalue as scrollvalue' { id `Ptr ()',`Int',`Int',`Int',`Int' } -> `Int' #}
-instance (impl ~ (Int -> Int -> Int -> Int ->  IO (Int))) => Op (SetValue ()) Scrollbar orig impl where
+{# fun Fl_Scrollbar_scrollvalue as scrollvalue' { id `Ptr ()',`Int',`Int',`Int',`Int' } -> `Int' #}
+instance (impl ~ (Int -> Int -> Int -> Int ->  IO (Int))) => Op (SetScrollValue ()) Scrollbar orig impl where
   runOp _ _ slider pos size first total = withRef slider $ \sliderPtr -> scrollvalue' sliderPtr pos size first total
 
-{# fun unsafe Fl_Scrollbar_set_linesize as setLinesize' { id `Ptr ()',`Int' } -> `()' #}
+{# fun Fl_Scrollbar_set_linesize as setLinesize' { id `Ptr ()',`Int' } -> `()' #}
 instance (impl ~ (LineSize ->  IO ())) => Op (SetLinesize ()) Scrollbar orig impl where
   runOp _ _ slider (LineSize i) = withRef slider $ \sliderPtr -> setLinesize' sliderPtr i
 
-{# fun unsafe Fl_Scrollbar_linesize as linesize' { id `Ptr ()' } -> `Int' #}
+{# fun Fl_Scrollbar_linesize as linesize' { id `Ptr ()' } -> `Int' #}
 instance (impl ~ ( IO LineSize)) => Op (GetLinesize ()) Scrollbar orig impl where
   runOp _ _ slider = withRef slider $ \sliderPtr -> linesize' sliderPtr >>= return . LineSize
 
@@ -58,18 +59,28 @@ instance (impl ~ ( IO LineSize)) => Op (GetLinesize ()) Scrollbar orig impl wher
 instance (impl ~ (Event -> IO Int)) => Op (Handle ()) Scrollbar orig impl where
   runOp _ _ scrollbar event = withRef scrollbar (\p -> scrollbarHandle' p (fromIntegral . fromEnum $ event))
 
+{# fun Fl_Widget_set_type as setType' { id `Ptr ()',`Word8' } -> `()' supressWarningAboutRes #}
+instance (impl ~ (ScrollbarType ->  IO ())) => Op (SetType ()) Scrollbar orig impl where
+  runOp _ _ widget t = withRef widget $ \widgetPtr -> setType' widgetPtr (fromInteger $ toInteger $ fromEnum t)
+{# fun Fl_Widget_type as type' { id `Ptr ()' } -> `Word8' #}
+instance (impl ~ IO (ScrollbarType)) => Op (GetType_ ()) Scrollbar orig impl where
+  runOp _ _ widget = withRef widget $ \widgetPtr -> type' widgetPtr >>= return . toEnum . fromInteger . toInteger
+
 -- $functions
 -- @
---
 -- destroy :: 'Ref' 'Scrollbar' -> 'IO' ()
 --
 -- getLinesize :: 'Ref' 'Scrollbar' -> 'IO' 'LineSize'
+--
+-- getType_ :: 'Ref' 'Scrollbar' -> 'IO' ('ScrollbarType')
 --
 -- handle :: 'Ref' 'Scrollbar' -> 'Event' -> 'IO' 'Int'
 --
 -- setLinesize :: 'Ref' 'Scrollbar' -> 'LineSize' -> 'IO' ()
 --
--- setValue :: 'Ref' 'Scrollbar' -> 'Int' -> 'Int' -> 'Int' -> 'Int' -> 'IO' 'Int'
+-- setScrollValue :: 'Ref' 'Scrollbar' -> 'Int' -> 'Int' -> 'Int' -> 'Int' -> 'IO' ('Int')
+--
+-- setType :: 'Ref' 'Scrollbar' -> 'ScrollbarType' -> 'IO' ()
 -- @
 
 -- $hierarchy

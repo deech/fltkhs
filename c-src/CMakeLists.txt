@@ -9,7 +9,7 @@ SET(SourceFiles
 	Fl_RollerC.cpp
 	Fl_DialC.cpp
 	Fl_CounterC.cpp
-	Utils.cpp
+	UtilsC.cpp
 	xC.cpp
 	fl_utf8C.cpp
 	glC.cpp
@@ -74,6 +74,7 @@ SET(SourceFiles
 	fl_show_colormapC.cpp
 	Fl_Single_WindowC.cpp
 	Fl_SliderC.cpp
+	Fl_SpinnerC.cpp
 	Fl_Sys_Menu_BarC.cpp
 	Fl_TableC.cpp
 	Fl_Table_RowC.cpp

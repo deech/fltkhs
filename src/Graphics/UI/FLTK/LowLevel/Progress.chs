@@ -39,22 +39,22 @@ instance (impl ~ ( IO ())) => Op (Destroy ()) Progress orig impl where
   runOp _ _ win = swapRef win $ \winPtr -> do
     progressDestroy' winPtr
     return nullPtr
-{# fun unsafe Fl_Progress_set_maximum as setMaximum' { id `Ptr ()',`Float' } -> `()' #}
+{# fun Fl_Progress_set_maximum as setMaximum' { id `Ptr ()',`Float' } -> `()' #}
 instance (impl ~ (Float ->  IO ())) => Op (SetMaximum ()) Progress orig impl where
   runOp _ _ progress v = withRef progress $ \progressPtr -> setMaximum' progressPtr v
-{# fun unsafe Fl_Progress_maximum as maximum' { id `Ptr ()' } -> `Float' #}
+{# fun Fl_Progress_maximum as maximum' { id `Ptr ()' } -> `Float' #}
 instance (impl ~ ( IO (Float))) => Op (GetMaximum ()) Progress orig impl where
   runOp _ _ progress = withRef progress $ \progressPtr -> maximum' progressPtr
-{# fun unsafe Fl_Progress_set_minimum as setMinimum' { id `Ptr ()',`Float' } -> `()' #}
+{# fun Fl_Progress_set_minimum as setMinimum' { id `Ptr ()',`Float' } -> `()' #}
 instance (impl ~ (Float ->  IO ())) => Op (SetMinimum ()) Progress orig impl where
   runOp _ _ progress v = withRef progress $ \progressPtr -> setMinimum' progressPtr v
-{# fun unsafe Fl_Progress_minimum as minimum' { id `Ptr ()' } -> `Float' #}
+{# fun Fl_Progress_minimum as minimum' { id `Ptr ()' } -> `Float' #}
 instance (impl ~ ( IO (Float))) => Op (GetMinimum ()) Progress orig impl where
   runOp _ _ progress = withRef progress $ \progressPtr -> minimum' progressPtr
-{# fun unsafe Fl_Progress_set_value as setValue' { id `Ptr ()',`Float' } -> `()' #}
+{# fun Fl_Progress_set_value as setValue' { id `Ptr ()',`Float' } -> `()' #}
 instance (impl ~ (Float ->  IO ())) => Op (SetValue ()) Progress orig impl where
   runOp _ _ progress v = withRef progress $ \progressPtr -> setValue' progressPtr v
-{# fun unsafe Fl_Progress_value as value' { id `Ptr ()' } -> `Float' #}
+{# fun Fl_Progress_value as value' { id `Ptr ()' } -> `Float' #}
 instance (impl ~ ( IO (Float))) => Op (GetValue ()) Progress orig impl where
   runOp _ _ progress = withRef progress $ \progressPtr -> value' progressPtr
 

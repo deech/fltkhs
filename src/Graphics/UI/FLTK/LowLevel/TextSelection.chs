@@ -21,28 +21,28 @@ import Graphics.UI.FLTK.LowLevel.Utils
 import Graphics.UI.FLTK.LowLevel.Hierarchy
 import Graphics.UI.FLTK.LowLevel.Dispatch
 
-{# fun unsafe Fl_Text_Selection_set as set' { id `Ptr ()',`Int',`Int' } -> `()' #}
+{# fun Fl_Text_Selection_set as set' { id `Ptr ()',`Int',`Int' } -> `()' #}
 instance  ( impl ~ (BufferRange -> IO ())) => Op (Set ()) TextSelection orig impl where
   runOp _ _ text_selection (BufferRange (BufferOffset start'') (BufferOffset end'')) = withRef text_selection $ \text_selectionPtr -> set' text_selectionPtr start'' end''
-{# fun unsafe Fl_Text_Selection_update as update' { id `Ptr ()',`Int',`Int',`Int' } -> `()' #}
+{# fun Fl_Text_Selection_update as update' { id `Ptr ()',`Int',`Int',`Int' } -> `()' #}
 instance  ( impl ~ (BufferOffset -> Int -> Int ->  IO ())) => Op (Update ()) TextSelection orig impl where
   runOp _ _ text_selection (BufferOffset pos) ndeleted ninserted = withRef text_selection $ \text_selectionPtr -> update' text_selectionPtr pos ndeleted ninserted
-{# fun unsafe Fl_Text_Selection_start as start' { id `Ptr ()' } -> `Int' #}
+{# fun Fl_Text_Selection_start as start' { id `Ptr ()' } -> `Int' #}
 instance  ( impl ~ IO BufferOffset) => Op (Start ()) TextSelection orig impl where
   runOp _ _ text_selection = withRef text_selection $ \text_selectionPtr -> start' text_selectionPtr >>= return . BufferOffset
-{# fun unsafe Fl_Text_Selection_end as end' { id `Ptr ()' } -> `Int' #}
+{# fun Fl_Text_Selection_end as end' { id `Ptr ()' } -> `Int' #}
 instance  ( impl ~ (IO (BufferOffset))) => Op (End ()) TextSelection orig impl where
   runOp _ _ text_selection = withRef text_selection $ \text_selectionPtr -> end' text_selectionPtr >>= return . BufferOffset
-{# fun unsafe Fl_Text_Selection_selected as selected' { id `Ptr ()' } -> `Bool' cToBool #}
+{# fun Fl_Text_Selection_selected as selected' { id `Ptr ()' } -> `Bool' cToBool #}
 instance  ( impl ~ IO (Bool)) => Op (Selected ()) TextSelection orig impl where
   runOp _ _ text_selection = withRef text_selection $ \text_selectionPtr -> selected' text_selectionPtr
-{# fun unsafe Fl_Text_Selection_set_selected as setSelected' { id `Ptr ()', cFromBool `Bool' } -> `()' #}
+{# fun Fl_Text_Selection_set_selected as setSelected' { id `Ptr ()', cFromBool `Bool' } -> `()' #}
 instance  ( impl ~ (Bool ->  IO ())) => Op (SetSelected ()) TextSelection orig impl where
   runOp _ _ text_selection b = withRef text_selection $ \text_selectionPtr -> setSelected' text_selectionPtr b
-{# fun unsafe Fl_Text_Selection_includes as includes' { id `Ptr ()',`Int' } -> `Bool' cToBool #}
+{# fun Fl_Text_Selection_includes as includes' { id `Ptr ()',`Int' } -> `Bool' cToBool #}
 instance  ( impl ~ (BufferOffset ->  IO (Bool))) => Op (Includes ()) TextSelection orig impl where
   runOp _ _ text_selection (BufferOffset pos) = withRef text_selection $ \text_selectionPtr -> includes' text_selectionPtr pos
-{# fun unsafe Fl_Text_Selection_position as position' { id `Ptr ()', id `Ptr CInt', id `Ptr CInt' } -> `Int' #}
+{# fun Fl_Text_Selection_position as position' { id `Ptr ()', id `Ptr CInt', id `Ptr CInt' } -> `Int' #}
 instance  ( impl ~ (IO (Maybe BufferRange))) => Op (GetPosition ()) TextSelection orig impl where
   runOp _ _ text_selection =
     withRef text_selection $ \text_selectionPtr ->

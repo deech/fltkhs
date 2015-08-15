@@ -379,11 +379,20 @@ EXPORT {
   FL_EXPORT_C(fl_Tree_Item,Fl_Tree_first_selected_item)(fl_Tree tree){
     return (static_cast<Fl_Tree*>(tree))->first_selected_item();
   }
+  FL_EXPORT_C(fl_Tree_Item,Fl_Tree_last_selected_item)(fl_Tree tree){
+    return (static_cast<Fl_Tree*>(tree))->last_selected_item();
+  }
   FL_EXPORT_C(fl_Tree_Item,Fl_Tree_next_selected_item)(fl_Tree tree){
     return (static_cast<Fl_Tree*>(tree))->next_selected_item();
   }
   FL_EXPORT_C(fl_Tree_Item,Fl_Tree_next_selected_item_with_item)(fl_Tree tree,fl_Tree_Item item){
     return (static_cast<Fl_Tree*>(tree))->next_selected_item((static_cast<Fl_Tree_Item*>(item)));
+  }
+  FL_EXPORT_C(fl_Tree_Item,Fl_Tree_next_selected_item_with_item_direction)(fl_Tree tree,fl_Tree_Item item, int dir){
+    return (static_cast<Fl_Tree*>(tree))->next_selected_item((static_cast<Fl_Tree_Item*>(item)), dir);
+  }
+  FL_EXPORT_C(fl_Tree_Item, Fl_Tree_next_item)(fl_Tree tree,fl_Tree_Item item, int dir, int visible) {
+    return (static_cast<Fl_Tree*>(tree))->next_item((static_cast<Fl_Tree_Item*>(item)), dir, visible);
   }
   FL_EXPORT_C(int,Fl_Tree_open_with_item)(fl_Tree tree,fl_Tree_Item item){
     return (static_cast<Fl_Tree*>(tree))->open((static_cast<Fl_Tree_Item*>(item)));

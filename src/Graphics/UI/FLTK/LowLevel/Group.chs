@@ -3,7 +3,9 @@
 module Graphics.UI.FLTK.LowLevel.Group
     (
     -- * Constructor
-     groupNew
+     groupNew,
+     groupSetCurrent,
+     groupCurrent,
      -- * Hierarchy
      --
      -- $hierarchy
@@ -24,6 +26,15 @@ import Graphics.UI.FLTK.LowLevel.Fl_Types
 import Graphics.UI.FLTK.LowLevel.Utils
 import Graphics.UI.FLTK.LowLevel.Hierarchy
 
+{# fun Fl_Group_set_current as groupSetCurrent' { id `Ptr ()' } -> `()' #}
+{# fun Fl_Group_current as groupCurrent' {} -> `Ptr ()' id #}
+
+groupSetCurrent :: (Parent a Group) => Maybe (Ref a) -> IO ()
+groupSetCurrent group = withMaybeRef group $ \groupPtr -> groupSetCurrent' groupPtr
+
+groupCurrent :: IO (Maybe (Ref Group))
+groupCurrent = groupCurrent' >>= toMaybeRef
+
 {# fun Fl_Group_New as groupNew' {  `Int',`Int', `Int', `Int'} -> `Ptr ()' id #}
 {# fun Fl_Group_New_WithLabel as groupNewWithLabel' { `Int',`Int',`Int',`Int',unsafeToCString `String'} -> `Ptr ()' id #}
 groupNew :: Rectangle -> Maybe String -> IO (Ref Group)
@@ -38,19 +49,19 @@ instance (impl ~ ( IO ())) => Op (Destroy ()) Group orig impl where
   runOp _ _ group = withRef group $ \groupPtr -> groupDestroy' groupPtr
 
 
-{# fun unsafe Fl_Group_draw_child as drawChild' { id `Ptr ()',id `Ptr ()' } -> `()' #}
+{# fun Fl_Group_draw_child as drawChild' { id `Ptr ()',id `Ptr ()' } -> `()' #}
 instance (Parent a Widget, impl ~ (Ref a -> IO ())) => Op (DrawChild ()) Group orig impl where
   runOp _ _ group widget = withRef group $ \groupPtr -> withRef widget $ \widgetPtr -> drawChild' groupPtr widgetPtr
 
-{# fun unsafe Fl_Group_draw_children as drawChildren' { id `Ptr ()' } -> `()' #}
+{# fun Fl_Group_draw_children as drawChildren' { id `Ptr ()' } -> `()' #}
 instance (impl ~ (IO ())) => Op (DrawChildren ()) Group orig impl where
   runOp _ _ group = withRef group $ \groupPtr -> drawChildren' groupPtr
 
-{# fun unsafe Fl_Group_draw_outside_label as drawOutsideLabel' { id `Ptr ()',id `Ptr ()' } -> `()' #}
+{# fun Fl_Group_draw_outside_label as drawOutsideLabel' { id `Ptr ()',id `Ptr ()' } -> `()' #}
 instance (Parent a Widget, impl ~ (Ref a -> IO ())) => Op (DrawOutsideLabel ()) Group orig impl where
   runOp _ _ group widget = withRef group $ \groupPtr -> withRef widget $ \widgetPtr -> drawOutsideLabel' groupPtr widgetPtr
 
-{# fun unsafe Fl_Group_update_child as updateChild' { id `Ptr ()',id `Ptr ()' } -> `()' #}
+{# fun Fl_Group_update_child as updateChild' { id `Ptr ()',id `Ptr ()' } -> `()' #}
 instance (Parent a Widget, impl ~ (Ref a -> IO ())) => Op (UpdateChild ()) Group orig impl where
   runOp _ _ group widget = withRef group $ \groupPtr -> withRef widget $ \widgetPtr -> updateChild' groupPtr widgetPtr
 
@@ -87,8 +98,8 @@ instance (impl ~ (IO ())) => Op (Clear ()) Group orig impl where
   runOp _ _ group = withRef group $ \groupPtr -> clear' groupPtr
 
 {# fun Fl_Group_set_resizable as setResizable' { id `Ptr ()',id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance (Parent a Widget, impl ~ (Ref a -> IO ())) => Op (SetResizable ()) Group orig impl where
-  runOp _ _ group o = withRef group $ \groupPtr -> withRef o $ \oPtr -> setResizable' groupPtr oPtr
+instance (Parent a Widget, impl ~ (Maybe ( Ref a ) -> IO ())) => Op (SetResizable ()) Group orig impl where
+  runOp _ _ group o = withRef group $ \groupPtr -> withMaybeRef o $ \oPtr -> setResizable' groupPtr oPtr
 
 instance (impl ~ IO ()) => Op (SetNotResizable ()) Group orig impl where
   runOp _ _ group = withRef group $ \groupPtr -> setResizable' groupPtr nullPtr
@@ -122,8 +133,8 @@ instance (Parent a Widget, impl ~ (Ref a ->  IO ())) => Op (Focus ()) Group orig
   runOp _ _ group w = withRef group $ \groupPtr -> withRef w $ \wPtr -> focus' groupPtr wPtr
 
 {# fun Fl_Group__ddfdesign_kludge as ddfdesignKludge' { id `Ptr ()' } -> `Ptr ()' id #}
-instance (impl ~ (IO (Ref Widget))) => Op (DdfdesignKludge ()) Group orig impl where
-  runOp _ _ group = withRef group $ \groupPtr -> ddfdesignKludge' groupPtr >>= toRef
+instance (impl ~ (IO (Maybe (Ref Widget)))) => Op (DdfdesignKludge ()) Group orig impl where
+  runOp _ _ group = withRef group $ \groupPtr -> ddfdesignKludge' groupPtr >>= toMaybeRef
 
 {# fun Fl_Group_insert_with_before as insertWithBefore' { id `Ptr ()',id `Ptr ()',id `Ptr ()' } -> `()' supressWarningAboutRes #}
 instance (Parent a Widget, impl ~ (Ref a -> Ref b ->  IO ())) => Op (InsertWithBefore ()) Group orig impl where
@@ -137,62 +148,62 @@ instance (impl ~ (IO [Ref Widget])) => Op (GetArray ()) Group orig impl where
                     arrayToRefs childArrayPtr numChildren
 
 {# fun Fl_Group_child as child' { id `Ptr ()',`Int' } -> `Ptr ()' id #}
-instance (impl ~ (Int ->  IO (Ref Widget))) => Op (GetChild ()) Group orig impl where
-  runOp _ _ self n = withRef self $ \selfPtr -> child' selfPtr n >>= toRef
+instance (impl ~ (Int ->  IO (Maybe (Ref Widget)))) => Op (GetChild ()) Group orig impl where
+  runOp _ _ self n = withRef self $ \selfPtr -> child' selfPtr n >>= toMaybeRef
 
 -- $groupfunctions
 -- @
--- add:: ('Parent' a 'Widget') => 'Ref' 'Group' -> 'Ref' a -> 'IO' ())
+-- add:: ('Parent' a 'Widget') => 'Ref' 'Group' -> 'Ref' a-> 'IO' ()
 --
--- addResizable:: ('Parent' a 'Widget') => 'Ref' 'Group' -> 'Ref' a -> 'IO' ())
+-- addResizable:: ('Parent' a 'Widget') => 'Ref' 'Group' -> 'Ref' a -> 'IO' ()
 --
 -- begin :: 'Ref' 'Group' -> 'IO' ()
 --
--- children :: 'Ref' 'Group' -> 'IO' 'Int'
+-- children :: 'Ref' 'Group' -> 'IO' ('Int')
 --
 -- clear :: 'Ref' 'Group' -> 'IO' ()
 --
--- clipChildren :: 'Ref' 'Group' -> 'IO' 'Int'
+-- clipChildren :: 'Ref' 'Group' -> 'IO' ('Int')
 --
--- ddfdesignKludge :: 'Ref' 'Group' -> 'IO' ('Ref' 'Widget')
+-- ddfdesignKludge :: 'Ref' 'Group' -> 'IO' ('Maybe' ('Ref' 'Widget'))
 --
 -- destroy :: 'Ref' 'Group' -> 'IO' ()
 --
--- drawChild:: ('Parent' a 'Widget') => 'Ref' 'Group' -> 'Ref' a -> 'IO' ())
+-- drawChild:: ('Parent' a 'Widget') => 'Ref' 'Group' -> 'Ref' a -> 'IO' ()
 --
 -- drawChildren :: 'Ref' 'Group' -> 'IO' ()
 --
--- drawOutsideLabel:: ('Parent' a 'Widget') => 'Ref' 'Group' -> 'Ref' a -> 'IO' ())
+-- drawOutsideLabel:: ('Parent' a 'Widget') => 'Ref' 'Group' -> 'Ref' a -> 'IO' ()
 --
 -- end :: 'Ref' 'Group' -> 'IO' ()
 --
--- find:: ('Parent' a 'Widget') => 'Ref' 'Group' -> 'Ref' a -> 'IO' 'Int')
+-- find:: ('Parent' a 'Widget') => 'Ref' 'Group' -> 'Ref' a -> 'IO' ('Int')
 --
--- focus:: ('Parent' a 'Widget') => 'Ref' 'Group' -> 'Ref' a -> 'IO' ())
+-- focus:: ('Parent' a 'Widget') => 'Ref' 'Group' -> 'Ref' a -> 'IO' ()
 --
 -- getArray :: 'Ref' 'Group' -> 'IO' ['Ref' 'Widget']
 --
--- getChild :: 'Ref' 'Group' -> 'Int' -> 'IO' ('Ref' 'Widget')
+-- getChild :: 'Ref' 'Group' -> 'Int' -> 'IO' ('Maybe' ('Ref' 'Widget'))
 --
 -- getResizable :: 'Ref' 'Group' -> 'IO' ('Maybe' ('Ref' 'Widget'))
 --
 -- initSizes :: 'Ref' 'Group' -> 'IO' ()
 --
--- insert:: ('Parent' a 'Widget') => 'Ref' 'Group' -> 'Ref' a -> 'Int' -> 'IO' ())
+-- insert:: ('Parent' a 'Widget') => 'Ref' 'Group' -> 'Ref' a-> 'Int' -> 'IO' ()
 --
--- insertWithBefore:: ('Parent' a 'Widget') => 'Ref' 'Group' -> 'Ref' a -> 'Ref' b -> 'IO' ())
+-- insertWithBefore:: ('Parent' a 'Widget') => 'Ref' 'Group' -> 'Ref' a -> 'Ref' b -> 'IO' ()
 --
 -- removeIndex :: 'Ref' 'Group' -> 'Int' -> 'IO' ()
 --
--- removeWidget:: ('Parent' a 'Widget') => 'Ref' 'Group' -> 'Ref' a -> 'IO' ())
+-- removeWidget:: ('Parent' a 'Widget') => 'Ref' 'Group' -> 'Ref' a -> 'IO' ()
 --
 -- setClipChildren :: 'Ref' 'Group' -> 'Int' -> 'IO' ()
 --
 -- setNotResizable :: 'Ref' 'Group' -> 'IO' ()
 --
--- setResizable:: ('Parent' a 'Widget') => 'Ref' 'Group' -> 'Ref' a -> 'IO' ())
+-- setResizable:: ('Parent' a 'Widget') => 'Ref' 'Group' -> 'Maybe' ( 'Ref' a ) -> 'IO' ()
 --
--- updateChild:: ('Parent' a 'Widget') => 'Ref' 'Group' -> 'Ref' a -> 'IO' ())
+-- updateChild:: ('Parent' a 'Widget') => 'Ref' 'Group' -> 'Ref' a -> 'IO' ()
 -- @
 
 -- $hierarchy

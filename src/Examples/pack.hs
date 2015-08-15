@@ -53,7 +53,7 @@ main = do
   _ <- buttonNew (toRectangle (255, 255, 25, 25)) (Just "b23")
   _ <- buttonNew (toRectangle (265, 265, 25, 25)) (Just "b24")
   end pack
-  setResizable w w
+  setResizable w (Just w)
   end scrolled
   lb1 <- lightButtonNew (toRectangle (10, 305, 165, 25)) (Just "HORIZONTAL")
   setType lb1 RadioButtonType

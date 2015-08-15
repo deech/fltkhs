@@ -1,4 +1,7 @@
-{-# LANGUAGE GADTs, UndecidableInstances, MultiParamTypeClasses, FunctionalDependencies, FlexibleInstances, FlexibleContexts, ScopedTypeVariables, OverlappingInstances, EmptyDataDecls #-}
+{-# LANGUAGE GADTs, UndecidableInstances, MultiParamTypeClasses, FunctionalDependencies, FlexibleInstances, FlexibleContexts, ScopedTypeVariables, EmptyDataDecls, CPP #-}
+#ifndef OVERLAPPING_INSTANCES_DEPRECATED
+{-# LANGUAGE OverlappingInstances #-}
+#endif
 module Graphics.UI.FLTK.LowLevel.Dispatch
        (
          -- * FindOp
@@ -31,8 +34,16 @@ import Graphics.UI.FLTK.LowLevel.Fl_Types
 data Same
 data Different
 class TypeEqual x y b | x y -> b
-instance TypeEqual a a Same
-instance Different ~ b => TypeEqual x y b
+instance
+#ifdef OVERLAPPING_INSTANCES_DEPRECATED
+  {-# OVERLAPPING #-}
+#endif
+  TypeEqual a a Same
+instance
+#ifdef OVERLAPPING_INSTANCES_DEPRECATED
+  {-# OVERLAPPABLE #-}
+#endif
+  Different ~ b => TypeEqual x y b
 
 -- Move down a nested type hierarchy
 -- eg. Tail (w (x (y (z ())))) (x (y (z ())))

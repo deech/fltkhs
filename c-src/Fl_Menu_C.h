@@ -33,6 +33,7 @@ EXPORT {
     virtual Fl_Gl_Window* as_gl_window();
     virtual Fl_Group* as_group();
     virtual Fl_Group* as_group_super();
+    const Fl_Menu_Item* get_menu_item_by_index(int i);
     Fl_DerivedMenu_(int X, int Y, int W, int H, const char *l, fl_Menu__Virtual_Funcs* funcs);
     Fl_DerivedMenu_(int X, int Y, int W, int H, fl_Menu__Virtual_Funcs* funcs);
     ~Fl_DerivedMenu_();
@@ -161,7 +162,7 @@ EXPORT {
   //  FL_EXPORT_C(int, Fl_Menu__find_index_with_cb)(fl_Menu_ menu_, fl_Callback cb); Don't know how to do this
   FL_EXPORT_C( fl_Menu_Item, Fl_Menu__test_shortcut)(fl_Menu_ menu_);
   FL_EXPORT_C(void, Fl_Menu__global)(fl_Menu_ menu_);
-  FL_EXPORT_C( fl_Menu_Item, Fl_Menu__menu)(fl_Menu_ menu_);
+  FL_EXPORT_C(fl_Menu_Item, Fl_Menu__menu)(fl_Menu_ menu_);
   FL_EXPORT_C(void, Fl_Menu__menu_with_m)(fl_Menu_ menu_,  fl_Menu_Item* item, int size);
   FL_EXPORT_C(void, Fl_Menu__copy)(fl_Menu_ menu_,  fl_Menu_Item m);
   FL_EXPORT_C(void, Fl_Menu__copy_with_user_data)(fl_Menu_ menu_,  fl_Menu_Item m, void* user_data);
@@ -192,6 +193,7 @@ EXPORT {
   FL_EXPORT_C(fl_Menu_Item, Fl_Menu__mvalue)(fl_Menu_ menu_);
   FL_EXPORT_C(int, Fl_Menu__value)(fl_Menu_ menu_);
   FL_EXPORT_C(int, Fl_Menu__value_with_item)(fl_Menu_ menu_,  fl_Menu_Item item);
+  FL_EXPORT_C(fl_Menu_Item, Fl_Menu__get_menu_item_by_index)(fl_Menu_ menu_,  int i);
   FL_EXPORT_C(int, Fl_Menu__value_with_index)(fl_Menu_ menu_, int index);
   FL_EXPORT_C(char*, Fl_Menu__text)(fl_Menu_ menu_);
   FL_EXPORT_C(char*, Fl_Menu__text_with_index)(fl_Menu_ menu_, int i);

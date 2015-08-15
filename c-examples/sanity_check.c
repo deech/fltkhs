@@ -16,6 +16,7 @@
 #include <Fl_ClockC.h>
 #include <Fl_Color_ChooserC.h>
 #include <Fl_CounterC.h>
+#include <Fl_SpinnerC.h>
 #include <Fl_DeviceC.h>
 #include <Fl_Double_WindowC.h>
 #include <Fl_DialC.h>

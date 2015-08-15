@@ -1,4 +1,9 @@
 {-# LANGUAGE CPP, EmptyDataDecls, ExistentialQuantification #-}
+
+#ifdef CALLSTACK_AVAILABLE
+{-# LANGUAGE ImplicitParams #-}
+#endif
+
 module Graphics.UI.FLTK.LowLevel.Fl_Types where
 #include "Fl_Types.h"
 #include "Fl_Text_EditorC.h"
@@ -9,15 +14,22 @@ import qualified Foreign.ForeignPtr.Unsafe as Unsafe
 import Debug.Trace
 import Control.Exception
 import C2HS hiding (cFromEnum, cFromBool, cToBool,cToEnum)
+#ifdef CALLSTACK_AVAILABLE
+import GHC.Stack
+#endif
 import qualified Data.ByteString as B
 #c
   enum SliderType {
     VertSliderType = FL_VERT_SLIDER,
     HorSliderType = FL_HOR_SLIDER,
-    VertFillSlideType = FL_VERT_FILL_SLIDER,
+    VertFillSliderType = FL_VERT_FILL_SLIDER,
     HorFillSliderType = FL_HOR_FILL_SLIDER,
     VertNiceSliderType = FL_VERT_NICE_SLIDER,
     HorNiceSliderType = FL_HOR_NICE_SLIDER
+  };
+  enum ScrollbarType {
+    VertScrollbar = FL_VERT_SLIDER,
+    HorScrollbar = FL_HOR_SLIDER
   };
   enum BrowserType {
     NormalBrowserType = FL_NORMAL_BROWSER,
@@ -70,9 +82,11 @@ import qualified Data.ByteString as B
     TreeReasonReselected = FL_TREE_REASON_RESELECTED,
 #endif /*FLTK_ABI_VERSION*/
     TreeReasonOpened = FL_TREE_REASON_OPENED,
-    TreeReasonClosed = FL_TREE_REASON_CLOSED
+    TreeReasonClosed = FL_TREE_REASON_CLOSED,
+    TreeReasonDragged = FL_TREE_REASON_DRAGGED
   };
   enum MenuItemFlag{
+     MenuItemNormal = 0,
      MenuItemInactive = FL_MENU_INACTIVE,
      MenuItemToggle = FL_MENU_TOGGLE,
      MenuItemValue = FL_MENU_VALUE,
@@ -84,13 +98,13 @@ import qualified Data.ByteString as B
      MenuItemHorizontal = FL_MENU_HORIZONTAL
   };
   enum ScrollbarMode {
-    Horizontal = HORIZONTAL,
-    Vertical = VERTICAL,
-    Both = BOTH,
-    AlwaysOn = ALWAYS_ON,
-    HorizontalAlways = HORIZONTAL_ALWAYS,
-    VerticalAlways = VERTICAL_ALWAYS,
-    BothAlways = BOTH_ALWAYS
+    HorizontalScrollBar = HORIZONTAL,
+    VerticalScrollBar = VERTICAL,
+    BothScrollBar = BOTH,
+    AlwaysOnScrollBar = ALWAYS_ON,
+    HorizontalAlwaysScrollBar = HORIZONTAL_ALWAYS,
+    VerticalAlwaysScrollBar = VERTICAL_ALWAYS,
+    BothAlwaysScrollBar = BOTH_ALWAYS
   };
   enum CursorType {
     NormalCursor = NORMAL_CURSOR,
@@ -186,8 +200,16 @@ import qualified Data.ByteString as B
     PackHorizontal = PACK_HORIZONTAL
   };
   typedef FL_SOCKET Fl_Socket;
+
+  enum ColorChooserMode {
+    RgbMode = 0,
+    ByteMode = 1,
+    HexMode = 2,
+    HsvMode = 3
+  };
 #endc
 {#enum SliderType {} deriving (Show, Eq) #}
+{#enum ScrollbarType {} deriving (Show, Eq) #}
 {#enum BrowserType {} deriving (Show, Eq) #}
 {#enum SortType {} deriving (Show, Eq) #}
 {#enum FileBrowserType {} deriving (Show, Eq) #}
@@ -197,7 +219,8 @@ import qualified Data.ByteString as B
 {#enum ButtonType {} deriving (Show, Eq) #}
 {#enum TreeReasonType {} deriving (Show, Eq) #}
 {#enum MenuItemFlag {} deriving (Show, Eq, Ord) #}
-newtype MenuItemFlags = MenuItemFlags [MenuItemFlag]
+{#enum ColorChooserMode {} deriving (Show, Eq, Ord) #}
+newtype MenuItemFlags = MenuItemFlags [MenuItemFlag] deriving Show
 allMenuItemFlags :: [MenuItemFlag]
 allMenuItemFlags =
   [
@@ -221,11 +244,11 @@ allMenuItemFlags =
 {#enum TableContext {} deriving (Show, Eq) #}
 {#enum LinePosition {} deriving (Show, Eq)  #}
 {#enum ScrollbarMode {} deriving (Show, Eq) #}
-data StyleTableEntry = StyleTableEntry (Maybe Color) (Maybe Font) (Maybe FontSize)
+data StyleTableEntry = StyleTableEntry (Maybe Color) (Maybe Font) (Maybe FontSize) deriving Show
 
 {#enum PackType{} deriving (Show, Eq, Ord) #}
 
-data GLUTproc = GLUTproc {#type GLUTproc#}
+data GLUTproc = GLUTproc {#type GLUTproc#} deriving Show
 newtype GLUTIdleFunction = GLUTIdleFunction (FunPtr (IO ()))
 newtype GLUTMenuStateFunction = GLUTMenuStateFunction (FunPtr (CInt -> IO()))
 newtype GLUTMenuStatusFunction = GLUTMenuStatusFunction
@@ -238,13 +261,12 @@ type FlShortcut = {#type Fl_Shortcut #}
 type FlColor    = {#type Fl_Color #}
 type FlFont     = {#type Fl_Font #}
 type FlAlign    = {#type Fl_Align #}
-type RGB        = (Word8, Word8, Word8)
 type LineDelta  = Maybe Int
 type Delta      = Maybe Int
 type FlIntPtr   = {#type fl_intptr_t #}
 type FlUIntPtr  = {#type fl_uintptr_t#}
 type ID         = {#type ID#}
-data Ref a      = Ref !(ForeignPtr (Ptr ())) deriving Show
+data Ref a      = Ref !(ForeignPtr (Ptr ())) deriving (Eq, Show)
 data FunRef     = FunRef !(FunPtr ())
 -- * The FLTK widget hierarchy
 data CBase parent
@@ -274,19 +296,19 @@ type UnfinishedStyleCbPrim       = CInt -> Ptr () -> IO ()
 
 newtype Width = Width Int deriving (Eq, Show)
 newtype Height = Height Int deriving (Eq, Show)
-newtype Depth = Depth Int
-newtype LineSize = LineSize Int
+newtype Depth = Depth Int deriving Show
+newtype LineSize = LineSize Int deriving Show
 newtype X = X Int deriving (Eq, Show)
 newtype Y = Y Int deriving (Eq, Show)
-newtype ByX = ByX Double
-newtype ByY = ByY Double
-newtype Angle = Angle CShort
+newtype ByX = ByX Double deriving Show
+newtype ByY = ByY Double deriving Show
+newtype Angle = Angle CShort deriving Show
 data Position = Position X Y deriving (Eq,Show)
-data CountDirection = CountUp | CountDown
-data DPI = DPI Float Float
-newtype TextDisplayStyle = TextDisplayStyle CInt
-newtype BufferOffset = BufferOffset Int
-data BufferRange = BufferRange BufferOffset BufferOffset
+data CountDirection = CountUp | CountDown deriving Show
+data DPI = DPI Float Float deriving Show
+newtype TextDisplayStyle = TextDisplayStyle CInt deriving Show
+newtype BufferOffset = BufferOffset Int deriving Show
+data BufferRange = BufferRange BufferOffset BufferOffset deriving Show
 statusToBufferRange :: (Ptr CInt -> Ptr CInt -> IO Int) -> IO (Maybe BufferRange)
 statusToBufferRange f =
   alloca $ \start' ->
@@ -299,27 +321,30 @@ statusToBufferRange f =
       end'' <- peekIntConv end'
       return (Just (BufferRange (BufferOffset start'') (BufferOffset end'')))
 
+data ColorChooserRGB = Decimals (Between0And1, Between0And1, Between0And1) | Words RGB deriving Show
 data Rectangle = Rectangle Position Size deriving (Eq,Show)
-data ByXY = ByXY ByX ByY
-data Intersection = Contained | Partial
+data ByXY = ByXY ByX ByY deriving Show
+data Intersection = Contained | Partial deriving Show
 data Size = Size Width Height deriving (Eq, Show)
 data KeyType = SpecialKeyType SpecialKey | NormalKeyType Char deriving (Show, Eq)
-data ShortcutKeySequence = ShortcutKeySequence [EventState] KeyType
-data Shortcut = KeySequence ShortcutKeySequence | KeyFormat String
-data KeyBindingKeySequence = KeyBindingKeySequence (Maybe [EventState]) KeyType
+data ShortcutKeySequence = ShortcutKeySequence [EventState] KeyType deriving Show
+data Shortcut = KeySequence ShortcutKeySequence | KeyFormat String deriving Show
+data KeyBindingKeySequence = KeyBindingKeySequence (Maybe [EventState]) KeyType deriving Show
+newtype Between0And1 = Between0And1 Double deriving Show
+newtype Between0And6 = Between0And6 Double deriving Show
 data ScreenLocation = Intersect Rectangle
                     | ScreenNumber Int
-                    | ScreenPosition Position
-newtype FontSize = FontSize CInt
-newtype PixmapHs = PixmapHs [B.ByteString]
-data BitmapHs = BitmapHs B.ByteString Size
-data Clipboard = InternalClipboard | SharedClipboard
-data UnknownError = UnknownError
-data NotFound = NotFound
+                    | ScreenPosition Position deriving Show
+newtype FontSize = FontSize CInt deriving Show
+newtype PixmapHs = PixmapHs [String] deriving Show
+data BitmapHs = BitmapHs B.ByteString Size deriving Show
+data Clipboard = InternalClipboard | SharedClipboard deriving Show
+data UnknownError = UnknownError deriving Show
+data NotFound = NotFound deriving Show
 data OutOfRange = OutOfRange deriving Show
 successOrOutOfRange :: a -> Bool -> (a -> IO b) -> IO (Either OutOfRange b)
 successOrOutOfRange a pred' tr = if pred' then return (Left OutOfRange) else tr a >>= return . Right
-data NoChange = NoChange
+data NoChange = NoChange deriving Show
 successOrNoChange :: Int -> Either NoChange ()
 successOrNoChange status = if (status == 0) then Left NoChange else Right ()
 data DataProcessingError = NoDataProcessedError | PartialDataProcessedError | UnknownDataError Int
@@ -364,14 +389,26 @@ withForeignPtrs fptrs io = do
   mapM_ touchForeignPtr fptrs
   return r
 
+#ifdef CALLSTACK_AVAILABLE
+toRefPtr :: (?loc :: CallStack) => Ptr (Ptr a) -> IO (Ptr a)
+#else
 toRefPtr :: Ptr (Ptr a) -> IO (Ptr a)
+#endif
 toRefPtr ptrToRefPtr = do
   refPtr <- peek ptrToRefPtr
   if (refPtr == nullPtr)
-   then error "Ref does not exist"
+#ifdef CALLSTACK_AVAILABLE
+   then error $ "Ref does not exist. " ++ (showCallStack ?loc)
+#else
+   then error "Ref does not exist. "
+#endif
    else return refPtr
 
+#ifdef CALLSTACK_AVAILABLE
+withRef :: (?loc :: CallStack) => Ref a -> (Ptr b -> IO c) -> IO c
+#else
 withRef :: Ref a -> (Ptr b -> IO c) -> IO c
+#endif
 withRef (Ref fptr) f =
    throwStackOnError $
      withForeignPtr fptr

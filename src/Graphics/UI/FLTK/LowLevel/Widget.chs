@@ -91,7 +91,7 @@ fillCustomWidgetFunctionStruct structPtr (CustomWidgetFuncs _draw' _handle' _res
       toCallbackPrim `orNullFunPtr` _show'       >>= {#set fl_Widget_Virtual_Funcs->show#} structPtr
       toCallbackPrim `orNullFunPtr` _hide'       >>= {#set fl_Widget_Virtual_Funcs->hide#} structPtr
 
-{# fun unsafe Fl_Widget_default_virtual_funcs as virtualFuncs' {} -> `Ptr ()' id #}
+{# fun Fl_Widget_default_virtual_funcs as virtualFuncs' {} -> `Ptr ()' id #}
 -- | Given a record of functions, return a pointer to a struct with function pointers back
 -- to those functions.
 --
@@ -171,11 +171,11 @@ instance (impl ~  IO (Maybe (Ref Group))) => Op (GetParent ()) Widget orig impl 
   runOp _ _ widget = withRef widget widgetParent' >>= toMaybeRef
 
 {#fun Fl_Widget_set_parent as widgetSetParent' { id `Ptr ()', id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance (Parent a Group, impl ~ (Ref a -> IO ())) => Op (SetParent ()) Widget orig impl where
+instance (Parent a Group, impl ~ (Maybe (Ref a) -> IO ())) => Op (SetParent ()) Widget orig impl where
   runOp _ _ widget group =
       withRef widget
       (\widgetPtr ->
-        withRef group (\groupPtr ->
+        withMaybeRef group (\groupPtr ->
                         widgetSetParent' widgetPtr groupPtr
                       )
       )
@@ -187,7 +187,7 @@ instance (impl ~ (Word8 ->  IO ())) => Op (SetType ()) Widget orig impl where
   runOp _ _ widget t = withRef widget $ \widgetPtr -> setType' widgetPtr t
 {# fun Fl_Widget_draw_label as drawLabel' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
 {# fun Fl_Widget_draw_label_with_xywh_alignment as drawLabelWithXywhAlignment' { id `Ptr ()',`Int',`Int',`Int',`Int', `Int' } -> `()' supressWarningAboutRes #}
-instance (impl ~ (Maybe (Rectangle,Alignments)->  IO ())) => Op (DrawLabel ()) Widget orig impl where
+instance (impl ~ (Maybe (Rectangle,Alignments) ->  IO ())) => Op (DrawLabel ()) Widget orig impl where
   runOp _ _ widget Nothing = withRef widget $ \widgetPtr -> drawLabel' widgetPtr
   runOp _ _ widget (Just (rectangle,align_)) = withRef widget $ \widgetPtr -> do
     let (x_pos,y_pos,w_pos,h_pos) = fromRectangle rectangle
@@ -251,7 +251,7 @@ instance (impl ~ IO (Color)) => Op (GetSelectionColor ()) Widget orig impl where
 {# fun Fl_Widget_set_selection_color as setSelectionColor' { id `Ptr ()',cFromColor `Color' } -> `()' supressWarningAboutRes #}
 instance (impl ~ (Color ->  IO ())) => Op (SetSelectionColor ()) Widget orig impl where
   runOp _ _ widget a = withRef widget $ \widgetPtr -> setSelectionColor' widgetPtr a
-{# fun Fl_Widget_label as label' { id `Ptr ()' } -> `String' #}
+{# fun Fl_Widget_label as label' { id `Ptr ()' } -> `String' unsafeFromCString #}
 instance (impl ~ IO (String)) => Op (GetLabel ()) Widget orig impl where
   runOp _ _ widget = withRef widget $ \widgetPtr -> label' widgetPtr
 {# fun Fl_Widget_copy_label as copyLabel' { id `Ptr ()', unsafeToCString `String' } -> `()' supressWarningAboutRes #}
@@ -288,15 +288,15 @@ instance (impl ~ ( FontSize ->  IO ())) => Op (SetLabelsize ()) Widget orig impl
 instance (impl ~ (IO (Ref Image))) => Op (GetImage ()) Widget orig impl where
   runOp _ _ widget = withRef widget $ \widgetPtr -> image' widgetPtr
 {# fun Fl_Widget_set_image as setImage' { id `Ptr ()',id `Ptr ()'} -> `()' supressWarningAboutRes #}
-instance (Parent a Image, impl ~ (Ref a ->  IO ())) => Op (SetImage ()) Widget orig impl where
-  runOp _ _ widget pix = withRef widget $ \widgetPtr -> withRef pix $ \pixPtr -> setImage' widgetPtr pixPtr
+instance (Parent a Image, impl ~ (Maybe( Ref a ) ->  IO ())) => Op (SetImage ()) Widget orig impl where
+  runOp _ _ widget pix = withRef widget $ \widgetPtr -> withMaybeRef pix $ \pixPtr -> setImage' widgetPtr pixPtr
 {# fun Fl_Widget_deimage as deimage' { id `Ptr ()' } -> `(Ref Image)' unsafeToRef #}
 instance (impl ~ (IO (Ref Image))) => Op (GetDeimage ()) Widget orig impl where
   runOp _ _ widget = withRef widget $ \widgetPtr -> deimage' widgetPtr
 {# fun Fl_Widget_set_deimage as setDeimage' { id `Ptr ()',id `Ptr ()'} -> `()' supressWarningAboutRes #}
-instance (Parent a Image, impl ~ (Ref a ->  IO ())) => Op (SetDeimage ()) Widget orig impl where
-  runOp _ _ widget pix = withRef widget $ \widgetPtr -> withRef pix $ \pixPtr -> setDeimage' widgetPtr pixPtr
-{# fun Fl_Widget_tooltip as tooltip' { id `Ptr ()' } -> `String' #}
+instance (Parent a Image, impl ~ (Maybe( Ref a ) ->  IO ())) => Op (SetDeimage ()) Widget orig impl where
+  runOp _ _ widget pix = withRef widget $ \widgetPtr -> withMaybeRef pix $ \pixPtr -> setDeimage' widgetPtr pixPtr
+{# fun Fl_Widget_tooltip as tooltip' { id `Ptr ()' } -> `String' unsafeFromCString #}
 instance (impl ~ (IO (String))) => Op (GetTooltip ()) Widget orig impl where
   runOp _ _ widget = withRef widget $ \widgetPtr -> tooltip' widgetPtr
 {# fun Fl_Widget_copy_tooltip as copyTooltip' { id `Ptr ()', unsafeToCString `String' } -> `()' supressWarningAboutRes #}
@@ -313,6 +313,9 @@ instance (impl ~ IO [When]) => Op (GetWhen ()) Widget orig impl where
 instance (impl ~ ( [When] ->  IO ())) => Op (SetWhen ()) Widget orig impl where
   runOp _ _ widget i = withRef widget $ \widgetPtr ->
     setWhen' widgetPtr (fromIntegral . combine $ i)
+{# fun Fl_Widget_do_callback as do_callback' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
+instance (impl ~ (IO ())) => Op (DoCallback ()) Widget orig impl where
+  runOp _ _ widget = withRef widget $ \widgetPtr -> do_callback' widgetPtr
 {# fun Fl_Widget_visible as visible' { id `Ptr ()' } -> `Bool' cToBool #}
 instance (impl ~ (IO Bool)) => Op (GetVisible ()) Widget orig impl where
   runOp _ _ widget = withRef widget $ \widgetPtr -> visible' widgetPtr
@@ -388,8 +391,8 @@ instance (impl ~ (IO ())) => Op (ClearVisibleFocus ()) Widget orig impl where
 {# fun Fl_Widget_modify_visible_focus as modifyVisibleFocus' { id `Ptr ()',`Int' } -> `()' supressWarningAboutRes #}
 instance (impl ~ ( Int ->  IO ())) => Op (ModifyVisibleFocus ()) Widget orig impl where
   runOp _ _ widget v = withRef widget $ \widgetPtr -> modifyVisibleFocus' widgetPtr v
-{# fun Fl_Widget_visible_focus as visibleFocus' { id `Ptr ()' } -> `Int' #}
-instance (impl ~ (IO (Int))) => Op (GetVisibleFocus ()) Widget orig impl where
+{# fun Fl_Widget_visible_focus as visibleFocus' { id `Ptr ()' } -> `Bool' cToBool #}
+instance (impl ~ (IO (Bool))) => Op (GetVisibleFocus ()) Widget orig impl where
   runOp _ _ widget = withRef widget $ \widgetPtr -> visibleFocus' widgetPtr
 {# fun Fl_Widget_contains as contains' { id `Ptr ()',id `Ptr ()' } -> `Int' #}
 instance (Parent a Widget, impl ~  (Ref a ->  IO Int)) => Op (Contains ()) Widget orig impl where
@@ -424,11 +427,11 @@ instance (impl ~ ( Word8 -> Rectangle ->  IO ())) => Op (GetDamageInsideWidget (
 instance (impl ~ ( IO (Size))) => Op (MeasureLabel ()) Widget orig impl where
   runOp _ _ widget = withRef widget $ \widgetPtr -> measureLabel' widgetPtr >>= \(width, height) -> return $ Size (Width width) (Height height)
 {# fun Fl_Widget_window as window' { id `Ptr ()' } -> `Ptr ()' id #}
-instance (impl ~ (IO (Ref Window))) => Op (GetWindow ()) Widget orig impl where
-  runOp _ _ widget = withRef widget $ \widgetPtr -> window' widgetPtr >>= toRef
+instance (impl ~ (IO (Maybe (Ref Window)))) => Op (GetWindow ()) Widget orig impl where
+  runOp _ _ widget = withRef widget $ \widgetPtr -> window' widgetPtr >>= toMaybeRef
 {# fun Fl_Widget_top_window as topWindow' { id `Ptr ()' } -> `Ptr ()' id #}
-instance (impl ~ (IO (Ref Window))) => Op (GetTopWindow ()) Widget orig impl where
-  runOp _ _ widget = withRef widget $ \widgetPtr -> (topWindow' widgetPtr) >>= toRef
+instance (impl ~ (IO (Maybe (Ref Window)))) => Op (GetTopWindow ()) Widget orig impl where
+  runOp _ _ widget = withRef widget $ \widgetPtr -> (topWindow' widgetPtr) >>= toMaybeRef
 {# fun Fl_Widget_top_window_offset as topWindowOffset' { id `Ptr ()',alloca- `Int' peekIntConv*,alloca- `Int' peekIntConv* } -> `()' #}
 instance (impl ~ ( IO (Position))) => Op (GetTopWindowOffset ()) Widget orig impl where
   runOp _ _ widget = withRef widget $ \widgetPtr -> topWindowOffset' widgetPtr >>= \(x_pos,y_pos) -> return $ Position (X x_pos) (Y y_pos)
@@ -443,12 +446,16 @@ instance (impl ~ ( Rectangle -> IO ())) => Op (Resize ()) Widget orig impl where
     let (x_pos,y_pos,w_pos,h_pos) = fromRectangle rectangle
     resize' widgetPtr x_pos y_pos w_pos h_pos
 {# fun Fl_Widget_set_callback as setCallback' { id `Ptr ()', id `FunPtr CallbackWithUserDataPrim'} -> `()' supressWarningAboutRes #}
-
 instance (impl ~ ((Ref orig -> IO ()) -> IO ())) => Op (SetCallback ()) Widget orig impl where
   runOp _ _ widget callback = withRef widget $ \widgetPtr -> do
     ptr <- toCallbackPrimWithUserData callback
     setCallback' widgetPtr (castFunPtr ptr)
 
+{# fun Fl_Widget_has_callback as hasCallback' { id `Ptr ()' } -> `CInt' #}
+instance (impl ~ (IO (Bool))) => Op (HasCallback ()) Widget orig impl where
+  runOp _ _ widget = withRef widget $ \widgetPtr -> do
+    res <- hasCallback' widgetPtr
+    return $ if (res == 0) then False else True
 {# fun Fl_Widget_draw_box as widgetDrawBox' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
 {# fun Fl_Widget_draw_box_with_tc as widgetDrawBoxWithTC' { id `Ptr ()', cFromEnum `Boxtype', cFromColor`Color' } -> `()' supressWarningAboutRes #}
 {# fun Fl_Widget_draw_box_with_txywhc as widgetDrawBoxWithTXywhC' { id `Ptr ()', cFromEnum `Boxtype', `Int',`Int',`Int',`Int', cFromColor `Color' } -> `()' supressWarningAboutRes #}
@@ -480,11 +487,11 @@ instance (impl ~ ( Maybe (Boxtype, Rectangle) -> IO ())) => Op (DrawFocus ()) Wi
 --
 -- activate :: 'Ref' 'Widget' -> 'IO' ()
 --
--- active :: 'Ref' 'Widget' -> 'IO' 'Bool'
+-- active :: 'Ref' 'Widget' -> 'IO' ('Bool')
 --
--- activeR :: 'Ref' 'Widget' -> 'IO' 'Bool'
+-- activeR :: 'Ref' 'Widget' -> 'IO' ('Bool')
 --
--- changed :: 'Ref' 'Widget' -> 'IO' 'Bool'
+-- changed :: 'Ref' 'Widget' -> 'IO' ('Bool')
 --
 -- clearActive :: 'Ref' 'Widget' -> 'IO' ()
 --
@@ -500,7 +507,7 @@ instance (impl ~ ( Maybe (Boxtype, Rectangle) -> IO ())) => Op (DrawFocus ()) Wi
 --
 -- clearVisibleFocus :: 'Ref' 'Widget' -> 'IO' ()
 --
--- contains:: ('Parent' a 'Widget') => 'Ref' 'Widget' -> 'Ref' a -> 'IO' 'Int')
+-- contains:: ('Parent' a 'Widget') => 'Ref' 'Widget' -> 'Ref' a -> 'IO' 'Int'
 --
 -- copyLabel :: 'Ref' 'Widget' -> 'String' -> 'IO' ()
 --
@@ -518,15 +525,15 @@ instance (impl ~ ( Maybe (Boxtype, Rectangle) -> IO ())) => Op (DrawFocus ()) Wi
 --
 -- drawFocus :: 'Ref' 'Widget' -> 'Maybe' ('Boxtype', 'Rectangle') -> 'IO' ()
 --
--- drawLabel :: 'Ref' 'Widget' -> 'Maybe' ('Rectangle', 'Alignments') -> 'IO' ()
+-- drawLabel :: 'Ref' 'Widget' -> 'Maybe' ('Rectangle,Alignments') -> 'IO' ()
 --
 -- getAlign :: 'Ref' 'Widget' -> 'IO' 'Alignments'
 --
--- getBox :: 'Ref' 'Widget' -> 'IO' 'Boxtype'
+-- getBox :: 'Ref' 'Widget' -> 'IO' ('Boxtype')
 --
--- getColor :: 'Ref' 'Widget' -> 'IO' 'Color'
+-- getColor :: 'Ref' 'Widget' -> 'IO' ('Color')
 --
--- getDamage :: 'Ref' 'Widget' -> 'IO' 'Word8'
+-- getDamage :: 'Ref' 'Widget' -> 'IO' ('Word8')
 --
 -- getDamageInsideWidget :: 'Ref' 'Widget' -> 'Word8' -> 'Rectangle' -> 'IO' ()
 --
@@ -534,61 +541,63 @@ instance (impl ~ ( Maybe (Boxtype, Rectangle) -> IO ())) => Op (DrawFocus ()) Wi
 --
 -- getDeimage :: 'Ref' 'Widget' -> 'IO' ('Ref' 'Image')
 --
--- getH :: 'Ref' 'Widget' -> 'IO' 'Int'
+-- getH :: 'Ref' 'Widget' -> 'IO' ('Int')
 --
 -- getImage :: 'Ref' 'Widget' -> 'IO' ('Ref' 'Image')
 --
--- getLabel :: 'Ref' 'Widget' -> 'IO' 'String'
+-- getLabel :: 'Ref' 'Widget' -> 'IO' ('String')
 --
--- getLabelcolor :: 'Ref' 'Widget' -> 'IO' 'Color'
+-- getLabelcolor :: 'Ref' 'Widget' -> 'IO' ('Color')
 --
--- getLabelfont :: 'Ref' 'Widget' -> 'IO' 'Font'
+-- getLabelfont :: 'Ref' 'Widget' -> 'IO' ('Font')
 --
--- getLabelsize :: 'Ref' 'Widget' -> 'IO' 'FontSize'
+-- getLabelsize :: 'Ref' 'Widget' -> 'IO' ('FontSize')
 --
--- getLabeltype :: 'Ref' 'Widget' -> 'IO' 'Labeltype'
+-- getLabeltype :: 'Ref' 'Widget' -> 'IO' ('Labeltype')
 --
--- getOutput :: 'Ref' 'Widget' -> 'IO' 'Int'
+-- getOutput :: 'Ref' 'Widget' -> 'IO' ('Int')
 --
 -- getParent :: 'Ref' 'Widget' -> 'IO' ('Maybe' ('Ref' 'Group'))
 --
--- getRectangle:: ('FindOp' orig ('GetX' ()) ('Match' obj), 'FindOp' orig ('GetY' ()) ('Match' obj), 'FindOp' orig ('GetW' ()) ('Match' obj), 'FindOp' orig ('GetH' ()) ('Match' obj), 'Op' ('GetX' ()) obj orig ('IO' 'Int',) 'Op' ('GetY' ()) obj orig ('IO' 'Int',) 'Op' ('GetW' ()) obj orig ('IO' 'Int',) 'Op' ('GetH' ()) obj orig ('IO' 'Int')) => 'Ref' 'Widget' -> 'IO' 'Rectangle')
+-- getRectangle:: ('FindOp' orig ('GetX' ()) ('Match' obj), 'FindOp' orig ('GetY' ()) ('Match' obj), 'FindOp' orig ('GetW' ()) ('Match' obj), 'FindOp' orig ('GetH' ()) ('Match' obj), 'Op' ('GetX' ()) obj orig ('IO' 'Int',) 'Op' ('GetY' ()) obj orig ('IO' 'Int',) 'Op' ('GetW' ()) obj orig ('IO' 'Int',) 'Op' ('GetH' ()) obj orig ('IO' 'Int',)) => 'Ref' 'Widget' -> 'IO' 'Rectangle'
 --
--- getSelectionColor :: 'Ref' 'Widget' -> 'IO' 'Color'
+-- getSelectionColor :: 'Ref' 'Widget' -> 'IO' ('Color')
 --
--- getTooltip :: 'Ref' 'Widget' -> 'IO' 'String'
+-- getTooltip :: 'Ref' 'Widget' -> 'IO' ('String')
 --
--- getTopWindow :: 'Ref' 'Widget' -> 'IO' ('Ref' 'Window')
+-- getTopWindow :: 'Ref' 'Widget' -> 'IO' ('Maybe' ('Ref' 'Window'))
 --
--- getTopWindowOffset :: 'Ref' 'Widget' -> 'IO' 'Position'
+-- getTopWindowOffset :: 'Ref' 'Widget' -> 'IO' ('Position')
 --
--- getType_ :: 'Ref' 'Widget' -> 'IO' 'Word8'
+-- getType_ :: 'Ref' 'Widget' -> 'IO' ('Word8')
 --
 -- getVisible :: 'Ref' 'Widget' -> 'IO' 'Bool'
 --
--- getVisibleFocus :: 'Ref' 'Widget' -> 'IO' 'Int'
+-- getVisibleFocus :: 'Ref' 'Widget' -> 'IO' ('Bool')
 --
 -- getVisibleR :: 'Ref' 'Widget' -> 'IO' 'Bool'
 --
--- getW :: 'Ref' 'Widget' -> 'IO' 'Int'
+-- getW :: 'Ref' 'Widget' -> 'IO' ('Int')
 --
 -- getWhen :: 'Ref' 'Widget' -> 'IO' ['When']
 --
--- getWindow :: 'Ref' 'Widget' -> 'IO' ('Ref' 'Window')
+-- getWindow :: 'Ref' 'Widget' -> 'IO' ('Maybe' ('Ref' 'Window'))
 --
--- getX :: 'Ref' 'Widget' -> 'IO' 'Int'
+-- getX :: 'Ref' 'Widget' -> 'IO' ('Int')
 --
--- getY :: 'Ref' 'Widget' -> 'IO' 'Int'
+-- getY :: 'Ref' 'Widget' -> 'IO' ('Int')
 --
 -- handle :: 'Ref' 'Widget' -> 'Event' -> 'IO' 'Int'
+--
+-- hasCallback :: 'Ref' 'Widget' -> 'IO' ('Bool')
 --
 -- hide :: 'Ref' 'Widget' -> 'IO' ()
 --
 -- hideSuper :: 'Ref' 'Widget' -> 'IO' ()
 --
--- inside:: ('Parent' a 'Widget') => 'Ref' 'Widget' -> 'Ref' a -> 'IO' 'Int')
+-- inside:: ('Parent' a 'Widget') => 'Ref' 'Widget' -> 'Ref' a -> 'IO' ('Int')
 --
--- measureLabel :: 'Ref' 'Widget' -> 'IO' 'Size'
+-- measureLabel :: 'Ref' 'Widget' -> 'IO' ('Size')
 --
 -- modifyVisibleFocus :: 'Ref' 'Widget' -> 'Int' -> 'IO' ()
 --
@@ -614,9 +623,9 @@ instance (impl ~ ( Maybe (Boxtype, Rectangle) -> IO ())) => Op (DrawFocus ()) Wi
 --
 -- setColorWithBgSel :: 'Ref' 'Widget' -> 'Color' -> 'Color' -> 'IO' ()
 --
--- setDeimage:: ('Parent' a 'Image') => 'Ref' 'Widget' -> 'Ref' a -> 'IO' ())
+-- setDeimage:: ('Parent' a 'Image') => 'Ref' 'Widget' -> 'Maybe'( 'Ref' a ) -> 'IO' ()
 --
--- setImage:: ('Parent' a 'Image') => 'Ref' 'Widget' -> 'Ref' a -> 'IO' ())
+-- setImage:: ('Parent' a 'Image') => 'Ref' 'Widget' -> 'Maybe'( 'Ref' a ) -> 'IO' ()
 --
 -- setLabel :: 'Ref' 'Widget' -> 'String' -> 'IO' ()
 --
@@ -630,7 +639,7 @@ instance (impl ~ ( Maybe (Boxtype, Rectangle) -> IO ())) => Op (DrawFocus ()) Wi
 --
 -- setOutput :: 'Ref' 'Widget' -> 'IO' ()
 --
--- setParent:: ('Parent' a 'Group') => 'Ref' 'Widget' -> 'Ref' a -> 'IO' ())
+-- setParent:: ('Parent' a 'Group') => 'Ref' 'Widget' -> 'Maybe' ('Ref' a) -> 'IO' ()
 --
 -- setSelectionColor :: 'Ref' 'Widget' -> 'Color' -> 'IO' ()
 --
@@ -650,7 +659,7 @@ instance (impl ~ ( Maybe (Boxtype, Rectangle) -> IO ())) => Op (DrawFocus ()) Wi
 --
 -- takeFocus :: 'Ref' 'Widget' -> 'IO' ('Either' 'NoChange' ())
 --
--- takesevents :: 'Ref' 'Widget' -> 'IO' 'Bool'
+-- takesevents :: 'Ref' 'Widget' -> 'IO' ('Bool')
 -- @
 
 

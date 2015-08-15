@@ -53,22 +53,22 @@ instance (impl ~ (IO ())) => Op (Destroy ()) Timer orig impl where
 {#fun Fl_Timer_handle as timerHandle' { id `Ptr ()', id `CInt' } -> `Int' #}
 instance (impl ~ (Event -> IO Int)) => Op (Handle ()) Timer orig impl where
   runOp _ _ timer event = withRef timer (\p -> timerHandle' p (fromIntegral . fromEnum $ event))
-{# fun unsafe Fl_Timer_direction as direction' { id `Ptr ()' } -> `CChar' id #}
+{# fun Fl_Timer_direction as direction' { id `Ptr ()' } -> `CChar' id #}
 instance (impl ~ ( IO (CountDirection))) => Op (GetDirection ()) Timer orig impl where
   runOp _ _ adjuster = withRef adjuster $ \adjusterPtr -> direction' adjusterPtr >>= return . ccharToCountDirection
-{# fun unsafe Fl_Timer_set_direction as setDirection' { id `Ptr ()',id `CChar' } -> `()' #}
+{# fun Fl_Timer_set_direction as setDirection' { id `Ptr ()',id `CChar' } -> `()' #}
 instance (impl ~ (CountDirection ->  IO ())) => Op (SetDirection ()) Timer orig impl where
   runOp _ _ adjuster d = withRef adjuster $ \adjusterPtr -> setDirection' adjusterPtr (countDirectionToCChar d)
-{# fun unsafe Fl_Timer_value as value' { id `Ptr ()' } -> `Double' #}
+{# fun Fl_Timer_value as value' { id `Ptr ()' } -> `Double' #}
 instance (impl ~ ( IO (Double))) => Op (GetValue ()) Timer orig impl where
   runOp _ _ adjuster = withRef adjuster $ \adjusterPtr -> value' adjusterPtr
-{# fun unsafe Fl_Timer_set_value as setValue' { id `Ptr ()',`Double' } -> `()' #}
+{# fun Fl_Timer_set_value as setValue' { id `Ptr ()',`Double' } -> `()' #}
 instance (impl ~ (Double ->  IO ())) => Op (SetValue ()) Timer orig impl where
   runOp _ _ adjuster value = withRef adjuster $ \adjusterPtr -> setValue' adjusterPtr value
-{# fun unsafe Fl_Timer_suspended as suspended' { id `Ptr ()' } -> `Bool' cToBool #}
+{# fun Fl_Timer_suspended as suspended' { id `Ptr ()' } -> `Bool' cToBool #}
 instance (impl ~ ( IO (Bool))) => Op (GetSuspended ()) Timer orig impl where
   runOp _ _ adjuster = withRef adjuster $ \adjusterPtr -> suspended' adjusterPtr
-{# fun unsafe Fl_Timer_set_suspended as setSuspended' { id `Ptr ()', cFromBool `Bool' } -> `()' #}
+{# fun Fl_Timer_set_suspended as setSuspended' { id `Ptr ()', cFromBool `Bool' } -> `()' #}
 instance (impl ~ (Bool ->  IO ())) => Op (SetSuspended ()) Timer orig impl where
   runOp _ _ adjuster s = withRef adjuster $ \adjusterPtr -> setSuspended' adjusterPtr s
 

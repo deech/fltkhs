@@ -36,40 +36,43 @@ instance (impl ~ (IO ())) => Op (Destroy ()) Wizard orig impl where
   runOp _ _ wizard = swapRef wizard $ \wizardPtr -> do
     wizardDestroy' wizardPtr
     return nullPtr
-{# fun unsafe Fl_Wizard_next as wizardNext' { id `Ptr ()' } -> `()' #}
+{# fun Fl_Wizard_next as wizardNext' { id `Ptr ()' } -> `()' #}
 instance (impl ~ (IO ())) => Op (Next ()) Wizard orig impl where
   runOp _ _ wizard = withRef wizard $ \wizardPtr -> wizardNext' wizardPtr
-{# fun unsafe Fl_Wizard_prev as wizardPrev' { id `Ptr ()' } -> `()' #}
+{# fun Fl_Wizard_prev as wizardPrev' { id `Ptr ()' } -> `()' #}
 instance (impl ~ (IO ())) => Op (Prev ()) Wizard orig impl where
   runOp _ _ wizard = withRef wizard $ \wizardPtr -> wizardPrev' wizardPtr
-{# fun unsafe Fl_Wizard_set_value as wizardSetValue' { id `Ptr ()', id `Ptr ()' } -> `()' #}
-instance (Parent a Widget, impl ~ ( Ref a -> IO ())) => Op (SetValue ()) Wizard orig impl where
+{# fun Fl_Wizard_set_value as wizardSetValue' { id `Ptr ()', id `Ptr ()' } -> `()' #}
+instance (Parent a Widget, impl ~ ( Maybe ( Ref a ) -> IO ())) => Op (SetValue ()) Wizard orig impl where
   runOp _ _ wizard widget =
     withRef wizard $ \wizardPtr ->
-      withRef widget $ \widgetPtr ->
+      withMaybeRef widget $ \widgetPtr ->
         wizardSetValue' wizardPtr widgetPtr
-{# fun unsafe Fl_Wizard_value as wizardValue' {id `Ptr ()'} -> `Ptr ()' id #}
-instance (impl ~ (IO (Ref Widget))) => Op (GetValue ()) Wizard orig impl where
+{# fun Fl_Wizard_value as wizardValue' {id `Ptr ()'} -> `Ptr ()' id #}
+instance (impl ~ (IO (Maybe (Ref Widget)))) => Op (GetValue ()) Wizard orig impl where
   runOp _ _ wizard =
-    withRef wizard $ \wizardPtr -> wizardValue' wizardPtr >>= toRef
+    withRef wizard $ \wizardPtr -> wizardValue' wizardPtr >>= toMaybeRef
 
 -- $functions
 -- @
 --
 -- destroy :: 'Ref' 'Wizard' -> 'IO' ()
 --
--- getValue :: 'Ref' 'Wizard' -> 'IO' ('Ref' 'Widget')
+-- getValue :: 'Ref' 'Wizard' -> 'IO' ('Maybe' ('Ref' 'Widget'))
 --
 -- next :: 'Ref' 'Wizard' -> 'IO' ()
 --
 -- prev :: 'Ref' 'Wizard' -> 'IO' ()
 --
--- setValue:: ('Parent' a 'Widget') => 'Ref' 'Wizard' -> 'Ref' a -> 'IO' ())
+-- setValue:: ('Parent' a 'Widget') => 'Ref' 'Wizard' -> 'Maybe' ( 'Ref' a ) -> 'IO' ()
 -- @
 
 -- $hierarchy
 -- @
 -- "Graphics.UI.FLTK.LowLevel.Widget"
+--  |
+--  v
+-- "Graphics.UI.FLTK.LowLevel.Group"
 --  |
 --  v
 -- "Graphics.UI.FLTK.LowLevel.Wizard"

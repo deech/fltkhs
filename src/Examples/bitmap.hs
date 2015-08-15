@@ -126,7 +126,7 @@ main = do
                (Size
                  (Width sorceressWidth)
                  (Height sorceressHeight)))
-  setImage button bitmap
+  setImage button (Just bitmap)
   leftb' <- toggleButtonNew (Rectangle (Position (X 25) (Y 50)) (Size (Width 50) (Height 25))) (Just "left")
   rightb' <- toggleButtonNew (Rectangle (Position (X 75) (Y 50)) (Size (Width 50) (Height 25))) (Just "right")
   topb' <- toggleButtonNew (Rectangle (Position (X 125) (Y 50)) (Size (Width 50) (Height 25))) (Just "top")
@@ -144,7 +144,7 @@ main = do
   setCallback insideb' $ buttonCb state'
   setCallback overb' $ buttonCb state'
   setCallback inactb' $ buttonCb state'
-  setResizable window window
+  setResizable window (Just window)
   end window
   showWidget window
   _ <- FL.run

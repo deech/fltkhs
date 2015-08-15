@@ -7,7 +7,7 @@ main :: IO ()
 main = do
   window <- doubleWindowNew (Size (Width 300) (Height 300)) Nothing Nothing
   setBox window NoBox
-  _ <- setResizable window window
+  _ <- setResizable window (Just window)
   tile <- tileNew (toRectangle (0,0,300,300)) Nothing
   box0 <- boxNew (toRectangle (0,0,150,150)) (Just "0") Nothing
   setBox box0 DownBox
@@ -23,7 +23,7 @@ main = do
   setColor box1 (Color 19)
   setLabelsize box1 (FontSize 18)
   setAlign box1 (Alignments [AlignTypeClip, AlignTypeInside, AlignTypeWrap])
-  _ <- setResizable w1 box1
+  _ <- setResizable w1 (Just box1)
   end w1
 
   box2a <- boxNew (toRectangle (0,150,70,150)) (Just "2a") Nothing
@@ -59,7 +59,7 @@ main = do
   tileW <- getW tile
   tileH <- getH tile
   r <- boxNew (toRectangle ((tileX+dx), (tileY+dy), (tileW-(2*dx)), (tileH-(2*dy)))) Nothing Nothing
-  _ <- setResizable tile r
+  _ <- setResizable tile (Just r)
   end tile
   end window
 

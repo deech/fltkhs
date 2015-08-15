@@ -92,37 +92,38 @@ instance (impl ~ (( IO ()))) => Op (ShowWidgetSuper ()) Button orig impl where
 {# fun Fl_Button_show as buttonShow' {id `Ptr ()'} -> `()' supressWarningAboutRes #}
 instance (impl ~ ((IO ()))) => Op (ShowWidget ()) Button orig impl where
   runOp _ _ button = withRef button $ (\p -> buttonShow' p)
-{# fun unsafe Fl_Button_value as value' { id `Ptr ()' } -> `Bool' cToBool #}
+{# fun Fl_Button_value as value' { id `Ptr ()' } -> `Bool' cToBool #}
 instance (impl ~ (( IO (Bool)))) => Op (GetValue ()) Button orig impl where
   runOp _ _ b = withRef b $ \bPtr -> value' bPtr
-{# fun unsafe Fl_Button_set_value as setValue' { id `Ptr ()', fromBool `Bool' } -> `Bool' toBool #}
+{# fun Fl_Button_set_value as setValue' { id `Ptr ()', fromBool `Bool' } -> `Bool' toBool #}
 instance (impl ~ ((Bool ->  IO (Bool)))) => Op (SetValue ()) Button orig impl where
   runOp _ _ b v = withRef b $ \bPtr -> setValue' bPtr v
-{# fun unsafe Fl_Button_set as set' { id `Ptr ()' } -> `Bool' cToBool #}
+{# fun Fl_Button_set as set' { id `Ptr ()' } -> `Bool' cToBool #}
 instance (impl ~ (( IO (Bool)))) => Op (Set ()) Button orig impl where
   runOp _ _ b = withRef b $ \bPtr -> set' bPtr
-{# fun unsafe Fl_Button_clear as clear' { id `Ptr ()' } -> `Bool' cToBool #}
+{# fun Fl_Button_clear as clear' { id `Ptr ()' } -> `Bool' cToBool #}
 instance (impl ~ (( IO (Bool)))) => Op (Clear ()) Button orig impl where
   runOp _ _ b = withRef b $ \bPtr -> clear' bPtr
-{# fun unsafe Fl_Button_setonly as setonly' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
+{# fun Fl_Button_setonly as setonly' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
 instance (impl ~ (( IO ()))) => Op (Setonly ()) Button orig impl where
   runOp _ _ b = withRef b $ \bPtr -> setonly' bPtr
-{# fun unsafe Fl_Button_get_shortcut as getShortcut' { id `Ptr ()' } -> `FlShortcut' fromIntegral #}
-instance (impl ~ (( IO (FlShortcut)))) => Op (GetShortcut ()) Button orig impl where
-  runOp _ _ b = withRef b $ \bPtr -> getShortcut' bPtr
-{# fun unsafe Fl_Button_set_shortcut as setShortcut' { id `Ptr ()',fromIntegral `Int' } -> `()' supressWarningAboutRes #}
-instance (impl ~ ((Int ->  IO ()))) => Op (SetShortcut ()) Button orig impl where
-  runOp _ _ b s = withRef b $ \bPtr -> setShortcut' bPtr s
-{# fun unsafe Fl_Button_down_box as downBox' { id `Ptr ()' } -> `Boxtype' cToEnum #}
+{# fun Fl_Button_get_shortcut as getShortcut' { id `Ptr ()' } -> `CInt' #}
+instance (impl ~ (( IO (Maybe ShortcutKeySequence)))) => Op (GetShortcut ()) Button orig impl where
+  runOp _ _ b = withRef b $ \bPtr -> getShortcut' bPtr >>= return . cIntToKeySequence
+{# fun Fl_Button_set_shortcut as setShortcut' { id `Ptr ()',id `CInt' } -> `()' supressWarningAboutRes #}
+instance (impl ~ ((ShortcutKeySequence ->  IO ()))) => Op (SetShortcut ()) Button orig impl where
+  runOp _ _ input (ShortcutKeySequence modifiers char) =
+    withRef input $ \inputPtr -> setShortcut' inputPtr (keySequenceToCInt modifiers char)
+{# fun Fl_Button_down_box as downBox' { id `Ptr ()' } -> `Boxtype' cToEnum #}
 instance (impl ~ (( IO (Boxtype)))) => Op (GetDownBox ()) Button orig impl where
   runOp _ _ b = withRef b $ \bPtr -> downBox' bPtr
-{# fun unsafe Fl_Button_set_down_box as setDownBox' { id `Ptr ()',cFromEnum `Boxtype' } -> `()' supressWarningAboutRes #}
+{# fun Fl_Button_set_down_box as setDownBox' { id `Ptr ()',cFromEnum `Boxtype' } -> `()' supressWarningAboutRes #}
 instance (impl ~ ((Boxtype ->  IO ()))) => Op (SetDownBox ()) Button orig impl where
   runOp _ _ b boxtype = withRef b $ \bPtr -> setDownBox' bPtr boxtype
-{# fun unsafe Fl_Button_down_color as downColor' { id `Ptr ()' } -> `Color' cToColor #}
+{# fun Fl_Button_down_color as downColor' { id `Ptr ()' } -> `Color' cToColor #}
 instance (impl ~ (( IO (Color)))) => Op (GetDownColor ()) Button orig impl where
   runOp _ _ b = withRef b $ \bPtr -> downColor' bPtr
-{# fun unsafe Fl_Button_set_down_color as setDownColor' { id `Ptr ()',cFromColor `Color' } -> `()' supressWarningAboutRes #}
+{# fun Fl_Button_set_down_color as setDownColor' { id `Ptr ()',cFromColor `Color' } -> `()' supressWarningAboutRes #}
 instance (impl ~ ((Color ->  IO ()))) => Op (SetDownColor ()) Button orig impl where
   runOp _ _ b c = withRef b $ \bPtr -> setDownColor' bPtr c
 {# fun Fl_Button_draw_box as buttonDrawBox' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
@@ -150,69 +151,68 @@ instance (impl ~ (Maybe (Boxtype, Rectangle) -> IO ())) => Op (DrawFocus ()) But
                   let (x_pos,y_pos,w_pos,h_pos) = fromRectangle r
                   buttonDrawFocusWithTXywh' buttonPtr bx x_pos y_pos w_pos h_pos
 
-{# fun unsafe Fl_Button_type as type' { id `Ptr ()' } -> `Word8' #}
-instance (impl ~ ( IO (ButtonType))) => Op (GetType ()) Button orig impl where
+{# fun Fl_Button_type as type' { id `Ptr ()' } -> `Word8' #}
+instance (impl ~ ( IO (ButtonType))) => Op (GetType_ ()) Button orig impl where
    runOp _ _ widget = withRef widget $ \widgetPtr -> type' widgetPtr >>= return . cToEnum
-{# fun unsafe Fl_Button_set_type as setType' { id `Ptr ()',`Word8' } -> `()' #}
+{# fun Fl_Button_set_type as setType' { id `Ptr ()',`Word8' } -> `()' #}
 instance (impl ~ (ButtonType ->  IO ())) => Op (SetType ()) Button orig impl where
    runOp _ _ widget t = withRef widget $ \widgetPtr -> setType' widgetPtr (cFromEnum t)
 
 -- $Fl_Buttonfunctions
 -- @
--- clear :: 'Ref' 'Button' -> 'IO' 'Bool'
+-- clear :: 'Ref' 'Button' -> ( 'IO' ('Bool'))
 --
--- destroy :: 'Ref' 'Button' -> 'IO' ()
+-- destroy :: 'Ref' 'Button' -> ( 'IO' ())
 --
 -- drawBackdrop :: 'Ref' 'Button' -> 'IO' ()
 --
--- drawBox :: 'Ref' 'Button' -> 'IO' ()
+-- drawBox :: 'Ref' 'Button' -> ('IO' ())
 --
--- drawBoxWithBoxtype :: 'Ref' 'Button' -> 'Boxtype' -> 'Color' -> 'Maybe' 'Rectangle' -> 'IO' ()
+-- drawBoxWithBoxtype :: 'Ref' 'Button' -> ( 'Boxtype' -> 'Color' -> 'Maybe' 'Rectangle' -> 'IO' ())
 --
 -- drawFocus :: 'Ref' 'Button' -> 'Maybe' ('Boxtype', 'Rectangle') -> 'IO' ()
 --
--- drawSuper :: 'Ref' 'Button' -> 'IO' ()
+-- drawSuper :: 'Ref' 'Button' -> ( 'IO' ())
 --
--- getDownBox :: 'Ref' 'Button' -> 'IO' 'Boxtype'
+-- getDownBox :: 'Ref' 'Button' -> ( 'IO' ('Boxtype'))
 --
--- getDownColor :: 'Ref' 'Button' -> 'IO' 'Color'
+-- getDownColor :: 'Ref' 'Button' -> ( 'IO' ('Color'))
 --
--- getShortcut :: 'Ref' 'Button' -> 'IO' 'FlShortcut'
+-- getShortcut :: 'Ref' 'Button' -> ( 'IO' ('Maybe' 'ShortcutKeySequence'))
 --
--- getType :: 'Ref' 'Button' -> 'IO' 'ButtonType'
+-- getType_ :: 'Ref' 'Button' -> 'IO' ('ButtonType')
 --
--- getValue :: 'Ref' 'Button' -> 'IO' 'Bool'
+-- getValue :: 'Ref' 'Button' -> ( 'IO' ('Bool'))
 --
--- handle :: 'Ref' 'Button' -> 'Event' -> 'IO' 'Int'
+-- handle :: 'Ref' 'Button' -> ('Event' -> 'IO' 'Int')
 --
--- handleSuper :: 'Ref' 'Button' -> 'Int' -> 'IO' 'Int'
+-- handleSuper :: 'Ref' 'Button' -> ('Int' -> 'IO' ('Int'))
 --
--- hide :: 'Ref' 'Button' -> 'IO' ()
+-- hide :: 'Ref' 'Button' -> ( 'IO' ())
 --
--- hideSuper :: 'Ref' 'Button' -> 'IO' ()
+-- hideSuper :: 'Ref' 'Button' -> ( 'IO' ())
 --
--- resize :: 'Ref' 'Button' -> 'Rectangle' -> 'IO' ()
+-- resize :: 'Ref' 'Button' -> ('Rectangle' -> 'IO' ())
 --
--- resizeSuper :: 'Ref' 'Button' -> 'Rectangle' -> 'IO' ()
+-- resizeSuper :: 'Ref' 'Button' -> ('Rectangle' -> 'IO' ())
 --
--- set :: 'Ref' 'Button' -> 'IO' 'Bool'
+-- set :: 'Ref' 'Button' -> ( 'IO' ('Bool'))
 --
--- setDownBox :: 'Ref' 'Button' -> 'Boxtype' -> 'IO' ()
+-- setDownBox :: 'Ref' 'Button' -> ('Boxtype' -> 'IO' ())
 --
--- setDownColor :: 'Ref' 'Button' -> 'Color' -> 'IO' ()
+-- setDownColor :: 'Ref' 'Button' -> ('Color' -> 'IO' ())
 --
--- setShortcut :: 'Ref' 'Button' -> 'Int' -> 'IO' ()
+-- setShortcut :: 'Ref' 'Button' -> ('ShortcutKeySequence' -> 'IO' ())
 --
 -- setType :: 'Ref' 'Button' -> 'ButtonType' -> 'IO' ()
 --
--- setValue :: 'Ref' 'Button' -> 'Bool' -> 'IO' 'Bool'
+-- setValue :: 'Ref' 'Button' -> ('Bool' -> 'IO' ('Bool'))
 --
--- setonly :: 'Ref' 'Button' -> 'IO' ()
+-- setonly :: 'Ref' 'Button' -> ( 'IO' ())
 --
--- showWidget :: 'Ref' 'Button' -> 'IO' ()
+-- showWidget :: 'Ref' 'Button' -> ('IO' ())
 --
--- showWidgetSuper :: 'Ref' 'Button' -> 'IO' ()
---
+-- showWidgetSuper :: 'Ref' 'Button' -> ( 'IO' ())
 -- @
 
 -- $hierarchy

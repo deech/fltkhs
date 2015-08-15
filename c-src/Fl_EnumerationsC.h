@@ -67,7 +67,8 @@ EXPORT {
   typedef enum  Fl_Tree_Select{
     FL_TREE_SELECT_NONE=0,
     FL_TREE_SELECT_SINGLE=1,
-    FL_TREE_SELECT_MULTI=2
+    FL_TREE_SELECT_MULTI=2,
+    FL_TREE_SELECT_SINGLE_DRAGGABLE=3
   }Fl_Tree_Select;
 #if FLTK_ABI_VERSION >= 10302
   typedef enum  Fl_Tree_Item_Reselect_Mode{
@@ -81,6 +82,7 @@ EXPORT {
   }Fl_Tree_Item_Draw_Mode;
 #endif /*FLTK_ABI_VERSION*/
 #define FL_Button         0xfee8
+#define FL_Clear          0xff0b
 #define FL_BackSpace      0xff08
 #define FL_Tab            0xff09
 #define FL_Iso_Key        0xff0c
@@ -88,7 +90,7 @@ EXPORT {
 #define FL_Pause          0xff13
 #define FL_Scroll_Lock    0xff14
 #define FL_Escape         0xff1b
-#define FL_Kana           0xff2e 
+#define FL_Kana           0xff2e
 #define FL_Eisu           0xff2f
 #define FL_Yen            0xff30
 #define FL_JIS_Underscore 0xff31
@@ -253,6 +255,15 @@ EXPORT {
 #define FL_GTK_THIN_DOWN_FRAME (Fl_Boxtype)(fl_define_FL_GTK_UP_BOXC()+7)
 #define FL_GTK_ROUND_UP_BOX (Fl_Boxtype)(fl_define_FL_GTK_UP_BOXC()+8)
 #define FL_GTK_ROUND_DOWN_BOX (Fl_Boxtype)(fl_define_FL_GTK_UP_BOXC()+9)
+#define FL_GLEAM_UP_BOX fl_define_FL_GLEAM_UP_BOXC()
+#define FL_GLEAM_DOWN_BOX (Fl_Boxtype)(fl_define_FL_GLEAM_UP_BOXC()+1)
+#define FL_GLEAM_UP_FRAME (Fl_Boxtype)(fl_define_FL_GLEAM_UP_BOXC()+2)
+#define FL_GLEAM_DOWN_FRAME (Fl_Boxtype)(fl_define_FL_GLEAM_UP_BOXC()+3)
+#define FL_GLEAM_THIN_UP_BOX (Fl_Boxtype)(fl_define_FL_GLEAM_UP_BOXC()+4)
+#define FL_GLEAM_THIN_DOWN_BOX (Fl_Boxtype)(fl_define_FL_GLEAM_UP_BOXC()+5)
+#define FL_GLEAM_ROUND_UP_BOX (Fl_Boxtype)(fl_define_FL_GLEAM_UP_BOXC()+6)
+#define FL_GLEAM_ROUND_DOWN_BOX (Fl_Boxtype)(fl_define_FL_GLEAM_UP_BOXC()+7)
+
 #define FL_FRAME FL_ENGRAVED_FRAME
 #define FL_FRAME_BOX FL_ENGRAVED_BOX
 #define FL_CIRCLE_BOX FL_ROUND_DOWN_BOX
@@ -437,6 +448,7 @@ EXPORT {
   FL_EXPORT_C(Fl_Boxtype, fl_define_FL_OVAL_BOXC)();
   FL_EXPORT_C(Fl_Boxtype, fl_define_FL_PLASTIC_UP_BOXC)();
   FL_EXPORT_C(Fl_Boxtype, fl_define_FL_GTK_UP_BOXC)();
+  FL_EXPORT_C(Fl_Boxtype, fl_define_FL_GLEAM_UP_BOXC)();
   FL_EXPORT_C(Fl_Boxtype, fl_boxC)(Fl_Boxtype b) ;
   FL_EXPORT_C(Fl_Boxtype, fl_downC)(Fl_Boxtype b) ;
   FL_EXPORT_C(Fl_Boxtype, fl_frameC)(Fl_Boxtype b) ;

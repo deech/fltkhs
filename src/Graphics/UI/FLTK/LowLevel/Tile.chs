@@ -42,7 +42,7 @@ instance (impl ~ ( Rectangle -> IO ())) => Op (Resize ()) Tile orig impl where
     let (x_pos,y_pos,w_pos,h_pos) = fromRectangle rectangle
     resize' tilePtr x_pos y_pos w_pos h_pos
 
-{# fun unsafe Fl_Tile_position as setPosition' { id `Ptr ()',`Int',`Int',`Int',`Int' } -> `()' #}
+{# fun Fl_Tile_position as setPosition' { id `Ptr ()',`Int',`Int',`Int',`Int' } -> `()' #}
 instance (impl ~ (Rectangle ->  IO ())) => Op (SetPosition ()) Tile orig impl where
   runOp _ _ tile rectangle = withRef tile $ \tilePtr -> do
     let (x_pos,y_pos,w_pos,h_pos) = fromRectangle rectangle

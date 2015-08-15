@@ -25,7 +25,7 @@ setTableSize t' nr' nc' = do
            if (odd _c)
            then do
             let s = (show _r) ++ "." ++ (show _c)
-            input_ <- inputNew Nothing cellRectangle' Nothing
+            input_ <- inputNew cellRectangle' Nothing Nothing
             _ <- setValue input_ s Nothing
             return ()
            else
@@ -59,7 +59,7 @@ drawCell t' tcontext' (TableCoordinate (Row tr') (Column tc')) r' =
                 case cellRectangle of
                   Just cellRectangle' -> do
                    child' <- getChild t' i
-                   resize child' cellRectangle'
+                   maybe (return ()) (\c -> resize c cellRectangle') child'
                   Nothing -> return ()
         )
         (zip [0..] rowCols)
@@ -107,7 +107,7 @@ main = do
   initializeTable table
   setTableSize table 50 50
   end win
-  setResizable win table
+  setResizable win (Just table)
   showWidget win
   _ <- FL.run
   return ()

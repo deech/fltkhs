@@ -57,10 +57,12 @@ cFromEnum :: (Enum a, Integral b) => a -> b
 cFromEnum = fromIntegral . fromEnum
 cToEnum :: (Integral b, Enum a) => b -> a
 cToEnum = toEnum . fromIntegral
-cToBool :: (Eq a, Num a) => a -> Bool
-cToBool status = case status of
-                   0 -> False
-                   _ -> True
+cToBool :: (Eq a, Num a, Ord a) => a -> Bool
+cToBool status =
+  if (status > 0)
+  then True
+  else False
+
 cFromBool :: (Eq a, Num a) => Bool -> a
 cFromBool status = if status then 1 else 0
 
@@ -77,7 +79,7 @@ combine :: (Enum a, Ord a) => [a] -> Int
 combine = sum . map (fromEnum . head) . group . sort
 
 masks :: CInt -> CInt -> Bool
-masks compoundCode code = (compoundCode .&. code) /= 0
+masks compoundCode code = (compoundCode .&. code) == code
 
 keySequenceToCInt :: [EventState] -> KeyType -> CInt
 keySequenceToCInt modifiers char =
@@ -85,6 +87,18 @@ keySequenceToCInt modifiers char =
         SpecialKeyType c' -> fromIntegral $ fromEnum c'
         NormalKeyType c' -> fromIntegral $ castCharToCChar c'
     in (fromIntegral $ combine modifiers) + charCode
+
+cIntToKeySequence :: CInt -> Maybe ShortcutKeySequence
+cIntToKeySequence i =
+  let evs = extract allEventStates i
+      masked = (i .&. (fromIntegral $ fromEnum Kb_KeyMask))
+      special = map cToEnum $ filter ((==) masked) allShortcutSpecialKeys
+  in
+    if (i == 0)
+    then Nothing
+    else if (null special)
+         then Just (ShortcutKeySequence evs (NormalKeyType $ toEnum $ fromIntegral masked))
+         else Just (ShortcutKeySequence evs (SpecialKeyType $ head special))
 
 wrapNonNull :: Ptr a -> String -> IO (ForeignPtr (Ptr a))
 wrapNonNull ptr msg = if (ptr == nullPtr)
@@ -176,6 +190,18 @@ arrayToRefs arrayPtr numElements =
            (numLeft - 1)
            (accum ++ [ref])
 
+staticArrayToRefs:: (Ptr ()) -> Int -> IO [(Ref a)]
+staticArrayToRefs arrayPtr numElements =
+    go arrayPtr numElements []
+    where
+      go _ 0 accum =  return accum
+      go currPtr numLeft accum = do
+        let nextPtr = currPtr `plusPtr` (sizeOf (undefined :: Ptr a))
+        ref <- toRef currPtr
+        go nextPtr
+           (numLeft - 1)
+           (accum ++ [ref])
+
 refOrError :: String -> Ptr () -> IO (Ref b)
 refOrError errorMessage p = wrapNonNull p errorMessage >>=
                                return . wrapInRef
@@ -214,8 +240,19 @@ toRef ptr = throwStackOnError $
 unsafeToRef :: Ptr () -> (Ref a)
 unsafeToRef = Unsafe.unsafePerformIO . toRef
 
+unsafeToMaybeRef :: Ptr () -> Maybe (Ref a)
+unsafeToMaybeRef = Unsafe.unsafePerformIO . toMaybeRef
+
 unsafeToCString :: String -> CString
-unsafeToCString = Unsafe.unsafePerformIO . newCString
+unsafeToCString s = Unsafe.unsafePerformIO (newCString s)
+
+unsafeFromCString :: CString -> String
+unsafeFromCString cstring =
+  Unsafe.unsafePerformIO (
+    if (cstring == nullPtr)
+    then return ""
+    else peekCString cstring >>= return
+    )
 
 toMaybeRef :: Ptr () -> IO (Maybe (Ref a))
 toMaybeRef ptr' = if ptr' == nullPtr then return Nothing else toRef ptr' >>= return . Just
@@ -245,18 +282,24 @@ oneKb = 1024
 alignmentsToInt :: Alignments -> Int
 alignmentsToInt (Alignments aligntypes') = combine aligntypes'
 intToAlignments :: Int -> Alignments
-intToAlignments = Alignments . extract allAlignTypes . fromIntegral
+intToAlignments alignmentCode = Alignments (extract allAlignTypes $ fromIntegral alignmentCode)
 
 menuItemFlagsToInt :: MenuItemFlags -> Int
 menuItemFlagsToInt (MenuItemFlags menuItemFlags') = combine menuItemFlags'
-intToMenuItemFlags :: Int -> MenuItemFlags
-intToMenuItemFlags = MenuItemFlags . extract allMenuItemFlags . fromIntegral
+intToMenuItemFlags :: Int -> Maybe MenuItemFlags
+intToMenuItemFlags flags' =
+  if (flags' == 0)
+  then Nothing
+  else Just $ (MenuItemFlags . extract allMenuItemFlags . fromIntegral) flags'
 
 withByteStrings :: [B.ByteString] -> (Ptr (Ptr CChar) -> IO a) -> IO a
 withByteStrings bs f = B.useAsCString (foldl1 B.append bs) (\ptr -> new ptr >>= f)
 
 withPixmap :: PixmapHs -> ((Ptr (Ptr CChar)) -> IO a) -> IO a
-withPixmap (PixmapHs pixmap) f = withByteStrings pixmap f
+withPixmap (PixmapHs strings) f = do
+  cStrings <- sequence (map newCString strings)
+  ptr <- newArray cStrings
+  f ptr
 
 withBitmap :: BitmapHs -> ((Ptr CChar) -> Int -> Int -> IO a) -> IO a
 withBitmap (BitmapHs bitmap (Size (Width width') (Height height'))) f =

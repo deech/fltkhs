@@ -1,30 +1,42 @@
-module Fluid.Types
- (
+module Types (
    WidgetTree(..),
+   FunctionArgs(..),
    Function(..),
    Class(..),
    Attribute(..),
+   Fluid,
    FluidBlock(..),
-   Fluid(..),
    UnbrokenOrBraced(..),
-   BracedStringParts(..)
- )
-where
+   BracedStringParts(..),
+   HaskellIdentifier(..),
+   ModuleIdentifier(..),
+   PathElem(..),
+   Path,
+   PathIndexedElements,
+   FluidElement(..),
+   Name,
+   NameLookupResult(..),
+   ElementIdentifier(..),
+   IdentifierIndexedElements,
+   Type,
+   LookupTables,
+   GenerationError(..),
+   TakenNames(..)
+ ) where
 
 type Name = Maybe String
-data Attribute =
-  Code0 [BracedStringParts]
+data Attribute
+  = Code0 [BracedStringParts]
   | Code1 [BracedStringParts]
   | Code2 [BracedStringParts]
   | Code3 [BracedStringParts]
   | Label UnbrokenOrBraced
   | Callback UnbrokenOrBraced
-  | XYWH (Int, Int, Int, Int)
-  | Type UnbrokenOrBraced
+  | XYWH (Int,Int,Int,Int)
   | Color Int
   | Maximum Int
   | Value UnbrokenOrBraced
-  | Box UnbrokenOrBraced
+  | Box String
   | Labelsize Int
   | Resizable
   | Visible
@@ -32,13 +44,13 @@ data Attribute =
   | Minimum Int
   | Step Double
   | SelectionColor Int
-  | Labeltype UnbrokenOrBraced
+  | Labeltype String
   | Labelcolor Int
   | Labelfont Int
   | Open
   | Hide
   | ReturnType UnbrokenOrBraced
-  | Shortcut UnbrokenOrBraced
+  | Shortcut String
   | Private
   | UserData UnbrokenOrBraced
   | UserDataType UnbrokenOrBraced
@@ -60,40 +72,97 @@ data Attribute =
   | InSource
   | InHeader
   | Global
-  | DownBox UnbrokenOrBraced
-  | SizeRange (Int, Int, Int, Int)
+  | DownBox String
+  | SizeRange (Int,Int,Int,Int)
   | LineComment String
   | AfterCode UnbrokenOrBraced
   | DerivedFromClass String
   | Filename UnbrokenOrBraced
-  deriving Show
+  | Divider
+  deriving (Show)
 type Type = String
-
-data WidgetTree =
-  Container Type Name [Attribute] [WidgetTree]
-  | Component Type Name [Attribute]
-  | Code [Attribute] UnbrokenOrBraced
-  | StandAloneComment [Attribute] UnbrokenOrBraced
-  | CodeBlock UnbrokenOrBraced [Attribute] [WidgetTree]
-  | Version String
+data WidgetTree = Group Type HaskellIdentifier [Attribute] [WidgetTree]
+                | Menu Type HaskellIdentifier [Attribute] [WidgetTree]
+                | Component Type HaskellIdentifier [Attribute]
+                | Code [Attribute] UnbrokenOrBraced
+                | StandAloneComment [Attribute] UnbrokenOrBraced
+                | CodeBlock UnbrokenOrBraced [Attribute] [WidgetTree]
+                | Version String
   deriving Show
 
-data Function = Function Name [Attribute] [WidgetTree] deriving Show
-data Class = Class String [Attribute] [FluidBlock] deriving Show
-data FluidBlock =
-  FluidClass Class
+newtype FunctionArgs =
+  FunctionArgs (Maybe String)
+  deriving (Show)
+data Function =
+  Function HaskellIdentifier
+           FunctionArgs
+           [Attribute]
+           [WidgetTree]
+  deriving (Show)
+data Class =
+  Class HaskellIdentifier
+        [Attribute]
+        [FluidBlock]
+  deriving (Show)
+data FluidBlock
+  = FluidClass Class
   | FluidFunction Function
-  | DeclBlock [Attribute] UnbrokenOrBraced [FluidBlock]
-  | Decl [Attribute] UnbrokenOrBraced
-  | Data String [Attribute]
-  deriving Show
-data UnbrokenOrBraced = UnbrokenString String | BracedString [BracedStringParts] deriving Show
-data BracedStringParts =
-  BareString String
+  | DeclBlock [Attribute]
+              UnbrokenOrBraced
+              [FluidBlock]
+  | Decl [Attribute]
+         UnbrokenOrBraced
+  | Data String
+         [Attribute]
+  deriving (Show)
+
+data UnbrokenOrBraced
+  = UnbrokenString String
+  | BracedString [BracedStringParts]
+  deriving (Show)
+
+data BracedStringParts
+  = BareString String
   | QuotedCharCode Char
   | QuotedHex Integer
   | QuotedOctal Integer
   | QuotedChar String
   | NestedBrace [BracedStringParts]
-  deriving Show
+  deriving (Show)
+
 type Fluid = [FluidBlock]
+
+data FluidElement
+  = BlockElement FluidBlock
+  | WidgetElement WidgetTree
+data HaskellIdentifier
+  = ValidHaskell String
+  | InvalidHaskell String
+  | UnidentifiedFunction
+  | Unidentified
+  deriving (Eq,Show)
+
+data ModuleIdentifier
+  = ValidModule String
+  | InvalidModule String
+
+data PathElem
+  = D
+  | I
+  deriving (Show,Eq)
+data NameLookupResult
+  = FoundUniquePath Path
+  | FoundMultiplePaths [Path]
+  | PathNotFound
+
+type Path = [PathElem]
+data ElementIdentifier
+  = ElementPath Path
+  | ElementName HaskellIdentifier
+  | ElementType Type
+
+type PathIndexedElements = [(Path,FluidElement)]
+type IdentifierIndexedElements = [([ElementIdentifier], FluidElement)]
+type LookupTables = ([(HaskellIdentifier,[Path])],[(Maybe Type,[Path])],[(Maybe String,[Path])])
+data GenerationError = BadModuleName String
+newtype TakenNames = TakenNames [String] deriving Show

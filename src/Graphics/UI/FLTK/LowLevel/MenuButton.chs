@@ -3,7 +3,8 @@
 module Graphics.UI.FLTK.LowLevel.MenuButton
     (
      -- * Constructor
-     menuButtonNew
+     menuButtonNew,
+     MenuButtonType(..)
      -- * Hierarchy
      --
      -- $hierarchy
@@ -25,6 +26,19 @@ import Graphics.UI.FLTK.LowLevel.Utils
 import Graphics.UI.FLTK.LowLevel.Dispatch
 import Graphics.UI.FLTK.LowLevel.Hierarchy
 
+#c
+enum MenuButtonType {
+  NormalMenuButton = NORMAL,
+  Popup1MenuButton = POPUP1,
+  Popup2MenuButton = POPUP2,
+  Popup12MenuButton = POPUP12,
+  Popup3MenuButton = POPUP3,
+  Popup13MenuButton = POPUP13,
+  Popup123MenuButton = POPUP123,
+};
+#endc
+{#enum MenuButtonType {} deriving (Show, Eq) #}
+
 {# fun Fl_Menu_Button_New as menuButtonNew' { `Int',`Int',`Int',`Int' } -> `Ptr ()' id #}
 {# fun Fl_Menu_Button_New_WithLabel as menuButtonNewWithLabel' { `Int',`Int',`Int',`Int',unsafeToCString `String'} -> `Ptr ()' id #}
 menuButtonNew :: Rectangle -> Maybe String -> IO (Ref MenuButton)
@@ -45,8 +59,8 @@ instance (impl ~ ( IO ())) => Op (Destroy ()) MenuButton orig impl where
 instance (impl ~ (Event -> IO Int)) => Op (Handle ()) MenuButton orig impl where
   runOp _ _ menu_bar event = withRef menu_bar (\p -> menuButtonHandle' p (fromIntegral . fromEnum $ event))
 {#fun Fl_Menu_Button_popup as menuButtonPopup' { id `Ptr ()' } -> `Ptr ()' id #}
-instance (impl ~ ( IO (Ref MenuItem))) => Op (Popup ()) MenuButton orig impl where
-  runOp _ _ menu_bar = withRef menu_bar (\p -> menuButtonPopup' p >>= toRef)
+instance (impl ~ ( IO (Maybe (Ref MenuItem)))) => Op (Popup ()) MenuButton orig impl where
+  runOp _ _ menu_bar = withRef menu_bar (\p -> menuButtonPopup' p >>= toMaybeRef)
 
 -- $functions
 -- @
@@ -55,7 +69,8 @@ instance (impl ~ ( IO (Ref MenuItem))) => Op (Popup ()) MenuButton orig impl whe
 --
 -- handle :: 'Ref' 'MenuButton' -> 'Event' -> 'IO' 'Int'
 --
--- popup :: 'Ref' 'MenuButton' -> 'IO' ('Ref' 'MenuItem')
+-- popup :: 'Ref' 'MenuButton' -> 'IO' ('Maybe' ('Ref' 'MenuItem'))
+--
 -- @
 
 -- $hierarchy

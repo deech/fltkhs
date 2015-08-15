@@ -19,9 +19,9 @@ Abbreviated installation instructions are for Linux and Mac are:
     cabal install
 ```
 
-- Test your installation by invoking: 'fltkhs-hello-world'.
+- Test your installation by invoking: 'fltkhs-arc'.
 
-The rest of the documentation (including installation instructions for Windows and API usage) is located in the [FLTKHS module] [3]. This is the primary module that needs to beimported by every Fltkhs app and the entry point into the application.
+The rest of the documentation (including installation instructions for Windows and API usage) is located in the [FLTKHS module] [3]. This is the primary module that needs to be imported by every Fltkhs app and the entry point into the application.
 
 
   [1]: http://www.fltk.org/index.php      "FLTK"

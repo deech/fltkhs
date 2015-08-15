@@ -5,6 +5,7 @@ module Graphics.UI.FLTK.LowLevel.Window
      CustomWindowFuncs(..),
      OptionalSizeRangeArgs(..),
      PositionSpec(..),
+     WindowType(..),
      defaultCustomWindowFuncs,
      fillCustomWidgetFunctionStruct,
      defaultOptionalSizeRangeArgs,
@@ -35,6 +36,14 @@ import Graphics.UI.FLTK.LowLevel.Hierarchy
 import Graphics.UI.FLTK.LowLevel.Widget
 
 import C2HS hiding (cFromEnum, toBool,cToEnum,cToBool)
+
+#c
+ enum WindowType {
+   SingleWindowType = FL_WINDOWC,
+   DoubleWindowType = FL_DOUBLE_WINDOWC
+};
+#endc
+{#enum WindowType {} deriving (Show, Eq) #}
 
 data PositionSpec = ByPosition Position
                   | forall a. (Parent a Widget) => ByWidget (Ref a)
@@ -75,7 +84,7 @@ fillCustomWindowFunctionStruct structPtr (CustomWindowFuncs _flush') =
 defaultCustomWindowFuncs :: forall a. (Parent a Window) => CustomWindowFuncs a
 defaultCustomWindowFuncs = CustomWindowFuncs Nothing
 
-{# fun unsafe Fl_Window_default_virtual_funcs as virtualFuncs' {} -> `Ptr ()' id #}
+{# fun Fl_Window_default_virtual_funcs as virtualFuncs' {} -> `Ptr ()' id #}
 windowMaker :: forall a b. (Parent a Window, Parent b Widget) =>
                Size ->
                Maybe Position ->
@@ -298,11 +307,11 @@ instance (impl ~ (Int -> Int -> OptionalSizeRangeArgs ->  IO ())) => Op (SizeRan
       structPtr <- optionalSizeRangeArgsToStruct args
       sizeRangeWithArgs' winPtr minw' minh' structPtr
 
-{# fun Fl_Window_label as label' { id `Ptr ()' } -> `String' #}
+{# fun Fl_Window_label as label' { id `Ptr ()' } -> `String' unsafeFromCString #}
 instance (impl ~ ( IO (String))) => Op (GetLabel ()) Window orig impl where
   runOp _ _ win = withRef win $ \winPtr -> label' winPtr
 
-{# fun Fl_Window_iconlabel as iconlabel' { id `Ptr ()' } -> `String' #}
+{# fun Fl_Window_iconlabel as iconlabel' { id `Ptr ()' } -> `String' unsafeFromCString #}
 instance (impl ~ ( IO (String))) => Op (GetIconlabel ()) Window orig impl where
   runOp _ _ win = withRef win $ \winPtr -> iconlabel' winPtr
 
@@ -322,7 +331,7 @@ instance (impl ~ (String -> String ->  IO ())) => Op (SetLabelWithIconlabel ()) 
 instance (impl ~ (String ->  IO ())) => Op (CopyLabel ()) Window orig impl where
   runOp _ _ win a = withRef win $ \winPtr -> copyLabel' winPtr a
 
-{# fun Fl_Window_xclass as xclass' { id `Ptr ()' } -> `String' #}
+{# fun Fl_Window_xclass as xclass' { id `Ptr ()' } -> `String' unsafeFromCString #}
 instance (impl ~ ( IO (String))) => Op (GetXclass ()) Window orig impl where
   runOp _ _ win = withRef win $ \winPtr -> xclass' winPtr
 
@@ -335,8 +344,8 @@ instance (impl ~ ( IO (Maybe (Ref Image)))) => Op (GetIcon ()) Window orig impl 
   runOp _ _ win = withRef win $ \winPtr -> icon' winPtr >>= toMaybeRef
 
 {# fun Fl_Window_set_icon as setIcon' { id `Ptr ()', id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance (Parent a Image, impl ~ (Ref a ->  IO ())) => Op (SetIcon ()) Window orig impl where
-  runOp _ _ win bitmap = withRef win $ \winPtr -> withRef bitmap $ \bitmapPtr -> setIcon' winPtr bitmapPtr
+instance (Parent a Image, impl ~ (Maybe( Ref a ) ->  IO ())) => Op (SetIcon ()) Window orig impl where
+  runOp _ _ win bitmap = withRef win $ \winPtr -> withMaybeRef bitmap $ \bitmapPtr -> setIcon' winPtr bitmapPtr
 
 {# fun Fl_Window_shown as shown' { id `Ptr ()' } -> `Bool' toBool #}
 instance (impl ~ ( IO (Bool))) => Op (Shown ()) Window orig impl where
@@ -428,6 +437,12 @@ instance (impl ~ (Maybe (Boxtype, Rectangle) -> IO ())) => Op (DrawFocus ()) Win
 instance (impl ~ ( IO ())) => Op (WaitForExpose ()) Window orig impl where
   runOp _ _ win = withRef win $ \winPtr -> waitForExpose' winPtr
 
+{# fun Fl_Widget_set_type as setType' { id `Ptr ()',`Word8' } -> `()' supressWarningAboutRes #}
+instance (impl ~ (WindowType ->  IO ())) => Op (SetType ()) Window orig impl where
+  runOp _ _ widget t = withRef widget $ \widgetPtr -> setType' widgetPtr (fromInteger $ toInteger $ fromEnum t)
+{# fun Fl_Widget_type as type' { id `Ptr ()' } -> `Word8' #}
+instance (impl ~ IO (WindowType)) => Op (GetType_ ()) Window orig impl where
+  runOp _ _ widget = withRef widget $ \widgetPtr -> type' widgetPtr >>= return . toEnum . fromInteger . toInteger
 
 -- $hierarchy
 -- @
@@ -442,7 +457,7 @@ instance (impl ~ ( IO ())) => Op (WaitForExpose ()) Window orig impl where
 
 -- $functions
 -- @
--- changed :: 'Ref' 'Window' -> 'IO' 'Bool'
+-- changed :: 'Ref' 'Window' -> 'IO' ('Bool')
 --
 -- clearBorder :: 'Ref' 'Window' -> 'IO' ()
 --
@@ -466,35 +481,37 @@ instance (impl ~ ( IO ())) => Op (WaitForExpose ()) Window orig impl where
 --
 -- fullscreenOff :: 'Ref' 'Window' -> 'Maybe' 'Rectangle' -> 'IO' ()
 --
--- getBorder :: 'Ref' 'Window' -> 'IO' 'Bool'
+-- getBorder :: 'Ref' 'Window' -> 'IO' ('Bool')
 --
--- getDecoratedH :: 'Ref' 'Window' -> 'IO' 'Int'
+-- getDecoratedH :: 'Ref' 'Window' -> 'IO' ('Int')
 --
--- getDecoratedW :: 'Ref' 'Window' -> 'IO' 'Int'
+-- getDecoratedW :: 'Ref' 'Window' -> 'IO' ('Int')
 --
 -- getIcon :: 'Ref' 'Window' -> 'IO' ('Maybe' ('Ref' 'Image'))
 --
--- getIconlabel :: 'Ref' 'Window' -> 'IO' 'String'
+-- getIconlabel :: 'Ref' 'Window' -> 'IO' ('String')
 --
--- getLabel :: 'Ref' 'Window' -> 'IO' 'String'
+-- getLabel :: 'Ref' 'Window' -> 'IO' ('String')
 --
--- getMenuWindow :: 'Ref' 'Window' -> 'IO' 'Bool'
+-- getMenuWindow :: 'Ref' 'Window' -> 'IO' ('Bool')
 --
--- getModal :: 'Ref' 'Window' -> 'IO' 'Bool'
+-- getModal :: 'Ref' 'Window' -> 'IO' ('Bool')
 --
--- getOverride :: 'Ref' 'Window' -> 'IO' 'Bool'
+-- getOverride :: 'Ref' 'Window' -> 'IO' ('Bool')
 --
--- getTooltipWindow :: 'Ref' 'Window' -> 'IO' 'Bool'
+-- getTooltipWindow :: 'Ref' 'Window' -> 'IO' ('Bool')
 --
--- getXRoot :: 'Ref' 'Window' -> 'IO' 'Int'
+-- getType_ :: 'Ref' 'Window' -> 'IO' ('WindowType')
 --
--- getXclass :: 'Ref' 'Window' -> 'IO' 'String'
+-- getXRoot :: 'Ref' 'Window' -> 'IO' ('Int')
 --
--- getYRoot :: 'Ref' 'Window' -> 'IO' 'Int'
+-- getXclass :: 'Ref' 'Window' -> 'IO' ('String')
+--
+-- getYRoot :: 'Ref' 'Window' -> 'IO' ('Int')
 --
 -- handle :: 'Ref' 'Window' -> 'Event' -> 'IO' 'Int'
 --
--- handleSuper :: 'Ref' 'Window' -> 'Int' -> 'IO' 'Int'
+-- handleSuper :: 'Ref' 'Window' -> 'Int' -> 'IO' ('Int')
 --
 -- hide :: 'Ref' 'Window' -> 'IO' ()
 --
@@ -508,7 +525,7 @@ instance (impl ~ ( IO ())) => Op (WaitForExpose ()) Window orig impl where
 --
 -- makeFullscreen :: 'Ref' 'Window' -> 'IO' ()
 --
--- nonModal :: 'Ref' 'Window' -> 'IO' 'Bool'
+-- nonModal :: 'Ref' 'Window' -> 'IO' ('Bool')
 --
 -- resize :: 'Ref' 'Window' -> 'Rectangle' -> 'IO' ()
 --
@@ -526,7 +543,7 @@ instance (impl ~ ( IO ())) => Op (WaitForExpose ()) Window orig impl where
 --
 -- setDefaultCursorWithFgBg :: 'Ref' 'Window' -> 'CursorType' -> ('Maybe' 'Color', 'Maybe' 'Color') -> 'IO' ()
 --
--- setIcon:: ('Parent' a 'Image') => 'Ref' 'Window' -> 'Ref' a -> 'IO' ())
+-- setIcon:: ('Parent' a 'Image') => 'Ref' 'Window' -> 'Maybe'( 'Ref' a ) -> 'IO' ()
 --
 -- setIconlabel :: 'Ref' 'Window' -> 'String' -> 'IO' ()
 --
@@ -544,13 +561,15 @@ instance (impl ~ ( IO ())) => Op (WaitForExpose ()) Window orig impl where
 --
 -- setTooltipWindow :: 'Ref' 'Window' -> 'IO' ()
 --
+-- setType :: 'Ref' 'Window' -> 'WindowType' -> 'IO' ()
+--
 -- setXclass :: 'Ref' 'Window' -> 'String' -> 'IO' ()
 --
 -- showWidget :: 'Ref' 'Window' -> 'IO' ()
 --
 -- showWidgetSuper :: 'Ref' 'Window' -> 'IO' ()
 --
--- shown :: 'Ref' 'Window' -> 'IO' 'Bool'
+-- shown :: 'Ref' 'Window' -> 'IO' ('Bool')
 --
 -- sizeRange :: 'Ref' 'Window' -> 'Int' -> 'Int' -> 'IO' ()
 --

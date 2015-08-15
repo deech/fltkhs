@@ -71,7 +71,7 @@ main = do
                drawCellCustom = (Just drawCell)
              }
   initializeTable table
-  setResizable window table
+  setResizable window (Just table)
   end window
   showWidget window
   _ <- FL.run
