@@ -1,4 +1,5 @@
 #!/bin/runhaskell
+{-# LANGUAGE FlexibleContexts #-}
 import Control.Monad
 import Text.Parsec
 import Text.Parsec.String
@@ -12,32 +13,70 @@ import Debug.Trace
 import System.Process
 import Data.Maybe
 
-data ConstraintsImpl = Constraints [String] String
-parseConstraints = do
+spacesOrNewLines =
+  skipMany $ (char ' ') <|> (char '\n') <|> crlf
+
+parseInstances = go (return [])
+  where
+    go accum = ((try (eof >> accum)) <|>
+                (try (do
+                    newline >> string "instance"
+                    soFar <- accum
+                    opInstance <- parseInstance
+                    go (return (soFar ++ [opInstance])))) <|>
+                (anyChar >> go accum))
+parseInstance = do
   spaces
-  constraints <- manyTill anyChar (try (string "(~) * impl ("))
-  state' <- getParserState
-  impl <- manyTill anyChar (try $ string $ ") => Op ")
-  spaces
-  return (constraints,impl)
-runImplParser = do
-  constraints <- parseConstraints
-  manyTill anyChar (try (string "("))
-  methodDatatype <- manyTill anyChar (try (string " ()) "))
-  widgetName <- manyTill anyChar (try (string " "))
-  return (constraints, methodDatatype, widgetName)
+  char '('
+  spacesOrNewLines
+  constraints <- manyTill anyChar (try (string "impl"))
+  spacesOrNewLines
+  char '~'
+  spacesOrNewLines
+  typeSig <- (try
+                (do
+                   char '('
+                   sig <- go (1 :: Int) ""
+                   spacesOrNewLines
+                   char ')'
+                   return sig) <|>
+              (go (1 :: Int) ""))
+  spacesOrNewLines
+  string "=>"
+  spacesOrNewLines
+  string "Op"
+  spacesOrNewLines
+  char '('
+  methodName <- word
+  _ <- go (1 :: Int) ""
+  spacesOrNewLines
+  widgetType <- word
+  return (constraints, typeSig, methodName, widgetType)
+  where
+    go nesting accum =
+      (try $ char '(' >> go (nesting + 1) (accum ++ "(")) <|>
+      (try $ lookAhead (char ')') >>
+             if (nesting == 0)
+               then parserZero
+               else if (nesting == 1)
+                      then char ')' >> return accum
+                      else char ')' >> go (nesting - 1) (accum ++ ")")) <|>
+      (do
+         bare <- manyTill anyChar ((lookAhead (char ')')) <|> (lookAhead (char '(')))
+         go nesting (accum ++ bare))
 
 runHierarchyParser = do
   spaces
-  char '*'
+  string "type"
   spaces
-  word
-  klazz <- word
-  char '='
+  widgetType <- word
   spaces
-  word
+  string "="
+  spaces
+  _ <- word
+  spaces
   parent <- many anyChar
-  return (klazz,parent)
+  return (widgetType, parent)
 className = "Op"
 
 lowerFirst m = [(toLower $ head m)] ++ (tail m)
@@ -69,7 +108,7 @@ pprint r = case r of
   ((c ,impl), methodDatatype, widgetName) ->
     (lowerFirst methodDatatype) ++
     "::" ++ " "
-    ++ "(" ++ (quoteDatatypes (tail (reverse (drop 2 (reverse c))))) ++ ")" ++ " => "
+    ++ "(" ++ (quoteDatatypes (reverse (drop 2 (reverse c)))) ++ ")" ++ " => "
     ++ "'Ref' '" ++ widgetName
     ++ "'" ++ " -> "
     ++ quoteDatatypes impl
@@ -86,38 +125,41 @@ traceHierarchy w accum dict = case (lookup w dict) of
 
 main = do
   args <- getArgs
-  let command = case args of
-        ("functions":w':[]) -> Just (Functions w')
-        ("hierarchy":w':[]) -> Just (Hierarchy w')
-        _ -> Nothing
+  let command =
+        case args of
+          ("functions":w':[]) -> Just (Functions w')
+          ("hierarchy":w':[]) -> Just (Hierarchy w')
+          _                   -> Nothing
 
-  ls <- readProcess "html2text" ["-width", "1000", "../dist/doc/html/fltkhs/Graphics-UI-FLTK-LowLevel-Dispatch.html" ] "" >>= return . filter (isInfixOf ("=> " ++ className)) . lines
-  objs <- readProcess "html2text" ["-width", "1000", "../dist/doc/html/fltkhs/Graphics-UI-FLTK-LowLevel-Hierarchy.html"] "" >>= return . filter (isInfixOf ("    * type")) . lines
-  let ppLines = map (\l -> case (parse runImplParser "" l) of
-                        Left err -> Nothing
-                        Right r -> Just r
-                    )
-                ls
-  let hier' = map (\o -> case (parse runHierarchyParser "" o) of
-                      Left err -> trace (show  err) $ Nothing
-                      Right r -> Just r
-                  )
-              objs
+  objs <- readFile "../src/Graphics/UI/FLTK/LowLevel/Hierarchy.hs" >>=
+          return .
+          filter (not . isInfixOf "Funcs") .
+          filter (isPrefixOf "type") .
+          lines
+  let readWidgetFile w = readFile ("../src/Graphics/UI/FLTK/LowLevel/" ++ w ++ ".chs")
+  let parseWidgetFile contents =
+        case (parse parseInstances "" contents) of
+          Left err        -> error (show err)
+          Right instances -> Just instances
+  let hier' = map
+                (\o -> case (parse runHierarchyParser "" o) of
+                   Left err -> Nothing
+                   Right r  -> Just r)
+                objs
   case command of
     Nothing -> error ""
     (Just (Hierarchy w)) -> do
       let trace' = reverse $
-                   map (\w -> "-- " ++ w) $
-                   map (\w -> "\"" ++ w ++ "\"") $
-                   map (\w -> "Graphics.UI.FLTK.LowLevel." ++ w) $
-                   traceHierarchy w [] (catMaybes hier')
+            map (\w -> "-- " ++ w) $
+              map (\w -> "\"" ++ w ++ "\"") $
+                map (\w -> "Graphics.UI.FLTK.LowLevel." ++ w) $
+                  traceHierarchy w [] (catMaybes hier')
       putStr $ concat $ intersperse "\n--  |\n--  v\n" trace'
       putStr "\n"
     (Just (Functions w)) -> do
-      let filteredByWidget = map (maybe "" pprint) $
-                             filter (\ppl -> case ppl of
-                                        Nothing -> False
-                                        Just ppl' -> isWidget w ppl'
-                                    ) ppLines
-      putStr $ intercalate "\n--\n" (map ((++) "-- ")  (sort  filteredByWidget))
+      contents <- readWidgetFile w
+      let parsed = parseWidgetFile contents
+      let instances = maybe [] (sort . map (\(c, sig, mName, wType) -> pprint ((c, sig), mName, wType)))
+                        parsed
+      putStr $ intercalate "\n--\n" (map ((++) "-- ") instances)
       putStr "\n"

@@ -369,11 +369,17 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Color_Chooser_rgb2hsv)(double R,double G,double B,double* H,double* S,double* V){
     Fl_Color_Chooser::rgb2hsv(R,G,B,*H,*S,*V);
   }
-  FL_EXPORT_C(int, flc_color_chooser)(const char* name, double r, double g, double b){
-    return fl_color_chooser(name,r,g,b);
+  FL_EXPORT_C(int, flc_color_chooser)(const char* name, double* r, double* g, double* b){
+    return fl_color_chooser(name,*r,*g,*b);
   }
-  FL_EXPORT_C(int, flc_color_chooser_with_m)(const char* name, double r, double g, double b, int m){
-    return fl_color_chooser(name,r,g,b,m);
+  FL_EXPORT_C(int, flc_color_chooser_with_m)(const char* name, double* r, double* g, double* b, int m){
+    return fl_color_chooser(name,*r,*g,*b,m);
+  }
+  FL_EXPORT_C(int, flc_color_chooser_with_uchar)(const char* name, uchar* r, uchar* g, uchar* b){
+    return fl_color_chooser(name,*r,*g,*b);
+  }
+  FL_EXPORT_C(int, flc_color_chooser_with_uchar_m)(const char* name, uchar* r, uchar* g, uchar* b, int m){
+    return fl_color_chooser(name,*r,*g,*b,m);
   }
 #ifdef __cplusplus
 }

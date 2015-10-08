@@ -2,6 +2,10 @@
 module Graphics.UI.FLTK.LowLevel.FL
     (
      Option(..),
+     scrollbarSize,
+     setScrollbarSize,
+     selectionOwner,
+     setSelectionOwner,
      run,
      check,
      ready,
@@ -167,7 +171,8 @@ import Graphics.UI.FLTK.LowLevel.Hierarchy hiding (
                                                    setColor,
                                                    getColor,
                                                    focus,
-                                                   display
+                                                   display,
+                                                   setScrollbarSize
                                                   )
 import Graphics.UI.FLTK.LowLevel.Dispatch
 import qualified System.IO.Unsafe as Unsafe (unsafePerformIO)
@@ -237,7 +242,7 @@ getAwakeHandler_ =
 {# fun Fl_version as version
   {} -> `Double' #}
 {# fun Fl_help as help
-  {} -> `String' #}
+  {} -> `String' unsafeFromCString #}
 
 display :: String -> IO ()
 display text = withCString text $ \str -> {#call Fl_display as fl_display #} str
@@ -271,12 +276,8 @@ background2 (r,g,b) = {#call Fl_background2 as fl_background2 #}
                     (fromIntegral r)
                     (fromIntegral g)
                     (fromIntegral b)
--- | In the function below marked `pure`, c2hs uses `unsafePerformIO` unqualified causing
--- | a compile error if it imported qualifed. This is a workaround.
-unsafePerformIO :: IO a -> a
-unsafePerformIO = Unsafe.unsafePerformIO
 {# fun pure Fl_scheme as scheme
-  {} -> `String' #}
+  {} -> `String' unsafeFromCString #}
 setScheme :: String -> IO Int
 setScheme sch = withCString sch $ \str -> {#call Fl_set_scheme as fl_set_scheme #} str >>= return . fromIntegral
 isScheme :: String -> IO Bool
@@ -285,6 +286,12 @@ isScheme sch = withCString sch $ \str -> {#call Fl_is_scheme as fl_is_scheme #} 
        {  } -> `Int' #}
 {# fun Fl_set_wait as setWait
        { `Double' } -> `Double' #}
+
+{# fun Fl_scrollbar_size as scrollbarSize
+       {  } -> `Int' #}
+{# fun Fl_set_scrollbar_size as setScrollbarSize
+       { `Int' } -> `()' #}
+
 {# fun Fl_readqueue as readqueue
        {  } -> `Ref Widget' unsafeToRef #}
 {# fun Fl_add_timeout as addTimeout
@@ -314,21 +321,21 @@ isScheme sch = withCString sch $ \str -> {#call Fl_is_scheme as fl_is_scheme #} 
 {# fun Fl_flush as flush
        {  } -> `()' supressWarningAboutRes #}
 {# fun Fl_first_window as firstWindow
-       {  } -> `Ref Window' unsafeToRef #}
+       {  } -> `Maybe (Ref Window)' unsafeToMaybeRef #}
 {# fun Fl_set_first_window as setFirstWindow'
        { id `Ptr ()' } -> `()' supressWarningAboutRes #}
 setFirstWindow :: (Parent a Window) => Ref a -> IO ()
 setFirstWindow wp =
     withRef wp setFirstWindow'
 {# fun Fl_next_window as nextWindow'
-       { id `Ptr ()' } -> `Ref Window' unsafeToRef #}
-nextWindow :: (Parent a Window) => Ref a -> IO (Ref Window)
+       { id `Ptr ()' } -> `Maybe (Ref Window)' unsafeToMaybeRef #}
+nextWindow :: (Parent a Window) => Ref a -> IO (Maybe (Ref Window))
 nextWindow currWindow =
     withRef currWindow nextWindow'
 {# fun Fl_modal as modal
-       {  } -> `Ref Window' unsafeToRef #}
+       {  } -> `Maybe (Ref Window)' unsafeToMaybeRef #}
 {# fun Fl_grab as grab
-       {  } -> `Ref Window' unsafeToRef #}
+       {  } -> `Maybe (Ref Window)' unsafeToMaybeRef #}
 {# fun Fl_set_grab as setGrab'
        { id `Ptr ()' } -> `()' supressWarningAboutRes #}
 setGrab :: (Parent a Window) => Ref a -> IO ()
@@ -401,7 +408,7 @@ extractEventStates = extract eventStates
 {# fun Fl_get_key as getKey
        {cFromKeyType `KeyType' } -> `Bool' toBool #}
 {# fun Fl_event_text as eventText
-       {  } -> `String' #}
+       {  } -> `String' unsafeFromCString #}
 {# fun Fl_event_length as eventLength
        {  } -> `Int' #}
 {# fun Fl_compose as compose
@@ -445,23 +452,31 @@ handle_ :: (Parent a Window) =>  Event -> Ref a -> IO Int
 handle_ e wp =
     withRef wp (handle_' (cFromEnum e))
 {# fun Fl_belowmouse as belowmouse
-       {  } -> `Ref Widget' unsafeToRef #}
+       {  } -> `Maybe (Ref Widget)' unsafeToMaybeRef #}
 {# fun Fl_set_belowmouse as setBelowmouse'
        { id `Ptr ()' } -> `()' supressWarningAboutRes #}
 setBelowmouse :: (Parent a Widget) => Ref a -> IO ()
 setBelowmouse wp = withRef wp setBelowmouse'
-{# fun Fl_pushed as pushed
-       {  } -> `Ref Widget' unsafeToRef #}
+{# fun Fl_pushed as pushed'
+       {  } -> `Ptr ()' #}
+pushed :: IO (Maybe (Ref Widget))
+pushed = pushed' >>= toMaybeRef
 {# fun Fl_set_pushed as setPushed'
        { id `Ptr ()' } -> `()' supressWarningAboutRes #}
 setPushed :: (Parent a Widget) => Ref a -> IO ()
 setPushed wp = withRef wp setPushed'
 {# fun Fl_focus as focus
-       {  } -> `Ref Widget' unsafeToRef #}
+       {  } -> `Maybe (Ref Widget)' unsafeToMaybeRef #}
 {# fun Fl_set_focus as setFocus'
        { id `Ptr ()' } -> `()' supressWarningAboutRes #}
 setFocus :: (Parent a Widget) => Ref a -> IO ()
 setFocus wp = withRef wp setFocus'
+{# fun Fl_selection_owner as selectionOwner
+       {  } -> `Maybe (Ref Widget)' unsafeToMaybeRef #}
+{# fun Fl_set_selection_owner as setSelection_Owner'
+       { id `Ptr ()' } -> `()' supressWarningAboutRes #}
+setSelectionOwner :: (Parent a Widget) => Ref a -> IO ()
+setSelectionOwner wp = withRef wp setSelection_Owner'
 {# fun Fl_add_handler as addHandler'
        { id `FunPtr GlobalEventHandlerPrim' } -> `()' supressWarningAboutRes #}
 {# fun Fl_remove_handler as removeHandler'
@@ -637,7 +652,7 @@ screenWorkArea location =
       Nothing ->
           screenWorkArea' >>= return . toRectangle
 
-setColorRgb :: Color -> Int -> Int -> Int -> IO ()
+setColorRgb :: Color -> Word8 -> Word8 -> Word8 -> IO ()
 setColorRgb c r g b = {#call Fl_set_color_rgb as fl_set_color_rgb #}
                         (cFromColor c)
                         (fromIntegral r)
@@ -647,13 +662,17 @@ setColorRgb c r g b = {#call Fl_set_color_rgb as fl_set_color_rgb #}
        { cFromColor `Color',`Int' } -> `()' supressWarningAboutRes #}
 {# fun Fl_get_color as getColor
        { cFromColor `Color' } -> `Int' #}
-{# fun Fl_get_color_rgb as getColorRgb
+{# fun Fl_get_color_rgb as getColorRgb'
        {
          cFromColor `Color',
-         alloca- `Word8' peekIntConv*,
-         alloca- `Word8' peekIntConv*,
-         alloca- `Word8' peekIntConv*
+         alloca- `CUChar' peekIntConv*,
+         alloca- `CUChar' peekIntConv*,
+         alloca- `CUChar' peekIntConv*
        } -> `()' supressWarningAboutRes #}
+getColorRgb :: Color -> IO RGB
+getColorRgb c = do
+   (_,r,g,b) <- getColorRgb' c
+   return (r,g,b)
 
 #if !defined(__APPLE__)
 {# fun Fl_free_color as freeColor'
@@ -665,9 +684,9 @@ removeFromColormap (Just overlay) c = freeColorWithOverlay' c overlay
 removeFromColormap Nothing c = freeColor' c
 #endif
 {# fun Fl_get_font as getFont
-       { cFromFont `Font' } -> `String' #}
+       { cFromFont `Font' } -> `String' unsafeFromCString #}
 {# fun Fl_get_font_name_with_attributes as getFontNameWithAttributes'
-       { cFromFont `Font', alloca- `Maybe FontAttribute' toAttribute* } -> `String' #}
+       { cFromFont `Font', alloca- `Maybe FontAttribute' toAttribute* } -> `String' unsafeFromCString #}
 toAttribute :: Ptr CInt -> IO (Maybe FontAttribute)
 toAttribute ptr =
         do

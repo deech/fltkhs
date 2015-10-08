@@ -53,6 +53,16 @@ EXPORT {
     C_to_Fl_Callback* callback = new C_to_Fl_Callback(c);
     callback->set_callback(static_cast<Fl_Menu_Item*>(menu_item));
   }
+  FL_EXPORT_C(int, Fl_Menu_Item_has_callback)(fl_Menu_Item menu_item){
+    void* p = 0;
+    p = (void*)(static_cast<Fl_Menu_Item*>(menu_item)->callback());
+    if (p == NULL) {
+      return 0;
+    }
+    else {
+      return 1;
+    }
+  }
   FL_EXPORT_C(void*,Fl_Menu_Item_user_data)(fl_Menu_Item menu_item){
     return (static_cast<Fl_Menu_Item*>(menu_item))->user_data();
   }

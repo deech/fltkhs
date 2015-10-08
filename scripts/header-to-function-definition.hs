@@ -1,4 +1,5 @@
 #!/bin/runhaskell
+{-# LANGUAGE FlexibleContexts #-}
 import Control.Monad
 import Text.Parsec
 import Text.Parsec.String
@@ -224,7 +225,7 @@ printHaskell (Haskell (prefix, oldName, name, returnType, haskellArgs)) =
              )
             )
     in
-    printf "{# fun unsafe %s as %s { %s } -> %s #}\ninstance (impl ~ (%s)) => Op (%s ()) xxx orig impl where\n   runOp _ _ %s"
+    printf "{# fun %s as %s { %s } -> %s #}\ninstance (impl ~ (%s)) => Op (%s ()) xxx orig impl where\n   runOp _ _ %s"
            oldName
            (name ++ "'")
            (intercalate ","
@@ -411,6 +412,7 @@ simpleTypeMap =
     ,("Fl_Mode", "Mode")
     ,("fl_Scroll", "Ptr ()")
     ,("fl_Widget", "Ptr ()")
+    ,("fl_Spinner", "Ptr ()")
     ,("fl_Tabs", "Ptr ()")
     ,("fl_Native_File_Chooser", "Ptr ()")
     ,("fl_Text_Buffer", "Ptr ()")
@@ -480,6 +482,7 @@ haskellEquivalent =
     [
      ("fl_Region"         , "Region"),
      ("fl_Widget"         , "Widget"),
+     ("fl_Spinner"         , "Spinner"),
      ("fl_Tabs"         , "Tabs"),
      ("fl_Native_File_Chooser"         , "NativeFileChooser"),
      ("fl_Text_Buffer"    , "TextBuffer"),

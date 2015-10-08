@@ -77,10 +77,10 @@ btypeCb browser' btype' = do
   _ <- select browser' 1 False -- leave focus box on first line
   choice' <- getText btype'
   case choice' of
-   "Normal" -> setType browser' (fromIntegral $ fromEnum NormalBrowserType)
-   "Select" -> setType browser' (fromIntegral $ fromEnum SelectBrowserType)
-   "Hold" -> setType browser' (fromIntegral $ fromEnum HoldBrowserType)
-   "Multi" -> setType browser' (fromIntegral $ fromEnum MultiBrowserType)
+   "Normal" -> setType browser' NormalBrowserType
+   "Select" -> setType browser' SelectBrowserType
+   "Hold" -> setType browser' HoldBrowserType
+   "Multi" -> setType browser' MultiBrowserType
    _ -> return ()
   redraw browser'
 
@@ -92,7 +92,7 @@ main = do
      let fname = head args
      window <- doubleWindowNew (Size (Width 560) (Height 400)) Nothing (Just fname)
      browser' <- selectBrowserNew (Rectangle (Position (X 0) (Y 0)) (Size (Width 560) (Height 350))) Nothing
-     setType browser' (fromIntegral $ fromEnum MultiBrowserType)
+     setType browser' MultiBrowserType
      setCallback browser' bCb
      loadStatus' <- load browser' fname
      if (loadStatus' == 0)
@@ -121,7 +121,7 @@ main = do
        addName btype "Multi"
        setCallback btype $ btypeCb browser'
        _ <- setValue btype (MenuItemByIndex (MenuItemIndex 3))
-       setResizable window browser'
+       setResizable window (Just browser')
        showWidget window
        _ <- FL.run
        return ()

@@ -111,8 +111,8 @@ EXPORT {
   FL_EXPORT_C(void,         Fl_Group_resize)(fl_Group group,int X, int Y, int W, int H);
 
   /* Fl_Group static members */
-  FL_EXPORT_C(fl_Group,Fl_Group_set_current)();
-  FL_EXPORT_C(void ,   Fl_Group_current)(fl_Group g);
+  FL_EXPORT_C(fl_Group,Fl_Group_current)();
+  FL_EXPORT_C(void ,   Fl_Group_set_current)(fl_Group g);
 
   /* Fl_Group specific */
   FL_EXPORT_C(void,         Fl_Group_draw_child)(fl_Group group, fl_Widget widget);

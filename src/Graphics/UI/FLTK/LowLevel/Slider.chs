@@ -15,6 +15,7 @@ where
 #include "Fl_ExportMacros.h"
 #include "Fl_Types.h"
 #include "Fl_SliderC.h"
+#include "Fl_WidgetC.h"
 import C2HS hiding (cFromEnum, cFromBool, cToBool,cToEnum)
 import Foreign.C.Types
 import Graphics.UI.FLTK.LowLevel.Fl_Enumerations
@@ -42,25 +43,30 @@ instance (impl ~ (IO ())) => Op (Destroy ()) Slider orig impl where
 {#fun Fl_Slider_handle as sliderHandle' { id `Ptr ()', id `CInt' } -> `Int' #}
 instance (impl ~ (Event -> IO Int)) => Op (Handle ()) Slider orig impl where
   runOp _ _ slider event = withRef slider (\p -> sliderHandle' p (fromIntegral . fromEnum $ event))
-{# fun unsafe Fl_Slider_bounds as bounds' { id `Ptr ()',`Double',`Double' } -> `()' supressWarningAboutRes #}
+{# fun Fl_Slider_bounds as bounds' { id `Ptr ()',`Double',`Double' } -> `()' supressWarningAboutRes #}
 instance (impl ~ (Double -> Double ->  IO ())) => Op (Bounds ()) Slider orig impl where
   runOp _ _ slider a b = withRef slider $ \sliderPtr -> bounds' sliderPtr a b
-{# fun unsafe Fl_Slider_scrollvalue as scrollvalue' { id `Ptr ()',`Int',`Int',`Int',`Int' } -> `Int' #}
+{# fun Fl_Slider_scrollvalue as scrollvalue' { id `Ptr ()',`Int',`Int',`Int',`Int' } -> `Int' #}
 instance (impl ~ (Int -> Int -> Int -> Int ->  IO (Int))) => Op (Scrollvalue ()) Slider orig impl where
   runOp _ _ slider pos slider_size first total = withRef slider $ \sliderPtr -> scrollvalue' sliderPtr pos slider_size first total
-{# fun unsafe Fl_Slider_set_slider_size as setSliderSize' { id `Ptr ()' } -> `Float' #}
+{# fun Fl_Slider_set_slider_size as setSliderSize' { id `Ptr ()' } -> `Float' #}
 instance (impl ~ ( IO (Float))) => Op (SetSliderSize ()) Slider orig impl where
   runOp _ _ slider = withRef slider $ \sliderPtr -> setSliderSize' sliderPtr
-{# fun unsafe Fl_Slider_slider_size as sliderSize' { id `Ptr ()',`Double' } -> `()' supressWarningAboutRes #}
+{# fun Fl_Slider_slider_size as sliderSize' { id `Ptr ()',`Double' } -> `()' supressWarningAboutRes #}
 instance (impl ~ (Double ->  IO ())) => Op (GetSliderSize ()) Slider orig impl where
   runOp _ _ slider v = withRef slider $ \sliderPtr -> sliderSize' sliderPtr v
-{# fun unsafe Fl_Slider_slider as slider' { id `Ptr ()' } -> `Boxtype' cToEnum #}
+{# fun Fl_Slider_slider as slider' { id `Ptr ()' } -> `Boxtype' cToEnum #}
 instance (impl ~ ( IO (Boxtype))) => Op (GetSlider ()) Slider orig impl where
   runOp _ _ slider = withRef slider $ \sliderPtr -> slider' sliderPtr
-{# fun unsafe Fl_Slider_set_slider as setSlider' { id `Ptr ()',cFromEnum `Boxtype' } -> `()' supressWarningAboutRes #}
+{# fun Fl_Slider_set_slider as setSlider' { id `Ptr ()',cFromEnum `Boxtype' } -> `()' supressWarningAboutRes #}
 instance (impl ~ (Boxtype ->  IO ())) => Op (SetSlider ()) Slider orig impl where
   runOp _ _ slider c = withRef slider $ \sliderPtr -> setSlider' sliderPtr c
-
+{# fun Fl_Widget_set_type as setType' { id `Ptr ()',`Word8' } -> `()' supressWarningAboutRes #}
+instance (impl ~ (SliderType ->  IO ())) => Op (SetType ()) Slider orig impl where
+  runOp _ _ widget t = withRef widget $ \widgetPtr -> setType' widgetPtr (fromInteger $ toInteger $ fromEnum t)
+{# fun Fl_Widget_type as type' { id `Ptr ()' } -> `Word8' #}
+instance (impl ~ IO (SliderType)) => Op (GetType_ ()) Slider orig impl where
+  runOp _ _ widget = withRef widget $ \widgetPtr -> type' widgetPtr >>= return . toEnum . fromInteger . toInteger
 -- $functions
 -- @
 --

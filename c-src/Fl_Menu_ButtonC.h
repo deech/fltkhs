@@ -10,6 +10,18 @@
 #include "Fl_Menu_C.h"
 EXPORT {
 #endif
+#ifndef INTERNAL_LINKAGE
+  typedef enum Menu_Button_Type {
+    NORMAL = 0,
+    POPUP1 = 1, /**< pops up with the mouse 1st button. */
+    POPUP2,  /**< pops up with the mouse 2nd button. */
+    POPUP12, /**< pops up with the mouse 1st or 2nd buttons. */
+    POPUP3,   /**< pops up with the mouse 3rd button. */
+    POPUP13,  /**< pops up with the mouse 1st or 3rd buttons. */
+    POPUP23,  /**< pops up with the mouse 2nd or 3rd buttons. */
+    POPUP123 /**< pops up with any mouse button. */
+  } Menu_Button_Type;
+#endif
   /* Inherited from Fl_Widget */
   FL_EXPORT_C(int,          Fl_Menu_Button_handle)(fl_Group self, int event);
   FL_EXPORT_C(fl_Group,     Fl_Menu_Button_parent)(fl_Menu_Button menu_button);

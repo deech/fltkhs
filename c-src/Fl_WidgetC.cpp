@@ -267,9 +267,22 @@ FL_EXPORT_C(void, Fl_Widget_draw_label)(fl_Widget Widget){
     Fl_DerivedWidget* castedWindow = (static_cast<Fl_DerivedWidget*>(widget));
     new C_to_Fl_Callback(castedWindow, cb, p);
   }
+  FL_EXPORT_C(void,Fl_Widget_do_callback)(fl_Widget widget){
+    (static_cast<Fl_DerivedWidget*>(widget))->do_callback();
+  }
   FL_EXPORT_C(void,Fl_Widget_set_callback)(fl_Widget widget,fl_Callback* cb){
     Fl_DerivedWidget* castedWindow = (static_cast<Fl_DerivedWidget*>(widget));
     new C_to_Fl_Callback(castedWindow, cb);
+  }
+  FL_EXPORT_C(int, Fl_Widget_has_callback)(fl_Widget widget){
+    void* p = 0;
+    p = (void*)(static_cast<Fl_DerivedWidget*>(widget)->callback());
+    if (p == NULL) {
+      return 0;
+    }
+    else {
+      return 1;
+    }
   }
   FL_EXPORT_C(void*,Fl_Widget_other_data)(fl_Widget widget){
     return (static_cast<Fl_DerivedWidget*>(widget))->get_other_data();

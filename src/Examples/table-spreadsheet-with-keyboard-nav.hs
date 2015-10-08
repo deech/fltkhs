@@ -46,7 +46,7 @@ setValueHide sp' table' intInput' = do
   writeIORef sp' updatedProperties'
   hide intInput'
   window' <- getWindow table'
-  setCursor window' CursorDefault
+  maybe (return ()) (\w' -> setCursor w' CursorDefault ) window'
 
 startEditing :: IORef SpreadsheetProperties -> Ref IntInput -> Ref Table -> Int -> Int -> IO ()
 startEditing props' intInput' table' row' col' = do
@@ -267,7 +267,7 @@ main = do
   begin win'
   -- Rows slider
   setRows' <- valueSliderNew (toRectangle (winWidth'-40,20,20,winHeight'-80)) Nothing
-  setType setRows' (fromIntegral $ fromEnum VertNiceSliderType)
+  setType setRows' VertNiceSliderType
   bounds setRows' 2 (fromIntegral maxRows)
   setStep setRows' 1
   numRows' <- getRows spreadsheet'
@@ -277,7 +277,7 @@ main = do
   clearVisibleFocus setRows'
    -- Cols slider
   setCols' <- valueSliderNew (toRectangle (20,winHeight'-40,winWidth'-80,20)) Nothing
-  setType setCols' (fromIntegral $ fromEnum HorNiceSliderType)
+  setType setCols' HorNiceSliderType
   bounds setCols' 2 (fromIntegral maxCols)
   setStep setCols' 1
   numCols' <- getCols spreadsheet'
@@ -286,7 +286,7 @@ main = do
   setWhen setCols' [WhenChanged]
   clearVisibleFocus setCols'
   end win'
-  setResizable win' spreadsheet'
+  setResizable win' (Just spreadsheet')
   showWidget win'
   _ <- FL.run
   return ()

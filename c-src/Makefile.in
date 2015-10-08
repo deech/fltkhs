@@ -14,7 +14,8 @@ CPPFILES= \
 	Fl_RollerC.cpp \
 	Fl_DialC.cpp \
 	Fl_CounterC.cpp \
-	Utils.cpp \
+	Fl_SpinnerC.cpp \
+	UtilsC.cpp \
 	xC.cpp \
 	fl_utf8C.cpp \
 	glC.cpp \

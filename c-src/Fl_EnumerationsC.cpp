@@ -3,7 +3,7 @@
 #ifdef __cplusplus
 #include "Fl_EnumerationsC.h"
 EXPORT {
-#endif  
+#endif
   FL_EXPORT_C(Fl_Boxtype, fl_define_FL_ROUND_UP_BOXC)(){ return fl_define_FL_ROUND_UP_BOX();}
   FL_EXPORT_C(Fl_Boxtype, fl_define_FL_SHADOW_BOXC)(){ return fl_define_FL_SHADOW_BOX();}
   FL_EXPORT_C(Fl_Boxtype, fl_define_FL_ROUNDED_BOXC)(){ return fl_define_FL_ROUNDED_BOX();}
@@ -13,6 +13,7 @@ EXPORT {
   FL_EXPORT_C(Fl_Boxtype, fl_define_FL_OVAL_BOXC)(){ return fl_define_FL_OVAL_BOX(); }
   FL_EXPORT_C(Fl_Boxtype, fl_define_FL_PLASTIC_UP_BOXC)(){ return fl_define_FL_PLASTIC_UP_BOX();}
   FL_EXPORT_C(Fl_Boxtype, fl_define_FL_GTK_UP_BOXC)(){ return fl_define_FL_GTK_UP_BOX();}
+  FL_EXPORT_C(Fl_Boxtype, fl_define_FL_GLEAM_UP_BOXC)(){ return fl_define_FL_GLEAM_UP_BOX();}
   FL_EXPORT_C(Fl_Boxtype, fl_boxC)(Fl_Boxtype b) { return fl_box(b);}
   FL_EXPORT_C(Fl_Boxtype, fl_downC)(Fl_Boxtype b) { return fl_down(b);}
   FL_EXPORT_C(Fl_Boxtype, fl_frameC)(Fl_Boxtype b) { return fl_frame(b);}

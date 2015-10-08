@@ -86,7 +86,7 @@ arrayToKeyBindings p | p == nullPtr = return []
 arrayToKeyBindings p =
   go [] p
   where
-    go accum p' | p' == nullPtr = print (length accum) >> return accum
+    go accum p' | p' == nullPtr = return accum
     go accum p' = do
       key' <- {#get Key_BindingC->key #} p' >>= return . fromIntegral
       state' <- {#get Key_BindingC->state #} p'
@@ -112,7 +112,7 @@ textEditorNew rectangle l' =
         Nothing -> textEditorNew' x_pos y_pos width height >>= toRef
         Just l -> textEditorNewWithLabel' x_pos y_pos width height l >>= toRef
 
-{# fun unsafe Fl_Text_Editor_handle as handle' { id `Ptr ()',`Int' } -> `Int' #}
+{# fun Fl_Text_Editor_handle as handle' { id `Ptr ()',`Int' } -> `Int' #}
 instance (impl ~ (Event ->  IO (Int))) => Op (Handle ()) TextEditor orig impl where
    runOp _ _ text_editor e = withRef text_editor $ \text_editorPtr -> handle' text_editorPtr (fromEnum e)
 {# fun Fl_Text_Editor_Destroy as textEditorDestroy' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
@@ -120,19 +120,19 @@ instance (impl ~ (IO ())) => Op (Destroy ()) TextEditor orig impl where
   runOp _ _ editor = swapRef editor $ \editorPtr -> do
     textEditorDestroy' editorPtr
     return nullPtr
-{# fun unsafe Fl_Text_Editor_set_insert_mode as setInsertMode' { id `Ptr ()', cFromBool `Bool' } -> `()' #}
+{# fun Fl_Text_Editor_set_insert_mode as setInsertMode' { id `Ptr ()', cFromBool `Bool' } -> `()' #}
 instance (impl ~ (Bool ->  IO ())) => Op (SetInsertMode ()) TextEditor orig impl where
    runOp _ _ text_editor b = withRef text_editor $ \text_editorPtr -> setInsertMode' text_editorPtr b
-{# fun unsafe Fl_Text_Editor_insert_mode as insertMode' { id `Ptr ()' } -> `Bool' cToBool #}
+{# fun Fl_Text_Editor_insert_mode as insertMode' { id `Ptr ()' } -> `Bool' cToBool #}
 instance (impl ~ ( IO (Bool))) => Op (GetInsertMode ()) TextEditor orig impl where
    runOp _ _ text_editor = withRef text_editor $ \text_editorPtr -> insertMode' text_editorPtr
-{# fun unsafe Fl_Text_Editor_add_default_key_bindings as addDefaultKeyBindings' { id `Ptr ()',id `Ptr ()' } -> `Ptr ()' id #}
+{# fun Fl_Text_Editor_add_default_key_bindings as addDefaultKeyBindings' { id `Ptr ()',id `Ptr ()' } -> `Ptr ()' id #}
 instance (impl ~ (IO [KeyBinding])) => Op (GetDefaultKeyBindings ()) TextEditor orig impl where
   runOp _ _ text_editor = withRef text_editor $ \text_editorPtr -> do
     p' <- addDefaultKeyBindings' text_editorPtr nullPtr
     kbs <- arrayToKeyBindings p'
     return kbs
-{# fun unsafe Fl_Text_Editor_replace_key_bindings as replaceKeyBindings' { id `Ptr ()', id `Ptr ()'} -> `()' #}
+{# fun Fl_Text_Editor_replace_key_bindings as replaceKeyBindings' { id `Ptr ()', id `Ptr ()'} -> `()' #}
 instance (impl ~ ([KeyBinding] -> IO ())) => Op (ReplaceKeyBindings ()) TextEditor orig impl where
   runOp _ _ text_editor kbs = withRef text_editor $ \text_editorPtr -> do
         p <- keyBindingsToArray kbs

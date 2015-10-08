@@ -77,7 +77,7 @@ data ImageFuncs a b =
     imageUncacheOverride :: Maybe (Ref Image -> IO ())
   }
 
-{# fun unsafe Fl_Image_default_virtual_funcs as virtualFuncs' {} -> `Ptr ()' id #}
+{# fun Fl_Image_default_virtual_funcs as virtualFuncs' {} -> `Ptr ()' id #}
 imageFunctionStruct :: (ImageFuncs a b) -> IO (Ptr ())
 imageFunctionStruct funcs = do
   p <- virtualFuncs'
@@ -96,8 +96,8 @@ imageFunctionStruct funcs = do
 defaultImageFuncs :: ImageFuncs a b
 defaultImageFuncs = ImageFuncs Nothing Nothing Nothing Nothing Nothing
 
-{# fun unsafe Fl_Image_New as flImageNew' { `Int',`Int',`Int' } -> `Ptr ()' id #}
-{# fun unsafe Fl_OverriddenImage_New as flOverriddenImageNew' { `Int',`Int',`Int', id `Ptr ()'} -> `Ptr ()' id #}
+{# fun Fl_Image_New as flImageNew' { `Int',`Int',`Int' } -> `Ptr ()' id #}
+{# fun Fl_OverriddenImage_New as flOverriddenImageNew' { `Int',`Int',`Int', id `Ptr ()'} -> `Ptr ()' id #}
 imageNew :: Size -> Depth -> Maybe (ImageFuncs a b) -> IO (Ref Image)
 imageNew (Size (Width width') (Height height')) (Depth depth') funcs =
   case funcs of
@@ -107,48 +107,48 @@ imageNew (Size (Width width') (Height height')) (Depth depth') funcs =
             toRef obj
     Nothing -> flImageNew' width' height' depth' >>= toRef
 
-{# fun unsafe Fl_Image_Destroy as flImageDestroy' { id `Ptr ()' } -> `()' id #}
+{# fun Fl_Image_Destroy as flImageDestroy' { id `Ptr ()' } -> `()' id #}
 instance (impl ~ (IO ())) => Op (Destroy ()) Image orig impl where
   runOp _ _ image = withRef image $ \imagePtr -> flImageDestroy' imagePtr
-{# fun unsafe Fl_Image_w as w' { id `Ptr ()' } -> `Int' #}
+{# fun Fl_Image_w as w' { id `Ptr ()' } -> `Int' #}
 instance (impl ~ ( IO (Int))) => Op (GetW ()) Image orig impl where
   runOp _ _ image = withRef image $ \imagePtr -> w' imagePtr
-{# fun unsafe Fl_Image_h as h' { id `Ptr ()' } -> `Int' #}
+{# fun Fl_Image_h as h' { id `Ptr ()' } -> `Int' #}
 instance (impl ~ ( IO (Int))) => Op (GetH ()) Image orig impl where
   runOp _ _ image = withRef image $ \imagePtr -> h' imagePtr
-{# fun unsafe Fl_Image_d as d' { id `Ptr ()' } -> `Int' #}
+{# fun Fl_Image_d as d' { id `Ptr ()' } -> `Int' #}
 instance (impl ~ ( IO (Int))) => Op (GetD ()) Image orig impl where
   runOp _ _ image = withRef image $ \imagePtr -> d' imagePtr
-{# fun unsafe Fl_Image_ld as ld' { id `Ptr ()' } -> `Int' #}
+{# fun Fl_Image_ld as ld' { id `Ptr ()' } -> `Int' #}
 instance (impl ~ ( IO (Int))) => Op (GetLd ()) Image orig impl where
   runOp _ _ image = withRef image $ \imagePtr -> ld' imagePtr
-{# fun unsafe Fl_Image_count as count' { id `Ptr ()' } -> `Int' #}
+{# fun Fl_Image_count as count' { id `Ptr ()' } -> `Int' #}
 instance (impl ~ ( IO (Int))) => Op (GetCount ()) Image orig impl where
   runOp _ _ image = withRef image $ \imagePtr -> count' imagePtr
 
-{# fun unsafe Fl_Image_copy_with_w_h as copyWithWH' { id `Ptr ()',`Int',`Int' } -> `Ptr ()' id #}
-{# fun unsafe Fl_Image_copy as copy' { id `Ptr ()' } -> `Ptr ()' id #}
-instance (impl ~ ( Maybe Size -> IO (Ref Image))) => Op (Copy ()) Image orig impl where
+{# fun Fl_Image_copy_with_w_h as copyWithWH' { id `Ptr ()',`Int',`Int' } -> `Ptr ()' id #}
+{# fun Fl_Image_copy as copy' { id `Ptr ()' } -> `Ptr ()' id #}
+instance (impl ~ ( Maybe Size -> IO (Maybe (Ref Image)))) => Op (Copy ()) Image orig impl where
   runOp _ _ image size' = case size' of
-    Just (Size (Width w) (Height h)) -> withRef image $ \imagePtr -> copyWithWH' imagePtr w h >>= toRef
-    Nothing -> withRef image $ \imagePtr -> copy' imagePtr >>= toRef
+    Just (Size (Width w) (Height h)) -> withRef image $ \imagePtr -> copyWithWH' imagePtr w h >>= toMaybeRef
+    Nothing -> withRef image $ \imagePtr -> copy' imagePtr >>= toMaybeRef
 
-{# fun unsafe Fl_Image_color_average as colorAverage' { id `Ptr ()',cFromColor `Color',`Float' } -> `()' #}
+{# fun Fl_Image_color_average as colorAverage' { id `Ptr ()',cFromColor `Color',`Float' } -> `()' #}
 instance (impl ~ (Color -> Float ->  IO ())) => Op (ColorAverage ()) Image orig impl where
   runOp _ _ image c i = withRef image $ \imagePtr -> colorAverage' imagePtr c i
 
-{# fun unsafe Fl_Image_inactive as inactive' { id `Ptr ()' } -> `()' #}
+{# fun Fl_Image_inactive as inactive' { id `Ptr ()' } -> `()' #}
 instance (impl ~ ( IO ())) => Op (Inactive ()) Image orig impl where
   runOp _ _ image = withRef image $ \imagePtr -> inactive' imagePtr
 
-{# fun unsafe Fl_Image_desaturate as desaturate' { id `Ptr ()' } -> `()' #}
+{# fun Fl_Image_desaturate as desaturate' { id `Ptr ()' } -> `()' #}
 instance (impl ~ ( IO ())) => Op (Desaturate ()) Image orig impl where
   runOp _ _ image = withRef image $ \imagePtr -> desaturate' imagePtr
 
-{# fun unsafe Fl_Image_draw_with_cx_cy as drawWithCxCy' { id `Ptr ()',`Int',`Int',`Int',`Int',`Int',`Int' } -> `()' #}
-{# fun unsafe Fl_Image_draw_with_cx as drawWithCx' { id `Ptr ()',`Int',`Int',`Int',`Int',`Int' } -> `()' #}
-{# fun unsafe Fl_Image_draw_with_cy as drawWithCy' { id `Ptr ()',`Int',`Int',`Int',`Int',`Int' } -> `()' #}
-{# fun unsafe Fl_Image_draw_with as drawWith' { id `Ptr ()',`Int',`Int',`Int',`Int' } -> `()' #}
+{# fun Fl_Image_draw_with_cx_cy as drawWithCxCy' { id `Ptr ()',`Int',`Int',`Int',`Int',`Int',`Int' } -> `()' #}
+{# fun Fl_Image_draw_with_cx as drawWithCx' { id `Ptr ()',`Int',`Int',`Int',`Int',`Int' } -> `()' #}
+{# fun Fl_Image_draw_with_cy as drawWithCy' { id `Ptr ()',`Int',`Int',`Int',`Int',`Int' } -> `()' #}
+{# fun Fl_Image_draw_with as drawWith' { id `Ptr ()',`Int',`Int',`Int',`Int' } -> `()' #}
 
 instance (impl ~ (Position -> Size -> Maybe X -> Maybe Y -> IO ())) => Op (DrawResize ()) Image orig impl where
   runOp _ _ image (Position (X x) (Y y)) (Size (Width w) (Height h)) xOffset yOffset =
@@ -162,21 +162,19 @@ instance (impl ~ (Position -> Size -> Maybe X -> Maybe Y -> IO ())) => Op (DrawR
       (Nothing, Nothing) ->
         withRef image $ \imagePtr -> drawWith' imagePtr x y w h
 
-{# fun unsafe Fl_Image_draw as draw' { id `Ptr ()',`Int',`Int' } -> `()' #}
+{# fun Fl_Image_draw as draw' { id `Ptr ()',`Int',`Int' } -> `()' #}
 instance (impl ~ (Position ->  IO ())) => Op (Draw ()) Image orig impl where
   runOp _ _ image (Position (X x_pos') (Y y_pos')) = withRef image $ \imagePtr -> draw' imagePtr x_pos' y_pos'
-{# fun unsafe Fl_Image_uncache as uncache' { id `Ptr ()' } -> `()' #}
+{# fun Fl_Image_uncache as uncache' { id `Ptr ()' } -> `()' #}
 instance (impl ~ ( IO ())) => Op (Uncache ()) Image orig impl where
   runOp _ _ image = withRef image $ \imagePtr -> uncache' imagePtr
 
 -- $functions
 -- @
 --
--- className :: 'Ref' 'Image' -> 'IO' 'String'
---
 -- colorAverage :: 'Ref' 'Image' -> 'Color' -> 'Float' -> 'IO' ()
 --
--- copy :: 'Ref' 'Image' -> 'Maybe' 'Size' -> 'IO' ('Ref' 'Image')
+-- copy :: 'Ref' 'Image' -> 'Maybe' 'Size' -> 'IO' ('Maybe' ('Ref' 'Image'))
 --
 -- desaturate :: 'Ref' 'Image' -> 'IO' ()
 --
@@ -186,15 +184,15 @@ instance (impl ~ ( IO ())) => Op (Uncache ()) Image orig impl where
 --
 -- drawResize :: 'Ref' 'Image' -> 'Position' -> 'Size' -> 'Maybe' 'X' -> 'Maybe' 'Y' -> 'IO' ()
 --
--- getCount :: 'Ref' 'Image' -> 'IO' 'Int'
+-- getCount :: 'Ref' 'Image' -> 'IO' ('Int')
 --
--- getD :: 'Ref' 'Image' -> 'IO' 'Int'
+-- getD :: 'Ref' 'Image' -> 'IO' ('Int')
 --
--- getH :: 'Ref' 'Image' -> 'IO' 'Int'
+-- getH :: 'Ref' 'Image' -> 'IO' ('Int')
 --
--- getLd :: 'Ref' 'Image' -> 'IO' 'Int'
+-- getLd :: 'Ref' 'Image' -> 'IO' ('Int')
 --
--- getW :: 'Ref' 'Image' -> 'IO' 'Int'
+-- getW :: 'Ref' 'Image' -> 'IO' ('Int')
 --
 -- inactive :: 'Ref' 'Image' -> 'IO' ()
 --

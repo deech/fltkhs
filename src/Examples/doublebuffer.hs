@@ -30,32 +30,21 @@ sliderCb sides' sidesf' slider' = do
   redraw p'
 
 badDraw :: IORef (Double,Double) -> Int -> Int -> ((Double,Double) -> Double) -> IO ()
-badDraw sides w h which = do
+badDraw sides w h which' = do
   flcSetColor blackColor >> flcRectf (toRectangle (0,0,w,h))
-  flcSetColor whiteColor >> readIORef sides >>= star w h . which
+  flcSetColor whiteColor >> readIORef sides >>= star w h . which'
 
 
-drawWindow :: forall a r1 r2 r3 r4.
-              (
-               FindOp a (DrawChild ())(Match r1),
-               FindOp a (GetChild ()) (Match r2),
-               FindOp a (GetH ())     (Match r3),
-               FindOp a (GetW ())     (Match r4),
-               Op (DrawChild ())  r1 a (Ref Widget -> IO ()),
-               Op (GetChild ())   r2 a (Int -> IO (Ref Widget)),
-               Op (GetH ())       r3 a (IO Int),
-               Op (GetW ())       r4 a (IO Int)
-              ) =>
-              IORef (Double, Double) ->
+drawWindow :: IORef (Double, Double) ->
               ((Double, Double) -> Double) ->
-              Ref a ->
+              Ref Window ->
               IO ()
 drawWindow sides' whichf' w' = do
   ww' <- getW w'
   wh' <- getH w'
   badDraw sides' ww' wh' whichf'
   c' <- getChild w' (0 :: Int)
-  drawChild w' (c' :: Ref Widget)
+  maybe (return ()) (drawChild w') (c' :: Maybe (Ref Widget))
 
 main :: IO ()
 main = do
@@ -70,12 +59,12 @@ main = do
           (Just (Position (X 10) (Y 10)))
           (Just "Single Window")
           defaultCustomWidgetFuncs {
-            drawCustom = (Just $ drawWindow sides' fst)
+            drawCustom = (Just $ (\w -> drawWindow sides' fst (safeCast w)))
           }
           defaultCustomWindowFuncs
   setBox w1 FlatBox
   setColor w1 blackColor
-  setResizable w1 w1
+  setResizable w1 (Just w1)
   begin w1
   slider0 <- horSliderNew (toRectangle (20,370,360,25)) Nothing
   range slider0 2 30
@@ -92,12 +81,12 @@ main = do
           (Just $ Position (X 10) (Y 10))
           (Just "Fl_Double_Window")
           defaultCustomWidgetFuncs {
-                drawCustom = Just (drawWindow sides' snd)
+                drawCustom = Just (\w -> drawWindow sides' snd (safeCast w))
               }
           defaultCustomWindowFuncs
   setBox w2 FlatBox
   setColor w2 blackColor
-  setResizable w2 w2
+  setResizable w2 (Just w2)
   begin w2
   slider1 <- horSliderNew (toRectangle $ (20,370,360,25)) Nothing
   range slider1 2 30

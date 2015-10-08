@@ -1,5 +1,5 @@
 #include "Fl_Menu_C.h"
-#include "Utils.h"
+#include "UtilsC.h"
 #ifdef __cplusplus
 Fl_DerivedMenu_::Fl_DerivedMenu_(int X, int Y, int W, int H, const char *l, fl_Menu__Virtual_Funcs* funcs) : Fl_Menu_(X,Y,W,H,l){
     overriddenFuncs = funcs;
@@ -23,6 +23,10 @@ void Fl_DerivedMenu_::destroy_data(){
   if (this->overriddenFuncs->destroy_data != NULL){
     this->overriddenFuncs->destroy_data((fl_Menu_) this);
   }
+}
+
+const Fl_Menu_Item* Fl_DerivedMenu_::get_menu_item_by_index(int i) {
+  return &menu()[i];
 }
 int Fl_DerivedMenu_::handle(int event){
   int i;
@@ -568,6 +572,9 @@ EXPORT {
   }
   FL_EXPORT_C(int,Fl_Menu__value_with_item)(fl_Menu_ menu_,fl_Menu_Item item){
     return (static_cast<Fl_DerivedMenu_*>(menu_))->value(static_cast<Fl_Menu_Item*>(item));
+  }
+  FL_EXPORT_C(fl_Menu_Item, Fl_Menu__get_menu_item_by_index)(fl_Menu_ menu_,  int i) {
+    return (fl_Menu_Item)(static_cast<Fl_DerivedMenu_*>(menu_)->get_menu_item_by_index(i));
   }
   FL_EXPORT_C(int,Fl_Menu__value_with_index)(fl_Menu_ menu_,int index){
     return (static_cast<Fl_DerivedMenu_*>(menu_))->value(index);

@@ -13,11 +13,11 @@ main = do
   disp <- textDisplayNew (toRectangle (20,20,640-40,480-40)) Nothing
   tbuff <- textBufferNew Nothing Nothing
   sbuff <- textBufferNew Nothing Nothing
-  setBuffer disp tbuff
+  setBuffer disp (Just tbuff)
   highlightData disp sbuff (indexStyleTableEntries stes) Nothing
   setText tbuff "Red Line 1\nYel Line 2\nGrn Line 3\nBlu Line 4\nRed Line 5\nYel Line 6\nGrn Line 7\nBlu Line 8\n"
   setText sbuff "AAAAAAAAAA\nBBBBBBBBBB\nCCCCCCCCCC\nDDDDDDDDDD\nAAAAAAAAAA\nBBBBBBBBBB\nCCCCCCCCCC\nDDDDDDDDDD\n"
-  setResizable win disp
+  setResizable win (Just disp)
   showWidget win
   _ <- FL.run
   return ()

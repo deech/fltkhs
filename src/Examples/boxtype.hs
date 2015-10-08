@@ -91,7 +91,7 @@ main = do
   bt n' "GtkRoundUpBox" GtkRoundUpBox False
   bt n' "GtkRoundDownBox" GtkRoundDownBox False
   bt n' "FreeBoxtype" FreeBoxtype False
-  setResizable window window
+  setResizable window (Just window)
   end window
   showWidget window
   _ <- FL.run

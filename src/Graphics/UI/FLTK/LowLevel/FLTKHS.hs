@@ -16,13 +16,21 @@ module Graphics.UI.FLTK.LowLevel.FLTKHS
          --
          -- $InstallationWindows
 
+         -- * Getting Started
+         --
+         -- $GettingStarted
+
          -- * Demos
          --
          -- $Demos
 
-         -- * Getting Started
+         -- * Fluid Support
          --
-         -- $GettingStarted
+         -- $FluidSupport
+
+         -- * Stack Traces
+         --
+         -- $StackTrace
 
          -- * API Guide
          --
@@ -55,6 +63,7 @@ module Graphics.UI.FLTK.LowLevel.FLTKHS
          module Graphics.UI.FLTK.LowLevel.Image,
          module Graphics.UI.FLTK.LowLevel.ImageSurface,
          module Graphics.UI.FLTK.LowLevel.Input,
+         module Graphics.UI.FLTK.LowLevel.Output,
          module Graphics.UI.FLTK.LowLevel.IntInput,
          module Graphics.UI.FLTK.LowLevel.LightButton,
          module Graphics.UI.FLTK.LowLevel.LineDial,
@@ -76,7 +85,9 @@ module Graphics.UI.FLTK.LowLevel.FLTKHS
          module Graphics.UI.FLTK.LowLevel.SimpleCounter,
          module Graphics.UI.FLTK.LowLevel.SingleWindow,
          module Graphics.UI.FLTK.LowLevel.Slider,
+         module Graphics.UI.FLTK.LowLevel.Spinner,
          module Graphics.UI.FLTK.LowLevel.SysMenuBar,
+         module Graphics.UI.FLTK.LowLevel.Tabs,
          module Graphics.UI.FLTK.LowLevel.Table,
          module Graphics.UI.FLTK.LowLevel.TableRow,
          module Graphics.UI.FLTK.LowLevel.Timer,
@@ -99,6 +110,8 @@ module Graphics.UI.FLTK.LowLevel.FLTKHS
          module Graphics.UI.FLTK.LowLevel.Tile,
          module Graphics.UI.FLTK.LowLevel.Pack,
          module Graphics.UI.FLTK.LowLevel.Scrolled,
+         module Graphics.UI.FLTK.LowLevel.Ask,
+         module Graphics.UI.FLTK.LowLevel.ColorChooser,
          -- * Machinery for static dispatch
          module Graphics.UI.FLTK.LowLevel.Dispatch,
          -- * Association of widgets and functions
@@ -125,6 +138,7 @@ import Graphics.UI.FLTK.LowLevel.Group
 import Graphics.UI.FLTK.LowLevel.Widget
 import Graphics.UI.FLTK.LowLevel.Valuator
 import Graphics.UI.FLTK.LowLevel.Slider
+import Graphics.UI.FLTK.LowLevel.Spinner
 import Graphics.UI.FLTK.LowLevel.HorSlider
 import Graphics.UI.FLTK.LowLevel.FillSlider
 import Graphics.UI.FLTK.LowLevel.HorFillSlider
@@ -157,7 +171,9 @@ import Graphics.UI.FLTK.LowLevel.Timer
 import Graphics.UI.FLTK.LowLevel.Progress
 import Graphics.UI.FLTK.LowLevel.Positioner
 import Graphics.UI.FLTK.LowLevel.Input
+import Graphics.UI.FLTK.LowLevel.Output
 import Graphics.UI.FLTK.LowLevel.Wizard
+import Graphics.UI.FLTK.LowLevel.Tabs
 import Graphics.UI.FLTK.LowLevel.Table
 import Graphics.UI.FLTK.LowLevel.TableRow
 import Graphics.UI.FLTK.LowLevel.Box
@@ -176,6 +192,8 @@ import Graphics.UI.FLTK.LowLevel.NativeFileChooser
 import Graphics.UI.FLTK.LowLevel.Tile
 import Graphics.UI.FLTK.LowLevel.Pack
 import Graphics.UI.FLTK.LowLevel.Scrolled
+import Graphics.UI.FLTK.LowLevel.Ask
+import Graphics.UI.FLTK.LowLevel.ColorChooser
 
 -- $Module Documentation
 -- This module re-exports all the available widgets and their core types. The types and list
@@ -197,18 +215,20 @@ import Graphics.UI.FLTK.LowLevel.Scrolled
 --
 -- == Why a native toolkit?
 -- Even in this era of web interfaces it is still useful to be able to make native apps. They are usually faster
--- , easier to deploy and have fewer issues with respect to security.
+-- and have fewer security issues.
 --
--- == Why FLTK, or why not QT?
+-- == Why FLTK?
 -- - The original author chose FLTK because it was small enough that one person could bind the whole thing in an initial
--- pass. QT, although way slicker, would require many man-years of effort.
+-- pass. Larger toolkits like QT, although way slicker, would require many man-years of effort.
 -- - FLTK is quite featureful
 -- - FLTK is mature and maintained, the project is about 20 years old and author has had good experiences with the community
+-- - FLTK comes with a simple but quite useful GUI builder, <https://en.wikipedia.org/wiki/FLUID Fluid> which is now able to
+--   generate Haskell code. See the `Fluid Support` section for more details.
 --
 -- == What about HsQML\/WxHaskell/Gtk2Hs?
 -- These are all great projects and produce really nice UI's, but they all fail at least one of criterion listed under the __Goals__ section below.
 --
--- To the author's knowledge, as of the first quarter of 2015, no other package in the Haskell ecosystem meets all those constraints.
+-- To the author's knowledge, as of the third quarter of 2015, no other package in the Haskell ecosystem meets all those constraints.
 --
 
 -- $Goals
@@ -221,6 +241,74 @@ import Graphics.UI.FLTK.LowLevel.Scrolled
 -- (5) is easy to install. This library has a minimum of dependencies and <http://fltk.org FLTK> itself compiles cleanly on most architectures
 -- (6) allows the user to produce statically linked binaries with no external dependencies
 -- (7) includes a lot of complete working demos so that the user can get up and running faster
+-- (8) comes with GUI builder support to alleviate the tedium of laying out widgets by hand
+
+-- $FluidSupport
+--
+-- This package also comes with a utility (fltkhs-fluidtohs) that takes a user interface generated using the
+-- <https://en.wikipedia.org/wiki/FLUID Fluid GUI builder> that ships with FLTK and generates Haskell code.
+--
+-- Now the user can drag and drop widgets into place instead of having to calculate coordinates and sizes by hand.
+-- Additionally arbitrary Haskell code can be inserted into Fluid interfaces allowing user to do most of callback wiring
+-- directly from Fluid.
+--
+-- The quickest way to get started is to download the <https://github.com/deech/fltkhs-fluid-hello-world Fluid/Haskell project template>.
+-- The "Setup.hs" that comes with the skeleton is configured to use the 'fltkhs-fluidtohs' utility to automatically convert any Fluid in 'src' directory
+-- into a Haskell module of the same name during the preprocess step. This means using Fluid in a FLTKHS project is as simple
+-- as creating a Fluid interface and running 'cabal build' or 'cabal install'.
+--
+-- Additionally the <http://hackage.haskell.org/package/fltkhs-fluid-examples fltkhs-fluid-examples> comes with
+-- a number of demos that show off how Fluid integrates with FLTKS.
+--
+
+-- $StackTrace
+--
+-- In a traditional callback-heavy API such as FLTKHS null pointers happen which is why FLTKHS supports partial stack traces. All FLTK
+-- functions throw an error along with a stack trace when given a null 'Ref'.
+--
+-- For pre-7.10 GHCs stack traces will only be shown if the <https://wiki.haskell.org/Debugging#General_usage 'xc'> flag is used when compiling FLTKHS.
+--
+-- If compiled with GHC > 7.10 a partial stack trace is transparently available to the user. The recently minted <https://hackage.haskell.org/package/base-4.8.1.0/docs/GHC-Stack.html#g:3 'CallStack'>
+-- implicit parameter is used to get a trace of the function that made the offending call along with a file name and line number. So, for example, in the following
+-- code:
+--
+-- @
+-- buttonCb :: Ref Button -> IO ()
+-- buttonCb b' = do
+--   FL.deleteWidget b'
+--   l' <- getLabel b'
+--   ...
+--
+-- main :: IO ()
+-- main = do
+--  window <- windowNew ...
+--  begin window
+--  b' <- buttonNew ...
+--  setCallback b' buttonCb
+--  ...
+-- @
+--
+-- a button is placed inside a window in the main method but the first time it is clicked the callback will delete it and then try
+-- the extract the label from the null 'Ref'.
+-- The resulting stack trace will look something like:
+--
+-- @
+-- Ref does not exist. ?loc, called at src\/Graphics\/UI\/FLTK\/LowLevel\/Fl_Types.chs:395:58 in fltkh_Cx8029B5VOwKjdT0OwMERC:Graphics.UI.FLTK.LowLevel.Fl_Types
+--   toRefPtr, called at src\/Graphics\/UI\/FLTK\/LowLevel\/Fl_Types.chs:403:22 in fltkh_Cx8029B5VOwKjdT0OwMERC:Graphics.UI.FLTK.LowLevel.Fl_Types
+--   withRef, called at src\/Graphics\/UI\/FLTK\/LowLevel\/Hierarchy.hs:1652:166 in fltkh_Cx8029B5VOwKjdT0OwMERC:Graphics.UI.FLTK.LowLevel.Hierarchy
+--   getLabel, called at src\/Main.hs:11:10 in main:Main
+-- @
+--
+-- It says that the null pointer was originally detected in the library function 'toRefPtr' function which was called by the library function 'withRef', which
+-- was called by 'getLabel' on line 11 of 'src/Main.hs'. Notice, however, that the trace stops there. It does not tell you 'getLabel' was invoked from 'buttonCb'.
+-- For a more detailed trace the 'CallStack' implicit parameter needs to be passed to each function in the chain like:
+--
+-- @
+-- buttonCb :: (?loc :: CallStack) => Ref Button ...
+--  ...
+-- main :: IO ()
+--  ...
+-- @
 --
 
 -- $InstallationLinux
@@ -276,7 +364,7 @@ import Graphics.UI.FLTK.LowLevel.Scrolled
 -- == Install MinGHC
 -- MinGHC installers are available <https://github.com/fpco/minghc here>. This package has been tested with GHC 7.8.4 64-bit and may work with newer versions.
 --
--- Once MinGHC is downloaded and installed per the instructions in the link above, install the newest version of cabal-install. This is an important step because the `Setup.hs` that ships with this package uses some of the newer features of the Cabal 1.2.x API.
+-- Once MinGHC is downloaded and installed per the instructions in the link above, install the newest version of cabal-install. This is an important step because the "Setup.hs" that ships with this package uses some of the newer features of the Cabal 1.2.x API.
 --
 -- @
 -- > cabal update
@@ -369,7 +457,10 @@ import Graphics.UI.FLTK.LowLevel.Scrolled
 
 -- $Demos
 --
--- The available demos are listed in `fltkhs.cabal` as separate `Executable` components.
+-- There are currently two sets of FLTKHS demos, the ones that ship with this package
+-- and ones that show off <http://hackage.haskell.org/package/fltkhs-fluid-examples Fluid> support.
+--
+-- The demos shipped with this package are listed in `fltkhs.cabal` as separate `Executable` components.
 -- Once the package is installed they are installed to Cabal's standard /bin/ directory (usually /~\/.cabal\/bin).
 --
 -- Note that the executables install prefixed with \"fltkhs-\". Typing:
@@ -406,10 +497,12 @@ import Graphics.UI.FLTK.LowLevel.Scrolled
 --
 --
 -- = Quick Start
--- The quickest way to a working program is /src\/Examples\/hello-world.hs/ which gets compiled
--- to the executable 'fltkhs-hello-world'. It show basic widget creation and callbacks.
+-- The quickest way to get started is to the download the <http://github.com/deech/fltkhs-hello-world FLTKHS project skeleton>.
+-- It is a simple `hello-world` program that shows the basics of widget creation and callbacks.
+-- The project's Cabal file comes pre-configured with the options necessary to produce a statically-linked executable so a simple
+-- 'cabal configure && cabal build' should result in an 'fltkhs-hello-world' executable in the 'dist' directory.
 --
--- The other demos show more complicated usage.
+-- Other demos that ship with this package show more complicated usage of the API.
 --
 -- Since the API is a low-level binding, code using it takes on the imperative style of the underlying toolkit.
 -- Fortunately it should look pretty familiar to those who have used object-oriented GUI toolkits before.
@@ -551,6 +644,7 @@ import Graphics.UI.FLTK.LowLevel.Scrolled
 --   - src
 --     - Examples       -- Haskell demos
 --     - TestPrograms   -- Haskell test programs
+--     - Fluid          -- The Fluid file to Haskell conversion utility
 --     - Graphics
 --       - UI
 --         - FLTK

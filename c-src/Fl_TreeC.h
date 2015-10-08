@@ -141,8 +141,11 @@ EXPORT {
   FL_EXPORT_C(fl_Tree_Item, Fl_Tree_last)(fl_Tree tree);
   FL_EXPORT_C(fl_Tree_Item, Fl_Tree_last_visible)(fl_Tree tree);
   FL_EXPORT_C(fl_Tree_Item, Fl_Tree_first_selected_item)(fl_Tree tree);
+  FL_EXPORT_C(fl_Tree_Item, Fl_Tree_last_selected_item)(fl_Tree tree);
   FL_EXPORT_C(fl_Tree_Item, Fl_Tree_next_selected_item)(fl_Tree tree);
   FL_EXPORT_C(fl_Tree_Item, Fl_Tree_next_selected_item_with_item)(fl_Tree tree,fl_Tree_Item item);
+  FL_EXPORT_C(fl_Tree_Item, Fl_Tree_next_selected_item_with_item_direction)(fl_Tree tree,fl_Tree_Item item, int dir);
+  FL_EXPORT_C(fl_Tree_Item, Fl_Tree_next_item)(fl_Tree tree,fl_Tree_Item item, int dir, int visible);
   FL_EXPORT_C(int, Fl_Tree_open_with_item)(fl_Tree tree,fl_Tree_Item item);
   FL_EXPORT_C(int, Fl_Tree_open_with_item_docallback)(fl_Tree tree,fl_Tree_Item item, int docallback);
   FL_EXPORT_C(int, Fl_Tree_open_with_path)(fl_Tree tree,const char *path);

@@ -124,7 +124,7 @@ EXPORT {
   FL_EXPORT_C(fl_Widget*,   Fl_Color_Chooser_array)(fl_Color_Chooser color_chooser);
   FL_EXPORT_C(fl_Widget,    Fl_Color_Chooser_child)(fl_Color_Chooser color_chooser, int n);
 
-  FL_EXPORT_C(int,Fl_Color_Chooser_mode)(fl_Color_Chooser color_chooser); 
+  FL_EXPORT_C(int,Fl_Color_Chooser_mode)(fl_Color_Chooser color_chooser);
   FL_EXPORT_C(void,Fl_Color_Chooser_set_mode)(fl_Color_Chooser color_chooser,int newMode);
   FL_EXPORT_C(double,Fl_Color_Chooser_hue)(fl_Color_Chooser color_chooser);
   FL_EXPORT_C(double,Fl_Color_Chooser_saturation)(fl_Color_Chooser color_chooser);
@@ -138,8 +138,10 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Color_Chooser_rgb2hsv)(double R, double G, double B, double* H, double* S, double* V);
   FL_EXPORT_C(fl_Color_Chooser,Fl_Color_Chooser_New)(int x, int y, int w, int h);
   FL_EXPORT_C(fl_Color_Chooser,Fl_Color_Chooser_New_WithLabel)(int x, int y, int w, int h, const char* t);
-  FL_EXPORT_C(int, flc_color_chooser)(const char* name, double r, double g, double b);
-  FL_EXPORT_C(int, flc_color_chooser_with_m)(const char* name, double r, double g, double b, int m);
+  FL_EXPORT_C(int, flc_color_chooser)(const char* name, double* r, double* g, double* b);
+  FL_EXPORT_C(int, flc_color_chooser_with_m)(const char* name, double* r, double* g, double* b, int m);
+  FL_EXPORT_C(int, flc_color_chooser_with_uchar)(const char* name, uchar* r, uchar* g, uchar* b);
+  FL_EXPORT_C(int, flc_color_chooser_with_uchar_m)(const char* name, uchar* r, uchar* g, uchar* b, int m);
 #ifdef __cplusplus
 }
 #endif

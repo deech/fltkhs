@@ -10,6 +10,17 @@
 #include "Fl_CallbackC.h"
 EXPORT {
 #endif
+#ifndef INTERNAL_LINKAGE
+  typedef enum Fl_Beep {
+    FL_BEEP_DEFAULT = 0,
+    FL_BEEP_MESSAGE = 1,
+    FL_BEEP_ERROR = 2,
+    FL_BEEP_QUESTION = 3,
+    FL_BEEP_PASSWORD = 4,
+    FL_BEEP_NOTIFICATION = 5
+  } Fl_Beep;
+#endif
+
   FL_EXPORT_C(void,flc_beep)();
   FL_EXPORT_C(void,flc_beep_with_type)(int type);
   FL_EXPORT_C(void,flc_message)(const char* message);

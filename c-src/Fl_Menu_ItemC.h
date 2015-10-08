@@ -26,6 +26,7 @@ EXPORT {
   //  fl_Callback* callback(); commented until I figure out how to do this
   FL_EXPORT_C(void, Fl_Menu_Item_set_callback_with_user_data)(fl_Menu_Item menu_item, fl_Callback* c, void* user_data);
   FL_EXPORT_C(void, Fl_Menu_Item_set_callback)(fl_Menu_Item menu_item, fl_Callback* c);
+  FL_EXPORT_C(int,  Fl_Menu_Item_has_callback)(fl_Menu_Item menu_item);
   FL_EXPORT_C(void*, Fl_Menu_Item_user_data)(fl_Menu_Item menu_item);
   FL_EXPORT_C(void, Fl_Menu_Item_set_user_data)(fl_Menu_Item menu_item, void* v);
   FL_EXPORT_C(long, Fl_Menu_Item_argument)(fl_Menu_Item menu_item);

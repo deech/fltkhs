@@ -50,22 +50,22 @@ instance (impl ~ (IO ())) => Op (Destroy ()) ValueSlider orig impl where
 {#fun Fl_Value_Slider_handle as valueSliderHandle' { id `Ptr ()', id `CInt' } -> `Int' #}
 instance (impl ~ (Event -> IO Int)) => Op (Handle ()) ValueSlider orig impl where
   runOp _ _ valueSlider event = withRef valueSlider (\p -> valueSliderHandle' p (fromIntegral . fromEnum $ event))
-{# fun unsafe Fl_Value_Slider_textfont as textfont' { id `Ptr ()' } -> `Font' cToFont #}
+{# fun Fl_Value_Slider_textfont as textfont' { id `Ptr ()' } -> `Font' cToFont #}
 instance (impl ~ ( IO (Font))) => Op (GetTextfont ()) ValueSlider orig impl where
   runOp _ _ value_slider = withRef value_slider $ \value_sliderPtr -> textfont' value_sliderPtr
-{# fun unsafe Fl_Value_Slider_set_textfont as setTextfont' { id `Ptr ()',cFromFont `Font' } -> `()' #}
+{# fun Fl_Value_Slider_set_textfont as setTextfont' { id `Ptr ()',cFromFont `Font' } -> `()' #}
 instance (impl ~ (Font ->  IO ())) => Op (SetTextfont ()) ValueSlider orig impl where
   runOp _ _ value_slider s = withRef value_slider $ \value_sliderPtr -> setTextfont' value_sliderPtr s
-{# fun unsafe Fl_Value_Slider_textsize as textsize' { id `Ptr ()' } -> `CInt' id #}
+{# fun Fl_Value_Slider_textsize as textsize' { id `Ptr ()' } -> `CInt' id #}
 instance (impl ~ ( IO (FontSize))) => Op (GetTextsize ()) ValueSlider orig impl where
   runOp _ _ value_slider = withRef value_slider $ \value_sliderPtr -> textsize' value_sliderPtr >>= return . FontSize
-{# fun unsafe Fl_Value_Slider_set_textsize as setTextsize' { id `Ptr ()', id `CInt' } -> `()' #}
+{# fun Fl_Value_Slider_set_textsize as setTextsize' { id `Ptr ()', id `CInt' } -> `()' #}
 instance (impl ~ (FontSize ->  IO ())) => Op (SetTextsize ()) ValueSlider orig impl where
   runOp _ _ value_slider (FontSize s) = withRef value_slider $ \value_sliderPtr -> setTextsize' value_sliderPtr s
-{# fun unsafe Fl_Value_Slider_textcolor as textcolor' { id `Ptr ()' } -> `Color' cToColor #}
+{# fun Fl_Value_Slider_textcolor as textcolor' { id `Ptr ()' } -> `Color' cToColor #}
 instance (impl ~ ( IO (Color))) => Op (GetTextcolor ()) ValueSlider orig impl where
   runOp _ _ value_slider = withRef value_slider $ \value_sliderPtr -> textcolor' value_sliderPtr
-{# fun unsafe Fl_Value_Slider_set_textcolor as setTextcolor' { id `Ptr ()',cFromColor `Color' } -> `()' #}
+{# fun Fl_Value_Slider_set_textcolor as setTextcolor' { id `Ptr ()',cFromColor `Color' } -> `()' #}
 instance (impl ~ (Color ->  IO ())) => Op (SetTextcolor ()) ValueSlider orig impl where
   runOp _ _ value_slider s = withRef value_slider $ \value_sliderPtr -> setTextcolor' value_sliderPtr s
 

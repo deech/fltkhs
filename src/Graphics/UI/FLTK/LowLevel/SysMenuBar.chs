@@ -42,36 +42,36 @@ instance (impl ~ ( IO ())) => Op (Destroy ()) SysMenuBar orig impl where
 {#fun Fl_Sys_Menu_Bar_handle as sysMenuBarHandle' { id `Ptr ()', id `CInt' } -> `Int' #}
 instance (impl ~ ( Event -> IO Int)) => Op (Handle ()) SysMenuBar orig impl where
   runOp _ _ menu_bar event = withRef menu_bar (\p -> sysMenuBarHandle' p (fromIntegral . fromEnum $ event))
-{# fun unsafe Fl_Sys_Menu_Bar_remove as remove' { id `Ptr ()',`Int' } -> `()' #}
+{# fun Fl_Sys_Menu_Bar_remove as remove' { id `Ptr ()',`Int' } -> `()' #}
 instance (impl ~ (Int  ->  IO ())) => Op (Remove ()) SysMenuBar orig impl where
   runOp _ _ menu_ index' = withRef menu_ $ \menu_Ptr -> remove' menu_Ptr index'
-{# fun unsafe Fl_Sys_Menu_Bar_replace as replace' { id `Ptr ()',`Int', unsafeToCString `String' } -> `()' #}
+{# fun Fl_Sys_Menu_Bar_replace as replace' { id `Ptr ()',`Int', unsafeToCString `String' } -> `()' #}
 instance (impl ~ (Int -> String ->  IO ())) => Op (Replace ()) SysMenuBar orig impl where
   runOp _ _ menu_ index' name = withRef menu_ $ \menu_Ptr -> replace' menu_Ptr index' name
-{# fun unsafe Fl_Sys_Menu_Bar_clear as clear' { id `Ptr ()' } -> `()' #}
+{# fun Fl_Sys_Menu_Bar_clear as clear' { id `Ptr ()' } -> `()' #}
 instance (impl ~ ( IO ())) => Op (Clear ()) SysMenuBar orig impl where
   runOp _ _ menu_ = withRef menu_ $ \menu_Ptr -> clear' menu_Ptr
-{# fun unsafe Fl_Sys_Menu_Bar_clear_submenu as clearSubmenu' { id `Ptr ()',`Int' } -> `Int' #}
+{# fun Fl_Sys_Menu_Bar_clear_submenu as clearSubmenu' { id `Ptr ()',`Int' } -> `Int' #}
 instance (impl ~ (Int ->  IO (Int))) => Op (ClearSubmenu ()) SysMenuBar orig impl where
   runOp _ _ menu_ index' = withRef menu_ $ \menu_Ptr -> clearSubmenu' menu_Ptr index'
-{# fun unsafe Fl_Sys_Menu_Bar_shortcut as shortcut' { id `Ptr ()',`Int',id `CInt' } -> `()' #}
+{# fun Fl_Sys_Menu_Bar_shortcut as shortcut' { id `Ptr ()',`Int',id `CInt' } -> `()' #}
 instance (impl ~ (Int -> ShortcutKeySequence ->  IO ())) => Op (SetShortcut ()) SysMenuBar orig impl where
   runOp _ _ menu_ index' (ShortcutKeySequence modifiers char) =
     withRef menu_ $ \menu_Ptr ->
         shortcut' menu_Ptr index' (keySequenceToCInt modifiers char)
-{# fun unsafe Fl_Sys_Menu_Bar_set_mode as setMode' { id `Ptr ()',`Int',`Int' } -> `()' #}
+{# fun Fl_Sys_Menu_Bar_set_mode as setMode' { id `Ptr ()',`Int',`Int' } -> `()' #}
 instance (impl ~ (Int -> Int ->  IO ())) => Op (SetMode ()) SysMenuBar orig impl where
   runOp _ _ menu_ i fl = withRef menu_ $ \menu_Ptr -> setMode' menu_Ptr i fl
-{# fun unsafe Fl_Sys_Menu_Bar_mode as mode' { id `Ptr ()',`Int' } -> `Int' #}
+{# fun Fl_Sys_Menu_Bar_mode as mode' { id `Ptr ()',`Int' } -> `Int' #}
 instance (impl ~ (Int ->  IO (Int))) => Op (GetMode ()) SysMenuBar orig impl where
   runOp _ _ menu_ i = withRef menu_ $ \menu_Ptr -> mode' menu_Ptr i
-{# fun unsafe Fl_Sys_Menu_Bar_global as global' { id `Ptr ()' } -> `()' #}
+{# fun Fl_Sys_Menu_Bar_global as global' { id `Ptr ()' } -> `()' #}
 instance (impl ~ ( IO ())) => Op (Global ()) SysMenuBar orig impl where
   runOp _ _ menu_ = withRef menu_ $ \menu_Ptr -> global' menu_Ptr
-{# fun unsafe Fl_Sys_Menu_Bar_menu as menu' { id `Ptr ()' } -> `Ptr ()' id #}
-instance (impl ~ ( IO (Ref MenuItem))) => Op (GetMenu ()) SysMenuBar orig impl where
-  runOp _ _ menu_ = withRef menu_ $ \menu_Ptr -> menu' menu_Ptr >>= toRef
-{# fun unsafe Fl_Sys_Menu_Bar_menu_with_m as menuWithM' { id `Ptr ()',id `Ptr ( Ptr () )',`Int' } -> `()' #}
+{# fun Fl_Sys_Menu_Bar_menu as menu' { id `Ptr ()' } -> `Ptr ()' id #}
+instance (impl ~ ( IO (Maybe (Ref MenuItem)))) => Op (GetMenu ()) SysMenuBar orig impl where
+  runOp _ _ menu_ = withRef menu_ $ \menu_Ptr -> menu' menu_Ptr >>= toMaybeRef
+{# fun Fl_Sys_Menu_Bar_menu_with_m as menuWithM' { id `Ptr ()',id `Ptr ( Ptr () )',`Int' } -> `()' #}
 instance (impl ~ ([Ref MenuItem] -> IO ())) => Op (SetMenu ()) SysMenuBar orig impl where
   runOp _ _ menu_ items =
     withRef menu_ $ \menu_Ptr ->
@@ -83,13 +83,13 @@ instance (impl ~ ([Ref MenuItem] -> IO ())) => Op (SetMenu ()) SysMenuBar orig i
 --
 -- clear :: 'Ref' 'SysMenuBar' -> 'IO' ()
 --
--- clearSubmenu :: 'Ref' 'SysMenuBar' -> 'Int' -> 'IO' 'Int'
+-- clearSubmenu :: 'Ref' 'SysMenuBar' -> 'Int' -> 'IO' ('Int')
 --
 -- destroy :: 'Ref' 'SysMenuBar' -> 'IO' ()
 --
--- getMenu :: 'Ref' 'SysMenuBar' -> 'IO' ('Ref' 'MenuItem')
+-- getMenu :: 'Ref' 'SysMenuBar' -> 'IO' ('Maybe' ('Ref' 'MenuItem'))
 --
--- getMode :: 'Ref' 'SysMenuBar' -> 'Int' -> 'IO' 'Int'
+-- getMode :: 'Ref' 'SysMenuBar' -> 'Int' -> 'IO' ('Int')
 --
 -- global :: 'Ref' 'SysMenuBar' -> 'IO' ()
 --

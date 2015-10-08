@@ -10,6 +10,12 @@
 #include "Fl_CallbackC.h"
 EXPORT {
 #endif
+#ifndef INTERNAL_LINKAGE
+  typedef enum Counter_Type {
+    FL_NORMAL_COUNTERC = 0,
+    FL_SIMPLE_COUNTERC = 1
+  } Counter_Type;
+#endif
   FL_EXPORT_C(fl_Group,     Fl_Counter_parent)(fl_Counter counter);
   FL_EXPORT_C(void,         Fl_Counter_set_parent)(fl_Counter counter, fl_Group grp);
   FL_EXPORT_C(uchar,        Fl_Counter_type)(fl_Counter counter);
@@ -92,7 +98,7 @@ EXPORT {
   FL_EXPORT_C(fl_Window,    Fl_Counter_top_window)(fl_Counter counter);
   FL_EXPORT_C(fl_Window ,   Fl_Counter_top_window_offset)(fl_Counter counter, int* xoff, int* yoff);
   FL_EXPORT_C(fl_Gl_Window, Fl_Counter_as_gl_window)(fl_Counter counter);
-  FL_EXPORT_C(void,         Fl_Counter_resize)(fl_Table table,int X, int Y, int W, int H);
+  FL_EXPORT_C(void,         Fl_Counter_resize)(fl_Counter counter ,int X, int Y, int W, int H);
 
   /* Inherited from Fl_Valuator */
   FL_EXPORT_C(void, Fl_Counter_bounds)(fl_Counter counter, double a, double b);

@@ -42,11 +42,11 @@ instance (impl ~ (IO ())) => Op (Destroy ()) Choice orig impl where
                           \menu_Ptr ->
                              widgetDestroy' menu_Ptr >>
                              return nullPtr
-{# fun unsafe Fl_Choice_value as value' { id `Ptr ()' } -> `Int' #}
-instance (impl ~ ( IO (Int))) => Op (GetValue ()) Choice orig impl where
-  runOp _ _ menu_ = withRef menu_ $ \menu_Ptr -> value' menu_Ptr
-{# fun unsafe Fl_Choice_set_value_with_item as valueWithItem' { id `Ptr ()',id `Ptr ()' } -> `Int' #}
-{# fun unsafe Fl_Choice_set_value_with_index as valueWithIndex' { id `Ptr ()',`Int' } -> `Int' #}
+{# fun Fl_Choice_value as value' { id `Ptr ()' } -> `Int' #}
+instance (impl ~ ( IO (MenuItemIndex))) => Op (GetValue ()) Choice orig impl where
+  runOp _ _ menu_ = withRef menu_ $ \menu_Ptr -> value' menu_Ptr >>= return . MenuItemIndex
+{# fun Fl_Choice_set_value_with_item as valueWithItem' { id `Ptr ()',id `Ptr ()' } -> `Int' #}
+{# fun Fl_Choice_set_value_with_index as valueWithIndex' { id `Ptr ()',`Int' } -> `Int' #}
 instance (impl ~ (MenuItemReference -> IO (Int))) => Op (SetValue ()) Choice orig impl where
   runOp _ _ menu_ menu_item_reference =
     withRef menu_ $ \menu_Ptr ->
@@ -64,9 +64,11 @@ instance (impl ~ (Event -> IO Int)) => Op (Handle ()) Choice orig impl where
 -- @
 -- destroy :: 'Ref' 'Choice' -> 'IO' ()
 --
--- getValue :: 'Ref' 'Choice' -> 'IO' 'Int'
+-- getValue :: 'Ref' 'Choice' -> 'IO' ('MenuItemIndex')
 --
 -- handle :: 'Ref' 'Choice' -> 'Event' -> 'IO' 'Int'
+--
+-- setValue :: 'Ref' 'Choice' -> 'MenuItemReference' -> 'IO' ('Int')
 -- @
 
 -- $hierarchy

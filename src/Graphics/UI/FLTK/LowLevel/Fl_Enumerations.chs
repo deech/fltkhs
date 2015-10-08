@@ -11,11 +11,15 @@ module Graphics.UI.FLTK.LowLevel.Fl_Enumerations
      TreeSort(..),
      TreeConnector(..),
      TreeSelect(..),
+     SearchDirection(..),
      -- * Keyboard and mouse codes
      SpecialKey(..),
      allSpecialKeys,
+     allShortcutSpecialKeys,
      MouseButton(..),
      EventState(..),
+     KeyboardKeyMask(..),
+     MouseButtonsMask(..),
      allEventStates,
      kb_CommandState, kb_ControlState, kb_KpLast,
      -- * Widget damage types
@@ -162,10 +166,13 @@ module Graphics.UI.FLTK.LowLevel.Fl_Enumerations
      symbolLabel,
      defineShadowLabel,
      defineEngravedLabel,
-     defineEmbossedLabel
+     defineEmbossedLabel,
+     -- * Color
+     RGB
     )
 where
 import C2HS
+import System.IO.Unsafe
 #c
 enum VersionInfo {
   MajorVersion = FL_MAJOR_VERSION,
@@ -238,10 +245,16 @@ enum TreeConnector{
 enum TreeSelect{
   TreeSelectNone = FL_TREE_SELECT_NONE,
   TreeSelectSingle = FL_TREE_SELECT_SINGLE,
-  TreeSelectMulti = FL_TREE_SELECT_MULTI
+  TreeSelectMulti = FL_TREE_SELECT_MULTI,
+  TreeSelectSingleDraggable = FL_TREE_SELECT_SINGLE_DRAGGABLE
+};
+enum SearchDirection {
+  SearchDirectionDown = FL_Down,
+  SearchDirectionUp = FL_Up
 };
 enum SpecialKey {
   Button = FL_Button,
+  Kb_Clear = FL_Clear,
   Kb_Backspace = FL_BackSpace,
   Kb_Tab = FL_Tab,
   Kb_IsoKey = FL_Iso_Key,
@@ -503,15 +516,52 @@ enum AlignType {
 {#enum TreeSort {} deriving (Show, Eq) #}
 {#enum TreeConnector {} deriving (Show, Eq) #}
 {#enum TreeSelect {} deriving (Show, Eq) #}
+{#enum SearchDirection {} deriving (Show, Eq) #}
 #if FLTK_ABI_VERSION >= 10302
 {#enum TreeItemReselectMode {} deriving (Show, Eq) #}
 {#enum TreeItemDrawMode {} deriving (Show, Eq) #}
 #endif /*FLTK_ABI_VERSION*/
 {#enum SpecialKey {} deriving (Show, Eq) #}
+
+allShortcutSpecialKeys :: [CInt]
+allShortcutSpecialKeys = [
+  fromIntegral $ fromEnum (Kb_Backspace),
+  fromIntegral $ fromEnum (Kb_Tab),
+  fromIntegral $ fromEnum (Kb_Clear),
+  fromIntegral $ fromEnum (Kb_Enter),
+  fromIntegral $ fromEnum (Kb_Pause),
+  fromIntegral $ fromEnum (Kb_ScrollLockState),
+  fromIntegral $ fromEnum (Kb_Escape),
+  fromIntegral $ fromEnum (Kb_Home),
+  fromIntegral $ fromEnum (Kb_Left),
+  fromIntegral $ fromEnum (Kb_Up),
+  fromIntegral $ fromEnum (Kb_Right),
+  fromIntegral $ fromEnum (Kb_Down),
+  fromIntegral $ fromEnum (Kb_PageUp),
+  fromIntegral $ fromEnum (Kb_PageDown),
+  fromIntegral $ fromEnum (Kb_End),
+  fromIntegral $ fromEnum (Kb_Print),
+  fromIntegral $ fromEnum (Kb_Insert),
+  fromIntegral $ fromEnum (Kb_Menu),
+  fromIntegral $ fromEnum (Kb_NumLockState),
+  fromIntegral $ fromEnum (Kb_KpEnter),
+  fromIntegral $ fromEnum (Kb_ShiftL),
+  fromIntegral $ fromEnum (Kb_ShiftR),
+  fromIntegral $ fromEnum (Kb_ControlL),
+  fromIntegral $ fromEnum (Kb_ControlR),
+  fromIntegral $ fromEnum (Kb_CapsLock),
+  fromIntegral $ fromEnum (Kb_MetaL),
+  fromIntegral $ fromEnum (Kb_MetaR),
+  fromIntegral $ fromEnum (Kb_AltL),
+  fromIntegral $ fromEnum (Kb_AltR),
+  fromIntegral $ fromEnum (Kb_Delete)
+  ]
+
 allSpecialKeys :: [SpecialKey]
 allSpecialKeys = [
     Button,
     Kb_Backspace,
+    Kb_Clear,
     Kb_Tab,
     Kb_IsoKey,
     Kb_Enter,
@@ -567,6 +617,8 @@ allSpecialKeys = [
 
 {#enum MouseButton {} deriving (Show, Eq) #}
 {#enum EventState {} deriving (Show, Eq, Ord) #}
+{#enum KeyboardKeyMask {} deriving (Show, Eq, Ord) #}
+{#enum MouseButtonsMask {} deriving (Show, Eq, Ord) #}
 kb_CommandState, kb_ControlState :: EventState
 #ifdef __APPLE__
 kb_CommandState = Kb_MetaState
@@ -593,7 +645,7 @@ glutCursorFullCrossHair = GlutCursorCrosshair
 {#enum Cursor {} deriving (Show) #}
 {#enum Mode   {} deriving (Show) #}
 {#enum AlignType {} deriving (Show, Eq, Ord) #}
-newtype Alignments = Alignments [AlignType]
+newtype Alignments = Alignments [AlignType] deriving Show
 alignCenter :: Alignments
 alignCenter = Alignments [AlignTypeCenter]
 alignTop :: Alignments
@@ -734,6 +786,14 @@ data Boxtype = NoBox
              | GtkThinDownFrame
              | GtkRoundUpBox
              | GtkRoundDownBox
+             | GleamUpBox
+             | GleamDownBox
+             | GleamUpFrame
+             | GleamDownFrame
+             | GleamThinUpBox
+             | GleamThinDownBox
+             | GleamRoundUpBox
+             | GleamRoundDownBox
              | FreeBoxtype
              deriving (Show)
 instance Enum Boxtype where
@@ -785,6 +845,14 @@ instance Enum Boxtype where
   fromEnum GtkThinDownFrame = defineGtkUpBox_ + 7
   fromEnum GtkRoundUpBox = defineGtkUpBox_ + 8
   fromEnum GtkRoundDownBox = defineGtkUpBox_ + 9
+  fromEnum GleamUpBox = defineGleamUpBox_
+  fromEnum GleamDownBox = defineGleamUpBox_ + 1
+  fromEnum GleamUpFrame = defineGleamUpBox_ + 2
+  fromEnum GleamDownFrame = defineGleamUpBox_ + 3
+  fromEnum GleamThinUpBox = defineGleamUpBox_ + 4
+  fromEnum GleamThinDownBox = defineGleamUpBox_ + 5
+  fromEnum GleamRoundUpBox = defineGleamUpBox_ + 6
+  fromEnum GleamRoundDownBox = defineGleamUpBox_ + 7
   fromEnum FreeBoxtype = 48
 
   toEnum 0 = NoBox
@@ -836,6 +904,14 @@ instance Enum Boxtype where
            | x == defineGtkUpBox_ + 7 = GtkThinDownFrame
            | x == defineGtkUpBox_ + 8 = GtkRoundUpBox
            | x == defineGtkUpBox_ + 9 = GtkRoundDownBox
+           | x == defineGleamUpBox_  = GleamUpBox
+           | x == defineGleamUpBox_ + 1 = GleamDownBox
+           | x == defineGleamUpBox_ + 2 = GleamUpFrame
+           | x == defineGleamUpBox_ + 3 = GleamDownFrame
+           | x == defineGleamUpBox_ + 4 = GleamThinUpBox
+           | x == defineGleamUpBox_ + 5 = GleamThinDownBox
+           | x == defineGleamUpBox_ + 6 = GleamRoundUpBox
+           | x == defineGleamUpBox_ + 7 = GleamRoundDownBox
            | otherwise = error ("Boxtype.toEnum: Cannot match " ++
 	                                         show otherwise)
 frame,frameBox, circleBox, diamondBox :: Boxtype
@@ -846,8 +922,8 @@ diamondBox = DiamondDownBox
 
 
 -- Fonts
-newtype Font = Font Int
-data FontAttribute = Bold | Italic | BoldItalic deriving Enum
+newtype Font = Font Int deriving Show
+data FontAttribute = Bold | Italic | BoldItalic deriving (Show, Enum)
 cFromFont :: Font -> CInt
 cFromFont (Font f) = fromIntegral f
 cToFont :: CInt -> Font
@@ -905,7 +981,7 @@ freeFont = Font 16
 
 -- Colors
 
-newtype Color = Color Int deriving Show
+newtype Color = Color CUInt deriving Show
 foregroundColor :: Color
 foregroundColor = Color 0
 background2Color :: Color
@@ -990,7 +1066,7 @@ data Labeltype = NormalLabel
                | ShadowLabel
                | EngravedLabel
                | EmbossedLabel
-               | FreeLabelType
+               | FreeLabelType deriving Show
 
 instance Enum Labeltype where
     fromEnum NormalLabel = 0
@@ -1068,6 +1144,10 @@ defineGtkUpBox_ =
 defineGtkUpBox :: Boxtype
 defineGtkUpBox = toEnum defineGtkUpBox_
 
+defineGleamUpBox_ :: (Num a ) => a
+defineGleamUpBox_ =
+  fromIntegral $ {#call pure unsafe fl_define_FL_GLEAM_UP_BOXC #}
+
 defineShadowLabel_ :: (Num a) => a
 defineShadowLabel_ =
    fromIntegral $ {#call pure unsafe fl_define_FL_SHADOW_LABELC #}
@@ -1093,28 +1173,33 @@ cFromColor (Color c) = fromIntegral c
 cToColor :: CUInt-> Color
 cToColor c = Color (fromIntegral c)
 
-{#fun pure unsafe fl_inactiveC as
+type RGB = (CUChar, CUChar, CUChar)
+
+{#fun pure fl_inactiveC as
                  inactive {cFromColor `Color' } -> `Color' cToColor#}
-{#fun pure unsafe fl_contrastC as
+{#fun pure fl_contrastC as
                   contrast {cFromColor `Color',cFromColor `Color'}
                   -> `Color' cToColor#}
-{#fun pure unsafe fl_color_averageC as
+{#fun pure fl_color_averageC as
                   color_average {cFromColor `Color',
                                  cFromColor `Color',
                                  realToFrac `Double'}
                   -> `Color' cToColor#}
-{#fun pure unsafe fl_lighterC as
+{#fun pure fl_lighterC as
                   lighter {cFromColor `Color'} -> `Color' cToColor#}
-{#fun pure unsafe fl_darkerC as
+{#fun pure fl_darkerC as
                   darker {cFromColor `Color'} -> `Color' cToColor#}
-{#fun pure unsafe fl_rgb_color_with_rgbC as
-                  rgbColorWithRgb {castCharToCUChar `Char',
-                                   castCharToCUChar `Char',
-                                   castCharToCUChar `Char'}
-                  -> `Color' cToColor#}
-{#fun pure unsafe fl_rgb_color_with_grayscaleC as
+{#fun fl_rgb_color_with_rgbC as
+                  rgbColorWithRgb' {id `CUChar',
+                                    id `CUChar',
+                                    id `CUChar'}
+                  -> `CUInt' #}
+rgbColorWithRgb :: RGB -> IO Color
+rgbColorWithRgb (r,g,b) = rgbColorWithRgb' r g b >>= return . Color
+
+{#fun pure fl_rgb_color_with_grayscaleC as
                   rgbColorWithGrayscale {castCharToCUChar `Char'}
                   -> `Color' cToColor#}
-{#fun pure unsafe fl_gray_rampC as grayRamp {`Int'} -> `Color' cToColor#}
-{#fun pure unsafe fl_color_cubeC as colorCube {`Int',`Int',`Int'}
+{#fun pure fl_gray_rampC as grayRamp {`Int'} -> `Color' cToColor#}
+{#fun pure fl_color_cubeC as colorCube {`Int',`Int',`Int'}
                   -> `Color' cToColor#}
