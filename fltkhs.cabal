@@ -1,5 +1,5 @@
 name : fltkhs
-version : 0.2.0.0
+version : 0.2.0.1
 synopsis : FLTK bindings
 description:
     Low level bindings for the FLTK GUI toolkit.
@@ -101,8 +101,7 @@ library
                    Graphics.UI.FLTK.LowLevel.ColorChooser
   build-depends:
                 base == 4.*,
-                bytestring,
-                ghc
+                bytestring
   build-tools: c2hs
   hs-source-dirs: src
   other-modules: C2HS
