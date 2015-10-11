@@ -417,6 +417,16 @@ withRef (Ref fptr) f =
            f (castPtr refPtr)
        )
 
+isNull :: Ref a -> IO Bool
+isNull (Ref fptr) =
+  withForeignPtr fptr $
+   (\ptrToRefPtr -> do
+        refPtr <- peek ptrToRefPtr
+        if (refPtr == nullPtr)
+          then return True
+          else return False
+   )
+
 unsafeRefToPtr :: Ref a -> IO (Ptr ())
 unsafeRefToPtr (Ref fptr) =
     throwStackOnError $ do
