@@ -59,6 +59,7 @@ toEventHandlerPrim f = mkWidgetEventHandler $
                             return $ fromIntegral result
 
 -- | Overrideable 'Widget' functions
+-- | Do not create this directly. Instead use `defaultWidgetCustomFuncs`
 data CustomWidgetFuncs a =
     CustomWidgetFuncs
     {
@@ -106,12 +107,13 @@ customWidgetFunctionStruct customWidgetFuncs' = do
 
 -- | An empty set of functions to pass to 'widgetCustom'.
 defaultCustomWidgetFuncs :: forall a. (Parent a Widget) => CustomWidgetFuncs a
-defaultCustomWidgetFuncs = CustomWidgetFuncs
-                            Nothing
-                            Nothing
-                            Nothing
-                            Nothing
-                            Nothing
+defaultCustomWidgetFuncs =
+  CustomWidgetFuncs
+    Nothing
+    Nothing
+    Nothing
+    Nothing
+    Nothing
 
 -- | Lots of 'Widget' subclasses have the same constructor parameters. This function consolidates them.
 --
@@ -144,13 +146,14 @@ widgetMaker rectangle _label' customFuncs' new' newWithLabel' newWithCustomFuncs
 -- | Widget constructor.
 widgetCustom :: Rectangle
                 -> Maybe String
+                -> (Ref Widget -> IO ())
                 -> CustomWidgetFuncs Widget
                 -> IO (Ref Widget)
-widgetCustom rectangle l' funcs' =
+widgetCustom rectangle l' draw' funcs' =
   widgetMaker
     rectangle
     l'
-    (Just  funcs')
+    (Just  funcs' { drawCustom = (Just draw') })
     widgetNew'
     widgetNewWithLabel'
     overriddenWidgetNew'

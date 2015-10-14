@@ -78,9 +78,8 @@ main = do
                (Position (X 10) (Y 10))
                (Size (Width 280) (Height 280)))
              Nothing
-             defaultCustomWidgetFuncs {
-                 drawCustom = Just (drawArc myArgs')
-               }
+             (drawArc myArgs')
+             defaultCustomWidgetFuncs
   forM_ (take 6 (zip (iterate ((+) 25) 300) [0..])) $ \(y, sliderNumber') -> do
     s <- horValueSliderNew
          (toRectangle $ (50, y, 240, 25))
