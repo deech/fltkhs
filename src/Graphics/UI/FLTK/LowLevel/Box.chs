@@ -34,11 +34,12 @@ import Graphics.UI.FLTK.LowLevel.Widget
 {# fun Fl_OverriddenBox_New as overriddenBoxNew' { `Int',`Int',`Int',`Int', id `Ptr ()'} -> `Ptr ()' id #}
 {# fun Fl_Box_New_WithBoxtype as boxNewWithBoxtype' {cFromEnum `Boxtype',  `Int',`Int',`Int',`Int',unsafeToCString `String'} -> `Ptr ()' id #}
 {# fun Fl_OverriddenBox_New_WithBoxtype as overriddenBoxNewWithBoxtype' {cFromEnum `Boxtype',  `Int',`Int',`Int',`Int',unsafeToCString `String', id `Ptr ()'} -> `Ptr ()' id #}
-boxCustom :: Rectangle ->                       -- ^ The bounds of this box
-             Maybe String ->                    -- ^ Optional label
-             Maybe (Ref Box -> IO ()) ->        -- ^ Optional custom box drawing function
-             Maybe (CustomWidgetFuncs Box) ->   -- ^ Optional widget overrides
-             IO (Ref Box)
+
+boxCustom :: Rectangle                     -- ^ The bounds of this box
+          -> Maybe String                  -- ^ Optional label
+          -> Maybe (Ref Box -> IO ())      -- ^ Optional custom box drawing function
+          -> Maybe (CustomWidgetFuncs Box) -- ^ Optional widget overrides
+          -> IO (Ref Box)
 boxCustom rectangle l' draw' funcs' =
   widgetMaker
     rectangle

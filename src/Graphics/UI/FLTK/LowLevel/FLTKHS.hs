@@ -36,6 +36,10 @@ module Graphics.UI.FLTK.LowLevel.FLTKHS
          --
          -- $APIGuide
 
+         -- * Slow Compilation Issues
+         --
+         -- $Compilation
+
          -- * Core Types
          module Graphics.UI.FLTK.LowLevel.Fl_Types,
          -- * Widgets
@@ -636,6 +640,34 @@ import Graphics.UI.FLTK.LowLevel.ColorChooser
 -- being able to get at the default implementation out-weighs the trap the user might fall into. If this becomes a pervasive problem the author is
 -- open to removing this functionality.
 --
+
+-- $Compilation
+--
+-- As described above, the API emulates multiple dispatch using type-level programming and typeclasseses. While this is makes for a nice API it has also
+-- slowed down compilation of executables much more than expected. This is especially true in the GHC 7.10.x series in which the step where GHC specialises typeclass
+-- function calls to concrete types has apparently taken a *huge* compile-time performance hit.
+--
+-- To clarify the time taken to compile the library itself has not changed, but applications that use the library to create executables are taking a lot
+-- longer (almost 3x compared to GHC 7.8.x) to compile. To further emphasize, there does not appear to be any runtime performance issues. This is only a
+-- compile time problem.
+--
+-- To preserve the user's and the author's sanity a flag `fastCompile` has been introduced to this package and to the <http://hackage.haskell.org/fltkhs-fluid-examples fltkhs-fluid-examples>.
+-- This flag which tells the compiler to skip the specialising step when compiling executables, dramatically decreases compile time but also bloats the resulting executable size and
+-- probably makes runtime performance much slower. In this package and <http://hackage.haskell.org/fltkhs-fluid-examples fltkhs-fluid-examples> it is enabled by default, since the executables are just
+-- demos that are not meant to show off performance. To disable this flag, tell Cabal to ignore it during the `configure` step:
+--
+-- @
+-- cabal configure -f-fastCompile
+-- @
+--
+-- In the <https://github.com/deech/fltkhs-hello-world fltkhs> and the <https://github.com/deech/fltkhs-fluid-hello-world fltkhs-fluid> project skeletons this flag is /disabled/ by
+-- default to provide the best runtime performance. To enable the flag for a smoother development workflow, tell Cabal to enable it during the `configure` step:
+--
+-- @
+-- cabal configure -f fastCompile
+-- @
+
+
 -- =File Layout
 -- @
 -- Root

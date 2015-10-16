@@ -120,13 +120,13 @@ tableCustomFunctionStruct draw' drawCell' customWidgetFuncs' customTableFuncs' =
 
 {# fun Fl_Table_New as tableNew' {  `Int',`Int', `Int', `Int', id `Ptr ()'} -> `Ptr ()' id #}
 {# fun Fl_Table_New_WithLabel as tableNewWithLabel' { `Int',`Int',`Int',`Int',unsafeToCString `String', id `Ptr ()'} -> `Ptr ()' id #}
-tableCustom :: Rectangle ->                                                            -- ^ Bounds of this table
-               Maybe String ->                                                         -- ^ Optional label
-               Maybe (Ref Table -> IO ()) ->                                           -- ^ Optional custom table drawing function
-               (Ref Table -> TableContext -> TableCoordinate -> Rectangle -> IO ()) -> -- ^ Custom table cell drawing function
-               CustomWidgetFuncs Table ->                                              -- ^ Widget overrides
-               CustomTableFuncs Table ->                                               -- ^ Table overrides
-               IO (Ref Table)
+tableCustom :: Rectangle                                                            -- ^ Bounds of this table
+            -> Maybe String                                                         -- ^ Optional label
+            -> Maybe (Ref Table -> IO ())                                           -- ^ Optional custom table drawing function
+            -> (Ref Table -> TableContext -> TableCoordinate -> Rectangle -> IO ()) -- ^ Custom table cell drawing function
+            -> CustomWidgetFuncs Table                                              -- ^ Widget overrides
+            -> CustomTableFuncs Table                                               -- ^ Table overrides
+            -> IO (Ref Table)
 tableCustom rectangle label' draw' drawCell' customWidgetFuncs' customTableFuncs' =
     do
       let (x_pos, y_pos, width, height) = fromRectangle rectangle

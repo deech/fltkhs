@@ -31,13 +31,13 @@ import C2HS hiding (cFromEnum, toBool,cToEnum)
 {# fun Fl_OverriddenGl_Window_NewXY as overriddenWindowNewXY' {`Int',`Int', `Int', `Int', id `Ptr ()'} -> `Ptr ()' id #}
 {# fun Fl_OverriddenGl_Window_NewXY_WithLabel as overriddenWindowNewXYWithLabel' { `Int',`Int',`Int',`Int',unsafeToCString `String', id `Ptr ()'} -> `Ptr ()' id #}
 {# fun Fl_OverriddenGl_Window_New_WithLabel as overriddenWindowNewWithLabel' { `Int',`Int', unsafeToCString `String', id `Ptr ()'} -> `Ptr ()' id #}
-glWindowCustom :: Size ->                           -- ^ The size of this window
-                  Maybe Position ->                 -- ^ The position of this window
-                  Maybe String ->                   -- ^ The window label
-                  Maybe (Ref GlWindow -> IO ()) ->  -- ^ Optional custom drawing function
-                  CustomWidgetFuncs GlWindow ->     -- ^ other custom widget functions
-                  CustomWindowFuncs GlWindow ->     -- ^ Other custom window functions
-                  IO (Ref GlWindow)
+glWindowCustom :: Size                           -- ^ The size of this window
+               -> Maybe Position                 -- ^ The position of this window
+               -> Maybe String                   -- ^ The window label
+               -> Maybe (Ref GlWindow -> IO ())  -- ^ Optional custom drawing function
+               -> CustomWidgetFuncs GlWindow     -- ^ other custom widget functions
+               -> CustomWindowFuncs GlWindow     -- ^ Other custom window functions
+               -> IO (Ref GlWindow)
 glWindowCustom size position title draw' customWidgetFuncs' customWindowFuncs' =
   windowMaker
     size

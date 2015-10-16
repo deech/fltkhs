@@ -31,13 +31,13 @@ import C2HS hiding (cFromEnum, toBool,cToEnum)
 {# fun Fl_OverriddenDouble_Window_NewXY as overriddenWindowNewXY' {`Int',`Int', `Int', `Int', id `Ptr ()'} -> `Ptr ()' id #}
 {# fun Fl_OverriddenDouble_Window_NewXY_WithLabel as overriddenWindowNewXYWithLabel' { `Int',`Int',`Int',`Int',unsafeToCString `String', id `Ptr ()'} -> `Ptr ()' id #}
 {# fun Fl_OverriddenDouble_Window_New_WithLabel as overriddenWindowNewWithLabel' { `Int',`Int', unsafeToCString `String', id `Ptr ()'} -> `Ptr ()' id #}
-doubleWindowCustom :: Size ->                              -- ^ Size of this window
-                      Maybe Position ->                    -- ^ Optional position of this window
-                      Maybe String ->                      -- ^ Optional label
-                      Maybe (Ref DoubleWindow -> IO ()) -> -- ^ Optional table drawing routine
-                      CustomWidgetFuncs DoubleWindow ->    -- ^ Custom widget overrides
-                      CustomWindowFuncs DoubleWindow ->    -- ^ Custom window overrides
-                      IO (Ref DoubleWindow)
+doubleWindowCustom :: Size                              -- ^ Size of this window
+                   -> Maybe Position                    -- ^ Optional position of this window
+                   -> Maybe String                      -- ^ Optional label
+                   -> Maybe (Ref DoubleWindow -> IO ()) -- ^ Optional table drawing routine
+                   -> CustomWidgetFuncs DoubleWindow    -- ^ Custom widget overrides
+                   -> CustomWindowFuncs DoubleWindow    -- ^ Custom window overrides
+                   -> IO (Ref DoubleWindow)
 doubleWindowCustom size position title draw' customWidgetFuncs' customWindowFuncs' =
   windowMaker
     size
