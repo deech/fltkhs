@@ -84,45 +84,53 @@ toDrawCellPrim f =
 data CustomTableFuncs a =
     CustomTableFuncs
     {
-     drawCellCustom   :: Maybe (Ref a -> TableContext -> TableCoordinate -> Rectangle -> IO ())
-    ,clearCustom      :: Maybe (Ref a -> IO ())
+    clearCustom      :: Maybe (Ref a -> IO ())
     ,setRowsCustom    :: Maybe (Ref a -> Int -> IO ())
     ,setColsCustom    :: Maybe (Ref a -> Int -> IO ())
     }
 
 fillCustomTableFunctionStruct :: forall a. (Parent a Table) =>
                                   Ptr () ->
+                                  Maybe (Ref a -> TableContext -> TableCoordinate -> Rectangle -> IO ()) ->
                                   CustomTableFuncs a ->
                                   IO ()
-fillCustomTableFunctionStruct structPtr (CustomTableFuncs _drawCell' _clear' _setRows' _setCols')  = do
+fillCustomTableFunctionStruct structPtr _drawCell' (CustomTableFuncs _clear' _setRows' _setCols')  = do
    toDrawCellPrim `orNullFunPtr` _drawCell' >>= {#set fl_Table_Virtual_Funcs->draw_cell#} structPtr
    toCallbackPrim `orNullFunPtr` _clear' >>= {#set fl_Table_Virtual_Funcs->clear#} structPtr
    toSetIntPrim `orNullFunPtr` _setRows' >>= {#set fl_Table_Virtual_Funcs->set_rows#} structPtr
    toSetIntPrim `orNullFunPtr` _setCols' >>= {#set fl_Table_Virtual_Funcs->set_cols#} structPtr
 
 defaultCustomTableFuncs :: forall a. (Parent a Table) => CustomTableFuncs a
-defaultCustomTableFuncs = CustomTableFuncs Nothing Nothing Nothing Nothing
+defaultCustomTableFuncs = CustomTableFuncs Nothing Nothing Nothing
 
 {# fun Fl_Table_default_virtual_funcs as virtualFuncs' {} -> `Ptr ()' id #}
 tableCustomFunctionStruct :: (Parent a Widget,
                               Parent b Table) =>
+                             Maybe (Ref a -> IO ()) ->
+                             Maybe (Ref b -> TableContext -> TableCoordinate -> Rectangle -> IO ()) ->
                              CustomWidgetFuncs a ->
                              CustomTableFuncs b ->
                              IO (Ptr ())
-tableCustomFunctionStruct customWidgetFuncs' customTableFuncs' =
+tableCustomFunctionStruct draw' drawCell' customWidgetFuncs' customTableFuncs' =
   do
    ptr <- virtualFuncs'
-   fillCustomWidgetFunctionStruct ptr customWidgetFuncs'
-   fillCustomTableFunctionStruct ptr customTableFuncs'
+   fillCustomWidgetFunctionStruct ptr draw' customWidgetFuncs'
+   fillCustomTableFunctionStruct ptr drawCell' customTableFuncs'
    return ptr
 
 {# fun Fl_Table_New as tableNew' {  `Int',`Int', `Int', `Int', id `Ptr ()'} -> `Ptr ()' id #}
 {# fun Fl_Table_New_WithLabel as tableNewWithLabel' { `Int',`Int',`Int',`Int',unsafeToCString `String', id `Ptr ()'} -> `Ptr ()' id #}
-tableCustom :: Rectangle -> Maybe String -> CustomWidgetFuncs Table -> CustomTableFuncs Table -> IO (Ref Table)
-tableCustom rectangle label' customWidgetFuncs' customTableFuncs' =
+tableCustom :: Rectangle ->                                                            -- ^ Bounds of this table
+               Maybe String ->                                                         -- ^ Optional label
+               Maybe (Ref Table -> IO ()) ->                                           -- ^ Optional custom table drawing function
+               (Ref Table -> TableContext -> TableCoordinate -> Rectangle -> IO ()) -> -- ^ Custom table cell drawing function
+               CustomWidgetFuncs Table ->                                              -- ^ Widget overrides
+               CustomTableFuncs Table ->                                               -- ^ Table overrides
+               IO (Ref Table)
+tableCustom rectangle label' draw' drawCell' customWidgetFuncs' customTableFuncs' =
     do
       let (x_pos, y_pos, width, height) = fromRectangle rectangle
-      ptr <- tableCustomFunctionStruct customWidgetFuncs' customTableFuncs'
+      ptr <- tableCustomFunctionStruct draw' (Just drawCell') customWidgetFuncs' customTableFuncs'
       case label' of
         (Just l') -> tableNewWithLabel' x_pos y_pos width height l' ptr >>= toRef
         Nothing -> tableNew' x_pos y_pos width height ptr >>= toRef

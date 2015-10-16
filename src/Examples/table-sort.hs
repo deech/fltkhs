@@ -218,10 +218,10 @@ main = do
                (Size (Width $ windowW - margin * 2)
                      (Height $ windowH - margin * 2)))
              Nothing
+             Nothing
+             (drawCell tableState)
              defaultCustomWidgetFuncs
-             (defaultCustomTableFuncs {
-                drawCellCustom = Just $ drawCell tableState
-             })
+             defaultCustomTableFuncs
   setColHeader table True
   setColResize table True
   setSelectionColor table yellowColor

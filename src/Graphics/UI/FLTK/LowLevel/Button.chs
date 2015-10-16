@@ -33,11 +33,16 @@ import Graphics.UI.FLTK.LowLevel.Hierarchy
 {# fun Fl_Button_New_WithLabel as widgetNewWithLabel' { `Int',`Int',`Int',`Int', unsafeToCString `String'} -> `Ptr ()' id #}
 {# fun Fl_OverriddenButton_New_WithLabel as overriddenWidgetNewWithLabel' { `Int',`Int',`Int',`Int', unsafeToCString `String', id `Ptr ()'} -> `Ptr ()' id #}
 {# fun Fl_OverriddenButton_New as overriddenWidgetNew' { `Int',`Int',`Int',`Int', id `Ptr ()'} -> `Ptr ()' id #}
-buttonCustom :: Rectangle -> Maybe String -> Maybe (CustomWidgetFuncs Button) -> IO (Ref Button)
-buttonCustom rectangle l' funcs' =
+buttonCustom :: Rectangle ->                         -- ^ The bounds of this button
+                Maybe String ->                      -- ^ The button label
+                Maybe (Ref Button -> IO ()) ->       -- ^ Optional custom drawing function
+                Maybe (CustomWidgetFuncs Button) ->  -- ^ Optional custom widget functions
+                IO (Ref Button)
+buttonCustom rectangle l' draw' funcs' =
   widgetMaker
     rectangle
     l'
+    draw'
     funcs'
     widgetNew'
     widgetNewWithLabel'
@@ -49,6 +54,7 @@ buttonNew rectangle l' =
   widgetMaker
     rectangle
     l'
+    Nothing
     Nothing
     widgetNew'
     widgetNewWithLabel'

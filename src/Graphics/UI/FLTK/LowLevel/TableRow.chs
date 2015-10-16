@@ -30,11 +30,11 @@ data TableRowSelectFlag = TableRowSelect | TableRowDeselect | TableRowToggle
 
 {# fun Fl_OverriddenTable_Row_New as tableRowNew' {  `Int',`Int', `Int', `Int', id `Ptr ()'} -> `Ptr ()' id #}
 {# fun Fl_OverriddenTable_Row_New_WithLabel as tableRowNewWithLabel' { `Int',`Int',`Int',`Int', unsafeToCString `String', id `Ptr ()'} -> `Ptr ()' id #}
-tableRowNew :: Rectangle -> Maybe String -> CustomWidgetFuncs TableRow -> CustomTableFuncs TableRow -> IO (Ref TableRow)
-tableRowNew rectangle label' customWidgetFuncs' customTableFuncs' =
+tableRowNew :: Rectangle -> Maybe String -> Maybe (Ref TableRow -> IO ()) -> (Ref TableRow -> TableContext -> TableCoordinate -> Rectangle -> IO ()) -> CustomWidgetFuncs TableRow -> CustomTableFuncs TableRow -> IO (Ref TableRow)
+tableRowNew rectangle label' draw' drawCell' customWidgetFuncs' customTableFuncs' =
     do
       let (x_pos, y_pos, width, height) = fromRectangle rectangle
-      ptr <- tableCustomFunctionStruct customWidgetFuncs' customTableFuncs'
+      ptr <- tableCustomFunctionStruct draw' (Just drawCell') customWidgetFuncs' customTableFuncs'
       case label' of
         (Just l') -> tableRowNewWithLabel' x_pos y_pos width height l' ptr >>= toRef
         Nothing -> tableRowNew' x_pos y_pos width height ptr >>= toRef

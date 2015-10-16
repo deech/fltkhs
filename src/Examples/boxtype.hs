@@ -25,7 +25,6 @@ bt n label' boxtype' square' = do
              (Width $ if square' then rowHeight - 20 else windowWidth - 20)
              (Height $ rowHeight - 20)))
           label'
-          Nothing
   setLabelsize b' (FontSize 11)
   when square' $ setAlign b' alignRight
 main :: IO ()

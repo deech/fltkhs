@@ -241,10 +241,10 @@ main = do
   spreadsheet' <- tableCustom
                     (toRectangle (20,20,tableWidth', tableHeight'))
                     Nothing
+                    Nothing
+                    (drawCell props' intInput')
                     defaultCustomWidgetFuncs
-                    defaultCustomTableFuncs {
-                        drawCellCustom = (Just $ drawCell props' intInput')
-                      }
+                    defaultCustomTableFuncs
   whens' <- getWhen spreadsheet'
   setWhen spreadsheet' $ [WhenNotChanged] ++ whens'
   setSelection spreadsheet' 0 0 0 0

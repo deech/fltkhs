@@ -98,8 +98,6 @@ constructorG flClassName hsConstructor name posSize
     ["-- Fl_Table " ++ (maybe "" id name) ++ " " ++ (show posSize)]
   | flClassName == "MenuItem" || flClassName == "Submenu" =
     [(maybe "_ <- " (\n -> n ++ " <- ") name) ++ "menuItemNew"]
-  | flClassName == "Fl_Browser" || flClassName == "Fl_Box" =
-    [typicalConstructorG name posSize hsConstructor ++ " Nothing"]
   | flClassName == "Fl_Window" =
     let (x,y,w,h) = posSize in
     [(maybe "_ <- " (\n -> n ++ " <- ") name) ++

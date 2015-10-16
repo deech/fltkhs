@@ -68,7 +68,7 @@ initializeWindow w' = do
   _ <- add menu "&File/&Quit" (Just (KeySequence (ShortcutKeySequence [kb_CommandState] (NormalKeyType 'q')))) (Just quitCb) (MenuItemFlags [])
   w_w' <- getW w'
   w_h' <- getH w'
-  box' <- boxNew (toRectangle (20,25+20,w_w'-40,w_h'-40-25)) Nothing Nothing
+  box' <- boxNew (toRectangle (20,25+20,w_w'-40,w_h'-40-25)) Nothing
   setColor box' (Color 45)
   setBox box' FlatBox
   setAlign box' (Alignments [AlignTypeCenter, AlignTypeInside, AlignTypeWrap])

@@ -9,7 +9,7 @@ main = do
   setBox window NoBox
   _ <- setResizable window (Just window)
   tile <- tileNew (toRectangle (0,0,300,300)) Nothing
-  box0 <- boxNew (toRectangle (0,0,150,150)) (Just "0") Nothing
+  box0 <- boxNew (toRectangle (0,0,150,150)) (Just "0")
   setBox box0 DownBox
   setColor box0 (Color 9)
   setLabelsize box0 (FontSize 36)
@@ -18,7 +18,7 @@ main = do
   w1 <- doubleWindowNew (Size (Width 150) (Height 150)) (Just (Position (X 150) (Y 0))) Nothing
   begin w1
   setBox w1 NoBox
-  box1 <- boxNew (toRectangle (0,0,150,150)) (Just "1\nThis is a child window") Nothing
+  box1 <- boxNew (toRectangle (0,0,150,150)) (Just "1\nThis is a child window")
   setBox box1 DownBox
   setColor box1 (Color 19)
   setLabelsize box1 (FontSize 18)
@@ -26,25 +26,25 @@ main = do
   _ <- setResizable w1 (Just box1)
   end w1
 
-  box2a <- boxNew (toRectangle (0,150,70,150)) (Just "2a") Nothing
+  box2a <- boxNew (toRectangle (0,150,70,150)) (Just "2a")
   setBox box2a DownBox
   setColor box2a (Color 12)
   setLabelsize box2a (FontSize 36)
   setAlign box2a (Alignments [AlignTypeClip])
 
-  box2b <- boxNew (toRectangle (70,150,80,150)) (Just "2b") Nothing
+  box2b <- boxNew (toRectangle (70,150,80,150)) (Just "2b")
   setBox box2b DownBox
   setColor box2b (Color 13)
   setLabelsize box2b (FontSize 36)
   setAlign box2b (Alignments [AlignTypeClip])
 
-  box3a <- boxNew (toRectangle (150,150,150,70)) (Just "3a") Nothing
+  box3a <- boxNew (toRectangle (150,150,150,70)) (Just "3a")
   setBox box3a DownBox
   setColor box3a (Color 12)
   setLabelsize box3a (FontSize 36)
   setAlign box3a (Alignments [AlignTypeClip])
 
-  box3b <- boxNew (toRectangle (150,(150+70),150,80)) (Just "3b") Nothing
+  box3b <- boxNew (toRectangle (150,(150+70),150,80)) (Just "3b")
   setBox box3b DownBox
   setColor box3b (Color 13)
   setLabelsize box3b (FontSize 36)
@@ -58,7 +58,7 @@ main = do
   tileY <- getY tile
   tileW <- getW tile
   tileH <- getH tile
-  r <- boxNew (toRectangle ((tileX+dx), (tileY+dy), (tileW-(2*dx)), (tileH-(2*dy)))) Nothing Nothing
+  r <- boxNew (toRectangle ((tileX+dx), (tileY+dy), (tileW-(2*dx)), (tileH-(2*dy)))) Nothing
   _ <- setResizable tile (Just r)
   end tile
   end window

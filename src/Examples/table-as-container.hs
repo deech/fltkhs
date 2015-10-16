@@ -100,10 +100,10 @@ main = do
   table <- tableCustom
             (toRectangle (20,20,win_w-40,win_h-40))
             (Just "FLTK widget table")
+            Nothing
+            drawCell
             defaultCustomWidgetFuncs
-            (defaultCustomTableFuncs{
-              drawCellCustom = (Just drawCell)
-              })
+            defaultCustomTableFuncs
   initializeTable table
   setTableSize table 50 50
   end win

@@ -66,10 +66,10 @@ main = do
                (Position (X 10) (Y 10))
                (Size (Width 880) (Height 380)))
              Nothing
+             Nothing
+             drawCell
              defaultCustomWidgetFuncs
-             defaultCustomTableFuncs {
-               drawCellCustom = (Just drawCell)
-             }
+             defaultCustomTableFuncs
   initializeTable table
   setResizable window (Just table)
   end window

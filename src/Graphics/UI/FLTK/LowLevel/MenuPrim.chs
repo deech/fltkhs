@@ -2,7 +2,8 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 module Graphics.UI.FLTK.LowLevel.MenuPrim
     (
-     menu_New
+     menu_New,
+     menu_Custom
      -- * Hierarchy
      --
      -- $hierarchy
@@ -31,16 +32,27 @@ import qualified Data.ByteString.Char8 as C
 {# fun Fl_Menu__New_WithLabel as widgetNewWithLabel' { `Int',`Int',`Int',`Int',unsafeToCString `String'} -> `Ptr ()' id #}
 {# fun Fl_OverriddenMenu__New_WithLabel as overriddenWidgetNewWithLabel' { `Int',`Int',`Int',`Int',unsafeToCString `String', id `Ptr ()'} -> `Ptr ()' id #}
 {# fun Fl_OverriddenMenu__New as overriddenWidgetNew' { `Int',`Int',`Int',`Int', id `Ptr ()'} -> `Ptr ()' id #}
-menu_New :: Rectangle -> Maybe String -> Maybe (CustomWidgetFuncs MenuPrim) -> IO (Ref MenuPrim)
-menu_New rectangle l' funcs' =
+menu_Custom :: Rectangle -> Maybe String -> Maybe (CustomWidgetFuncs MenuPrim) -> IO (Ref MenuPrim)
+menu_Custom rectangle l' funcs' =
   widgetMaker
     rectangle
     l'
+    Nothing
     funcs'
     widgetNew'
     widgetNewWithLabel'
     overriddenWidgetNew'
     overriddenWidgetNewWithLabel'
+
+menu_New :: Rectangle -> Maybe String -> IO (Ref MenuPrim)
+menu_New rectangle l' =
+    let (x_pos, y_pos, width, height) = fromRectangle rectangle
+    in case l' of
+        Nothing -> widgetNew' x_pos y_pos width height >>=
+                             toRef
+        Just l -> widgetNewWithLabel' x_pos y_pos width height l >>=
+                             toRef
+
 
 {# fun Fl_Menu__Destroy as widgetDestroy' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
 instance (impl ~ (IO ())) => Op (Destroy ()) MenuPrim orig impl where
@@ -119,7 +131,6 @@ instance (Parent a MenuItem, impl ~ ( IO (Maybe (Ref a)))) => Op (TestShortcut (
 {# fun Fl_Menu__global as global' { id `Ptr ()' } -> `()' #}
 instance (impl ~ ( IO ())) => Op (Global ()) MenuPrim orig impl where
   runOp _ _ menu_ = withRef menu_ $ \menu_Ptr -> global' menu_Ptr
-{# fun Fl_Menu__menu as menu' { id `Ptr ()' } -> `Ptr ()' id #}
 {# fun Fl_Menu__get_menu_item_by_index as getMenuItemByIndex' { id `Ptr ()', id `CInt' } -> `Ptr ()' id #}
 instance (impl ~ ( IO [(Maybe (Ref MenuItem))])) => Op (GetMenu ()) MenuPrim orig impl where
   runOp _ _ menu_ = withRef menu_ $ \menu_Ptr -> do

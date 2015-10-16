@@ -63,10 +63,8 @@ toEventHandlerPrim f = mkWidgetEventHandler $
 data CustomWidgetFuncs a =
     CustomWidgetFuncs
     {
-     -- | See <http://www.fltk.org/doc-1.3/classFl__Widget.html#a1acb38c6b3cb40452ad02ccfeedbac8a Fl_Widget::draw>
-     drawCustom   :: Maybe (Ref a -> IO ())
      -- | See <http://www.fltk.org/doc-1.3/classFl__Widget.html#a9cb17cc092697dfd05a3fab55856d218 Fl_Widget::handle>
-    ,handleCustom :: Maybe (Ref a -> Event -> IO Int)
+    handleCustom :: Maybe (Ref a -> Event -> IO Int)
      -- | See <http://www.fltk.org/doc-1.3/classFl__Widget.html#aca98267e7a9b94f699ebd27d9f59e8bb Fl_Widget::resize>
     ,resizeCustom :: Maybe (Ref a -> Rectangle -> IO ())
      -- | See <http://www.fltk.org/doc-1.3/classFl__Widget.html#ab572c6fbc922bf3268b72cf9e2939606 Fl_Widget::show>
@@ -83,9 +81,10 @@ data CustomWidgetFuncs a =
 -- Only of interest to 'Widget' contributors
 fillCustomWidgetFunctionStruct :: forall a. (Parent a Widget) =>
                                   Ptr () ->
+                                  Maybe (Ref a -> IO ()) ->
                                   CustomWidgetFuncs a ->
                                   IO ()
-fillCustomWidgetFunctionStruct structPtr (CustomWidgetFuncs _draw' _handle' _resize' _show' _hide') = do
+fillCustomWidgetFunctionStruct structPtr _draw' (CustomWidgetFuncs _handle' _resize' _show' _hide') = do
       toCallbackPrim `orNullFunPtr` _draw'       >>= {#set fl_Widget_Virtual_Funcs->draw#} structPtr
       toEventHandlerPrim `orNullFunPtr` _handle' >>= {#set fl_Widget_Virtual_Funcs->handle#} structPtr
       toRectangleFPrim `orNullFunPtr` _resize'   >>= {#set fl_Widget_Virtual_Funcs->resize#} structPtr
@@ -98,18 +97,18 @@ fillCustomWidgetFunctionStruct structPtr (CustomWidgetFuncs _draw' _handle' _res
 --
 -- Only of interest to 'Widget' contributors.
 customWidgetFunctionStruct :: forall a. (Parent a Widget) =>
+                              Maybe (Ref a -> IO ()) ->
                               CustomWidgetFuncs a ->
                               IO (Ptr ())
-customWidgetFunctionStruct customWidgetFuncs' = do
+customWidgetFunctionStruct draw' customWidgetFuncs' = do
   p <- virtualFuncs'
-  fillCustomWidgetFunctionStruct p customWidgetFuncs'
+  fillCustomWidgetFunctionStruct p draw' customWidgetFuncs'
   return p
 
 -- | An empty set of functions to pass to 'widgetCustom'.
 defaultCustomWidgetFuncs :: forall a. (Parent a Widget) => CustomWidgetFuncs a
 defaultCustomWidgetFuncs =
   CustomWidgetFuncs
-    Nothing
     Nothing
     Nothing
     Nothing
@@ -121,22 +120,23 @@ defaultCustomWidgetFuncs =
 widgetMaker :: forall a. (Parent a Widget) =>
                Rectangle                                                          -- ^ Position and size
                -> Maybe String                                                    -- ^ Title
+               -> Maybe (Ref a -> IO ())                                          -- ^ Custom drawing function
                -> Maybe (CustomWidgetFuncs a)                                     -- ^ Custom functions
                -> (Int -> Int -> Int -> Int -> IO ( Ptr ()))                      -- ^ Foreign constructor to call if neither title nor custom functions are given
                -> (Int -> Int -> Int -> Int -> String -> IO ( Ptr () ))           -- ^ Foreign constructor to call if only title is given
                -> (Int -> Int -> Int -> Int -> Ptr () -> IO ( Ptr () ))           -- ^ Foreign constructor to call if only custom functions are given
                -> (Int -> Int -> Int -> Int -> String -> Ptr () -> IO ( Ptr () )) -- ^ Foreign constructor to call if both title and custom functions are given
                -> IO (Ref a)                                                      -- ^ Reference to the widget
-widgetMaker rectangle _label' customFuncs' new' newWithLabel' newWithCustomFuncs' newWithCustomFuncsLabel' =
+widgetMaker rectangle _label' draw' customFuncs' new' newWithLabel' newWithCustomFuncs' newWithCustomFuncsLabel' =
     let (x_pos, y_pos, width, height) = fromRectangle rectangle
     in case (_label', customFuncs') of
         (Nothing,Nothing) -> new' x_pos y_pos width height >>= toRef
         ((Just l), Nothing) -> newWithLabel' x_pos y_pos width height l >>= toRef
         ((Just l), (Just fs)) -> do
-          ptr <- customWidgetFunctionStruct fs
+          ptr <- customWidgetFunctionStruct draw' fs
           newWithCustomFuncsLabel' x_pos y_pos width height l (castPtr ptr) >>= toRef
         (Nothing, (Just fs)) -> do
-          ptr <- customWidgetFunctionStruct fs
+          ptr <- customWidgetFunctionStruct draw' fs
           newWithCustomFuncs' x_pos y_pos width height (castPtr ptr) >>= toRef
 
 {# fun Fl_Widget_New as widgetNew' { `Int',`Int',`Int',`Int' } -> `Ptr ()' id #}
@@ -144,16 +144,17 @@ widgetMaker rectangle _label' customFuncs' new' newWithLabel' newWithCustomFuncs
 {# fun Fl_OverriddenWidget_New_WithLabel as overriddenWidgetNewWithLabel' { `Int',`Int',`Int',`Int', unsafeToCString `String', id `Ptr ()'} -> `Ptr ()' id #}
 {# fun Fl_OverriddenWidget_New as overriddenWidgetNew' { `Int',`Int',`Int',`Int', id `Ptr ()'} -> `Ptr ()' id #}
 -- | Widget constructor.
-widgetCustom :: Rectangle
-                -> Maybe String
-                -> (Ref Widget -> IO ())
-                -> CustomWidgetFuncs Widget
+widgetCustom :: Rectangle                   -- ^ The bounds of this widget
+                -> Maybe String             -- ^ The widget label
+                -> (Ref Widget -> IO ())    -- ^ Custom drawing function
+                -> CustomWidgetFuncs Widget -- ^ Other custom functions
                 -> IO (Ref Widget)
 widgetCustom rectangle l' draw' funcs' =
   widgetMaker
     rectangle
     l'
-    (Just  funcs' { drawCustom = (Just draw') })
+    (Just draw')
+    (Just funcs')
     widgetNew'
     widgetNewWithLabel'
     overriddenWidgetNew'

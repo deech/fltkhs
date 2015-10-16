@@ -89,6 +89,7 @@ windowMaker :: forall a b. (Parent a Window, Parent b Widget) =>
                Size ->
                Maybe Position ->
                Maybe String ->
+               Maybe (Ref b -> IO ()) ->
                CustomWidgetFuncs b ->
                CustomWindowFuncs a ->
                (Int -> Int -> Ptr () -> IO (Ptr ())) ->
@@ -99,6 +100,7 @@ windowMaker :: forall a b. (Parent a Window, Parent b Widget) =>
 windowMaker (Size (Width w) (Height h))
             position
             title
+            draw'
             customWidgetFuncs'
             customWindowFuncs'
             custom'
@@ -107,7 +109,7 @@ windowMaker (Size (Width w) (Height h))
             customXYWithLabel' =
      do
        p <- virtualFuncs'
-       fillCustomWidgetFunctionStruct p customWidgetFuncs'
+       fillCustomWidgetFunctionStruct p draw' customWidgetFuncs'
        fillCustomWindowFunctionStruct p customWindowFuncs'
        case (position, title) of
         (Nothing, Nothing) -> custom' w h p >>= toRef
@@ -119,17 +121,19 @@ windowMaker (Size (Width w) (Height h))
 {# fun Fl_OverriddenWindow_NewXY as overriddenWindowNewXY' {`Int',`Int', `Int', `Int', id `Ptr ()'} -> `Ptr ()' id #}
 {# fun Fl_OverriddenWindow_NewXY_WithLabel as overriddenWindowNewXYWithLabel' { `Int',`Int',`Int',`Int',unsafeToCString `String', id `Ptr ()'} -> `Ptr ()' id #}
 {# fun Fl_OverriddenWindow_New_WithLabel as overriddenWindowNewWithLabel' { `Int',`Int', unsafeToCString `String', id `Ptr ()'} -> `Ptr ()' id #}
-windowCustom :: Size ->
-                Maybe Position ->
-                Maybe String ->
-                CustomWidgetFuncs Window ->
-                CustomWindowFuncs Window ->
+windowCustom :: Size ->                        -- ^ Size of this window
+                Maybe Position ->              -- ^ Optional position of this window
+                Maybe String ->                -- ^ Optional label
+                Maybe (Ref Window -> IO ()) -> -- ^ Optional table drawing routine
+                CustomWidgetFuncs Window ->    -- ^ Custom widget overrides
+                CustomWindowFuncs Window ->    -- ^ Custom window overrides
                 IO (Ref Window)
-windowCustom size position title customWidgetFuncs' customWindowFuncs' =
+windowCustom size position title draw' customWidgetFuncs' customWindowFuncs' =
   windowMaker
     size
     position
     title
+    draw'
     customWidgetFuncs'
     customWindowFuncs'
     overriddenWindowNew'
@@ -143,6 +147,7 @@ windowNew size position title =
     size
     position
     title
+    Nothing
     (defaultCustomWidgetFuncs :: CustomWidgetFuncs Window)
     (defaultCustomWindowFuncs :: CustomWindowFuncs Window)
     overriddenWindowNew'

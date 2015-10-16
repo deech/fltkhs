@@ -4,6 +4,7 @@ module Graphics.UI.FLTK.LowLevel.Browser
     (
      -- * Constructor
      browserNew,
+     browserCustom
      -- * Hierarchy
      --
      -- $hierarchy
@@ -30,16 +31,27 @@ import Graphics.UI.FLTK.LowLevel.Widget
 {# fun Fl_Browser_New_WithLabel as browserNewWithLabel' { `Int',`Int',`Int',`Int',unsafeToCString `String'} -> `Ptr ()' id #}
 {# fun Fl_OverriddenBrowser_New_WithLabel as overriddenBrowserNewWithLabel' { `Int',`Int',`Int',`Int',unsafeToCString `String', id `Ptr ()'} -> `Ptr ()' id #}
 {# fun Fl_OverriddenBrowser_New as overriddenBrowserNew' { `Int',`Int',`Int',`Int', id `Ptr ()'} -> `Ptr ()' id #}
-browserNew :: Rectangle -> Maybe String -> Maybe (CustomWidgetFuncs Browser) -> IO (Ref Browser)
-browserNew rectangle l' funcs' =
+browserCustom :: Rectangle -> Maybe String -> Maybe (Ref Browser -> IO ()) -> Maybe (CustomWidgetFuncs Browser) -> IO (Ref Browser)
+browserCustom rectangle l' draw' funcs' =
   widgetMaker
     rectangle
     l'
+    draw'
     funcs'
     browserNew'
     browserNewWithLabel'
     overriddenBrowserNew'
     overriddenBrowserNewWithLabel'
+
+browserNew :: Rectangle -> Maybe String -> IO (Ref Browser)
+browserNew rectangle l' =
+    let (x_pos, y_pos, width, height) = fromRectangle rectangle
+    in case l' of
+        Nothing -> browserNew' x_pos y_pos width height >>=
+                             toRef
+        Just l -> browserNewWithLabel' x_pos y_pos width height l >>=
+                             toRef
+
 
 {#fun Fl_Browser_handle as browserHandle' { id `Ptr ()', id `CInt' } -> `Int' #}
 instance (impl ~ (Event -> IO Int)) => Op (Handle ()) Browser orig impl where

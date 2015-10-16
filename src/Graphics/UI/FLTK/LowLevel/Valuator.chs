@@ -4,6 +4,7 @@ module Graphics.UI.FLTK.LowLevel.Valuator
     (
      -- * Constructor
      valuatorNew,
+     valuatorCustom,
      ValuatorType(..),
      -- * Hierarchy
      --
@@ -38,16 +39,26 @@ enum ValuatorType {
 {# fun Fl_Valuator_New_WithLabel as valuatorNewWithLabel' { `Int',`Int',`Int',`Int', unsafeToCString `String'} -> `Ptr ()' id #}
 {# fun Fl_OverriddenValuator_New_WithLabel as overriddenValuatorNewWithLabel' { `Int',`Int',`Int',`Int', unsafeToCString `String', id `Ptr ()'} -> `Ptr ()' id #}
 {# fun Fl_OverriddenValuator_New as overriddenValuatorNew' { `Int',`Int',`Int',`Int', id `Ptr ()'} -> `Ptr ()' id #}
-valuatorNew :: Rectangle -> Maybe String -> Maybe (CustomWidgetFuncs Valuator) -> IO (Ref Valuator)
-valuatorNew rectangle l' funcs' =
+valuatorCustom :: Rectangle -> Maybe String -> Maybe (Ref Valuator -> IO ()) -> Maybe (CustomWidgetFuncs Valuator) -> IO (Ref Valuator)
+valuatorCustom rectangle l' draw' funcs' =
   widgetMaker
     rectangle
     l'
+    draw'
     funcs'
     valuatorNew'
     valuatorNewWithLabel'
     overriddenValuatorNew'
     overriddenValuatorNewWithLabel'
+
+valuatorNew :: Rectangle -> Maybe String -> IO (Ref Valuator)
+valuatorNew rectangle l' =
+    let (x_pos, y_pos, width, height) = fromRectangle rectangle
+    in case l' of
+        Nothing -> valuatorNew' x_pos y_pos width height >>=
+                             toRef
+        Just l -> valuatorNewWithLabel' x_pos y_pos width height l >>=
+                             toRef
 
 {# fun Fl_Valuator_Destroy as valuatorDestroy' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
 instance (impl ~ (IO ())) => Op (Destroy ()) Valuator orig impl where

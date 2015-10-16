@@ -58,9 +58,8 @@ main = do
           (Size (Width 400) (Height 400))
           (Just (Position (X 10) (Y 10)))
           (Just "Single Window")
-          defaultCustomWidgetFuncs {
-            drawCustom = (Just $ (\w -> drawWindow sides' fst (safeCast w)))
-          }
+          (Just (\w -> drawWindow sides' fst (safeCast w)))
+          defaultCustomWidgetFuncs
           defaultCustomWindowFuncs
   setBox w1 FlatBox
   setColor w1 blackColor
@@ -80,9 +79,8 @@ main = do
           (Size (Width 400) (Height 400))
           (Just $ Position (X 10) (Y 10))
           (Just "Fl_Double_Window")
-          defaultCustomWidgetFuncs {
-                drawCustom = Just (\w -> drawWindow sides' snd (safeCast w))
-              }
+          (Just (\w -> drawWindow sides' snd (safeCast w)))
+          defaultCustomWidgetFuncs
           defaultCustomWindowFuncs
   setBox w2 FlatBox
   setColor w2 blackColor

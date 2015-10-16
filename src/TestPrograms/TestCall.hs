@@ -30,9 +30,8 @@ addWindow = do
               (Size (Width 100) (Height 100))
               Nothing
               (Just "Test")
-              (defaultCustomWidgetFuncs {
-                  drawCustom = (Just drawOverride)
-                  })
+              (Just drawOverride)
+              defaultCustomWidgetFuncs
               defaultCustomWindowFuncs
   button1 <- addButton 10 30 "button 1"
   button2 <- addButton 10 70 "button 2"
