@@ -36,3 +36,4 @@ dist/*
 /src/Fluid/Parser.hi
 /src/Fluid/Types.hi
 /TAGS
+/.stack-work/*

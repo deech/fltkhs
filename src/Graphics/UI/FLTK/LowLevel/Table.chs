@@ -111,10 +111,10 @@ tableCustomFunctionStruct :: (Parent a Widget,
                              CustomWidgetFuncs a ->
                              CustomTableFuncs b ->
                              IO (Ptr ())
-tableCustomFunctionStruct draw' drawCell' customWidgetFuncs' customTableFuncs' =
+tableCustomFunctionStruct draw'' drawCell' customWidgetFuncs' customTableFuncs' =
   do
    ptr <- virtualFuncs'
-   fillCustomWidgetFunctionStruct ptr draw' customWidgetFuncs'
+   fillCustomWidgetFunctionStruct ptr draw'' customWidgetFuncs'
    fillCustomTableFunctionStruct ptr drawCell' customTableFuncs'
    return ptr
 
@@ -127,10 +127,10 @@ tableCustom :: Rectangle                                                        
             -> CustomWidgetFuncs Table                                              -- ^ Widget overrides
             -> CustomTableFuncs Table                                               -- ^ Table overrides
             -> IO (Ref Table)
-tableCustom rectangle label' draw' drawCell' customWidgetFuncs' customTableFuncs' =
+tableCustom rectangle label' draw'' drawCell' customWidgetFuncs' customTableFuncs' =
     do
       let (x_pos, y_pos, width, height) = fromRectangle rectangle
-      ptr <- tableCustomFunctionStruct draw' (Just drawCell') customWidgetFuncs' customTableFuncs'
+      ptr <- tableCustomFunctionStruct draw'' (Just drawCell') customWidgetFuncs' customTableFuncs'
       case label' of
         (Just l') -> tableNewWithLabel' x_pos y_pos width height l' ptr >>= toRef
         Nothing -> tableNew' x_pos y_pos width height ptr >>= toRef

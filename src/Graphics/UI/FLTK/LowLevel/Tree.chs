@@ -113,8 +113,8 @@ instance (impl ~ (Ref TreeItem  ->  IO (Maybe (Ref TreeItem))) ) => Op (NextAfte
   runOp _ _ tree item = withRef tree $ \treePtr -> withRef item $ \itemPtr -> nextWithItem' treePtr itemPtr >>= toMaybeRef
 {# fun Fl_Tree_next_item as nextItem' { id `Ptr ()',id `Ptr ()', id `CInt', cFromBool `Bool'} -> `Ptr ()' id #}
 instance (impl ~ (Ref TreeItem  ->  Maybe SearchDirection -> Bool -> IO (Maybe (Ref TreeItem))) ) => Op (NextItem ()) Tree orig impl where
-  runOp _ _ tree item dir visible =
-    withRef tree $ \treePtr -> withRef item $ \itemPtr -> nextItem' treePtr itemPtr (maybe 0 (fromIntegral . fromEnum) dir) visible
+  runOp _ _ tree item dir visible' =
+    withRef tree $ \treePtr -> withRef item $ \itemPtr -> nextItem' treePtr itemPtr (maybe 0 (fromIntegral . fromEnum) dir) visible'
        >>= toMaybeRef
 {# fun Fl_Tree_prev as prev' { id `Ptr ()' } -> `Ptr ()' id #}
 instance (impl ~ ( IO (Maybe (Ref TreeItem))) ) => Op (Prev ()) Tree orig impl where

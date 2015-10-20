@@ -172,7 +172,6 @@ module Graphics.UI.FLTK.LowLevel.Fl_Enumerations
     )
 where
 import C2HS
-import System.IO.Unsafe
 #c
 enum VersionInfo {
   MajorVersion = FL_MAJOR_VERSION,
