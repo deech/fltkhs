@@ -121,7 +121,7 @@ Executable fltkhs-fluidtohs
     base == 4.*,
     filepath,
     fltkhs,
-    parsec,
+    parsec >= 3.1.6,
     mtl
   default-language: Haskell2010
   ghc-Options: -Wall -threaded -fcontext-stack=300
