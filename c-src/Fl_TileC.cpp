@@ -303,6 +303,9 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Tile_add_resizable)(fl_Tile tile,fl_Widget o){
     return (static_cast<Fl_Tile*>(tile))->add_resizable(*(static_cast<Fl_Widget*>(o)));
   }
+  FL_EXPORT_C(void,Fl_Tile_resize)(fl_Tile tile, int x, int y, int w, int h){
+    return (static_cast<Fl_Tile*>(tile))->resize(x, y, w, h);
+  }
   FL_EXPORT_C(void,Fl_Tile_init_sizes)(fl_Tile tile){
     (static_cast<Fl_Tile*>(tile))->init_sizes();
   }
