@@ -99,16 +99,26 @@ SET(SourceFiles
 	Fl_WizardC.cpp
   )
 
-ADD_DEFINITIONS("${CXX_FLAGS} -mwindows -DWIN32 -DUSE_OPENGL32 -D_LARGEFILE_SOURCE -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64 -c -Wall -DINTERNAL_LINKAGE -g -Icpp -I\"${FLTK_HOME}\"")
+ADD_DEFINITIONS("${CXX_FLAGS} -DWIN32 -DUSE_OPENGL32 -D_LARGEFILE_SOURCE -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64 -c -Wall -DINTERNAL_LINKAGE -g -Icpp -I\"${FLTK_HOME}/include\"")
 
 MESSAGE(STATUS ${CXX_FLAGS})
-ADD_LIBRARY(fltkc ${SourceFiles})
 
-set_target_properties(fltkc PROPERTIES ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/../c-lib)
+# first build object library so that we can reuse same objects for both static and shared library
+ADD_LIBRARY(fltkc_obj OBJECT ${SourceFiles})
 
-add_custom_command(TARGET fltkc PRE_LINK
-                   COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_SOURCE_DIR}/CMakeCopyObjectFiles.txt
-                   )
+ADD_LIBRARY(fltkc SHARED $<TARGET_OBJECTS:fltkc_obj>)
+
+target_link_libraries(fltkc ${FLTKLINKFLAGS} -L${FLTK_HOME}/lib)
+
+set_target_properties(fltkc PROPERTIES ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/../c-lib
+                                       RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/../c-lib)
+
+
+ADD_LIBRARY(fltkc_static STATIC $<TARGET_OBJECTS:fltkc_obj>)
+set_target_properties(fltkc_static PROPERTIES ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/../c-lib
+                                              OUTPUT_NAME fltkc)
+
+
 set_directory_properties(PROPERTIES
                          ADDITIONAL_MAKE_CLEAN_FILES "${CMAKE_CURRENT_SOURCE_DIR}/../c-lib;
                                                       ${CMAKE_CURRENT_SOURCE_DIR}/../static_object_files;
