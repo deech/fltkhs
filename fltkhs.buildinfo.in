@@ -1,2 +1,2 @@
-ld-options: @FLTKCONFIGCOMMAND@ -lstdc++
+ld-options: @FLTKCONFIGCOMMAND@
 include-dirs: @FLTK_HOME@
