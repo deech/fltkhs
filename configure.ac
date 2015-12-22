@@ -29,7 +29,7 @@ AC_CHECK_LIB([fltk_forms],
              FormsFlag='--use-forms',
              FormsFlag='')
 
-AC_SUBST(FLTKCONFIGCOMMAND,`fltk-config --ldstaticflags $GlFlag $ImagesFlag $CairoFlag $FormsFlag`)
+AC_SUBST(FLTKCONFIGCOMMAND,"$(fltk-config --ldstaticflags $GlFlag $ImagesFlag $CairoFlag $FormsFlag) -lstdc++")
 AC_SUBST(FLTK_HOME,`fltk-config --includedir`)
 # Checks for typedefs, structures, and compiler characteristics.
 AC_TYPE_SIZE_T

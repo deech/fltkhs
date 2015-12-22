@@ -1,6 +1,10 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
 
 PROJECT(fltkc)
+
+# CMake doesn't like backslashes in path
+STRING(REGEX REPLACE "\\\\" "/" FLTK_HOME ${FLTK_HOME}) 
+
 if(EXISTS "${FLTK_HOME}/lib/libfltk_z.a")
   SET(FLTK_Z "${FLTK_HOME}/lib/libfltk_z.a")
 else()
@@ -22,9 +26,32 @@ else()
   SET(FLTK_PNG "${HAVE_PNG}")
 endif()
 
-SET(FLTKCONFIGCOMMAND "${FLTK_HOME}/lib/libfltk.a ${FLTK_HOME}/lib/libfltk_gl.a ${FLTK_HOME}/lib/libfltk_images.a ${FLTK_PNG} ${FLTK_JPEG} ${FLTK_Z} ${FLTK_HOME}/lib/libfltk_forms.a")
-SET(FLTKCONFIGCOMMAND "${FLTKCONFIGCOMMAND} -mwindows -lglu32 -lopengl32 -lole32 -luuid -lcomctl32")
-MESSAGE("${FLTKCONFIGCOMMAND}")
+
+SET(FLTKLINKFLAGS "-Wl,-Bstatic")
+SET(FLTKLINKFLAGS "${FLTKLINKFLAGS} -lfltk.a -lfltk_gl -lfltk_images.a ${FLTK_PNG} ${FLTK_JPEG} ${FLTK_Z} -lfltk_forms")
+SET(FLTKLINKFLAGS "${FLTKLINKFLAGS} -Wl,-Bdynamic")
+
+# target_link_libraries doesn't accept libraries as absolute path and
+# find_library usually returns path to import library instead static one
+# so replace any string in form of 'c:/dev/lib/libfoo.dll.a' with '-lfoo'
+STRING(REGEX REPLACE "[^ ]*/lib" "-l" FLTKLINKFLAGS ${FLTKLINKFLAGS})
+STRING(REGEX REPLACE "\\.dll\\.a|\\.a" "" FLTKLINKFLAGS ${FLTKLINKFLAGS})
+
+SET(FLTKLINKFLAGS "${FLTKLINKFLAGS} -lglu32 -lopengl32 -lole32 -luuid -lcomctl32 -lComdlg32 -static-libstdc++ -static-libgcc")
+
+# Newer versions of MinGW come with libwinpthread which gets linked dynamicaly by default
+find_library (HAVE_PTHREAD pthread)
+IF(HAVE_PTHREAD)
+	SET(FLTKLINKFLAGS "${FLTKLINKFLAGS} -Wl,-Bstatic,-lstdc++,-lpthread,-Bdynamic")
+else()
+	SET(FLTKLINKFLAGS "${FLTKLINKFLAGS} -Wl,-Bstatic,-lstdc++,-Bdynamic")
+endif()
+
+
+MESSAGE(STATUS "FLTKLINKFLAGS: ${FLTKLINKFLAGS}")
+
+SET(FLTKCONFIGCOMMAND "-Wl,-Bstatic,-whole-archive,-lfltkc,-no-whole-archive,-Bdynamic ${FLTKLINKFLAGS}")
+
 CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/fltkhs.buildinfo.in
                ${CMAKE_CURRENT_SOURCE_DIR}/fltkhs.buildinfo)
 FIND_PACKAGE(OpenGL REQUIRED)
