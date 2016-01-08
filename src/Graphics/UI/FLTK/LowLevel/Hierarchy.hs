@@ -1,4 +1,4 @@
-{-# LANGUAGE TypeSynonymInstances, FlexibleInstances, MultiParamTypeClasses, FunctionalDependencies, TypeFamilies, GADTs, FlexibleContexts, ScopedTypeVariables, EmptyDataDecls, CPP #-}
+{-# LANGUAGE TypeSynonymInstances, TypeFamilies, GADTs, FlexibleContexts, EmptyDataDecls, CPP #-}
 
 #ifdef CALLSTACK_AVAILABLE
 {-# LANGUAGE ImplicitParams #-}
@@ -7,12 +7,12 @@
 #ifdef CALLSTACK_AVAILABLE
 #define MAKE_METHOD(Datatype, Method) \
 data Datatype a; \
-Method :: (?loc :: CallStack, FindOp a (Datatype ()) (Match r), Op (Datatype ()) r a impl) => Ref a -> impl; \
+Method :: (?loc :: CallStack, Match r ~ FindOp a (Datatype ()), Op (Datatype ()) r a impl) => Ref a -> impl; \
 Method aRef = (unsafePerformIO $ withRef aRef (\_ -> return ())) `seq` dispatch (undefined :: Datatype()) aRef
 #else
 #define MAKE_METHOD(Datatype, Method) \
 data Datatype a; \
-Method :: (FindOp a (Datatype ()) (Match r), Op (Datatype ()) r a impl) => Ref a -> impl; \
+Method :: (Match r ~ FindOp a (Datatype ()), Op (Datatype ()) r a impl) => Ref a -> impl; \
 Method aRef = dispatch (undefined :: Datatype ()) aRef
 #endif
 
@@ -1526,11 +1526,11 @@ import System.IO.Unsafe
 
 data CRegion parent
 type Region = CRegion Base
-instance Functions Region ()
+type instance Functions Region = ()
 
 data CGlContext parent
 type GlContext = CGlContext Base
-instance Functions GlContext ()
+type instance Functions GlContext = ()
 
 data CWidget parent
 type Widget = CWidget Base
@@ -1624,7 +1624,7 @@ type WidgetFuncs =
   (DrawBackdrop
   (DrawFocus
   ()))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))
-instance Functions Widget WidgetFuncs
+type instance Functions Widget = WidgetFuncs
 
 MAKE_METHOD(Destroy, destroy)
 MAKE_METHOD(Handle, handle)
@@ -1745,7 +1745,7 @@ type GroupFuncs =
   (GetArray
   (GetChild
   ()))))))))))))))))))))))))))
-instance Functions Group GroupFuncs
+type instance Functions Group = GroupFuncs
 
 MAKE_METHOD(DrawChild,drawChild)
 MAKE_METHOD(DrawChildren,drawChildren)
@@ -1826,7 +1826,7 @@ type WindowFuncs =
   (GetDecoratedH
   (WaitForExpose
   ())))))))))))))))))))))))))))))))))))))))))))))))))
-instance Functions Window WindowFuncs
+type instance Functions Window = WindowFuncs
 
 MAKE_METHOD(DrawSuper,drawSuper)
 MAKE_METHOD(HandleSuper,handleSuper)
@@ -1886,7 +1886,7 @@ type SingleWindowFuncs =
   (Handle
   (Resize
   ())))))))))))
-instance Functions SingleWindow SingleWindowFuncs
+type instance Functions SingleWindow = SingleWindowFuncs
 
 
 data CDoubleWindow parent
@@ -1904,7 +1904,8 @@ type DoubleWindowFuncs =
   (Handle
   (Resize
   ())))))))))))
-instance Functions DoubleWindow DoubleWindowFuncs
+
+type instance Functions DoubleWindow = DoubleWindowFuncs
 
 
 data COverlayWindow parent
@@ -1918,7 +1919,8 @@ type OverlayWindowFuncs =
   (CanDoOverlay
   (RedrawOverlay
   ())))))))
-instance Functions OverlayWindow OverlayWindowFuncs
+
+type instance Functions OverlayWindow = OverlayWindowFuncs
 
 
 MAKE_METHOD(CanDoOverlay,canDoOverlay)
@@ -1955,7 +1957,8 @@ type ButtonFuncs =
   (SetType
   (GetType_
   ()))))))))))))))))))))))))))
-instance Functions Button ButtonFuncs
+
+type instance Functions Button = ButtonFuncs
 
 MAKE_METHOD(GetValue,getValue)
 MAKE_METHOD(SetValue,setValue)
@@ -1972,30 +1975,35 @@ data CLightButton parent
 type LightButtonFuncs =
   (Destroy ())
 type LightButton = CLightButton Button
-instance Functions LightButton LightButtonFuncs
+
+type instance Functions LightButton = LightButtonFuncs
 
 data CRadioLightButton parent
 type RadioLightButton = CRadioLightButton LightButton
-instance Functions RadioLightButton ()
+
+type instance Functions RadioLightButton = ()
 
 data CCheckButton parent
 type CheckButtonFuncs =
   (Destroy ())
 type CheckButton = CCheckButton Button
-instance Functions CheckButton CheckButtonFuncs
+
+type instance Functions CheckButton = CheckButtonFuncs
 
 data CReturnButton parent
 type ReturnButton = CReturnButton Button
 type ReturnButtonFuncs =
   (Destroy
   (Handle ()))
-instance Functions ReturnButton ReturnButtonFuncs
+
+type instance Functions ReturnButton = ReturnButtonFuncs
 
 data CRoundButton parent
 type RoundButton = CRoundButton Button
 type RoundButtonFuncs =
   (Destroy ())
-instance Functions RoundButton RoundButtonFuncs
+
+type instance Functions RoundButton = RoundButtonFuncs
 
 data CRepeatButton parent
 type RepeatButton = CRepeatButton Button
@@ -2004,14 +2012,16 @@ type RepeatButtonFuncs =
   (Handle
   (Deactivate
   ())))
-instance Functions RepeatButton RepeatButtonFuncs
+
+type instance Functions RepeatButton = RepeatButtonFuncs
 
 
 data CToggleButton parent
 type ToggleButton = CToggleButton Button
 type ToggleButtonFuncs =
   (Destroy ())
-instance Functions ToggleButton ToggleButtonFuncs
+
+type instance Functions ToggleButton = ToggleButtonFuncs
 
 data CValuator parent
 type Valuator = CValuator Widget
@@ -2038,7 +2048,8 @@ type ValuatorFuncs =
   (SetType
   (GetType_
   ())))))))))))))))))))))
-instance Functions Valuator ValuatorFuncs
+
+type instance Functions Valuator = ValuatorFuncs
 
 MAKE_METHOD(Bounds,bounds)
 MAKE_METHOD(GetMinimum,getMinimum)
@@ -2067,7 +2078,8 @@ type SliderFuncs =
   (SetSlider
   (SetType
   (GetType_ ()))))))))))
-instance Functions Slider SliderFuncs
+
+type instance Functions Slider = SliderFuncs
 
 MAKE_METHOD(Scrollvalue,scrollvalue)
 MAKE_METHOD(SetSliderSize,setSliderSize)
@@ -2077,23 +2089,28 @@ MAKE_METHOD(SetSlider,setSlider)
 
 data CFillSlider parent
 type FillSlider = CFillSlider Slider
-instance Functions FillSlider ()
+
+type instance Functions FillSlider = ()
 
 data CHorSlider parent
 type HorSlider = CHorSlider Slider
-instance Functions HorSlider ()
+
+type instance Functions HorSlider = ()
 
 data CHorFillSlider parent
 type HorFillSlider = CHorFillSlider Slider
-instance Functions HorFillSlider ()
+
+type instance Functions HorFillSlider = ()
 
 data CNiceSlider parent
 type NiceSlider = CNiceSlider Slider
-instance Functions NiceSlider ()
+
+type instance Functions NiceSlider = ()
 
 data CHorNiceSlider parent
 type HorNiceSlider = CHorNiceSlider Slider
-instance Functions HorNiceSlider ()
+
+type instance Functions HorNiceSlider = ()
 
 data CMenuItem parent
 type MenuItem = CMenuItem Base
@@ -2145,7 +2162,8 @@ type MenuItemFuncs =
   (Insert
   (GetSize
   ()))))))))))))))))))))))))))))))))))))))))))))))
-instance Functions MenuItem MenuItemFuncs
+
+type instance Functions MenuItem = MenuItemFuncs
 
 MAKE_METHOD(NextWithStep,nextWithStep)
 MAKE_METHOD(Next,next)
@@ -2217,7 +2235,8 @@ type MenuPrimFuncs =
   (GetDownColor
   (SetDownColor
   ())))))))))))))))))))))))))))))))))))))))))))))
-instance Functions MenuPrim MenuPrimFuncs
+
+type instance Functions MenuPrim = MenuPrimFuncs
 
 MAKE_METHOD(ItemPathname,itemPathname)
 MAKE_METHOD(ItemPathnameRecent,itemPathnameRecent)
@@ -2262,7 +2281,8 @@ type SysMenuBarFuncs =
   (SetShortcut
   (Handle
   ())))))))))))))
-instance Functions SysMenuBar SysMenuBarFuncs
+
+type instance Functions SysMenuBar = SysMenuBarFuncs
 
 data CChoice parent
 type Choice = CChoice MenuPrim
@@ -2272,7 +2292,8 @@ type ChoiceFuncs =
   (GetValue
   (SetValue
   ()))))
-instance Functions Choice ChoiceFuncs
+
+type instance Functions Choice = ChoiceFuncs
 
 
 data CMenuButton parent
@@ -2282,7 +2303,8 @@ type MenuButtonFuncs =
   (Handle
   (Popup
   ())))
-instance Functions MenuButton MenuButtonFuncs
+
+type instance Functions MenuButton = MenuButtonFuncs
 
 data CImage parent
 type Image = CImage Base
@@ -2301,7 +2323,8 @@ type ImageFuncs =
   (Draw
   (Uncache
   ())))))))))))))
-instance Functions Image ImageFuncs
+
+type instance Functions Image = ImageFuncs
 
 MAKE_METHOD(GetD,getD)
 MAKE_METHOD(GetLd,getLd)
@@ -2329,7 +2352,8 @@ type BitmapFuncs =
  (Draw
  (Uncache
  ())))))))))))))
-instance Functions Bitmap BitmapFuncs
+
+type instance Functions Bitmap = BitmapFuncs
 
 data CPixmap parent
 type Pixmap = CPixmap Image
@@ -2348,7 +2372,8 @@ type PixmapFuncs =
   (Draw
   (Uncache
   ())))))))))))))
-instance Functions Pixmap PixmapFuncs
+
+type instance Functions Pixmap = PixmapFuncs
 
 data CCopySurface parent
 type CopySurface = CCopySurface Base
@@ -2358,7 +2383,8 @@ type CopySurfaceFuncs =
   (SetCurrent
   (Draw
   ()))))
-instance Functions CopySurface CopySurfaceFuncs
+
+type instance Functions CopySurface = CopySurfaceFuncs
 
 MAKE_METHOD(ClassName,className)
 MAKE_METHOD(SetCurrent,setCurrent)
@@ -2371,7 +2397,8 @@ type ImageSurfaceFuncs =
   (SetCurrent
   (Draw
   ()))))
-instance Functions ImageSurface ImageSurfaceFuncs
+
+type instance Functions ImageSurface = ImageSurfaceFuncs
 
 
 data CAdjuster parent
@@ -2381,7 +2408,8 @@ type AdjusterFuncs =
   (SetSoft
   (GetSoft
   ())))
-instance Functions Adjuster AdjusterFuncs
+
+type instance Functions Adjuster = AdjusterFuncs
 
 
 MAKE_METHOD(SetSoft,setSoft)
@@ -2399,7 +2427,8 @@ type DialFuncs =
  (SetType
  (GetType_
  ()))))))))
-instance Functions Dial DialFuncs
+
+type instance Functions Dial = DialFuncs
 
 MAKE_METHOD(GetAngle1,getAngle1)
 MAKE_METHOD(SetAngle1,setAngle1)
@@ -2409,11 +2438,13 @@ MAKE_METHOD(SetAngles,setAngles)
 
 data CFillDial parent
 type FillDial = CFillDial Dial
-instance Functions FillDial ()
+
+type instance Functions FillDial = ()
 
 data CLineDial parent
 type LineDial = CLineDial Dial
-instance Functions LineDial ()
+
+type instance Functions LineDial = ()
 
 data CRoller parent
 type Roller = CRoller Valuator
@@ -2421,7 +2452,8 @@ type RollerFuncs =
   (Destroy
   (Handle
   ()))
-instance Functions Roller RollerFuncs
+
+type instance Functions Roller = RollerFuncs
 
 data CCounter parent
 type Counter = CCounter Valuator
@@ -2438,13 +2470,15 @@ type CounterFuncs =
   (SetType
   (GetType_
   ())))))))))))
-instance Functions Counter CounterFuncs
+
+type instance Functions Counter = CounterFuncs
 
 MAKE_METHOD(SetLstep,setLstep)
 
 data CSimpleCounter parent
 type SimpleCounter = CSimpleCounter Counter
-instance Functions SimpleCounter ()
+
+type instance Functions SimpleCounter = ()
 
 data CScrollbar parent
 type Scrollbar = CScrollbar Slider
@@ -2456,7 +2490,8 @@ type ScrollbarFuncs =
  (GetLinesize
  (SetType
  (GetType_ ())))))))
-instance Functions Scrollbar ScrollbarFuncs
+
+type instance Functions Scrollbar = ScrollbarFuncs
 
 MAKE_METHOD(SetLinesize,setLinesize)
 MAKE_METHOD(GetLinesize,getLinesize)
@@ -2474,11 +2509,13 @@ type ValueSliderFuncs =
   (GetTextcolor
   (SetTextcolor
   ()))))))))
-instance Functions ValueSlider ValueSliderFuncs
+
+type instance Functions ValueSlider = ValueSliderFuncs
 
 data CHorValueSlider parent
 type HorValueSlider = CHorValueSlider ValueSlider
-instance Functions HorValueSlider ()
+
+type instance Functions HorValueSlider = ()
 
 data CInput parent
 type Input = CInput Widget
@@ -2526,7 +2563,8 @@ type InputFuncs =
   (GetTabNav
   (SetTabNav
   ()))))))))))))))))))))))))))))))))))))))))))
-instance Functions Input InputFuncs
+
+type instance Functions Input = InputFuncs
 
 MAKE_METHOD(StaticValue,staticValue)
 MAKE_METHOD(Index,index)
@@ -2557,7 +2595,8 @@ data COutput parent
 type Output = COutput Input
 type OutputFuncs =
   (SetType ())
-instance Functions Output OutputFuncs
+
+type instance Functions Output = OutputFuncs
 
 data CValueInput parent
 type ValueInput = CValueInput Valuator
@@ -2575,7 +2614,8 @@ type ValueInputFuncs =
   (SetTextcolor
   (GetTextcolor
   ()))))))))))))
-instance Functions ValueInput ValueInputFuncs
+
+type instance Functions ValueInput = ValueInputFuncs
 
 data CValueOutput parent
 type ValueOutput = CValueOutput Valuator
@@ -2591,7 +2631,8 @@ type ValueOutputFuncs =
   (SetTextcolor
   (GetTextcolor
   ()))))))))))
-instance Functions ValueOutput ValueOutputFuncs
+
+type instance Functions ValueOutput = ValueOutputFuncs
 
 data CTimer parent
 type Timer = CTimer Widget
@@ -2605,7 +2646,8 @@ type TimerFuncs =
   (GetSuspended
   (SetSuspended
   ()))))))))
-instance Functions Timer TimerFuncs
+
+type instance Functions Timer = TimerFuncs
 
 MAKE_METHOD(GetDirection,getDirection)
 MAKE_METHOD(SetDirection,setDirection)
@@ -2614,11 +2656,13 @@ MAKE_METHOD(SetSuspended,setSuspended)
 
 data CHiddenTimer parent
 type HiddenTimer = CHiddenTimer Widget
-instance Functions HiddenTimer ()
+
+type instance Functions HiddenTimer = ()
 
 data CValueTimer parent
 type ValueTimer = CValueTimer Widget
-instance Functions ValueTimer ()
+
+type instance Functions ValueTimer = ()
 
 data CProgress parent
 type Progress = CProgress Widget
@@ -2631,7 +2675,8 @@ type ProgressFuncs =
   (SetValue
   (GetValue
   ())))))))
-instance Functions Progress ProgressFuncs
+
+type instance Functions Progress = ProgressFuncs
 
 data CPositioner parent
 type Positioner = CPositioner Widget
@@ -2655,7 +2700,8 @@ type PositionerFuncs =
   (SetXstep
   (SetYstep
   ()))))))))))))))))))
-instance Functions Positioner PositionerFuncs
+
+type instance Functions Positioner = PositionerFuncs
 
 MAKE_METHOD(SetXvalue,setXvalue)
 MAKE_METHOD(GetXvalue,getXvalue)
@@ -2683,7 +2729,8 @@ type WizardFuncs =
   (SetValue
   (GetValue
   ())))))
-instance Functions Wizard WizardFuncs
+
+type instance Functions Wizard = WizardFuncs
 
 MAKE_METHOD(Prev,prev)
 
@@ -2764,7 +2811,8 @@ type TableFuncs =
   (Hide
   (HideSuper
   ())))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))
-instance Functions Table TableFuncs
+
+type instance Functions Table = TableFuncs
 
 MAKE_METHOD(SetTableBox,setTableBox)
 MAKE_METHOD(GetTableBox,getTableBox)
@@ -2837,7 +2885,8 @@ type TableRowFuncs =
   (GetRowSelected
   (SelectAllRows
   ())))))))))))))))
-instance Functions TableRow TableRowFuncs
+
+type instance Functions TableRow = TableRowFuncs
 
 MAKE_METHOD(GetRowSelected,getRowSelected)
 MAKE_METHOD(SelectAllRows,selectAllRows)
@@ -2876,7 +2925,8 @@ type GlWindowFuncs =
   (HideOverlay
   (MakeOverlayCurrent
   ()))))))))))))))))))))))))))))))
-instance Functions GlWindow GlWindowFuncs
+
+type instance Functions GlWindow = GlWindowFuncs
 
 MAKE_METHOD(GetValid,getValid)
 MAKE_METHOD(SetValid,setValid)
@@ -2895,7 +2945,8 @@ MAKE_METHOD(MakeOverlayCurrent,makeOverlayCurrent)
 
 data CBox parent
 type Box = CBox Widget
-instance Functions Box ()
+
+type instance Functions Box = ()
 
 data CBrowser parent
 type Browser = CBrowser Group
@@ -2961,7 +3012,8 @@ type BrowserFuncs =
   (SetType
   (GetType_
   ()))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))
-instance Functions Browser BrowserFuncs
+
+type instance Functions Browser = BrowserFuncs
 
 MAKE_METHOD(Move,move)
 MAKE_METHOD(Load,load)
@@ -3002,11 +3054,13 @@ MAKE_METHOD(Sort,sort)
 
 data CSelectBrowser parent
 type SelectBrowser = CSelectBrowser Browser
-instance Functions SelectBrowser ()
+
+type instance Functions SelectBrowser = ()
 
 data CIntInput parent
 type IntInput = CIntInput Input
-instance Functions IntInput ()
+
+type instance Functions IntInput = ()
 
 data CClock parent
 type Clock = CClock Widget
@@ -3017,7 +3071,8 @@ type ClockFuncs =
   (SetValue
   ()))))
 
-instance Functions Clock ClockFuncs
+
+type instance Functions Clock = ClockFuncs
 MAKE_METHOD(GetValueSinceEpoch,getValueSinceEpoch)
 
 data CTreePrefs parent
@@ -3073,7 +3128,8 @@ type TreePrefsFuncs =
   (GetSelectmode
   (SetSelectmode
   ())))))))))))))))))))))))))))))))))))))))))))))))))
-instance Functions TreePrefs TreePrefsFuncs
+
+type instance Functions TreePrefs = TreePrefsFuncs
 
 MAKE_METHOD(GetItemLabelfont,getItemLabelfont)
 MAKE_METHOD(GetItemLabelsize,getItemLabelsize)
@@ -3203,7 +3259,8 @@ type TreeItemFuncs =
   (LabelH
   ()))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))
 
-instance Functions TreeItem TreeItemFuncs
+
+type instance Functions TreeItem = TreeItemFuncs
 
 MAKE_METHOD(ShowSelf,showSelf)
 MAKE_METHOD(SetWidget,setWidget)
@@ -3365,7 +3422,8 @@ type TreeFuncs =
   (GetCallbackReason
   ()))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))
 
-instance Functions Tree TreeFuncs
+
+type instance Functions Tree = TreeFuncs
 
 MAKE_METHOD(RootLabel,rootLabel)
 MAKE_METHOD(Root,root)
@@ -3420,7 +3478,8 @@ type TextSelectionFuncs =
   (Includes
   (GetPosition
   ()))))))))
-instance Functions TextSelection TextSelectionFuncs
+
+type instance Functions TextSelection = TextSelectionFuncs
 MAKE_METHOD(Update,update)
 MAKE_METHOD(Start,start)
 MAKE_METHOD(SetSelected,setSelected)
@@ -3505,7 +3564,8 @@ type TextBufferFuncs =
   (NextCharClipped
   (Utf8Align
   ())))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))
-instance Functions TextBuffer TextBufferFuncs
+
+type instance Functions TextBuffer = TextBufferFuncs
 
 MAKE_METHOD(InputFileWasTranscoded,inputFileWasTranscoded)
 MAKE_METHOD(FileEncodingWarningMessage,fileEncodingWarningMessage)
@@ -3637,7 +3697,8 @@ type TextDisplayFuncs =
   (SetLinenumberFormat
   (GetLinenumberFormat
   ()))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))
-instance Functions TextDisplay TextDisplayFuncs
+
+type instance Functions TextDisplay = TextDisplayFuncs
 
 MAKE_METHOD(SetBuffer,setBuffer)
 MAKE_METHOD(GetBuffer,getBuffer)
@@ -3687,7 +3748,8 @@ type TextEditorFuncs =
   (GetDefaultKeyBindings
   (ReplaceKeyBindings
   ())))))
-instance Functions TextEditor TextEditorFuncs
+
+type instance Functions TextEditor = TextEditorFuncs
 
 MAKE_METHOD(SetInsertMode,setInsertMode)
 MAKE_METHOD(GetInsertMode,getInsertMode)
@@ -3719,7 +3781,8 @@ type NativeFileChooserFuncs =
   (GetErrmsg
   (ShowWidget
   ())))))))))))))))))))))
-instance Functions NativeFileChooser NativeFileChooserFuncs
+
+type instance Functions NativeFileChooser = NativeFileChooserFuncs
 
 MAKE_METHOD(SetOptions,setOptions)
 MAKE_METHOD(GetOptions,getOptions)
@@ -3745,7 +3808,8 @@ type TileFuncs =
   (Handle
   (Resize
   ())))
-instance Functions Tile TileFuncs
+
+type instance Functions Tile = TileFuncs
 
 data CPack parent
 type Pack = CPack Group
@@ -3756,7 +3820,8 @@ type PackFuncs =
   (GetSpacing
   (IsHorizontal
   ())))))
-instance Functions Pack PackFuncs
+
+type instance Functions Pack = PackFuncs
 
 MAKE_METHOD(SetSpacing,setSpacing)
 MAKE_METHOD(GetSpacing,getSpacing)
@@ -3775,7 +3840,8 @@ type ScrolledFuncs =
   (SetType
   (Resize
   (Handle ()))))))))))
-instance Functions Scrolled ScrolledFuncs
+
+type instance Functions Scrolled = ScrolledFuncs
 
 MAKE_METHOD(ScrollTo,scrollTo)
 MAKE_METHOD(Xposition,xposition)
@@ -3792,7 +3858,8 @@ type TabsFuncs =
   (Which
   (ClientArea ())))))))
 
-instance Functions Tabs TabsFuncs
+
+type instance Functions Tabs = TabsFuncs
 
 MAKE_METHOD(GetPush,getPush)
 MAKE_METHOD(SetPush,setPush)
@@ -3825,7 +3892,8 @@ type SpinnerFuncs =
   (Resize
   ())))))))))))))))))))))
 
-instance Functions Spinner SpinnerFuncs
+
+type instance Functions Spinner = SpinnerFuncs
 MAKE_METHOD(GetFormat,getFormat)
 
 data CColorChooser parent
@@ -3842,7 +3910,8 @@ type ColorChooserFuncs =
   (SetHsv
   (SetRgb
   ()))))))))))
-instance Functions ColorChooser ColorChooserFuncs
+
+type instance Functions ColorChooser = ColorChooserFuncs
 
 MAKE_METHOD(GetHue, getHue)
 MAKE_METHOD(GetSaturation, getSaturation)

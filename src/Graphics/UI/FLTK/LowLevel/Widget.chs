@@ -210,10 +210,10 @@ instance (impl ~ IO (Int)) => Op (GetW ()) Widget orig impl where
 instance (impl ~ IO (Int)) => Op (GetH ()) Widget orig impl where
   runOp _ _ widget = withRef widget $ \widgetPtr -> h' widgetPtr
 instance (
-         FindOp orig (GetX ()) (Match obj),
-         FindOp orig (GetY ()) (Match obj),
-         FindOp orig (GetW ()) (Match obj),
-         FindOp orig (GetH ()) (Match obj),
+         Match obj ~ FindOp orig (GetX ()),
+         Match obj ~ FindOp orig (GetY ()),
+         Match obj ~ FindOp orig (GetW ()),
+         Match obj ~ FindOp orig (GetH ()),
          Op (GetX ()) obj orig (IO Int),
          Op (GetY ()) obj orig (IO Int),
          Op (GetW ()) obj orig (IO Int),
