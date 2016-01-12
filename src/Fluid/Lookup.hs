@@ -20,7 +20,8 @@ module Lookup
   windowType,
   fontType,
   spinnerType,
-  flClasses
+  flClasses,
+  imageExtensions
  )
 where
 
@@ -45,6 +46,7 @@ windowType :: [(String, String)]
 fontType :: [(String, String)]
 spinnerType :: [(String, String)]
 flClasses :: [(String, (String, String))]
+imageExtensions :: [(String, String)]
 
 boxType = [
   ("NO_BOX"                 ,"NoBox"),
@@ -281,8 +283,23 @@ flClasses =
   ,("Fl_Pack",("Pack", "packNew"))
   ,("Fl_Table",("Table", "tableNew"))
   ,("Fl_Scroll",("Scroll", "scrollNew"))
-  ,("Fl_Menu_Bar",("MenuBar", "menuBarNew"))
+  ,("Fl_Menu_Bar",("MenuBar", "sysMenuBarNew"))
   ,("Menu_Button",("MenuButton", "menuButtonNew"))
   ,("Fl_Choice",("Choice", "choiceNew"))
   ,("Fl_Browser",("Browser", "browserNew" ))
-  ,("Fl_Tabs",("Tabs", "tabsNew"))]
+  ,("Fl_Tabs",("Tabs", "tabsNew"))
+  ,("Fl_Progress", ("Progress", "progressNew"))
+  ]
+
+imageExtensions =
+  [(".bm", "bmpImageNew")
+   ,(".bmp", "bmpImageNew")
+   ,(".gif", "gifImageNew")
+   ,(".jpg", "jpegImageNew")
+   ,(".pbm", "pnmImageNew")
+   ,(".pgm", "pnmImageNew")
+   ,(".png", "pngImageNew")
+   ,(".ppm", "pnmImageNew")
+   ,(".xbm", "xbmImageNew")
+   ,(".xpm", "xpmImageNew")
+  ]

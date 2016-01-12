@@ -127,7 +127,6 @@ import Graphics.UI.FLTK.LowLevel.Utils
 import Graphics.UI.FLTK.LowLevel.Dispatch
 import Graphics.UI.FLTK.LowLevel.Hierarchy
 import Data.ByteString
-import Data.ByteString.Unsafe
 
 #c
 enum LineStyle {
@@ -542,7 +541,7 @@ flcDrawBox boxtype rectangle color' = let (x_pos', y_pos', width', height') = fr
 flcDrawImageBuf :: ByteString -> Rectangle -> Delta -> LineDelta -> IO ()
 flcDrawImageBuf buf rectangle d l =
   let (x_pos', y_pos', width', height') = fromRectangle rectangle
-  in unsafeUseAsCString
+  in useAsCString
        buf
        (\cs ->
          case (d,l) of
@@ -555,7 +554,7 @@ flcDrawImageBuf buf rectangle d l =
 flcDrawImageMonoBuf :: ByteString -> Rectangle -> Delta -> LineDelta ->  IO ()
 flcDrawImageMonoBuf buf rectangle d l =
   let (x_pos', y_pos', width', height') = fromRectangle rectangle
-  in unsafeUseAsCString
+  in useAsCString
        buf
        (\cs ->
          case (d,l) of

@@ -17,7 +17,6 @@ where
 #include "Fl_Double_WindowC.h"
 #include "Fl_Gl_WindowC.h"
 import Foreign
-import Foreign.C
 import Graphics.UI.FLTK.LowLevel.Fl_Types
 import Graphics.UI.FLTK.LowLevel.Fl_Enumerations
 import Graphics.UI.FLTK.LowLevel.Utils

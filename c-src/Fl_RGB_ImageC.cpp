@@ -66,6 +66,9 @@ EXPORT {
   FL_EXPORT_C(void,Fl_RGB_Image_draw_with_cy)(fl_RGB_Image rgb_image,int X,int Y,int W,int H,int cy){
     (static_cast<Fl_RGB_Image*>(rgb_image))->draw(X,Y,W,H,cy);
   }
+  FL_EXPORT_C(void,Fl_RGB_Image_draw_with)(fl_RGB_Image rgb_image,int X,int Y,int W,int H){
+    (static_cast<Fl_RGB_Image*>(rgb_image))->draw(X,Y,W,H);
+  }
   FL_EXPORT_C(void,Fl_RGB_Image_draw)(fl_RGB_Image rgb_image,int X,int Y){
     (static_cast<Fl_RGB_Image*>(rgb_image))->draw(X,Y);
   }

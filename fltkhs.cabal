@@ -100,6 +100,15 @@ library
                    Graphics.UI.FLTK.LowLevel.Tabs
                    Graphics.UI.FLTK.LowLevel.Spinner
                    Graphics.UI.FLTK.LowLevel.ColorChooser
+                   Graphics.UI.FLTK.LowLevel.FileBrowser
+                   Graphics.UI.FLTK.LowLevel.JPEGImage
+                   Graphics.UI.FLTK.LowLevel.RGBImage
+                   Graphics.UI.FLTK.LowLevel.BMPImage
+                   Graphics.UI.FLTK.LowLevel.GIFImage
+                   Graphics.UI.FLTK.LowLevel.XBMImage
+                   Graphics.UI.FLTK.LowLevel.XPMImage
+                   Graphics.UI.FLTK.LowLevel.PNGImage
+                   Graphics.UI.FLTK.LowLevel.PNMImage
   build-depends:
                 base == 4.*,
                 bytestring
@@ -123,6 +132,7 @@ Executable fltkhs-fluidtohs
     filepath,
     fltkhs,
     parsec >= 3.1.6,
+    directory >= 1.2.2.0,
     mtl
   default-language: Haskell2010
   ghc-Options: -Wall -threaded
@@ -141,7 +151,7 @@ Executable fltkhs-pack
   Hs-Source-Dirs: src/Examples
   Build-Depends:
     base == 4.*,
-    directory,
+    directory >= 1.2.2.0,
     fltkhs
   default-language: Haskell2010
   ghc-Options: -Wall -threaded

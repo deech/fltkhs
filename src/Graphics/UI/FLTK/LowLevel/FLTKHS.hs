@@ -116,6 +116,15 @@ module Graphics.UI.FLTK.LowLevel.FLTKHS
          module Graphics.UI.FLTK.LowLevel.Scrolled,
          module Graphics.UI.FLTK.LowLevel.Ask,
          module Graphics.UI.FLTK.LowLevel.ColorChooser,
+         module Graphics.UI.FLTK.LowLevel.FileBrowser,
+         module Graphics.UI.FLTK.LowLevel.JPEGImage,
+         module Graphics.UI.FLTK.LowLevel.RGBImage,
+         module Graphics.UI.FLTK.LowLevel.BMPImage,
+         module Graphics.UI.FLTK.LowLevel.GIFImage,
+         module Graphics.UI.FLTK.LowLevel.XBMImage,
+         module Graphics.UI.FLTK.LowLevel.XPMImage,
+         module Graphics.UI.FLTK.LowLevel.PNGImage,
+         module Graphics.UI.FLTK.LowLevel.PNMImage,
          -- * Machinery for static dispatch
          module Graphics.UI.FLTK.LowLevel.Dispatch,
          -- * Association of widgets and functions
@@ -198,6 +207,15 @@ import Graphics.UI.FLTK.LowLevel.Pack
 import Graphics.UI.FLTK.LowLevel.Scrolled
 import Graphics.UI.FLTK.LowLevel.Ask
 import Graphics.UI.FLTK.LowLevel.ColorChooser
+import Graphics.UI.FLTK.LowLevel.FileBrowser
+import Graphics.UI.FLTK.LowLevel.JPEGImage
+import Graphics.UI.FLTK.LowLevel.RGBImage
+import Graphics.UI.FLTK.LowLevel.BMPImage
+import Graphics.UI.FLTK.LowLevel.GIFImage
+import Graphics.UI.FLTK.LowLevel.XBMImage
+import Graphics.UI.FLTK.LowLevel.XPMImage
+import Graphics.UI.FLTK.LowLevel.PNGImage
+import Graphics.UI.FLTK.LowLevel.PNMImage
 
 -- $Module Documentation
 -- This module re-exports all the available widgets and their core types. The types and list

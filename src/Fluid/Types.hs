@@ -79,6 +79,8 @@ data Attribute
   | DerivedFromClass String
   | Filename UnbrokenOrBraced
   | Divider
+  | Image UnbrokenOrBraced
+  | Deimage UnbrokenOrBraced
   deriving (Show)
 type Type = String
 data WidgetTree = Group Type HaskellIdentifier [Attribute] [WidgetTree]

@@ -10,6 +10,13 @@ EXPORT {
 #endif
 #include "filenameC.h"
 
+#ifndef INTERNAL_LINKAGE
+  typedef enum FILE_BROWSER_TYPE {
+    FILES,
+    DIRECTORIES
+  } FILE_BROWSER_TYPE;
+#endif
+
   /* Inherited from Fl_Widget */
   FL_EXPORT_C(int ,         Fl_File_Browser_handle_super)(fl_File_Browser file_browser,int event);
   FL_EXPORT_C(int ,         Fl_File_Browser_handle )(fl_File_Browser file_browser,int event);

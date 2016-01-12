@@ -29,6 +29,10 @@ EXPORT {
   FL_EXPORT_C(int		,flc_filename_match)(const char* name, const char* pattern);
   FL_EXPORT_C(int		,flc_filename_isdir)(const char* name);
   FL_EXPORT_C(int		,flc_filename_relative_with_cwd)(char* to, int tolen, const char* from, const char* cwd);
+  FL_EXPORT_C(Fl_File_Sort_F* ,fl_numericsort_reference ());
+  FL_EXPORT_C(Fl_File_Sort_F* ,fl_alphasort_reference ());
+  FL_EXPORT_C(Fl_File_Sort_F* ,fl_casealphasort_reference ());
+  FL_EXPORT_C(Fl_File_Sort_F* ,fl_casenumericsort_reference ());
 #ifdef __cplusplus
 }
 #endif

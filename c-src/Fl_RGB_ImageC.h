@@ -29,6 +29,7 @@ EXPORT {
   FL_EXPORT_C(void, Fl_RGB_Image_draw_with_cx_cy)(fl_RGB_Image rgb_image,int X, int Y, int W, int H, int cx, int cy);
   FL_EXPORT_C(void, Fl_RGB_Image_draw_with_cx)(fl_RGB_Image rgb_image,int X, int Y, int W, int H, int cx);
   FL_EXPORT_C(void, Fl_RGB_Image_draw_with_cy)(fl_RGB_Image rgb_image,int X, int Y, int W, int H, int cy);
+  FL_EXPORT_C(void, Fl_RGB_Image_draw_with)(fl_RGB_Image rgb_image,int X, int Y, int W, int H);
   FL_EXPORT_C(void, Fl_RGB_Image_draw)(fl_RGB_Image rgb_image,int X, int Y);
   FL_EXPORT_C(void, Fl_RGB_Image_uncache)(fl_RGB_Image rgb_image);
   FL_EXPORT_C(void, Fl_RGB_Image_set_max_size)(size_t size);

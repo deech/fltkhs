@@ -68,9 +68,6 @@ instance (impl ~ (Int ->  IO (Int))) => Op (GetMode ()) SysMenuBar orig impl whe
 {# fun Fl_Sys_Menu_Bar_global as global' { id `Ptr ()' } -> `()' #}
 instance (impl ~ ( IO ())) => Op (Global ()) SysMenuBar orig impl where
   runOp _ _ menu_ = withRef menu_ $ \menu_Ptr -> global' menu_Ptr
-{# fun Fl_Sys_Menu_Bar_menu as menu' { id `Ptr ()' } -> `Ptr ()' id #}
-instance (impl ~ ( IO (Maybe (Ref MenuItem)))) => Op (GetMenu ()) SysMenuBar orig impl where
-  runOp _ _ menu_ = withRef menu_ $ \menu_Ptr -> menu' menu_Ptr >>= toMaybeRef
 {# fun Fl_Sys_Menu_Bar_menu_with_m as menuWithM' { id `Ptr ()',id `Ptr ( Ptr () )',`Int' } -> `()' #}
 instance (impl ~ ([Ref MenuItem] -> IO ())) => Op (SetMenu ()) SysMenuBar orig impl where
   runOp _ _ menu_ items =
@@ -87,8 +84,6 @@ instance (impl ~ ([Ref MenuItem] -> IO ())) => Op (SetMenu ()) SysMenuBar orig i
 --
 -- destroy :: 'Ref' 'SysMenuBar' -> 'IO' ()
 --
--- getMenu :: 'Ref' 'SysMenuBar' -> 'IO' ('Maybe' ('Ref' 'MenuItem'))
---
 -- getMode :: 'Ref' 'SysMenuBar' -> 'Int' -> 'IO' ('Int')
 --
 -- global :: 'Ref' 'SysMenuBar' -> 'IO' ()
@@ -104,7 +99,7 @@ instance (impl ~ ([Ref MenuItem] -> IO ())) => Op (SetMenu ()) SysMenuBar orig i
 -- setMode :: 'Ref' 'SysMenuBar' -> 'Int' -> 'Int' -> 'IO' ()
 --
 -- setShortcut :: 'Ref' 'SysMenuBar' -> 'Int' -> 'ShortcutKeySequence' -> 'IO' ()
--- @
+
 
 -- $hierarchy
 -- @

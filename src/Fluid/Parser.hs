@@ -6,8 +6,11 @@ import Text.Parsec.Language
 import Text.Parsec.Token
 import Debug.Trace
 import Control.Monad.Identity
+import System.Directory
 import Types
+import Utils
 import Data.List
+import System.IO.Unsafe
 
 println :: (Monad m)
         => String -> m ()
@@ -175,6 +178,17 @@ literal =
   (try $ bracedContentsP >>= return . BracedString) <|>
   (unbrokenString >>= return . UnbrokenString)
 
+pathLiteral
+  :: ParsecT String () Identity UnbrokenOrBraced
+pathLiteral =
+  (try $ do
+      bc <- bracedContentsP
+      -- take the canonical path relative this the Fluid file since the generated Haskell
+      -- file gets put under the `dist` directory and this path will no longer be valid
+      return (BracedString [(BareString (unsafePerformIO (canonicalizePath (collapseParts bc))))]))
+  <|>
+  (unbrokenString >>= return . UnbrokenString)
+
 langDef :: GenTokenParser String a Control.Monad.Identity.Identity
 langDef = makeTokenParser haskellDef
 
@@ -287,7 +301,9 @@ attrPs =
        ,(string "global" >> return Global)
        ,(string "deactivate" >> return Deactivate)
        ,(string "public" >> return Public)
-       ,(string "divider" >> return Divider)]) ++
+       ,(string "divider" >> return Divider)
+       ,(attrP "image" Image pathLiteral)
+       ,(attrP "deimage" Deimage pathLiteral)]) ++
   [(attrP "size_range" SizeRange numFourTuple)]
 
 innardsP :: ParsecT String () Identity Attribute
@@ -355,6 +371,7 @@ componentTypes =
      , (string "Fl_Check_Browser")
      , (string "Fl_File_Browser")
      , (string "Fl_Tree")
+     , (string "Fl_Progress")
      ])
 
 testIdentifier :: String

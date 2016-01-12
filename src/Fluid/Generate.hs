@@ -1,7 +1,6 @@
 {-# LANGUAGE ScopedTypeVariables #-}
 module Generate
-       (collapseString,
-        typeToHs,
+       (typeToHs,
         typicalConstructorG,
         constructorG,
         attributeG,
@@ -9,43 +8,23 @@ module Generate
        )
        where
 
-import           Control.Monad.State
-import           Control.Monad.Writer
-import           Control.Monad.Identity
-import           Data.Char
-import           Data.List
-import           Foreign.C.Types
-import           Graphics.UI.FLTK.LowLevel.Utils
-import           Lookup
-import           Numeric
-import           Types
-import           Parser
+import Control.Monad.State
+import Control.Monad.Writer
+import Control.Monad.Identity
+import Data.Char
+import Data.List
+import Foreign.C.Types
+import Graphics.UI.FLTK.LowLevel.Utils
+import Lookup
+import Types
+import Parser
+import Utils
+import System.FilePath
+
 apply
   :: [Char] -> [Char] -> Maybe [Char] -> [Char]
 apply f n args =
   f ++ " " ++ n ++ (maybe "" (\args' -> " " ++ args') args)
-
-
-collapseParts :: [BracedStringParts] -> String
-collapseParts parts = go parts []
-  where go ((BareString s):_parts) accum =
-          go _parts (accum ++ s)
-        go ((QuotedCharCode c):_parts) accum =
-          go _parts (accum ++ "\\" ++ [c])
-        go ((QuotedHex h):_parts) accum =
-          go _parts (accum ++ "0x" ++ (showHex h ""))
-        go ((QuotedOctal o):_parts) accum =
-          go _parts (accum ++ "0o" ++ (showOct o ""))
-        go ((QuotedChar c):_parts) accum =
-          go _parts (accum ++ c)
-        go ((NestedBrace ps):_parts) accum =
-          go _parts ("{" ++ (go ps accum) ++ "}")
-        go [] accum = accum
-
-collapseString :: UnbrokenOrBraced -> String
-collapseString (UnbrokenString s) = s
-collapseString (BracedString []) = ""
-collapseString (BracedString parts) = collapseParts parts
 
 typeToHs :: String -> String -> Maybe String
 typeToHs flClassName flWidgetType
@@ -113,7 +92,11 @@ attributeG flClassName name attr =
     Types.Label l ->
       apply "setLabel" name (Just $ show $ collapseString l)
     Types.Value v ->
-      apply "setValue" name (Just $ collapseString v)
+      if (not (flClassName `elem` ["MenuItem"]))
+      then if (flClassName `elem` ["Fl_Return_Button", "Fl_Light_Button", "Fl_Check_Button", "Fl_Repeat_Button", "Fl_Round_Button", "Fl_Button"])
+           then apply "setValue" name (Just (show (cToBool ((read (collapseString v)) :: Int))))
+           else apply "setValue" name (Just (show (collapseString v)))
+      else ""
     Types.WidgetType w ->
       maybe ""
             (\t ->
@@ -130,7 +113,9 @@ attributeG flClassName name attr =
     Types.Labelsize s ->
       apply "setLabelsize" name (Just ("(FontSize " ++ (show s) ++ ")"))
     Types.Resizable ->
-      apply "setResizable" name (Just ("((Just (safeCast " ++ name  ++ ")) :: Maybe (Ref Widget))"))
+      (apply "groupCurrent" "" Nothing) ++
+      " >>= " ++
+      " maybe (error \"setResizable: Could not determine containing group for " ++ name ++ "\") (\\g -> setResizable g " ++ ("((Just (safeCast " ++ name  ++ ")) :: Maybe (Ref Widget))") ++ ")"
     Types.Visible ->
       apply "setVisible" name Nothing
     Types.Align a ->
@@ -162,7 +147,9 @@ attributeG flClassName name attr =
     Types.When w ->
       apply "setWhen" name (Just $ "[" ++ (snd (whenType !! w)) ++ "]")
     Types.Hotspot ->
-      apply "setHotspot" name Nothing
+      (apply "getWindow" name Nothing) ++
+      " >>= " ++
+      " maybe (error \"hotSpot: Could not determine containing window for " ++ name ++ "\") (\\w -> hotSpot w (ByWidget " ++ name  ++ " ) Nothing)"
     Types.Modal ->
       apply "setModal" name Nothing
     Types.TextFont f ->
@@ -200,7 +187,24 @@ attributeG flClassName name attr =
       collapseParts code
     Types.Code3 code ->
       collapseParts code
+    Types.Image path ->
+      setImageOrDeimage path "setImage"
+    Types.Deimage path ->
+      setImageOrDeimage path "setDeimage"
+    Types.Hide ->
+      apply "hide" name Nothing
     unknown -> " -- unknown attribute: " ++ (show unknown)
+  where
+    setImageOrDeimage path imageOrDeimage =
+      let imageConstructor = lookup (takeExtension (collapseString path)) imageExtensions
+      in
+      case imageConstructor of
+        (Just imageConstructor') ->
+          (apply imageConstructor' "" (Just $ show $ collapseString path)) ++
+          " >>= " ++
+          "either (\\_ -> error \"Could not open image: " ++ (collapseString path) ++ "\") " ++
+          "(" ++ (apply imageOrDeimage name Nothing) ++ " . Just )"
+        Nothing -> "error \"Image format not supported: " ++ (collapseString path) ++ "\""
 
 haskellIdToName :: TakenNames -> String -> HaskellIdentifier -> String
 haskellIdToName _ _ (ValidHaskell hid) = hid
@@ -365,6 +369,10 @@ widgetTreeG menuName widgetTree =
                                   (map (attributeG newFlClassName newName) restAttrs) ++
                                   ["setMenu " ++ newName ++ " ([] :: [Ref MenuItem])"] ++
                                   innerTreeOutput
+                           "MenuItem" ->
+                             (constructorG newFlClassName hsConstructor (Just newName) posSize) ++
+                             (map (attributeG newFlClassName newName) restAttrs) ++
+                             innerTreeOutput
                            _ ->
                              (constructorG newFlClassName hsConstructor (Just newName) posSize) ++
                              (map (attributeG newFlClassName newName) restAttrs) ++

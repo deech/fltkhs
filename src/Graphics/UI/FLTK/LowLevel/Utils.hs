@@ -309,3 +309,12 @@ withBitmap (BitmapHs bitmap (Size (Width width') (Height height'))) f =
 
 withStrings :: [String] -> (Ptr (Ptr CChar) -> IO a) -> IO a
 withStrings ss f = withByteStrings (map C.pack ss) f
+
+copyByteStringToCString :: B.ByteString -> IO CString
+copyByteStringToCString bs =
+  B.useAsCStringLen bs
+    (\(cstring, len) -> do
+        dest <- mallocArray len
+        copyArray dest cstring len
+        return dest
+    )
