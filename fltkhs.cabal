@@ -100,6 +100,15 @@ library
                    Graphics.UI.FLTK.LowLevel.Tabs
                    Graphics.UI.FLTK.LowLevel.Spinner
                    Graphics.UI.FLTK.LowLevel.ColorChooser
+                   Graphics.UI.FLTK.LowLevel.FileBrowser
+                   Graphics.UI.FLTK.LowLevel.JPEGImage
+                   Graphics.UI.FLTK.LowLevel.RGBImage
+                   Graphics.UI.FLTK.LowLevel.BMPImage
+                   Graphics.UI.FLTK.LowLevel.GIFImage
+                   Graphics.UI.FLTK.LowLevel.XBMImage
+                   Graphics.UI.FLTK.LowLevel.XPMImage
+                   Graphics.UI.FLTK.LowLevel.PNGImage
+                   Graphics.UI.FLTK.LowLevel.PNMImage
   build-depends:
                 base == 4.*,
                 bytestring

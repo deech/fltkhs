@@ -53,6 +53,18 @@ EXPORT {
   FL_EXPORT_C(int,flc_filename_relative_with_cwd)(char* to,int tolen,const char* from,const char* cwd){
     return fl_filename_relative(to,tolen,from,cwd);
   }
+  FL_EXPORT_C(Fl_File_Sort_F* ,fl_numericsort_reference ()){
+    return &fl_numericsort;
+  }
+  FL_EXPORT_C(Fl_File_Sort_F* ,fl_alphasort_reference ()){
+    return &fl_alphasort;
+  }
+  FL_EXPORT_C(Fl_File_Sort_F* ,fl_casealphasort_reference ()){
+    return &fl_casealphasort;
+  }
+  FL_EXPORT_C(Fl_File_Sort_F* ,fl_casenumericsort_reference ()){
+    return &fl_casenumericsort;
+  }
 #ifdef __cplusplus
 }
 #endif

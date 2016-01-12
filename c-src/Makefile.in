@@ -49,6 +49,7 @@ CPPFILES= \
 	Fl_Hold_BrowserC.cpp \
 	Fl_Image_SurfaceC.cpp \
 	Fl_ImageC.cpp \
+	Fl_JPEG_ImageC.cpp \
 	Fl_Input_C.cpp \
 	Fl_InputC.cpp \
 	Fl_Int_InputC.cpp \
@@ -64,6 +65,11 @@ CPPFILES= \
 	Fl_Paged_DeviceC.cpp \
 	Fl_PixmapC.cpp \
 	Fl_PNM_ImageC.cpp \
+	Fl_PNG_ImageC.cpp \
+	Fl_XBM_ImageC.cpp \
+	Fl_XPM_ImageC.cpp \
+	Fl_GIF_ImageC.cpp \
+	Fl_BMP_ImageC.cpp \
 	Fl_PreferencesC.cpp \
 	Fl_PrinterC.cpp \
 	Fl_ProgressC.cpp \

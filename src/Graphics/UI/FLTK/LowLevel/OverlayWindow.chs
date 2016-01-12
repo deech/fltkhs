@@ -15,7 +15,6 @@ where
 #include "Fl_C.h"
 #include "Fl_Overlay_WindowC.h"
 import Foreign
-import Foreign.C
 import Graphics.UI.FLTK.LowLevel.Fl_Types
 import Graphics.UI.FLTK.LowLevel.Utils
 import Graphics.UI.FLTK.LowLevel.Hierarchy

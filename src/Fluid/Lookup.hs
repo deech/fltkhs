@@ -285,4 +285,6 @@ flClasses =
   ,("Menu_Button",("MenuButton", "menuButtonNew"))
   ,("Fl_Choice",("Choice", "choiceNew"))
   ,("Fl_Browser",("Browser", "browserNew" ))
-  ,("Fl_Tabs",("Tabs", "tabsNew"))]
+  ,("Fl_Tabs",("Tabs", "tabsNew"))
+  ,("Fl_Progress", ("Progress", "progressNew"))
+  ]

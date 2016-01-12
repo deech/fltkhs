@@ -107,6 +107,7 @@ imageNew (Size (Width width') (Height height')) (Depth depth') funcs =
             toRef obj
     Nothing -> flImageNew' width' height' depth' >>= toRef
 
+
 {# fun Fl_Image_Destroy as flImageDestroy' { id `Ptr ()' } -> `()' id #}
 instance (impl ~ (IO ())) => Op (Destroy ()) Image orig impl where
   runOp _ _ image = withRef image $ \imagePtr -> flImageDestroy' imagePtr
@@ -130,7 +131,8 @@ instance (impl ~ ( IO (Int))) => Op (GetCount ()) Image orig impl where
 {# fun Fl_Image_copy as copy' { id `Ptr ()' } -> `Ptr ()' id #}
 instance (impl ~ ( Maybe Size -> IO (Maybe (Ref Image)))) => Op (Copy ()) Image orig impl where
   runOp _ _ image size' = case size' of
-    Just (Size (Width w) (Height h)) -> withRef image $ \imagePtr -> copyWithWH' imagePtr w h >>= toMaybeRef
+    Just (Size (Width imageWidth) (Height imageHeight)) ->
+        withRef image $ \imagePtr -> copyWithWH' imagePtr imageWidth imageHeight >>= toMaybeRef
     Nothing -> withRef image $ \imagePtr -> copy' imagePtr >>= toMaybeRef
 
 {# fun Fl_Image_color_average as colorAverage' { id `Ptr ()',cFromColor `Color',`Float' } -> `()' #}
@@ -151,16 +153,16 @@ instance (impl ~ ( IO ())) => Op (Desaturate ()) Image orig impl where
 {# fun Fl_Image_draw_with as drawWith' { id `Ptr ()',`Int',`Int',`Int',`Int' } -> `()' #}
 
 instance (impl ~ (Position -> Size -> Maybe X -> Maybe Y -> IO ())) => Op (DrawResize ()) Image orig impl where
-  runOp _ _ image (Position (X x) (Y y)) (Size (Width w) (Height h)) xOffset yOffset =
+  runOp _ _ image (Position (X imageX) (Y imageY)) (Size (Width imageWidth) (Height imageHeight)) xOffset yOffset =
     case (xOffset, yOffset) of
       (Just (X xOff), Just (Y yOff)) ->
-        withRef image $ \imagePtr -> drawWithCxCy' imagePtr x y w h (fromIntegral xOff) (fromIntegral yOff)
+        withRef image $ \imagePtr -> drawWithCxCy' imagePtr imageX imageY imageWidth imageHeight (fromIntegral xOff) (fromIntegral yOff)
       (Just (X xOff), Nothing) ->
-        withRef image $ \imagePtr -> drawWithCx' imagePtr x y w h (fromIntegral xOff)
+        withRef image $ \imagePtr -> drawWithCx' imagePtr imageX imageY imageWidth imageHeight (fromIntegral xOff)
       (Nothing, Just (Y yOff)) ->
-        withRef image $ \imagePtr -> drawWithCy' imagePtr x y w h (fromIntegral yOff)
+        withRef image $ \imagePtr -> drawWithCy' imagePtr imageX imageY imageWidth imageHeight (fromIntegral yOff)
       (Nothing, Nothing) ->
-        withRef image $ \imagePtr -> drawWith' imagePtr x y w h
+        withRef image $ \imagePtr -> drawWith' imagePtr imageX imageY imageWidth imageHeight
 
 {# fun Fl_Image_draw as draw' { id `Ptr ()',`Int',`Int' } -> `()' #}
 instance (impl ~ (Position ->  IO ())) => Op (Draw ()) Image orig impl where

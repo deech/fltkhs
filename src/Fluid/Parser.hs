@@ -355,6 +355,7 @@ componentTypes =
      , (string "Fl_Check_Browser")
      , (string "Fl_File_Browser")
      , (string "Fl_Tree")
+     , (string "Fl_Progress")
      ])
 
 testIdentifier :: String

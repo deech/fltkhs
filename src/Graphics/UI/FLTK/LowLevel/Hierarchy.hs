@@ -1513,7 +1513,33 @@ module Graphics.UI.FLTK.LowLevel.Hierarchy
          SetHsv,
          setHsv,
          SetRgb,
-         setRgb
+         setRgb,
+         -- FileBrowser
+         FileBrowser,
+         SetIconsize,
+         setIconsize,
+         GetIconsize,
+         getIconsize,
+         SetFiletype,
+         setFiletype,
+         GetFiletype,
+         getFiletype,
+         -- RGBImage
+         RGBImage,
+         -- JPEGImage
+         JPEGImage,
+         -- BMPImage
+         BMPImage,
+         -- GIFImage
+         GIFImage,
+         -- XBMImage
+         XBMImage,
+         -- XPMImage
+         XPMImage,
+         -- PNGImage
+         PNGImage,
+         -- PNMImage
+         PNMImage
   )
 where
 import Prelude hiding (round)
@@ -3920,3 +3946,70 @@ MAKE_METHOD(GetG, getG)
 MAKE_METHOD(GetB, getB)
 MAKE_METHOD(SetHsv, setHsv)
 MAKE_METHOD(SetRgb, setRgb)
+
+data CFileBrowser parent
+type FileBrowser = CFileBrowser Browser
+type FileBrowserFuncs =
+  (SetIconsize
+  (GetIconsize
+  (SetFilter
+  (GetFilter
+  (SetTextsize
+  (GetTextsize
+  (GetFiletype
+  (SetFiletype
+  ()))))))))
+type instance Functions FileBrowser = FileBrowserFuncs
+
+MAKE_METHOD(SetIconsize, setIconsize)
+MAKE_METHOD(GetIconsize, getIconsize)
+MAKE_METHOD(SetFiletype, setFiletype)
+MAKE_METHOD(GetFiletype, getFiletype)
+
+data CRGBImage parent
+type RGBImage = CRGBImage Image
+type RGBImageFuncs =
+  (Destroy
+  (GetW
+  (GetH
+  (GetD
+  (GetLd
+  (GetCount
+  (Copy
+  (ColorAverage
+  (Inactive
+  (Desaturate
+  (DrawResize
+  (Draw
+  (Uncache
+  ())))))))))))))
+
+type instance Functions RGBImage = RGBImageFuncs
+
+data CJPEGImage parent
+type JPEGImage = CJPEGImage RGBImage
+type instance Functions JPEGImage = ()
+
+data CBMPImage parent
+type BMPImage = CBMPImage RGBImage
+type instance Functions BMPImage = ()
+
+data CGIFImage parent
+type GIFImage = CGIFImage RGBImage
+type instance Functions GIFImage = ()
+
+data CXBMImage parent
+type XBMImage = CXBMImage RGBImage
+type instance Functions XBMImage = ()
+
+data CXPMImage parent
+type XPMImage = CXPMImage RGBImage
+type instance Functions XPMImage = ()
+
+data CPNGImage parent
+type PNGImage = CPNGImage RGBImage
+type instance Functions PNGImage = ()
+
+data CPNMImage parent
+type PNMImage = CPNMImage RGBImage
+type instance Functions PNMImage = ()
