@@ -95,7 +95,10 @@ attributeG flClassName name attr =
       if (not (flClassName `elem` ["MenuItem"]))
       then if (flClassName `elem` ["Fl_Return_Button", "Fl_Light_Button", "Fl_Check_Button", "Fl_Repeat_Button", "Fl_Round_Button", "Fl_Button"])
            then apply "setValue" name (Just (show (cToBool ((read (collapseString v)) :: Int))))
-           else apply "setValue" name (Just (show (collapseString v)))
+           else
+             if (flClassName `elem` ["Fl_Output", "Fl_Int_Input", "Fl_Input"])
+             then apply "setValue" name (Just (show (collapseString v)))
+             else apply "setValue" name (Just (collapseString v))
       else ""
     Types.WidgetType w ->
       maybe ""
