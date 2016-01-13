@@ -68,40 +68,19 @@ type family FindOp hierarchy (needle :: *) :: * where
 data InHierarchy
 data NotInHierarchy a b
 
--- | Move down the "object" hierarchy
--- | eg. Downcast Rectangle Shape
-class Downcast aas as | aas -> as
-instance Downcast (a as) as
-instance (as ~ Base) => Downcast Base as
-
-class TypeEqual x y b | x y -> b
-instance
-#ifdef OVERLAPPING_INSTANCES_DEPRECATED
-  {-# OVERLAPPING #-}
-#endif
-  TypeEqual a a Same
-instance
-#ifdef OVERLAPPING_INSTANCES_DEPRECATED
-  {-# OVERLAPPABLE #-}
-#endif
-  Different ~ b => TypeEqual x y b
-
-class FindInHierarchy' orig a b c r | orig a b c -> r
-instance (Downcast aas as, FindInHierarchy orig as o r) => FindInHierarchy' orig aas o Different r
-instance (r ~ InHierarchy) => FindInHierarchy' orig a b Same r
-
-class FindInHierarchy orig a b c | orig a b -> c
-instance (TypeEqual as oos match, FindInHierarchy' orig as oos match r) => FindInHierarchy orig as oos r
-instance (r ~ NotInHierarchy orig o) => FindInHierarchy orig Base o r
-instance FindInHierarchy orig Base Base InHierarchy
-
+type family FindInHierarchy (needle :: * ) (curr :: *) (haystack :: *) :: * where
+  FindInHierarchy needle () (a as) = NotInHierarchy needle (a as)
+  FindInHierarchy needle (a as) (a as) = InHierarchy
+  FindInHierarchy needle (a as) (b bs) = FindInHierarchy needle as (b bs)
 
 -- | A class with a single instance that is found only if @b@ is an ancestor of @a@.
 --
 -- Used by some 'Op' implementations to enforce that certain parameters have to be
 -- at least a @b@.
+
 class Parent a b
-instance (FindInHierarchy a a b InHierarchy) => Parent a b
+instance (InHierarchy ~ FindInHierarchy a a b) => Parent a b
+
 
 -- | Associate a "class" with it's member functions
 type family Functions (x :: *) :: *
