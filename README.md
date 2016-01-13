@@ -3,6 +3,8 @@ Fltkhs - A Haskell Binding to the FLTK GUI Library
 
 Fltkhs aims to be a complete Haskell binding to the [FLTK GUI library] [1].
 
+NOTE: As of version 0.4.0.0, due to the introduction of closed type families, only GHC >= 7.8.1 is supported.
+
 Abbreviated installation instructions are for Linux and Mac are:
 
 - Download [FLTK 1.3.3] [2].
