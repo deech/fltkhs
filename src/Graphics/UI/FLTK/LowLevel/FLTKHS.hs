@@ -40,6 +40,10 @@ module Graphics.UI.FLTK.LowLevel.FLTKHS
          --
          -- $Compilation
 
+         -- * Cabal REPL Issues
+         --
+         -- $CabalREPLIssues
+
          -- * Core Types
          module Graphics.UI.FLTK.LowLevel.Fl_Types,
          -- * Widgets
@@ -259,11 +263,10 @@ import Graphics.UI.FLTK.LowLevel.PNMImage
 -- (1) provides full coverage of the toolkit allowing the user to write GUI's in pure Haskell.
 -- (2) feels like it has polymorphic dispatch, meaning a single function dispatches to the right implementation based on the type of widget it is given
 -- (3) is /not/ monolithic, meaning new widgets can be incorporated the user's application without needing to recompile this library
--- (4) is conservative on the extensions so that older GHC's (and perhaps non-GHC compilers) can use it
--- (5) is easy to install. This library has a minimum of dependencies and <http://fltk.org FLTK> itself compiles cleanly on most architectures
--- (6) allows the user to produce statically linked binaries with no external dependencies
--- (7) includes a lot of complete working demos so that the user can get up and running faster
--- (8) comes with GUI builder support to alleviate the tedium of laying out widgets by hand
+-- (4) is easy to install. This library has a minimum of dependencies and <http://fltk.org FLTK> itself compiles cleanly on most architectures
+-- (5) allows the user to produce statically linked binaries with no external dependencies
+-- (6) includes a lot of complete working demos so that the user can get up and running faster
+-- (7) comes with GUI builder support to alleviate the tedium of laying out widgets by hand
 
 -- $FluidSupport
 --
@@ -340,14 +343,14 @@ import Graphics.UI.FLTK.LowLevel.PNMImage
 -- - The recommended way of installing FLTK on Linux is from source. The reason is that some package managers seem to put the headers and libraries in a non-standard locations which will cause the Haskell bindings to throw compilation errors. On OSX and Linux it should build and install smoothly using the standard:
 --
 -- @
--- > ./configure
+-- > ./configure --enable-shared
 -- > make
 -- > make install
 -- @
 --
 -- If you are customizing your `configure` step it is important to at least enable OpenGL and Cairo like so:
 --
---     > > ./configure --enable-gl --enable-cairo
+--     > > ./configure --enable-shared --enable-gl --enable-cairo
 --
 -- If you didn't install FLTK from source you will need to ensure that the FLTK headers are in the include path and, along with the standard FLTK library, `fltk_gl`, and `fltk_cairo` are also in the library path. You will also need the `make`, `autoconf`, and `autoheader` tools to build the Haskell bindings.
 --
@@ -370,6 +373,8 @@ import Graphics.UI.FLTK.LowLevel.PNMImage
 --
 
 -- $InstallationWindows
+--
+-- _UPDATE_: This installation guide only works with MinGHC. Within the last month (January 2016) MinGHC has been deprecated and is no longer supported. If you have GHC 7.10.x, MinGHC will probably work for you but will not work for GHC 8. We are currently working on instructions for building on Windows with Stack.
 --
 -- Note: Currently this package only works on 64-bit Windows.
 --
@@ -661,13 +666,11 @@ import Graphics.UI.FLTK.LowLevel.PNMImage
 
 -- $Compilation
 --
--- As described above, the API emulates multiple dispatch using type-level programming and typeclasseses. While this is makes for a nice API it has also
--- slowed down compilation of executables much more than expected. This is especially true in the GHC 7.10.x series in which the step where GHC specialises typeclass
--- function calls to concrete types has apparently taken a *huge* compile-time performance hit.
+-- As described above, the API emulates multiple dispatch using type-level programming, closed type families and typeclasses. While this is makes for a nice API it has also
+-- slowed down compilation of executables much more than expected.
 --
 -- To clarify the time taken to compile the library itself has not changed, but applications that use the library to create executables are taking a lot
--- longer (almost 3x compared to GHC 7.8.x) to compile. To further emphasize, there does not appear to be any runtime performance issues. This is only a
--- compile time problem.
+-- longer to compile. To further emphasize, there does not appear to be any runtime performance issues. This is only a compile time problem.
 --
 -- To preserve the user's and the author's sanity a flag `fastCompile` has been introduced to this package and to the <http://hackage.haskell.org/fltkhs-fluid-examples fltkhs-fluid-examples>.
 -- This flag which tells the compiler to skip the specialising step when compiling executables, dramatically decreases compile time but also bloats the resulting executable size and
@@ -685,6 +688,10 @@ import Graphics.UI.FLTK.LowLevel.PNMImage
 -- cabal configure -f fastCompile
 -- @
 
+-- $CabalREPLIssues
+--
+-- The recommended way to running the REPL in a `fltkhs` application is `cabal repl`. It works in GHC 7.8.x, but unfortunately will not work in GHC 7.10.x to due to a <https://ghc.haskell.org/trac/ghc/ticket/10568 regression>
+--
 
 -- =File Layout
 -- @

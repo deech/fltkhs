@@ -10,7 +10,7 @@ Abbreviated installation instructions are for Linux and Mac are:
 - Download [FLTK 1.3.3] [2].
 - Install with:
 ```
-    > ./configure
+    > ./configure --enable-shared
     > make
     > make install
 ```

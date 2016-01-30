@@ -2,7 +2,7 @@ name : fltkhs
 version : 0.4.0.0
 synopsis : FLTK bindings
 description:
-    Low level bindings for the FLTK GUI toolkit.
+    Low level bindings for the FLTK GUI toolkit. For installation and quick start instruction please scroll all the way down to the README.
 license : MIT
 license-file : LICENSE
 tested-with: GHC >=7.8.1
