@@ -121,7 +121,7 @@ else
 	SONAME_FLAGS= -shared -Wl,-soname
 endif
 .SILENT:
-all: libfltkc.a libfltkcdyn.$(SHARED_EXT)
+all: libfltkc.a libfltkc.$(SHARED_EXT)
 .SUFFIXES: .cpp .o
 .cpp.o:
 	test -d $(STATIC_OBJECT_FILES) || mkdir $(STATIC_OBJECT_FILES)
@@ -134,12 +134,12 @@ libfltkc.a : $(OBJECTS)
 	@echo "*** Linking $@..."
 	(cd $(STATIC_OBJECT_FILES); \
 	ar rcs $(LIBDIR)/$@ $^;)
-libfltkcdyn.so : $(OBJECTS)
+libfltkc.so : $(OBJECTS)
 	test -d $(LIBDIR) || mkdir $(LIBDIR)
 	@echo "*** Linking $@..."
 	(cd $(SHARED_OBJECT_FILES); \
-	$(CXX) $(SONAME_FLAGS),$(LIBDIR)/$@ -o $(LIBDIR)/$@ $^);
-libfltkcdyn.dylib: $(OBJECTS)
+	$(CXX) $(SONAME_FLAGS),$(LIBDIR)/$@ -o $(LIBDIR)/$@ $^ $(shell $(FLTKCONFIG) --use-images --use-glut --use-forms --use-gl --ldflags));
+libfltkc.dylib: $(OBJECTS)
 	@echo "*** Not linking $@ because of bugs in ./c-src/Makefile.in, help appreciated."
 clean:
 	test -d $(LIBDIR) && rm -rf $(LIBDIR)

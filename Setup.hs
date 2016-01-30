@@ -1,5 +1,4 @@
 import Data.Maybe(fromJust, isJust, fromMaybe, maybeToList)
-import Data.List(partition, isPrefixOf)
 import Distribution.Simple.Compiler
 import Distribution.Simple.LocalBuildInfo
 import Distribution.PackageDescription
@@ -21,6 +20,7 @@ import Distribution.Simple.Program.Db
 import Distribution.Simple.PreProcess
 import Distribution.Simple.Register ( generateRegistrationInfo, registerPackage )
 import System.IO.Unsafe (unsafePerformIO)
+import System.IO.Error
 import qualified Distribution.Simple.Program.Ar    as Ar
 import qualified Distribution.ModuleName as ModuleName
 import Distribution.Simple.BuildPaths
@@ -33,7 +33,7 @@ import qualified Distribution.Simple.UHC  as UHC
 import qualified Distribution.Simple.PackageIndex as PackageIndex
 import Distribution.PackageDescription as PD
 import Distribution.InstalledPackageInfo (extraGHCiLibraries, showInstalledPackageInfo)
-import System.Environment (getEnv)
+import System.Environment (getEnv, setEnv)
 
 main :: IO ()
 main = defaultMainWithHooks defaultUserHooks {
@@ -56,9 +56,9 @@ myCMakePreConf :: Args -> ConfigFlags -> IO HookedBuildInfo
 myCMakePreConf args flags =
   do
     let runCMake = do
-	fltkHome <- getEnv "FLTK_HOME"
-	putStrLn "Running cmake ..."
-	rawSystemExit verbose "cmake" [".", "-G", "MSYS Makefiles", "-DFLTK_HOME=" ++ fltkHome]
+        fltkHome <- getEnv "FLTK_HOME"
+        putStrLn "Running cmake ..."
+        rawSystemExit verbose "cmake" [".", "-G", "MSYS Makefiles", "-DFLTK_HOME=" ++ fltkHome]
     clibExists <- doesDirectoryExist fltkcdir
     if (not clibExists)
      then runCMake
@@ -73,15 +73,10 @@ myCMakePreConf args flags =
 fltkcdir = unsafePerformIO getCurrentDirectory ++ "/c-lib"
 fltkclib = "fltkc"
 
-withFltkc op pd =
-  let lib = (fromJust . library) pd
-      bi = libBuildInfo lib
-      elds = extraLibDirs bi
-      els = extraLibs bi
-      bi' = bi {extraLibs = els `op` [fltkclib], extraLibDirs = elds `op` [fltkcdir]}
-      lib' = lib {libBuildInfo = bi'}
-  in
-    pd {library = Just lib'}
+addToEnvironmentVariable :: String -> String -> IO ()
+addToEnvironmentVariable env value = do
+  currentLdLibraryPath <- tryIOError (getEnv env)
+  setEnv env ((either (const "") (\curr -> curr ++ ":") currentLdLibraryPath) ++ value)
 
 myBuildHook pkg_descr local_bld_info user_hooks bld_flags =
   do let compileC = do
@@ -94,8 +89,12 @@ myBuildHook pkg_descr local_bld_info user_hooks bld_flags =
         clibraries <- getDirectoryContents fltkcdir
         when (null $ filter (Data.List.isInfixOf "fltkc") clibraries) compileC
        else compileC
-     let new_pkg_descr = withFltkc (++) pkg_descr
-     buildHook defaultUserHooks new_pkg_descr local_bld_info user_hooks bld_flags
+     case buildOS of
+       Windows -> addToEnvironmentVariable "PATH" fltkcdir
+       _ -> do
+         addToEnvironmentVariable "LD_LIBRARY_PATH" fltkcdir
+         addToEnvironmentVariable "LIBRARY_PATH" fltkcdir
+     buildHook defaultUserHooks pkg_descr local_bld_info user_hooks bld_flags
 
 copyCBindings :: PackageDescription -> LocalBuildInfo -> UserHooks -> CopyFlags -> IO ()
 copyCBindings pkg_descr lbi uhs flags = do
@@ -107,7 +106,7 @@ copyCBindings pkg_descr lbi uhs flags = do
         ["c-lib/libfltkc.a", libPref]
     case buildOS of
      Linux -> rawSystemExit (fromFlag $ copyVerbosity flags) "cp"
-              ["c-lib/libfltkcdyn.so", libPref]
+              ["c-lib/libfltkc.so", libPref]
      Windows -> do
         rawSystemExit (fromFlag $ copyVerbosity flags) "cp"
               ["c-lib/libfltkc.dll.a", libPref]
@@ -117,7 +116,6 @@ copyCBindings pkg_descr lbi uhs flags = do
 myCleanHook pd x uh cf = do
   rawSystemExit normal "make" ["clean"]
   cleanHook defaultUserHooks pd x uh cf
-
 
 -- Based on code in "Gtk2HsSetup.hs" from "gtk" package
 registerHook pkg_descr localbuildinfo _ flags =
