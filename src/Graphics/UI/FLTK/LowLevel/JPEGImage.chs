@@ -31,7 +31,7 @@ jpegImageNewWithData l' data' = do
   jpegImageNewWithData' l' (castPtr jpeg') >>= toRef >>= checkImage
 
 -- $hierarchy
---
+-- @
 -- "Graphics.UI.FLTK.LowLevel.Image"
 --  |
 --  v
@@ -39,3 +39,4 @@ jpegImageNewWithData l' data' = do
 --  |
 --  v
 -- "Graphics.UI.FLTK.LowLevel.JPEGImage"
+-- @

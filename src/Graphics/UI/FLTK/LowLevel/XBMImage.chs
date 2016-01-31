@@ -26,7 +26,7 @@ xbmImageNew filename' = do
   checkImage ref'
 
 -- $hierarchy
---
+-- @
 -- "Graphics.UI.FLTK.LowLevel.Image"
 --  |
 --  v
@@ -34,3 +34,4 @@ xbmImageNew filename' = do
 --  |
 --  v
 -- "Graphics.UI.FLTK.LowLevel.XBMImage"
+-- @

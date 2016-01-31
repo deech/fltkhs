@@ -31,7 +31,7 @@ pngImageNewWithData l' data' = do
   pngImageNewWithData' l' (castPtr png') (B.length data') >>= toRef >>= checkImage
 
 -- $hierarchy
---
+-- @
 -- "Graphics.UI.FLTK.LowLevel.Image"
 --  |
 --  v
@@ -39,3 +39,4 @@ pngImageNewWithData l' data' = do
 --  |
 --  v
 -- "Graphics.UI.FLTK.LowLevel.PNGImage"
+-- @

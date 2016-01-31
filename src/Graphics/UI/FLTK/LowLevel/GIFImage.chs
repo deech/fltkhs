@@ -26,7 +26,7 @@ gifImageNew filename' = do
   checkImage ref'
 
 -- $hierarchy
---
+-- @
 -- "Graphics.UI.FLTK.LowLevel.Image"
 --  |
 --  v
@@ -34,3 +34,4 @@ gifImageNew filename' = do
 --  |
 --  v
 -- "Graphics.UI.FLTK.LowLevel.GIFImage"
+-- @

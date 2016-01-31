@@ -117,15 +117,15 @@ instance (impl ~ ( IO ())) => Op (Uncache ()) RGBImage orig impl where
   runOp _ _ image = withRef image $ \imagePtr -> uncache' imagePtr
 
 -- $hierarchy
---
+-- @
 -- "Graphics.UI.FLTK.LowLevel.Image"
 --  |
 --  v
 -- "Graphics.UI.FLTK.LowLevel.RGBImage"
---
+-- @
 
 -- $functions
---
+-- @
 -- colorAverage :: 'Ref' 'RGBImage' -> 'Color' -> 'Float' -> 'IO' ()
 --
 -- copy:: ('Parent' a 'RGBImage') => 'Ref' 'RGBImage' -> 'Maybe' 'Size' -> 'IO' ('Maybe' ('Ref' a))
@@ -151,3 +151,4 @@ instance (impl ~ ( IO ())) => Op (Uncache ()) RGBImage orig impl where
 -- inactive :: 'Ref' 'RGBImage' -> 'IO' ()
 --
 -- uncache :: 'Ref' 'RGBImage' -> 'IO' ()
+-- @

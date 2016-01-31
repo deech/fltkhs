@@ -265,8 +265,11 @@ import Graphics.UI.FLTK.LowLevel.PNMImage
 -- (3) is /not/ monolithic, meaning new widgets can be incorporated the user's application without needing to recompile this library
 -- (4) is easy to install. This library has a minimum of dependencies and <http://fltk.org FLTK> itself compiles cleanly on most architectures
 -- (5) allows the user to produce statically linked binaries with no external dependencies
--- (6) includes a lot of complete working demos so that the user can get up and running faster
+-- (6) includes a lot of complete working demos so that the user can get up and running faster. (see note below)
 -- (7) comes with GUI builder support to alleviate the tedium of laying out widgets by hand
+--
+-- _Note_: As of version 0.4.0.1, the demos have been moved into their own package <http://hackage.haskell.org/fltkhs-demos fltkhs-demos> for reasons outlined in the =Demos= section of
+-- this document.
 
 -- $FluidSupport
 --
@@ -367,9 +370,9 @@ import Graphics.UI.FLTK.LowLevel.PNMImage
 --
 -- __Note:__ If this step produces a flood of `undefined reference` errors please ensure that you have the right version of FLTK (1.3.3) installed and that the headers are in the expected locations. It seems as though some package managers put the libraries and headers in non-standard places.
 --
--- - Test that the build completed successfully by invoking
+-- - Test that the build completed successfully by invoking incredibly unimpressive
 --
---     > > fltkhs-hello-world
+--     > > fltkhs-buttons
 --
 
 -- $InstallationWindows
@@ -476,51 +479,31 @@ import Graphics.UI.FLTK.LowLevel.PNMImage
 --
 -- Please note that compared to the Linux and Mac installs the compilation process takes a very long time. The reason for this is the MinGW gcc/g++ compilers are much slower.
 --
--- Once this has completed, you can test it by:
+-- Once this has completed, you can test it by invoking the incredibly unimpressive:
 --
 -- @
--- > fltkhs-hello-world
+-- > fltkhs-buttons
 -- @
 
 -- $Demos
 --
--- There are currently two sets of FLTKHS demos, the ones that ship with this package
+-- _Update_: As of version 0.4.0.1 all the demos have been moved to their own
+-- package <http://hackage.haskell.org/fltkhs-demos fltkhs-demos>. This speeds up installation of this package
+-- significantly and also allows the examples to be run interactively with `cabal
+-- repl`. This was an issue pre-0.4.0.1 because the REPL needed to link against the
+-- C library containing the C++ bindings and was having trouble finding it because
+-- it was just created by the Cabal build step but not yet installed. This seems
+-- like a better solution than hacking `Setup.hs` to make the library visible.
+--
+-- There are currently two sets of FLTKHS demos, the ones that are part of the <http://hackage.haskell.org/fltkhs-demos fltkhs-demos> package
 -- and ones that show off <http://hackage.haskell.org/package/fltkhs-fluid-examples Fluid> support.
 --
--- The demos shipped with this package are listed in `fltkhs.cabal` as separate `Executable` components.
--- Once the package is installed they are installed to Cabal's standard /bin/ directory (usually /~\/.cabal\/bin).
---
--- Note that the executables install prefixed with \"fltkhs-\". Typing:
---
---     > > fltkhs-<TAB>
---
--- at the command line should show a list of available demos.
---
--- Alternatively you can do:
---
---     > > ls ~/.cabal/bin/fltkhs-*
---
---
--- Most of the demos are exact ports of those shipped in the /test/ directory of the <http://fltk.org FLTK> distribution.
--- It is hoped the user will study the Haskell demo code side-by-side with the C++ demo code in order to understand the API.
--- The section __API Guide__ covers this in more detail.
---
--- == Why is the demo code so un-Haskelly?
--- For being written in Haskell, the demo code is horrifyingly\/amazingly imperative and stateful. Although it may repulse those
--- who used to pure Haskell idioms it is that way for a reason.
---
--- The demo code was never meant to be idiomatic Haskell code but a way of showing as much of the API as possible. The API itself
--- closely resembles the underlying C++ code which is imperative and stateful. This has the advantage of making the API easier
--- to learn.
---
--- For instance, assuming FLTK was installed from source compare /src\/Examples\/arc.hs with /test\/arc.cxx in the FLTK
--- source directory. There is quite a bit of correspondence and it is easy to see how the Haskell API functions map to the C++ ones.
---
+-- Please see the README in the <http://hackage.haskell.org/fltkhs-demos fltkhs-demos> package for more information.
 --
 
 -- $GettingStarted
 --
--- It is assumed that by this point the user has successfully installed this library and examples.
+-- It is assumed that by this point the user has successfully installed this library and demos in <http://hackage.haskell.org/fltkhs-demos fltkhs-demos> (see above).
 --
 --
 -- = Quick Start
@@ -588,7 +571,7 @@ import Graphics.UI.FLTK.LowLevel.PNMImage
 -- takes an argument while the getter does not. Since Haskell does not support overloading this convention is used.
 --
 -- (2) in many cases C++ uses overloading to provide default values to arguments. Since Haskell does
--- not support overloading these arguments are 'Maybe' types eg. the `hotspot` function in "Graphics.UI.FLTK.LowLevel.Window".
+-- not support overloading, these arguments are 'Maybe' types eg. the `hotspot` function in "Graphics.UI.FLTK.LowLevel.Window".
 -- In other cases where the common use case leaves the default arguments unspecified the binding provides two functions,
 -- a longer less-convenient-to-type one that takes the default argument and a short one that does not
 -- eg. `drawBox` and `drawBoxWithBoxtype`, also in "Graphics.UI.FLTK.LowLevel.Window".
@@ -672,7 +655,7 @@ import Graphics.UI.FLTK.LowLevel.PNMImage
 -- To clarify the time taken to compile the library itself has not changed, but applications that use the library to create executables are taking a lot
 -- longer to compile. To further emphasize, there does not appear to be any runtime performance issues. This is only a compile time problem.
 --
--- To preserve the user's and the author's sanity a flag `fastCompile` has been introduced to this package and to the <http://hackage.haskell.org/fltkhs-fluid-examples fltkhs-fluid-examples>.
+-- To preserve the user's and the author's sanity a flag `fastCompile` has been introduced to the <http://hackage.haskell.org/fltkhs-demos fltkhs-demos> and to the <http://hackage.haskell.org/fltkhs-fluid-examples fltkhs-fluid-examples>.
 -- This flag which tells the compiler to skip the specialising step when compiling executables, dramatically decreases compile time but also bloats the resulting executable size and
 -- probably makes runtime performance much slower. In this package and <http://hackage.haskell.org/fltkhs-fluid-examples fltkhs-fluid-examples> it is enabled by default, since the executables are just
 -- demos that are not meant to show off performance. To disable this flag, tell Cabal to ignore it during the `configure` step:
@@ -699,7 +682,6 @@ import Graphics.UI.FLTK.LowLevel.PNMImage
 --   - c-src            -- The C bindings
 --   - c-examples       -- demos written using the C bindings (not installed)
 --   - src
---     - Examples       -- Haskell demos
 --     - TestPrograms   -- Haskell test programs
 --     - Fluid          -- The Fluid file to Haskell conversion utility
 --     - Graphics
