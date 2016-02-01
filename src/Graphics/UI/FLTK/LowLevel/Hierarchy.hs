@@ -7,12 +7,12 @@
 #ifdef CALLSTACK_AVAILABLE
 #define MAKE_METHOD(Datatype, Method) \
 data Datatype a; \
-Method :: (?loc :: CallStack, Match r ~ FindOp a (Datatype ()), Op (Datatype ()) r a impl) => Ref a -> impl; \
+Method :: (?loc :: CallStack, Match r ~ FindOp a a (Datatype ()), Op (Datatype ()) r a impl) => Ref a -> impl; \
 Method aRef = (unsafePerformIO $ withRef aRef (\_ -> return ())) `seq` dispatch (undefined :: Datatype()) aRef
 #else
 #define MAKE_METHOD(Datatype, Method) \
 data Datatype a; \
-Method :: (Match r ~ FindOp a (Datatype ()), Op (Datatype ()) r a impl) => Ref a -> impl; \
+Method :: (Match r ~ FindOp a a (Datatype ()), Op (Datatype ()) r a impl) => Ref a -> impl; \
 Method aRef = dispatch (undefined :: Datatype ()) aRef
 #endif
 
@@ -1549,7 +1549,7 @@ import Graphics.UI.FLTK.LowLevel.Dispatch
 import GHC.Stack
 import System.IO.Unsafe
 #endif
-
+type instance Functions Base = ()
 data CRegion parent
 type Region = CRegion Base
 type instance Functions Region = ()

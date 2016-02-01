@@ -40,9 +40,9 @@ rgbImageNew bits' (Size (Width width') (Height height')) depth' linesize' = do
 
 checkImage :: (
                 Parent orig RGBImage,
-                Match x ~ FindOp orig (GetW ()),
+                Match x ~ FindOp orig orig (GetW ()),
                 Op (GetW ()) x orig (IO Int),
-                Match y ~ FindOp orig (Destroy ()),
+                Match y ~ FindOp orig orig (Destroy ()),
                 Op (Destroy ()) y orig (IO ())
                )
                => Ref orig -> IO (Either UnknownError (Ref orig))

@@ -37,16 +37,16 @@ data Different
 -- | See 'FindOp' for more details.
 data Match a
 -- | See 'FindOp' for more details.
-data NoFunction a
+data NoFunction a b
 
 -- Test whether a given nested type contains
 -- a type
 -- eg. Same ~ Contains (w (x (y (z ())))) (y ())
 --     Different ~ Contains (w (x (y (z ())))) (a ())
 type family Contains as a where
+  Contains () (x ()) = Different
   Contains (a as) (a ()) = Same
-  Contains () x = Different
-  Contains (a as) b = Contains as b
+  Contains (a as) (b ()) = Contains as (b ())
 
 -- | @FindOp@ searches a class hierarchy for a member function (an  Op-eration)
 -- and returns the first class in the hierarchy that support it.
@@ -55,13 +55,13 @@ type family Contains as a where
 -- closest ancestor to @a@ (possibly @a@) that has that function.
 --
 -- If found @r@ is @Match c@, if not found @r@ is @NoFunction b@.
-type family FindOpHelper hierarchy  (needle :: *) (found :: *) :: * where
-  FindOpHelper hierarchy needle Same = Match hierarchy
-  FindOpHelper (child ancestors) needle Different = FindOp ancestors needle
+type family FindOpHelper orig hierarchy  (needle :: *) (found :: *) :: * where
+  FindOpHelper orig hierarchy needle Same = Match hierarchy
+  FindOpHelper orig (child ancestors) needle Different = FindOp orig ancestors needle
 
-type family FindOp hierarchy (needle :: *) :: * where
-  FindOp () n = NoFunction n
-  FindOp hierarchy needle = FindOpHelper hierarchy needle (Contains (Functions hierarchy) needle)
+type family FindOp orig hierarchy (needle :: *) :: * where
+  FindOp orig () n = NoFunction n orig
+  FindOp orig hierarchy needle = FindOpHelper orig hierarchy needle (Contains (Functions hierarchy) needle)
 
 -- | Find the first "object" of the given type
 -- | in the hierarchy.
@@ -115,7 +115,7 @@ safeCast (Ref x) = (Ref x)
 -- what arguments it needs.
 dispatch :: forall op obj origObj impl.
             (
-              Match obj ~ FindOp origObj op,
+              Match obj ~ FindOp origObj origObj op,
               Op op obj origObj impl
             ) =>
             op -> Ref origObj -> impl
