@@ -91,8 +91,11 @@ myBuildHook pkg_descr local_bld_info user_hooks bld_flags =
        else compileC
      case buildOS of
        Windows -> addToEnvironmentVariable "PATH" fltkcdir
-       _ -> do
+       Linux -> do
          addToEnvironmentVariable "LD_LIBRARY_PATH" fltkcdir
+         addToEnvironmentVariable "LIBRARY_PATH" fltkcdir
+       _ -> do 
+         addToEnvironmentVariable "DYLD_LIBRARY_PATH" fltkcdir
          addToEnvironmentVariable "LIBRARY_PATH" fltkcdir
      buildHook defaultUserHooks pkg_descr local_bld_info user_hooks bld_flags
 
@@ -104,9 +107,12 @@ copyCBindings pkg_descr lbi uhs flags = do
                 $ flags
     rawSystemExit (fromFlag $ copyVerbosity flags) "cp"
         ["c-lib/libfltkc.a", libPref]
+    print buildOS
     case buildOS of
      Linux -> rawSystemExit (fromFlag $ copyVerbosity flags) "cp"
-              ["c-lib/libfltkc.so", libPref]
+              ["c-lib/libfltkc-dyn.so", libPref]
+     OSX -> rawSystemExit (fromFlag $ copyVerbosity flags) "cp"
+              ["c-lib/libfltkc-dyn.dylib", libPref]
      Windows -> do
         rawSystemExit (fromFlag $ copyVerbosity flags) "cp"
               ["c-lib/libfltkc.dll.a", libPref]

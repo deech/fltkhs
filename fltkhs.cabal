@@ -138,6 +138,8 @@ Executable fltkhs-fluidtohs
   ghc-Options: -Wall -threaded
   if os(windows)
    ghc-Options: -optl-mwindows
+  if os(darwin)
+   ghc-Options: -pgml g++ "-optl-Wl,-lfltkc"
   if !os(darwin) && !os(windows)
     ghc-Options: -pgml g++ "-optl-Wl,--whole-archive" "-optl-Wl,-Bstatic" "-optl-Wl,-lfltkc" "-optl-Wl,-Bdynamic" "-optl-Wl,--no-whole-archive"
 
@@ -151,5 +153,7 @@ Executable fltkhs-buttons
   ghc-Options: -Wall -threaded
   if os(windows)
    ghc-Options: -optl-mwindows
+  if os(darwin)
+   ghc-Options: -pgml g++ "-optl-Wl,-lfltkc"
   if !os(darwin) && !os(windows)
     ghc-Options: -pgml g++ "-optl-Wl,--whole-archive" "-optl-Wl,-Bstatic" "-optl-Wl,-lfltkc" "-optl-Wl,-Bdynamic" "-optl-Wl,--no-whole-archive"

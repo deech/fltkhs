@@ -9,6 +9,7 @@
 #include "Fl_CallbackC.h"
 EXPORT {
 #endif
+  #include <stdlib.h>
   FL_EXPORT_C(fl_RGB_Image, Fl_RGB_Image_New)(uchar* bits, int W, int H);
   FL_EXPORT_C(fl_RGB_Image, Fl_RGB_Image_New_With_D)(uchar* bits, int W, int H, int D);
   FL_EXPORT_C(fl_RGB_Image, Fl_RGB_Image_New_With_LD)(uchar* bits, int W, int H, int LD);
