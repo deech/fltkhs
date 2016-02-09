@@ -106,11 +106,11 @@ MESSAGE(STATUS ${CXX_FLAGS})
 # first build object library so that we can reuse same objects for both static and shared library
 ADD_LIBRARY(fltkc_obj OBJECT ${SourceFiles})
 
-ADD_LIBRARY(fltkc SHARED $<TARGET_OBJECTS:fltkc_obj>)
+ADD_LIBRARY(fltkc-dyn SHARED $<TARGET_OBJECTS:fltkc_obj>)
 
-target_link_libraries(fltkc ${FLTKLINKFLAGS} -L${FLTK_HOME}/lib)
+target_link_libraries(fltkc-dyn ${FLTKLINKFLAGS} -L${FLTK_HOME}/lib)
 
-set_target_properties(fltkc PROPERTIES ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/../c-lib
+set_target_properties(fltkc-dyn PROPERTIES ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/../c-lib
                                        RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/../c-lib)
 
 

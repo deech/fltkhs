@@ -94,7 +94,7 @@ myBuildHook pkg_descr local_bld_info user_hooks bld_flags =
        Linux -> do
          addToEnvironmentVariable "LD_LIBRARY_PATH" fltkcdir
          addToEnvironmentVariable "LIBRARY_PATH" fltkcdir
-       _ -> do 
+       _ -> do
          addToEnvironmentVariable "DYLD_LIBRARY_PATH" fltkcdir
          addToEnvironmentVariable "LIBRARY_PATH" fltkcdir
      buildHook defaultUserHooks pkg_descr local_bld_info user_hooks bld_flags
@@ -142,7 +142,7 @@ register pkg@PackageDescription { library = Just lib } lbi regFlags = do
 
     let installedPkgInfo = installedPkgInfoRaw {
                                 -- this is what this whole register code is all about
-                                extraGHCiLibraries = ["fltkc"] }
+                                extraGHCiLibraries = ["fltkc-dyn"] }
 
      -- Three different modes:
     case () of
