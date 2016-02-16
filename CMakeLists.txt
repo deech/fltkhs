@@ -3,30 +3,31 @@ CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
 PROJECT(fltkc)
 
 # CMake doesn't like backslashes in path
-STRING(REGEX REPLACE "\\\\" "/" FLTK_HOME ${FLTK_HOME}) 
+STRING("REGEX" "REPLACE" "\\\\" "/" "FLTK_HOME" "${FLTK_HOME}")
 
-if(EXISTS "${FLTK_HOME}/lib/libfltk_z.a")
-  SET(FLTK_Z "${FLTK_HOME}/lib/libfltk_z.a")
+if(EXISTS "${FLTK_HOME}/build/lib/libfltk_z.a")
+  SET(FLTK_Z "${FLTK_HOME}/build/lib/libfltk_z.a")
 else()
   find_library(HAVE_Z z)
   SET(FLTK_Z "${HAVE_Z}")
 endif()
 
-if(EXISTS "${FLTK_HOME}/lib/libfltk_jpeg.a")
-  SET(FLTK_JPEG "${FLTK_HOME}/lib/libfltk_jpeg.a")
+if(EXISTS "${FLTK_HOME}/build/lib/libfltk_jpeg.a")
+  SET(FLTK_JPEG "${FLTK_HOME}/build/lib/libfltk_jpeg.a")
 else()
   find_library(HAVE_JPEG jpeg)
   SET(FLTK_JPEG "${HAVE_JPEG}")
 endif()
 
-if(EXISTS "${FLTK_HOME}/lib/libfltk_png.a")
-  SET(FLTK_PNG "${FLTK_HOME}/lib/libfltk_png.a")
+if(EXISTS "${FLTK_HOME}/build/lib/libfltk_png.a")
+  SET(FLTK_PNG "${FLTK_HOME}/build/lib/libfltk_png.a")
 else()
   find_library(HAVE_PNG png)
   SET(FLTK_PNG "${HAVE_PNG}")
 endif()
 
-
+INCLUDE_DIRECTORIES(${FLTK_HOME})
+LINK_DIRECTORIES("${FLTK_HOME}/build/lib")
 SET(FLTKLINKFLAGS "-Wl,-Bstatic")
 SET(FLTKLINKFLAGS "${FLTKLINKFLAGS} -lfltk.a -lfltk_gl -lfltk_images.a ${FLTK_PNG} ${FLTK_JPEG} ${FLTK_Z} -lfltk_forms")
 SET(FLTKLINKFLAGS "${FLTKLINKFLAGS} -Wl,-Bdynamic")
@@ -48,9 +49,7 @@ else()
 endif()
 
 
-MESSAGE(STATUS "FLTKLINKFLAGS: ${FLTKLINKFLAGS}")
-
-SET(FLTKCONFIGCOMMAND "-Wl,-Bstatic,-whole-archive,-lfltkc,-no-whole-archive,-Bdynamic ${FLTKLINKFLAGS}")
+SET(FLTKCONFIGCOMMAND "-Wl,-Bstatic,-whole-archive,-lfltkc,-no-whole-archive,-Bdynamic -L${FLTK_HOME}/build/lib -L${CMAKE_CURRENT_SOURCE_DIR}/c-lib ${FLTKLINKFLAGS}")
 
 CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/fltkhs.buildinfo.in
                ${CMAKE_CURRENT_SOURCE_DIR}/fltkhs.buildinfo)

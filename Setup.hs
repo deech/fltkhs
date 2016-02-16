@@ -81,7 +81,9 @@ addToEnvironmentVariable env value = do
 myBuildHook pkg_descr local_bld_info user_hooks bld_flags =
   do let compileC = do
              putStrLn "==Compiling C bindings=="
-             rawSystemExit normal "make" []
+             case buildOS of
+              Windows -> rawSystemExit normal "make" []
+              _ -> rawSystemExit normal "make" []
      cdirexists <- doesDirectoryExist fltkcdir
      if cdirexists
        then
@@ -113,11 +115,9 @@ copyCBindings pkg_descr lbi uhs flags = do
               ["c-lib/libfltkc-dyn.so", libPref]
      OSX -> rawSystemExit (fromFlag $ copyVerbosity flags) "cp"
               ["c-lib/libfltkc-dyn.dylib", libPref]
-     Windows -> do
-        rawSystemExit (fromFlag $ copyVerbosity flags) "cp"
-              ["c-lib/libfltkc.dll.a", libPref]
-        rawSystemExit (fromFlag $ copyVerbosity flags) "cp"
-              ["c-lib/libfltkc.dll", libPref]
+     Windows ->
+            rawSystemExit (fromFlag $ copyVerbosity flags) "cp"
+              ["c-lib" </> "libfltkc-dyn.dll", libPref]
 
 myCleanHook pd x uh cf = do
   rawSystemExit normal "make" ["clean"]
