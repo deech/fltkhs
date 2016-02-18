@@ -127,12 +127,18 @@ library
 Executable fltkhs-fluidtohs
   Main-Is: Main.hs
   Hs-Source-Dirs: src/Fluid
+  Other-modules:
+                Generate
+                Lookup
+                Parser
+                Types
+                Utils
   Build-Depends:
     base == 4.*,
     filepath,
     fltkhs,
     parsec >= 3.1.6,
-    directory >= 1.2.2.0,
+    directory >= 1.2.1.0,
     mtl
   default-language: Haskell2010
   ghc-Options: -Wall -threaded

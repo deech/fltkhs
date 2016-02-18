@@ -108,13 +108,12 @@ copyCBindings pkg_descr lbi uhs flags = do
                 . fromFlag . copyDest
                 $ flags
     rawSystemExit (fromFlag $ copyVerbosity flags) "cp"
-        ["c-lib/libfltkc.a", libPref]
-    print buildOS
+        ["c-lib" </> "libfltkc.a", libPref]
     case buildOS of
      Linux -> rawSystemExit (fromFlag $ copyVerbosity flags) "cp"
-              ["c-lib/libfltkc-dyn.so", libPref]
+              ["c-lib" </> "libfltkc-dyn.so", libPref]
      OSX -> rawSystemExit (fromFlag $ copyVerbosity flags) "cp"
-              ["c-lib/libfltkc-dyn.dylib", libPref]
+              ["c-lib" </> "libfltkc-dyn.dylib", libPref]
      Windows ->
             rawSystemExit (fromFlag $ copyVerbosity flags) "cp"
               ["c-lib" </> "libfltkc-dyn.dll", libPref]
@@ -142,7 +141,11 @@ register pkg@PackageDescription { library = Just lib } lbi regFlags = do
 
     let installedPkgInfo = installedPkgInfoRaw {
                                 -- this is what this whole register code is all about
-                                extraGHCiLibraries = ["fltkc-dyn"] }
+                                extraGHCiLibraries =
+                                  case buildOS of
+                                    Windows -> ["libfltkc-dyn"]
+                                    _ -> ["fltkc-dyn"]
+                                }
 
      -- Three different modes:
     case () of
