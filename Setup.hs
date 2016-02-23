@@ -83,6 +83,8 @@ myBuildHook pkg_descr local_bld_info user_hooks bld_flags =
              putStrLn "==Compiling C bindings=="
              case buildOS of
               Windows -> rawSystemExit normal "make" []
+              os | os `elem` [FreeBSD, OpenBSD, NetBSD, DragonFly]
+                -> rawSystemExit normal "gmake" []
               _ -> rawSystemExit normal "make" []
      cdirexists <- doesDirectoryExist fltkcdir
      if cdirexists
@@ -110,8 +112,9 @@ copyCBindings pkg_descr lbi uhs flags = do
     rawSystemExit (fromFlag $ copyVerbosity flags) "cp"
         ["c-lib" </> "libfltkc.a", libPref]
     case buildOS of
-     Linux -> rawSystemExit (fromFlag $ copyVerbosity flags) "cp"
-              ["c-lib" </> "libfltkc-dyn.so", libPref]
+     os | os `elem` [Linux, FreeBSD, OpenBSD, NetBSD, DragonFly]
+       -> rawSystemExit (fromFlag $ copyVerbosity flags) "cp"
+            ["c-lib" </> "libfltkc-dyn.so", libPref]
      OSX -> rawSystemExit (fromFlag $ copyVerbosity flags) "cp"
               ["c-lib" </> "libfltkc-dyn.dylib", libPref]
      Windows ->
@@ -119,7 +122,10 @@ copyCBindings pkg_descr lbi uhs flags = do
               ["c-lib" </> "libfltkc-dyn.dll", libPref]
 
 myCleanHook pd x uh cf = do
-  rawSystemExit normal "make" ["clean"]
+  case buildOS of
+   os | os `elem` [FreeBSD, OpenBSD, NetBSD, DragonFly]
+     -> rawSystemExit normal "gmake" ["clean"]
+   _ -> rawSystemExit normal "make" ["clean"]
   cleanHook defaultUserHooks pd x uh cf
 
 -- Based on code in "Gtk2HsSetup.hs" from "gtk" package
