@@ -4,8 +4,12 @@ SRC = c-src
 SHARED_OBJECT_FILES = shared_object_files
 STATIC_OBJECT_FILES = static_object_files
 EXAMPLES = c-examples
+CONFIGURE_CACHE = autom4te.cache
+CONFIGURE_LOG = config.log
+CONFIGURE_STATUS = config.status
+FLTKHS_BUILDINFO = fltkhs.buildinfo
 DIRS = $(SRC) $(EXAMPLES)
-CLEANUPDIRS = $(EXECUTABLEDIR) $(LIBDIR) $(OBJECT_FILES) $(SHARED_OBJECT_FILES) $(STATIC_OBJECT_FILES)
+CLEANUP = $(EXECUTABLEDIR) $(LIBDIR) $(OBJECT_FILES) $(SHARED_OBJECT_FILES) $(STATIC_OBJECT_FILES) $(CONFIGURE_CACHE) $(CONFIGURE_LOG) $(CONFIGURE_STATUS) $(CONFIGURE_SCAN) $(FLTKHS_BUILDINFO)
 .SILENT:
 .PHONY: src all clean
 src:
@@ -14,9 +18,7 @@ examples: src
 	cd $(EXAMPLES); $(MAKE) all
 all: examples
 clean:
-	for dir in $(CLEANUPDIRS); do\
-	 	echo "=== removing $$dir ===";\
-		if [ -d "./$$dir" ];then     \
-	 	  rm -rf $$dir; \
-                fi \
+	for f in $(CLEANUP); do\
+	 	echo "=== removing $$f ===";\
+	 	  rm -rf $$f; \
 	done

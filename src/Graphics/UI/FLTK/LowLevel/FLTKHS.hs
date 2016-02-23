@@ -285,7 +285,7 @@ import Graphics.UI.FLTK.LowLevel.PNMImage
 -- into a Haskell module of the same name during the preprocess step. This means using Fluid in a FLTKHS project is as simple
 -- as creating a Fluid interface and running 'cabal build' or 'cabal install'.
 --
--- Additionally the <http://hackage.haskell.org/package/fltkhs-fluid-examples fltkhs-fluid-examples> comes with
+-- Additionally the <http://hackage.haskell.org/package/fltkhs-fluid-demos fltkhs-fluid-demos> comes with
 -- a number of demos that show off how Fluid integrates with FLTKS.
 --
 
@@ -343,19 +343,25 @@ import Graphics.UI.FLTK.LowLevel.PNMImage
 --
 -- - Make sure you have OpenGL installed
 -- - Download and install <http://www.fltk.org/software.php?VERSION=1.3.3&FILE=fltk/1.3.3/fltk-1.3.3-source.tar.gz FLTK 1.3.3>.
--- - The recommended way of installing FLTK on Linux is from source. The reason is that some package managers seem to put the headers and libraries in a non-standard locations which will cause the Haskell bindings to throw compilation errors. On OSX and Linux it should build and install smoothly using the standard:
+-- - The recommended way of installing FLTK on Linux is from source. The reason is that some package managers seem to be behind on versions (as of this writing Ubuntu 14.04 is still on 1.3.2) and others put the headers and libraries in a non-standard locations which will cause the Haskell bindings to throw compilation errors. On OSX and Linux it should build and install smoothly using the standard:
 --
 -- @
--- > ./configure --enable-shared
--- > make
--- > make install
+-- > > ./configure --enable-shared
+-- > > make
+-- > > make install
 -- @
 --
--- If you are customizing your `configure` step it is important to at least enable OpenGL and Cairo like so:
+-- If you are customizing your `configure` step it is important to at least enable shared libraries, OpenGL and Cairo like so:
 --
 --     > > ./configure --enable-shared --enable-gl --enable-cairo
 --
--- If you didn't install FLTK from source you will need to ensure that the FLTK headers are in the include path and, along with the standard FLTK library, `fltk_gl`, and `fltk_cairo` are also in the library path. You will also need the `make`, `autoconf`, and `autoheader` tools to build the Haskell bindings.
+-- If you didn't install FLTK from source you can use the 'fltk-config' tool to ensure that version 1.3.3 is installed:
+--
+-- @
+-- > fltk-config --version
+-- @
+--
+-- Additionally the FLTK headers should be in the include path and, along with the standard FLTK libraries, `fltk_images`, and `fltk_gl`. You will also need the `make`, `autoconf`, and `autoheader` tools to build the Haskell bindings.
 --
 -- - Make sure `c2hs` is installed with `cabal install c2hs`.
 --
@@ -496,7 +502,7 @@ import Graphics.UI.FLTK.LowLevel.PNMImage
 -- like a better solution than hacking `Setup.hs` to make the library visible.
 --
 -- There are currently two sets of FLTKHS demos, the ones that are part of the <http://hackage.haskell.org/fltkhs-demos fltkhs-demos> package
--- and ones that show off <http://hackage.haskell.org/package/fltkhs-fluid-examples Fluid> support.
+-- and ones that show off <http://hackage.haskell.org/package/fltkhs-fluid-demos Fluid> support.
 --
 -- Please see the README in the <http://hackage.haskell.org/fltkhs-demos fltkhs-demos> package for more information.
 --
@@ -655,9 +661,9 @@ import Graphics.UI.FLTK.LowLevel.PNMImage
 -- To clarify the time taken to compile the library itself has not changed, but applications that use the library to create executables are taking a lot
 -- longer to compile. To further emphasize, there does not appear to be any runtime performance issues. This is only a compile time problem.
 --
--- To preserve the user's and the author's sanity a flag `fastCompile` has been introduced to the <http://hackage.haskell.org/fltkhs-demos fltkhs-demos> and to the <http://hackage.haskell.org/fltkhs-fluid-examples fltkhs-fluid-examples>.
+-- To preserve the user's and the author's sanity a flag `fastCompile` has been introduced to the <http://hackage.haskell.org/fltkhs-demos fltkhs-demos> and to the <http://hackage.haskell.org/fltkhs-fluid-demos fltkhs-fluid-demos>.
 -- This flag which tells the compiler to skip the specialising step when compiling executables, dramatically decreases compile time but also bloats the resulting executable size and
--- probably makes runtime performance much slower. In this package and <http://hackage.haskell.org/fltkhs-fluid-examples fltkhs-fluid-examples> it is enabled by default, since the executables are just
+-- probably makes runtime performance much slower. In this package and <http://hackage.haskell.org/fltkhs-fluid-demos fltkhs-fluid-demos> it is enabled by default, since the executables are just
 -- demos that are not meant to show off performance. To disable this flag, tell Cabal to ignore it during the `configure` step:
 --
 -- @
