@@ -18,10 +18,10 @@ Abbreviated installation instructions are for Linux and Mac are:
 - Clone and install this repo:
 ```
     > git clone https://github.com/deech/fltkhs
-    cabal install
+    stack build
 ```
 
-- Test your installation by invoking: 'fltkhs-buttons'.
+- Test your installation by invoking: 'stack exec fltkhs-buttons'.
 
 The rest of the documentation (including installation instructions for Windows and API usage) is located in the [FLTKHS module] [3]. This is the primary module that needs to be imported by every Fltkhs app and the entry point into the application.
 
