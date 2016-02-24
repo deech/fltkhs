@@ -15,16 +15,28 @@ Abbreviated installation instructions are for Linux and Mac are:
     > make install
 ```
 
-- Clone and install this repo:
+- Install via the `fltkhs-hello-world` skeleton application:
 ```
-    > git clone https://github.com/deech/fltkhs
-    stack build
+    > git clone https://github.com/deech/fltkhs-hello-world
+    > cd fltkhs-hello-world
+    > stack build
 ```
 
-- Test your installation by invoking: 'stack exec fltkhs-buttons'.
+- Test your installation by invoking: 'stack exec fltkhs-hello-world'.
 
 The rest of the documentation (including installation instructions for Windows and API usage) is located in the [FLTKHS module] [3]. This is the primary module that needs to be imported by every Fltkhs app and the entry point into the application.
 
+Screenshots
+-----------
+
+[Drawing with FLTKHS](images/arc-windows.png)
+
+[A table of widgets](images/widget-table.png)
+
+[A complex tree](images/tree-complex-windows.png) Done completely using Fluid. Notice how tree nodes can be arbitrary widgets.
+
+Demos
+-----
 A number of demos are also available in the [fltkhs-demos] [4] and the [fltkhs-fluid-demos] [5] packages.
 
   [1]: http://www.fltk.org/index.php      "FLTK"
