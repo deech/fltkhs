@@ -31,7 +31,7 @@ Screenshots
 
 [Drawing with FLTKHS](images/arc-windows.png)
 
-[A table of widgets](images/widget-table.png)
+[A table of widgets](images/widget-table-windows.png)
 
 [A complex tree](images/tree-complex-windows.png) Done completely using Fluid. Notice how tree nodes can be arbitrary widgets.
 
