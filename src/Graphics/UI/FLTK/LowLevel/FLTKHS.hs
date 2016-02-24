@@ -14,7 +14,7 @@ module Graphics.UI.FLTK.LowLevel.FLTKHS
 
          -- * Installation
          --
-         -- ** Linux
+         -- ** Linux & *BSD
          --
          -- $InstallationLinux
 
@@ -477,7 +477,7 @@ import Graphics.UI.FLTK.LowLevel.PNMImage
 -- cause the Haskell bindings to throw compilation errors. -- - Make sure `c2hs` is
 -- installed with `cabal install c2hs`.
 --
-
+--
 -- == Download & Install the FLTKHS Hello World Skeleton
 -- === Downloading Without Git
 -- If 'git' is not installed download the latest version of the fltkhs-hello-world application skeleton from <https://github.com/deech/fltkhs-hello-world/archive/master.tar.gz here>
@@ -485,7 +485,6 @@ import Graphics.UI.FLTK.LowLevel.PNMImage
 -- Rename it:
 --
 -- @
--- > cd \/Users\/\<username\>/Downloads\/
 -- > mv master.tar.gz fltkhs-hello-world.tar.gz
 -- @
 --
