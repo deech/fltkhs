@@ -10,6 +10,7 @@
 #include <FL/Fl_Widget.H>
 #include <FL/Fl_Menu_Item.H>
 #include <FL/Fl_Menu_.H>
+#include <FL/Fl_Sys_Menu_Bar.H>
 #include <FL/Fl_Text_Buffer.H>
 #include <FL/Fl_Text_Editor.H>
 #include <FL/Fl_File_Chooser.H>
@@ -62,10 +63,14 @@ class C_to_Fl_Callback {
   int menu_insert(Fl_Menu_Item* item, int index, char* name, int shortcut, int flags = 0);
   int menu_insert(Fl_Menu_* menu_, int index, char* name, int shortcut, int flags = 0);
   int menu_insert(Fl_Menu_* menu_, int index, char* name, char* shortcut, int flags = 0);
+  int menu_insert(Fl_Sys_Menu_Bar* menu_, int index, char* name, int shortcut, int flags = 0);
+  int menu_insert(Fl_Sys_Menu_Bar* menu_, int index, char* name, char* shortcut, int flags = 0);
   int menu_add(Fl_Menu_Item* item, char* name, int shortcut, int flags = 0);
   int menu_add(Fl_Menu_Item* item, char* name, char* shortcut, int flags = 0);
   int menu_add(Fl_Menu_* menu,char* name, char* shortcut, int flags = 0);
   int menu_add(Fl_Menu_* menu,char* name, int shortcut, int flags = 0);
+  int menu_add(Fl_Sys_Menu_Bar* menu,char* name, char* shortcut, int flags = 0);
+  int menu_add(Fl_Sys_Menu_Bar* menu,char* name, int shortcut, int flags = 0);
 };
 #endif
 #endif /* __FL_CALLBACK_C__ */

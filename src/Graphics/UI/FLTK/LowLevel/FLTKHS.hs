@@ -104,6 +104,7 @@ module Graphics.UI.FLTK.LowLevel.FLTKHS
          module Graphics.UI.FLTK.LowLevel.SingleWindow,
          module Graphics.UI.FLTK.LowLevel.Slider,
          module Graphics.UI.FLTK.LowLevel.Spinner,
+         module Graphics.UI.FLTK.LowLevel.MenuBar,
          module Graphics.UI.FLTK.LowLevel.SysMenuBar,
          module Graphics.UI.FLTK.LowLevel.Tabs,
          module Graphics.UI.FLTK.LowLevel.Table,
@@ -174,6 +175,7 @@ import Graphics.UI.FLTK.LowLevel.HorValueSlider
 import Graphics.UI.FLTK.LowLevel.NiceSlider
 import Graphics.UI.FLTK.LowLevel.MenuItem
 import Graphics.UI.FLTK.LowLevel.MenuPrim
+import Graphics.UI.FLTK.LowLevel.MenuBar
 import Graphics.UI.FLTK.LowLevel.SysMenuBar
 import Graphics.UI.FLTK.LowLevel.Choice
 import Graphics.UI.FLTK.LowLevel.MenuButton

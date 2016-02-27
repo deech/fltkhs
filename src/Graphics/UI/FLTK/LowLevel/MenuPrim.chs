@@ -3,7 +3,8 @@
 module Graphics.UI.FLTK.LowLevel.MenuPrim
     (
      menu_New,
-     menu_Custom
+     menu_Custom,
+     insertMenuItem
      -- * Hierarchy
      --
      -- $hierarchy
@@ -157,42 +158,56 @@ instance (Parent a MenuItem, impl ~ ([Ref a] -> IO ())) => Op (SetMenu ()) MenuP
 instance (Parent a MenuItem, impl ~ (Ref a->  IO ())) => Op (Copy ()) MenuPrim orig impl where
   runOp _ _ menu_ m = withRef menu_ $ \menu_Ptr -> withRef m $ \mPtr -> copy' menu_Ptr mPtr
 
+insertMenuItem ::
+  (Parent a MenuPrim) =>
+  Ref MenuPrim ->
+  Int ->
+  String ->
+  Maybe Shortcut ->
+  (Ref a -> IO ()) ->
+  MenuItemFlags ->
+  (Ptr () -> Int -> String -> CInt -> FunPtr CallbackWithUserDataPrim -> Int -> IO Int) ->
+  (Ptr () -> Int -> String  -> String -> FunPtr CallbackWithUserDataPrim -> Int -> IO Int) ->
+  IO (MenuItemIndex)
+insertMenuItem menu_ index' name shortcut cb flags insertWithFlags'' insertWithShortcutnameFlags'' =
+  withRef menu_ $ \menu_Ptr -> do
+    let combinedFlags = menuItemFlagsToInt flags
+    ptr <- toCallbackPrim cb
+    idx' <- case shortcut of
+             Just s' -> case s' of
+               KeySequence (ShortcutKeySequence modifiers char) ->
+                 insertWithFlags''
+                  menu_Ptr
+                  index'
+                  name
+                  (keySequenceToCInt modifiers char)
+                  (castFunPtr ptr)
+                  combinedFlags
+               KeyFormat format' ->
+                 if (not $ null format') then
+                   insertWithShortcutnameFlags''
+                     menu_Ptr
+                     index'
+                     name
+                     format'
+                     (castFunPtr ptr)
+                     combinedFlags
+                 else error "Fl_Menu_.menu_insert: shortcut format string cannot be empty"
+             Nothing ->
+               insertWithFlags''
+                 menu_Ptr
+                 index'
+                 name
+                 0
+                 (castFunPtr ptr)
+                 combinedFlags
+    return (MenuItemIndex idx')
+
 {# fun Fl_Menu__insert_with_flags as insertWithFlags' { id `Ptr ()',`Int',unsafeToCString `String',id `CInt',id `FunPtr CallbackWithUserDataPrim',`Int'} -> `Int' #}
 {# fun Fl_Menu__insert_with_shortcutname_flags as insertWithShortcutnameFlags' { id `Ptr ()',`Int',unsafeToCString `String', unsafeToCString `String',id `FunPtr CallbackWithUserDataPrim',`Int' } -> `Int' #}
 instance (Parent a MenuPrim, impl ~ ( Int -> String -> Maybe Shortcut -> (Ref a -> IO ()) -> MenuItemFlags -> IO (MenuItemIndex))) => Op (Insert ()) MenuPrim orig impl where
-  runOp _ _ menu_ index' name shortcut cb flags =
-    withRef menu_ $ \menu_Ptr -> do
-      let combinedFlags = menuItemFlagsToInt flags
-      ptr <- toCallbackPrim cb
-      idx' <- case shortcut of
-               Just s' -> case s' of
-                 KeySequence (ShortcutKeySequence modifiers char) ->
-                   insertWithFlags'
-                    menu_Ptr
-                    index'
-                    name
-                    (keySequenceToCInt modifiers char)
-                    (castFunPtr ptr)
-                    combinedFlags
-                 KeyFormat format' ->
-                   if (not $ null format') then
-                     insertWithShortcutnameFlags'
-                       menu_Ptr
-                       index'
-                       name
-                       format'
-                       (castFunPtr ptr)
-                       combinedFlags
-                   else error "Fl_Menu_.menu_insert: shortcut format string cannot be empty"
-               Nothing ->
-                 insertWithFlags'
-                   menu_Ptr
-                   index'
-                   name
-                   0
-                   (castFunPtr ptr)
-                   combinedFlags
-      return (MenuItemIndex idx')
+  runOp _ _ menu_ index' name shortcut cb flags = insertMenuItem menu_ index' name shortcut cb flags insertWithFlags' insertWithShortcutnameFlags'
+
 {# fun Fl_Menu__add_with_name as add' { id `Ptr ()',unsafeToCString `String'} -> `()' #}
 instance (impl ~ (String -> IO ())) => Op (AddName ()) MenuPrim orig impl where
   runOp _ _ menu_ name' = withRef menu_ $ \menu_Ptr -> add' menu_Ptr name'
@@ -200,35 +215,8 @@ instance (impl ~ (String -> IO ())) => Op (AddName ()) MenuPrim orig impl where
 {# fun Fl_Menu__add_with_shortcutname_flags as addWithShortcutnameFlags' { id `Ptr ()', unsafeToCString `String', unsafeToCString `String',id `FunPtr CallbackWithUserDataPrim',`Int' } -> `Int' #}
 instance (Parent a MenuItem, impl ~ ( String -> Maybe Shortcut -> Maybe (Ref a-> IO ()) -> MenuItemFlags -> IO (MenuItemIndex))) => Op (Add ()) MenuPrim orig (impl) where
   runOp _ _ menu_ name shortcut cb flags =
-    withRef menu_ $ \menu_Ptr -> do
-      let combinedFlags = menuItemFlagsToInt flags
-      ptr <- maybe (return (castPtrToFunPtr nullPtr)) toCallbackPrim cb
-      idx' <- case shortcut of
-               Just s' -> case s' of
-                 KeySequence (ShortcutKeySequence modifiers char) ->
-                   addWithFlags'
-                    menu_Ptr
-                    name
-                    (keySequenceToCInt modifiers char)
-                    (castFunPtr ptr)
-                    combinedFlags
-                 KeyFormat format' ->
-                   if (not $ null format') then
-                     addWithShortcutnameFlags'
-                     menu_Ptr
-                     name
-                     format'
-                     (castFunPtr ptr)
-                     combinedFlags
-                   else error "Fl_Menu_.menu_add: Shortcut format string cannot be empty"
-               Nothing ->
-                   addWithFlags'
-                    menu_Ptr
-                    name
-                    0
-                    (castFunPtr ptr)
-                    combinedFlags
-      return (MenuItemIndex idx')
+    addMenuItem (Left menu_) name shortcut cb flags addWithFlags' addWithShortcutnameFlags'
+
 {# fun Fl_Menu__size as size' { id `Ptr ()' } -> `Int' #}
 instance (impl ~ ( IO (Int))) => Op (GetSize ()) MenuPrim orig impl where
   runOp _ _ menu_ = withRef menu_ $ \menu_Ptr -> size' menu_Ptr

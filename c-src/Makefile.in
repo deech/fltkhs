@@ -86,6 +86,7 @@ CPPFILES= \
 	fl_show_colormapC.cpp \
 	Fl_Single_WindowC.cpp \
 	Fl_SliderC.cpp \
+	Fl_Menu_BarC.cpp \
 	Fl_Sys_Menu_BarC.cpp \
 	Fl_TableC.cpp \
 	Fl_Table_RowC.cpp \

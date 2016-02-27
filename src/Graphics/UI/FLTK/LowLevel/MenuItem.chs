@@ -3,6 +3,7 @@
 module Graphics.UI.FLTK.LowLevel.MenuItem
   (
    menuItemNew,
+   addMenuItem,
    MenuItemIndex(..),
    MenuItemName(..),
    MenuItemPointer(..),
@@ -235,40 +236,59 @@ instance (Parent a MenuItem, impl ~ (Maybe Int -> Bool -> IO (Maybe (Ref a)))) =
 instance (impl ~ (Ref Widget  ->  IO ())) => Op (DoCallback ()) MenuItem orig impl where
   runOp _ _ menu_item o = withRef menu_item $ \menu_itemPtr -> withRef o $ \oPtr -> doCallback' menu_itemPtr oPtr
 
+addMenuItem ::
+  (Parent menuItem MenuItem) =>
+  Either (Ref MenuPrim) (Ref MenuItem) ->
+  String ->
+  Maybe Shortcut ->
+  Maybe (Ref menuItem -> IO ()) ->
+  MenuItemFlags ->
+  (Ptr () -> String -> CInt -> FunPtr CallbackWithUserDataPrim -> Int -> IO Int) ->
+  (Ptr () -> String -> String -> FunPtr CallbackWithUserDataPrim -> Int -> IO Int) ->
+  IO (MenuItemIndex)
+addMenuItem refMenuOrMenuItem name shortcut cb flags addWithFlags addWithShortcutnameFlags =
+     either
+       (\menu -> withRef menu (go "Menu_.add: Shortcut format string cannot be empty" ))
+       (\menuItem -> withRef menuItem (go "MenuItem.add: Shortcut format string cannot be empty"))
+       refMenuOrMenuItem
+    where
+      go :: String -> Ptr () -> IO MenuItemIndex
+      go errorMsg menu_Ptr = do
+        let combinedFlags = menuItemFlagsToInt flags
+        ptr <- maybe (return (castPtrToFunPtr nullPtr)) toCallbackPrim cb
+        idx' <- case shortcut of
+                 Just s' -> case s' of
+                   KeySequence (ShortcutKeySequence modifiers char) ->
+                     addWithFlags
+                      menu_Ptr
+                      name
+                      (keySequenceToCInt modifiers char)
+                      (castFunPtr ptr)
+                      combinedFlags
+                   KeyFormat format' ->
+                     if (not $ null format') then
+                       addWithShortcutnameFlags
+                       menu_Ptr
+                       name
+                       format'
+                       (castFunPtr ptr)
+                       combinedFlags
+                     else error errorMsg
+                 Nothing ->
+                     addWithFlags
+                      menu_Ptr
+                      name
+                      0
+                      (castFunPtr ptr)
+                      combinedFlags
+        return (MenuItemIndex idx')
+
 {# fun Fl_Menu_Item_insert_with_flags as insertWithFlags' { id `Ptr ()',`Int', unsafeToCString `String',id `CInt',id `FunPtr CallbackWithUserDataPrim',`Int'} -> `Int' #}
 {# fun Fl_Menu_Item_add_with_flags as addWithFlags' { id `Ptr ()', unsafeToCString `String',id `CInt',id `FunPtr CallbackWithUserDataPrim',`Int'} -> `Int' #}
 {# fun Fl_Menu_Item_add_with_shortcutname_flags as addWithShortcutnameFlags' { id `Ptr ()', unsafeToCString `String', unsafeToCString `String',id `FunPtr CallbackWithUserDataPrim',`Int' } -> `Int' #}
 instance (Parent a MenuItem, impl ~ (String -> Maybe Shortcut -> Maybe (Ref a -> IO ()) -> MenuItemFlags -> IO (MenuItemIndex))) => Op (Add ()) MenuItem orig impl where
   runOp _ _ menu_item name shortcut cb flags =
-    withRef menu_item $ \menu_itemPtr -> do
-      let combinedFlags = menuItemFlagsToInt flags
-      ptr <- maybe (return nullFunPtr) toCallbackPrim cb
-      idx' <- case shortcut of
-               Just s' -> case s' of
-                 KeySequence (ShortcutKeySequence modifiers char) ->
-                   addWithFlags'
-                     menu_itemPtr
-                     name
-                     (keySequenceToCInt modifiers char)
-                     (castFunPtr ptr)
-                     combinedFlags
-                 KeyFormat format' ->
-                   if (not $ null format') then
-                     addWithShortcutnameFlags'
-                       menu_itemPtr
-                       name
-                       format'
-                       (castFunPtr ptr)
-                       combinedFlags
-                   else error "menuItemAdd: shortcut format string cannot be empty"
-               Nothing ->
-                  addWithFlags'
-                    menu_itemPtr
-                    name
-                    0
-                    (castFunPtr ptr)
-                    combinedFlags
-      return (MenuItemIndex idx')
+    addMenuItem (Right menu_item) name shortcut cb flags addWithFlags' addWithShortcutnameFlags'
 
 instance (Parent a MenuItem, impl ~ (Int -> String -> Maybe ShortcutKeySequence -> (Ref a -> IO ()) -> MenuItemFlags -> IO (MenuItemIndex))) => Op (Insert ()) MenuItem orig impl where
   runOp _ _ menu_item index' name ks cb flags =

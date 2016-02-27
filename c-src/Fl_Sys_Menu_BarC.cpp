@@ -321,6 +321,10 @@ EXPORT {
     C_to_Fl_Callback* callback_interceptor = new C_to_Fl_Callback(cb);
     return callback_interceptor->menu_insert((static_cast<Fl_Sys_Menu_Bar*>(sys_menu_bar)),index,name,shortcut, flags);
   }
+  FL_EXPORT_C(int,Fl_Sys_Menu_Bar_insert_with_shortcutname_flags)(fl_Sys_Menu_Bar menu_,int index,char* name,char* shortcut,fl_Callback* cb,int flags){
+    C_to_Fl_Callback* callback_interceptor = new C_to_Fl_Callback(cb);
+    return callback_interceptor->menu_insert((static_cast<Fl_Sys_Menu_Bar*>(menu_)),index, name,shortcut,flags);
+  }
   FL_EXPORT_C(int,Fl_Sys_Menu_Bar_insert_with_user_data_flags)(fl_Sys_Menu_Bar sys_menu_bar,int index,char* name,int shortcut,fl_Callback* cb,void* user_data,int flags){
     C_to_Fl_Callback* callback_interceptor = new C_to_Fl_Callback(cb, user_data);
     return callback_interceptor->menu_insert((static_cast<Fl_Sys_Menu_Bar*>(sys_menu_bar)),index,name,shortcut,flags);
@@ -332,6 +336,9 @@ EXPORT {
   FL_EXPORT_C(int,Fl_Sys_Menu_Bar_add_with_user_data)(fl_Sys_Menu_Bar sys_menu_bar,char* name,int shortcut,fl_Callback* cb,void* user_data){
     C_to_Fl_Callback* callback_interceptor = new C_to_Fl_Callback(cb, user_data);
     return callback_interceptor->menu_add((static_cast<Fl_Sys_Menu_Bar*>(sys_menu_bar)),name,shortcut,0);
+  }
+  FL_EXPORT_C(int, Fl_Sys_Menu_Bar_add_with_name)(fl_Sys_Menu_Bar menu_,  char* name){
+    return (static_cast<Fl_Sys_Menu_Bar*>(menu_))->add(name);
   }
   FL_EXPORT_C(int,Fl_Sys_Menu_Bar_add_with_flags)(fl_Sys_Menu_Bar sys_menu_bar,char* name,int shortcut,fl_Callback* cb,int flags){
     C_to_Fl_Callback* callback_interceptor = new C_to_Fl_Callback(cb);

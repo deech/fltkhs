@@ -7,7 +7,6 @@
 #include "FL/Fl.H"
 #include "FL/Fl_Sys_Menu_Bar.H"
 #include "Fl_CallbackC.h"
-#include "Fl_Menu_C.h"
 EXPORT {
 #endif
   /* Inherited from Fl_Widget */

@@ -529,6 +529,8 @@ module Graphics.UI.FLTK.LowLevel.Hierarchy
          setTextcolor,
          DownBox,
          downBox,
+         -- * MenuBar
+         MenuBar,
          -- * SysMenuBar
          SysMenuBar,
          -- * Choice,
@@ -2290,8 +2292,17 @@ MAKE_METHOD(GetTextcolor,getTextcolor)
 MAKE_METHOD(SetTextcolor,setTextcolor)
 MAKE_METHOD(DownBox,downBox)
 
+data CMenuBar parent
+type MenuBar = CMenuBar MenuPrim
+type MenuBarFuncs =
+  (Destroy
+  (Handle
+  ()))
+type instance Functions MenuBar = MenuBarFuncs
+
+
 data CSysMenuBar parent
-type SysMenuBar = CSysMenuBar MenuPrim
+type SysMenuBar = CSysMenuBar MenuBar
 type SysMenuBarFuncs =
   (Destroy
   (SetMenu
@@ -2305,7 +2316,10 @@ type SysMenuBarFuncs =
   (GetMode
   (SetShortcut
   (Handle
-  ()))))))))))))
+  (Add
+  (AddName
+  (Insert
+  ())))))))))))))))
 
 type instance Functions SysMenuBar = SysMenuBarFuncs
 
@@ -3094,7 +3108,9 @@ type ClockFuncs =
   (GetValue
   (GetValueSinceEpoch
   (SetValue
-  ()))))
+  (SetType
+  (GetType_
+  ()))))))
 
 
 type instance Functions Clock = ClockFuncs

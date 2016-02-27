@@ -456,6 +456,7 @@ EXPORT {
   typedef void* fl_Single_Window;
   typedef void* fl_Slider;
   typedef void* fl_Spinner;
+  typedef void* fl_Menu_Bar;
   typedef void* fl_Sys_Menu_Bar;
   typedef void* fl_Table;
   typedef void* fl_Table_Row;

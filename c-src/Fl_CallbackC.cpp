@@ -85,6 +85,24 @@ int C_to_Fl_Callback::menu_insert(Fl_Menu_* menu_, int index, char* name, char* 
     return menu_->insert(index,name,shortcut,NULL,p,flags);
   }
 }
+int C_to_Fl_Callback::menu_insert(Fl_Sys_Menu_Bar* menu_, int index, char* name, int shortcut, int flags){
+  if (this->callback) {
+    return menu_->insert(index,name,shortcut,intercept,this,flags);
+  }
+  else {
+    void* p = 0;
+    return menu_->insert(index,name,shortcut,NULL,p,flags);
+  }
+}
+int C_to_Fl_Callback::menu_insert(Fl_Sys_Menu_Bar* menu_, int index, char* name, char* shortcut, int flags){
+  if (this->callback) {
+    return menu_->insert(index,name,shortcut,intercept,this,flags);
+  }
+  else {
+    void* p = 0;
+    return menu_->insert(index,name,shortcut,NULL,p,flags);
+  }
+}
 int C_to_Fl_Callback::menu_add(Fl_Menu_Item* item, char* name, int shortcut, int flags){
   if (this->callback) {
     return item->add(name, shortcut, intercept, this, flags);
@@ -113,6 +131,24 @@ int C_to_Fl_Callback::menu_add(Fl_Menu_* menu_, char* name, char* shortcut, int 
   }
 }
 int C_to_Fl_Callback::menu_add(Fl_Menu_* menu_, char* name, int shortcut, int flags){
+  if (this->callback) {
+    return menu_->add(name,shortcut,intercept,this,flags);
+  }
+  else {
+    void* p = 0;
+    return menu_->add(name,shortcut,NULL,p,flags);
+  }
+}
+int C_to_Fl_Callback::menu_add(Fl_Sys_Menu_Bar* menu_, char* name, char* shortcut, int flags){
+  if (this->callback) {
+    return menu_->add(name,shortcut,intercept,this,flags);
+  }
+  else {
+    void* p = 0;
+    return menu_->add(name,shortcut,NULL,p,flags);
+  }
+}
+int C_to_Fl_Callback::menu_add(Fl_Sys_Menu_Bar* menu_, char* name, int shortcut, int flags){
   if (this->callback) {
     return menu_->add(name,shortcut,intercept,this,flags);
   }

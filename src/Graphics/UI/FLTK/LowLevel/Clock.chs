@@ -39,7 +39,7 @@ enum ClockType {
   DigitalClock = FL_DIGITAL_CLOCK
 };
 #endc
-{# enum ClockType {} #}
+{# enum ClockType {} deriving (Show) #}
 newtype Hour = Hour Int
 newtype Minute = Minute Int
 newtype Second = Second Int
@@ -89,6 +89,14 @@ instance (impl ~ (IO ClockByTime)) => Op (GetValue ()) Clock orig impl where
 {#fun Fl_Clock_handle as menu_Handle' { id `Ptr ()', id `CInt' } -> `Int' #}
 instance (impl ~ (Event -> IO Int)) => Op (Handle ()) Clock orig impl where
   runOp _ _ menu_ event = withRef menu_ (\p -> menu_Handle' p (fromIntegral . fromEnum $ event))
+
+{# fun Fl_Clock_set_type as setType' { id `Ptr ()',`Word8' } -> `()' #}
+instance (impl ~ (ClockType ->  IO ())) => Op (SetType ()) Clock orig impl where
+  runOp _ _ clock type'' = withRef clock $ \clockPtr -> setType' clockPtr (fromIntegral (fromEnum type''))
+
+{# fun Fl_Clock_type as type' { id `Ptr ()' } -> `Word8' #}
+instance (impl ~ ( IO (ClockType))) => Op (GetType_ ()) Clock orig impl where
+   runOp _ _ clock = withRef clock $ \clockPtr -> type' clockPtr >>= return . toEnum . fromIntegral
 
 -- $Clockfunctions
 --

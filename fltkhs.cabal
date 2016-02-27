@@ -55,6 +55,7 @@ library
                    Graphics.UI.FLTK.LowLevel.Browser
                    Graphics.UI.FLTK.LowLevel.SelectBrowser
                    Graphics.UI.FLTK.LowLevel.SysMenuBar
+                   Graphics.UI.FLTK.LowLevel.MenuBar
                    Graphics.UI.FLTK.LowLevel.Choice
                    Graphics.UI.FLTK.LowLevel.MenuButton
                    Graphics.UI.FLTK.LowLevel.Image
