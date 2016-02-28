@@ -46,3 +46,27 @@ instance (impl ~ (IO ())) => Op (Destroy ()) MenuBar orig impl where
 {#fun Fl_Menu_Bar_handle as menuBarHandle' { id `Ptr ()', id `CInt' } -> `Int' #}
 instance (impl ~ (Event -> IO Int)) => Op (Handle ()) MenuBar orig impl where
   runOp _ _ menuBar event = withRef menuBar (\p -> menuBarHandle' p (fromIntegral . fromEnum $ event))
+
+
+-- $functions
+--
+-- @
+--
+-- destroy :: 'Ref' 'MenuBar' -> 'IO' ()
+--
+-- handle :: 'Ref' 'MenuBar' -> 'Event' -> 'IO' 'Int'
+--
+-- @
+
+-- $hierarchy
+--
+-- @
+-- "Graphics.UI.FLTK.LowLevel.Widget"
+--  |
+--  v
+-- "Graphics.UI.FLTK.LowLevel.MenuPrim"
+--  |
+--  v
+-- "Graphics.UI.FLTK.LowLevel.MenuBar"
+--
+-- @

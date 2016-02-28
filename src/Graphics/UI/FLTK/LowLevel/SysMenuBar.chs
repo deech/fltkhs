@@ -95,6 +95,10 @@ instance (Parent a MenuPrim, impl ~ ( Int -> String -> Maybe Shortcut -> (Ref a 
 -- $functions
 -- @
 --
+-- add:: ('Parent' a 'MenuItem') => 'Ref' 'SysMenuBar' -> 'String' -> 'Maybe' 'Shortcut' -> 'Maybe' ('Ref' a-> 'IO' ()) -> 'MenuItemFlags' -> 'IO' ('MenuItemIndex')
+--
+-- addName :: 'Ref' 'SysMenuBar' -> 'String' -> 'IO' ()
+--
 -- clear :: 'Ref' 'SysMenuBar' -> 'IO' ()
 --
 -- clearSubmenu :: 'Ref' 'SysMenuBar' -> 'Int' -> 'IO' ('Int')
@@ -106,6 +110,8 @@ instance (Parent a MenuPrim, impl ~ ( Int -> String -> Maybe Shortcut -> (Ref a 
 -- global :: 'Ref' 'SysMenuBar' -> 'IO' ()
 --
 -- handle :: 'Ref' 'SysMenuBar' -> 'Event' -> 'IO' 'Int'
+--
+-- insert:: ('Parent' a 'MenuPrim') => 'Ref' 'SysMenuBar' -> 'Int' -> 'String' -> 'Maybe' 'Shortcut' -> ('Ref' a -> 'IO' ()) -> 'MenuItemFlags' -> 'IO' ('MenuItemIndex')
 --
 -- remove :: 'Ref' 'SysMenuBar' -> 'Int' -> 'IO' ()
 --
@@ -127,5 +133,9 @@ instance (Parent a MenuPrim, impl ~ ( Int -> String -> Maybe Shortcut -> (Ref a 
 -- "Graphics.UI.FLTK.LowLevel.MenuPrim"
 --  |
 --  v
+-- "Graphics.UI.FLTK.LowLevel.MenuBar"
+--  |
+--  v
 -- "Graphics.UI.FLTK.LowLevel.SysMenuBar"
+--
 -- @
