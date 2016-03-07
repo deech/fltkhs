@@ -343,7 +343,7 @@ widgetTreeG menuName widgetTree =
                      (foldl
                         (\(takenNames', outputSoFar) tree ->
                            let (output, newNames) = runState (widgetTreeG
-                                                               (case hsClassName of {
+                                                               (case flClassName of {
                                                                   "Submenu" -> menuName;
                                                                   _ -> (Just newName)
                                                                 })
@@ -353,7 +353,7 @@ widgetTreeG menuName widgetTree =
                         (names, [])
                         trees)
               modify (\ns -> concatTakenNames ns newNames)
-              let code = (case hsClassName of
+              let code = (case flClassName of
                            "Submenu" ->
                               case menuName of
                                 Just mn ->

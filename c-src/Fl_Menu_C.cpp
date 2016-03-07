@@ -116,31 +116,31 @@ EXPORT {
     return ptr;
   }
   FL_EXPORT_C(int,Fl_Menu__handle_super )(fl_Menu_ menu_,int event){
-    return (static_cast<Fl_Menu_*>(menu_))->handle(event);
+    return (static_cast<Fl_Menu_*>(menu_))->Fl_Menu_::handle(event);
   }
   FL_EXPORT_C(int,Fl_Menu__handle )(fl_Menu_ menu_, int event){
     return (static_cast<Fl_DerivedMenu_*>(menu_))->handle(event);
   }
   FL_EXPORT_C(void,Fl_Menu__resize_super )(fl_Menu_ menu_,int x, int y, int w, int h){
-    (static_cast<Fl_Menu_*>(menu_))->resize(x,y,w,h);
+    (static_cast<Fl_Menu_*>(menu_))->Fl_Menu_::resize(x,y,w,h);
   }
   FL_EXPORT_C(void,Fl_Menu__resize )(fl_Menu_ menu_,int x, int y, int w, int h){
     (static_cast<Fl_DerivedMenu_*>(menu_))->resize(x,y,w,h);
   }
   FL_EXPORT_C(void,Fl_Menu__show_super)(fl_Menu_ menu_){
-    (static_cast<Fl_Menu_*>(menu_))->show();
+    (static_cast<Fl_Menu_*>(menu_))->Fl_Menu_::show();
   }
   FL_EXPORT_C(void,Fl_Menu__show )(fl_Menu_ menu_){
     (static_cast<Fl_DerivedMenu_*>(menu_))->show();
   }
   FL_EXPORT_C(void,Fl_Menu__hide_super)(fl_Menu_ menu_){
-    (static_cast<Fl_Menu_*>(menu_))->hide();
+    (static_cast<Fl_Menu_*>(menu_))->Fl_Menu_::hide();
   }
   FL_EXPORT_C(void,Fl_Menu__hide )(fl_Menu_ menu_){
     (static_cast<Fl_DerivedMenu_*>(menu_))->hide();
   }
   FL_EXPORT_C(fl_Window,Fl_Menu__as_window_super)(fl_Menu_ menu_){
-    return (fl_Window)(static_cast<Fl_Menu_*>(menu_))->as_window();
+    return (fl_Window)(static_cast<Fl_Menu_*>(menu_))->Fl_Menu_::as_window();
   }
   FL_EXPORT_C(fl_Window,Fl_Menu__as_window )(fl_Menu_ menu_){
     return (fl_Window)(static_cast<Fl_DerivedMenu_*>(menu_))->as_window();
@@ -152,7 +152,7 @@ EXPORT {
     return (fl_Group)(static_cast<Fl_DerivedMenu_*>(menu_))->as_group();
   }
   FL_EXPORT_C(fl_Gl_Window,Fl_Menu__as_gl_window_super)(fl_Menu_ menu_){
-    return (fl_Gl_Window) (static_cast<Fl_Menu_*>(menu_))->as_gl_window();
+    return (fl_Gl_Window) (static_cast<Fl_Menu_*>(menu_))->Fl_Menu_::as_gl_window();
   }
   FL_EXPORT_C(fl_Gl_Window,Fl_Menu__as_gl_window )(fl_Menu_ menu_){
     return (fl_Gl_Window) (static_cast<Fl_DerivedMenu_*>(menu_))->as_gl_window();

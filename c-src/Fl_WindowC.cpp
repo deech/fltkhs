@@ -593,19 +593,19 @@ FL_EXPORT_C(fl_Window, Fl_OverriddenWindow_NewXY_WithLabel)(int x, int y, int w,
     (static_cast<Fl_DerivedWindow*>(window))->draw_super();
   };
   FL_EXPORT_C(int,  Fl_Window_handle_super)(fl_Window window, int event){
-    return (static_cast<Fl_Window*>(window))->handle(event);
+    return (static_cast<Fl_Window*>(window))->Fl_Window::handle(event);
   };
   FL_EXPORT_C(fl_Group,  Fl_Window_as_group_super)(fl_Window window){
-    return (fl_Group)(static_cast<Fl_Window*>(window))->as_group();
+    return (fl_Group)(static_cast<Fl_Window*>(window))->Fl_Window::as_group();
   };
   FL_EXPORT_C(void, Fl_Window_resize_super)(fl_Window window, int x, int y, int w, int h){
-    (static_cast<Fl_Window*>(window))->resize(x, y, w, h);
+    (static_cast<Fl_Window*>(window))->Fl_Window::resize(x, y, w, h);
   };
   FL_EXPORT_C(void, Fl_Window_show_super)(fl_Window window){
-    (static_cast<Fl_Window*>(window))->show();
+    (static_cast<Fl_Window*>(window))->Fl_Window::show();
   };
   FL_EXPORT_C(void, Fl_Window_hide_super)(fl_Window window){
-    (static_cast<Fl_Window*>(window))->hide();
+    (static_cast<Fl_Window*>(window))->Fl_Window::hide();
   };
   FL_EXPORT_C(void, Fl_Window_flush_super)(fl_Window window){
     (static_cast<Fl_DerivedWindow*>(window))->flush_super();

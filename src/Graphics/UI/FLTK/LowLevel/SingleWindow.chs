@@ -73,8 +73,8 @@ instance (impl ~ ( IO ())) => Op (DrawSuper ()) SingleWindow orig impl where
   runOp _ _ window = withRef window $ \windowPtr -> drawSuper' windowPtr
 
 {# fun Fl_Single_Window_handle_super as handleSuper' { id `Ptr ()',`Int' } -> `Int' #}
-instance (impl ~ (Int ->  IO (Int))) => Op (HandleSuper ()) SingleWindow orig impl where
-  runOp _ _ window event = withRef window $ \windowPtr -> handleSuper' windowPtr event
+instance (impl ~ (Event ->  IO (Int))) => Op (HandleSuper ()) SingleWindow orig impl where
+  runOp _ _ window event = withRef window $ \windowPtr -> handleSuper' windowPtr (fromIntegral (fromEnum event))
 
 {# fun Fl_Single_Window_resize_super as resizeSuper' { id `Ptr ()',`Int',`Int',`Int',`Int' } -> `()' supressWarningAboutRes #}
 instance (impl ~ (Rectangle -> IO ())) => Op (ResizeSuper ()) SingleWindow orig impl where

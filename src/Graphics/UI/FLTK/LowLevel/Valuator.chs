@@ -65,9 +65,18 @@ instance (impl ~ (IO ())) => Op (Destroy ()) Valuator orig impl where
   runOp _ _ win = swapRef win $ \winPtr -> do
                                         valuatorDestroy' winPtr
                                         return nullPtr
+{# fun Fl_Valuator_hide as hide' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
+instance (impl ~ (( IO ()))) => Op (Hide ()) Valuator orig impl where
+  runOp _ _ button = withRef button $ \buttonPtr -> hide' buttonPtr
+{# fun Fl_Valuator_hide_super as hideSuper' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
+instance (impl ~ (( IO ()))) => Op (HideSuper ()) Valuator orig impl where
+  runOp _ _ button = withRef button $ \buttonPtr -> hideSuper' buttonPtr
 {#fun Fl_Valuator_handle as valuatorHandle' { id `Ptr ()', id `CInt' } -> `Int' #}
 instance (impl ~ (Event -> IO Int)) => Op (Handle ()) Valuator orig impl where
   runOp _ _ valuator event = withRef valuator (\p -> valuatorHandle' p (fromIntegral . fromEnum $ event))
+{#fun Fl_Valuator_handle_super as valuatorHandleSuper' { id `Ptr ()', id `CInt' } -> `Int' #}
+instance (impl ~ (Event -> IO Int)) => Op (HandleSuper ()) Valuator orig impl where
+  runOp _ _ valuator event = withRef valuator (\p -> valuatorHandleSuper' p (fromIntegral . fromEnum $ event))
 {# fun Fl_Valuator_resize_super as resizeSuper' { id `Ptr ()',`Int',`Int',`Int',`Int' } -> `()' supressWarningAboutRes #}
 instance (impl ~ (Rectangle ->  IO ())) => Op (ResizeSuper ()) Valuator orig impl where
   runOp _ _ valuator rectangle = withRef valuator $ \valuatorPtr -> do

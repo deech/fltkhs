@@ -22,6 +22,7 @@ import Graphics.UI.FLTK.LowLevel.Fl_Types
 import Graphics.UI.FLTK.LowLevel.Utils
 import Graphics.UI.FLTK.LowLevel.Hierarchy
 import Graphics.UI.FLTK.LowLevel.Dispatch
+import Graphics.UI.FLTK.LowLevel.Fl_Enumerations
 
 {# fun Fl_Scroll_New as scrollNew' { `Int',`Int',`Int',`Int' } -> `Ptr ()' id #}
 {# fun Fl_Scroll_New_WithLabel as scrollNewWithLabel' { `Int',`Int',`Int',`Int', unsafeToCString `String'} -> `Ptr ()' id #}
@@ -61,8 +62,8 @@ instance (impl ~ (ScrollbarMode ->  IO ())) => Op (SetType ()) Scrolled orig imp
 instance (impl ~ (Rectangle ->  IO ())) => Op (Resize ()) Scrolled orig impl where
    runOp _ _ widget rectangle = let (x_pos', y_pos', width', height') = fromRectangle rectangle in withRef widget $ \scrollPtr -> resize' scrollPtr x_pos' y_pos' width' height'
 {# fun Fl_Scroll_handle as handle' { id `Ptr ()',`Int' } -> `Int' #}
-instance (impl ~ (Int ->  IO (Int))) => Op (Handle ()) Scrolled orig impl where
-   runOp _ _ widget event = withRef widget $ \scrollPtr -> handle' scrollPtr event
+instance (impl ~ (Event ->  IO (Int))) => Op (Handle ()) Scrolled orig impl where
+   runOp _ _ widget event = withRef widget $ \scrollPtr -> handle' scrollPtr (fromIntegral (fromEnum event))
 
 -- $hierarchy
 -- @

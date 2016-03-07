@@ -329,10 +329,10 @@ FL_EXPORT_C(void, Fl_Browser_draw_label)(fl_Browser Browser){
     return (static_cast<Fl_DerivedBrowser*>(browser))->visible_r();
   }
   FL_EXPORT_C(void,Fl_Browser_show_super)(fl_Browser browser){
-    return (static_cast<Fl_Browser*>(browser))->show();
+    return (static_cast<Fl_Browser*>(browser))->Fl_Browser::show();
   }
   FL_EXPORT_C(void,Fl_Browser_hide_super)(fl_Browser browser){
-    return (static_cast<Fl_Browser*>(browser))->hide();
+    return (static_cast<Fl_Browser*>(browser))->Fl_Browser::hide();
   }
   FL_EXPORT_C(void,Fl_Browser_clear_visible)(fl_Browser browser){
     (static_cast<Fl_DerivedBrowser*>(browser))->clear_visible();
@@ -425,13 +425,13 @@ FL_EXPORT_C(void, Fl_Browser_draw_label)(fl_Browser Browser){
     return (fl_Window) (static_cast<Fl_DerivedBrowser*>(browser))->top_window_offset(*xoff,*yoff);
   }
   FL_EXPORT_C(fl_Group,Fl_Browser_as_group_super)(fl_Browser browser){
-    return (fl_Group) (static_cast<Fl_Browser*>(browser))->as_group();
+    return (fl_Group) (static_cast<Fl_Browser*>(browser))->Fl_Browser::as_group();
   }
   FL_EXPORT_C(fl_Group,Fl_Browser_as_group)(fl_Browser browser){
     return (fl_Group) (static_cast<Fl_DerivedBrowser*>(browser))->as_group();
   }
   FL_EXPORT_C(fl_Gl_Window,Fl_Browser_as_gl_window_super)(fl_Browser browser){
-    return (fl_Gl_Window) (static_cast<Fl_Browser*>(browser))->as_gl_window();
+    return (fl_Gl_Window) (static_cast<Fl_Browser*>(browser))->Fl_Browser::as_gl_window();
   }
   FL_EXPORT_C(fl_Gl_Window,Fl_Browser_as_gl_window)(fl_Browser browser){
     return (fl_Gl_Window) (static_cast<Fl_DerivedBrowser*>(browser))->as_gl_window();

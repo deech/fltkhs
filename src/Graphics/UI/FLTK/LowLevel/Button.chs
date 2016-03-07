@@ -71,8 +71,8 @@ instance (impl ~ (( IO ()))) => Op (Destroy ()) Button orig impl where
 instance (impl ~ (( IO ()))) => Op (DrawSuper ()) Button orig impl where
   runOp _ _ button = withRef button $ \buttonPtr -> drawSuper' buttonPtr
 {# fun Fl_Button_handle_super as handleSuper' { id `Ptr ()',`Int' } -> `Int' #}
-instance (impl ~ ((Int ->  IO (Int)))) => Op (HandleSuper ()) Button orig impl where
-  runOp _ _ button event = withRef button $ \buttonPtr -> handleSuper' buttonPtr event
+instance (impl ~ ((Event ->  IO (Int)))) => Op (HandleSuper ()) Button orig impl where
+  runOp _ _ button event = withRef button $ \buttonPtr -> handleSuper' buttonPtr (fromIntegral (fromEnum event))
 {#fun Fl_Button_handle as buttonHandle' { id `Ptr ()', id `CInt' } -> `Int' #}
 instance (impl ~ ((Event -> IO Int))) => Op (Handle ()) Button orig impl where
   runOp _ _ button event = withRef button (\p -> buttonHandle' p (fromIntegral . fromEnum $ event))

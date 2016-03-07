@@ -130,37 +130,37 @@ EXPORT {
     (static_cast<Fl_DerivedButton*>(button))->draw_super();
   }
   FL_EXPORT_C(int,Fl_Button_handle_super )(fl_Button button,int event){
-    return (static_cast<Fl_Button*>(button))->handle(event);
+    return (static_cast<Fl_Button*>(button))->Fl_Button::handle(event);
   }
   FL_EXPORT_C(int,Fl_Button_handle )(fl_Button button, int event){
     return (static_cast<Fl_DerivedButton*>(button))->handle(event);
   }
   FL_EXPORT_C(void,Fl_Button_resize_super )(fl_Button button,int x, int y, int w, int h){
-    (static_cast<Fl_Button*>(button))->resize(x,y,w,h);
+    (static_cast<Fl_Button*>(button))->Fl_Button::resize(x,y,w,h);
   }
   FL_EXPORT_C(void,Fl_Button_resize )(fl_Button button,int x, int y, int w, int h){
     (static_cast<Fl_DerivedButton*>(button))->resize(x,y,w,h);
   }
   FL_EXPORT_C(void,Fl_Button_show_super)(fl_Button button){
-    (static_cast<Fl_Button*>(button))->show();
+    (static_cast<Fl_Button*>(button))->Fl_Button::show();
   }
   FL_EXPORT_C(void,Fl_Button_show )(fl_Button button){
     (static_cast<Fl_DerivedButton*>(button))->show();
   }
   FL_EXPORT_C(void,Fl_Button_hide_super)(fl_Button button){
-    (static_cast<Fl_Button*>(button))->hide();
+    (static_cast<Fl_Button*>(button))->Fl_Button::hide();
   }
   FL_EXPORT_C(void,Fl_Button_hide )(fl_Button button){
     (static_cast<Fl_DerivedButton*>(button))->hide();
   }
   FL_EXPORT_C(fl_Window,Fl_Button_as_window_super)(fl_Button button){
-    return (static_cast<Fl_Button*>(button))->as_window();
+    return (static_cast<Fl_Button*>(button))->Fl_Button::as_window();
   }
   FL_EXPORT_C(fl_Window,Fl_Button_as_window )(fl_Button button){
     return (static_cast<Fl_DerivedButton*>(button))->as_window();
   }
   FL_EXPORT_C(fl_Gl_Window,Fl_Button_as_gl_window_super)(fl_Button button){
-    return (fl_Gl_Window) (static_cast<Fl_Button*>(button))->as_gl_window();
+    return (fl_Gl_Window) (static_cast<Fl_Button*>(button))->Fl_Button::as_gl_window();
   }
   FL_EXPORT_C(fl_Gl_Window,Fl_Button_as_gl_window )(fl_Button button){
     return (fl_Gl_Window) (static_cast<Fl_DerivedButton*>(button))->as_gl_window();
@@ -443,7 +443,7 @@ FL_EXPORT_C(void, Fl_Button_draw_label)(fl_Button Button){
     return (fl_Group) (static_cast<Fl_DerivedButton*>(button))->as_group();
   }
   FL_EXPORT_C(fl_Group,Fl_Button_as_group_super)(fl_Button button){
-    return (fl_Group) (static_cast<Fl_Button*>(button))->as_group();
+    return (fl_Group) (static_cast<Fl_Button*>(button))->Fl_Button::as_group();
   }
   FL_EXPORT_C(void*, Fl_Button_other_data)(fl_Button button){
     return (static_cast<Fl_DerivedButton*>(button))->get_other_data();

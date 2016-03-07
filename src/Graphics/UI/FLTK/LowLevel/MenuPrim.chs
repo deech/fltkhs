@@ -62,8 +62,8 @@ instance (impl ~ (IO ())) => Op (Destroy ()) MenuPrim orig impl where
                              widgetDestroy' menu_Ptr >>
                              return nullPtr
 {# fun Fl_Menu__handle_super as handleSuper' { id `Ptr ()',`Int' } -> `Int' #}
-instance (impl ~ (Int ->  IO (Int))) => Op (HandleSuper ()) MenuPrim orig impl where
-  runOp _ _ menu_ event = withRef menu_ $ \menu_Ptr -> handleSuper' menu_Ptr event
+instance (impl ~ (Event ->  IO (Int))) => Op (HandleSuper ()) MenuPrim orig impl where
+  runOp _ _ menu_ event = withRef menu_ $ \menu_Ptr -> handleSuper' menu_Ptr (fromIntegral (fromEnum event))
 {#fun Fl_Menu__handle as menu_Handle' { id `Ptr ()', id `CInt' } -> `Int' #}
 instance (impl ~ (Event -> IO Int)) => Op (Handle ()) MenuPrim orig impl where
   runOp _ _ menu_ event = withRef menu_ (\p -> menu_Handle' p (fromIntegral . fromEnum $ event))
@@ -244,8 +244,8 @@ instance (impl ~ (Int -> ShortcutKeySequence ->  IO ())) => Op (SetShortcut ()) 
 instance (impl ~ (Int -> MenuItemFlags ->  IO ())) => Op (SetMode ()) MenuPrim orig impl where
   runOp _ _ menu_ i fl = withRef menu_ $ \menu_Ptr -> setMode' menu_Ptr i (menuItemFlagsToInt fl)
 {# fun Fl_Menu__mode as mode' { id `Ptr ()',`Int' } -> `Int' #}
-instance (impl ~ (Int ->  IO (Int))) => Op (GetMode ()) MenuPrim orig impl where
-  runOp _ _ menu_ i = withRef menu_ $ \menu_Ptr -> mode' menu_Ptr i
+instance (impl ~ (Int ->  IO (Maybe MenuItemFlags))) => Op (GetMode ()) MenuPrim orig impl where
+  runOp _ _ menu_ i = withRef menu_ $ \menu_Ptr -> mode' menu_Ptr i >>= return . intToMenuItemFlags
 {# fun Fl_Menu__mvalue as mvalue' { id `Ptr ()' } -> `Ptr ()' id #}
 instance (impl ~ (IO (Maybe (Ref MenuItem)))) => Op (Mvalue ()) MenuPrim orig impl where
   runOp _ _ menu_ = withRef menu_ $ \menu_Ptr -> mvalue' menu_Ptr >>= toMaybeRef

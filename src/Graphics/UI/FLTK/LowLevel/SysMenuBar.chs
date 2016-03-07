@@ -62,11 +62,11 @@ instance (impl ~ (Int -> ShortcutKeySequence ->  IO ())) => Op (SetShortcut ()) 
     withRef menu_ $ \menu_Ptr ->
         shortcut' menu_Ptr index' (keySequenceToCInt modifiers char)
 {# fun Fl_Sys_Menu_Bar_set_mode as setMode' { id `Ptr ()',`Int',`Int' } -> `()' #}
-instance (impl ~ (Int -> Int ->  IO ())) => Op (SetMode ()) SysMenuBar orig impl where
-  runOp _ _ menu_ i fl = withRef menu_ $ \menu_Ptr -> setMode' menu_Ptr i fl
+instance (impl ~ (Int -> MenuItemFlags ->  IO ())) => Op (SetMode ()) SysMenuBar orig impl where
+  runOp _ _ menu_ i fl = withRef menu_ $ \menu_Ptr -> setMode' menu_Ptr i (menuItemFlagsToInt fl)
 {# fun Fl_Sys_Menu_Bar_mode as mode' { id `Ptr ()',`Int' } -> `Int' #}
-instance (impl ~ (Int ->  IO (Int))) => Op (GetMode ()) SysMenuBar orig impl where
-  runOp _ _ menu_ i = withRef menu_ $ \menu_Ptr -> mode' menu_Ptr i
+instance (impl ~ (Int ->  IO (Maybe MenuItemFlags))) => Op (GetMode ()) SysMenuBar orig impl where
+  runOp _ _ menu_ i = withRef menu_ $ \menu_Ptr -> mode' menu_Ptr i >>= return . intToMenuItemFlags
 {# fun Fl_Sys_Menu_Bar_global as global' { id `Ptr ()' } -> `()' #}
 instance (impl ~ ( IO ())) => Op (Global ()) SysMenuBar orig impl where
   runOp _ _ menu_ = withRef menu_ $ \menu_Ptr -> global' menu_Ptr
