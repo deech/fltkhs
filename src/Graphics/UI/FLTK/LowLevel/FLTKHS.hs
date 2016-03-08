@@ -285,10 +285,6 @@ import Graphics.UI.FLTK.LowLevel.PNMImage
 -- (6) includes a lot of complete working demos so that the user can get up and running faster. (see note below)
 -- (7) comes with GUI builder support to alleviate the tedium of laying out widgets by hand
 --
--- __Note__: As of version 0.4.0.1, the demos have been moved into their own
--- package <http://hackage.haskell.org/fltkhs-demos fltkhs-demos> for reasons
--- outlined in the =Demos= section of this document.
-
 -- $FluidSupport
 --
 -- This package also comes with a utility (fltkhs-fluidtohs) that takes a user
@@ -834,8 +830,14 @@ import Graphics.UI.FLTK.LowLevel.PNMImage
 
 -- $Demos
 --
+-- __Update__: As of 0.4.0.7 the <http://github.com/deech/fltkhs-demos FLTKHS demos> and the
+-- <http://github.com/deech/fltkhs-fluid-demos FLUID demos> will only be updated on Github.
+-- It is a chore to keep the versions of the demos on Hackage in sync with the proper version
+-- of <http://hackage.haskell.org/package/fltkhs FLTKHS> and Stack makes them easier
+-- to install (and play with ) than with Cabal.
+--
 -- __Update__: As of version 0.4.0.1 all the demos have been moved to their own
--- package <http://hackage.haskell.org/fltkhs-demos fltkhs-demos>. This speeds
+-- package <http://hackage.haskell.org/package/fltkhs-demos fltkhs-demos>. This speeds
 -- up installation of this package significantly and also allows the examples to
 -- be run interactively with `cabal repl`. This was an issue pre-0.4.0.1 because
 -- the REPL needed to link against the C library containing the C++ bindings and
@@ -844,17 +846,17 @@ import Graphics.UI.FLTK.LowLevel.PNMImage
 -- @Setup.hs@ to make the library visible.
 --
 -- There are currently two sets of FLTKHS demos, the ones that are part of the
--- <http://hackage.haskell.org/fltkhs-demos fltkhs-demos> package and ones that
+-- <http://hackage.haskell.org/package/fltkhs-demos fltkhs-demos> package and ones that
 -- show off <http://hackage.haskell.org/package/fltkhs-fluid-demos Fluid>
 -- support.
 --
--- Please see the README in the <http://hackage.haskell.org/fltkhs-demos fltkhs-demos> package for more information.
+-- Please see the README in the <http://hackage.haskell.org/package/fltkhs-demos fltkhs-demos> package for more information.
 --
 
 -- $GettingStarted
 --
 -- It is assumed that by this point the user has successfully installed this
--- library and demos in <http://hackage.haskell.org/fltkhs-demos fltkhs-demos> (see
+-- library and demos in <http://hackage.haskell.org/package/fltkhs-demos fltkhs-demos> (see
 -- above).
 --
 --
@@ -1069,12 +1071,12 @@ import Graphics.UI.FLTK.LowLevel.PNMImage
 -- runtime performance issues. This is only a compile time problem.
 --
 -- To preserve the user's and the author's sanity a flag `fastCompile` has been
--- introduced to the <http://hackage.haskell.org/fltkhs-demos fltkhs-demos> and
--- to the <http://hackage.haskell.org/fltkhs-fluid-demos fltkhs-fluid-demos>.
+-- introduced to the <http://hackage.haskell.org/package/fltkhs-demos fltkhs-demos> and
+-- to the <http://hackage.haskell.org/package/fltkhs-fluid-demos fltkhs-fluid-demos>.
 -- This flag which tells the compiler to skip the specialising step when
 -- compiling executables, dramatically decreases compile time but also bloats
 -- the resulting executable size and probably makes runtime performance much
--- slower. In this package and <http://hackage.haskell.org/fltkhs-fluid-demos fltkhs-fluid-demos>
+-- slower. In this package and <http://hackage.haskell.org/package/fltkhs-fluid-demos fltkhs-fluid-demos>
 -- it is enabled by default, since the executables are just
 -- demos that are not meant to show off performance. To disable this flag, tell
 -- Stack to ignore it during the `build` step:
