@@ -69,6 +69,9 @@ instance (impl ~ (Int ->  IO ())) => Op (SetRowsSuper ()) TableRow orig impl whe
 {# fun Fl_Table_Row_set_cols_super as setColsSuper' { id `Ptr ()',`Int' } -> `()' #}
 instance (impl ~ (Int ->  IO ())) => Op (SetColsSuper ()) TableRow orig impl where
   runOp _ _ table val = withRef table $ \tablePtr -> setColsSuper' tablePtr val
+{# fun Fl_Table_Row_handle_super as handleSuper' { id `Ptr ()', cFromEnum `Event' } -> `Int' #}
+instance (impl ~ (Event ->  IO (Int))) => Op (HandleSuper ()) TableRow orig impl where
+   runOp _ _ table event = withRef table $ \tablePtr -> handleSuper' tablePtr event
 {# fun Fl_Table_Row_handle as handle' { id `Ptr ()', cFromEnum `Event' } -> `Int' #}
 instance (impl ~ (Event ->  IO (Int))) => Op (Handle ()) TableRow orig impl where
   runOp _ _ table event = withRef table $ \tablePtr -> handle' tablePtr event
@@ -94,7 +97,6 @@ instance (impl ~ ( TableRowSelectFlag -> IO ())) => Op (SelectAllRows ()) TableR
 
 -- $functions
 -- @
---
 -- clear :: 'Ref' 'TableRow' -> 'IO' ()
 --
 -- clearSuper :: 'Ref' 'TableRow' -> 'IO' ()
@@ -103,11 +105,13 @@ instance (impl ~ ( TableRowSelectFlag -> IO ())) => Op (SelectAllRows ()) TableR
 --
 -- getRowSelected :: 'Ref' 'TableRow' -> 'Int' -> 'IO' ('Either' 'OutOfRange' 'Bool')
 --
--- getRows :: 'Ref' 'TableRow' -> 'IO' 'Int'
+-- getRows :: 'Ref' 'TableRow' -> 'IO' ('Int')
 --
--- getType :: 'Ref' 'TableRow' -> 'IO' 'TableRowSelectMode'
+-- getType_ :: 'Ref' 'TableRow' -> 'IO' 'TableRowSelectMode'
 --
--- handle :: 'Ref' 'TableRow' -> 'Event' -> 'IO' 'Int'
+-- handle :: 'Ref' 'TableRow' -> 'Event' -> 'IO' ('Int')
+--
+-- handleSuper :: 'Ref' 'TableRow' -> 'Event' -> 'IO' ('Int')
 --
 -- resize :: 'Ref' 'TableRow' -> 'Rectangle' -> 'IO' ()
 --
@@ -124,6 +128,7 @@ instance (impl ~ ( TableRowSelectFlag -> IO ())) => Op (SelectAllRows ()) TableR
 -- setRowsSuper :: 'Ref' 'TableRow' -> 'Int' -> 'IO' ()
 --
 -- setType :: 'Ref' 'TableRow' -> 'TableRowSelectMode' -> 'IO' ()
+--
 -- @
 
 -- $hierarchy

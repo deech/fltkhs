@@ -141,26 +141,31 @@ instance (impl ~ IO (ValuatorType)) => Op (GetType_ ()) Valuator orig impl where
 
 -- $functions
 -- @
---
 -- bounds :: 'Ref' 'Valuator' -> 'Double' -> 'Double' -> 'IO' ()
 --
--- clamp :: 'Ref' 'Valuator' -> 'Double' -> 'IO' 'Double'
+-- clamp :: 'Ref' 'Valuator' -> 'Double' -> 'IO' ('Double')
 --
 -- destroy :: 'Ref' 'Valuator' -> 'IO' ()
 --
--- format :: 'Ref' 'Valuator' -> 'String' -> 'IO' 'Int'
+-- getMaximum :: 'Ref' 'Valuator' -> 'IO' ('Double')
 --
--- getMaximum :: 'Ref' 'Valuator' -> 'IO' 'Double'
+-- getMinimum :: 'Ref' 'Valuator' -> 'IO' ('Double')
 --
--- getMinimum :: 'Ref' 'Valuator' -> 'IO' 'Double'
+-- getStep :: 'Ref' 'Valuator' -> 'IO' ('Rational')
 --
--- getStep :: 'Ref' 'Valuator' -> 'IO' 'Rational'
+-- getType_ :: 'Ref' 'Valuator' -> 'IO' ('ValuatorType')
 --
--- getValue :: 'Ref' 'Valuator' -> 'IO' 'Double'
+-- getValue :: 'Ref' 'Valuator' -> 'IO' ('Double')
 --
 -- handle :: 'Ref' 'Valuator' -> 'Event' -> 'IO' 'Int'
 --
--- increment :: 'Ref' 'Valuator' -> 'Double' -> 'Int' -> 'IO' 'Double'
+-- handleSuper :: 'Ref' 'Valuator' -> 'Event' -> 'IO' 'Int'
+--
+-- hide :: 'Ref' 'Valuator' -> ( 'IO' ())
+--
+-- hideSuper :: 'Ref' 'Valuator' -> ( 'IO' ())
+--
+-- increment :: 'Ref' 'Valuator' -> 'Double' -> 'Int' -> 'IO' ('Double')
 --
 -- precision :: 'Ref' 'Valuator' -> 'Int' -> 'IO' ()
 --
@@ -170,7 +175,9 @@ instance (impl ~ IO (ValuatorType)) => Op (GetType_ ()) Valuator orig impl where
 --
 -- resizeSuper :: 'Ref' 'Valuator' -> 'Rectangle' -> 'IO' ()
 --
--- round :: 'Ref' 'Valuator' -> 'Double' -> 'IO' 'Double'
+-- round :: 'Ref' 'Valuator' -> 'Double' -> 'IO' ('Double')
+--
+-- setFormat :: 'Ref' 'Valuator' -> 'String' -> 'IO' ('Int')
 --
 -- setMaximum :: 'Ref' 'Valuator' -> 'Double' -> 'IO' ()
 --
@@ -178,7 +185,9 @@ instance (impl ~ IO (ValuatorType)) => Op (GetType_ ()) Valuator orig impl where
 --
 -- setStep :: 'Ref' 'Valuator' -> 'Rational' -> 'IO' ()
 --
--- setValue :: 'Ref' 'Valuator' -> 'Double' -> 'IO' 'Int'
+-- setType :: 'Ref' 'Valuator' -> 'ValuatorType' -> 'IO' ()
+--
+-- setValue :: 'Ref' 'Valuator' -> 'Double' -> 'IO' ('Int')
 -- @
 
 -- $hierarchy

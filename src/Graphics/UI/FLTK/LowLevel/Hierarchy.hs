@@ -2056,8 +2056,11 @@ type Valuator = CValuator Widget
 type ValuatorFuncs =
   (Destroy
   (Handle
+  (HandleSuper
   (ResizeSuper
   (Resize
+  (Hide
+  (HideSuper
   (Bounds
   (GetMinimum
   (SetMinimum
@@ -2075,7 +2078,7 @@ type ValuatorFuncs =
   (Increment
   (SetType
   (GetType_
-  ())))))))))))))))))))))
+  ()))))))))))))))))))))))))
 
 type instance Functions Valuator = ValuatorFuncs
 
@@ -2919,11 +2922,12 @@ type TableRowFuncs =
   (SetRowsSuper
   (SetColsSuper
   (Handle
+  (HandleSuper
   (ResizeSuper
   (Resize
   (GetRowSelected
   (SelectAllRows
-  ())))))))))))))))
+  ()))))))))))))))))
 
 type instance Functions TableRow = TableRowFuncs
 
