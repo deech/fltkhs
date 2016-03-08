@@ -90,5 +90,5 @@ A number of demos are also available in the [fltkhs-demos] [4] and the [fltkhs-f
   [1]: http://www.fltk.org/index.php      "FLTK"
   [2]: http://www.fltk.org/software.php
   [3]: http://hackage.haskell.org/package/fltkhs/docs/Graphics-UI-FLTK-LowLevel-FLTKHS.html
-  [4]: http://hackage.haskell.org/package/fltkhs-demos
-  [5]: http://hackage.haskell.org/package/fltkhs-fluid-demos
+  [4]: http://github.com/deech/fltkhs-demos
+  [5]: http://github.com/deech/fltkhs-fluid-demos
