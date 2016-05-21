@@ -14,7 +14,7 @@ import qualified Foreign.ForeignPtr.Unsafe as Unsafe
 import Debug.Trace
 import Control.Exception
 import C2HS hiding (cFromEnum, cFromBool, cToBool,cToEnum)
-#ifdef CALLSTACK_AVAILABLE
+#if defined(CALLSTACK_AVAILABLE) || defined(HASCALLSTACK_AVAILABLE)
 import GHC.Stack
 #endif
 import qualified Data.ByteString as B
@@ -391,6 +391,8 @@ withForeignPtrs fptrs io = do
 
 #ifdef CALLSTACK_AVAILABLE
 toRefPtr :: (?loc :: CallStack) => Ptr (Ptr a) -> IO (Ptr a)
+#elif HASCALLSTACK_AVAILABLE
+toRefPtr :: HasCallStack => Ptr (Ptr a) -> IO (Ptr a)
 #else
 toRefPtr :: Ptr (Ptr a) -> IO (Ptr a)
 #endif
@@ -399,6 +401,8 @@ toRefPtr ptrToRefPtr = do
   if (refPtr == nullPtr)
 #ifdef CALLSTACK_AVAILABLE
    then error $ "Ref does not exist. " ++ (showCallStack ?loc)
+#elif HASCALLSTACK_AVAILABLE
+   then error $ "Ref does not exist. " ++ (prettyCallStack callStack)
 #else
    then error "Ref does not exist. "
 #endif
@@ -406,6 +410,8 @@ toRefPtr ptrToRefPtr = do
 
 #ifdef CALLSTACK_AVAILABLE
 withRef :: (?loc :: CallStack) => Ref a -> (Ptr b -> IO c) -> IO c
+#elif HASCALLSTACK_AVAILABLE
+withRef :: HasCallStack => Ref a -> (Ptr b -> IO c) -> IO c
 #else
 withRef :: Ref a -> (Ptr b -> IO c) -> IO c
 #endif

@@ -1,3 +1,4 @@
+{-# LANGUAGE CPP #-}
 import Data.Maybe(fromJust, isJust, fromMaybe, maybeToList)
 import Distribution.Simple.Compiler
 import Distribution.Simple.LocalBuildInfo
@@ -157,8 +158,7 @@ register pkg@PackageDescription { library = Just lib } lbi regFlags = do
     case () of
      _ | modeGenerateRegFile   -> writeRegistrationFile installedPkgInfo
        | modeGenerateRegScript -> die "Generate Reg Script not supported"
-       | otherwise             -> registerPackage verbosity
-                                    installedPkgInfo pkg lbi inplace packageDbs
+       | otherwise             -> registerPackage verbosity (compiler lbi) (withPrograms lbi) False {- multiinstance -} packageDbs installedPkgInfo
   where
     modeGenerateRegFile = isJust (flagToMaybe (regGenPkgConf regFlags))
     regFile             = fromMaybe (display (packageId pkg) <.> "conf")

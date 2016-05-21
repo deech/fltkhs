@@ -9,6 +9,11 @@
 data Datatype a; \
 Method :: (?loc :: CallStack, Match r ~ FindOp a a (Datatype ()), Op (Datatype ()) r a impl) => Ref a -> impl; \
 Method aRef = (unsafePerformIO $ withRef aRef (\_ -> return ())) `seq` dispatch (undefined :: Datatype()) aRef
+#elif HASCALLSTACK_AVAILABLE
+#define MAKE_METHOD(Datatype, Method) \
+data Datatype a; \
+Method :: (HasCallStack, Match r ~ FindOp a a (Datatype ()), Op (Datatype ()) r a impl) => Ref a -> impl; \
+Method aRef = (unsafePerformIO $ withRef aRef (\_ -> return ())) `seq` dispatch (undefined :: Datatype()) aRef
 #else
 #define MAKE_METHOD(Datatype, Method) \
 data Datatype a; \
@@ -1547,7 +1552,7 @@ where
 import Prelude hiding (round)
 import Graphics.UI.FLTK.LowLevel.Fl_Types
 import Graphics.UI.FLTK.LowLevel.Dispatch
-#ifdef CALLSTACK_AVAILABLE
+#if defined(CALLSTACK_AVAILABLE) || defined(HASCALLSTACK_AVAILABLE)
 import GHC.Stack
 import System.IO.Unsafe
 #endif
