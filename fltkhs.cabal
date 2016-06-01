@@ -13,7 +13,7 @@ homepage: http://github.com/deech/fltkhs
 -- copyright:
 category: UI,Graphics
 build-type: Custom
-cabal-version: >=1.24
+cabal-version: >=1.20
 source-repository head
   type: git
   location: http://github.com/deech/fltkhs

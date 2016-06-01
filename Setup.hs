@@ -158,7 +158,12 @@ register pkg@PackageDescription { library = Just lib } lbi regFlags = do
     case () of
      _ | modeGenerateRegFile   -> writeRegistrationFile installedPkgInfo
        | modeGenerateRegScript -> die "Generate Reg Script not supported"
-       | otherwise             -> registerPackage verbosity (compiler lbi) (withPrograms lbi) False {- multiinstance -} packageDbs installedPkgInfo
+       | otherwise             ->
+#if __GLASGOW_HASKELL__ >= 800
+          registerPackage verbosity (compiler lbi) (withPrograms lbi) False {- multiinstance -} packageDbs installedPkgInfo
+#else
+          registerPackage verbosity installedPkgInfo pkg lbi inplace packageDbs
+#endif
   where
     modeGenerateRegFile = isJust (flagToMaybe (regGenPkgConf regFlags))
     regFile             = fromMaybe (display (packageId pkg) <.> "conf")
