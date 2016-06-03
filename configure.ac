@@ -7,7 +7,9 @@ AC_PROG_CXX
 AC_PROG_CC
 
 # Checks for libraries.
-AC_CHECK_PROG(FLTKCONFIG,fltk-config,fltk-config,AC_MSG_ERROR(Cannot find the fltk-config executable. Is FLTK installed?))
+AC_CHECK_PROG(FLTKCONFIG,fltk-config,[fltk-config],[no])
+test "$FLTKCONFIG" == "no" && AC_MSG_ERROR([Cannot find the fltk-config executable. Is FLTK installed?])
+
 # Checks for header files.
 AC_CHECK_HEADERS([stddef.h stdint.h stdlib.h string.h unistd.h])
 AC_CHECK_LIB([dl], [main])
