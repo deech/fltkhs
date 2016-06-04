@@ -14,10 +14,6 @@ test "$FLTKCONFIG" == "no" && AC_MSG_ERROR([Cannot find the fltk-config executab
 AC_CHECK_HEADERS([stddef.h stdint.h stdlib.h string.h unistd.h])
 AC_CHECK_LIB([dl], [main])
 AC_CHECK_LIB([fltk], [fl_alphasort])
-AC_CHECK_LIB([fltk_gl],
-             [main],
-             GlFlag='--use-gl --use-glut',
-             GlFlag='')
 AC_CHECK_LIB([fltk_images],
              [main],
              ImagesFlag='--use-images',
@@ -31,7 +27,7 @@ AC_CHECK_LIB([fltk_forms],
              FormsFlag='--use-forms',
              FormsFlag='')
 
-AC_SUBST(FLTKCONFIGCOMMAND,"$(fltk-config --ldstaticflags $GlFlag $ImagesFlag $CairoFlag $FormsFlag) -lstdc++")
+AC_SUBST(FLTKCONFIGCOMMAND,"$(fltk-config --ldstaticflags --use-gl --use-glut $ImagesFlag $CairoFlag $FormsFlag) -lstdc++")
 AC_SUBST(FLTK_HOME,`fltk-config --includedir`)
 # Checks for typedefs, structures, and compiler characteristics.
 AC_TYPE_SIZE_T
