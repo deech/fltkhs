@@ -7,6 +7,7 @@
 #include "FL/Fl.H"
 #include "FL/Fl_Image.H"
 #include "Fl_CallbackC.h"
+
 EXPORT {
   class Fl_DerivedImage : public Fl_Image {
     fl_Image_Virtual_Funcs* overriddenFuncs;
@@ -32,6 +33,16 @@ EXPORT {
     ~Fl_DerivedImage();
   };
 #endif
+
+#ifndef INTERNAL_LINKAGE
+  enum {
+    FL_IMAGE_ERR_NO_IMAGE = -1,
+    FL_IMAGE_ERR_FILE_ACCESS = -2,
+    FL_IMAGE_ERR_FORMAT = -3
+  };
+#endif
+
+
   FL_EXPORT_C(fl_Image_Virtual_Funcs*, Fl_Image_default_virtual_funcs)();
   FL_EXPORT_C(void*, Fl_Image_other_data)(fl_Image image);
   FL_EXPORT_C(void, Fl_Image_set_other_data)(fl_Image image, void* v);
@@ -54,6 +65,7 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Image_draw_with)(fl_Image image,int X,int Y,int W,int H);
   FL_EXPORT_C(void, Fl_Image_draw)(fl_Image image,int X, int Y);
   FL_EXPORT_C(void, Fl_Image_uncache)(fl_Image image);
+  FL_EXPORT_C(int, Fl_Image_fail)(fl_Image image);
 #ifdef __cplusplus
 }
 #endif

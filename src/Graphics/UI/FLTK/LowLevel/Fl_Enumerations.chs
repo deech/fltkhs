@@ -206,7 +206,8 @@ enum Event {
   DndLeave = FL_DND_LEAVE,
   DndRelease = FL_DND_RELEASE,
   ScreenConfigurationChanged = FL_SCREEN_CONFIGURATION_CHANGED,
-  Fullscreen = FL_FULLSCREEN
+  Fullscreen = FL_FULLSCREEN,
+  ZoomGesture = FL_ZOOM_GESTURE
 };
 enum When {
   WhenNever = FL_WHEN_NEVER,
@@ -488,7 +489,8 @@ enum Mode {
  ModeRGB8        = FL_RGB8,
  ModeMultisample = FL_MULTISAMPLE,
  ModeStereo      = FL_STEREO,
- ModeFakeSingle  = FL_FAKE_SINGLE
+ ModeFakeSingle  = FL_FAKE_SINGLE,
+ ModeZoomGesture = FL_ZOOM_GESTURE
 };
 enum AlignType {
  AlignTypeCenter          = 0,

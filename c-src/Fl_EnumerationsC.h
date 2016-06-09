@@ -10,7 +10,7 @@ EXPORT {
 #ifndef INTERNAL_LINKAGE
 #define FL_MAJOR_VERSION        1
 #define FL_MINOR_VERSION        3
-#define FL_PATCH_VERSION        0
+#define FL_PATCH_VERSION        4
 #define FL_VERSION              ((double)FL_MAJOR_VERSION +             \
                                  (double)FL_MINOR_VERSION * 0.01 +      \
                                  (double)FL_PATCH_VERSION * 0.0001)
@@ -41,7 +41,8 @@ EXPORT {
     FL_DND_LEAVE                = 22,
     FL_DND_RELEASE      = 23,
     FL_SCREEN_CONFIGURATION_CHANGED = 24,
-    FL_FULLSCREEN         = 25
+    FL_FULLSCREEN         = 25,
+    FL_ZOOM_GESTURE       = 26
   } Fl_Event;
 
   typedef enum Fl_When {
@@ -417,7 +418,8 @@ EXPORT {
     FL_RGB8             = 64,
     FL_MULTISAMPLE      = 128,
     FL_STEREO           = 256,
-    FL_FAKE_SINGLE      = 512
+    FL_FAKE_SINGLE      = 512,
+    FL_OPENGL3          = 1024
   } Fl_Mode;
 #define FL_IMAGE_WITH_ALPHA 0x40000000
 

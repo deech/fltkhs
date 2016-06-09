@@ -40,6 +40,12 @@ EXPORT {
     OPTION_SHOW_TOOLTIPS,
     OPTION_LAST
   } Fl_Option;
+
+  const char* Fl_fl_local_ctrl;
+  const char* Fl_fl_local_meta;
+  const char* Fl_fl_local_alt;
+  const char* Fl_fl_local_shift;
+
   typedef void (fl_Label_Draw_F)(const fl_Label label, int x, int y, int w, int h, Fl_Align align);
   typedef void (fl_Label_Measure_F)(const fl_Label label, int *width, int *height);
   typedef void (fl_Box_Draw_F)(int x, int y, int w, int h, Fl_Color color);
@@ -67,6 +73,9 @@ EXPORT {
   FL_EXPORT_C(int, Fl_add_awake_handler_)(fl_Awake_Handler handler, void* user_data);
   FL_EXPORT_C(int, Fl_get_awake_handler_)(fl_Awake_Handler* handler, void** user_data);
   FL_EXPORT_C(double, Fl_version)();
+  FL_EXPORT_C(int, Fl_api_version)();
+  FL_EXPORT_C(int, Fl_abi_version)();
+  FL_EXPORT_C(int, Fl_abi_check)(int abi);
   FL_EXPORT_C(const char*, Fl_help)();
   FL_EXPORT_C(int, Fl_arg)(int argc, char **argv, int i);
   FL_EXPORT_C(int, Fl_args_with_i)(int argc, char **argv, int i);
@@ -142,6 +151,7 @@ EXPORT {
   FL_EXPORT_C(void       ,Fl_set_event_is_click)(int i);
   FL_EXPORT_C(int        ,Fl_event_button)();
   FL_EXPORT_C(int        ,Fl_event_state)();
+  FL_EXPORT_C(int        ,Fl_event_state_with_mask)(int mask);
   FL_EXPORT_C(int        ,Fl_contains_event_state)(int i);
   FL_EXPORT_C(int        ,Fl_event_key)();
   FL_EXPORT_C(int        ,Fl_event_original_key)();
@@ -216,6 +226,8 @@ EXPORT {
   FL_EXPORT_C(int               ,Fl_box_dw)(Fl_Boxtype boxtype);
   FL_EXPORT_C(int               ,Fl_box_dh)(Fl_Boxtype boxtype);
   FL_EXPORT_C(int               ,Fl_draw_box_active)();
+  FL_EXPORT_C(Fl_Color          ,Fl_box_color)(Fl_Color color);
+  FL_EXPORT_C(void              ,Fl_set_box_color)(Fl_Color color);
   FL_EXPORT_C(void              ,Fl_default_atclose)(fl_Window window,void* data);
   FL_EXPORT_C(void              ,Fl_set_atclose)(fl_Atclose_Handler* f);
   FL_EXPORT_C(int               ,Fl_event_shift)();
@@ -244,6 +256,8 @@ EXPORT {
   FL_EXPORT_C(void              ,Fl_watch_widget_pointer)(fl_Widget w);
   FL_EXPORT_C(void              ,Fl_release_widget_pointer)(fl_Widget w);
   FL_EXPORT_C(void              ,Fl_clear_widget_pointer)(fl_Widget w);
+  FL_EXPORT_C(void              ,Fl_set_use_high_res_GL)(int val);
+  FL_EXPORT_C(int               ,Fl_get_use_high_res_GL)();
 #ifdef __cplusplus
 }
 #endif

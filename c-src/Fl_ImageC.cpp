@@ -147,6 +147,9 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Image_uncache)(fl_Image image){
     return (static_cast<Fl_DerivedImage*>(image))->uncache();
   }
+  FL_EXPORT_C(int, Fl_Image_fail)(fl_Image image) {
+    return (static_cast<Fl_DerivedImage*>(image))->fail();
+  }
 #ifdef __cplusplus
 }
 #endif

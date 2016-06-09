@@ -270,6 +270,9 @@ FL_EXPORT_C(void, Fl_Gl_Window_draw_label)(fl_Gl_Window Gl_Window);
   FL_EXPORT_C(void,Fl_Gl_Window_flush)(fl_Gl_Window win);
   FL_EXPORT_C(void,Fl_Gl_Window_show_super)(fl_Gl_Window win);
   FL_EXPORT_C(void,Fl_Gl_Window_resize_super)(fl_Gl_Window win,int X,int Y,int W,int H);
+  FL_EXPORT_C(int, Fl_Gl_Window_pixels_per_unit)(fl_Gl_Window win);
+  FL_EXPORT_C(int, Fl_Gl_Window_pixel_w)(fl_Gl_Window win);
+  FL_EXPORT_C(int, Fl_Gl_Window_pixel_h)(fl_Gl_Window win);
 
 #ifdef __cplusplus
 }

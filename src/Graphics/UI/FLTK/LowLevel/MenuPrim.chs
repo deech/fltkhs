@@ -298,11 +298,13 @@ instance (impl ~ ( IO (Color))) => Op (GetDownColor ()) MenuPrim orig impl where
 {# fun Fl_Menu__set_down_color as setDownColor' { id `Ptr ()',`Int' } -> `()' #}
 instance (impl ~ (Int ->  IO ())) => Op (SetDownColor ()) MenuPrim orig impl where
   runOp _ _ menu_ c = withRef menu_ $ \menu_Ptr -> setDownColor' menu_Ptr c
+{# fun Fl_Menu__setonly as setOnly' { id `Ptr ()', id `Ptr ()' } -> `()' #}
+instance (Parent a MenuItem, impl ~ (Ref a ->  IO ())) => Op (SetOnly ()) MenuPrim orig impl where
+  runOp _ _ menu_ item_ = withRef menu_ $ \menu_Ptr -> withRef item_ $ \itemPtr -> setOnly' menu_Ptr itemPtr
 
 -- $functions
 -- @
---
--- add:: ('Parent' a 'MenuItem') => 'Ref' 'MenuPrim' -> 'String' -> 'Maybe' 'Shortcut' -> ('Ref' a-> 'IO' ()) -> 'MenuItemFlags' -> 'IO' ('MenuItemIndex')
+-- add:: ('Parent' a 'MenuItem') => 'Ref' 'MenuPrim' -> 'String' -> 'Maybe' 'Shortcut' -> 'Maybe' ('Ref' a-> 'IO' ()) -> 'MenuItemFlags' -> 'IO' ('MenuItemIndex')
 --
 -- addName :: 'Ref' 'MenuPrim' -> 'String' -> 'IO' ()
 --
@@ -320,9 +322,9 @@ instance (impl ~ (Int ->  IO ())) => Op (SetDownColor ()) MenuPrim orig impl whe
 --
 -- getDownColor :: 'Ref' 'MenuPrim' -> 'IO' ('Color')
 --
--- getMenu :: 'Ref' 'MenuPrim' -> 'IO' ['Ref' 'MenuItem']
+-- getMenu :: 'Ref' 'MenuPrim' -> 'IO' [('Maybe' ('Ref' 'MenuItem']))
 --
--- getMode :: 'Ref' 'MenuPrim' -> 'Int' -> 'IO' ('Int')
+-- getMode :: 'Ref' 'MenuPrim' -> 'Int' -> 'IO' ('Maybe' 'MenuItemFlags')
 --
 -- getSize :: 'Ref' 'MenuPrim' -> 'IO' ('Int')
 --
@@ -342,7 +344,7 @@ instance (impl ~ (Int ->  IO ())) => Op (SetDownColor ()) MenuPrim orig impl whe
 --
 -- handle :: 'Ref' 'MenuPrim' -> 'Event' -> 'IO' 'Int'
 --
--- handleSuper :: 'Ref' 'MenuPrim' -> 'Int' -> 'IO' ('Int')
+-- handleSuper :: 'Ref' 'MenuPrim' -> 'Event' -> 'IO' ('Int')
 --
 -- hide :: 'Ref' 'MenuPrim' -> 'IO' ()
 --
@@ -373,6 +375,8 @@ instance (impl ~ (Int ->  IO ())) => Op (SetDownColor ()) MenuPrim orig impl whe
 -- setMenu:: ('Parent' a 'MenuItem') => 'Ref' 'MenuPrim' -> ['Ref' a] -> 'IO' ()
 --
 -- setMode :: 'Ref' 'MenuPrim' -> 'Int' -> 'MenuItemFlags' -> 'IO' ()
+--
+-- setOnly:: ('Parent' a 'MenuItem') => 'Ref' 'MenuPrim' -> 'Ref' a -> 'IO' ()
 --
 -- setShortcut :: 'Ref' 'MenuPrim' -> 'Int' -> 'ShortcutKeySequence' -> 'IO' ()
 --

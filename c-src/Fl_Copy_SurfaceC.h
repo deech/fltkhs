@@ -15,6 +15,9 @@ EXPORT {
   FL_EXPORT_C(void        ,Fl_Copy_Surface_draw)(fl_Copy_Surface copy_surface, fl_Widget widget, int delta_x, int delta_y);
   FL_EXPORT_C(fl_Copy_Surface, Fl_Copy_Surface_New)(int w, int h);
   FL_EXPORT_C(void, Fl_Copy_Surface_Destroy)(fl_Copy_Surface copy_surface);
+  FL_EXPORT_C(void, Fl_Copy_Surface_draw_decorated_window)(fl_Copy_Surface copy_surface, fl_Window win, int delta_x, int delta_y);
+  FL_EXPORT_C(int , Fl_Copy_Surface_w)(fl_Copy_Surface copy_surface);
+  FL_EXPORT_C(int , Fl_Copy_Surface_h)(fl_Copy_Surface copy_surface);
 #ifdef __cplusplus
 }
 #endif

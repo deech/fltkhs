@@ -18,7 +18,15 @@ EXPORT {
   FL_EXPORT_C(void, Fl_Copy_Surface_Destroy)(fl_Copy_Surface copy_surface){
     delete (static_cast<Fl_Copy_Surface*>(copy_surface));
   }
-
+  FL_EXPORT_C(void, Fl_Copy_Surface_draw_decorated_window)(fl_Copy_Surface copy_surface, fl_Window win, int delta_x, int delta_y){
+    (static_cast<Fl_Copy_Surface*>(copy_surface))->draw_decorated_window((static_cast<Fl_Window*>(win)),delta_x,delta_y);
+  }
+  FL_EXPORT_C(int , Fl_Copy_Surface_w)(fl_Copy_Surface copy_surface){
+  return (static_cast<Fl_Copy_Surface*>(copy_surface))->w();
+  }
+  FL_EXPORT_C(int , Fl_Copy_Surface_h)(fl_Copy_Surface copy_surface){
+    return (static_cast<Fl_Copy_Surface*>(copy_surface))->h();
+  }
 #ifdef __cplusplus
 }
 #endif

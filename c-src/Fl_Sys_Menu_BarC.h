@@ -157,6 +157,7 @@ EXPORT {
   FL_EXPORT_C(void, Fl_Sys_Menu_Bar_set_down_box)(fl_Sys_Menu_Bar sys_menu_bar, Fl_Boxtype b);
   FL_EXPORT_C(Fl_Color, Fl_Sys_Menu_Bar_down_color)(fl_Sys_Menu_Bar sys_menu_bar);
   FL_EXPORT_C(void, Fl_Sys_Menu_Bar_set_down_color)(fl_Sys_Menu_Bar sys_menu_bar, unsigned c);
+  FL_EXPORT_C(void, Fl_Sys_Menu_Bar_setonly)(fl_Sys_Menu_Bar menu_, fl_Menu_Item i);
 #ifdef __cplusplus
 }
 #endif

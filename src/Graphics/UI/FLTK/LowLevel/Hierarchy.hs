@@ -534,6 +534,8 @@ module Graphics.UI.FLTK.LowLevel.Hierarchy
          setTextcolor,
          DownBox,
          downBox,
+         SetOnly,
+         setOnly,
          -- * MenuBar
          MenuBar,
          -- * SysMenuBar
@@ -560,6 +562,8 @@ module Graphics.UI.FLTK.LowLevel.Hierarchy
          drawResize,
          Uncache,
          uncache,
+         Fail,
+         fail,
          -- * Bitmap
          Bitmap,
          -- * Pixmap
@@ -570,6 +574,8 @@ module Graphics.UI.FLTK.LowLevel.Hierarchy
          className,
          SetCurrent,
          setCurrent,
+         DrawDecoratedWindow,
+         drawDecoratedWindow,
          -- * ImageSurface
          ImageSurface,
          -- * Adjuster
@@ -864,6 +870,12 @@ module Graphics.UI.FLTK.LowLevel.Hierarchy
          hideOverlay,
          MakeOverlayCurrent,
          makeOverlayCurrent,
+         PixelsPerUnit,
+         pixelsPerUnit,
+         PixelW,
+         pixelW,
+         PixelH,
+         pixelH,
          -- * Box
          Box,
          -- * Browser
@@ -1549,7 +1561,7 @@ module Graphics.UI.FLTK.LowLevel.Hierarchy
          PNMImage
   )
 where
-import Prelude hiding (round)
+import Prelude hiding (round, fail)
 import Graphics.UI.FLTK.LowLevel.Fl_Types
 import Graphics.UI.FLTK.LowLevel.Dispatch
 #if defined(CALLSTACK_AVAILABLE) || defined(HASCALLSTACK_AVAILABLE)
@@ -2270,7 +2282,8 @@ type MenuPrimFuncs =
   (SetDownBox
   (GetDownColor
   (SetDownColor
-  ())))))))))))))))))))))))))))))))))))))))))))))
+  (SetOnly
+  ()))))))))))))))))))))))))))))))))))))))))))))))
 
 type instance Functions MenuPrim = MenuPrimFuncs
 
@@ -2299,6 +2312,7 @@ MAKE_METHOD(SetTextsize,setTextsize)
 MAKE_METHOD(GetTextcolor,getTextcolor)
 MAKE_METHOD(SetTextcolor,setTextcolor)
 MAKE_METHOD(DownBox,downBox)
+MAKE_METHOD(SetOnly, setOnly)
 
 data CMenuBar parent
 type MenuBar = CMenuBar MenuPrim
@@ -2327,7 +2341,8 @@ type SysMenuBarFuncs =
   (Add
   (AddName
   (Insert
-  ())))))))))))))))
+  (SetOnly
+  ()))))))))))))))))
 
 type instance Functions SysMenuBar = SysMenuBarFuncs
 
@@ -2369,7 +2384,8 @@ type ImageFuncs =
   (DrawResize
   (Draw
   (Uncache
-  ())))))))))))))
+  (Fail
+  ()))))))))))))))
 
 type instance Functions Image = ImageFuncs
 
@@ -2381,6 +2397,7 @@ MAKE_METHOD(Inactive,inactive)
 MAKE_METHOD(Desaturate,desaturate)
 MAKE_METHOD(DrawResize,drawResize)
 MAKE_METHOD(Uncache,uncache)
+MAKE_METHOD(Fail,fail)
 
 data CBitmap parent
 type Bitmap = CBitmap Image
@@ -2429,12 +2446,16 @@ type CopySurfaceFuncs =
   (ClassName
   (SetCurrent
   (Draw
-  ()))))
+  (DrawDecoratedWindow
+  (GetW
+  (GetH
+  ())))))))
 
 type instance Functions CopySurface = CopySurfaceFuncs
 
 MAKE_METHOD(ClassName,className)
 MAKE_METHOD(SetCurrent,setCurrent)
+MAKE_METHOD(DrawDecoratedWindow, drawDecoratedWindow)
 
 data CImageSurface parent
 type ImageSurface = CImageSurface Base
@@ -2972,7 +2993,9 @@ type GlWindowFuncs =
   (RedrawOverlay
   (HideOverlay
   (MakeOverlayCurrent
-  ()))))))))))))))))))))))))))))))
+  (PixelsPerUnit
+  (PixelW
+  (PixelH ())))))))))))))))))))))))))))))))))
 
 type instance Functions GlWindow = GlWindowFuncs
 
@@ -2990,6 +3013,9 @@ MAKE_METHOD(SwapBuffers,swapBuffers)
 MAKE_METHOD(Ortho,ortho)
 MAKE_METHOD(HideOverlay,hideOverlay)
 MAKE_METHOD(MakeOverlayCurrent,makeOverlayCurrent)
+MAKE_METHOD(PixelsPerUnit, pixelsPerUnit)
+MAKE_METHOD(PixelW, pixelW)
+MAKE_METHOD(PixelH, pixelH)
 
 data CBox parent
 type Box = CBox Widget

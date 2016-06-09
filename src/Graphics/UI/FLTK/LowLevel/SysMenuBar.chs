@@ -92,9 +92,12 @@ instance (Parent a MenuItem, impl ~ ( String -> Maybe Shortcut -> Maybe (Ref a->
 instance (Parent a MenuPrim, impl ~ ( Int -> String -> Maybe Shortcut -> (Ref a -> IO ()) -> MenuItemFlags -> IO (MenuItemIndex))) => Op (Insert ()) SysMenuBar orig impl where
   runOp _ _ menu_ index' name shortcut cb flags = insertMenuItem (safeCast menu_) index' name shortcut cb flags insertWithFlags' insertWithShortcutnameFlags'
 
+{# fun Fl_Sys_Menu_Bar_setonly as setOnly' { id `Ptr ()', id `Ptr ()' } -> `()' #}
+instance (Parent a MenuItem, impl ~ (Ref a ->  IO ())) => Op (SetOnly ()) SysMenuBar orig impl where
+  runOp _ _ menu_ item_ = withRef menu_ $ \menu_Ptr -> withRef item_ $ \itemPtr -> setOnly' menu_Ptr itemPtr
+
 -- $functions
 -- @
---
 -- add:: ('Parent' a 'MenuItem') => 'Ref' 'SysMenuBar' -> 'String' -> 'Maybe' 'Shortcut' -> 'Maybe' ('Ref' a-> 'IO' ()) -> 'MenuItemFlags' -> 'IO' ('MenuItemIndex')
 --
 -- addName :: 'Ref' 'SysMenuBar' -> 'String' -> 'IO' ()
@@ -105,7 +108,7 @@ instance (Parent a MenuPrim, impl ~ ( Int -> String -> Maybe Shortcut -> (Ref a 
 --
 -- destroy :: 'Ref' 'SysMenuBar' -> 'IO' ()
 --
--- getMode :: 'Ref' 'SysMenuBar' -> 'Int' -> 'IO' ('Int')
+-- getMode :: 'Ref' 'SysMenuBar' -> 'Int' -> 'IO' ('Maybe' 'MenuItemFlags')
 --
 -- global :: 'Ref' 'SysMenuBar' -> 'IO' ()
 --
@@ -119,7 +122,9 @@ instance (Parent a MenuPrim, impl ~ ( Int -> String -> Maybe Shortcut -> (Ref a 
 --
 -- setMenu :: 'Ref' 'SysMenuBar' -> ['Ref' 'MenuItem'] -> 'IO' ()
 --
--- setMode :: 'Ref' 'SysMenuBar' -> 'Int' -> 'Int' -> 'IO' ()
+-- setMode :: 'Ref' 'SysMenuBar' -> 'Int' -> 'MenuItemFlags' -> 'IO' ()
+--
+-- setOnly:: ('Parent' a 'MenuItem') => 'Ref' 'SysMenuBar' -> 'Ref' a -> 'IO' ()
 --
 -- setShortcut :: 'Ref' 'SysMenuBar' -> 'Int' -> 'ShortcutKeySequence' -> 'IO' ()
 --

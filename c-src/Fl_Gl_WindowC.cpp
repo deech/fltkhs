@@ -834,6 +834,15 @@ FL_EXPORT_C(fl_Gl_Window, Fl_OverriddenGl_Window_NewXY_WithLabel)(int x, int y, 
   FL_EXPORT_C(void,Fl_Gl_Window_make_overlay_current)(fl_Gl_Window win){
     (static_cast<Fl_DerivedGl_Window*>(win))->make_overlay_current();
   }
+  FL_EXPORT_C(int,Fl_Gl_Window_pixels_per_unit)(fl_Gl_Window win){
+    return (static_cast<Fl_DerivedGl_Window*>(win))->pixels_per_unit();
+  }
+  FL_EXPORT_C(int,Fl_Gl_Window_pixel_)(fl_Gl_Window win){
+    return (static_cast<Fl_DerivedGl_Window*>(win))->pixel_w();
+  }
+  FL_EXPORT_C(int,Fl_Gl_Window_pixel_h)(fl_Gl_Window win){
+    return (static_cast<Fl_DerivedGl_Window*>(win))->pixel_h();
+  }
 #ifdef __cplusplus
 }
 #endif

@@ -158,14 +158,24 @@ instance (impl ~ ( IO ())) => Op (HideOverlay ()) GlWindow orig impl where
 instance (impl ~ ( IO ())) => Op (MakeOverlayCurrent ()) GlWindow orig impl where
   runOp _ _ win = withRef win $ \winPtr -> makeOverlayCurrent' winPtr
 
+{# fun Fl_Gl_Window_pixels_per_unit as pixelsPerUnit' { id `Ptr ()' } -> `Int' #}
+instance (impl ~ ( IO (Int))) => Op (PixelsPerUnit ()) GlWindow orig impl where
+  runOp _ _ win = withRef win $ \winPtr -> pixelsPerUnit' winPtr
+{# fun Fl_Gl_Window_pixel_w as pixelW' { id `Ptr ()' } -> `Int' #}
+instance (impl ~ ( IO (Int))) => Op (PixelW ()) GlWindow orig impl where
+  runOp _ _ win = withRef win $ \winPtr -> pixelW' winPtr
+{# fun Fl_Gl_Window_pixel_h as pixelH' { id `Ptr ()' } -> `Int' #}
+instance (impl ~ ( IO (Int))) => Op (PixelH ()) GlWindow orig impl where
+  runOp _ _ win = withRef win $ \winPtr -> pixelH' winPtr
+
 -- $GlWindowfunctions
 -- @
 --
--- canDo :: 'Ref' 'GlWindow' -> 'IO' 'Int'
+-- canDo :: 'Ref' 'GlWindow' -> 'IO' ('Int')
 --
--- canDoOverlay :: 'Ref' 'GlWindow' -> 'IO' 'Int'
+-- canDoOverlay :: 'Ref' 'GlWindow' -> 'IO' ('Int')
 --
--- canDoWithM :: 'Ref' 'GlWindow' -> 'Int' -> 'IO' 'Int'
+-- canDoWithM :: 'Ref' 'GlWindow' -> 'Int' -> 'IO' ('Int')
 --
 -- destroy :: 'Ref' 'GlWindow' -> 'IO' ()
 --
@@ -177,15 +187,15 @@ instance (impl ~ ( IO ())) => Op (MakeOverlayCurrent ()) GlWindow orig impl wher
 --
 -- getContext :: 'Ref' 'GlWindow' -> 'IO' ('Ref' 'GlContext')
 --
--- getContextValid :: 'Ref' 'GlWindow' -> 'IO' 'Bool'
+-- getContextValid :: 'Ref' 'GlWindow' -> 'IO' ('Bool')
 --
--- getMode :: 'Ref' 'GlWindow' -> 'IO' 'Mode'
+-- getMode :: 'Ref' 'GlWindow' -> 'IO' ('Mode')
 --
--- getValid :: 'Ref' 'GlWindow' -> 'IO' 'Bool'
+-- getValid :: 'Ref' 'GlWindow' -> 'IO' ('Bool')
 --
--- handle :: 'Ref' 'GlWindow' -> 'Event' -> 'IO' 'Int'
+-- handle :: 'Ref' 'GlWindow' -> 'Event' -> 'IO' ('Int')
 --
--- handleSuper :: 'Ref' 'GlWindow' -> 'Event' -> 'IO' 'Int'
+-- handleSuper :: 'Ref' 'GlWindow' -> 'Event' -> 'IO' ('Int')
 --
 -- hide :: 'Ref' 'GlWindow' -> 'IO' ()
 --
@@ -199,6 +209,12 @@ instance (impl ~ ( IO ())) => Op (MakeOverlayCurrent ()) GlWindow orig impl wher
 --
 -- ortho :: 'Ref' 'GlWindow' -> 'IO' ()
 --
+-- pixelH :: 'Ref' 'GlWindow' -> 'IO' ('Int')
+--
+-- pixelW :: 'Ref' 'GlWindow' -> 'IO' ('Int')
+--
+-- pixelsPerUnit :: 'Ref' 'GlWindow' -> 'IO' ('Int')
+--
 -- redrawOverlay :: 'Ref' 'GlWindow' -> 'IO' ()
 --
 -- resize :: 'Ref' 'GlWindow' -> 'Rectangle' -> 'IO' ()
@@ -211,7 +227,7 @@ instance (impl ~ ( IO ())) => Op (MakeOverlayCurrent ()) GlWindow orig impl wher
 --
 -- setContextWithDestroyFlag :: 'Ref' 'GlWindow' -> 'Ref' 'GlContext' -> 'Bool' -> 'IO' ()
 --
--- setMode :: 'Ref' 'GlWindow' -> 'Mode' -> 'IO' 'Int'
+-- setMode :: 'Ref' 'GlWindow' -> 'Mode' -> 'IO' ('Int')
 --
 -- setValid :: 'Ref' 'GlWindow' -> 'Bool' -> 'IO' ()
 --
@@ -220,6 +236,7 @@ instance (impl ~ ( IO ())) => Op (MakeOverlayCurrent ()) GlWindow orig impl wher
 -- showWidgetSuper :: 'Ref' 'GlWindow' -> 'IO' ()
 --
 -- swapBuffers :: 'Ref' 'GlWindow' -> 'IO' ()
+--
 -- @
 
 -- $hierarchy

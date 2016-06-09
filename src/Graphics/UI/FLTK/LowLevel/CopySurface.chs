@@ -42,6 +42,19 @@ instance (impl ~ ( IO ())) => Op (SetCurrent ()) CopySurface orig impl where
 instance (Parent a Widget, impl ~ ( Ref a  -> Position -> IO ())) => Op (Draw ()) CopySurface orig impl where
   runOp _ _ copy_surface widget (Position (X delta_x) (Y delta_y)) = withRef copy_surface $ \copy_surfacePtr -> withRef widget $ \widgetPtr -> draw' copy_surfacePtr widgetPtr delta_x delta_y
 
+{# fun Fl_Copy_Surface_draw_decorated_window as drawDecoratedWindow' { id `Ptr ()',id `Ptr ()',`Int',`Int' } -> `()' #}
+instance (Parent a Window, impl ~ ( Ref a  -> Position -> IO ())) => Op (DrawDecoratedWindow ()) CopySurface orig impl where
+  runOp _ _ copy_surface window (Position (X delta_x) (Y delta_y)) = withRef copy_surface $ \copy_surfacePtr -> withRef window $ \windowPtr -> drawDecoratedWindow' copy_surfacePtr windowPtr delta_x delta_y
+
+{#fun Fl_Copy_Surface_w as w' {id `Ptr ()' } -> `Int' #}
+instance (impl ~ IO Int) => Op (GetW ()) CopySurface orig impl where
+  runOp _ _ copy_surface = withRef copy_surface $ \copy_surfacePtr -> w' copy_surfacePtr
+
+{#fun Fl_Copy_Surface_h as h' {id `Ptr ()' } -> `Int' #}
+instance (impl ~ IO Int) => Op (GetH ()) CopySurface orig impl where
+  runOp _ _ copy_surface = withRef copy_surface $ \copy_surfacePtr -> h' copy_surfacePtr
+
+
 -- $CopySurfacefunctions
 --
 -- @
@@ -50,6 +63,12 @@ instance (Parent a Widget, impl ~ ( Ref a  -> Position -> IO ())) => Op (Draw ()
 -- destroy :: 'Ref' 'CopySurface' -> 'IO' ()
 --
 -- draw:: ('Parent' a 'Widget') => 'Ref' 'CopySurface' -> 'Ref' a -> 'Position' -> 'IO' ()
+--
+-- drawDecoratedWindow:: ('Parent' a 'Window') => 'Ref' 'CopySurface' -> 'Ref' a -> 'Position' -> 'IO' ()
+--
+-- getH :: 'Ref' 'CopySurface' -> 'IO' 'Int'
+--
+-- getW :: 'Ref' 'CopySurface' -> 'IO' 'Int'
 --
 -- setCurrent :: 'Ref' 'CopySurface' -> 'IO' ()
 -- @

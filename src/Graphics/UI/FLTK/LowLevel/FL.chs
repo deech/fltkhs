@@ -54,6 +54,9 @@ module Graphics.UI.FLTK.LowLevel.FL
      releaseWidgetPointer,
      clearWidgetPointer,
      version,
+     apiVersion,
+     abiVersion,
+     abiCheck,
      help,
      visual,
 #if !defined(__APPLE__)
@@ -112,6 +115,9 @@ module Graphics.UI.FLTK.LowLevel.FL
      boxDw,
      boxDh,
      drawBoxActive,
+     eventStateWithMask,
+     boxColor,
+     setBoxColor,
      -- * Fonts
      getFontName,
      getFont,
@@ -152,6 +158,8 @@ module Graphics.UI.FLTK.LowLevel.FL
      setEventDispatch,
      eventText,
      eventLength,
+     setUseHighResGL,
+     getUseHighResGL
     )
 where
 #include "Fl_C.h"
@@ -241,6 +249,12 @@ getAwakeHandler_ =
 
 {# fun Fl_version as version
   {} -> `Double' #}
+{# fun Fl_api_version as apiVersion
+  {} -> `Int' #}
+{# fun Fl_abi_version as abiVersion
+  {} -> `Int' #}
+{# fun Fl_abi_check as abiCheck
+  {`Int'} -> `Bool' cToBool #}
 {# fun Fl_help as help
   {} -> `String' unsafeFromCString #}
 
@@ -342,6 +356,10 @@ setGrab :: (Parent a Window) => Ref a -> IO ()
 setGrab wp = withRef wp setGrab'
 {# fun Fl_event as event
        {  } -> `Event' cToEnum #}
+{# fun Fl_event_state_with_mask as eventStateWithMask' {`CInt'} -> `Bool' cToBool #}
+eventStateWithMask :: [EventState] -> IO Bool
+eventStateWithMask modifiers = eventStateWithMask' (fromIntegral (combine modifiers))
+
 {# fun Fl_event_x as eventX
        {  } -> `Int'#}
 {# fun Fl_event_y as eventY
@@ -388,13 +406,6 @@ eventStates = [
               ]
 extractEventStates :: CInt -> [EventState]
 extractEventStates = extract eventStates
--- foldModifiers :: [KeyboardCode] -> CInt
--- foldModifiers codes =
---     let validKeysyms = map cFromEnum (filter (\c -> c `elem` validKeyboardStates) codes)
---     in
---       case validKeysyms of
---         [] -> (-1)
---         (k:ks) -> foldl (\accum k' -> accum .&. k') k ks
 {# fun Fl_event_state as eventState
        {  } -> `[EventState]' extractEventStates #}
 {# fun Fl_contains_event_state as containsEventState
@@ -748,6 +759,10 @@ setBoxtype bt (FromBoxtype template) =
        { cFromEnum `Boxtype' } -> `Int' #}
 {# fun Fl_draw_box_active as drawBoxActive
        {  } -> `Bool' toBool #}
+{# fun Fl_set_box_color as setBoxColor
+       {cFromColor `Color'} -> `()' #}
+{# fun Fl_box_color as boxColor
+       {cFromColor `Color'} -> `Color' cToColor #}
 {# fun Fl_event_shift as eventShift
        {  } -> `Bool' toBool #}
 {# fun Fl_event_ctrl as eventCtrl
@@ -787,3 +802,7 @@ releaseWidgetPointer :: (Parent a Widget) => Ref a -> IO ()
 releaseWidgetPointer wp = withRef wp {#call Fl_release_widget_pointer as fl_release_widget_pointer #}
 clearWidgetPointer :: (Parent a Widget) => Ref a -> IO ()
 clearWidgetPointer wp = withRef wp {#call Fl_clear_widget_pointer as fl_Clear_Widget_Pointer #}
+{# fun Fl_set_use_high_res_GL as setUseHighResGL
+      {fromBool `Bool'} -> `()' #}
+{# fun Fl_get_use_high_res_GL as getUseHighResGL
+      {} -> `Bool' toBool #}

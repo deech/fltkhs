@@ -65,6 +65,15 @@ EXPORT {
   FL_EXPORT_C(double,Fl_version)( ){
     return Fl::version();
   }
+  FL_EXPORT_C(int, Fl_api_version)(){
+    return Fl::api_version();
+  }
+  FL_EXPORT_C(int, Fl_abi_version)(){
+    return Fl::abi_version();
+  }
+  FL_EXPORT_C(int, Fl_abi_check)(int abi){
+    return Fl::abi_check(abi);
+  }
   FL_EXPORT_C(const char*, Fl_help)(){
     return Fl::help;
   }
@@ -283,6 +292,9 @@ EXPORT {
   }
   FL_EXPORT_C(int,Fl_event_state)( ){
     return Fl::event_state();
+  }
+  FL_EXPORT_C(int,Fl_event_state_with_mask)(int mask){
+    return Fl::event_state(mask);
   }
   FL_EXPORT_C(int,Fl_contains_event_state)(int i){
     return Fl::event_state(i);
@@ -505,6 +517,12 @@ EXPORT {
   FL_EXPORT_C(int,Fl_draw_box_active)( ){
     return Fl::draw_box_active();
   }
+  FL_EXPORT_C(Fl_Color          ,Fl_box_color)(Fl_Color color){
+    return Fl::box_color(color);
+  }
+  FL_EXPORT_C(void              ,Fl_set_box_color)(Fl_Color color){
+    Fl::set_box_color(color);
+  }
   FL_EXPORT_C(void,Fl_default_atclose)(fl_Window window,void* data){
     Fl::default_atclose((static_cast<Fl_Window*>(window)),data);
   }
@@ -593,6 +611,12 @@ EXPORT {
     Fl_Widget& ref = *(static_cast<Fl_Widget*>(w));
     Fl_Widget* refPtr = &ref;
     Fl::release_widget_pointer(refPtr);
+  }
+  FL_EXPORT_C(void              ,Fl_set_use_high_res_GL)(int val){
+    Fl::use_high_res_GL(val);
+  }
+  FL_EXPORT_C(int               ,Fl_get_use_high_res_GL)(){
+    return Fl::use_high_res_GL();
   }
 #ifdef __cplusplus
 }
