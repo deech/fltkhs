@@ -10,6 +10,9 @@ AC_PROG_CC
 AC_CHECK_PROG(FLTKCONFIG,fltk-config,[fltk-config],[no])
 test "$FLTKCONFIG" == "no" && AC_MSG_ERROR([Cannot find the fltk-config executable. Is FLTK installed?])
 
+AC_SUBST(FLTK_VERSION, "$(fltk-config --version)")
+test "$FLTK_VERSION" != "1.3.4" && AC_MSG_ERROR([Detected FLTK $FLTK_VERSION. FLTK 1.3.4 is required.])
+
 # Checks for header files.
 AC_CHECK_HEADERS([stddef.h stdint.h stdlib.h string.h unistd.h])
 AC_CHECK_LIB([dl], [main])
