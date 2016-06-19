@@ -120,6 +120,11 @@ module Graphics.UI.FLTK.LowLevel.FL
      setFontByFont,
      setFonts,
      setFontsWithString,
+     -- * File Descriptor Callbacks
+     addFd,
+     addFdWhen,
+     removeFd,
+     removeFdWhen,
      -- * Events
      event,
      eventShift,
@@ -704,9 +709,41 @@ getFontName f = getFontNameWithAttributes' f
        {  } -> `Font' cToFont #}
 {# fun Fl_set_fonts_with_string as setFontsWithString
        { `String' } -> `Font' cToFont #}
+
+{# fun Fl_add_fd_with_when as addFdWhen'
+       {
+         `CInt',
+         `CInt',
+         id `FunPtr FDHandlerPrim'
+       } -> `()' #}
+
+addFdWhen :: CInt -> [FdWhen] -> FDHandler -> IO ()
+addFdWhen fd fdWhens handler = do
+  fPtr <- toFDHandlerPrim handler
+  addFdWhen' fd (fromIntegral . combine $ fdWhens) fPtr
+
+{# fun Fl_add_fd as addFd'
+       {
+         `CInt',
+         id `FunPtr FDHandlerPrim'
+       } -> `()' #}
+
+addFd :: CInt -> FDHandler -> IO ()
+addFd fd handler = do
+  fPtr <- toFDHandlerPrim handler
+  addFd' fd fPtr
+
+{# fun Fl_remove_fd_with_when as removeFdWhen' { `CInt', `CInt'} -> `()' #}
+removeFdWhen :: CInt -> [FdWhen] -> IO ()
+removeFdWhen fd fdWhens =
+  removeFdWhen' fd (fromIntegral . combine $ fdWhens)
+
+{# fun Fl_remove_fd as removeFd' { `CInt' } -> `()' #}
+removeFd :: CInt -> IO ()
+removeFd fd = removeFd' fd
+
 {# fun Fl_get_boxtype as getBoxtype'
        { cFromEnum `Boxtype' } -> `FunPtr BoxDrawFPrim' id #}
-
 getBoxtype :: Boxtype -> IO BoxDrawF
 getBoxtype bt = do
   wrappedFunPtr <- getBoxtype' bt

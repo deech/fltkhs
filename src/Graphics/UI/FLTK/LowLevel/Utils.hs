@@ -40,6 +40,8 @@ foreign import ccall "wrapper"
         mkTextModifyCb :: TextModifyCbPrim -> IO (FunPtr TextModifyCbPrim)
 foreign import ccall "wrapper"
         mkTextPredeleteCb :: TextPredeleteCbPrim -> IO (FunPtr TextPredeleteCbPrim)
+foreign import ccall "wrapper"
+        mkFDHandlerPrim :: FDHandlerPrim -> IO (FunPtr FDHandlerPrim)
 
 toCallbackPrim :: (Ref a -> IO ()) ->
                   IO (FunPtr (Ptr () -> IO ()))
@@ -167,6 +169,9 @@ toTextPredeleteCbPrim f =
       \pos' nDeleted' _ ->
        f (BufferOffset (fromIntegral pos')) (fromIntegral nDeleted')
     )
+
+toFDHandlerPrim :: FDHandler -> IO (FunPtr FDHandlerPrim)
+toFDHandlerPrim f = mkFDHandlerPrim (\fd _ -> f fd)
 
 toUnfinishedStyleCbPrim :: UnfinishedStyleCb -> IO (FunPtr UnfinishedStyleCbPrim)
 toUnfinishedStyleCbPrim f =

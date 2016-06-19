@@ -511,7 +511,7 @@ enum AlignType {
 #endc
 {#enum Event {} deriving (Show, Eq) #}
 {#enum When {} deriving (Show, Eq, Ord) #}
-{#enum FdWhen {} deriving (Show, Eq) #}
+{#enum FdWhen {} deriving (Show, Eq, Ord) #}
 {#enum TreeSort {} deriving (Show, Eq) #}
 {#enum TreeConnector {} deriving (Show, Eq) #}
 {#enum TreeSelect {} deriving (Show, Eq) #}
