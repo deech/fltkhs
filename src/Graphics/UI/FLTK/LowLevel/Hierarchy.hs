@@ -1546,8 +1546,14 @@ module Graphics.UI.FLTK.LowLevel.Hierarchy
          -- PNGImage
          PNGImage,
          -- PNMImage
-         PNMImage
-  )
+         PNMImage,
+         -- FileInput
+         FileInput,
+         GetErrorColor,
+         getErrorColor,
+         SetErrorColor,
+         setErrorColor
+     )
 where
 import Prelude hiding (round)
 import Graphics.UI.FLTK.LowLevel.Fl_Types
@@ -4037,3 +4043,18 @@ type instance Functions PNGImage = ()
 data CPNMImage parent
 type PNMImage = CPNMImage RGBImage
 type instance Functions PNMImage = ()
+
+data CFileInput parent
+type FileInput = CFileInput Input
+type FileInputFuncs =
+  (SetDownBox
+  (GetDownBox
+  (SetErrorColor
+  (GetErrorColor
+  (GetValue
+  (SetValue
+  ()))))))
+
+type instance Functions FileInput = FileInputFuncs
+MAKE_METHOD(SetErrorColor, setErrorColor)
+MAKE_METHOD(GetErrorColor, getErrorColor)

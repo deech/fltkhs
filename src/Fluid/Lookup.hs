@@ -289,6 +289,10 @@ flClasses =
   ,("Fl_Browser",("Browser", "browserNew" ))
   ,("Fl_Tabs",("Tabs", "tabsNew"))
   ,("Fl_Progress", ("Progress", "progressNew"))
+  ,("Fl_File_Input", ("FileInput", "fileInputNew"))
+  ,("Fl_Text_Display", ("TextDisplay", "textDisplayNew"))
+  ,("Fl_Text_Editor", ("TextEditor", "textEditorNew"))
+  ,("Fl_Tile", ("Tile", "tileNew"))
   ]
 
 imageExtensions =

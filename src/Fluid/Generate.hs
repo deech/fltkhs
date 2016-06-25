@@ -321,7 +321,7 @@ widgetTreeG menuName menuPath widgetTree =
                                 trees)
               modify (\ns -> concatTakenNames ns newNames)
               let code = (constructorG newFlClassName hsConstructor (Just newName) posSize) ++
-                         (map (attributeG hsClassName newName) restAttrs) ++
+                         (map (attributeG newFlClassName newName) restAttrs) ++
                          ["begin " ++ newName] ++
                          innerTreeOutput ++
                          ["end " ++ newName]

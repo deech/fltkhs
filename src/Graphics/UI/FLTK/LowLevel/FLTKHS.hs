@@ -83,6 +83,7 @@ module Graphics.UI.FLTK.LowLevel.FLTKHS
          module Graphics.UI.FLTK.LowLevel.Input,
          module Graphics.UI.FLTK.LowLevel.Output,
          module Graphics.UI.FLTK.LowLevel.IntInput,
+         module Graphics.UI.FLTK.LowLevel.FileInput,
          module Graphics.UI.FLTK.LowLevel.LightButton,
          module Graphics.UI.FLTK.LowLevel.LineDial,
          module Graphics.UI.FLTK.LowLevel.MenuPrim,
@@ -209,6 +210,7 @@ import Graphics.UI.FLTK.LowLevel.Box
 import Graphics.UI.FLTK.LowLevel.Browser
 import Graphics.UI.FLTK.LowLevel.SelectBrowser
 import Graphics.UI.FLTK.LowLevel.IntInput
+import Graphics.UI.FLTK.LowLevel.FileInput
 import Graphics.UI.FLTK.LowLevel.Clock
 import Graphics.UI.FLTK.LowLevel.TreePrefs
 import Graphics.UI.FLTK.LowLevel.TreeItem

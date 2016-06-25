@@ -326,6 +326,7 @@ groupTypes =
      , (string "Fl_Pack")
      , (string "Fl_Table")
      , (string "Fl_Scroll")
+     , (string "Fl_Tile")
      ]) ++
   [(string "Fl_Tabs")]
 
@@ -372,6 +373,9 @@ componentTypes =
      , (string "Fl_File_Browser")
      , (string "Fl_Tree")
      , (string "Fl_Progress")
+     , (string "Fl_File_Input")
+     , (string "Fl_Text_Display")
+     , (string "Fl_Text_Editor")
      ])
 
 testIdentifier :: String
@@ -514,6 +518,7 @@ classP =
      body <-
        manyTill fluidP (trimAfter $ char '}')
      return (Class (InvalidHaskell name) otherArgs body)
+
 declBlockP
   :: ParsecT String () Identity FluidBlock
 declBlockP =

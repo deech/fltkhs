@@ -82,6 +82,7 @@ library
                    Graphics.UI.FLTK.LowLevel.Input
                    Graphics.UI.FLTK.LowLevel.Output
                    Graphics.UI.FLTK.LowLevel.IntInput
+                   Graphics.UI.FLTK.LowLevel.FileInput
                    Graphics.UI.FLTK.LowLevel.Wizard
                    Graphics.UI.FLTK.LowLevel.Table
                    Graphics.UI.FLTK.LowLevel.TableRow
