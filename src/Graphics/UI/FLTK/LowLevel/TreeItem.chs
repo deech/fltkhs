@@ -498,7 +498,6 @@ instance (impl ~ (IO (Int))) => Op (LabelH ()) TreeItem orig impl where
 -- visible :: 'Ref' 'TreeItem' -> 'IO' ('Bool')
 --
 -- visibleR :: 'Ref' 'TreeItem' -> 'IO' ('Bool')
-
 -- @
 
 

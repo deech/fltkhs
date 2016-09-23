@@ -38,6 +38,10 @@ rgbImageNew bits' (Size (Width width') (Height height')) depth' linesize' = do
     (Just (Depth imageDepth), Just (LineSize l')) -> rgbImageNew_WithD_LD' (castPtr asCString) width' height' imageDepth l' >>= toRef
     (Nothing, Nothing) -> rgbImageNew' (castPtr asCString) width' height' >>= toRef
 
+-- | Check that the given RGBImage (or subclass of RGBImage) has a non-zero width.
+--
+-- For the most part you don't have worry about all the ugly constraints.
+-- If you're interested, they check that the given reference is an RGBImage, which supports 'getW' and 'destroy'.
 checkImage :: (
                 Parent orig RGBImage,
                 Match x ~ FindOp orig orig (GetW ()),

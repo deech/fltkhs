@@ -92,8 +92,8 @@ fillCustomWidgetFunctionStruct structPtr _draw' (CustomWidgetFuncs _handle' _res
       toCallbackPrim `orNullFunPtr` _hide'       >>= {#set fl_Widget_Virtual_Funcs->hide#} structPtr
 
 {# fun Fl_Widget_default_virtual_funcs as virtualFuncs' {} -> `Ptr ()' id #}
--- | Given a record of functions, return a pointer to a struct with function pointers back
--- to those functions.
+
+-- | Given a record of functions, return a pointer to a struct with function pointers back to those functions.
 --
 -- Only of interest to 'Widget' contributors.
 customWidgetFunctionStruct :: forall a. (Parent a Widget) =>

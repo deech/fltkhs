@@ -664,7 +664,6 @@ instance (impl ~ ( IO (TreeReasonType)) ) => Op (GetCallbackReason ()) Tree orig
 -- showItemWithYoff :: 'Ref' 'Tree' -> 'Ref' 'TreeItem' -> 'Maybe' 'Int' -> 'IO' ()
 --
 -- showSelf :: 'Ref' 'Tree' -> 'IO' ()
-
 -- @
 
 -- $hierarchy

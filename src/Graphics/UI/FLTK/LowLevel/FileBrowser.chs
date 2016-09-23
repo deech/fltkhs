@@ -16,7 +16,7 @@ module Graphics.UI.FLTK.LowLevel.FileBrowser
 
      -- * Functions
      --
-     -- $FileBrowserfunctions
+     -- $FileBrowserFunctions
      --
     )
 where
@@ -79,7 +79,7 @@ instance (impl ~ (String -> FileSortF -> IO (Either UnknownError ()))) => Op (Lo
 {# fun fl_casenumericsort_reference as caseNumericSort {} -> `FileSortF' #}
 
 -- $hierarchy
---
+-- @
 -- "Graphics.UI.FLTK.LowLevel.Widget"
 --  |
 --  v
@@ -90,9 +90,10 @@ instance (impl ~ (String -> FileSortF -> IO (Either UnknownError ()))) => Op (Lo
 --  |
 --  v
 -- "Graphics.UI.FLTK.LowLevel.FileBrowser"
+-- @
 
 -- $FileBrowserFunctions
---
+-- @
 -- getFiletype :: 'Ref' 'FileBrowser' -> 'IO' ('FileBrowserType')
 --
 -- getFilter :: 'Ref' 'FileBrowser' -> 'IO' ('String')
@@ -110,3 +111,4 @@ instance (impl ~ (String -> FileSortF -> IO (Either UnknownError ()))) => Op (Lo
 -- setIconsize :: 'Ref' 'FileBrowser' -> 'CUChar' -> 'IO' ()
 --
 -- setTextsize :: 'Ref' 'FileBrowser' -> 'FontSize' -> 'IO' ()
+-- @

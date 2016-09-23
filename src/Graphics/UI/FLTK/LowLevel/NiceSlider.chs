@@ -6,10 +6,6 @@ module Graphics.UI.FLTK.LowLevel.NiceSlider
      -- * Hierarchy
      --
      -- $hierarchy
-
-     -- * Functions
-     --
-     -- $functions
     )
 where
 #include "Fl_ExportMacros.h"
@@ -31,12 +27,6 @@ niceSliderNew rectangle l' =
                              toRef
         Just l -> niceSliderNewWithLabel' x_pos y_pos width height l >>=
                              toRef
--- $functions
--- @
---
-
--- @
-
 -- $hierarchy
 -- @
 -- "Graphics.UI.FLTK.LowLevel.Widget"

@@ -6,6 +6,10 @@ module Graphics.UI.FLTK.LowLevel.FileInput
      -- * Hierarchy
      --
      -- $hierarchy
+
+     -- * Functions
+     --
+     -- $functions
     )
 where
 #include "Fl_ExportMacros.h"
@@ -51,8 +55,26 @@ instance (impl ~ (IO (String))) => Op (GetValue ()) FileInput orig impl where
 
 -- $hierarchy
 -- @
+-- "Graphics.UI.FLTK.LowLevel.Widget"
+--  |
+--  v
+-- "Graphics.UI.FLTK.LowLevel.Input"
+--  |
+--  v
+-- "Graphics.UI.FLTK.LowLevel.FileInput"
 -- @
 
 -- $functions
 -- @
+-- getDownBox :: 'Ref' 'FileInput' -> 'IO' ('Boxtype')
+--
+-- getErrorColor :: 'Ref' 'FileInput' -> 'IO' ('Color')
+--
+-- getValue :: 'Ref' 'FileInput' -> 'IO' ('String')
+--
+-- setDownBox :: 'Ref' 'FileInput' -> 'Boxtype' -> 'IO' ()
+--
+-- setErrorColor :: 'Ref' 'FileInput' -> 'Color' -> 'IO' ()
+--
+-- setValue :: 'Ref' 'FileInput' -> 'String' -> 'IO' ()
 -- @

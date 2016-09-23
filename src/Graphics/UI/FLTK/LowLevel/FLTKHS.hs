@@ -374,6 +374,9 @@ import Graphics.UI.FLTK.LowLevel.PNMImage
 -- "GHCi (Linux, *BSD & OSD Yosemite)".
 --
 -- == GHC 7.10.3 And Beyond (Windows only)
+-- _UPDATE_: This issue has been resolved by updates to 'language-c' and 'c2hs'. This
+-- section will be removed in a subsequent release.
+--
 -- FLTKHS does not work with GHC 7.10.3 on Windows. Period. GHC 7.10.2 and 7.8.4 on
 -- Windows work fine. The problem is the MinGW environment that comes bundled with
 -- GHC 7.10.3 has brought to a light and unfortunate

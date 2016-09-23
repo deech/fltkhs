@@ -11,7 +11,7 @@ module Graphics.UI.FLTK.LowLevel.Spinner
 
      -- * Functions
      --
-     -- $Spinnerfunctions
+     -- $functions
      --
     )
 where

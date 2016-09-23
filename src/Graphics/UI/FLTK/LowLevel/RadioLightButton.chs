@@ -6,10 +6,6 @@ module Graphics.UI.FLTK.LowLevel.RadioLightButton
      -- * Hierarchy
      --
      -- $hierarchy
-
-     -- * Functions
-     --
-     -- $functions
     )
 where
 #include "Fl_ExportMacros.h"
@@ -30,11 +26,6 @@ radioLightButtonNew rectangle l' =
     in case l' of
         Nothing -> widgetNew' x_pos y_pos width height >>= toRef
         Just l -> widgetNewWithLabel' x_pos y_pos width height l >>= toRef
--- $functions
--- @
---
-
--- @
 
 -- $hierarchy
 -- @
