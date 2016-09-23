@@ -364,6 +364,9 @@ inMarshallMap =
      ("Boxtype", "cFromEnum")
     ,("Labeltype", "cFromEnum")
     ,("AlignType", "cFromEnum")
+    ,("const SettingBool", "cFromEnum")
+    ,("const SettingDouble", "cFromEnum")
+    ,("const SettingChar", "cFromEnum")
     ,("Color", "cFromColor")
     ,("CUInt", "id")
     ,("FlShortcut", "id")
@@ -395,18 +398,22 @@ simpleTypeMap =
     [
      ("void", "()")
     ,("int", "Int")
+    ,("const unsigned", "Int")
     ,("void*", "Ptr ()")
     ,("double", "Double")
     ,("int*", "Ptr CInt")
     ,("char*", "String")
+    ,("const char *", "String")
     ,("const char*", "String")
     ,("char* const*", "String")
     ,("const char* const*", "String")
+    ,("const char * const", "String")
     ,("float", "Float")
     ,("uchar", "Word8")
     ,("float*", "Ptr CFloat")
     ,("unsigned", "Int")
     ,("unsigned int", "Int")
+    ,("long long", "Double")
     ,("fl_Region", "Ptr ()")
     ,("Fl_Boxtype", "Boxtype")
     ,("Fl_Mode", "Mode")
@@ -449,6 +456,7 @@ simpleTypeMap =
     ,("fl_Image", "Ptr ()")
     ,("fl_Image_Surface", "Ptr ()")
     ,("fl_Bitmap", "Ptr ()")
+    ,("webviewC",   "Ptr()")
     ,("Fl_Color", "Color")
     ,("Fl_Font", "Font")
     ,("Fl_Fontsize", "Fontsize")
@@ -520,7 +528,8 @@ haskellEquivalent =
      ("fl_Image_Surface"  , "ImageSurface"),
      ("fl_Menu_Item"      , "MenuItem"),
      ("fl_Menu_"          , "MenuPrim"),
-     ("fl_Bitmap"         , "Bitmap")
+     ("fl_Bitmap"         , "Bitmap"),
+     ("webviewC"          , "Webview")
     ]
 upcase = map toUpper
 makeArgument className argType argName =
@@ -618,9 +627,9 @@ ignoreUntil e p = scan
              <|>
              do {p; x <- scan; return x}
 
-parseCPP = do
+parseCPP p = do
   manyTill anyChar (try (string "EXPORT {"))
-  impls <- many (try (ignoreUntil parseImplementation (noneOf "{}")))
+  impls <- many (try (ignoreUntil p (noneOf "{}")))
   manyTill anyChar (char '}')
   return impls
 

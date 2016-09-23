@@ -128,16 +128,13 @@ widgetMaker :: forall a. (Parent a Widget) =>
                -> (Int -> Int -> Int -> Int -> String -> Ptr () -> IO ( Ptr () )) -- ^ Foreign constructor to call if both title and custom functions are given
                -> IO (Ref a)                                                      -- ^ Reference to the widget
 widgetMaker rectangle _label' draw' customFuncs' new' newWithLabel' newWithCustomFuncs' newWithCustomFuncsLabel' =
+  do
     let (x_pos, y_pos, width, height) = fromRectangle rectangle
-    in case (_label', customFuncs') of
-        (Nothing,Nothing) -> new' x_pos y_pos width height >>= toRef
-        ((Just l), Nothing) -> newWithLabel' x_pos y_pos width height l >>= toRef
-        ((Just l), (Just fs)) -> do
-          ptr <- customWidgetFunctionStruct draw' fs
-          newWithCustomFuncsLabel' x_pos y_pos width height l (castPtr ptr) >>= toRef
-        (Nothing, (Just fs)) -> do
-          ptr <- customWidgetFunctionStruct draw' fs
-          newWithCustomFuncs' x_pos y_pos width height (castPtr ptr) >>= toRef
+    ptr <- customWidgetFunctionStruct draw' (maybe defaultCustomWidgetFuncs id customFuncs')
+    widget <- maybe (newWithCustomFuncs' x_pos y_pos width height (castPtr ptr))
+                    (\l -> newWithCustomFuncsLabel' x_pos y_pos width height l (castPtr ptr))
+                    _label'
+    toRef widget
 
 {# fun Fl_Widget_New as widgetNew' { `Int',`Int',`Int',`Int' } -> `Ptr ()' id #}
 {# fun Fl_Widget_New_WithLabel as widgetNewWithLabel' { `Int',`Int',`Int',`Int', unsafeToCString `String'} -> `Ptr ()' id #}
