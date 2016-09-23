@@ -3,7 +3,7 @@
 module Graphics.UI.FLTK.LowLevel.TableRow
     (
      tableRowNew,
-     TableRowSelectFlag
+     TableRowSelectFlag(..)
      -- * Hierarchy
      --
      -- $hierarchy
