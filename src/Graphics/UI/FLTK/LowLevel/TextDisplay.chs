@@ -25,6 +25,7 @@ import Graphics.UI.FLTK.LowLevel.Fl_Enumerations
 import Graphics.UI.FLTK.LowLevel.Utils
 import Graphics.UI.FLTK.LowLevel.Hierarchy
 import Graphics.UI.FLTK.LowLevel.Dispatch
+import qualified Data.Text as T
 import qualified Foreign.ForeignPtr.Unsafe as Unsafe
 
 mkStyleTableEntriesPtr :: (Parent a TextDisplay) => Ref a -> [StyleTableEntry] -> IO (ForeignPtr [StyleTableEntry])
@@ -52,8 +53,8 @@ indexStyleTableEntries :: [StyleTableEntry] -> [(Char, StyleTableEntry)]
 indexStyleTableEntries = zip ['A'..]
 
 {# fun Fl_Text_Display_New as textDisplayNew' { `Int',`Int',`Int',`Int' } -> `Ptr ()' id #}
-{# fun Fl_Text_Display_New_WithLabel as textDisplayNewWithLabel' { `Int',`Int',`Int',`Int',unsafeToCString `String'} -> `Ptr ()' id #}
-textDisplayNew :: Rectangle -> Maybe String -> IO (Ref TextDisplay)
+{# fun Fl_Text_Display_New_WithLabel as textDisplayNewWithLabel' { `Int',`Int',`Int',`Int',unsafeToCString `T.Text'} -> `Ptr ()' id #}
+textDisplayNew :: Rectangle -> Maybe T.Text -> IO (Ref TextDisplay)
 textDisplayNew rectangle l' =
     let (x_pos, y_pos, width, height) = fromRectangle rectangle
     in case l' of
@@ -86,8 +87,8 @@ instance (impl ~ (BufferRange -> IO ())) => Op (RedisplayRange ()) TextDisplay o
 {# fun Fl_Text_Display_scroll as scroll' { id `Ptr ()',`Int',`Int' } -> `()' #}
 instance (impl ~ (Int -> BufferOffset ->  IO ())) => Op (Scroll ()) TextDisplay orig impl where
   runOp _ _ text_display toplinenum (BufferOffset  horizoffset) = withRef text_display $ \text_displayPtr -> scroll' text_displayPtr toplinenum horizoffset
-{# fun Fl_Text_Display_overstrike as overstrike' { id `Ptr ()',unsafeToCString `String' } -> `()' #}
-instance (impl ~ (String ->  IO ())) => Op (Overstrike ()) TextDisplay orig impl where
+{# fun Fl_Text_Display_overstrike as overstrike' { id `Ptr ()',unsafeToCString `T.Text' } -> `()' #}
+instance (impl ~ (T.Text ->  IO ())) => Op (Overstrike ()) TextDisplay orig impl where
    runOp _ _ text_display text = withRef text_display $ \text_displayPtr -> overstrike' text_displayPtr text
 {# fun Fl_Text_Display_set_insert_position as setInsertPosition' { id `Ptr ()',`Int' } -> `()' #}
 instance (impl ~ (BufferOffset ->  IO ())) => Op (SetInsertPosition ()) TextDisplay orig impl where
@@ -269,11 +270,11 @@ instance (impl ~ (AlignType ->  IO ())) => Op (SetLinenumberAlign ()) TextDispla
 {# fun linenumber_align as linenumberAlign' { id `Ptr ()' } -> `AlignType' cToEnum #}
 instance (impl ~ ( IO (AlignType))) => Op (GetLinenumberAlign ()) TextDisplay orig impl where
    runOp _ _ text_display = withRef text_display $ \text_displayPtr -> linenumberAlign' text_displayPtr
-{# fun set_linenumber_format as setLinenumberFormat' { id `Ptr ()',unsafeToCString `String' } -> `()' #}
-instance (impl ~ (String ->  IO ())) => Op (SetLinenumberFormat ()) TextDisplay orig impl where
+{# fun set_linenumber_format as setLinenumberFormat' { id `Ptr ()',unsafeToCString `T.Text' } -> `()' #}
+instance (impl ~ (T.Text ->  IO ())) => Op (SetLinenumberFormat ()) TextDisplay orig impl where
    runOp _ _ text_display val = withRef text_display $ \text_displayPtr -> setLinenumberFormat' text_displayPtr val
-{# fun linenumber_format as linenumberFormat' { id `Ptr ()' } -> `String' unsafeFromCString #}
-instance (impl ~ ( IO (String))) => Op (GetLinenumberFormat ()) TextDisplay orig impl where
+{# fun linenumber_format as linenumberFormat' { id `Ptr ()' } -> `T.Text' unsafeFromCString #}
+instance (impl ~ ( IO T.Text)) => Op (GetLinenumberFormat ()) TextDisplay orig impl where
    runOp _ _ text_display = withRef text_display $ \text_displayPtr -> linenumberFormat' text_displayPtr
 
 -- $hierarchy
@@ -303,7 +304,7 @@ instance (impl ~ ( IO (String))) => Op (GetLinenumberFormat ()) TextDisplay orig
 --
 -- getLinenumberFont :: 'Ref' 'TextDisplay' -> 'IO' ('Font')
 --
--- getLinenumberFormat :: 'Ref' 'TextDisplay' -> 'IO' ('String')
+-- getLinenumberFormat :: 'Ref' 'TextDisplay' -> 'IO' 'T.Text'
 --
 -- getLinenumberSize :: 'Ref' 'TextDisplay' -> 'IO' ('FontSize')
 --
@@ -341,7 +342,7 @@ instance (impl ~ ( IO (String))) => Op (GetLinenumberFormat ()) TextDisplay orig
 --
 -- nextWord :: 'Ref' 'TextDisplay' -> 'IO' ()
 --
--- overstrike :: 'Ref' 'TextDisplay' -> 'String' -> 'IO' ()
+-- overstrike :: 'Ref' 'TextDisplay' -> 'T.Text' -> 'IO' ()
 --
 -- positionStyle :: 'Ref' 'TextDisplay' -> 'BufferOffset' -> 'Int' -> 'Int' -> 'IO' 'TextDisplayStyle'
 --
@@ -373,7 +374,7 @@ instance (impl ~ ( IO (String))) => Op (GetLinenumberFormat ()) TextDisplay orig
 --
 -- setLinenumberFont :: 'Ref' 'TextDisplay' -> 'Font' -> 'IO' ()
 --
--- setLinenumberFormat :: 'Ref' 'TextDisplay' -> 'String' -> 'IO' ()
+-- setLinenumberFormat :: 'Ref' 'TextDisplay' -> 'T.Text' -> 'IO' ()
 --
 -- setLinenumberSize :: 'Ref' 'TextDisplay' -> 'FontSize' -> 'IO' ()
 --
@@ -386,6 +387,8 @@ instance (impl ~ ( IO (String))) => Op (GetLinenumberFormat ()) TextDisplay orig
 -- setShortcut :: 'Ref' 'TextDisplay' -> 'ShortcutKeySequence' -> 'IO' ()
 --
 -- setTextcolor :: 'Ref' 'TextDisplay' -> 'Color' -> 'IO' ()
+--
+-- setTextfont :: 'Ref' 'TextDisplay' -> 'Font' -> 'IO' ()
 --
 -- setTextsize :: 'Ref' 'TextDisplay' -> 'FontSize' -> 'IO' ()
 --

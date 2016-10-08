@@ -25,25 +25,24 @@ import Graphics.UI.FLTK.LowLevel.Fl_Types
 import Graphics.UI.FLTK.LowLevel.Utils
 import Graphics.UI.FLTK.LowLevel.Hierarchy
 import Graphics.UI.FLTK.LowLevel.Dispatch
+import qualified Data.Text as T
 import Graphics.UI.FLTK.LowLevel.Widget
 
 {# fun Fl_Browser_New as browserNew' { `Int',`Int',`Int',`Int' } -> `Ptr ()' id #}
-{# fun Fl_Browser_New_WithLabel as browserNewWithLabel' { `Int',`Int',`Int',`Int',unsafeToCString `String'} -> `Ptr ()' id #}
-{# fun Fl_OverriddenBrowser_New_WithLabel as overriddenBrowserNewWithLabel' { `Int',`Int',`Int',`Int',unsafeToCString `String', id `Ptr ()'} -> `Ptr ()' id #}
+{# fun Fl_Browser_New_WithLabel as browserNewWithLabel' { `Int',`Int',`Int',`Int',unsafeToCString `T.Text'} -> `Ptr ()' id #}
+{# fun Fl_OverriddenBrowser_New_WithLabel as overriddenBrowserNewWithLabel' { `Int',`Int',`Int',`Int',unsafeToCString `T.Text', id `Ptr ()'} -> `Ptr ()' id #}
 {# fun Fl_OverriddenBrowser_New as overriddenBrowserNew' { `Int',`Int',`Int',`Int', id `Ptr ()'} -> `Ptr ()' id #}
-browserCustom :: Rectangle -> Maybe String -> Maybe (Ref Browser -> IO ()) -> Maybe (CustomWidgetFuncs Browser) -> IO (Ref Browser)
+browserCustom :: Rectangle -> Maybe T.Text -> Maybe (Ref Browser -> IO ()) -> Maybe (CustomWidgetFuncs Browser) -> IO (Ref Browser)
 browserCustom rectangle l' draw' funcs' =
   widgetMaker
     rectangle
     l'
     draw'
     funcs'
-    browserNew'
-    browserNewWithLabel'
     overriddenBrowserNew'
     overriddenBrowserNewWithLabel'
 
-browserNew :: Rectangle -> Maybe String -> IO (Ref Browser)
+browserNew :: Rectangle -> Maybe T.Text -> IO (Ref Browser)
 browserNew rectangle l' =
     let (x_pos, y_pos, width, height) = fromRectangle rectangle
     in case l' of
@@ -64,17 +63,17 @@ instance (impl ~ (IO ())) => Op (Destroy ()) Browser orig impl where
 {# fun Fl_Browser_remove as remove' { id `Ptr ()',`Int' } -> `()' #}
 instance (impl ~ (Int ->  IO ())) => Op (Remove ()) Browser orig impl where
   runOp _ _ browser line = withRef browser $ \browserPtr -> remove' browserPtr line
-{# fun Fl_Browser_add as add' { id `Ptr ()',unsafeToCString `String' } -> `()' #}
-instance (impl ~ (String ->  IO ())) => Op (Add ()) Browser orig impl where
+{# fun Fl_Browser_add as add' { id `Ptr ()',unsafeToCString `T.Text' } -> `()' #}
+instance (impl ~ (T.Text ->  IO ())) => Op (Add ()) Browser orig impl where
   runOp _ _ browser newtext = withRef browser $ \browserPtr -> add' browserPtr newtext
-{# fun Fl_Browser_insert as insert' { id `Ptr ()',`Int',unsafeToCString `String' } -> `()' #}
-instance (impl ~ (Int -> String ->  IO ())) => Op (Insert ()) Browser orig impl where
+{# fun Fl_Browser_insert as insert' { id `Ptr ()',`Int',unsafeToCString `T.Text' } -> `()' #}
+instance (impl ~ (Int -> T.Text ->  IO ())) => Op (Insert ()) Browser orig impl where
   runOp _ _ browser line newtext = withRef browser $ \browserPtr -> insert' browserPtr line newtext
 {# fun Fl_Browser_move as move' { id `Ptr ()',`Int',`Int' } -> `()' #}
 instance (impl ~ (Int -> Int ->  IO ())) => Op (Move ()) Browser orig impl where
   runOp _ _ browser to from = withRef browser $ \browserPtr -> move' browserPtr to from
-{# fun Fl_Browser_load as load' { id `Ptr ()',unsafeToCString `String' } -> `Int' #}
-instance (impl ~ (String ->  IO (Int))) => Op (Load ()) Browser orig impl where
+{# fun Fl_Browser_load as load' { id `Ptr ()',unsafeToCString `T.Text' } -> `Int' #}
+instance (impl ~ (T.Text ->  IO (Int))) => Op (Load ()) Browser orig impl where
   runOp _ _ browser filename = withRef browser $ \browserPtr -> load' browserPtr filename
 {# fun Fl_Browser_swap as swap' { id `Ptr ()',`Int',`Int' } -> `()' #}
 instance (impl ~ (Int -> Int ->  IO ())) => Op (Swap ()) Browser orig impl where
@@ -130,11 +129,11 @@ instance (impl ~ ( IO (Int))) => Op (GetValue ()) Browser orig impl where
 {# fun Fl_Browser_set_value as setValue' { id `Ptr ()',`Int' } -> `()' #}
 instance (impl ~ (Int ->  IO ())) => Op (SetValue ()) Browser orig impl where
   runOp _ _ browser line = withRef browser $ \browserPtr -> setValue' browserPtr line
-{# fun Fl_Browser_text as text' { id `Ptr ()',`Int' } -> `String' unsafeFromCString #}
-instance (impl ~ (Int ->  IO (String))) => Op (GetText ()) Browser orig impl where
+{# fun Fl_Browser_text as text' { id `Ptr ()',`Int' } -> `T.Text' unsafeFromCString #}
+instance (impl ~ (Int ->  IO T.Text)) => Op (GetText ()) Browser orig impl where
   runOp _ _ browser line = withRef browser $ \browserPtr -> text' browserPtr line
-{# fun Fl_Browser_set_text as setText' { id `Ptr ()',`Int', unsafeToCString `String' } -> `()' #}
-instance (impl ~ (Int -> String ->  IO ())) => Op (SetText ()) Browser orig impl where
+{# fun Fl_Browser_set_text as setText' { id `Ptr ()',`Int', unsafeToCString `T.Text' } -> `()' #}
+instance (impl ~ (Int -> T.Text ->  IO ())) => Op (SetText ()) Browser orig impl where
   runOp _ _ browser line newtext = withRef browser $ \browserPtr -> setText' browserPtr line newtext
 {# fun Fl_Browser_format_char as formatChar' { id `Ptr ()' } -> `CChar' id #}
 instance (impl ~ ( IO (Char))) => Op (GetFormatChar ()) Browser orig impl where
@@ -252,7 +251,7 @@ instance (impl ~ IO (BrowserType)) => Op (GetType_ ()) Browser orig impl where
 
 -- $functions
 -- @
--- add :: 'Ref' 'Browser' -> 'String' -> 'IO' ()
+-- add :: 'Ref' 'Browser' -> 'T.Text' -> 'IO' ()
 --
 -- clear :: 'Ref' 'Browser' -> 'IO' ()
 --
@@ -284,7 +283,7 @@ instance (impl ~ IO (BrowserType)) => Op (GetType_ ()) Browser orig impl where
 --
 -- getSize :: 'Ref' 'Browser' -> 'IO' ('Int')
 --
--- getText :: 'Ref' 'Browser' -> 'Int' -> 'IO' ('String')
+-- getText :: 'Ref' 'Browser' -> 'Int' -> 'IO' 'T.Text'
 --
 -- getTextcolor :: 'Ref' 'Browser' -> 'IO' ('Color')
 --
@@ -304,11 +303,11 @@ instance (impl ~ IO (BrowserType)) => Op (GetType_ ()) Browser orig impl where
 --
 -- hideLine :: 'Ref' 'Browser' -> 'Int' -> 'IO' ()
 --
--- insert :: 'Ref' 'Browser' -> 'Int' -> 'String' -> 'IO' ()
+-- insert :: 'Ref' 'Browser' -> 'Int' -> 'T.Text' -> 'IO' ()
 --
 -- lineposition :: 'Ref' 'Browser' -> 'Int' -> 'LinePosition' -> 'IO' ()
 --
--- load :: 'Ref' 'Browser' -> 'String' -> 'IO' ('Int')
+-- load :: 'Ref' 'Browser' -> 'T.Text' -> 'IO' ('Int')
 --
 -- makeVisible :: 'Ref' 'Browser' -> 'Int' -> 'IO' ()
 --
@@ -330,7 +329,7 @@ instance (impl ~ IO (BrowserType)) => Op (GetType_ ()) Browser orig impl where
 --
 -- setFormatChar :: 'Ref' 'Browser' -> 'Char' -> 'IO' ()
 --
--- setHasScrollbar :: 'Ref' 'Browser' -> 'ScrollbarMode'>- 'IO' ()
+-- setHasScrollbar :: 'Ref' 'Browser' -> 'ScrollbarMode' -> 'IO' ()
 --
 -- setHposition :: 'Ref' 'Browser' -> 'Int' -> 'IO' ()
 --
@@ -346,7 +345,7 @@ instance (impl ~ IO (BrowserType)) => Op (GetType_ ()) Browser orig impl where
 --
 -- setSize :: 'Ref' 'Browser' -> 'Int' -> 'Int' -> 'IO' ()
 --
--- setText :: 'Ref' 'Browser' -> 'Int' -> 'String' -> 'IO' ()
+-- setText :: 'Ref' 'Browser' -> 'Int' -> 'T.Text' -> 'IO' ()
 --
 -- setTextcolor :: 'Ref' 'Browser' -> 'Color' -> 'IO' ()
 --
@@ -371,6 +370,7 @@ instance (impl ~ IO (BrowserType)) => Op (GetType_ ()) Browser orig impl where
 -- swap :: 'Ref' 'Browser' -> 'Int' -> 'Int' -> 'IO' ()
 --
 -- visible :: 'Ref' 'Browser' -> 'Int' -> 'IO' ('Int')
+
 -- @
 
 -- $hierarchy

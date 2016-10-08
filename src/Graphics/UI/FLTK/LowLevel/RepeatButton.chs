@@ -23,10 +23,11 @@ import Graphics.UI.FLTK.LowLevel.Fl_Enumerations
 import Graphics.UI.FLTK.LowLevel.Utils
 import Graphics.UI.FLTK.LowLevel.Hierarchy
 import Graphics.UI.FLTK.LowLevel.Dispatch
+import qualified Data.Text as T
 
 {# fun Fl_Repeat_Button_New as widgetNew' { `Int',`Int',`Int',`Int' } -> `Ptr ()' id #}
-{# fun Fl_Repeat_Button_New_WithLabel as widgetNewWithLabel' { `Int',`Int',`Int',`Int', unsafeToCString `String'} -> `Ptr ()' id #}
-repeatButtonNew :: Rectangle -> Maybe String -> IO (Ref RepeatButton)
+{# fun Fl_Repeat_Button_New_WithLabel as widgetNewWithLabel' { `Int',`Int',`Int',`Int', unsafeToCString `T.Text'} -> `Ptr ()' id #}
+repeatButtonNew :: Rectangle -> Maybe T.Text -> IO (Ref RepeatButton)
 repeatButtonNew rectangle l' =
     let (x_pos, y_pos, width, height) = fromRectangle rectangle
     in case l' of

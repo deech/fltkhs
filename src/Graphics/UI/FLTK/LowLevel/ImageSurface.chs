@@ -22,6 +22,7 @@ import Graphics.UI.FLTK.LowLevel.Fl_Types
 import Graphics.UI.FLTK.LowLevel.Utils
 import Graphics.UI.FLTK.LowLevel.Hierarchy
 import Graphics.UI.FLTK.LowLevel.Dispatch
+import qualified Data.Text as T
 
 {# fun Fl_Image_Surface_New as imageSurfaceNew' {`Int', `Int'} -> `Ptr ()' id #}
 imageSurfaceNew :: Size -> IO (Ref ImageSurface)
@@ -31,8 +32,8 @@ imageSurfaceNew (Size (Width w') (Height h')) = imageSurfaceNew' w' h' >>= toRef
 instance (impl ~ (IO ())) => Op (Destroy ()) ImageSurface orig impl where
   runOp _ _ image_surface = withRef image_surface $ \image_surfacePtr -> imageSurfaceDestroy' image_surfacePtr
 
-{# fun Fl_Image_Surface_class_name as className' { id `Ptr ()' } -> `String' unsafeFromCString #}
-instance (impl ~ ( IO (String))) => Op (ClassName ()) ImageSurface orig impl where
+{# fun Fl_Image_Surface_class_name as className' { id `Ptr ()' } -> `T.Text' unsafeFromCString #}
+instance (impl ~ ( IO (T.Text))) => Op (ClassName ()) ImageSurface orig impl where
   runOp _ _ image_surface = withRef image_surface $ \image_surfacePtr -> className' image_surfacePtr
 
 {# fun Fl_Image_Surface_set_current as setCurrent' { id `Ptr ()' } -> `()' #}
@@ -51,7 +52,7 @@ instance (Parent a Widget, impl ~ ( Ref a  -> Position -> IO ())) => Op (Draw ()
 
 -- $functions
 -- @
--- className :: 'Ref' 'ImageSurface' -> 'IO' ('String')
+-- className :: 'Ref' 'ImageSurface' -> 'IO' ('T.Text')
 --
 -- destroy :: 'Ref' 'ImageSurface' -> 'IO' ()
 --

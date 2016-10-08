@@ -1,4 +1,4 @@
-{-# LANGUAGE CPP, ExistentialQuantification, TypeSynonymInstances, FlexibleInstances, MultiParamTypeClasses, FlexibleContexts, UndecidableInstances #-}
+{-# LANGUAGE OverloadedStrings, CPP, ExistentialQuantification, TypeSynonymInstances, FlexibleInstances, MultiParamTypeClasses, FlexibleContexts, UndecidableInstances #-}
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 module Graphics.UI.FLTK.LowLevel.MenuItem
   (
@@ -28,10 +28,11 @@ import Graphics.UI.FLTK.LowLevel.Fl_Types
 import Graphics.UI.FLTK.LowLevel.Utils
 import Graphics.UI.FLTK.LowLevel.Hierarchy
 import Graphics.UI.FLTK.LowLevel.Dispatch
+import qualified Data.Text as T
 
 newtype MenuItemIndex = MenuItemIndex Int
 data MenuItemPointer = forall a. (Parent a MenuItem) => MenuItemPointer (Ref a)
-newtype MenuItemName = MenuItemName String
+newtype MenuItemName = MenuItemName T.Text
 data MenuItemReference = MenuItemByIndex MenuItemIndex | MenuItemByPointer MenuItemPointer
 data MenuItemLocator = MenuItemPointerLocator MenuItemPointer | MenuItemNameLocator MenuItemName
 
@@ -56,16 +57,16 @@ instance (impl ~  IO (Maybe (Ref MenuItem))) => Op (Next ()) MenuItem orig impl 
 instance (impl ~  IO (Maybe (Ref MenuItem))) => Op (GetFirst ()) MenuItem orig impl where
   runOp _ _ menu_item = withRef menu_item $ \menu_itemPtr -> first' menu_itemPtr >>=toMaybeRef
 
-{# fun Fl_Menu_Item_label as label' { id `Ptr ()' } -> `String' unsafeFromCString #}
-instance (impl ~  IO (String)) => Op (GetLabel ()) MenuItem orig impl where
+{# fun Fl_Menu_Item_label as label' { id `Ptr ()' } -> `T.Text' unsafeFromCString #}
+instance (impl ~  IO T.Text) => Op (GetLabel ()) MenuItem orig impl where
   runOp _ _ menu_item = withRef menu_item $ \menu_itemPtr -> label' menu_itemPtr
 
-{# fun Fl_Menu_Item_set_label as setLabel' { id `Ptr ()', unsafeToCString `String' } -> `()' #}
-instance (impl ~ (String ->  IO ())) => Op (SetLabel ()) MenuItem orig impl where
+{# fun Fl_Menu_Item_set_label as setLabel' { id `Ptr ()', unsafeToCString `T.Text' } -> `()' #}
+instance (impl ~ (T.Text ->  IO ())) => Op (SetLabel ()) MenuItem orig impl where
   runOp _ _ menu_item a = withRef menu_item $ \menu_itemPtr -> setLabel' menu_itemPtr a
 
-{# fun Fl_Menu_Item_set_label_with_labeltype as setLabelWithLabeltype' { id `Ptr ()',cFromEnum `Labeltype', unsafeToCString `String' } -> `()' #}
-instance (impl ~ (Labeltype -> String ->  IO ())) => Op (SetLabelWithLabeltype ()) MenuItem orig impl where
+{# fun Fl_Menu_Item_set_label_with_labeltype as setLabelWithLabeltype' { id `Ptr ()',cFromEnum `Labeltype', unsafeToCString `T.Text' } -> `()' #}
+instance (impl ~ (Labeltype -> T.Text ->  IO ())) => Op (SetLabelWithLabeltype ()) MenuItem orig impl where
   runOp _ _ menu_item labeltype b = withRef menu_item $ \menu_itemPtr -> setLabelWithLabeltype' menu_itemPtr labeltype b
 
 {# fun Fl_Menu_Item_labeltype as labeltype' { id `Ptr ()' } -> `Labeltype' cToEnum #}
@@ -196,8 +197,8 @@ instance (impl ~  IO (Maybe MenuItemFlags)) => Op (GetFlags ()) MenuItem orig im
 instance (impl ~ (MenuItemFlags ->  IO ())) => Op (SetFlags ()) MenuItem orig impl where
   runOp _ _ menu_item flags = withRef menu_item $ \menu_itemPtr -> setFlags' menu_itemPtr (menuItemFlagsToInt flags)
 
-{# fun Fl_Menu_Item_text as text' { id `Ptr ()' } -> `String' unsafeFromCString #}
-instance (impl ~ ( IO (String))) => Op (GetText ()) MenuItem orig impl where
+{# fun Fl_Menu_Item_text as text' { id `Ptr ()' } -> `T.Text' unsafeFromCString #}
+instance (impl ~ ( IO T.Text)) => Op (GetText ()) MenuItem orig impl where
   runOp _ _ menu_item = withRef menu_item $ \menu_itemPtr -> text' menu_itemPtr
 
 {# fun Fl_Menu_Item_pulldown_with_args as pulldownWithArgs' { id `Ptr ()',`Int',`Int',`Int',`Int',id `Ptr ()', id `Ptr ()', id `Ptr ()', fromBool `Bool'} -> `Ptr ()' id #}
@@ -213,12 +214,12 @@ instance (Parent a MenuPrim, Parent b MenuItem, Parent c MenuItem, impl ~ (Recta
      pulldownWithArgs' menu_itemPtr x_pos y_pos width height pickedPtr template_menuPtr titlePtr menu_bar >>= toMaybeRef
 
 {# fun Fl_Menu_Item_popup_with_args as popupWithArgs' { id `Ptr ()',`Int',`Int', id `Ptr CChar' , id `Ptr ()', id `Ptr ()'} -> `Ptr ()' id #}
-instance (Parent a MenuItem, Parent b MenuPrim, Parent c MenuItem, impl ~ (Position -> Maybe String -> Maybe (Ref a) -> Maybe (Ref b) -> IO (Maybe (Ref c)))) => Op (Popup ()) MenuItem orig impl where
+instance (Parent a MenuItem, Parent b MenuPrim, Parent c MenuItem, impl ~ (Position -> Maybe T.Text -> Maybe (Ref a) -> Maybe (Ref b) -> IO (Maybe (Ref c)))) => Op (Popup ()) MenuItem orig impl where
   runOp _ _ menu_item (Position (X x_pos) (Y y_pos)) title picked' template_menu =
     withRef menu_item $ \menu_itemPtr ->
     withMaybeRef picked' $ \pickedPtr ->
     withMaybeRef template_menu $ \template_menuPtr ->
-    maybeNew newCString title >>= \titlePtr ->
+    maybeNew copyTextToCString title >>= \titlePtr ->
     popupWithArgs' menu_itemPtr x_pos y_pos titlePtr pickedPtr template_menuPtr >>= toMaybeRef
 
 {# fun Fl_Menu_Item_test_shortcut as testShortcut' { id `Ptr ()' } -> `Ptr ()' id #}
@@ -239,12 +240,12 @@ instance (impl ~ (Ref Widget  ->  IO ())) => Op (DoCallback ()) MenuItem orig im
 addMenuItem ::
   (Parent menuItem MenuItem) =>
   Either (Ref MenuPrim) (Ref MenuItem) ->
-  String ->
+  T.Text ->
   Maybe Shortcut ->
   Maybe (Ref menuItem -> IO ()) ->
   MenuItemFlags ->
-  (Ptr () -> String -> CInt -> FunPtr CallbackWithUserDataPrim -> Int -> IO Int) ->
-  (Ptr () -> String -> String -> FunPtr CallbackWithUserDataPrim -> Int -> IO Int) ->
+  (Ptr () -> T.Text -> CInt -> FunPtr CallbackWithUserDataPrim -> Int -> IO Int) ->
+  (Ptr () -> T.Text -> T.Text -> FunPtr CallbackWithUserDataPrim -> Int -> IO Int) ->
   IO (MenuItemIndex)
 addMenuItem refMenuOrMenuItem name shortcut cb flags addWithFlags addWithShortcutnameFlags =
      either
@@ -266,7 +267,7 @@ addMenuItem refMenuOrMenuItem name shortcut cb flags addWithFlags addWithShortcu
                       (castFunPtr ptr)
                       combinedFlags
                    KeyFormat format' ->
-                     if (not $ null format') then
+                     if (not $ T.null format') then
                        addWithShortcutnameFlags
                        menu_Ptr
                        name
@@ -283,14 +284,14 @@ addMenuItem refMenuOrMenuItem name shortcut cb flags addWithFlags addWithShortcu
                       combinedFlags
         return (MenuItemIndex idx')
 
-{# fun Fl_Menu_Item_insert_with_flags as insertWithFlags' { id `Ptr ()',`Int', unsafeToCString `String',id `CInt',id `FunPtr CallbackWithUserDataPrim',`Int'} -> `Int' #}
-{# fun Fl_Menu_Item_add_with_flags as addWithFlags' { id `Ptr ()', unsafeToCString `String',id `CInt',id `FunPtr CallbackWithUserDataPrim',`Int'} -> `Int' #}
-{# fun Fl_Menu_Item_add_with_shortcutname_flags as addWithShortcutnameFlags' { id `Ptr ()', unsafeToCString `String', unsafeToCString `String',id `FunPtr CallbackWithUserDataPrim',`Int' } -> `Int' #}
-instance (Parent a MenuItem, impl ~ (String -> Maybe Shortcut -> Maybe (Ref a -> IO ()) -> MenuItemFlags -> IO (MenuItemIndex))) => Op (Add ()) MenuItem orig impl where
+{# fun Fl_Menu_Item_insert_with_flags as insertWithFlags' { id `Ptr ()',`Int', unsafeToCString `T.Text',id `CInt',id `FunPtr CallbackWithUserDataPrim',`Int'} -> `Int' #}
+{# fun Fl_Menu_Item_add_with_flags as addWithFlags' { id `Ptr ()', unsafeToCString `T.Text',id `CInt',id `FunPtr CallbackWithUserDataPrim',`Int'} -> `Int' #}
+{# fun Fl_Menu_Item_add_with_shortcutname_flags as addWithShortcutnameFlags' { id `Ptr ()', unsafeToCString `T.Text', unsafeToCString `T.Text',id `FunPtr CallbackWithUserDataPrim',`Int' } -> `Int' #}
+instance (Parent a MenuItem, impl ~ (T.Text -> Maybe Shortcut -> Maybe (Ref a -> IO ()) -> MenuItemFlags -> IO (MenuItemIndex))) => Op (Add ()) MenuItem orig impl where
   runOp _ _ menu_item name shortcut cb flags =
     addMenuItem (Right menu_item) name shortcut cb flags addWithFlags' addWithShortcutnameFlags'
 
-instance (Parent a MenuItem, impl ~ (Int -> String -> Maybe ShortcutKeySequence -> (Ref a -> IO ()) -> MenuItemFlags -> IO (MenuItemIndex))) => Op (Insert ()) MenuItem orig impl where
+instance (Parent a MenuItem, impl ~ (Int -> T.Text -> Maybe ShortcutKeySequence -> (Ref a -> IO ()) -> MenuItemFlags -> IO (MenuItemIndex))) => Op (Insert ()) MenuItem orig impl where
   runOp _ _ menu_item index' name ks cb flags =
     withRef menu_item $ \menu_itemPtr ->
       let combinedFlags = menuItemFlagsToInt flags
@@ -317,14 +318,13 @@ instance (impl ~ ( IO (Int))) => Op (GetSize ()) MenuItem orig impl where
 
 -- $functions
 -- @
---
 -- activate :: 'Ref' 'MenuItem' -> 'IO' ()
 --
 -- active :: 'Ref' 'MenuItem' -> 'IO' ('Bool')
 --
 -- activevisible :: 'Ref' 'MenuItem' -> 'IO' ('Bool')
 --
--- add:: ('Parent' a 'MenuItem') => 'Ref' 'MenuItem' -> 'String' -> 'Maybe' 'Shortcut' -> ('Ref' a -> 'IO' ()) -> 'MenuItemFlags' -> 'IO' ('MenuItemIndex')
+-- add:: ('Parent' a 'MenuItem') => 'Ref' 'MenuItem' -> 'T.Text' -> 'Maybe' 'Shortcut' -> 'Maybe' ('Ref' a -> 'IO' ()) -> 'MenuItemFlags' -> 'IO' ('MenuItemIndex')
 --
 -- checkbox :: 'Ref' 'MenuItem' -> 'IO' ('Bool')
 --
@@ -346,7 +346,7 @@ instance (impl ~ ( IO (Int))) => Op (GetSize ()) MenuItem orig impl where
 --
 -- getFlags :: 'Ref' 'MenuItem' -> 'IO' ('Maybe' 'MenuItemFlags')
 --
--- getLabel :: 'Ref' 'MenuItem' -> 'IO' ('String')
+-- getLabel :: 'Ref' 'MenuItem' -> 'IO' 'T.Text'
 --
 -- getLabelcolor :: 'Ref' 'MenuItem' -> 'IO' ('Color')
 --
@@ -360,13 +360,13 @@ instance (impl ~ ( IO (Int))) => Op (GetSize ()) MenuItem orig impl where
 --
 -- getSize :: 'Ref' 'MenuItem' -> 'IO' ('Int')
 --
--- getText :: 'Ref' 'MenuItem' -> 'IO' ('String')
+-- getText :: 'Ref' 'MenuItem' -> 'IO' 'T.Text'
 --
 -- getValue :: 'Ref' 'MenuItem' -> 'IO' ('Int')
 --
 -- hide :: 'Ref' 'MenuItem' -> 'IO' ()
 --
--- insert:: ('Parent' a 'MenuItem') => 'Ref' 'MenuItem' -> 'Int' -> 'String' -> 'Maybe' 'ShortcutKeySequence' -> ('Ref' a -> 'IO' ()) -> 'MenuItemFlags' -> 'IO' ('MenuItemIndex')
+-- insert:: ('Parent' a 'MenuItem') => 'Ref' 'MenuItem' -> 'Int' -> 'T.Text' -> 'Maybe' 'ShortcutKeySequence' -> ('Ref' a -> 'IO' ()) -> 'MenuItemFlags' -> 'IO' ('MenuItemIndex')
 --
 -- measure:: ('Parent' a 'MenuPrim') => 'Ref' 'MenuItem' -> 'Ref' a -> 'IO' ('Size')
 --
@@ -374,7 +374,7 @@ instance (impl ~ ( IO (Int))) => Op (GetSize ()) MenuItem orig impl where
 --
 -- nextWithStep:: ('Parent' a 'MenuItem') => 'Ref' 'MenuItem' -> 'Int' -> 'IO' ('Maybe' ('Ref' a))
 --
--- popup:: ('Parent' a 'MenuItem', 'Parent' b 'MenuPrim', 'Parent' c 'MenuItem') => 'Ref' 'MenuItem' -> 'Position' -> 'Maybe' 'String' -> 'Maybe' ('Ref' a) -> 'Maybe' ('Ref' b) -> 'IO' ('Maybe' ('Ref' c))
+-- popup:: ('Parent' a 'MenuItem', 'Parent' b 'MenuPrim', 'Parent' c 'MenuItem') => 'Ref' 'MenuItem' -> 'Position' -> 'Maybe' 'T.Text' -> 'Maybe' ('Ref' a) -> 'Maybe' ('Ref' b) -> 'IO' ('Maybe' ('Ref' c))
 --
 -- pulldown:: ('Parent' a 'MenuPrim', 'Parent' b 'MenuItem', 'Parent' c 'MenuItem') => 'Ref' 'MenuItem' -> 'Rectangle' -> 'Maybe' ('Ref' a) -> 'Maybe' ('Ref' b) -> 'Maybe' ('Ref' c) -> 'Maybe' 'Bool' -> 'IO' ('Maybe' ('Ref' 'MenuItem'))
 --
@@ -386,9 +386,9 @@ instance (impl ~ ( IO (Int))) => Op (GetSize ()) MenuItem orig impl where
 --
 -- setFlags :: 'Ref' 'MenuItem' -> 'MenuItemFlags' -> 'IO' ()
 --
--- setLabel :: 'Ref' 'MenuItem' -> 'String' -> 'IO' ()
+-- setLabel :: 'Ref' 'MenuItem' -> 'T.Text' -> 'IO' ()
 --
--- setLabelWithLabeltype :: 'Ref' 'MenuItem' -> 'Labeltype' -> 'String' -> 'IO' ()
+-- setLabelWithLabeltype :: 'Ref' 'MenuItem' -> 'Labeltype' -> 'T.Text' -> 'IO' ()
 --
 -- setLabelcolor :: 'Ref' 'MenuItem' -> 'Color' -> 'IO' ()
 --

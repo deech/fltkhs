@@ -1,7 +1,9 @@
+{-# LANGUAGE OverloadedStrings #-}
 module Main where
 
 import Graphics.UI.FLTK.LowLevel.FL
 import Graphics.UI.FLTK.LowLevel.FLTKHS
+import Graphics.UI.FLTK.LowLevel.Fl_Enumerations
 
 main :: IO ()
 main = do

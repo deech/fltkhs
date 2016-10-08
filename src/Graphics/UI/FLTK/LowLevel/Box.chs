@@ -26,17 +26,18 @@ import Graphics.UI.FLTK.LowLevel.Fl_Types
 import Graphics.UI.FLTK.LowLevel.Utils
 import Graphics.UI.FLTK.LowLevel.Hierarchy
 import Graphics.UI.FLTK.LowLevel.Dispatch
+import qualified Data.Text as T
 import Graphics.UI.FLTK.LowLevel.Widget
 
 {# fun Fl_Box_New as boxNew' { `Int',`Int',`Int',`Int' } -> `Ptr ()' id #}
-{# fun Fl_Box_New_WithLabel as boxNewWithLabel' { `Int',`Int',`Int',`Int',unsafeToCString `String'} -> `Ptr ()' id #}
-{# fun Fl_OverriddenBox_New_WithLabel as overriddenBoxNewWithLabel' { `Int',`Int',`Int',`Int',unsafeToCString `String', id `Ptr ()'} -> `Ptr ()' id #}
+{# fun Fl_Box_New_WithLabel as boxNewWithLabel' { `Int',`Int',`Int',`Int',unsafeToCString `T.Text'} -> `Ptr ()' id #}
+{# fun Fl_OverriddenBox_New_WithLabel as overriddenBoxNewWithLabel' { `Int',`Int',`Int',`Int',unsafeToCString `T.Text', id `Ptr ()'} -> `Ptr ()' id #}
 {# fun Fl_OverriddenBox_New as overriddenBoxNew' { `Int',`Int',`Int',`Int', id `Ptr ()'} -> `Ptr ()' id #}
-{# fun Fl_Box_New_WithBoxtype as boxNewWithBoxtype' {cFromEnum `Boxtype',  `Int',`Int',`Int',`Int',unsafeToCString `String'} -> `Ptr ()' id #}
-{# fun Fl_OverriddenBox_New_WithBoxtype as overriddenBoxNewWithBoxtype' {cFromEnum `Boxtype',  `Int',`Int',`Int',`Int',unsafeToCString `String', id `Ptr ()'} -> `Ptr ()' id #}
+{# fun Fl_Box_New_WithBoxtype as boxNewWithBoxtype' {cFromEnum `Boxtype',  `Int',`Int',`Int',`Int',unsafeToCString `T.Text'} -> `Ptr ()' id #}
+{# fun Fl_OverriddenBox_New_WithBoxtype as overriddenBoxNewWithBoxtype' {cFromEnum `Boxtype',  `Int',`Int',`Int',`Int',unsafeToCString `T.Text', id `Ptr ()'} -> `Ptr ()' id #}
 
 boxCustom :: Rectangle                     -- ^ The bounds of this box
-          -> Maybe String                  -- ^ Optional label
+          -> Maybe T.Text                  -- ^ Optional label
           -> Maybe (Ref Box -> IO ())      -- ^ Optional custom box drawing function
           -> Maybe (CustomWidgetFuncs Box) -- ^ Optional widget overrides
           -> IO (Ref Box)
@@ -46,12 +47,10 @@ boxCustom rectangle l' draw' funcs' =
     l'
     draw'
     funcs'
-    boxNew'
-    boxNewWithLabel'
     overriddenBoxNew'
     overriddenBoxNewWithLabel'
 
-boxCustomWithBoxtype :: Boxtype -> Rectangle -> String -> Maybe (Ref Box -> IO ()) -> Maybe (CustomWidgetFuncs Box) -> IO (Ref Box)
+boxCustomWithBoxtype :: Boxtype -> Rectangle -> T.Text -> Maybe (Ref Box -> IO ()) -> Maybe (CustomWidgetFuncs Box) -> IO (Ref Box)
 boxCustomWithBoxtype boxtype' rectangle' l' draw' funcs' =
     let (x_pos, y_pos, width, height) = fromRectangle rectangle'
     in case funcs' of
@@ -62,7 +61,7 @@ boxCustomWithBoxtype boxtype' rectangle' l' draw' funcs' =
           boxNewWithBoxtype' boxtype' x_pos y_pos width height l' >>= toRef
 
 
-boxNew :: Rectangle -> Maybe String -> IO (Ref Box)
+boxNew :: Rectangle -> Maybe T.Text -> IO (Ref Box)
 boxNew rectangle l' =
     let (x_pos, y_pos, width, height) = fromRectangle rectangle
     in case l' of
@@ -71,7 +70,7 @@ boxNew rectangle l' =
         Just l -> boxNewWithLabel' x_pos y_pos width height l >>=
                              toRef
 
-boxNewWithBoxtype :: Boxtype -> Rectangle -> String -> IO (Ref Box)
+boxNewWithBoxtype :: Boxtype -> Rectangle -> T.Text -> IO (Ref Box)
 boxNewWithBoxtype boxtype' rectangle' l' =
     let (x_pos, y_pos, width, height) = fromRectangle rectangle'
     in

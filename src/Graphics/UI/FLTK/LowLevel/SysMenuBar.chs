@@ -22,13 +22,14 @@ import Graphics.UI.FLTK.LowLevel.Fl_Enumerations
 import Graphics.UI.FLTK.LowLevel.Fl_Types
 import Graphics.UI.FLTK.LowLevel.Utils
 import Graphics.UI.FLTK.LowLevel.Dispatch
+import qualified Data.Text as T
 import Graphics.UI.FLTK.LowLevel.Hierarchy
 import Graphics.UI.FLTK.LowLevel.MenuItem
 import Graphics.UI.FLTK.LowLevel.MenuPrim
 
 {# fun Fl_Sys_Menu_Bar_New as sysMenuBarNew' { `Int',`Int',`Int',`Int' } -> `Ptr ()' id #}
-{# fun Fl_Sys_Menu_Bar_New_WithLabel as sysMenuBarNewWithLabel' { `Int',`Int',`Int',`Int', unsafeToCString `String'} -> `Ptr ()' id #}
-sysMenuBarNew :: Rectangle -> Maybe String -> IO (Ref SysMenuBar)
+{# fun Fl_Sys_Menu_Bar_New_WithLabel as sysMenuBarNewWithLabel' { `Int',`Int',`Int',`Int', unsafeToCString `T.Text'} -> `Ptr ()' id #}
+sysMenuBarNew :: Rectangle -> Maybe T.Text -> IO (Ref SysMenuBar)
 sysMenuBarNew rectangle l'=
     let (x_pos, y_pos, width, height) = fromRectangle rectangle
     in case l' of
@@ -47,8 +48,8 @@ instance (impl ~ ( Event -> IO Int)) => Op (Handle ()) SysMenuBar orig impl wher
 {# fun Fl_Sys_Menu_Bar_remove as remove' { id `Ptr ()',`Int' } -> `()' #}
 instance (impl ~ (Int  ->  IO ())) => Op (Remove ()) SysMenuBar orig impl where
   runOp _ _ menu_ index' = withRef menu_ $ \menu_Ptr -> remove' menu_Ptr index'
-{# fun Fl_Sys_Menu_Bar_replace as replace' { id `Ptr ()',`Int', unsafeToCString `String' } -> `()' #}
-instance (impl ~ (Int -> String ->  IO ())) => Op (Replace ()) SysMenuBar orig impl where
+{# fun Fl_Sys_Menu_Bar_replace as replace' { id `Ptr ()',`Int', unsafeToCString `T.Text' } -> `()' #}
+instance (impl ~ (Int -> T.Text ->  IO ())) => Op (Replace ()) SysMenuBar orig impl where
   runOp _ _ menu_ index' name = withRef menu_ $ \menu_Ptr -> replace' menu_Ptr index' name
 {# fun Fl_Sys_Menu_Bar_clear as clear' { id `Ptr ()' } -> `()' #}
 instance (impl ~ ( IO ())) => Op (Clear ()) SysMenuBar orig impl where
@@ -77,27 +78,27 @@ instance (impl ~ ([Ref MenuItem] -> IO ())) => Op (SetMenu ()) SysMenuBar orig i
         withRefs items $ \menu_itemsPtr ->
             menuWithM' menu_Ptr menu_itemsPtr (length items)
 
-{# fun Fl_Sys_Menu_Bar_add_with_name as add' { id `Ptr ()',unsafeToCString `String'} -> `()' #}
-instance (impl ~ (String -> IO ())) => Op (AddName ()) SysMenuBar orig impl where
+{# fun Fl_Sys_Menu_Bar_add_with_name as add' { id `Ptr ()',unsafeToCString `T.Text'} -> `()' #}
+instance (impl ~ (T.Text -> IO ())) => Op (AddName ()) SysMenuBar orig impl where
   runOp _ _ menu_ name' = withRef menu_ $ \menu_Ptr -> add' menu_Ptr name'
 
-{# fun Fl_Sys_Menu_Bar_add_with_flags as addWithFlags' { id `Ptr ()',unsafeToCString `String',id `CInt',id `FunPtr CallbackWithUserDataPrim',`Int' } -> `Int' #}
-{# fun Fl_Sys_Menu_Bar_add_with_shortcutname_flags as addWithShortcutnameFlags' { id `Ptr ()', unsafeToCString `String', unsafeToCString `String',id `FunPtr CallbackWithUserDataPrim',`Int' } -> `Int' #}
-instance (Parent a MenuItem, impl ~ ( String -> Maybe Shortcut -> Maybe (Ref a-> IO ()) -> MenuItemFlags -> IO (MenuItemIndex))) => Op (Add ()) SysMenuBar orig (impl) where
+{# fun Fl_Sys_Menu_Bar_add_with_flags as addWithFlags' { id `Ptr ()',unsafeToCString `T.Text',id `CInt',id `FunPtr CallbackWithUserDataPrim',`Int' } -> `Int' #}
+{# fun Fl_Sys_Menu_Bar_add_with_shortcutname_flags as addWithShortcutnameFlags' { id `Ptr ()', unsafeToCString `T.Text', unsafeToCString `T.Text',id `FunPtr CallbackWithUserDataPrim',`Int' } -> `Int' #}
+instance (Parent a MenuItem, impl ~ ( T.Text -> Maybe Shortcut -> Maybe (Ref a-> IO ()) -> MenuItemFlags -> IO (MenuItemIndex))) => Op (Add ()) SysMenuBar orig (impl) where
   runOp _ _ menu_ name shortcut cb flags =
     addMenuItem (Left (safeCast menu_)) name shortcut cb flags addWithFlags' addWithShortcutnameFlags'
 
-{# fun Fl_Sys_Menu_Bar_insert_with_flags as insertWithFlags' { id `Ptr ()',`Int',unsafeToCString `String',id `CInt',id `FunPtr CallbackWithUserDataPrim',`Int'} -> `Int' #}
-{# fun Fl_Sys_Menu_Bar_insert_with_shortcutname_flags as insertWithShortcutnameFlags' { id `Ptr ()',`Int',unsafeToCString `String', unsafeToCString `String',id `FunPtr CallbackWithUserDataPrim',`Int' } -> `Int' #}
-instance (Parent a MenuPrim, impl ~ ( Int -> String -> Maybe Shortcut -> (Ref a -> IO ()) -> MenuItemFlags -> IO (MenuItemIndex))) => Op (Insert ()) SysMenuBar orig impl where
+{# fun Fl_Sys_Menu_Bar_insert_with_flags as insertWithFlags' { id `Ptr ()',`Int',unsafeToCString `T.Text',id `CInt',id `FunPtr CallbackWithUserDataPrim',`Int'} -> `Int' #}
+{# fun Fl_Sys_Menu_Bar_insert_with_shortcutname_flags as insertWithShortcutnameFlags' { id `Ptr ()',`Int',unsafeToCString `T.Text', unsafeToCString `T.Text',id `FunPtr CallbackWithUserDataPrim',`Int' } -> `Int' #}
+instance (Parent a MenuPrim, impl ~ ( Int -> T.Text -> Maybe Shortcut -> (Ref a -> IO ()) -> MenuItemFlags -> IO (MenuItemIndex))) => Op (Insert ()) SysMenuBar orig impl where
   runOp _ _ menu_ index' name shortcut cb flags = insertMenuItem (safeCast menu_) index' name shortcut cb flags insertWithFlags' insertWithShortcutnameFlags'
 
 -- $functions
 -- @
 --
--- add:: ('Parent' a 'MenuItem') => 'Ref' 'SysMenuBar' -> 'String' -> 'Maybe' 'Shortcut' -> 'Maybe' ('Ref' a-> 'IO' ()) -> 'MenuItemFlags' -> 'IO' ('MenuItemIndex')
+-- add:: ('Parent' a 'MenuItem') => 'Ref' 'SysMenuBar' -> 'T.Text' -> 'Maybe' 'Shortcut' -> 'Maybe' ('Ref' a-> 'IO' ()) -> 'MenuItemFlags' -> 'IO' ('MenuItemIndex')
 --
--- addName :: 'Ref' 'SysMenuBar' -> 'String' -> 'IO' ()
+-- addName :: 'Ref' 'SysMenuBar' -> 'T.Text' -> 'IO' ()
 --
 -- clear :: 'Ref' 'SysMenuBar' -> 'IO' ()
 --
@@ -105,21 +106,21 @@ instance (Parent a MenuPrim, impl ~ ( Int -> String -> Maybe Shortcut -> (Ref a 
 --
 -- destroy :: 'Ref' 'SysMenuBar' -> 'IO' ()
 --
--- getMode :: 'Ref' 'SysMenuBar' -> 'Int' -> 'IO' ('Int')
+-- getMode :: 'Ref' 'SysMenuBar' -> 'Int' -> 'IO' ('Maybe' 'MenuItemFlags')
 --
 -- global :: 'Ref' 'SysMenuBar' -> 'IO' ()
 --
 -- handle :: 'Ref' 'SysMenuBar' -> 'Event' -> 'IO' 'Int'
 --
--- insert:: ('Parent' a 'MenuPrim') => 'Ref' 'SysMenuBar' -> 'Int' -> 'String' -> 'Maybe' 'Shortcut' -> ('Ref' a -> 'IO' ()) -> 'MenuItemFlags' -> 'IO' ('MenuItemIndex')
+-- insert:: ('Parent' a 'MenuPrim') => 'Ref' 'SysMenuBar' -> 'Int' -> 'T.Text' -> 'Maybe' 'Shortcut' -> ('Ref' a -> 'IO' ()) -> 'MenuItemFlags' -> 'IO' ('MenuItemIndex')
 --
 -- remove :: 'Ref' 'SysMenuBar' -> 'Int' -> 'IO' ()
 --
--- replace :: 'Ref' 'SysMenuBar' -> 'Int' -> 'String' -> 'IO' ()
+-- replace :: 'Ref' 'SysMenuBar' -> 'Int' -> 'T.Text' -> 'IO' ()
 --
 -- setMenu :: 'Ref' 'SysMenuBar' -> ['Ref' 'MenuItem'] -> 'IO' ()
 --
--- setMode :: 'Ref' 'SysMenuBar' -> 'Int' -> 'Int' -> 'IO' ()
+-- setMode :: 'Ref' 'SysMenuBar' -> 'Int' -> 'MenuItemFlags' -> 'IO' ()
 --
 -- setShortcut :: 'Ref' 'SysMenuBar' -> 'Int' -> 'ShortcutKeySequence' -> 'IO' ()
 --

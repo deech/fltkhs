@@ -17,18 +17,17 @@ where
 #include "Fl_Menu_BarC.h"
 import C2HS hiding (cFromEnum, cFromBool, cToBool,cToEnum)
 import Foreign.C.Types
-import Graphics.UI.FLTK.LowLevel.Widget
 import Graphics.UI.FLTK.LowLevel.Fl_Enumerations
 import Graphics.UI.FLTK.LowLevel.Fl_Types
 import Graphics.UI.FLTK.LowLevel.Utils
 import Graphics.UI.FLTK.LowLevel.Dispatch
+import qualified Data.Text as T
 import Graphics.UI.FLTK.LowLevel.Hierarchy
 import Graphics.UI.FLTK.LowLevel.MenuItem
-import qualified Data.ByteString.Char8 as C
 
 {# fun Fl_Menu_Bar_New as widgetNew' { `Int',`Int',`Int',`Int' } -> `Ptr ()' id #}
-{# fun Fl_Menu_Bar_New_WithLabel as widgetNewWithLabel' { `Int',`Int',`Int',`Int',unsafeToCString `String'} -> `Ptr ()' id #}
-menuBarNew :: Rectangle -> Maybe String -> IO (Ref MenuBar)
+{# fun Fl_Menu_Bar_New_WithLabel as widgetNewWithLabel' { `Int',`Int',`Int',`Int',unsafeToCString `T.Text'} -> `Ptr ()' id #}
+menuBarNew :: Rectangle -> Maybe T.Text -> IO (Ref MenuBar)
 menuBarNew rectangle l' =
     let (x_pos, y_pos, width, height) = fromRectangle rectangle
     in case l' of

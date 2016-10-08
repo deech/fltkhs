@@ -21,6 +21,7 @@ import Graphics.UI.FLTK.LowLevel.Fl_Types
 import Graphics.UI.FLTK.LowLevel.Utils
 import Graphics.UI.FLTK.LowLevel.Hierarchy
 import Graphics.UI.FLTK.LowLevel.Dispatch
+import qualified Data.Text as T
 
 {# fun Fl_Copy_Surface_New as copySurfaceNew' {`Int', `Int'} -> `Ptr ()' id #}
 copySurfaceNew :: Size -> IO (Ref CopySurface)
@@ -30,8 +31,8 @@ copySurfaceNew (Size (Width w') (Height h')) = copySurfaceNew' w' h' >>= toRef
 instance (impl ~ (IO ())) => Op (Destroy ()) CopySurface orig impl where
   runOp _ _ copy_surface = withRef copy_surface $ \copy_surfacePtr -> copySurfaceDestroy' copy_surfacePtr
 
-{# fun Fl_Copy_Surface_class_name as className' { id `Ptr () ' } -> `String' unsafeFromCString #}
-instance (impl ~ (IO (String))) => Op (ClassName ()) Image orig impl where
+{# fun Fl_Copy_Surface_class_name as className' { id `Ptr () ' } -> `T.Text' unsafeFromCString #}
+instance (impl ~ (IO (T.Text))) => Op (ClassName ()) Image orig impl where
   runOp _ _ copy_surface = withRef copy_surface $ \copy_surfacePtr -> className' copy_surfacePtr
 
 {# fun Fl_Copy_Surface_set_current as setCurrent' { id `Ptr ()' } -> `()' #}

@@ -19,13 +19,13 @@ import Graphics.UI.FLTK.LowLevel.Utils
 import Graphics.UI.FLTK.LowLevel.Hierarchy
 import Graphics.UI.FLTK.LowLevel.RGBImage
 import qualified Data.ByteString as B
-
-{# fun Fl_JPEG_Image_New as jpegImageNew' { unsafeToCString `String' } -> `Ptr ()' id #}
-{# fun Fl_JPEG_Image_New_WithData as jpegImageNewWithData' { unsafeToCString `String', id `Ptr CUChar' } -> `Ptr ()' id #}
-jpegImageNew :: String -> IO (Either UnknownError (Ref JPEGImage))
+import qualified Data.Text as T
+{# fun Fl_JPEG_Image_New as jpegImageNew' { unsafeToCString `T.Text' } -> `Ptr ()' id #}
+{# fun Fl_JPEG_Image_New_WithData as jpegImageNewWithData' { unsafeToCString `T.Text', id `Ptr CUChar' } -> `Ptr ()' id #}
+jpegImageNew :: T.Text -> IO (Either UnknownError (Ref JPEGImage))
 jpegImageNew filename' = jpegImageNew' filename' >>= toRef >>= checkImage
 
-jpegImageNewWithData :: String -> B.ByteString -> IO (Either UnknownError (Ref JPEGImage))
+jpegImageNewWithData :: T.Text -> B.ByteString -> IO (Either UnknownError (Ref JPEGImage))
 jpegImageNewWithData l' data' = do
   jpeg' <- copyByteStringToCString data'
   jpegImageNewWithData' l' (castPtr jpeg') >>= toRef >>= checkImage

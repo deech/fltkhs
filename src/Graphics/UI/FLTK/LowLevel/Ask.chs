@@ -14,6 +14,8 @@ where
 #include "Fl_AskC.h"
 import C2HS hiding (cFromEnum, cToBool,cToEnum)
 import Foreign.C.Types
+import qualified Data.Text as T
+import Graphics.UI.FLTK.LowLevel.Utils
 
 #c
 enum BeepType {
@@ -34,18 +36,18 @@ flBeep :: Maybe BeepType -> IO ()
 flBeep Nothing = flBeep'
 flBeep (Just bt) = flBeepType' (fromIntegral (fromEnum bt))
 
-{# fun flc_input as flInput' { `String' } -> `()' #}
-flInput :: String -> IO ()
+{# fun flc_input as flInput' { unsafeToCString `T.Text' } -> `()' #}
+flInput :: T.Text -> IO ()
 flInput = flInput'
 
-{# fun flc_password as flPassword' { `String' } -> `()' #}
-flPassword :: String -> IO ()
+{# fun flc_password as flPassword' { unsafeToCString `T.Text' } -> `()' #}
+flPassword :: T.Text -> IO ()
 flPassword = flPassword'
 
-{# fun flc_message as flMessage' { `String' } -> `()' #}
-flMessage :: String -> IO ()
+{# fun flc_message as flMessage' { unsafeToCString `T.Text' } -> `()' #}
+flMessage :: T.Text -> IO ()
 flMessage = flMessage'
 
-{# fun flc_alert as flAlert' { `String' } -> `()' #}
-flAlert :: String -> IO ()
+{# fun flc_alert as flAlert' { unsafeToCString `T.Text' } -> `()' #}
+flAlert :: T.Text -> IO ()
 flAlert = flAlert'

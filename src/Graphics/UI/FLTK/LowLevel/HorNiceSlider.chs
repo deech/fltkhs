@@ -17,10 +17,10 @@ import Foreign.C.Types
 import Graphics.UI.FLTK.LowLevel.Fl_Types
 import Graphics.UI.FLTK.LowLevel.Utils
 import Graphics.UI.FLTK.LowLevel.Hierarchy
-
+import qualified Data.Text as T
 {# fun Fl_Hor_Nice_Slider_New as horNiceSliderNew' { `Int',`Int',`Int',`Int' } -> `Ptr ()' id #}
-{# fun Fl_Hor_Nice_Slider_New_WithLabel as horNiceSliderNewWithLabel' { `Int',`Int',`Int',`Int',unsafeToCString `String'} -> `Ptr ()' id #}
-horNiceSliderNew :: Rectangle -> Maybe String -> IO (Ref HorNiceSlider)
+{# fun Fl_Hor_Nice_Slider_New_WithLabel as horNiceSliderNewWithLabel' { `Int',`Int',`Int',`Int',unsafeToCString `T.Text'} -> `Ptr ()' id #}
+horNiceSliderNew :: Rectangle -> Maybe T.Text -> IO (Ref HorNiceSlider)
 horNiceSliderNew rectangle l' =
     let (x_pos, y_pos, width, height) = fromRectangle rectangle
     in case l' of

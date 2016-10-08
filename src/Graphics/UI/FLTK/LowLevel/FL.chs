@@ -180,6 +180,8 @@ import Graphics.UI.FLTK.LowLevel.Hierarchy hiding (
                                                    setScrollbarSize
                                                   )
 import Graphics.UI.FLTK.LowLevel.Dispatch
+import qualified Data.Text as T
+import qualified Data.Text.Foreign as TF
 import qualified System.IO.Unsafe as Unsafe (unsafePerformIO)
 #c
  enum Option {
@@ -247,10 +249,10 @@ getAwakeHandler_ =
 {# fun Fl_version as version
   {} -> `Double' #}
 {# fun Fl_help as help
-  {} -> `String' unsafeFromCString #}
+  {} -> `T.Text' unsafeFromCString #}
 
-display :: String -> IO ()
-display text = withCString text $ \str -> {#call Fl_display as fl_display #} str
+display :: T.Text -> IO ()
+display text = TF.withCStringLen text $ \(str,_) -> {#call Fl_display as fl_display #} str
 {# fun Fl_visual as visual
   {cFromEnum `Mode'} -> `Bool' cToBool #}
 #if !defined(__APPLE__)
@@ -282,11 +284,11 @@ background2 (r,g,b) = {#call Fl_background2 as fl_background2 #}
                     (fromIntegral g)
                     (fromIntegral b)
 {# fun pure Fl_scheme as scheme
-  {} -> `String' unsafeFromCString #}
-setScheme :: String -> IO Int
-setScheme sch = withCString sch $ \str -> {#call Fl_set_scheme as fl_set_scheme #} str >>= return . fromIntegral
-isScheme :: String -> IO Bool
-isScheme sch = withCString sch $ \str -> {#call Fl_is_scheme as fl_is_scheme #} str >>= return . toBool
+  {} -> `T.Text' unsafeFromCString #}
+setScheme :: T.Text -> IO Int
+setScheme sch = TF.withCStringLen sch $ \(str,_) -> {#call Fl_set_scheme as fl_set_scheme #} str >>= return . fromIntegral
+isScheme :: T.Text -> IO Bool
+isScheme sch = TF.withCStringLen sch $ \(str,_) -> {#call Fl_is_scheme as fl_is_scheme #} str >>= return . toBool
 {# fun Fl_wait as wait
        {  } -> `Int' #}
 {# fun Fl_set_wait as setWait
@@ -413,7 +415,7 @@ extractEventStates = extract eventStates
 {# fun Fl_get_key as getKey
        {cFromKeyType `KeyType' } -> `Bool' toBool #}
 {# fun Fl_event_text as eventText
-       {  } -> `String' unsafeFromCString #}
+       {  } -> `T.Text' unsafeFromCString #}
 {# fun Fl_event_length as eventLength
        {  } -> `Int' #}
 {# fun Fl_compose as compose
@@ -530,9 +532,9 @@ setEventDispatch ed = do
       poke ptrToCallbackPtr callbackPtr
       setEventDispatch' ptrToCallbackPtr
 {# fun Fl_copy as copy
-       { `String',`Int' } -> `()' supressWarningAboutRes #}
+       { unsafeToCString `T.Text',`Int' } -> `()' supressWarningAboutRes #}
 {# fun Fl_copy_with_destination as copyWithDestination
-       { `String',`Int',`Int' } -> `()' supressWarningAboutRes #}
+       { unsafeToCString `T.Text',`Int',`Int' } -> `()' supressWarningAboutRes #}
 {# fun Fl_paste_with_source as pasteWithSource
        { id `Ptr ()',`Int' } -> `()' supressWarningAboutRes #}
 paste :: (Parent a Widget) => Ref a -> Maybe Int -> IO ()
@@ -689,26 +691,26 @@ removeFromColormap (Just overlay) c = freeColorWithOverlay' c overlay
 removeFromColormap Nothing c = freeColor' c
 #endif
 {# fun Fl_get_font as getFont
-       { cFromFont `Font' } -> `String' unsafeFromCString #}
+       { cFromFont `Font' } -> `T.Text' unsafeFromCString #}
 {# fun Fl_get_font_name_with_attributes as getFontNameWithAttributes'
-       { cFromFont `Font', alloca- `Maybe FontAttribute' toAttribute* } -> `String' unsafeFromCString #}
+       { cFromFont `Font', alloca- `Maybe FontAttribute' toAttribute* } -> `T.Text' unsafeFromCString #}
 toAttribute :: Ptr CInt -> IO (Maybe FontAttribute)
 toAttribute ptr =
         do
           attributeCode <- peekIntConv ptr
           return $ cToFontAttribute attributeCode
-getFontName :: Font -> IO (String, Maybe FontAttribute)
+getFontName :: Font -> IO (T.Text, Maybe FontAttribute)
 getFontName f = getFontNameWithAttributes' f
 {# fun Fl_get_font_sizes as getFontSizes
        { cFromFont `Font', alloca- `Int' peekIntConv* } -> `Int' #}
 {# fun Fl_set_font_by_string as setFontByString
-       { cFromFont `Font', unsafeToCString `String' } -> `()' supressWarningAboutRes #}
+       { cFromFont `Font', unsafeToCString `T.Text' } -> `()' supressWarningAboutRes #}
 {# fun Fl_set_font_by_font as setFontByFont
        { cFromFont `Font',cFromFont `Font' } -> `()' supressWarningAboutRes #}
 {# fun Fl_set_fonts as setFonts
        {  } -> `Font' cToFont #}
 {# fun Fl_set_fonts_with_string as setFontsWithString
-       { `String' } -> `Font' cToFont #}
+       { unsafeToCString `T.Text' } -> `Font' cToFont #}
 
 {# fun Fl_add_fd_with_when as addFdWhen'
        {

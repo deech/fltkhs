@@ -1,14 +1,25 @@
+{-# LANGUAGE CPP, OverloadedStrings #-}
+#ifdef CALLSTACK_AVAILABLE
+{-# LANGUAGE ImplicitParams #-}
+#endif
+
 module Graphics.UI.FLTK.LowLevel.Utils where
 import Graphics.UI.FLTK.LowLevel.Fl_Types
 import Graphics.UI.FLTK.LowLevel.Fl_Enumerations
 import Graphics.UI.FLTK.LowLevel.Dispatch
+import qualified Data.Text as T
 import Data.List
+import qualified Data.Text.Foreign as TF
+import qualified Data.Text.Encoding as E
 import Foreign
 import qualified Foreign.Concurrent as FC
 import Foreign.C
-import qualified Data.ByteString.Char8 as C
 import qualified Data.ByteString as B
 import qualified System.IO.Unsafe as Unsafe
+import Debug.Trace
+#if defined(CALLSTACK_AVAILABLE) || defined(HASCALLSTACK_AVAILABLE)
+import GHC.Stack
+#endif
 
 foreign import ccall "wrapper"
         mkWidgetCallbackPtr :: CallbackWithUserDataPrim -> IO (FunPtr CallbackWithUserDataPrim)
@@ -123,7 +134,7 @@ toGlobalCallbackPrim f = mkCallbackPtr (\_ -> f)
 toDrawCallback :: DrawCallback -> IO (FunPtr DrawCallbackPrim)
 toDrawCallback f = mkDrawCallbackPrimPtr
                    (\string' length' x' y' -> do
-                      str' <- peekCStringLen (string', fromIntegral length')
+                      str' <- TF.peekCStringLen (string', fromIntegral length')
                       f str' (Position (X (fromIntegral x')) (Y (fromIntegral y'))))
 
 toBoxDrawF :: BoxDrawFPrim -> BoxDrawF
@@ -155,7 +166,7 @@ toTextModifyCbPrim f =
   mkTextModifyCb
     (
       \pos' nInserted' nDeleted' nRestyled' stringPtr _ ->
-       peekCString stringPtr >>=
+       cStringToText stringPtr >>=
        f (fromIntegral pos')
          (fromIntegral nInserted')
          (fromIntegral nDeleted')
@@ -248,16 +259,26 @@ unsafeToRef = Unsafe.unsafePerformIO . toRef
 unsafeToMaybeRef :: Ptr () -> Maybe (Ref a)
 unsafeToMaybeRef = Unsafe.unsafePerformIO . toMaybeRef
 
-unsafeToCString :: String -> CString
-unsafeToCString s = Unsafe.unsafePerformIO (newCString s)
+unsafeToCString :: T.Text -> CString
+unsafeToCString t = Unsafe.unsafePerformIO (copyTextToCString t)
 
-unsafeFromCString :: CString -> String
-unsafeFromCString cstring =
-  Unsafe.unsafePerformIO (
-    if (cstring == nullPtr)
-    then return ""
-    else peekCString cstring >>= return
-    )
+unsafeFromCString :: CString -> T.Text
+unsafeFromCString cstring = Unsafe.unsafePerformIO (cStringToText cstring)
+
+#ifdef CALLSTACK_AVAILABLE
+cStringToText :: (?loc :: CallStack) => CString -> IO T.Text
+#elif HASCALLSTACK_AVAILABLE
+cStringToText :: (HasCallStack) => CString -> IO T.Text
+#else
+cStringToText :: CString -> IO T.Text
+#endif
+cStringToText cstring =
+    if (cstring == nullPtr) then return ""
+    else do
+      byteString <- B.packCString cstring
+      either (\e -> traceStack (show e) (error ""))
+             return
+             (E.decodeUtf8' byteString)
 
 toMaybeRef :: Ptr () -> IO (Maybe (Ref a))
 toMaybeRef ptr' = if ptr' == nullPtr then return Nothing else toRef ptr' >>= return . Just
@@ -302,7 +323,7 @@ withByteStrings bs f = B.useAsCString (foldl1 B.append bs) (\ptr -> new ptr >>= 
 
 withPixmap :: PixmapHs -> ((Ptr (Ptr CChar)) -> IO a) -> IO a
 withPixmap (PixmapHs strings) f = do
-  cStrings <- sequence (map newCString strings)
+  cStrings <- sequence (map copyTextToCString strings)
   ptr <- newArray cStrings
   f ptr
 
@@ -312,14 +333,20 @@ withBitmap (BitmapHs bitmap (Size (Width width') (Height height'))) f =
      bitmap
      (\ptr -> f ptr width' height')
 
-withStrings :: [String] -> (Ptr (Ptr CChar) -> IO a) -> IO a
-withStrings ss f = withByteStrings (map C.pack ss) f
+withStrings :: [T.Text] -> (Ptr (Ptr CChar) -> IO a) -> IO a
+withStrings ss f = TF.withCStringLen (T.concat ss) (\(cstring,_) -> new cstring >>= f) -- withByteStrings (map C.pack ss) f
 
 copyByteStringToCString :: B.ByteString -> IO CString
 copyByteStringToCString bs =
   B.useAsCStringLen bs
     (\(cstring, len) -> do
-        dest <- mallocArray len
-        copyArray dest cstring len
+        dest <- mallocArray (len + 1)
+        copyArray dest cstring (len + 1)
         return dest
     )
+
+copyTextToCString :: T.Text -> IO CString
+copyTextToCString t =
+  let bs = E.encodeUtf8 t
+  in
+    copyByteStringToCString bs

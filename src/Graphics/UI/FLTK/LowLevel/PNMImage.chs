@@ -17,9 +17,9 @@ import Graphics.UI.FLTK.LowLevel.Fl_Types
 import Graphics.UI.FLTK.LowLevel.Utils
 import Graphics.UI.FLTK.LowLevel.Hierarchy
 import Graphics.UI.FLTK.LowLevel.RGBImage
-
-{# fun Fl_PNM_Image_New as pnmImageNew' { unsafeToCString `String' } -> `Ptr ()' id #}
-pnmImageNew :: String -> IO (Either UnknownError (Ref PNMImage))
+import qualified Data.Text as T
+{# fun Fl_PNM_Image_New as pnmImageNew' { unsafeToCString `T.Text' } -> `Ptr ()' id #}
+pnmImageNew :: T.Text -> IO (Either UnknownError (Ref PNMImage))
 pnmImageNew filename' = do
   ptr <- pnmImageNew' filename'
   ref' <- (toRef ptr :: IO (Ref PNMImage))

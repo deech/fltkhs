@@ -21,11 +21,12 @@ import Graphics.UI.FLTK.LowLevel.Fl_Types
 import Graphics.UI.FLTK.LowLevel.Utils
 import Graphics.UI.FLTK.LowLevel.Hierarchy
 import Graphics.UI.FLTK.LowLevel.Dispatch
+import qualified Data.Text as T
 import Graphics.UI.FLTK.LowLevel.Fl_Enumerations
 
 {# fun Fl_File_Input_New as fileInputNew' { `Int',`Int',`Int',`Int' } -> `Ptr ()' id #}
-{# fun Fl_File_Input_New_WithLabel as fileInputNewWithLabel' { `Int',`Int',`Int',`Int', unsafeToCString `String'} -> `Ptr ()' id #}
-fileInputNew :: Rectangle -> Maybe String -> IO (Ref FileInput)
+{# fun Fl_File_Input_New_WithLabel as fileInputNewWithLabel' { `Int',`Int',`Int',`Int', unsafeToCString `T.Text'} -> `Ptr ()' id #}
+fileInputNew :: Rectangle -> Maybe T.Text -> IO (Ref FileInput)
 fileInputNew rectangle l' =
     let (x_pos, y_pos, width, height) = fromRectangle rectangle
     in case l' of
@@ -46,11 +47,11 @@ instance (impl ~ ( IO (Color))) => Op (GetErrorColor ()) FileInput orig impl whe
 {# fun Fl_File_Input_set_errorcolor as setErrorColor' { id `Ptr ()',cFromColor `Color' } -> `()' #}
 instance (impl ~ (Color ->  IO ())) => Op (SetErrorColor ()) FileInput orig impl where
   runOp _ _ fileInput b = withRef fileInput $ \fileInputPtr -> setErrorColor' fileInputPtr b
-{# fun Fl_File_Input_set_value as setValue' { id `Ptr ()', unsafeToCString `String'} -> `()' #}
-instance (impl ~ (String -> IO ())) => Op (SetValue ()) FileInput orig impl where
+{# fun Fl_File_Input_set_value as setValue' { id `Ptr ()', unsafeToCString `T.Text'} -> `()' #}
+instance (impl ~ (T.Text -> IO ())) => Op (SetValue ()) FileInput orig impl where
   runOp _ _ fileInput s = withRef fileInput $ \fileInputPtr -> setValue' fileInputPtr s
-{# fun Fl_File_Input_value as getValue' { id `Ptr ()' } -> `String' unsafeFromCString #}
-instance (impl ~ (IO (String))) => Op (GetValue ()) FileInput orig impl where
+{# fun Fl_File_Input_value as getValue' { id `Ptr ()' } -> `T.Text' unsafeFromCString #}
+instance (impl ~ (IO T.Text)) => Op (GetValue ()) FileInput orig impl where
   runOp _ _ fileInput = withRef fileInput $ \fileInputPtr -> getValue' fileInputPtr
 
 -- $hierarchy
@@ -70,11 +71,11 @@ instance (impl ~ (IO (String))) => Op (GetValue ()) FileInput orig impl where
 --
 -- getErrorColor :: 'Ref' 'FileInput' -> 'IO' ('Color')
 --
--- getValue :: 'Ref' 'FileInput' -> 'IO' ('String')
---
+-- getValue :: 'Ref' 'FileInput' -> 'IO' 'T.Text'
+  --
 -- setDownBox :: 'Ref' 'FileInput' -> 'Boxtype' -> 'IO' ()
 --
 -- setErrorColor :: 'Ref' 'FileInput' -> 'Color' -> 'IO' ()
 --
--- setValue :: 'Ref' 'FileInput' -> 'String' -> 'IO' ()
+-- setValue :: 'Ref' 'FileInput' -> 'T.Text' -> 'IO' ()
 -- @

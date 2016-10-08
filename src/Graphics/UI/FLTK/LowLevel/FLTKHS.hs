@@ -162,6 +162,7 @@ import Graphics.UI.FLTK.LowLevel.RepeatButton
 import Graphics.UI.FLTK.LowLevel.ToggleButton
 import Graphics.UI.FLTK.LowLevel.Fl_Types
 import Graphics.UI.FLTK.LowLevel.Dispatch
+import qualified Data.Text as T
 import Graphics.UI.FLTK.LowLevel.Hierarchy
 import Graphics.UI.FLTK.LowLevel.Group
 import Graphics.UI.FLTK.LowLevel.Widget

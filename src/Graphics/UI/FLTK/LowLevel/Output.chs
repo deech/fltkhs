@@ -26,6 +26,7 @@ import Graphics.UI.FLTK.LowLevel.Fl_Types
 import Graphics.UI.FLTK.LowLevel.Utils
 import Graphics.UI.FLTK.LowLevel.Hierarchy
 import Graphics.UI.FLTK.LowLevel.Dispatch
+import qualified Data.Text as T
 #c
 enum FlOutputType {
   FlNormalOutput = FL_NORMAL_OUTPUT,
@@ -34,10 +35,10 @@ enum FlOutputType {
 #endc
 {#enum FlOutputType {}#}
 {# fun Fl_Output_New as outputNew' { `Int',`Int',`Int',`Int' } -> `Ptr ()' id #}
-{# fun Fl_Output_New_WithLabel as outputNewWithLabel' { `Int',`Int',`Int',`Int', unsafeToCString `String'} -> `Ptr ()' id #}
+{# fun Fl_Output_New_WithLabel as outputNewWithLabel' { `Int',`Int',`Int',`Int', unsafeToCString `T.Text'} -> `Ptr ()' id #}
 {# fun Fl_Multiline_Output_New as multilineOutputNew' { `Int',`Int',`Int',`Int' } -> `Ptr ()' id #}
-{# fun Fl_Multiline_Output_New_WithLabel as multilineOutputNewWithLabel' { `Int',`Int',`Int',`Int', unsafeToCString `String'} -> `Ptr ()' id #}
-outputNew :: Rectangle -> Maybe String -> Maybe FlOutputType -> IO (Ref Output)
+{# fun Fl_Multiline_Output_New_WithLabel as multilineOutputNewWithLabel' { `Int',`Int',`Int',`Int', unsafeToCString `T.Text'} -> `Ptr ()' id #}
+outputNew :: Rectangle -> Maybe T.Text -> Maybe FlOutputType -> IO (Ref Output)
 outputNew rectangle l' flOutputType =
     let (x_pos, y_pos, width, height) = fromRectangle rectangle
         constructor = case flOutputType of

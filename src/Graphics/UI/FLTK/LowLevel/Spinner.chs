@@ -26,6 +26,7 @@ import Graphics.UI.FLTK.LowLevel.Fl_Types
 import Graphics.UI.FLTK.LowLevel.Utils
 import Graphics.UI.FLTK.LowLevel.Hierarchy
 import Graphics.UI.FLTK.LowLevel.Dispatch
+import qualified Data.Text as T
 #c
 enum SpinnerType {
   IntSpinnerType = FL_INT_INPUTC,
@@ -34,8 +35,8 @@ enum SpinnerType {
 #endc
 {#enum SpinnerType {} deriving (Show, Eq) #}
 {# fun Fl_Spinner_New as spinnerNew' { `Int',`Int',`Int',`Int' } -> `Ptr ()' id #}
-{# fun Fl_Spinner_New_WithLabel as spinnerNewWithLabel' { `Int',`Int',`Int',`Int', unsafeToCString `String'} -> `Ptr ()' id #}
-spinnerNew :: Rectangle -> Maybe String -> IO (Ref Spinner)
+{# fun Fl_Spinner_New_WithLabel as spinnerNewWithLabel' { `Int',`Int',`Int',`Int', unsafeToCString `T.Text'} -> `Ptr ()' id #}
+spinnerNew :: Rectangle -> Maybe T.Text -> IO (Ref Spinner)
 spinnerNew rectangle l'=
     let (x_pos, y_pos, width, height) = fromRectangle rectangle
     in case l' of
@@ -71,13 +72,13 @@ instance (impl ~ (SpinnerType ->  IO ())) => Op (SetType ()) Spinner orig impl w
 {# fun Fl_Spinner_type as type' { id `Ptr ()' } -> `Word8' #}
 instance (impl ~ IO (SpinnerType)) => Op (GetType_ ()) Spinner orig impl where
   runOp _ _ widget = withRef widget $ \widgetPtr -> type' widgetPtr >>= return . toEnum . fromInteger . toInteger
-{# fun Fl_Spinner_set_format as set_format' { id `Ptr ()', `String' } -> `()' supressWarningAboutRes #}
-instance (impl ~ (String ->  IO ())) => Op (SetFormat ()) Spinner orig impl where
+{# fun Fl_Spinner_set_format as set_format' { id `Ptr ()', unsafeToCString `T.Text' } -> `()' supressWarningAboutRes #}
+instance (impl ~ (T.Text ->  IO ())) => Op (SetFormat ()) Spinner orig impl where
   runOp _ _ spinner f = withRef spinner $ \spinnerPtr -> set_format' spinnerPtr f
-{# fun Fl_Spinner_format as format' { id `Ptr ()' } -> `String' unsafeFromCString #}
-instance (impl ~ ( IO (Maybe String))) => Op (GetFormat ()) Spinner orig impl where
+{# fun Fl_Spinner_format as format' { id `Ptr ()' } -> `T.Text' unsafeFromCString #}
+instance (impl ~ ( IO (Maybe T.Text))) => Op (GetFormat ()) Spinner orig impl where
    runOp _ _ spinner = withRef spinner $ \spinnerPtr -> format' spinnerPtr >>= \s ->
-     if (null s) then return Nothing else return (Just s)
+     if (T.null s) then return Nothing else return (Just s)
 {# fun Fl_Spinner_value as value' { id `Ptr ()' } -> `Double' #}
 instance (impl ~ ( IO (Double))) => Op (GetValue ()) Spinner orig impl where
   runOp _ _ spinner = withRef spinner $ \spinnerPtr -> value' spinnerPtr
@@ -121,7 +122,7 @@ instance (impl ~ (Double -> Double ->  IO ())) => Op (Range ()) Spinner orig imp
 
 -- $functions
 -- @
--- getFormat :: 'Ref' 'Spinner' -> 'IO' ('Maybe' 'String')
+-- getFormat :: 'Ref' 'Spinner' -> 'IO' ('Maybe' 'T.Text')
 --
 -- getMaximum :: 'Ref' 'Spinner' -> 'IO' ('Double')
 --
@@ -143,7 +144,7 @@ instance (impl ~ (Double -> Double ->  IO ())) => Op (Range ()) Spinner orig imp
 --
 -- range :: 'Ref' 'Spinner' -> 'Double' -> 'Double' -> 'IO' ()
 --
--- setFormat :: 'Ref' 'Spinner' -> 'String' -> 'IO' ()
+-- setFormat :: 'Ref' 'Spinner' -> 'T.Text' -> 'IO' ()
 --
 -- setMaximum :: 'Ref' 'Spinner' -> 'Double' -> 'IO' ()
 --

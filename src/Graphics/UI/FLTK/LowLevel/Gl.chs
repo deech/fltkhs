@@ -28,6 +28,7 @@ import Foreign.C
 import Graphics.UI.FLTK.LowLevel.Fl_Types
 import Graphics.UI.FLTK.LowLevel.Fl_Enumerations
 import Graphics.UI.FLTK.LowLevel.Utils
+import qualified Data.Text as T
 {# fun flc_gl_start   as glStart   { } -> `()' #}
 {# fun flc_gl_finish  as glFinish  { } -> `()' #}
 {# fun flc_gl_height  as glHeight  { } -> `()' #}
@@ -46,40 +47,40 @@ glRectf rectangle = let (x_pos', y_pos', width', height') = fromRectangle rectan
 glFont :: Font -> Int ->  IO ()
 glFont fontid size = flcGlFont' fontid size
 
-{# fun flc_gl_width as flcGlWidth' { `String' } -> `Double' #}
-glWidth :: String ->  IO (Double)
+{# fun flc_gl_width as flcGlWidth' { unsafeToCString `T.Text' } -> `Double' #}
+glWidth :: T.Text ->  IO (Double)
 glWidth str = flcGlWidth' str
 
-{# fun flc_gl_width_with_n as flcGlWidthWithN' { `String',`Int' } -> `Double' #}
-glWidthChars :: String -> Int ->  IO (Double)
+{# fun flc_gl_width_with_n as flcGlWidthWithN' { unsafeToCString `T.Text',`Int' } -> `Double' #}
+glWidthChars :: T.Text -> Int ->  IO (Double)
 glWidthChars str n = flcGlWidthWithN' str n
 
 {# fun flc_gl_width_with_uchar_str as flcGlWidthWithUcharStr' { castCharToCUChar `Char' } -> `Double' #}
 glWidthChar :: Char ->  IO (Double)
 glWidthChar str = flcGlWidthWithUcharStr' str
 
-{# fun flc_gl_draw as flcGlDraw' { `String' } -> `()' #}
-glDraw :: String ->  IO ()
+{# fun flc_gl_draw as flcGlDraw' { unsafeToCString `T.Text' } -> `()' #}
+glDraw :: T.Text ->  IO ()
 glDraw str = flcGlDraw' str
 
-{# fun flc_gl_draw_with_n as flcGlDrawWithN' { `String',`Int' } -> `()' #}
-glDrawChars :: String -> Int ->  IO ()
+{# fun flc_gl_draw_with_n as flcGlDrawWithN' { unsafeToCString `T.Text',`Int' } -> `()' #}
+glDrawChars :: T.Text -> Int ->  IO ()
 glDrawChars str n = flcGlDrawWithN' str n
 
-{# fun flc_gl_draw_with_xy as flcGlDrawWithXy' { `String',`Float',`Float' } -> `()' #}
-glDrawAt :: String -> Float -> Float ->  IO ()
+{# fun flc_gl_draw_with_xy as flcGlDrawWithXy' { unsafeToCString `T.Text',`Float',`Float' } -> `()' #}
+glDrawAt :: T.Text -> Float -> Float ->  IO ()
 glDrawAt str x y = flcGlDrawWithXy' str x y
 
-{# fun flc_gl_draw_with_nxy as flcGlDrawWithNxy' { `String',`Int',`Float',`Float' } -> `()' #}
-glDrawCharsAt :: String -> Int -> Float -> Float ->  IO ()
+{# fun flc_gl_draw_with_nxy as flcGlDrawWithNxy' { unsafeToCString `T.Text',`Int',`Float',`Float' } -> `()' #}
+glDrawCharsAt :: T.Text -> Int -> Float -> Float ->  IO ()
 glDrawCharsAt str n x y = flcGlDrawWithNxy' str n x y
 
-{# fun flc_gl_draw_with_xywh_align as flcGlDrawWithXywhAlign' { `String',`Int',`Int',`Int',`Int',cFromEnum `AlignType' } -> `()' #}
-glDrawInBox :: String -> Rectangle -> AlignType ->  IO ()
+{# fun flc_gl_draw_with_xywh_align as flcGlDrawWithXywhAlign' { unsafeToCString `T.Text',`Int',`Int',`Int',`Int',cFromEnum `AlignType' } -> `()' #}
+glDrawInBox :: T.Text -> Rectangle -> AlignType ->  IO ()
 glDrawInBox str rectangle align = let (x_pos', y_pos', width', height') = fromRectangle rectangle in flcGlDrawWithXywhAlign' str x_pos' y_pos' width' height' align
 
-{# fun flc_gl_measure as flcGlMeasure' { `String',`Int',`Int' } -> `()' #}
-glMeasure :: String -> Position ->  IO ()
+{# fun flc_gl_measure as flcGlMeasure' { unsafeToCString `T.Text',`Int',`Int' } -> `()' #}
+glMeasure :: T.Text -> Position ->  IO ()
 glMeasure str (Position (X x_pos') (Y y_pos')) = flcGlMeasure' str x_pos' y_pos'
 
 {# fun flc_gl_draw_image_with_d_ld as flcGlDrawImageWithDLd' { id `Ptr CUChar',`Int',`Int',`Int',`Int',`Int', `Int'} -> `()' #}

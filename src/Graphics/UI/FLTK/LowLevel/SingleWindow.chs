@@ -21,6 +21,7 @@ import Graphics.UI.FLTK.LowLevel.Fl_Types
 import Graphics.UI.FLTK.LowLevel.Fl_Enumerations
 import Graphics.UI.FLTK.LowLevel.Utils
 import Graphics.UI.FLTK.LowLevel.Dispatch
+import qualified Data.Text as T
 import Graphics.UI.FLTK.LowLevel.Hierarchy
 import Graphics.UI.FLTK.LowLevel.Widget
 import Graphics.UI.FLTK.LowLevel.Window
@@ -28,11 +29,11 @@ import C2HS hiding (cFromEnum, toBool,cToEnum)
 
 {# fun Fl_OverriddenSingle_Window_New as overriddenWindowNew' {`Int',`Int', id `Ptr ()'} -> `Ptr ()' id #}
 {# fun Fl_OverriddenSingle_Window_NewXY as overriddenWindowNewXY' {`Int',`Int', `Int', `Int', id `Ptr ()'} -> `Ptr ()' id #}
-{# fun Fl_OverriddenSingle_Window_NewXY_WithLabel as overriddenWindowNewXYWithLabel' { `Int',`Int',`Int',`Int', unsafeToCString `String', id `Ptr ()'} -> `Ptr ()' id #}
-{# fun Fl_OverriddenSingle_Window_New_WithLabel as overriddenWindowNewWithLabel' { `Int',`Int', unsafeToCString `String', id `Ptr ()'} -> `Ptr ()' id #}
+{# fun Fl_OverriddenSingle_Window_NewXY_WithLabel as overriddenWindowNewXYWithLabel' { `Int',`Int',`Int',`Int', unsafeToCString `T.Text', id `Ptr ()'} -> `Ptr ()' id #}
+{# fun Fl_OverriddenSingle_Window_New_WithLabel as overriddenWindowNewWithLabel' { `Int',`Int', unsafeToCString `T.Text', id `Ptr ()'} -> `Ptr ()' id #}
 singleWindowCustom :: Size                                 -- ^ Size of this window
                    -> Maybe Position                       -- ^ Optional position of this window
-                   -> Maybe String                         -- ^ Optional label
+                   -> Maybe T.Text                         -- ^ Optional label
                    -> Maybe (Ref SingleWindow -> IO ())    -- ^ Optional custom drawing function
                    -> CustomWidgetFuncs SingleWindow       -- ^ Custom widget overrides
                    -> CustomWindowFuncs SingleWindow       -- ^ Custom window overrides
@@ -50,7 +51,7 @@ singleWindowCustom size position title draw' customWidgetFuncs' customWindowFunc
     overriddenWindowNewXY'
     overriddenWindowNewXYWithLabel'
 
-singleWindowNew :: Size -> Maybe Position -> Maybe String -> IO (Ref SingleWindow)
+singleWindowNew :: Size -> Maybe Position -> Maybe T.Text -> IO (Ref SingleWindow)
 singleWindowNew size position title =
   windowMaker
     size

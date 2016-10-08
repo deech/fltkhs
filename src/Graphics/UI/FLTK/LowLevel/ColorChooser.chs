@@ -25,11 +25,12 @@ import Graphics.UI.FLTK.LowLevel.Fl_Types
 import Graphics.UI.FLTK.LowLevel.Utils
 import Graphics.UI.FLTK.LowLevel.Hierarchy
 import Graphics.UI.FLTK.LowLevel.Dispatch
+import qualified Data.Text as T
 import Data.List
 
 {# fun Fl_Color_Chooser_New as colorchooserNew' { `Int',`Int',`Int',`Int' } -> `Ptr ()' id #}
-{# fun Fl_Color_Chooser_New_WithLabel as colorchooserNewWithLabel' { `Int',`Int',`Int',`Int', unsafeToCString `String'} -> `Ptr ()' id #}
-colorChooserNew :: Rectangle -> Maybe String -> IO (Ref ColorChooser)
+{# fun Fl_Color_Chooser_New_WithLabel as colorchooserNewWithLabel' { `Int',`Int',`Int',`Int', unsafeToCString `T.Text'} -> `Ptr ()' id #}
+colorChooserNew :: Rectangle -> Maybe T.Text -> IO (Ref ColorChooser)
 colorChooserNew rectangle l'=
     let (x_pos, y_pos, width, height) = fromRectangle rectangle
     in case l' of
@@ -141,9 +142,9 @@ rgb2Hsv (Between0And1 h'', Between0And1 s'', Between0And1 v'') =
        v''' <- peek vPtr
        return (Just (Between0And6 (realToFrac h'''),Between0And1 (realToFrac s'''),Between0And1 (realToFrac v''')))
 
-{# fun flc_color_chooser_with_m as flc_color_chooser_with_m' {`String' , id `Ptr CDouble', id `Ptr CDouble', id `Ptr CDouble', `Int' } -> `Int' #}
-{# fun flc_color_chooser_with_uchar_m as flc_color_chooser_with_uchar_m' {`String' , id `Ptr CUChar', id `Ptr CUChar', id `Ptr CUChar', `Int' } -> `Int' #}
-flcColorChooser :: String ->
+{# fun flc_color_chooser_with_m as flc_color_chooser_with_m' {unsafeToCString `T.Text' , id `Ptr CDouble', id `Ptr CDouble', id `Ptr CDouble', `Int' } -> `Int' #}
+{# fun flc_color_chooser_with_uchar_m as flc_color_chooser_with_uchar_m' {unsafeToCString `T.Text' , id `Ptr CUChar', id `Ptr CUChar', id `Ptr CUChar', `Int' } -> `Int' #}
+flcColorChooser :: T.Text ->
                    ColorChooserRGB ->
                    Maybe ColorChooserMode ->
                    IO (Maybe ColorChooserRGB)

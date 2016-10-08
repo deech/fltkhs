@@ -34,6 +34,7 @@ import Graphics.UI.FLTK.LowLevel.Fl_Types
 import Graphics.UI.FLTK.LowLevel.Utils
 import Graphics.UI.FLTK.LowLevel.Hierarchy
 import Graphics.UI.FLTK.LowLevel.Dispatch
+import qualified Data.Text as T
 data Row = Row Int
 data Column = Column Int
 data TableCoordinate = TableCoordinate Row Column
@@ -119,9 +120,9 @@ tableCustomFunctionStruct draw'' drawCell' customWidgetFuncs' customTableFuncs' 
    return ptr
 
 {# fun Fl_Table_New as tableNew' {  `Int',`Int', `Int', `Int', id `Ptr ()'} -> `Ptr ()' id #}
-{# fun Fl_Table_New_WithLabel as tableNewWithLabel' { `Int',`Int',`Int',`Int',unsafeToCString `String', id `Ptr ()'} -> `Ptr ()' id #}
+{# fun Fl_Table_New_WithLabel as tableNewWithLabel' { `Int',`Int',`Int',`Int',unsafeToCString `T.Text', id `Ptr ()'} -> `Ptr ()' id #}
 tableCustom :: Rectangle                                                            -- ^ Bounds of this table
-            -> Maybe String                                                         -- ^ Optional label
+            -> Maybe T.Text                                                         -- ^ Optional label
             -> Maybe (Ref Table -> IO ())                                           -- ^ Optional custom table drawing function
             -> (Ref Table -> TableContext -> TableCoordinate -> Rectangle -> IO ()) -- ^ Custom table cell drawing function
             -> CustomWidgetFuncs Table                                              -- ^ Widget overrides

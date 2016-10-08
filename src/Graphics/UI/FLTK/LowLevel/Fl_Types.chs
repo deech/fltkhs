@@ -14,6 +14,7 @@ import qualified Foreign.ForeignPtr.Unsafe as Unsafe
 import Debug.Trace
 import Control.Exception
 import C2HS hiding (cFromEnum, cFromBool, cToBool,cToEnum)
+import qualified Data.Text as T
 #if defined(CALLSTACK_AVAILABLE) || defined(HASCALLSTACK_AVAILABLE)
 import GHC.Stack
 #endif
@@ -280,7 +281,7 @@ type ImageDrawCallbackPrim       = Ptr () -> CInt -> CInt -> CInt -> CInt -> CIn
 type ImageCopyCallbackPrim       = Ptr () -> CInt -> CInt -> IO (Ptr ())
 type GlobalEventHandlerPrim      = CInt -> IO CInt
 type GlobalEventHandlerF         = Event -> IO Int
-type DrawCallback                = String -> Position -> IO ()
+type DrawCallback                = T.Text -> Position -> IO ()
 type DrawCallbackPrim            = CString -> CInt -> CInt -> CInt -> IO ()
 type TextBufferCallback          = FunPtr (Ptr () -> IO ())
 type FileChooserCallback         = FunPtr (Ptr () -> Ptr () -> IO())
@@ -289,7 +290,7 @@ type BoxDrawF                    = Rectangle -> Color -> IO ()
 type BoxDrawFPrim                = CInt -> CInt -> CInt -> CInt -> FlColor -> IO ()
 type FDHandlerPrim               = CInt -> Ptr () -> IO ()
 type FDHandler                   = CInt -> IO ()
-type TextModifyCb                = Int -> Int -> Int -> Int -> String -> IO ()
+type TextModifyCb                = Int -> Int -> Int -> Int -> T.Text -> IO ()
 type TextModifyCbPrim            = CInt -> CInt -> CInt -> CInt -> Ptr CChar -> Ptr () -> IO ()
 type TextPredeleteCb             = BufferOffset -> Int -> IO ()
 type TextPredeleteCbPrim         = CInt -> CInt -> Ptr () -> IO ()
@@ -330,7 +331,7 @@ data Intersection = Contained | Partial deriving Show
 data Size = Size Width Height deriving (Eq, Show)
 data KeyType = SpecialKeyType SpecialKey | NormalKeyType Char deriving (Show, Eq)
 data ShortcutKeySequence = ShortcutKeySequence [EventState] KeyType deriving Show
-data Shortcut = KeySequence ShortcutKeySequence | KeyFormat String deriving Show
+data Shortcut = KeySequence ShortcutKeySequence | KeyFormat T.Text deriving Show
 data KeyBindingKeySequence = KeyBindingKeySequence (Maybe [EventState]) KeyType deriving Show
 newtype Between0And1 = Between0And1 Double deriving Show
 newtype Between0And6 = Between0And6 Double deriving Show
@@ -338,7 +339,7 @@ data ScreenLocation = Intersect Rectangle
                     | ScreenNumber Int
                     | ScreenPosition Position deriving Show
 newtype FontSize = FontSize CInt deriving Show
-newtype PixmapHs = PixmapHs [String] deriving Show
+newtype PixmapHs = PixmapHs [T.Text] deriving Show
 data BitmapHs = BitmapHs B.ByteString Size deriving Show
 data Clipboard = InternalClipboard | SharedClipboard deriving Show
 data UnknownError = UnknownError deriving Show

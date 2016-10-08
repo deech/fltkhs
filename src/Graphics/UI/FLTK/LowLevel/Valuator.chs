@@ -26,6 +26,7 @@ import Graphics.UI.FLTK.LowLevel.Fl_Types
 import Graphics.UI.FLTK.LowLevel.Utils
 import Graphics.UI.FLTK.LowLevel.Hierarchy
 import Graphics.UI.FLTK.LowLevel.Dispatch
+import qualified Data.Text as T
 import Graphics.UI.FLTK.LowLevel.Widget
 import Data.Ratio
 #c
@@ -36,22 +37,20 @@ enum ValuatorType {
 #endc
 {#enum ValuatorType {} deriving (Show, Eq) #}
 {# fun Fl_Valuator_New as valuatorNew' { `Int',`Int',`Int',`Int' } -> `Ptr ()' id #}
-{# fun Fl_Valuator_New_WithLabel as valuatorNewWithLabel' { `Int',`Int',`Int',`Int', unsafeToCString `String'} -> `Ptr ()' id #}
-{# fun Fl_OverriddenValuator_New_WithLabel as overriddenValuatorNewWithLabel' { `Int',`Int',`Int',`Int', unsafeToCString `String', id `Ptr ()'} -> `Ptr ()' id #}
+{# fun Fl_Valuator_New_WithLabel as valuatorNewWithLabel' { `Int',`Int',`Int',`Int', unsafeToCString `T.Text'} -> `Ptr ()' id #}
+{# fun Fl_OverriddenValuator_New_WithLabel as overriddenValuatorNewWithLabel' { `Int',`Int',`Int',`Int', unsafeToCString `T.Text', id `Ptr ()'} -> `Ptr ()' id #}
 {# fun Fl_OverriddenValuator_New as overriddenValuatorNew' { `Int',`Int',`Int',`Int', id `Ptr ()'} -> `Ptr ()' id #}
-valuatorCustom :: Rectangle -> Maybe String -> Maybe (Ref Valuator -> IO ()) -> Maybe (CustomWidgetFuncs Valuator) -> IO (Ref Valuator)
+valuatorCustom :: Rectangle -> Maybe T.Text -> Maybe (Ref Valuator -> IO ()) -> Maybe (CustomWidgetFuncs Valuator) -> IO (Ref Valuator)
 valuatorCustom rectangle l' draw' funcs' =
   widgetMaker
     rectangle
     l'
     draw'
     funcs'
-    valuatorNew'
-    valuatorNewWithLabel'
     overriddenValuatorNew'
     overriddenValuatorNewWithLabel'
 
-valuatorNew :: Rectangle -> Maybe String -> IO (Ref Valuator)
+valuatorNew :: Rectangle -> Maybe T.Text -> IO (Ref Valuator)
 valuatorNew rectangle l' =
     let (x_pos, y_pos, width, height) = fromRectangle rectangle
     in case l' of
@@ -120,8 +119,8 @@ instance (impl ~ ( IO (Double))) => Op (GetValue ()) Valuator orig impl where
 {# fun Fl_Valuator_set_value as setValue' { id `Ptr ()',`Double' } -> `Int' #}
 instance (impl ~ (Double ->  IO (Int))) => Op (SetValue ()) Valuator orig impl where
   runOp _ _ valuator v = withRef valuator $ \valuatorPtr -> setValue' valuatorPtr v
-{# fun Fl_Valuator_format as format' { id `Ptr ()', unsafeToCString `String' } -> `Int' #}
-instance (impl ~ (String ->  IO (Int))) => Op (SetFormat ()) Valuator orig impl where
+{# fun Fl_Valuator_format as format' { id `Ptr ()', unsafeToCString `T.Text' } -> `Int' #}
+instance (impl ~ (T.Text ->  IO (Int))) => Op (SetFormat ()) Valuator orig impl where
   runOp _ _ valuator f = withRef valuator $ \valuatorPtr -> format' valuatorPtr f
 {# fun Fl_Valuator_round as round' { id `Ptr ()',`Double' } -> `Double' #}
 instance (impl ~ (Double ->  IO (Double))) => Op (Round ()) Valuator orig impl where
@@ -177,7 +176,7 @@ instance (impl ~ IO (ValuatorType)) => Op (GetType_ ()) Valuator orig impl where
 --
 -- round :: 'Ref' 'Valuator' -> 'Double' -> 'IO' ('Double')
 --
--- setFormat :: 'Ref' 'Valuator' -> 'String' -> 'IO' ('Int')
+-- setFormat :: 'Ref' 'Valuator' -> 'T.Text' -> 'IO' ('Int')
 --
 -- setMaximum :: 'Ref' 'Valuator' -> 'Double' -> 'IO' ()
 --

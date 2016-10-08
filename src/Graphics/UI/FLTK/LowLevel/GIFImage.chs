@@ -17,9 +17,9 @@ import Graphics.UI.FLTK.LowLevel.Fl_Types
 import Graphics.UI.FLTK.LowLevel.Utils
 import Graphics.UI.FLTK.LowLevel.Hierarchy
 import Graphics.UI.FLTK.LowLevel.RGBImage
-
-{# fun Fl_GIF_Image_New as gifImageNew' { unsafeToCString `String' } -> `Ptr ()' id #}
-gifImageNew :: String -> IO (Either UnknownError (Ref GIFImage))
+import qualified Data.Text as T
+{# fun Fl_GIF_Image_New as gifImageNew' { unsafeToCString `T.Text' } -> `Ptr ()' id #}
+gifImageNew :: T.Text -> IO (Either UnknownError (Ref GIFImage))
 gifImageNew filename' = do
   ptr <- gifImageNew' filename'
   ref' <- (toRef ptr :: IO (Ref GIFImage))

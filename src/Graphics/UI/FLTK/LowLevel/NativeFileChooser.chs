@@ -26,6 +26,7 @@ import Graphics.UI.FLTK.LowLevel.Fl_Types
 import Graphics.UI.FLTK.LowLevel.Utils
 import Graphics.UI.FLTK.LowLevel.Hierarchy
 import Graphics.UI.FLTK.LowLevel.Dispatch
+import qualified Data.Text as T
 
 #c
 enum NativeFileChooserType {
@@ -96,34 +97,34 @@ instance (impl ~ ( IO ([NativeFileChooserOption]))) => Op (GetOptions ()) Native
 {# fun Fl_Native_File_Chooser_count as count' { id `Ptr ()' } -> `Int' #}
 instance (impl ~ ( IO (Int))) => Op (GetCount ()) NativeFileChooser orig impl where
    runOp _ _ chooser = withRef chooser $ \chooserPtr -> count' chooserPtr
-{# fun Fl_Native_File_Chooser_filename as filename' { id `Ptr ()' } -> `String' unsafeFromCString #}
-instance (impl ~ ( IO (Maybe String))) => Op (GetFilename ()) NativeFileChooser orig impl where
+{# fun Fl_Native_File_Chooser_filename as filename' { id `Ptr ()' } -> `T.Text' unsafeFromCString #}
+instance (impl ~ ( IO (Maybe T.Text))) => Op (GetFilename ()) NativeFileChooser orig impl where
    runOp _ _ chooser = withRef chooser $ \chooserPtr -> filename' chooserPtr >>= \s ->
-     if (null s) then return Nothing else return (Just s)
-{# fun Fl_Native_File_Chooser_filename_with_i as filenameWithI' { id `Ptr ()',`Int' } -> `String' unsafeFromCString #}
-instance (impl ~ (Int ->  IO (Maybe String))) => Op (GetFilenameAt ()) NativeFileChooser orig impl where
+     if (T.null s) then return Nothing else return (Just s)
+{# fun Fl_Native_File_Chooser_filename_with_i as filenameWithI' { id `Ptr ()',`Int' } -> `T.Text' unsafeFromCString #}
+instance (impl ~ (Int ->  IO (Maybe T.Text))) => Op (GetFilenameAt ()) NativeFileChooser orig impl where
    runOp _ _ chooser i = withRef chooser $ \chooserPtr -> filenameWithI' chooserPtr i >>= \s ->
-     if (null s) then return Nothing else return (Just s)
-{# fun Fl_Native_File_Chooser_set_directory as setDirectory' { id `Ptr ()',unsafeToCString `String' } -> `()' #}
-instance (impl ~ (String ->  IO ())) => Op (SetDirectory ()) NativeFileChooser orig impl where
+     if (T.null s) then return Nothing else return (Just s)
+{# fun Fl_Native_File_Chooser_set_directory as setDirectory' { id `Ptr ()',unsafeToCString `T.Text' } -> `()' #}
+instance (impl ~ (T.Text ->  IO ())) => Op (SetDirectory ()) NativeFileChooser orig impl where
    runOp _ _ chooser val = withRef chooser $ \chooserPtr -> setDirectory' chooserPtr val
-{# fun Fl_Native_File_Chooser_directory as directory' { id `Ptr ()' } -> `String' unsafeFromCString #}
-instance (impl ~ ( IO (Maybe String))) => Op (GetDirectory ()) NativeFileChooser orig impl where
+{# fun Fl_Native_File_Chooser_directory as directory' { id `Ptr ()' } -> `T.Text' unsafeFromCString #}
+instance (impl ~ ( IO (Maybe T.Text))) => Op (GetDirectory ()) NativeFileChooser orig impl where
    runOp _ _ chooser = withRef chooser $ \chooserPtr -> directory' chooserPtr >>= \s ->
-     if (null s) then return Nothing else return (Just s)
-{# fun Fl_Native_File_Chooser_set_title as setTitle' { id `Ptr ()',unsafeToCString `String' } -> `()' #}
-instance (impl ~ (String ->  IO ())) => Op (SetTitle ()) NativeFileChooser orig impl where
+     if (T.null s) then return Nothing else return (Just s)
+{# fun Fl_Native_File_Chooser_set_title as setTitle' { id `Ptr ()',unsafeToCString `T.Text' } -> `()' #}
+instance (impl ~ (T.Text ->  IO ())) => Op (SetTitle ()) NativeFileChooser orig impl where
    runOp _ _ chooser title'' = withRef chooser $ \chooserPtr -> setTitle' chooserPtr title''
-{# fun Fl_Native_File_Chooser_title as title' { id `Ptr ()' } -> `String' unsafeFromCString #}
-instance (impl ~ ( IO (Maybe String))) => Op (GetTitle ()) NativeFileChooser orig impl where
+{# fun Fl_Native_File_Chooser_title as title' { id `Ptr ()' } -> `T.Text' unsafeFromCString #}
+instance (impl ~ ( IO (Maybe T.Text))) => Op (GetTitle ()) NativeFileChooser orig impl where
    runOp _ _ chooser = withRef chooser $ \chooserPtr -> title' chooserPtr >>= \s ->
-     if (null s) then return Nothing else return (Just s)
-{# fun Fl_Native_File_Chooser_filter as filter' { id `Ptr ()' } -> `String' unsafeFromCString #}
-instance (impl ~ ( IO (Maybe String))) => Op (GetFilter ()) NativeFileChooser orig impl where
+     if (T.null s) then return Nothing else return (Just s)
+{# fun Fl_Native_File_Chooser_filter as filter' { id `Ptr ()' } -> `T.Text' unsafeFromCString #}
+instance (impl ~ ( IO (Maybe T.Text))) => Op (GetFilter ()) NativeFileChooser orig impl where
    runOp _ _ chooser = withRef chooser $ \chooserPtr -> filter' chooserPtr >>= \s ->
-     if (null s) then return Nothing else return (Just s)
-{# fun Fl_Native_File_Chooser_set_filter as setFilter' { id `Ptr ()', unsafeToCString `String' } -> `()' #}
-instance (impl ~ (String ->  IO ())) => Op (SetFilter ()) NativeFileChooser orig impl where
+     if (T.null s) then return Nothing else return (Just s)
+{# fun Fl_Native_File_Chooser_set_filter as setFilter' { id `Ptr ()', unsafeToCString `T.Text' } -> `()' #}
+instance (impl ~ (T.Text ->  IO ())) => Op (SetFilter ()) NativeFileChooser orig impl where
    runOp _ _ chooser filter'' = withRef chooser $ \chooserPtr -> setFilter' chooserPtr filter''
 {# fun Fl_Native_File_Chooser_filters as filters' { id `Ptr ()' } -> `Int' #}
 instance (impl ~ ( IO (Int))) => Op (Filters ()) NativeFileChooser orig impl where
@@ -134,17 +135,17 @@ instance (impl ~ (Int ->  IO ())) => Op (SetFilterValue ()) NativeFileChooser or
 {# fun Fl_Native_File_Chooser_filter_value as filterValue' { id `Ptr ()' } -> `Int' #}
 instance (impl ~ ( IO (Int))) => Op (GetFilterValue ()) NativeFileChooser orig impl where
    runOp _ _ chooser = withRef chooser $ \chooserPtr -> filterValue' chooserPtr
-{# fun Fl_Native_File_Chooser_set_preset_file as setPresetFile' { id `Ptr ()',unsafeToCString `String' } -> `()' #}
-instance (impl ~ (String ->  IO ())) => Op (SetPresetFile ()) NativeFileChooser orig impl where
+{# fun Fl_Native_File_Chooser_set_preset_file as setPresetFile' { id `Ptr ()',unsafeToCString `T.Text' } -> `()' #}
+instance (impl ~ (T.Text ->  IO ())) => Op (SetPresetFile ()) NativeFileChooser orig impl where
    runOp _ _ chooser preset' = withRef chooser $ \chooserPtr -> setPresetFile' chooserPtr preset'
-{# fun Fl_Native_File_Chooser_preset_file as presetFile' { id `Ptr ()' } -> `String' unsafeFromCString #}
-instance (impl ~ ( IO (Maybe String))) => Op (GetPresetFile ()) NativeFileChooser orig impl where
+{# fun Fl_Native_File_Chooser_preset_file as presetFile' { id `Ptr ()' } -> `T.Text' unsafeFromCString #}
+instance (impl ~ ( IO (Maybe T.Text))) => Op (GetPresetFile ()) NativeFileChooser orig impl where
    runOp _ _ chooser = withRef chooser $ \chooserPtr -> presetFile' chooserPtr >>= \s ->
-     if (null s) then return Nothing else return (Just s)
-{# fun Fl_Native_File_Chooser_errmsg as errmsg' { id `Ptr ()' } -> `String' unsafeFromCString #}
-instance (impl ~ ( IO (Maybe String))) => Op (GetErrmsg ()) NativeFileChooser orig impl where
+     if (T.null s) then return Nothing else return (Just s)
+{# fun Fl_Native_File_Chooser_errmsg as errmsg' { id `Ptr ()' } -> `T.Text' unsafeFromCString #}
+instance (impl ~ ( IO (Maybe T.Text))) => Op (GetErrmsg ()) NativeFileChooser orig impl where
    runOp _ _ chooser = withRef chooser $ \chooserPtr -> errmsg' chooserPtr >>= \s ->
-     if (null s) then return Nothing else return (Just s)
+     if (T.null s) then return Nothing else return (Just s)
 {# fun Fl_Native_File_Chooser_show as show' { id `Ptr ()' } -> `Int' #}
 instance (impl ~ ( IO (NativeFileChooserUserAction))) => Op (ShowWidget ()) NativeFileChooser orig impl where
    runOp _ _ chooser = withRef chooser $ \chooserPtr -> do
@@ -168,37 +169,37 @@ instance (impl ~ ( IO (NativeFileChooserUserAction))) => Op (ShowWidget ()) Nati
 --
 -- getCount :: 'Ref' 'NativeFileChooser' -> 'IO' ('Int')
 --
--- getDirectory :: 'Ref' 'NativeFileChooser' -> 'IO' ('Maybe' 'String')
+-- getDirectory :: 'Ref' 'NativeFileChooser' -> 'IO' ('Maybe' 'T.Text')
 --
--- getErrmsg :: 'Ref' 'NativeFileChooser' -> 'IO' ('Maybe' 'String')
+-- getErrmsg :: 'Ref' 'NativeFileChooser' -> 'IO' ('Maybe' 'T.Text')
 --
--- getFilename :: 'Ref' 'NativeFileChooser' -> 'IO' ('Maybe' 'String')
+-- getFilename :: 'Ref' 'NativeFileChooser' -> 'IO' ('Maybe' 'T.Text')
 --
--- getFilenameAt :: 'Ref' 'NativeFileChooser' -> 'Int' -> 'IO' ('Maybe' 'String')
+-- getFilenameAt :: 'Ref' 'NativeFileChooser' -> 'Int' -> 'IO' ('Maybe' 'T.Text')
 --
--- getFilter :: 'Ref' 'NativeFileChooser' -> 'IO' ('Maybe' 'String')
+-- getFilter :: 'Ref' 'NativeFileChooser' -> 'IO' ('Maybe' 'T.Text')
 --
 -- getFilterValue :: 'Ref' 'NativeFileChooser' -> 'IO' ('Int')
 --
 -- getOptions :: 'Ref' 'NativeFileChooser' -> 'IO' (['NativeFileChooserOption')]
 --
--- getPresetFile :: 'Ref' 'NativeFileChooser' -> 'IO' ('Maybe' 'String')
+-- getPresetFile :: 'Ref' 'NativeFileChooser' -> 'IO' ('Maybe' 'T.Text')
 --
--- getTitle :: 'Ref' 'NativeFileChooser' -> 'IO' ('Maybe' 'String')
+-- getTitle :: 'Ref' 'NativeFileChooser' -> 'IO' ('Maybe' 'T.Text')
 --
 -- getType_ :: 'Ref' 'NativeFileChooser' -> 'IO' ('NativeFileChooserType')
 --
--- setDirectory :: 'Ref' 'NativeFileChooser' -> 'String' -> 'IO' ()
+-- setDirectory :: 'Ref' 'NativeFileChooser' -> 'T.Text' -> 'IO' ()
 --
--- setFilter :: 'Ref' 'NativeFileChooser' -> 'String' -> 'IO' ()
+-- setFilter :: 'Ref' 'NativeFileChooser' -> 'T.Text' -> 'IO' ()
 --
 -- setFilterValue :: 'Ref' 'NativeFileChooser' -> 'Int' -> 'IO' ()
 --
 -- setOptions :: 'Ref' 'NativeFileChooser' -> ['NativeFileChooserOption'] -> 'IO' ()
 --
--- setPresetFile :: 'Ref' 'NativeFileChooser' -> 'String' -> 'IO' ()
+-- setPresetFile :: 'Ref' 'NativeFileChooser' -> 'T.Text' -> 'IO' ()
 --
--- setTitle :: 'Ref' 'NativeFileChooser' -> 'String' -> 'IO' ()
+-- setTitle :: 'Ref' 'NativeFileChooser' -> 'T.Text' -> 'IO' ()
 --
 -- setType :: 'Ref' 'NativeFileChooser' -> 'NativeFileChooserType' -> 'IO' ()
 --

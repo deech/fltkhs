@@ -30,6 +30,7 @@ import Graphics.UI.FLTK.LowLevel.Fl_Types
 import Graphics.UI.FLTK.LowLevel.Utils
 import Graphics.UI.FLTK.LowLevel.Hierarchy
 import Graphics.UI.FLTK.LowLevel.Dispatch
+import qualified Data.Text as T
 import Data.Char
 #c
 enum ClockType {
@@ -47,9 +48,9 @@ data ClockByTime = ClockByTime Hour Minute Second
 data ClockSinceEpoch = ClockSinceEpoch Second
 data ClockSetTimeType = ClockSetByTime ClockByTime | ClockSetSinceEpoch ClockSinceEpoch
 {# fun Fl_Clock_New as clockNew' { `Int',`Int',`Int',`Int' } -> `Ptr ()' id #}
-{# fun Fl_Clock_New_WithLabel as clockNewWithLabel' { `Int',`Int',`Int',`Int', unsafeToCString `String'} -> `Ptr ()' id #}
-{# fun Fl_Clock_New_WithClockType as clockNewWithClockType' { id `CUChar', `Int',`Int',`Int',`Int', unsafeToCString `String'} -> `Ptr ()' id #}
-clockNew :: Rectangle -> Maybe String -> IO (Ref Clock)
+{# fun Fl_Clock_New_WithLabel as clockNewWithLabel' { `Int',`Int',`Int',`Int', unsafeToCString `T.Text'} -> `Ptr ()' id #}
+{# fun Fl_Clock_New_WithClockType as clockNewWithClockType' { id `CUChar', `Int',`Int',`Int',`Int', unsafeToCString `T.Text'} -> `Ptr ()' id #}
+clockNew :: Rectangle -> Maybe T.Text -> IO (Ref Clock)
 clockNew rectangle l' =
     let (x_pos, y_pos, width, height) = fromRectangle rectangle
     in case l' of
@@ -57,7 +58,7 @@ clockNew rectangle l' =
                              toRef
         Just l -> clockNewWithLabel' x_pos y_pos width height l >>=
                              toRef
-clockNewWithType :: ClockType -> Rectangle -> String -> IO (Ref Clock)
+clockNewWithType :: ClockType -> Rectangle -> T.Text -> IO (Ref Clock)
 clockNewWithType clocktype' rectangle' label' =
     let (x_pos, y_pos, width, height) = fromRectangle rectangle'
     in

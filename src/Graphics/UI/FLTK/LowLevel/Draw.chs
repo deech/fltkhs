@@ -125,6 +125,7 @@ import Graphics.UI.FLTK.LowLevel.Fl_Types
 import Graphics.UI.FLTK.LowLevel.Fl_Enumerations
 import Graphics.UI.FLTK.LowLevel.Utils
 import Graphics.UI.FLTK.LowLevel.Dispatch
+import qualified Data.Text as T
 import Graphics.UI.FLTK.LowLevel.Hierarchy
 import Data.ByteString
 
@@ -205,10 +206,10 @@ flcPoint :: Position ->  IO ()
 flcPoint (Position (X x_pos') (Y y_pos')) = flcPoint' x_pos' y_pos'
 
 {# fun flc_line_style_with_width_dashes as flcLineStyleWithWidthDashes' {cFromEnum `LineStyle', `Int', id `Ptr CChar' } -> `()' #}
-flcLineStyle :: LineStyle -> Maybe Int -> Maybe String -> IO ()
+flcLineStyle :: LineStyle -> Maybe Int -> Maybe T.Text -> IO ()
 flcLineStyle style width' dashes' = do
   let _width = maybe 0 id width'
-  _dashes <- maybe (return nullPtr) newCString dashes'
+  _dashes <- maybe (return nullPtr) copyTextToCString dashes'
   flcLineStyleWithWidthDashes' style _width _dashes
 
 {# fun flc_rect as flcRect' { `Int',`Int',`Int',`Int' } -> `()' #}
@@ -419,80 +420,80 @@ flcSetHeight font' size' = flcSetHeight' font' size'
 flcDescent ::  IO (Int)
 flcDescent  = flcDescent'
 
-{# fun flc_width as flcWidth' { `String' } -> `Double' #}
-flcWidth :: String ->  IO (Double)
+{# fun flc_width as flcWidth' { unsafeToCString `T.Text' } -> `Double' #}
+flcWidth :: T.Text ->  IO (Double)
 flcWidth txt = flcWidth' txt
 
-{# fun flc_width_with_n as flcWidthWithN' { `String',`Int' } -> `Double' #}
-flcWidthWithN :: String -> Int ->  IO (Double)
+{# fun flc_width_with_n as flcWidthWithN' { unsafeToCString `T.Text',`Int' } -> `Double' #}
+flcWidthWithN :: T.Text -> Int ->  IO (Double)
 flcWidthWithN txt n = flcWidthWithN' txt n
 
 {# fun flc_width_with_c as flcWidthWithC' { `Int' } -> `Double' #}
 flcWidthWithC :: Int ->  IO (Double)
 flcWidthWithC c = flcWidthWithC' c
 
-{# fun flc_text_extents as flcTextExtents' { `String',alloca- `Int' peekIntConv*,alloca- `Int' peekIntConv*,alloca- `Int' peekIntConv*,alloca- `Int' peekIntConv* } -> `()' #}
-flcTextExtents :: String -> IO (Rectangle)
+{# fun flc_text_extents as flcTextExtents' { unsafeToCString `T.Text',alloca- `Int' peekIntConv*,alloca- `Int' peekIntConv*,alloca- `Int' peekIntConv*,alloca- `Int' peekIntConv* } -> `()' #}
+flcTextExtents :: T.Text -> IO (Rectangle)
 flcTextExtents s  = flcTextExtents' s >>= \(rectangle') -> return $ (toRectangle rectangle')
 
-{# fun flc_text_extents_with_n as flcTextExtentsWithN' { `String',`Int',alloca- `Int' peekIntConv*,alloca- `Int' peekIntConv*,alloca- `Int' peekIntConv*,alloca- `Int' peekIntConv* } -> `()' #}
-flcTextExtentsWithN :: String -> Int ->  IO (Rectangle)
+{# fun flc_text_extents_with_n as flcTextExtentsWithN' { unsafeToCString `T.Text',`Int',alloca- `Int' peekIntConv*,alloca- `Int' peekIntConv*,alloca- `Int' peekIntConv*,alloca- `Int' peekIntConv* } -> `()' #}
+flcTextExtentsWithN :: T.Text -> Int ->  IO (Rectangle)
 flcTextExtentsWithN t n  = flcTextExtentsWithN' t n >>= \(rectangle') -> return $ (toRectangle rectangle')
 
-{# fun flc_latin1_to_local as flcLatin1ToLocal' { `String' } -> `String' unsafeFromCString #}
-flcLatin1ToLocal :: String ->  IO (String)
+{# fun flc_latin1_to_local as flcLatin1ToLocal' { unsafeToCString `T.Text' } -> `T.Text' unsafeFromCString #}
+flcLatin1ToLocal :: T.Text ->  IO  T.Text
 flcLatin1ToLocal t = flcLatin1ToLocal' t
 
-{# fun flc_latin1_to_local_with_n as flcLatin1ToLocalWithN' { `String',`Int' } -> `String' unsafeFromCString #}
-flcLatin1ToLocalWithN :: String -> Int ->  IO (String)
+{# fun flc_latin1_to_local_with_n as flcLatin1ToLocalWithN' { unsafeToCString `T.Text',`Int' } -> `T.Text' unsafeFromCString #}
+flcLatin1ToLocalWithN :: T.Text -> Int ->  IO  T.Text
 flcLatin1ToLocalWithN t n = flcLatin1ToLocalWithN' t n
 
-{# fun flc_local_to_latin1 as flcLocalToLatin1' { `String' } -> `String' unsafeFromCString #}
-flcLocalToLatin1 :: String ->  IO (String)
+{# fun flc_local_to_latin1 as flcLocalToLatin1' { unsafeToCString `T.Text' } -> `T.Text' unsafeFromCString #}
+flcLocalToLatin1 :: T.Text ->  IO  T.Text
 flcLocalToLatin1 t = flcLocalToLatin1' t
 
-{# fun flc_local_to_latin1_with_n as flcLocalToLatin1WithN' { `String',`Int' } -> `String' unsafeFromCString #}
-flcLocalToLatin1WithN :: String -> Int ->  IO (String)
+{# fun flc_local_to_latin1_with_n as flcLocalToLatin1WithN' { unsafeToCString `T.Text',`Int' } -> `T.Text' unsafeFromCString #}
+flcLocalToLatin1WithN :: T.Text -> Int ->  IO  T.Text
 flcLocalToLatin1WithN t n = flcLocalToLatin1WithN' t n
 
-{# fun flc_mac_roman_to_local as flcMacRomanToLocal' { `String' } -> `String' unsafeFromCString #}
-flcMacRomanToLocal :: String ->  IO (String)
+{# fun flc_mac_roman_to_local as flcMacRomanToLocal' { unsafeToCString `T.Text' } -> `T.Text' unsafeFromCString #}
+flcMacRomanToLocal :: T.Text ->  IO  T.Text
 flcMacRomanToLocal t = flcMacRomanToLocal' t
 
-{# fun flc_mac_roman_to_local_with_n as flcMacRomanToLocalWithN' { `String',`Int' } -> `String' unsafeFromCString #}
-flcMacRomanToLocalWithN :: String -> Int ->  IO (String)
+{# fun flc_mac_roman_to_local_with_n as flcMacRomanToLocalWithN' { unsafeToCString `T.Text',`Int' } -> `T.Text' unsafeFromCString #}
+flcMacRomanToLocalWithN :: T.Text -> Int ->  IO  T.Text
 flcMacRomanToLocalWithN t n = flcMacRomanToLocalWithN' t n
 
-{# fun flc_local_to_mac_roman as flcLocalToMacRoman' { `String' } -> `String' unsafeFromCString #}
-flcLocalToMacRoman :: String ->  IO (String)
+{# fun flc_local_to_mac_roman as flcLocalToMacRoman' { unsafeToCString `T.Text' } -> `T.Text' unsafeFromCString #}
+flcLocalToMacRoman :: T.Text ->  IO  T.Text
 flcLocalToMacRoman t = flcLocalToMacRoman' t
 
-{# fun flc_local_to_mac_roman_with_n as flcLocalToMacRomanWithN' { `String',`Int' } -> `String' unsafeFromCString #}
-flcLocalToMacRomanWithN :: String -> Int ->  IO (String)
+{# fun flc_local_to_mac_roman_with_n as flcLocalToMacRomanWithN' { unsafeToCString `T.Text',`Int' } -> `T.Text' unsafeFromCString #}
+flcLocalToMacRomanWithN :: T.Text -> Int ->  IO  T.Text
 flcLocalToMacRomanWithN t n = flcLocalToMacRomanWithN' t n
 
-{# fun flc_draw as flcDraw' { `String',`Int',`Int' } -> `()' #}
-flcDraw :: String -> Position ->  IO ()
+{# fun flc_draw as flcDraw' { unsafeToCString `T.Text',`Int',`Int' } -> `()' #}
+flcDraw :: T.Text -> Position ->  IO ()
 flcDraw str (Position (X x_pos') (Y y_pos')) = flcDraw' str x_pos' y_pos'
 
-{# fun flc_draw_with_angle as flcDrawWithAngle' { `Int',`String',`Int',`Int' } -> `()' #}
-flcDrawWithAngle :: Int -> String -> Position ->  IO ()
+{# fun flc_draw_with_angle as flcDrawWithAngle' { `Int',unsafeToCString `T.Text',`Int',`Int' } -> `()' #}
+flcDrawWithAngle :: Int -> T.Text -> Position ->  IO ()
 flcDrawWithAngle angle str (Position (X x_pos') (Y y_pos')) = flcDrawWithAngle' angle str x_pos' y_pos'
 
-{# fun flc_draw_with_n as flcDrawWithN' { `String',`Int',`Int',`Int' } -> `()' #}
-flcDrawWithN :: String -> Int -> Position ->  IO ()
+{# fun flc_draw_with_n as flcDrawWithN' { unsafeToCString `T.Text',`Int',`Int',`Int' } -> `()' #}
+flcDrawWithN :: T.Text -> Int -> Position ->  IO ()
 flcDrawWithN str n (Position (X x_pos') (Y y_pos')) = flcDrawWithN' str n x_pos' y_pos'
 
-{# fun flc_draw_with_n_angle as flcDrawWithNAngle' { `Int',`String',`Int',`Int',`Int' } -> `()' #}
-flcDrawWithNAngle :: Int -> String -> Int -> Position ->  IO ()
+{# fun flc_draw_with_n_angle as flcDrawWithNAngle' { `Int',unsafeToCString `T.Text',`Int',`Int',`Int' } -> `()' #}
+flcDrawWithNAngle :: Int -> T.Text -> Int -> Position ->  IO ()
 flcDrawWithNAngle angle str n (Position (X x_pos') (Y y_pos')) = flcDrawWithNAngle' angle str n x_pos' y_pos'
 
-{# fun flc_rtl_draw as flcRtlDraw' { `String',`Int',`Int',`Int' } -> `()' #}
-flcRtlDraw :: String -> Int -> Position ->  IO ()
+{# fun flc_rtl_draw as flcRtlDraw' { unsafeToCString `T.Text',`Int',`Int',`Int' } -> `()' #}
+flcRtlDraw :: T.Text -> Int -> Position ->  IO ()
 flcRtlDraw str n (Position (X x_pos') (Y y_pos')) = flcRtlDraw' str n x_pos' y_pos'
 
-{# fun flc_measure_with_draw_symbols as flcMeasureWithDrawSymbols' { `String', id `Ptr CInt', id `Ptr CInt', `CInt' } -> `()' #}
-flcMeasure :: String -> Bool -> Bool -> IO (Size)
+{# fun flc_measure_with_draw_symbols as flcMeasureWithDrawSymbols' { unsafeToCString `T.Text', id `Ptr CInt', id `Ptr CInt', `CInt' } -> `()' #}
+flcMeasure :: T.Text -> Bool -> Bool -> IO (Size)
 flcMeasure str word_wrap draw_symbols =
   alloca $ \widthPtr' ->
   alloca $ \heightPtr' ->
@@ -506,9 +507,9 @@ flcMeasure str word_wrap draw_symbols =
   then poke widthPtr' 1 >> doit
   else doit
 
-{# fun flc_draw_with_img_draw_symbols as flcDrawWithImgDrawSymbols' { `String',`Int',`Int',`Int',`Int',`Int', id `Ptr ()',`Bool' } -> `()' #}
-{# fun flc_draw_with_callthis_img_draw_symbols as flcDrawWithCallthisImgDrawSymbols' { `String',`Int',`Int',`Int',`Int',`Int', id `FunPtr DrawCallbackPrim', id `Ptr ()',`Bool' } -> `()' #}
-flcDrawInBoxWithImageReference' ::  String -> Rectangle -> Alignments -> Maybe DrawCallback -> Ptr () -> Maybe Bool -> IO ()
+{# fun flc_draw_with_img_draw_symbols as flcDrawWithImgDrawSymbols' { unsafeToCString `T.Text',`Int',`Int',`Int',`Int',`Int', id `Ptr ()',`Bool' } -> `()' #}
+{# fun flc_draw_with_callthis_img_draw_symbols as flcDrawWithCallthisImgDrawSymbols' { unsafeToCString `T.Text',`Int',`Int',`Int',`Int',`Int', id `FunPtr DrawCallbackPrim', id `Ptr ()',`Bool' } -> `()' #}
+flcDrawInBoxWithImageReference' ::  T.Text -> Rectangle -> Alignments -> Maybe DrawCallback -> Ptr () -> Maybe Bool -> IO ()
 flcDrawInBoxWithImageReference' string' rectangle' align' draw_callback' image_ptr draw_flags' =
   let (x_pos', y_pos', width', height') = fromRectangle rectangle' in
   case draw_callback' of
@@ -517,20 +518,20 @@ flcDrawInBoxWithImageReference' string' rectangle' align' draw_callback' image_p
   Just c' -> do
              fptr <- toDrawCallback c'
              flcDrawWithCallthisImgDrawSymbols' string' x_pos' y_pos' width' height' (alignmentsToInt align') fptr image_ptr (maybe False id draw_flags')
-flcDrawInBoxWithImageReference :: (Parent a Image) => String -> Rectangle -> Alignments -> Maybe DrawCallback -> Ref a -> Maybe Bool -> IO ()
+flcDrawInBoxWithImageReference :: (Parent a Image) => T.Text -> Rectangle -> Alignments -> Maybe DrawCallback -> Ref a -> Maybe Bool -> IO ()
 flcDrawInBoxWithImageReference string' rectangle' align' draw_callback' image' draw_flags'
   = withRef image' $ \imagePtr' -> flcDrawInBoxWithImageReference' string' rectangle' align' draw_callback' imagePtr' draw_flags'
 
-flcDrawInBox :: String -> Rectangle -> Alignments -> Maybe DrawCallback -> Maybe Bool -> IO ()
+flcDrawInBox :: T.Text -> Rectangle -> Alignments -> Maybe DrawCallback -> Maybe Bool -> IO ()
 flcDrawInBox string' rectangle' align' draw_callback' draw_flags'
   = flcDrawInBoxWithImageReference' string' rectangle' align' draw_callback' (castPtr nullPtr) draw_flags'
 
-{# fun flc_frame as flcFrame' { `String',`Int',`Int',`Int',`Int' } -> `()' #}
-flcFrame :: String -> Rectangle ->  IO ()
+{# fun flc_frame as flcFrame' { unsafeToCString `T.Text',`Int',`Int',`Int',`Int' } -> `()' #}
+flcFrame :: T.Text -> Rectangle ->  IO ()
 flcFrame s rectangle = let (x_pos', y_pos', width', height') = fromRectangle rectangle in flcFrame' s x_pos' y_pos' width' height'
 
-{# fun flc_frame2 as flcFrame2' { `String',`Int',`Int',`Int',`Int' } -> `()' #}
-flcFrame2 :: String -> Rectangle ->  IO ()
+{# fun flc_frame2 as flcFrame2' { unsafeToCString `T.Text',`Int',`Int',`Int',`Int' } -> `()' #}
+flcFrame2 :: T.Text -> Rectangle ->  IO ()
 flcFrame2 s rectangle = let (x_pos', y_pos', width', height') = fromRectangle rectangle in flcFrame2' s x_pos' y_pos' width' height'
 
 {# fun flc_draw_box as flcDrawBox' { cFromEnum `Boxtype',`Int',`Int',`Int',`Int',cFromColor `Color' } -> `()' #}
@@ -614,12 +615,12 @@ flcMeasurePixmapWithCdata pixmap  =
                          return (result, toSize (width', height'))
                       )
 
-{# fun flc_shortcut_label as flcShortcutLabel' { `Int' } -> `String' unsafeFromCString #}
-flcShortcutLabel :: Int ->  IO (String)
+{# fun flc_shortcut_label as flcShortcutLabel' { `Int' } -> `T.Text' unsafeFromCString #}
+flcShortcutLabel :: Int ->  IO  T.Text
 flcShortcutLabel shortcut = flcShortcutLabel' shortcut
 
-{# fun flc_old_shortcut as flcOldShortcut' { `String' } -> `Int' #}
-flcOldShortcut :: String -> IO (Int)
+{# fun flc_old_shortcut as flcOldShortcut' { unsafeToCString `T.Text' } -> `Int' #}
+flcOldShortcut :: T.Text -> IO (Int)
 flcOldShortcut s = flcOldShortcut' s
 
 {# fun flc_overlay_rect as flcOverlayRect' { `Int',`Int',`Int',`Int' } -> `()' #}
@@ -662,6 +663,6 @@ flcSetSpot font' size' rectangle = let (x_pos', y_pos', width', height') = fromR
 flcResetSpot ::  IO ()
 flcResetSpot  = flcResetSpot'
 
-{# fun flc_draw_symbol as flcDrawSymbol' { `String',`Int',`Int',`Int',`Int',cFromColor `Color' } -> `Int' #}
-flcDrawSymbol :: String -> Rectangle -> Color ->  IO (Int)
+{# fun flc_draw_symbol as flcDrawSymbol' { unsafeToCString `T.Text',`Int',`Int',`Int',`Int',cFromColor `Color' } -> `Int' #}
+flcDrawSymbol :: T.Text -> Rectangle -> Color ->  IO (Int)
 flcDrawSymbol label rectangle color' = let (x_pos', y_pos', width', height') = fromRectangle rectangle in flcDrawSymbol' label x_pos' y_pos' width' height' color'

@@ -27,14 +27,13 @@ import Graphics.UI.FLTK.LowLevel.Fl_Enumerations
 import Graphics.UI.FLTK.LowLevel.Fl_Types
 import Graphics.UI.FLTK.LowLevel.Utils
 import Graphics.UI.FLTK.LowLevel.Dispatch
+import qualified Data.Text as T
 import Graphics.UI.FLTK.LowLevel.Hierarchy
 
-{# fun Fl_Button_New as widgetNew' { `Int',`Int',`Int',`Int' } -> `Ptr ()' id #}
-{# fun Fl_Button_New_WithLabel as widgetNewWithLabel' { `Int',`Int',`Int',`Int', unsafeToCString `String'} -> `Ptr ()' id #}
-{# fun Fl_OverriddenButton_New_WithLabel as overriddenWidgetNewWithLabel' { `Int',`Int',`Int',`Int', unsafeToCString `String', id `Ptr ()'} -> `Ptr ()' id #}
+{# fun Fl_OverriddenButton_New_WithLabel as overriddenWidgetNewWithLabel' { `Int',`Int',`Int',`Int', unsafeToCString `T.Text', id `Ptr ()'} -> `Ptr ()' id #}
 {# fun Fl_OverriddenButton_New as overriddenWidgetNew' { `Int',`Int',`Int',`Int', id `Ptr ()'} -> `Ptr ()' id #}
 buttonCustom :: Rectangle                         -- ^ The bounds of this button
-             -> Maybe String                      -- ^ The button label
+             -> Maybe T.Text                      -- ^ The button label
              -> Maybe (Ref Button -> IO ())       -- ^ Optional custom drawing function
              -> Maybe (CustomWidgetFuncs Button)  -- ^ Optional custom widget functions
              -> IO (Ref Button)
@@ -44,20 +43,16 @@ buttonCustom rectangle l' draw' funcs' =
     l'
     draw'
     funcs'
-    widgetNew'
-    widgetNewWithLabel'
     overriddenWidgetNew'
     overriddenWidgetNewWithLabel'
 
-buttonNew :: Rectangle -> Maybe String -> IO (Ref Button)
+buttonNew :: Rectangle -> Maybe T.Text -> IO (Ref Button)
 buttonNew rectangle l' =
   widgetMaker
     rectangle
     l'
     Nothing
     Nothing
-    widgetNew'
-    widgetNewWithLabel'
     overriddenWidgetNew'
     overriddenWidgetNewWithLabel'
 

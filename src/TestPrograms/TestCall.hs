@@ -17,7 +17,7 @@ drawOverride wptr = do
   print "drawOverride"
   drawSuper wptr
 
-addButton :: Int -> Int -> String -> IO (Ref Button)
+addButton :: Int -> Int -> T.Text -> IO (Ref Button)
 addButton x_pos y_pos label = do
   button <- buttonNew
               (Rectangle (Position (X x_pos) (Y y_pos)) (Size (Width 80) (Height 30)) )

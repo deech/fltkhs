@@ -28,6 +28,7 @@ import Graphics.UI.FLTK.LowLevel.Fl_Enumerations
 import Graphics.UI.FLTK.LowLevel.Fl_Types
 import Graphics.UI.FLTK.LowLevel.Utils
 import Graphics.UI.FLTK.LowLevel.Dispatch
+import qualified Data.Text as T
 import Graphics.UI.FLTK.LowLevel.Hierarchy
 
 type RectangleFPrim              = Ptr () -> CInt -> CInt -> CInt -> CInt -> IO ()
@@ -119,15 +120,13 @@ defaultCustomWidgetFuncs =
 -- Only of interest to 'Widget' contributors.
 widgetMaker :: forall a. (Parent a Widget) =>
                Rectangle                                                          -- ^ Position and size
-               -> Maybe String                                                    -- ^ Title
+               -> Maybe T.Text                                                    -- ^ Title
                -> Maybe (Ref a -> IO ())                                          -- ^ Custom drawing function
                -> Maybe (CustomWidgetFuncs a)                                     -- ^ Custom functions
-               -> (Int -> Int -> Int -> Int -> IO ( Ptr ()))                      -- ^ Foreign constructor to call if neither title nor custom functions are given
-               -> (Int -> Int -> Int -> Int -> String -> IO ( Ptr () ))           -- ^ Foreign constructor to call if only title is given
                -> (Int -> Int -> Int -> Int -> Ptr () -> IO ( Ptr () ))           -- ^ Foreign constructor to call if only custom functions are given
-               -> (Int -> Int -> Int -> Int -> String -> Ptr () -> IO ( Ptr () )) -- ^ Foreign constructor to call if both title and custom functions are given
+               -> (Int -> Int -> Int -> Int -> T.Text -> Ptr () -> IO ( Ptr () )) -- ^ Foreign constructor to call if both title and custom functions are given
                -> IO (Ref a)                                                      -- ^ Reference to the widget
-widgetMaker rectangle _label' draw' customFuncs' new' newWithLabel' newWithCustomFuncs' newWithCustomFuncsLabel' =
+widgetMaker rectangle _label' draw' customFuncs' newWithCustomFuncs' newWithCustomFuncsLabel' =
   do
     let (x_pos, y_pos, width, height) = fromRectangle rectangle
     ptr <- customWidgetFunctionStruct draw' (maybe defaultCustomWidgetFuncs id customFuncs')
@@ -136,13 +135,11 @@ widgetMaker rectangle _label' draw' customFuncs' new' newWithLabel' newWithCusto
                     _label'
     toRef widget
 
-{# fun Fl_Widget_New as widgetNew' { `Int',`Int',`Int',`Int' } -> `Ptr ()' id #}
-{# fun Fl_Widget_New_WithLabel as widgetNewWithLabel' { `Int',`Int',`Int',`Int', unsafeToCString `String'} -> `Ptr ()' id #}
-{# fun Fl_OverriddenWidget_New_WithLabel as overriddenWidgetNewWithLabel' { `Int',`Int',`Int',`Int', unsafeToCString `String', id `Ptr ()'} -> `Ptr ()' id #}
+{# fun Fl_OverriddenWidget_New_WithLabel as overriddenWidgetNewWithLabel' { `Int',`Int',`Int',`Int', unsafeToCString `T.Text', id `Ptr ()'} -> `Ptr ()' id #}
 {# fun Fl_OverriddenWidget_New as overriddenWidgetNew' { `Int',`Int',`Int',`Int', id `Ptr ()'} -> `Ptr ()' id #}
 -- | Widget constructor.
 widgetCustom :: Rectangle                   -- ^ The bounds of this widget
-                -> Maybe String             -- ^ The widget label
+                -> Maybe T.Text             -- ^ The widget label
                 -> (Ref Widget -> IO ())    -- ^ Custom drawing function
                 -> CustomWidgetFuncs Widget -- ^ Other custom functions
                 -> IO (Ref Widget)
@@ -152,8 +149,6 @@ widgetCustom rectangle l' draw' funcs' =
     l'
     (Just draw')
     (Just funcs')
-    widgetNew'
-    widgetNewWithLabel'
     overriddenWidgetNew'
     overriddenWidgetNewWithLabel'
 
@@ -252,14 +247,14 @@ instance (impl ~ IO (Color)) => Op (GetSelectionColor ()) Widget orig impl where
 {# fun Fl_Widget_set_selection_color as setSelectionColor' { id `Ptr ()',cFromColor `Color' } -> `()' supressWarningAboutRes #}
 instance (impl ~ (Color ->  IO ())) => Op (SetSelectionColor ()) Widget orig impl where
   runOp _ _ widget a = withRef widget $ \widgetPtr -> setSelectionColor' widgetPtr a
-{# fun Fl_Widget_label as label' { id `Ptr ()' } -> `String' unsafeFromCString #}
-instance (impl ~ IO (String)) => Op (GetLabel ()) Widget orig impl where
+{# fun Fl_Widget_label as label' { id `Ptr ()' } -> `T.Text' unsafeFromCString #}
+instance (impl ~ IO T.Text) => Op (GetLabel ()) Widget orig impl where
   runOp _ _ widget = withRef widget $ \widgetPtr -> label' widgetPtr
-{# fun Fl_Widget_copy_label as copyLabel' { id `Ptr ()', unsafeToCString `String' } -> `()' supressWarningAboutRes #}
-instance (impl ~ (String ->  IO ())) => Op (CopyLabel ()) Widget orig impl where
+{# fun Fl_Widget_copy_label as copyLabel' { id `Ptr ()', unsafeToCString `T.Text' } -> `()' supressWarningAboutRes #}
+instance (impl ~ (T.Text ->  IO ())) => Op (CopyLabel ()) Widget orig impl where
   runOp _ _ widget new_label = withRef widget $ \widgetPtr -> copyLabel' widgetPtr new_label
-{# fun Fl_Widget_set_label as setLabel' { id `Ptr ()', unsafeToCString `String' } -> `()' supressWarningAboutRes #}
-instance (impl ~ ( String -> IO ())) => Op (SetLabel ()) Widget orig impl where
+{# fun Fl_Widget_set_label as setLabel' { id `Ptr ()', unsafeToCString `T.Text' } -> `()' supressWarningAboutRes #}
+instance (impl ~ ( T.Text -> IO ())) => Op (SetLabel ()) Widget orig impl where
   runOp _ _ widget text = withRef widget $ \widgetPtr -> setLabel' widgetPtr text
 {# fun Fl_Widget_labeltype as labeltype' { id `Ptr ()' } -> `Labeltype' cToEnum #}
 instance (impl ~ (IO (Labeltype))) => Op (GetLabeltype ()) Widget orig impl where
@@ -297,14 +292,14 @@ instance (impl ~ (IO (Ref Image))) => Op (GetDeimage ()) Widget orig impl where
 {# fun Fl_Widget_set_deimage as setDeimage' { id `Ptr ()',id `Ptr ()'} -> `()' supressWarningAboutRes #}
 instance (Parent a Image, impl ~ (Maybe( Ref a ) ->  IO ())) => Op (SetDeimage ()) Widget orig impl where
   runOp _ _ widget pix = withRef widget $ \widgetPtr -> withMaybeRef pix $ \pixPtr -> setDeimage' widgetPtr pixPtr
-{# fun Fl_Widget_tooltip as tooltip' { id `Ptr ()' } -> `String' unsafeFromCString #}
-instance (impl ~ (IO (String))) => Op (GetTooltip ()) Widget orig impl where
+{# fun Fl_Widget_tooltip as tooltip' { id `Ptr ()' } -> `T.Text' unsafeFromCString #}
+instance (impl ~ (IO T.Text)) => Op (GetTooltip ()) Widget orig impl where
   runOp _ _ widget = withRef widget $ \widgetPtr -> tooltip' widgetPtr
-{# fun Fl_Widget_copy_tooltip as copyTooltip' { id `Ptr ()', unsafeToCString `String' } -> `()' supressWarningAboutRes #}
-instance (impl ~ ( String ->  IO ())) => Op (CopyTooltip ()) Widget orig impl where
+{# fun Fl_Widget_copy_tooltip as copyTooltip' { id `Ptr ()', unsafeToCString `T.Text' } -> `()' supressWarningAboutRes #}
+instance (impl ~ ( T.Text ->  IO ())) => Op (CopyTooltip ()) Widget orig impl where
   runOp _ _ widget text = withRef widget $ \widgetPtr -> copyTooltip' widgetPtr text
-{# fun Fl_Widget_set_tooltip as setTooltip' { id `Ptr ()', unsafeToCString `String' } -> `()' supressWarningAboutRes #}
-instance (impl ~ ( String ->  IO ())) => Op (SetTooltip ()) Widget orig impl where
+{# fun Fl_Widget_set_tooltip as setTooltip' { id `Ptr ()', unsafeToCString `T.Text' } -> `()' supressWarningAboutRes #}
+instance (impl ~ ( T.Text ->  IO ())) => Op (SetTooltip ()) Widget orig impl where
   runOp _ _ widget text = withRef widget $ \widgetPtr -> setTooltip' widgetPtr text
 {# fun Fl_Widget_when as when' { id `Ptr ()' } -> `CInt' id #}
 instance (impl ~ IO [When]) => Op (GetWhen ()) Widget orig impl where
@@ -510,13 +505,15 @@ instance (impl ~ ( Maybe (Boxtype, Rectangle) -> IO ())) => Op (DrawFocus ()) Wi
 --
 -- contains:: ('Parent' a 'Widget') => 'Ref' 'Widget' -> 'Ref' a -> 'IO' 'Int'
 --
--- copyLabel :: 'Ref' 'Widget' -> 'String' -> 'IO' ()
+-- copyLabel :: 'Ref' 'Widget' -> 'T.Text' -> 'IO' ()
 --
--- copyTooltip :: 'Ref' 'Widget' -> 'String' -> 'IO' ()
+-- copyTooltip :: 'Ref' 'Widget' -> 'T.Text' -> 'IO' ()
 --
 -- deactivate :: 'Ref' 'Widget' -> 'IO' ()
 --
 -- destroy :: 'Ref' 'Widget' -> 'IO' ()
+--
+-- doCallback :: 'Ref' 'Widget' -> 'IO' ()
 --
 -- drawBackdrop :: 'Ref' 'Widget' -> 'IO' ()
 --
@@ -546,7 +543,7 @@ instance (impl ~ ( Maybe (Boxtype, Rectangle) -> IO ())) => Op (DrawFocus ()) Wi
 --
 -- getImage :: 'Ref' 'Widget' -> 'IO' ('Ref' 'Image')
 --
--- getLabel :: 'Ref' 'Widget' -> 'IO' ('String')
+-- getLabel :: 'Ref' 'Widget' -> 'IO' 'T.Text'
 --
 -- getLabelcolor :: 'Ref' 'Widget' -> 'IO' ('Color')
 --
@@ -560,11 +557,11 @@ instance (impl ~ ( Maybe (Boxtype, Rectangle) -> IO ())) => Op (DrawFocus ()) Wi
 --
 -- getParent :: 'Ref' 'Widget' -> 'IO' ('Maybe' ('Ref' 'Group'))
 --
--- getRectangle:: ('FindOp' orig ('GetX' ()) ('Match' obj), 'FindOp' orig ('GetY' ()) ('Match' obj), 'FindOp' orig ('GetW' ()) ('Match' obj), 'FindOp' orig ('GetH' ()) ('Match' obj), 'Op' ('GetX' ()) obj orig ('IO' 'Int',) 'Op' ('GetY' ()) obj orig ('IO' 'Int',) 'Op' ('GetW' ()) obj orig ('IO' 'Int',) 'Op' ('GetH' ()) obj orig ('IO' 'Int',)) => 'Ref' 'Widget' -> 'IO' 'Rectangle'
+-- getRectangle:: ('Match' obj ~ 'FindOp' orig orig ('GetX' ()), 'Match' obj ~ 'FindOp' orig orig ('GetY' ()), 'Match' obj ~ 'FindOp' orig orig ('GetW' ()), 'Match' obj ~ 'FindOp' orig orig ('GetH' ()), 'Op' ('GetX' ()) obj orig ('IO' 'Int',) 'Op' ('GetY' ()) obj orig ('IO' 'Int',) 'Op' ('GetW' ()) obj orig ('IO' 'Int',) 'Op' ('GetH' ()) obj orig ('IO' 'Int',)) => 'Ref' 'Widget' -> 'IO' 'Rectangle'
 --
 -- getSelectionColor :: 'Ref' 'Widget' -> 'IO' ('Color')
 --
--- getTooltip :: 'Ref' 'Widget' -> 'IO' ('String')
+-- getTooltip :: 'Ref' 'Widget' -> 'IO' 'T.Text'
 --
 -- getTopWindow :: 'Ref' 'Widget' -> 'IO' ('Maybe' ('Ref' 'Window'))
 --
@@ -628,7 +625,7 @@ instance (impl ~ ( Maybe (Boxtype, Rectangle) -> IO ())) => Op (DrawFocus ()) Wi
 --
 -- setImage:: ('Parent' a 'Image') => 'Ref' 'Widget' -> 'Maybe'( 'Ref' a ) -> 'IO' ()
 --
--- setLabel :: 'Ref' 'Widget' -> 'String' -> 'IO' ()
+-- setLabel :: 'Ref' 'Widget' -> 'T.Text' -> 'IO' ()
 --
 -- setLabelcolor :: 'Ref' 'Widget' -> 'Color' -> 'IO' ()
 --
@@ -644,7 +641,7 @@ instance (impl ~ ( Maybe (Boxtype, Rectangle) -> IO ())) => Op (DrawFocus ()) Wi
 --
 -- setSelectionColor :: 'Ref' 'Widget' -> 'Color' -> 'IO' ()
 --
--- setTooltip :: 'Ref' 'Widget' -> 'String' -> 'IO' ()
+-- setTooltip :: 'Ref' 'Widget' -> 'T.Text' -> 'IO' ()
 --
 -- setType :: 'Ref' 'Widget' -> 'Word8' -> 'IO' ()
 --
