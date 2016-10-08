@@ -114,8 +114,8 @@ textEditorNew rectangle l' =
         Just l -> textEditorNewWithLabel' x_pos y_pos width height l >>= toRef
 
 {# fun Fl_Text_Editor_handle as handle' { id `Ptr ()',`Int' } -> `Int' #}
-instance (impl ~ (Event ->  IO (Int))) => Op (Handle ()) TextEditor orig impl where
-   runOp _ _ text_editor e = withRef text_editor $ \text_editorPtr -> handle' text_editorPtr (fromEnum e)
+instance (impl ~ (Event ->  IO(Either UnknownEvent ()))) => Op (Handle ()) TextEditor orig impl where
+   runOp _ _ text_editor e = withRef text_editor $ \text_editorPtr -> handle' text_editorPtr (fromEnum e) >>= return  . successOrUnknownEvent
 {# fun Fl_Text_Editor_Destroy as textEditorDestroy' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
 instance (impl ~ (IO ())) => Op (Destroy ()) TextEditor orig impl where
   runOp _ _ editor = swapRef editor $ \editorPtr -> do
@@ -162,7 +162,7 @@ instance (impl ~ ([KeyBinding] -> IO ())) => Op (ReplaceKeyBindings ()) TextEdit
 --
 -- getInsertMode :: 'Ref' 'TextEditor' -> 'IO' 'Bool'
 --
--- handle :: 'Ref' 'TextEditor' -> 'Event' -> 'IO' 'Int'
+-- handle :: 'Ref' 'TextEditor' -> ('Event' -> 'IO' ('Either' 'UnknownEvent' ()))
 --
 -- replaceKeyBindings :: 'Ref' 'TextEditor' -> ['KeyBinding'] -> 'IO' ()
 --

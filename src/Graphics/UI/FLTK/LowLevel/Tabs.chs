@@ -38,8 +38,8 @@ tabsNew rectangle l' =
         Just l -> tabsNewWithLabel' x_pos y_pos width height l >>= toRef
 
 {# fun Fl_Tabs_handle as handle' { id `Ptr ()',`Int' } -> `Int' #}
-instance (impl ~ (Event -> IO Int)) => Op (Handle ()) Tabs orig impl where
-  runOp _ _ tabs event = withRef tabs (\p -> handle' p (fromIntegral . fromEnum $ event))
+instance (impl ~ (Event -> IO (Either UnknownEvent ()))) => Op (Handle ()) Tabs orig impl where
+  runOp _ _ tabs event = withRef tabs (\p -> handle' p (fromIntegral . fromEnum $ event)) >>= return  . successOrUnknownEvent
 
 {# fun Fl_Tabs_value as value' { id `Ptr ()' } -> `Ptr ()' id #}
 instance (impl ~ (IO (Maybe (Ref Widget)))) => Op (GetValue ()) Tabs orig impl where
@@ -90,7 +90,7 @@ instance (impl ~ (TabsHeightOffset -> IO Rectangle)) => Op (ClientArea ()) Tabs 
 --
 -- getValue :: 'Ref' 'Tabs' -> 'IO' ('Maybe' ('Ref' 'Widget'))
 --
--- handle :: 'Ref' 'Tabs' -> 'Event' -> 'IO' 'Int'
+-- handle :: 'Ref' 'Tabs' -> ('Event' -> 'IO' ('Either' 'UnknownEvent' ()))
 --
 -- setPush:: ('Parent' a 'Widget') => 'Ref' 'Tabs' -> 'Maybe' ( 'Ref' a ) -> 'IO' ('Either' 'NoChange' ())
 --

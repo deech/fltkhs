@@ -74,8 +74,8 @@ instance (impl ~ ( IO ())) => Op (DrawSuper ()) SingleWindow orig impl where
   runOp _ _ window = withRef window $ \windowPtr -> drawSuper' windowPtr
 
 {# fun Fl_Single_Window_handle_super as handleSuper' { id `Ptr ()',`Int' } -> `Int' #}
-instance (impl ~ (Event ->  IO (Int))) => Op (HandleSuper ()) SingleWindow orig impl where
-  runOp _ _ window event = withRef window $ \windowPtr -> handleSuper' windowPtr (fromIntegral (fromEnum event))
+instance (impl ~ (Event ->  IO (Either UnknownEvent ()))) => Op (HandleSuper ()) SingleWindow orig impl where
+  runOp _ _ window event = withRef window $ \windowPtr -> handleSuper' windowPtr (fromIntegral (fromEnum event)) >>= return . successOrUnknownEvent
 
 {# fun Fl_Single_Window_resize_super as resizeSuper' { id `Ptr ()',`Int',`Int',`Int',`Int' } -> `()' supressWarningAboutRes #}
 instance (impl ~ (Rectangle -> IO ())) => Op (ResizeSuper ()) SingleWindow orig impl where
@@ -105,8 +105,8 @@ instance (impl ~ (IO ())) => Op (ShowWidget ()) SingleWindow orig impl where
 
 {#fun Fl_Single_Window_handle as windowHandle'
       { id `Ptr ()', id `CInt' } -> `Int' #}
-instance (impl ~ (Event -> IO Int)) => Op (Handle ()) SingleWindow orig impl where
-  runOp _ _ window event = withRef window (\p -> windowHandle' p (fromIntegral . fromEnum $ event))
+instance (impl ~ (Event -> IO (Either UnknownEvent ()))) => Op (Handle ()) SingleWindow orig impl where
+  runOp _ _ window event = withRef window (\p -> windowHandle' p (fromIntegral . fromEnum $ event)) >>= return  . successOrUnknownEvent
 
 {# fun Fl_Single_Window_resize as resize' { id `Ptr ()',`Int',`Int',`Int',`Int' } -> `()' supressWarningAboutRes #}
 instance (impl ~ (Rectangle -> IO ())) => Op (Resize ()) SingleWindow orig impl where
@@ -122,7 +122,7 @@ instance (impl ~ (Rectangle -> IO ())) => Op (Resize ()) SingleWindow orig impl 
 --
 -- flushSuper :: 'Ref' 'SingleWindow' -> 'IO' ()
 --
--- handle :: 'Ref' 'SingleWindow' -> 'Event' -> 'IO' 'Int'
+-- handle :: 'Ref' 'SingleWindow' -> ('Event' -> 'IO' ('Either' 'UnknownEvent' ()))
 --
 -- handleSuper :: 'Ref' 'SingleWindow' -> 'Int' -> 'IO' 'Int'
 --

@@ -57,8 +57,8 @@ instance (impl ~ (MenuItemReference -> IO (Int))) => Op (SetValue ()) Choice ori
               withRef menu_item $ \menu_itemPtr ->
                   valueWithItem' menu_Ptr menu_itemPtr
 {#fun Fl_Choice_handle as menu_Handle' { id `Ptr ()', id `CInt' } -> `Int' #}
-instance (impl ~ (Event -> IO Int)) => Op (Handle ()) Choice orig impl where
-  runOp _ _ menu_ event = withRef menu_ (\p -> menu_Handle' p (fromIntegral . fromEnum $ event))
+instance (impl ~ (Event -> IO (Either UnknownEvent ()))) => Op (Handle ()) Choice orig impl where
+  runOp _ _ menu_ event = withRef menu_ (\p -> menu_Handle' p (fromIntegral . fromEnum $ event)) >>= return  . successOrUnknownEvent
 
 -- $Choicefunctions
 --
@@ -67,7 +67,7 @@ instance (impl ~ (Event -> IO Int)) => Op (Handle ()) Choice orig impl where
 --
 -- getValue :: 'Ref' 'Choice' -> 'IO' ('MenuItemIndex')
 --
--- handle :: 'Ref' 'Choice' -> 'Event' -> 'IO' 'Int'
+-- handle :: 'Ref' 'Choice' -> 'Event' -> 'IO' ('Either' 'UnknownEvent' ())
 --
 -- setValue :: 'Ref' 'Choice' -> 'MenuItemReference' -> 'IO' ('Int')
 -- @

@@ -3,7 +3,8 @@
 module Graphics.UI.FLTK.LowLevel.GlWindow
     (
      glWindowNew,
-     glWindowCustom
+     glWindowCustom,
+     glWindowCanDo
      -- * Hierarchy
      --
      -- $hierarchy
@@ -17,6 +18,7 @@ where
 #include "Fl_Double_WindowC.h"
 #include "Fl_Gl_WindowC.h"
 import Foreign
+import C2HS hiding (cFromEnum, cFromBool, cToBool,cToEnum)
 import Graphics.UI.FLTK.LowLevel.Fl_Types
 import Graphics.UI.FLTK.LowLevel.Fl_Enumerations
 import Graphics.UI.FLTK.LowLevel.Utils
@@ -25,7 +27,6 @@ import Graphics.UI.FLTK.LowLevel.Widget
 import Graphics.UI.FLTK.LowLevel.Hierarchy
 import Graphics.UI.FLTK.LowLevel.Dispatch
 import qualified Data.Text as T
-import C2HS hiding (cFromEnum, toBool,cToEnum)
 
 {# fun Fl_OverriddenGl_Window_New as overriddenWindowNew' {`Int',`Int', id `Ptr ()'} -> `Ptr ()' id #}
 {# fun Fl_OverriddenGl_Window_NewXY as overriddenWindowNewXY' {`Int',`Int', `Int', `Int', id `Ptr ()'} -> `Ptr ()' id #}
@@ -64,6 +65,9 @@ glWindowNew size position title =
     overriddenWindowNewXY'
     overriddenWindowNewXYWithLabel'
 
+{# fun Fl_Gl_Window_can_do_with_m as canDoWithM' { `Int'} -> `Bool' cToBool #}
+glWindowCanDo :: Mode -> IO Bool
+glWindowCanDo m = canDoWithM' (fromEnum m)
 {# fun Fl_Gl_Window_draw_super as drawSuper' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
 instance (impl ~ ( IO ())) => Op (DrawSuper ()) GlWindow orig impl where
   runOp _ _ self = withRef self $ \selfPtr -> drawSuper' selfPtr
@@ -96,11 +100,11 @@ instance (impl ~ (Rectangle ->  IO ())) => Op (Resize ()) GlWindow orig impl whe
     let (x_pos', y_pos', width', height') = fromRectangle rectangle' in
     withRef win $ \winPtr -> resize' winPtr x_pos' y_pos' width' height'
 {# fun Fl_Gl_Window_handle as handle' { id `Ptr ()', cFromEnum `Event' } -> `Int' #}
-instance (impl ~ (Event ->  IO (Int))) => Op (Handle ()) GlWindow orig impl where
-  runOp _ _ self event = withRef self $ \selfPtr -> handle' selfPtr event
+instance (impl ~ (Event ->  IO(Either UnknownEvent ()))) => Op (Handle ()) GlWindow orig impl where
+  runOp _ _ self event = withRef self $ \selfPtr -> handle' selfPtr event >>= return  . successOrUnknownEvent
 {# fun Fl_Gl_Window_handle_super as handleSuper' { id `Ptr ()', cFromEnum `Event' } -> `Int' #}
-instance (impl ~ (Event ->  IO (Int))) => Op (HandleSuper ()) GlWindow orig impl where
-  runOp _ _ self event = withRef self $ \selfPtr -> handleSuper' selfPtr event
+instance (impl ~ (Event ->  IO (Either UnknownEvent ()))) => Op (HandleSuper ()) GlWindow orig impl where
+  runOp _ _ self event = withRef self $ \selfPtr -> handleSuper' selfPtr event >>= return . successOrUnknownEvent
 {# fun Fl_Gl_Window_Destroy as windowDestroy' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
 instance (impl ~ (IO ())) => Op (Destroy ()) GlWindow orig impl where
   runOp _ _ win = withRef win $ \winPtr -> windowDestroy' winPtr
@@ -119,18 +123,15 @@ instance (impl ~ ( IO (Bool))) => Op (GetContextValid ()) GlWindow orig impl whe
 {# fun Fl_Gl_Window_set_context_valid as setContextValid' { id `Ptr ()', fromBool `Bool' } -> `()' supressWarningAboutRes #}
 instance (impl ~ (Bool ->  IO ())) => Op (SetContextValid ()) GlWindow orig impl where
   runOp _ _ win v = withRef win $ \winPtr -> setContextValid' winPtr v
-{# fun Fl_Gl_Window_can_do_with_m as canDoWithM' { id `Ptr ()',`Int' } -> `Int' #}
-instance (impl ~ (Int ->  IO (Int))) => Op (CanDoWithM ()) GlWindow orig impl where
-  runOp _ _ win m = withRef win $ \winPtr -> canDoWithM' winPtr m
-{# fun Fl_Gl_Window_can_do as canDo' { id `Ptr ()' } -> `Int' #}
-instance (impl ~ ( IO (Int))) => Op (CanDo ()) GlWindow orig impl where
+{# fun Fl_Gl_Window_can_do as canDo' { id `Ptr ()' } -> `Bool' cToBool #}
+instance (impl ~ ( IO (Bool))) => Op (CanDo ()) GlWindow orig impl where
   runOp _ _ win = withRef win $ \winPtr -> canDo' winPtr
-{# fun Fl_Gl_Window_mode as mode' { id `Ptr ()' } -> `Mode' cToEnum #}
+{# fun Fl_Gl_Window_mode as mode' { id `Ptr ()' } -> `Int' #}
 instance (impl ~ ( IO (Mode))) => Op (GetMode ()) GlWindow orig impl where
-  runOp _ _ win = withRef win $ \winPtr -> mode' winPtr
-{# fun Fl_Gl_Window_set_mode as setMode' { id `Ptr ()',cFromEnum `Mode' } -> `Int' #}
-instance (impl ~ (Mode ->  IO (Int))) => Op (SetMode ()) GlWindow orig impl where
-  runOp _ _ win a = withRef win $ \winPtr -> setMode' winPtr a
+  runOp _ _ win = withRef win $ \winPtr -> mode' winPtr >>= return . toEnum
+{# fun Fl_Gl_Window_set_mode as setMode' { id `Ptr ()',`Int' } -> `Int' #}
+instance (impl ~ (Modes ->  IO ())) => Op (SetMode ()) GlWindow orig impl where
+  runOp _ _ win a = withRef win $ \winPtr -> setMode' winPtr (modesToInt a) >> return ()
 {# fun Fl_Gl_Window_context as context' { id `Ptr ()' } -> `Ref GlContext' unsafeToRef #}
 instance (impl ~ ( IO (Ref GlContext))) => Op (GetContext ()) GlWindow orig impl where
   runOp _ _ win = withRef win $ \winPtr -> context' winPtr
@@ -146,8 +147,8 @@ instance (impl ~ ( IO ())) => Op (SwapBuffers ()) GlWindow orig impl where
 {# fun Fl_Gl_Window_ortho as ortho' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
 instance (impl ~ ( IO ())) => Op (Ortho ()) GlWindow orig impl where
   runOp _ _ win = withRef win $ \winPtr -> ortho' winPtr
-{# fun Fl_Gl_Window_can_do_overlay as canDoOverlay' { id `Ptr ()' } -> `Int' #}
-instance (impl ~ ( IO (Int))) => Op (CanDoOverlay ()) GlWindow orig impl where
+{# fun Fl_Gl_Window_can_do_overlay as canDoOverlay' { id `Ptr ()' } -> `Bool' cToBool #}
+instance (impl ~ ( IO (Bool))) => Op (CanDoOverlay ()) GlWindow orig impl where
   runOp _ _ win = withRef win $ \winPtr -> canDoOverlay' winPtr
 {# fun Fl_Gl_Window_redraw_overlay as redrawOverlay' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
 instance (impl ~ ( IO ())) => Op (RedrawOverlay ()) GlWindow orig impl where
@@ -161,12 +162,9 @@ instance (impl ~ ( IO ())) => Op (MakeOverlayCurrent ()) GlWindow orig impl wher
 
 -- $GlWindowfunctions
 -- @
+-- canDo :: 'Ref' 'GlWindow' -> 'IO' ('Bool')
 --
--- canDo :: 'Ref' 'GlWindow' -> 'IO' 'Int'
---
--- canDoOverlay :: 'Ref' 'GlWindow' -> 'IO' 'Int'
---
--- canDoWithM :: 'Ref' 'GlWindow' -> 'Int' -> 'IO' 'Int'
+-- canDoOverlay :: 'Ref' 'GlWindow' -> 'IO' ('Bool')
 --
 -- destroy :: 'Ref' 'GlWindow' -> 'IO' ()
 --
@@ -178,15 +176,15 @@ instance (impl ~ ( IO ())) => Op (MakeOverlayCurrent ()) GlWindow orig impl wher
 --
 -- getContext :: 'Ref' 'GlWindow' -> 'IO' ('Ref' 'GlContext')
 --
--- getContextValid :: 'Ref' 'GlWindow' -> 'IO' 'Bool'
+-- getContextValid :: 'Ref' 'GlWindow' -> 'IO' ('Bool')
 --
--- getMode :: 'Ref' 'GlWindow' -> 'IO' 'Mode'
+-- getMode :: 'Ref' 'GlWindow' -> 'IO' ('Mode')
 --
--- getValid :: 'Ref' 'GlWindow' -> 'IO' 'Bool'
+-- getValid :: 'Ref' 'GlWindow' -> 'IO' ('Bool')
 --
--- handle :: 'Ref' 'GlWindow' -> 'Event' -> 'IO' 'Int'
+-- handle :: 'Ref' 'GlWindow' -> 'Event' -> 'IO' ('Int')
 --
--- handleSuper :: 'Ref' 'GlWindow' -> 'Event' -> 'IO' 'Int'
+-- handleSuper :: 'Ref' 'GlWindow' -> 'Event' -> 'IO' ('Int')
 --
 -- hide :: 'Ref' 'GlWindow' -> 'IO' ()
 --
@@ -212,7 +210,7 @@ instance (impl ~ ( IO ())) => Op (MakeOverlayCurrent ()) GlWindow orig impl wher
 --
 -- setContextWithDestroyFlag :: 'Ref' 'GlWindow' -> 'Ref' 'GlContext' -> 'Bool' -> 'IO' ()
 --
--- setMode :: 'Ref' 'GlWindow' -> 'Mode' -> 'IO' 'Int'
+-- setMode :: 'Ref' 'GlWindow' -> 'Modes' -> 'IO' ()
 --
 -- setValid :: 'Ref' 'GlWindow' -> 'Bool' -> 'IO' ()
 --

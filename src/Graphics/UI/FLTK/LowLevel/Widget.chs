@@ -49,7 +49,7 @@ toRectangleFPrim f = mkRectanglePtr $ \wPtr x_pos y_pos width height ->
   fptr <- wrapNonNull wPtr "Null Pointer. toRectangleFPrim"
   f (wrapInRef fptr) rectangle
 
-toEventHandlerPrim :: (Ref a -> Event -> IO Int) ->
+toEventHandlerPrim :: (Ref a -> Event -> IO (Either UnknownEvent ())) ->
                       IO (FunPtr (Ptr () -> CInt -> IO CInt))
 toEventHandlerPrim f = mkWidgetEventHandler $
                        \wPtr eventNumber ->
@@ -57,7 +57,7 @@ toEventHandlerPrim f = mkWidgetEventHandler $
                             in do
                             fptr <- wrapNonNull wPtr "Null Pointer: toEventHandlerPrim"
                             result <- f (wrapInRef fptr) event
-                            return $ fromIntegral result
+                            return (either (\_ -> fromIntegral (0::CInt)) (const (fromIntegral (1::CInt))) result)
 
 -- | Overrideable 'Widget' functions
 -- | Do not create this directly. Instead use `defaultWidgetCustomFuncs`
@@ -65,7 +65,7 @@ data CustomWidgetFuncs a =
     CustomWidgetFuncs
     {
      -- | See <http://www.fltk.org/doc-1.3/classFl__Widget.html#a9cb17cc092697dfd05a3fab55856d218 Fl_Widget::handle>
-    handleCustom :: Maybe (Ref a -> Event -> IO Int)
+    handleCustom :: Maybe (Ref a -> Event -> IO (Either UnknownEvent ()))
      -- | See <http://www.fltk.org/doc-1.3/classFl__Widget.html#aca98267e7a9b94f699ebd27d9f59e8bb Fl_Widget::resize>
     ,resizeCustom :: Maybe (Ref a -> Rectangle -> IO ())
      -- | See <http://www.fltk.org/doc-1.3/classFl__Widget.html#ab572c6fbc922bf3268b72cf9e2939606 Fl_Widget::show>
@@ -159,8 +159,8 @@ instance (impl ~  IO ()) => Op (Destroy ()) Widget orig impl where
     return nullPtr
 
 {#fun Fl_Widget_handle as widgetHandle' { id `Ptr ()', id `CInt' } -> `Int' #}
-instance (impl ~ (Event -> IO Int)) => Op (Handle ()) Widget orig impl where
-  runOp _ _ widget event = withRef widget (\p -> widgetHandle' p (fromIntegral . fromEnum $ event))
+instance (impl ~ (Event -> IO (Either UnknownEvent ()))) => Op (Handle ()) Widget orig impl where
+  runOp _ _ widget event = withRef widget (\p -> widgetHandle' p (fromIntegral . fromEnum $ event)) >>= return  . successOrUnknownEvent
 
 {#fun Fl_Widget_parent as widgetParent' { id `Ptr ()'} -> `Ptr ()' id #}
 instance (impl ~  IO (Maybe (Ref Group))) => Op (GetParent ()) Widget orig impl where
@@ -585,7 +585,7 @@ instance (impl ~ ( Maybe (Boxtype, Rectangle) -> IO ())) => Op (DrawFocus ()) Wi
 --
 -- getY :: 'Ref' 'Widget' -> 'IO' ('Int')
 --
--- handle :: 'Ref' 'Widget' -> 'Event' -> 'IO' 'Int'
+-- handle :: 'Ref' 'Widget' -> ('Event' -> 'IO' ('Either' 'UnknownEvent' ()))
 --
 -- hasCallback :: 'Ref' 'Widget' -> 'IO' ('Bool')
 --

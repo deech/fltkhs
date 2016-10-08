@@ -71,11 +71,11 @@ instance (impl ~ (( IO ()))) => Op (Hide ()) Valuator orig impl where
 instance (impl ~ (( IO ()))) => Op (HideSuper ()) Valuator orig impl where
   runOp _ _ button = withRef button $ \buttonPtr -> hideSuper' buttonPtr
 {#fun Fl_Valuator_handle as valuatorHandle' { id `Ptr ()', id `CInt' } -> `Int' #}
-instance (impl ~ (Event -> IO Int)) => Op (Handle ()) Valuator orig impl where
-  runOp _ _ valuator event = withRef valuator (\p -> valuatorHandle' p (fromIntegral . fromEnum $ event))
+instance (impl ~ (Event -> IO (Either UnknownEvent ()))) => Op (Handle ()) Valuator orig impl where
+  runOp _ _ valuator event = withRef valuator (\p -> valuatorHandle' p (fromIntegral . fromEnum $ event)) >>= return  . successOrUnknownEvent
 {#fun Fl_Valuator_handle_super as valuatorHandleSuper' { id `Ptr ()', id `CInt' } -> `Int' #}
-instance (impl ~ (Event -> IO Int)) => Op (HandleSuper ()) Valuator orig impl where
-  runOp _ _ valuator event = withRef valuator (\p -> valuatorHandleSuper' p (fromIntegral . fromEnum $ event))
+instance (impl ~ (Event -> IO (Either UnknownEvent ()))) => Op (HandleSuper ()) Valuator orig impl where
+  runOp _ _ valuator event = withRef valuator (\p -> valuatorHandleSuper' p (fromIntegral . fromEnum $ event)) >>= return . successOrUnknownEvent
 {# fun Fl_Valuator_resize_super as resizeSuper' { id `Ptr ()',`Int',`Int',`Int',`Int' } -> `()' supressWarningAboutRes #}
 instance (impl ~ (Rectangle ->  IO ())) => Op (ResizeSuper ()) Valuator orig impl where
   runOp _ _ valuator rectangle = withRef valuator $ \valuatorPtr -> do
@@ -156,9 +156,9 @@ instance (impl ~ IO (ValuatorType)) => Op (GetType_ ()) Valuator orig impl where
 --
 -- getValue :: 'Ref' 'Valuator' -> 'IO' ('Double')
 --
--- handle :: 'Ref' 'Valuator' -> 'Event' -> 'IO' 'Int'
+-- handle :: 'Ref' 'Valuator' -> ('Event' -> 'IO' ('Either' 'UnknownEvent' ()))
 --
--- handleSuper :: 'Ref' 'Valuator' -> 'Event' -> 'IO' 'Int'
+-- handleSuper :: 'Ref' 'Valuator' -> ('Event' -> 'IO' ('Either' 'UnknownEvent' ()))
 --
 -- hide :: 'Ref' 'Valuator' -> ( 'IO' ())
 --

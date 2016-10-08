@@ -318,6 +318,11 @@ intToMenuItemFlags flags' =
   then Nothing
   else Just $ (MenuItemFlags . extract allMenuItemFlags . fromIntegral) flags'
 
+modesToInt :: Modes -> Int
+modesToInt (Modes ms) = combine ms
+intToModes :: Int -> Modes
+intToModes modeCode = Modes (extract allModes (fromIntegral modeCode))
+
 withByteStrings :: [B.ByteString] -> (Ptr (Ptr CChar) -> IO a) -> IO a
 withByteStrings bs f = B.useAsCString (foldl1 B.append bs) (\ptr -> new ptr >>= f)
 

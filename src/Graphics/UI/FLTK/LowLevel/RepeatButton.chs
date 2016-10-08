@@ -42,8 +42,8 @@ instance (impl ~ ( IO ())) => Op (Destroy ()) RepeatButton orig impl where
                      return nullPtr
 
 {#fun Fl_Repeat_Button_handle as handle' { id `Ptr ()', id `CInt' } -> `Int' #}
-instance (impl ~ ( Event -> IO Int)) => Op (Handle ()) RepeatButton orig impl where
-  runOp _ _ button event = withRef button (\p -> handle' p (fromIntegral . fromEnum $ event))
+instance (impl ~ ( Event -> IO (Either UnknownEvent ()))) => Op (Handle ()) RepeatButton orig impl where
+  runOp _ _ button event = withRef button (\p -> handle' p (fromIntegral . fromEnum $ event)) >>= return  . successOrUnknownEvent
 
 {#fun Fl_Repeat_Button_deactivate as deactivate' { id `Ptr ()'} -> `()' supressWarningAboutRes #}
 instance (impl ~ ( IO ())) => Op (Deactivate ()) RepeatButton orig impl where
@@ -56,7 +56,7 @@ instance (impl ~ ( IO ())) => Op (Deactivate ()) RepeatButton orig impl where
 --
 -- destroy :: 'Ref' 'RepeatButton' -> 'IO' ()
 --
--- handle :: 'Ref' 'RepeatButton' -> 'Event' -> 'IO' 'Int'
+-- handle :: 'Ref' 'RepeatButton' -> ('Event' -> 'IO' ('Either' 'UnknownEvent' ()))
 --
 -- @
 

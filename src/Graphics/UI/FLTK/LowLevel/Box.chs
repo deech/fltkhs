@@ -78,13 +78,13 @@ boxNewWithBoxtype boxtype' rectangle' l' =
                              toRef
 
 {#fun Fl_Box_handle as boxHandle' { id `Ptr ()', id `CInt' } -> `Int' #}
-instance (impl ~ (Event -> IO Int)) => Op (Handle ()) Box orig impl where
-  runOp _ _ box event = withRef box (\p -> boxHandle' p (fromIntegral . fromEnum $ event))
+instance (impl ~ (Event -> IO (Either UnknownEvent ()))) => Op (Handle ()) Box orig impl where
+  runOp _ _ box event = withRef box (\p -> boxHandle' p (fromIntegral . fromEnum $ event)) >>= return  . successOrUnknownEvent
 
 
 -- $functions
 -- @
--- handle :: 'Ref' 'Box' -> 'Event' -> 'IO' 'Int'
+-- handle :: 'Ref' 'Box' -> 'Event' -> 'IO' ('Either' 'UnknownEvent' ())
 -- @
 
 -- $hierarchy

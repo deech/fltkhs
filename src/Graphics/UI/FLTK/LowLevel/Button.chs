@@ -66,11 +66,11 @@ instance (impl ~ (( IO ()))) => Op (Destroy ()) Button orig impl where
 instance (impl ~ (( IO ()))) => Op (DrawSuper ()) Button orig impl where
   runOp _ _ button = withRef button $ \buttonPtr -> drawSuper' buttonPtr
 {# fun Fl_Button_handle_super as handleSuper' { id `Ptr ()',`Int' } -> `Int' #}
-instance (impl ~ ((Event ->  IO (Int)))) => Op (HandleSuper ()) Button orig impl where
-  runOp _ _ button event = withRef button $ \buttonPtr -> handleSuper' buttonPtr (fromIntegral (fromEnum event))
+instance (impl ~ ((Event ->  IO (Either UnknownEvent ())))) => Op (HandleSuper ()) Button orig impl where
+  runOp _ _ button event = withRef button $ \buttonPtr -> handleSuper' buttonPtr (fromIntegral (fromEnum event)) >>= return . successOrUnknownEvent
 {#fun Fl_Button_handle as buttonHandle' { id `Ptr ()', id `CInt' } -> `Int' #}
-instance (impl ~ ((Event -> IO Int))) => Op (Handle ()) Button orig impl where
-  runOp _ _ button event = withRef button (\p -> buttonHandle' p (fromIntegral . fromEnum $ event))
+instance (impl ~ ((Event -> IO (Either UnknownEvent ())))) => Op (Handle ()) Button orig impl where
+  runOp _ _ button event = withRef button (\p -> buttonHandle' p (fromIntegral . fromEnum $ event)) >>= return  . successOrUnknownEvent
 {# fun Fl_Button_resize_super as resizeSuper' { id `Ptr ()',`Int',`Int',`Int',`Int' } -> `()' supressWarningAboutRes #}
 instance (impl ~ ((Rectangle -> IO ()))) => Op (ResizeSuper ()) Button orig impl where
   runOp _ _ button rectangle =
@@ -185,9 +185,9 @@ instance (impl ~ (ButtonType ->  IO ())) => Op (SetType ()) Button orig impl whe
 --
 -- getValue :: 'Ref' 'Button' -> ( 'IO' ('Bool'))
 --
--- handle :: 'Ref' 'Button' -> ('Event' -> 'IO' 'Int')
+-- handle :: 'Ref' 'Button' -> ('Event' -> 'IO' ('Either' 'UnknownEvent' ()))
 --
--- handleSuper :: 'Ref' 'Button' -> ('Int' -> 'IO' ('Int'))
+-- handleSuper :: 'Ref' 'Button' -> ('Event' -> 'IO' ('Either' 'UnknownEvent' ()))
 --
 -- hide :: 'Ref' 'Button' -> ( 'IO' ())
 --

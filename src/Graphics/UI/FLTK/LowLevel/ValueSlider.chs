@@ -49,8 +49,8 @@ instance (impl ~ (IO ())) => Op (Destroy ()) ValueSlider orig impl where
     valueSliderDestroy' winPtr
     return nullPtr
 {#fun Fl_Value_Slider_handle as valueSliderHandle' { id `Ptr ()', id `CInt' } -> `Int' #}
-instance (impl ~ (Event -> IO Int)) => Op (Handle ()) ValueSlider orig impl where
-  runOp _ _ valueSlider event = withRef valueSlider (\p -> valueSliderHandle' p (fromIntegral . fromEnum $ event))
+instance (impl ~ (Event -> IO (Either UnknownEvent ()))) => Op (Handle ()) ValueSlider orig impl where
+  runOp _ _ valueSlider event = withRef valueSlider (\p -> valueSliderHandle' p (fromIntegral . fromEnum $ event)) >>= return  . successOrUnknownEvent
 {# fun Fl_Value_Slider_textfont as textfont' { id `Ptr ()' } -> `Font' cToFont #}
 instance (impl ~ ( IO (Font))) => Op (GetTextfont ()) ValueSlider orig impl where
   runOp _ _ value_slider = withRef value_slider $ \value_sliderPtr -> textfont' value_sliderPtr
@@ -81,7 +81,7 @@ instance (impl ~ (Color ->  IO ())) => Op (SetTextcolor ()) ValueSlider orig imp
 --
 -- getTextsize :: 'Ref' 'ValueSlider' -> 'IO' 'FontSize'
 --
--- handle :: 'Ref' 'ValueSlider' -> 'Event' -> 'IO' 'Int'
+-- handle :: 'Ref' 'ValueSlider' -> ('Event' -> 'IO' ('Either' 'UnknownEvent' ()))
 --
 -- setTextcolor :: 'Ref' 'ValueSlider' -> 'Color' -> 'IO' ()
 --

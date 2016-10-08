@@ -21,7 +21,6 @@ import Graphics.UI.FLTK.LowLevel.Fl_Enumerations
 import Graphics.UI.FLTK.LowLevel.Fl_Types
 import Graphics.UI.FLTK.LowLevel.Utils
 import Graphics.UI.FLTK.LowLevel.Dispatch
-import qualified Data.Text as T
 import Graphics.UI.FLTK.LowLevel.Hierarchy
 
 {# fun Fl_Tree_Prefs_New as treePrefsNew' {} -> `Ptr ()' id #}

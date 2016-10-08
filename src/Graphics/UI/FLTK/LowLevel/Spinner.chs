@@ -46,8 +46,8 @@ spinnerNew rectangle l'=
                                toRef
 
 {#fun Fl_Spinner_handle as spinnerHandle' { id `Ptr ()', id `CInt' } -> `Int' #}
-instance (impl ~ (Event -> IO Int)) => Op (Handle ()) Spinner orig impl where
-  runOp _ _ spinner event = withRef spinner (\p -> spinnerHandle' p (fromIntegral . fromEnum $ event))
+instance (impl ~ (Event -> IO (Either UnknownEvent ()))) => Op (Handle ()) Spinner orig impl where
+  runOp _ _ spinner event = withRef spinner (\p -> spinnerHandle' p (fromIntegral . fromEnum $ event)) >>= return  . successOrUnknownEvent
 {# fun Fl_Spinner_set_textfont as setTextfont' { id `Ptr ()',cFromFont `Font' } -> `()' #}
 instance (impl ~ (Font ->  IO ())) => Op (SetTextfont ()) Spinner orig impl where
   runOp _ _ spinner text = withRef spinner $ \spinnerPtr -> setTextfont' spinnerPtr text
@@ -140,7 +140,7 @@ instance (impl ~ (Double -> Double ->  IO ())) => Op (Range ()) Spinner orig imp
 --
 -- getValue :: 'Ref' 'Spinner' -> 'IO' ('Double')
 --
--- handle :: 'Ref' 'Spinner' -> 'Event' -> 'IO' 'Int'
+-- handle :: 'Ref' 'Spinner' -> ('Event' -> 'IO' ('Either' 'UnknownEvent' ()))
 --
 -- range :: 'Ref' 'Spinner' -> 'Double' -> 'Double' -> 'IO' ()
 --

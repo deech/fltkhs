@@ -73,8 +73,8 @@ instance (impl ~ ( Rectangle -> IO ())) => Op (Resize ()) TextDisplay orig impl 
     let (x_pos,y_pos,w_pos,h_pos) = fromRectangle rectangle
     resize' text_displayPtr x_pos y_pos w_pos h_pos
 {# fun Fl_Text_Display_handle as handle' { id `Ptr ()',`Int' } -> `Int' #}
-instance (impl ~ (Event ->  IO (Int))) => Op (Handle ()) TextDisplay orig impl where
-   runOp _ _ text_display e = withRef text_display $ \text_displayPtr -> handle' text_displayPtr (fromEnum e)
+instance (impl ~ (Event ->  IO(Either UnknownEvent ()))) => Op (Handle ()) TextDisplay orig impl where
+   runOp _ _ text_display e = withRef text_display $ \text_displayPtr -> handle' text_displayPtr (fromEnum e) >>= return  . successOrUnknownEvent
 {# fun Fl_Text_Display_set_buffer as setBuffer' { id `Ptr ()',id `Ptr ()' } -> `()' #}
 instance (Parent a TextBuffer, impl ~ (Maybe ( Ref a ) ->  IO ())) => Op (SetBuffer ()) TextDisplay orig impl where
    runOp _ _ text_display buf = withRef text_display $ \text_displayPtr -> withMaybeRef buf $ \bufPtr -> setBuffer' text_displayPtr bufPtr

@@ -121,12 +121,12 @@ instance (impl ~ ( IO ())) => Op (InitSizes ()) Group orig impl where
 instance (impl ~ ( IO (Int))) => Op (Children ()) Group orig impl where
   runOp _ _ group = withRef group $ \groupPtr -> children' groupPtr
 
-{# fun Fl_Group_set_clip_children as setClipChildren' { id `Ptr ()',`Int' } -> `()' supressWarningAboutRes #}
-instance (impl ~ (Int ->  IO ())) => Op (SetClipChildren ()) Group orig impl where
+{# fun Fl_Group_set_clip_children as setClipChildren' { id `Ptr ()', cFromBool `Bool' } -> `()' supressWarningAboutRes #}
+instance (impl ~ (Bool ->  IO ())) => Op (SetClipChildren ()) Group orig impl where
   runOp _ _ group c = withRef group $ \groupPtr -> setClipChildren' groupPtr c
 
-{# fun Fl_Group_clip_children as clipChildren' { id `Ptr ()' } -> `Int' #}
-instance (impl ~ ( IO (Int))) => Op (ClipChildren ()) Group orig impl where
+{# fun Fl_Group_clip_children as clipChildren' { id `Ptr ()' } -> `Bool' cToBool #}
+instance (impl ~ ( IO (Bool))) => Op (ClipChildren ()) Group orig impl where
   runOp _ _ group = withRef group $ \groupPtr -> clipChildren' groupPtr
 
 {# fun Fl_Group_focus as focus' { id `Ptr ()',id `Ptr ()' } -> `()' supressWarningAboutRes #}
@@ -164,7 +164,7 @@ instance (impl ~ (Int ->  IO (Maybe (Ref Widget)))) => Op (GetChild ()) Group or
 --
 -- clear :: 'Ref' 'Group' -> 'IO' ()
 --
--- clipChildren :: 'Ref' 'Group' -> 'IO' ('Int')
+-- clipChildren :: 'Ref' 'Group' -> 'IO' ('Bool')
 --
 -- ddfdesignKludge :: 'Ref' 'Group' -> 'IO' ('Maybe' ('Ref' 'Widget'))
 --
@@ -198,7 +198,7 @@ instance (impl ~ (Int ->  IO (Maybe (Ref Widget)))) => Op (GetChild ()) Group or
 --
 -- removeWidget:: ('Parent' a 'Widget') => 'Ref' 'Group' -> 'Ref' a -> 'IO' ()
 --
--- setClipChildren :: 'Ref' 'Group' -> 'Int' -> 'IO' ()
+-- setClipChildren :: 'Ref' 'Group' -> 'Bool' -> 'IO' ()
 --
 -- setNotResizable :: 'Ref' 'Group' -> 'IO' ()
 --

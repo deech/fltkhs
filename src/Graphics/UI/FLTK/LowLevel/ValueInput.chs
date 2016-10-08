@@ -42,8 +42,8 @@ instance (impl ~ (IO ())) => Op (Destroy ()) ValueInput orig impl where
     valueInputDestroy' winPtr
     return nullPtr
 {#fun Fl_Value_Input_handle as valueInputHandle' { id `Ptr ()', id `CInt' } -> `Int' #}
-instance (impl ~ (Event -> IO Int)) => Op (Handle ()) ValueInput orig impl where
-  runOp _ _ valueInput event = withRef valueInput (\p -> valueInputHandle' p (fromIntegral . fromEnum $ event))
+instance (impl ~ (Event -> IO (Either UnknownEvent ()))) => Op (Handle ()) ValueInput orig impl where
+  runOp _ _ valueInput event = withRef valueInput (\p -> valueInputHandle' p (fromIntegral . fromEnum $ event)) >>= return  . successOrUnknownEvent
 {# fun Fl_Value_Input_soft as soft' { id `Ptr ()' } -> `Bool' cToBool #}
 instance (impl ~ ( IO (Bool))) => Op (GetSoft ()) ValueInput orig impl where
   runOp _ _ value_input = withRef value_input $ \value_inputPtr -> soft' value_inputPtr
@@ -93,7 +93,7 @@ instance (impl ~ (Color ->  IO ())) => Op (SetTextcolor ()) ValueInput orig impl
 --
 -- getTextsize :: 'Ref' 'ValueInput' -> 'IO' ('FontSize')
 --
--- handle :: 'Ref' 'ValueInput' -> 'Event' -> 'IO' 'Int'
+-- handle :: 'Ref' 'ValueInput' -> ('Event' -> 'IO' ('Either' 'UnknownEvent' ()))
 --
 -- resize :: 'Ref' 'ValueInput' -> 'Rectangle' -> 'IO' ()
 --

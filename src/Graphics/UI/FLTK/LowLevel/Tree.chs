@@ -41,8 +41,8 @@ instance (impl ~ (IO ())) => Op (Destroy ()) Tree orig impl where
     return nullPtr
 
 {# fun Fl_Tree_handle as handle' { id `Ptr ()', cFromEnum `Event' } -> `Int' #}
-instance (impl ~ (Event ->  IO (Int)) ) => Op (Handle ()) Tree orig impl where
-  runOp _ _ tree e = withRef tree $ \treePtr -> handle' treePtr e
+instance (impl ~ (Event ->  IO (Either UnknownEvent ())) ) => Op (Handle ()) Tree orig impl where
+  runOp _ _ tree e = withRef tree $ \treePtr -> handle' treePtr e >>= return  . successOrUnknownEvent
 {# fun Fl_Tree_draw as draw' { id `Ptr ()' } -> `()' #}
 instance (impl ~ ( IO ()) ) => Op (Draw ()) Tree orig impl where
   runOp _ _ tree = withRef tree $ \treePtr -> draw' treePtr

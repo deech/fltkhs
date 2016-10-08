@@ -43,8 +43,8 @@ instance (impl ~ ( IO ())) => Op (Destroy ()) SysMenuBar orig impl where
     sysMenuBarDestroy' winPtr
     return nullPtr
 {#fun Fl_Sys_Menu_Bar_handle as sysMenuBarHandle' { id `Ptr ()', id `CInt' } -> `Int' #}
-instance (impl ~ ( Event -> IO Int)) => Op (Handle ()) SysMenuBar orig impl where
-  runOp _ _ menu_bar event = withRef menu_bar (\p -> sysMenuBarHandle' p (fromIntegral . fromEnum $ event))
+instance (impl ~ ( Event -> IO (Either UnknownEvent ()))) => Op (Handle ()) SysMenuBar orig impl where
+  runOp _ _ menu_bar event = withRef menu_bar (\p -> sysMenuBarHandle' p (fromIntegral . fromEnum $ event)) >>= return  . successOrUnknownEvent
 {# fun Fl_Sys_Menu_Bar_remove as remove' { id `Ptr ()',`Int' } -> `()' #}
 instance (impl ~ (Int  ->  IO ())) => Op (Remove ()) SysMenuBar orig impl where
   runOp _ _ menu_ index' = withRef menu_ $ \menu_Ptr -> remove' menu_Ptr index'
@@ -110,7 +110,7 @@ instance (Parent a MenuPrim, impl ~ ( Int -> T.Text -> Maybe Shortcut -> (Ref a 
 --
 -- global :: 'Ref' 'SysMenuBar' -> 'IO' ()
 --
--- handle :: 'Ref' 'SysMenuBar' -> 'Event' -> 'IO' 'Int'
+-- handle :: 'Ref' 'SysMenuBar' -> ('Event' -> 'IO' ('Either' 'UnknownEvent' ()))
 --
 -- insert:: ('Parent' a 'MenuPrim') => 'Ref' 'SysMenuBar' -> 'Int' -> 'T.Text' -> 'Maybe' 'Shortcut' -> ('Ref' a -> 'IO' ()) -> 'MenuItemFlags' -> 'IO' ('MenuItemIndex')
 --

@@ -50,12 +50,12 @@ instance (impl ~ (Rectangle ->  IO ())) => Op (SetPosition ()) Tile orig impl wh
     setPosition' tilePtr x_pos y_pos w_pos h_pos
 
 {#fun Fl_Tile_handle as tileHandle' { id `Ptr ()', id `CInt' } -> `Int' #}
-instance (impl ~ (Event -> IO Int)) => Op (Handle ()) Tile orig impl where
-  runOp _ _ tile event = withRef tile (\p -> tileHandle' p (fromIntegral . fromEnum $ event))
+instance (impl ~ (Event -> IO (Either UnknownEvent ()))) => Op (Handle ()) Tile orig impl where
+  runOp _ _ tile event = withRef tile (\p -> tileHandle' p (fromIntegral . fromEnum $ event)) >>= return  . successOrUnknownEvent
 
 -- $functions
 -- @
--- handle :: 'Ref' 'Tile' -> 'Event' -> 'IO' 'Int'
+-- handle :: 'Ref' 'Tile' -> ('Event' -> 'IO' ('Either' 'UnknownEvent' ()))
 --
 -- resize :: 'Ref' 'Tile' -> 'Rectangle' -> 'IO' ()
 --

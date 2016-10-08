@@ -57,8 +57,8 @@ instance (impl ~ ( IO LineSize)) => Op (GetLinesize ()) Scrollbar orig impl wher
 
 {#fun Fl_Scrollbar_handle as scrollbarHandle'
       { id `Ptr ()', id `CInt' } -> `Int' #}
-instance (impl ~ (Event -> IO Int)) => Op (Handle ()) Scrollbar orig impl where
-  runOp _ _ scrollbar event = withRef scrollbar (\p -> scrollbarHandle' p (fromIntegral . fromEnum $ event))
+instance (impl ~ (Event -> IO (Either UnknownEvent ()))) => Op (Handle ()) Scrollbar orig impl where
+  runOp _ _ scrollbar event = withRef scrollbar (\p -> scrollbarHandle' p (fromIntegral . fromEnum $ event)) >>= return  . successOrUnknownEvent
 
 {# fun Fl_Widget_set_type as setType' { id `Ptr ()',`Word8' } -> `()' supressWarningAboutRes #}
 instance (impl ~ (ScrollbarType ->  IO ())) => Op (SetType ()) Scrollbar orig impl where
@@ -75,7 +75,7 @@ instance (impl ~ IO (ScrollbarType)) => Op (GetType_ ()) Scrollbar orig impl whe
 --
 -- getType_ :: 'Ref' 'Scrollbar' -> 'IO' ('ScrollbarType')
 --
--- handle :: 'Ref' 'Scrollbar' -> 'Event' -> 'IO' 'Int'
+-- handle :: 'Ref' 'Scrollbar' -> ('Event' -> 'IO' ('Either' 'UnknownEvent' ()))
 --
 -- setLinesize :: 'Ref' 'Scrollbar' -> 'LineSize' -> 'IO' ()
 --

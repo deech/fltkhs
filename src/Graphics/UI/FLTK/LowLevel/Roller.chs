@@ -43,15 +43,15 @@ instance (impl ~ (IO ())) => Op (Destroy ()) Roller orig impl where
     return nullPtr
 
 {#fun Fl_Roller_handle as rollerHandle' { id `Ptr ()', id `CInt' } -> `Int' #}
-instance (impl ~ (Event -> IO Int)) => Op (Handle ()) Roller orig impl where
-  runOp _ _ roller event = withRef roller (\p -> rollerHandle' p (fromIntegral . fromEnum $ event))
+instance (impl ~ (Event -> IO (Either UnknownEvent ()))) => Op (Handle ()) Roller orig impl where
+  runOp _ _ roller event = withRef roller (\p -> rollerHandle' p (fromIntegral . fromEnum $ event)) >>= return  . successOrUnknownEvent
 
 -- $functions
 -- @
 --
 -- destroy :: 'Ref' 'Roller' -> 'IO' ()
 --
--- handle :: 'Ref' 'Roller' -> 'Event' -> 'IO' 'Int'
+-- handle :: 'Ref' 'Roller' -> ('Event' -> 'IO' ('Either' 'UnknownEvent' ()))
 -- @
 
 -- $hierarchy

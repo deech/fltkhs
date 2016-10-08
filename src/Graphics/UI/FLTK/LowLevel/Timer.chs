@@ -52,8 +52,8 @@ instance (impl ~ (IO ())) => Op (Destroy ()) Timer orig impl where
                                         timerDestroy' winPtr
                                         return nullPtr
 {#fun Fl_Timer_handle as timerHandle' { id `Ptr ()', id `CInt' } -> `Int' #}
-instance (impl ~ (Event -> IO Int)) => Op (Handle ()) Timer orig impl where
-  runOp _ _ timer event = withRef timer (\p -> timerHandle' p (fromIntegral . fromEnum $ event))
+instance (impl ~ (Event -> IO (Either UnknownEvent ()))) => Op (Handle ()) Timer orig impl where
+  runOp _ _ timer event = withRef timer (\p -> timerHandle' p (fromIntegral . fromEnum $ event)) >>= return  . successOrUnknownEvent
 {# fun Fl_Timer_direction as direction' { id `Ptr ()' } -> `CChar' id #}
 instance (impl ~ ( IO (CountDirection))) => Op (GetDirection ()) Timer orig impl where
   runOp _ _ adjuster = withRef adjuster $ \adjusterPtr -> direction' adjusterPtr >>= return . ccharToCountDirection
@@ -84,7 +84,7 @@ instance (impl ~ (Bool ->  IO ())) => Op (SetSuspended ()) Timer orig impl where
 --
 -- getValue :: 'Ref' 'Timer' -> 'IO' 'Double'
 --
--- handle :: 'Ref' 'Timer' -> 'Event' -> 'IO' 'Int'
+-- handle :: 'Ref' 'Timer' -> ('Event' -> 'IO' ('Either' 'UnknownEvent' ()))
 --
 -- setDirection :: 'Ref' 'Timer' -> 'CountDirection' -> 'IO' ()
 --

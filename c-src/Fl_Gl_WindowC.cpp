@@ -795,8 +795,8 @@ FL_EXPORT_C(fl_Gl_Window, Fl_OverriddenGl_Window_NewXY_WithLabel)(int x, int y, 
   FL_EXPORT_C(void,Fl_Gl_Window_set_context_valid)(fl_Gl_Window win,char v){
     (static_cast<Fl_DerivedGl_Window*>(win))->context_valid(v);
   }
-  FL_EXPORT_C(int,Fl_Gl_Window_can_do_with_m)(fl_Gl_Window win,int m){
-    return (static_cast<Fl_DerivedGl_Window*>(win))->can_do(m);
+  FL_EXPORT_C(int,Fl_Gl_Window_can_do_with_m)(int m){
+    return Fl_DerivedGl_Window::can_do(m);
   }
   FL_EXPORT_C(int,Fl_Gl_Window_can_do)(fl_Gl_Window win){
     return (static_cast<Fl_DerivedGl_Window*>(win))->can_do();

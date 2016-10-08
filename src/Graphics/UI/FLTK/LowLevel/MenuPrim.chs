@@ -61,11 +61,11 @@ instance (impl ~ (IO ())) => Op (Destroy ()) MenuPrim orig impl where
                              widgetDestroy' menu_Ptr >>
                              return nullPtr
 {# fun Fl_Menu__handle_super as handleSuper' { id `Ptr ()',`Int' } -> `Int' #}
-instance (impl ~ (Event ->  IO (Int))) => Op (HandleSuper ()) MenuPrim orig impl where
-  runOp _ _ menu_ event = withRef menu_ $ \menu_Ptr -> handleSuper' menu_Ptr (fromIntegral (fromEnum event))
+instance (impl ~ (Event ->  IO (Either UnknownEvent ()))) => Op (HandleSuper ()) MenuPrim orig impl where
+  runOp _ _ menu_ event = withRef menu_ $ \menu_Ptr -> handleSuper' menu_Ptr (fromIntegral (fromEnum event)) >>= return . successOrUnknownEvent
 {#fun Fl_Menu__handle as menu_Handle' { id `Ptr ()', id `CInt' } -> `Int' #}
-instance (impl ~ (Event -> IO Int)) => Op (Handle ()) MenuPrim orig impl where
-  runOp _ _ menu_ event = withRef menu_ (\p -> menu_Handle' p (fromIntegral . fromEnum $ event))
+instance (impl ~ (Event -> IO (Either UnknownEvent ()))) => Op (Handle ()) MenuPrim orig impl where
+  runOp _ _ menu_ event = withRef menu_ (\p -> menu_Handle' p (fromIntegral . fromEnum $ event)) >>= return  . successOrUnknownEvent
 {# fun Fl_Menu__resize_super as resizeSuper' { id `Ptr ()',`Int',`Int',`Int',`Int' } -> `()' supressWarningAboutRes #}
 instance (impl ~ (Rectangle -> IO ())) => Op (ResizeSuper ()) MenuPrim orig impl where
   runOp _ _ menu_ rectangle =
@@ -339,7 +339,7 @@ instance (impl ~ (Int ->  IO ())) => Op (SetDownColor ()) MenuPrim orig impl whe
 --
 -- global :: 'Ref' 'MenuPrim' -> 'IO' ()
 --
--- handle :: 'Ref' 'MenuPrim' -> 'Event' -> 'IO' 'Int'
+-- handle :: 'Ref' 'MenuPrim' -> ('Event' -> 'IO' ('Either' 'UnknownEvent' ()))
 --
 -- handleSuper :: 'Ref' 'MenuPrim' -> 'Event' -> 'IO' ('Int')
 --

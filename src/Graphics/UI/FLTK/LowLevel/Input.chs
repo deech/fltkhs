@@ -74,7 +74,7 @@ instance (impl ~ (IO ())) => Op (Destroy ()) Input orig impl where
 
 {#fun Fl_Input_handle as inputHandle' { id `Ptr ()', id `CInt' } -> `Int' #}
 {#fun Fl_Secret_Input_handle as secretInputHandle' { id `Ptr ()', id `CInt' } -> `Int' #}
-instance (impl ~ (Event -> IO Int)) => Op (Handle ()) Input orig impl where
+instance (impl ~ (Event -> IO (Either UnknownEvent ()))) => Op (Handle ()) Input orig impl where
   runOp _ _ input event =
     withRef
       input
@@ -84,6 +84,7 @@ instance (impl ~ (Event -> IO Int)) => Op (Handle ()) Input orig impl where
            FlSecretInput -> secretInputHandle' p (fromIntegral . fromEnum $ event)
            _             -> inputHandle' p (fromIntegral . fromEnum $ event)
       )
+    >>= return . successOrUnknownEvent
 
 {# fun Fl_Widget_set_type as setType' { id `Ptr ()',`Word8' } -> `()' supressWarningAboutRes #}
 instance (impl ~ (FlInputType ->  IO ())) => Op (SetType ()) Input orig impl where
@@ -268,7 +269,7 @@ instance (impl ~ ( IO (Int))) => Op (SetTabNav ()) Input orig impl where
 --
 -- getWrap :: 'Ref' 'Input' -> 'IO' ('Int')
 --
--- handle :: 'Ref' 'Input' -> 'Event' -> 'IO' 'Int'
+-- handle :: 'Ref' 'Input' -> ('Event' -> 'IO' ('Either' 'UnknownEvent' ()))
 --
 -- index :: 'Ref' 'Input' -> 'Int' -> 'IO' ('Char')
 --

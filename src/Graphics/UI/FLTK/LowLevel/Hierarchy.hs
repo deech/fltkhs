@@ -846,8 +846,6 @@ module Graphics.UI.FLTK.LowLevel.Hierarchy
          getContextValid,
          SetContextValid,
          setContextValid,
-         CanDoWithM,
-         canDoWithM,
          CanDo,
          canDo,
          GetContext,
@@ -2965,7 +2963,6 @@ type GlWindowFuncs =
   (Invalidate
   (GetContextValid
   (SetContextValid
-  (CanDoWithM
   (CanDo
   (GetMode
   (SetMode
@@ -2978,7 +2975,7 @@ type GlWindowFuncs =
   (RedrawOverlay
   (HideOverlay
   (MakeOverlayCurrent
-  ()))))))))))))))))))))))))))))))
+  ())))))))))))))))))))))))))))))
 
 type instance Functions GlWindow = GlWindowFuncs
 
@@ -2987,7 +2984,6 @@ MAKE_METHOD(SetValid,setValid)
 MAKE_METHOD(Invalidate,invalidate)
 MAKE_METHOD(GetContextValid,getContextValid)
 MAKE_METHOD(SetContextValid,setContextValid)
-MAKE_METHOD(CanDoWithM,canDoWithM)
 MAKE_METHOD(CanDo,canDo)
 MAKE_METHOD(GetContext,getContext)
 MAKE_METHOD(SetContext,setContext)

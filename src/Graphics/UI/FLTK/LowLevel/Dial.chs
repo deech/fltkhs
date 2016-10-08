@@ -64,8 +64,8 @@ instance (impl ~ ( IO (Angle))) => Op (GetAngle1 ()) Dial orig impl where
 instance (impl ~ ( IO (Angle))) => Op (GetAngle2 ()) Dial orig impl where
   runOp _ _ dial = withRef dial $ \dialPtr -> angle2' dialPtr >>= return . Angle
 {#fun Fl_Dial_handle as dialHandle' { id `Ptr ()', id `CInt' } -> `Int' #}
-instance (impl ~ (Event -> IO Int)) => Op (Handle ()) Dial orig impl where
-  runOp _ _ dial event = withRef dial (\p -> dialHandle' p (fromIntegral . fromEnum $ event))
+instance (impl ~ (Event -> IO (Either UnknownEvent ()))) => Op (Handle ()) Dial orig impl where
+  runOp _ _ dial event = withRef dial (\p -> dialHandle' p (fromIntegral . fromEnum $ event)) >>= return  . successOrUnknownEvent
 instance (impl ~ ( Angle -> Angle -> IO ())) => Op (SetAngles ()) Dial orig impl where
   runOp _ _ dial a1' a2' = do
     setAngle1 dial a1'
@@ -86,7 +86,7 @@ instance (impl ~ IO (DialType)) => Op (GetType_ ()) Dial orig impl where
 --
 -- getAngle2 :: 'Ref' 'Dial' -> 'IO' 'Angle'
 --
--- handle :: 'Ref' 'Dial' -> 'Event' -> 'IO' 'Int'
+-- handle :: 'Ref' 'Dial' -> ('Event' -> 'IO' ('Either' 'UnknownEvent' ()))
 --
 -- setAngle1 :: 'Ref' 'Dial' -> 'Angle' -> 'IO' ()
 --

@@ -43,8 +43,8 @@ instance (impl ~ (IO ())) => Op (Destroy ()) Positioner orig impl where
     return nullPtr
 
 {#fun Fl_Positioner_handle as positionerHandle' { id `Ptr ()', id `CInt' } -> `Int' #}
-instance (impl ~ (Event -> IO Int)) => Op (Handle ()) Positioner orig impl where
-  runOp _ _ positioner event = withRef positioner (\p -> positionerHandle' p (fromIntegral . fromEnum $ event))
+instance (impl ~ (Event -> IO (Either UnknownEvent ()))) => Op (Handle ()) Positioner orig impl where
+  runOp _ _ positioner event = withRef positioner (\p -> positionerHandle' p (fromIntegral . fromEnum $ event)) >>= return  . successOrUnknownEvent
 {# fun Fl_Positioner_set_xvalue as setXvalue' { id `Ptr ()',`Double' } -> `()' #}
 instance (impl ~ (Double ->  IO ())) => Op (SetXvalue ()) Positioner orig impl where
   runOp _ _ positioner xvalue = withRef positioner $ \positionerPtr -> setXvalue' positionerPtr xvalue
@@ -111,7 +111,7 @@ instance (impl ~ (Double ->  IO ())) => Op (SetYstep ()) Positioner orig impl wh
 --
 -- getYvalue :: 'Ref' 'Positioner' -> 'IO' 'Double'
 --
--- handle :: 'Ref' 'Positioner' -> 'Event' -> 'IO' 'Int'
+-- handle :: 'Ref' 'Positioner' -> ('Event' -> 'IO' ('Either' 'UnknownEvent' ()))
 --
 -- setXbounds :: 'Ref' 'Positioner' -> 'Double' -> 'Double' -> 'IO' ()
 --

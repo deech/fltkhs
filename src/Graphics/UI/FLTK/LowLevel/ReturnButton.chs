@@ -42,14 +42,14 @@ instance (impl ~  IO ()) => Op (Destroy ()) ReturnButton orig impl where
                      return nullPtr
 
 {#fun Fl_Return_Button_handle as handle' { id `Ptr ()', id `CInt' } -> `Int' #}
-instance (impl ~ ( Event -> IO Int)) => Op (Handle ()) ReturnButton orig impl where
-  runOp _ _ button event = withRef button (\p -> handle' p (fromIntegral . fromEnum $ event))
+instance (impl ~ ( Event -> IO (Either UnknownEvent ()))) => Op (Handle ()) ReturnButton orig impl where
+  runOp _ _ button event = withRef button (\p -> handle' p (fromIntegral . fromEnum $ event)) >>= return  . successOrUnknownEvent
 -- $functions
 -- @
 --
 -- destroy :: 'Ref' 'ReturnButton' -> 'IO' ()
 --
--- handle :: 'Ref' 'ReturnButton' -> 'Event' -> 'IO' 'Int'
+-- handle :: 'Ref' 'ReturnButton' -> ('Event' -> 'IO' ('Either' 'UnknownEvent' ()))
 --
 -- @
 

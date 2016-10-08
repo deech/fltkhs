@@ -52,8 +52,8 @@ instance (impl ~ (IO ())) => Op (Destroy ()) Counter orig impl where
     return nullPtr
 
 {#fun Fl_Counter_handle as counterHandle' { id `Ptr ()', id `CInt' } -> `Int' #}
-instance (impl ~ (Event -> IO Int)) => Op (Handle ()) Counter orig impl where
-  runOp _ _ counter event = withRef counter (\p -> counterHandle' p (fromIntegral . fromEnum $ event))
+instance (impl ~ (Event -> IO (Either UnknownEvent ()))) => Op (Handle ()) Counter orig impl where
+  runOp _ _ counter event = withRef counter (\p -> counterHandle' p (fromIntegral . fromEnum $ event)) >>= return . successOrUnknownEvent
 {# fun Fl_Counter_lstep as lstep' { id `Ptr ()',`Double' } -> `()' #}
 instance (impl ~ (Double ->  IO ())) => Op (SetLstep ()) Counter orig impl where
   runOp _ _ counter lstep = withRef counter $ \counterPtr -> lstep' counterPtr lstep
@@ -93,7 +93,7 @@ instance (impl ~ IO (CounterType)) => Op (GetType_ ()) Counter orig impl where
 --
 -- getTextsize :: 'Ref' 'Counter' -> 'IO' 'FontSize'
 --
--- handle :: 'Ref' 'Counter' -> 'Event' -> 'IO' 'Int'
+-- handle :: 'Ref' 'Counter' -> ('Event' -> 'IO' ('Either' 'UnknownEvent' ()))
 --
 -- setLstep :: 'Ref' 'Counter' -> 'Double' -> 'IO' ()
 --

@@ -42,8 +42,8 @@ instance (impl ~ (IO ())) => Op (Destroy ()) Slider orig impl where
                                         sliderDestroy' winPtr
                                         return nullPtr
 {#fun Fl_Slider_handle as sliderHandle' { id `Ptr ()', id `CInt' } -> `Int' #}
-instance (impl ~ (Event -> IO Int)) => Op (Handle ()) Slider orig impl where
-  runOp _ _ slider event = withRef slider (\p -> sliderHandle' p (fromIntegral . fromEnum $ event))
+instance (impl ~ (Event -> IO (Either UnknownEvent ()))) => Op (Handle ()) Slider orig impl where
+  runOp _ _ slider event = withRef slider (\p -> sliderHandle' p (fromIntegral . fromEnum $ event)) >>= return  . successOrUnknownEvent
 {# fun Fl_Slider_bounds as bounds' { id `Ptr ()',`Double',`Double' } -> `()' supressWarningAboutRes #}
 instance (impl ~ (Double -> Double ->  IO ())) => Op (Bounds ()) Slider orig impl where
   runOp _ _ slider a b = withRef slider $ \sliderPtr -> bounds' sliderPtr a b
@@ -79,7 +79,7 @@ instance (impl ~ IO (SliderType)) => Op (GetType_ ()) Slider orig impl where
 --
 -- getSliderSize :: 'Ref' 'Slider' -> 'Double' -> 'IO' ()
 --
--- handle :: 'Ref' 'Slider' -> 'Event' -> 'IO' 'Int'
+-- handle :: 'Ref' 'Slider' -> ('Event' -> 'IO' ('Either' 'UnknownEvent' ()))
 --
 -- scrollvalue :: 'Ref' 'Slider' -> 'Int' -> 'Int' -> 'Int' -> 'Int' -> 'IO' 'Int'
 --

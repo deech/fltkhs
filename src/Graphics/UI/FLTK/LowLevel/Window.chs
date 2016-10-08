@@ -165,8 +165,8 @@ instance (impl ~ ( IO ())) => Op (DrawSuper ()) Window orig impl where
   runOp _ _ window = withRef window $ \windowPtr -> drawSuper' windowPtr
 
 {# fun Fl_Window_handle_super as handleSuper' { id `Ptr ()',`Int' } -> `Int' #}
-instance (impl ~ (Event ->  IO (Int))) => Op (HandleSuper ()) Window orig impl where
-  runOp _ _ window event = withRef window $ \windowPtr -> handleSuper' windowPtr (fromIntegral (fromEnum event))
+instance (impl ~ (Event ->  IO (Either UnknownEvent ()))) => Op (HandleSuper ()) Window orig impl where
+  runOp _ _ window event = withRef window $ \windowPtr -> handleSuper' windowPtr (fromIntegral (fromEnum event)) >>= return . successOrUnknownEvent
 
 {# fun Fl_Window_resize_super as resizeSuper' { id `Ptr ()',`Int',`Int',`Int',`Int' } -> `()' supressWarningAboutRes #}
 instance (impl ~ (Rectangle -> IO ())) => Op (ResizeSuper ()) Window orig impl where
@@ -191,8 +191,8 @@ instance (impl ~ (IO ())) => Op (ShowWidget ()) Window orig impl where
   runOp _ _ window = withRef window (\p -> windowShow' p)
 
 {#fun Fl_Window_handle as windowHandle' { id `Ptr ()', id `CInt' } -> `Int' #}
-instance (impl ~ (Event -> IO Int)) => Op (Handle ()) Window orig impl where
-  runOp _ _ window event = withRef window (\p -> windowHandle' p (fromIntegral . fromEnum $ event))
+instance (impl ~ (Event -> IO (Either UnknownEvent ()))) => Op (Handle ()) Window orig impl where
+  runOp _ _ window event = withRef window (\p -> windowHandle' p (fromIntegral . fromEnum $ event)) >>= return  . successOrUnknownEvent
 
 {# fun Fl_Window_resize as resize' { id `Ptr ()',`Int',`Int',`Int',`Int' } -> `()' supressWarningAboutRes #}
 instance (impl ~ (Rectangle -> IO ())) => Op (Resize ()) Window orig impl where
@@ -515,7 +515,7 @@ instance (impl ~ IO (WindowType)) => Op (GetType_ ()) Window orig impl where
 --
 -- getYRoot :: 'Ref' 'Window' -> 'IO' ('Int')
 --
--- handle :: 'Ref' 'Window' -> 'Event' -> 'IO' 'Int'
+-- handle :: 'Ref' 'Window' -> ('Event' -> 'IO' ('Either' 'UnknownEvent' ()))
 --
 -- handleSuper :: 'Ref' 'Window' -> 'Event' -> 'IO' ('Int')
 --

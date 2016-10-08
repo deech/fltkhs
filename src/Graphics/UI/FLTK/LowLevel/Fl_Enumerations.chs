@@ -40,7 +40,9 @@ module Graphics.UI.FLTK.LowLevel.Fl_Enumerations
      Cursor(..),
      -- * Various modes
      Mode(..),
+     Modes(..),
      single,
+     allModes,
      -- * Alignment
      Alignments(..),
      AlignType(..),
@@ -642,7 +644,7 @@ kb_KpLast = Kb_F
 glutCursorFullCrossHair :: GlutCursor
 glutCursorFullCrossHair = GlutCursorCrosshair
 {#enum Cursor {} deriving (Show) #}
-{#enum Mode   {} deriving (Show) #}
+{#enum Mode   {} deriving (Show,Eq,Ord) #}
 {#enum AlignType {} deriving (Show, Eq, Ord) #}
 newtype Alignments = Alignments [AlignType] deriving Show
 alignCenter :: Alignments
@@ -1056,7 +1058,22 @@ numBlue = Color 5
 
 single :: Mode
 single = ModeRGB
-
+newtype Modes = Modes [Mode] deriving (Show,Eq,Ord)
+allModes :: [Mode]
+allModes =
+  [
+    ModeRGB,
+    ModeIndex,
+    ModeDouble,
+    ModeAccum,
+    ModeAlpha,
+    ModeDepth,
+    ModeStencil,
+    ModeRGB8,
+    ModeMultisample,
+    ModeStereo,
+    ModeFakeSingle
+  ]
 
 -- Fl_LabelType
 

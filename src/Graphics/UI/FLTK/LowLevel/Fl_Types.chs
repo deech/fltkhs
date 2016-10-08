@@ -329,6 +329,8 @@ data Rectangle = Rectangle Position Size deriving (Eq,Show)
 data ByXY = ByXY ByX ByY deriving Show
 data Intersection = Contained | Partial deriving Show
 data Size = Size Width Height deriving (Eq, Show)
+newtype LineNumber = LineNumber Int deriving (Eq,Show,Ord)
+newtype PixelPosition = PixelPosition Int deriving (Eq,Show,Ord)
 data KeyType = SpecialKeyType SpecialKey | NormalKeyType Char deriving (Show, Eq)
 data ShortcutKeySequence = ShortcutKeySequence [EventState] KeyType deriving Show
 data Shortcut = KeySequence ShortcutKeySequence | KeyFormat T.Text deriving Show
@@ -342,7 +344,12 @@ newtype FontSize = FontSize CInt deriving Show
 newtype PixmapHs = PixmapHs [T.Text] deriving Show
 data BitmapHs = BitmapHs B.ByteString Size deriving Show
 data Clipboard = InternalClipboard | SharedClipboard deriving Show
+data UnknownEvent = UnknownEvent deriving Show
+successOrUnknownEvent :: Int -> Either UnknownEvent ()
+successOrUnknownEvent status = if (status == 0) then Left UnknownEvent else Right ()
 data UnknownError = UnknownError deriving Show
+successOrUnknownError :: a -> Bool -> (a -> IO b) -> IO (Either UnknownError b)
+successOrUnknownError a pred' tr = if pred' then return (Left UnknownError) else tr a >>= return . Right
 data NotFound = NotFound deriving Show
 data OutOfRange = OutOfRange deriving Show
 successOrOutOfRange :: a -> Bool -> (a -> IO b) -> IO (Either OutOfRange b)

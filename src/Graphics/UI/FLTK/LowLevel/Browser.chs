@@ -53,8 +53,8 @@ browserNew rectangle l' =
 
 
 {#fun Fl_Browser_handle as browserHandle' { id `Ptr ()', id `CInt' } -> `Int' #}
-instance (impl ~ (Event -> IO Int)) => Op (Handle ()) Browser orig impl where
-  runOp _ _ browser event = withRef browser (\p -> browserHandle' p (fromIntegral . fromEnum $ event))
+instance (impl ~ (Event -> IO (Either UnknownEvent ()))) => Op (Handle ()) Browser orig impl where
+  runOp _ _ browser event = withRef browser (\p -> browserHandle' p (fromIntegral . fromEnum $ event)) >>= return . successOrUnknownEvent
 {# fun Fl_Browser_Destroy as browserDestroy' { id `Ptr ()' } -> `()' #}
 instance (impl ~ (IO ())) => Op (Destroy ()) Browser orig impl where
   runOp _ _ browser = swapRef browser $ \browserPtr -> do
@@ -70,14 +70,14 @@ instance (impl ~ (T.Text ->  IO ())) => Op (Add ()) Browser orig impl where
 instance (impl ~ (Int -> T.Text ->  IO ())) => Op (Insert ()) Browser orig impl where
   runOp _ _ browser line newtext = withRef browser $ \browserPtr -> insert' browserPtr line newtext
 {# fun Fl_Browser_move as move' { id `Ptr ()',`Int',`Int' } -> `()' #}
-instance (impl ~ (Int -> Int ->  IO ())) => Op (Move ()) Browser orig impl where
-  runOp _ _ browser to from = withRef browser $ \browserPtr -> move' browserPtr to from
+instance (impl ~ (LineNumber -> LineNumber ->  IO ())) => Op (Move ()) Browser orig impl where
+  runOp _ _ browser (LineNumber to) (LineNumber from) = withRef browser $ \browserPtr -> move' browserPtr to from
 {# fun Fl_Browser_load as load' { id `Ptr ()',unsafeToCString `T.Text' } -> `Int' #}
 instance (impl ~ (T.Text ->  IO (Int))) => Op (Load ()) Browser orig impl where
   runOp _ _ browser filename = withRef browser $ \browserPtr -> load' browserPtr filename
 {# fun Fl_Browser_swap as swap' { id `Ptr ()',`Int',`Int' } -> `()' #}
-instance (impl ~ (Int -> Int ->  IO ())) => Op (Swap ()) Browser orig impl where
-  runOp _ _ browser a b = withRef browser $ \browserPtr -> swap' browserPtr a b
+instance (impl ~ (LineNumber -> LineNumber ->  IO ())) => Op (Swap ()) Browser orig impl where
+  runOp _ _ browser (LineNumber a) (LineNumber b) = withRef browser $ \browserPtr -> swap' browserPtr a b
 {# fun Fl_Browser_clear as clear' { id `Ptr ()' } -> `()' #}
 instance (impl ~ ( IO ())) => Op (Clear ()) Browser orig impl where
   runOp _ _ browser = withRef browser $ \browserPtr -> clear' browserPtr
@@ -88,53 +88,53 @@ instance (impl ~ ( IO (Int))) => Op (GetSize ()) Browser orig impl where
 instance (impl ~ (Int -> Int ->  IO ())) => Op (SetSize ()) Browser orig impl where
   runOp _ _ browser w h = withRef browser $ \browserPtr -> setSize' browserPtr w h
 {# fun Fl_Browser_topline as topline' { id `Ptr ()' } -> `Int' #}
-instance (impl ~ ( IO (Int))) => Op (GetTopline ()) Browser orig impl where
-  runOp _ _ browser = withRef browser $ \browserPtr -> topline' browserPtr
+instance (impl ~ ( IO (LineNumber))) => Op (GetTopline ()) Browser orig impl where
+  runOp _ _ browser = withRef browser $ \browserPtr -> topline' browserPtr >>= return . LineNumber
 {# fun Fl_Browser_lineposition as lineposition' { id `Ptr ()',`Int', cFromEnum `LinePosition' } -> `()' #}
 instance (impl ~ (Int -> LinePosition ->  IO ())) => Op (Lineposition ()) Browser orig impl where
   runOp _ _ browser line pos = withRef browser $ \browserPtr -> lineposition' browserPtr line pos
 {# fun Fl_Browser_set_topline as setTopline' { id `Ptr ()',`Int' } -> `()' #}
-instance (impl ~ (Int ->  IO ())) => Op (SetTopline ()) Browser orig impl where
-  runOp _ _ browser line = withRef browser $ \browserPtr -> setTopline' browserPtr line
+instance (impl ~ (LineNumber ->  IO ())) => Op (SetTopline ()) Browser orig impl where
+  runOp _ _ browser (LineNumber line) = withRef browser $ \browserPtr -> setTopline' browserPtr line
 {# fun Fl_Browser_bottomline as bottomline' { id `Ptr ()',`Int' } -> `()' #}
-instance (impl ~ (Int ->  IO ())) => Op (SetBottomline ()) Browser orig impl where
-  runOp _ _ browser line = withRef browser $ \browserPtr -> bottomline' browserPtr line
+instance (impl ~ (LineNumber ->  IO ())) => Op (SetBottomline ()) Browser orig impl where
+  runOp _ _ browser (LineNumber line) = withRef browser $ \browserPtr -> bottomline' browserPtr line
 {# fun Fl_Browser_middleline as middleline' { id `Ptr ()',`Int' } -> `()' #}
-instance (impl ~ (Int ->  IO ())) => Op (SetMiddleline ()) Browser orig impl where
-  runOp _ _ browser line = withRef browser $ \browserPtr -> middleline' browserPtr line
+instance (impl ~ (LineNumber ->  IO ())) => Op (SetMiddleline ()) Browser orig impl where
+  runOp _ _ browser (LineNumber line) = withRef browser $ \browserPtr -> middleline' browserPtr line
 {# fun Fl_Browser_select_with_val as select' { id `Ptr ()',`Int', cFromBool `Bool' } -> `Int' #}
-instance (impl ~ (Int -> Bool -> IO (Int))) => Op (Select ()) Browser orig impl where
-  runOp _ _ browser selectType line = withRef browser $ \browserPtr -> select' browserPtr selectType line
+instance (impl ~ (LineNumber -> Bool -> IO (Either NoChange ()))) => Op (Select ()) Browser orig impl where
+  runOp _ _ browser (LineNumber line) selectType = withRef browser $ \browserPtr -> select' browserPtr line selectType >>= return . successOrNoChange
 {# fun Fl_Browser_selected as selected' { id `Ptr ()',`Int' } -> `Bool' cToBool #}
-instance (impl ~ (Int ->  IO (Bool))) => Op (Selected ()) Browser orig impl where
-  runOp _ _ browser line = withRef browser $ \browserPtr -> selected' browserPtr line
+instance (impl ~ (LineNumber ->  IO (Bool))) => Op (Selected ()) Browser orig impl where
+  runOp _ _ browser (LineNumber line) = withRef browser $ \browserPtr -> selected' browserPtr line
 {# fun Fl_Browser_show_with_line as showWithLine' { id `Ptr ()',`Int' } -> `()' #}
-instance (impl ~ (Int ->  IO ())) => Op (ShowWidgetLine ()) Browser orig impl where
-  runOp _ _ browser line = withRef browser $ \browserPtr -> showWithLine' browserPtr line
+instance (impl ~ (LineNumber ->  IO ())) => Op (ShowWidgetLine ()) Browser orig impl where
+  runOp _ _ browser (LineNumber line) = withRef browser $ \browserPtr -> showWithLine' browserPtr line
 {# fun Fl_Browser_show as show' { id `Ptr ()' } -> `()' #}
 instance (impl ~ ( IO ())) => Op (ShowWidget ()) Browser orig impl where
   runOp _ _ browser = withRef browser $ \browserPtr -> show' browserPtr
 {# fun Fl_Browser_hide_with_line as hideWithLine' { id `Ptr ()',`Int' } -> `()' #}
-instance (impl ~ (Int ->  IO ())) => Op (HideLine ()) Browser orig impl where
-  runOp _ _ browser line = withRef browser $ \browserPtr -> hideWithLine' browserPtr line
+instance (impl ~ (LineNumber ->  IO ())) => Op (HideLine ()) Browser orig impl where
+  runOp _ _ browser (LineNumber line) = withRef browser $ \browserPtr -> hideWithLine' browserPtr line
 {# fun Fl_Browser_hide as hide' { id `Ptr ()' } -> `()' #}
 instance (impl ~ ( IO ())) => Op (Hide ()) Browser orig impl where
   runOp _ _ browser = withRef browser $ \browserPtr -> hide' browserPtr
-{# fun Fl_Browser_visible as visible' { id `Ptr ()',`Int' } -> `Int' #}
-instance (impl ~ (Int ->  IO (Int))) => Op (Visible ()) Browser orig impl where
-  runOp _ _ browser line = withRef browser $ \browserPtr -> visible' browserPtr line
+{# fun Fl_Browser_visible as visible' { id `Ptr ()',`Int' } -> `Bool' cToBool #}
+instance (impl ~ (LineNumber ->  IO (Bool))) => Op (Visible ()) Browser orig impl where
+  runOp _ _ browser (LineNumber line) = withRef browser $ \browserPtr -> visible' browserPtr line
 {# fun Fl_Browser_value as value' { id `Ptr ()' } -> `Int' #}
-instance (impl ~ ( IO (Int))) => Op (GetValue ()) Browser orig impl where
-  runOp _ _ browser = withRef browser $ \browserPtr -> value' browserPtr
+instance (impl ~ ( IO (LineNumber))) => Op (GetValue ()) Browser orig impl where
+  runOp _ _ browser = withRef browser $ \browserPtr -> value' browserPtr >>= return . LineNumber
 {# fun Fl_Browser_set_value as setValue' { id `Ptr ()',`Int' } -> `()' #}
-instance (impl ~ (Int ->  IO ())) => Op (SetValue ()) Browser orig impl where
-  runOp _ _ browser line = withRef browser $ \browserPtr -> setValue' browserPtr line
+instance (impl ~ (LineNumber ->  IO ())) => Op (SetValue ()) Browser orig impl where
+  runOp _ _ browser (LineNumber line) = withRef browser $ \browserPtr -> setValue' browserPtr line
 {# fun Fl_Browser_text as text' { id `Ptr ()',`Int' } -> `T.Text' unsafeFromCString #}
-instance (impl ~ (Int ->  IO T.Text)) => Op (GetText ()) Browser orig impl where
-  runOp _ _ browser line = withRef browser $ \browserPtr -> text' browserPtr line
+instance (impl ~ (LineNumber ->  IO T.Text)) => Op (GetText ()) Browser orig impl where
+  runOp _ _ browser (LineNumber line) = withRef browser $ \browserPtr -> text' browserPtr line
 {# fun Fl_Browser_set_text as setText' { id `Ptr ()',`Int', unsafeToCString `T.Text' } -> `()' #}
-instance (impl ~ (Int -> T.Text ->  IO ())) => Op (SetText ()) Browser orig impl where
-  runOp _ _ browser line newtext = withRef browser $ \browserPtr -> setText' browserPtr line newtext
+instance (impl ~ (LineNumber -> T.Text ->  IO ())) => Op (SetText ()) Browser orig impl where
+  runOp _ _ browser (LineNumber line) newtext = withRef browser $ \browserPtr -> setText' browserPtr line newtext
 {# fun Fl_Browser_format_char as formatChar' { id `Ptr ()' } -> `CChar' id #}
 instance (impl ~ ( IO (Char))) => Op (GetFormatChar ()) Browser orig impl where
   runOp _ _ browser = withRef browser $ \browserPtr -> formatChar' browserPtr >>= return . castCCharToChar
@@ -168,38 +168,38 @@ instance (impl ~ ([Int] ->  IO ())) => Op (SetColumnWidths ()) Browser orig impl
       ptr <- newArray ((map fromIntegral arr) :: [CInt])
       setColumnWidths' browserPtr (castPtr ptr)
 {# fun Fl_Browser_displayed as displayed' { id `Ptr ()',`Int' } -> `Bool' cToBool #}
-instance (impl ~ (Int ->  IO (Bool))) => Op (Displayed ()) Browser orig impl where
-  runOp _ _ browser line = withRef browser $ \browserPtr -> displayed' browserPtr line
+instance (impl ~ (LineNumber ->  IO (Bool))) => Op (Displayed ()) Browser orig impl where
+  runOp _ _ browser (LineNumber line) = withRef browser $ \browserPtr -> displayed' browserPtr line
 {# fun Fl_Browser_make_visible as makeVisible' { id `Ptr ()',`Int' } -> `()' #}
-instance (impl ~ (Int ->  IO ())) => Op (MakeVisible ()) Browser orig impl where
-  runOp _ _ browser line = withRef browser $ \browserPtr -> makeVisible' browserPtr line
+instance (impl ~ (LineNumber ->  IO ())) => Op (MakeVisible ()) Browser orig impl where
+  runOp _ _ browser (LineNumber line) = withRef browser $ \browserPtr -> makeVisible' browserPtr line
 {# fun Fl_Browser_set_icon as setIcon' { id `Ptr ()',`Int',id `Ptr ()' } -> `()' #}
-instance (impl ~ (Int -> Ref Image ->  IO ())) => Op (SetIcon ()) Browser orig impl where
-  runOp _ _ browser line icon = withRef browser $ \browserPtr -> withRef icon $ \iconPtr -> setIcon' browserPtr line iconPtr
+instance (impl ~ (LineNumber -> Ref Image ->  IO ())) => Op (SetIcon ()) Browser orig impl where
+  runOp _ _ browser (LineNumber line) icon = withRef browser $ \browserPtr -> withRef icon $ \iconPtr -> setIcon' browserPtr line iconPtr
 {# fun Fl_Browser_icon as icon' { id `Ptr ()',`Int' } -> `Ptr ()' id #}
-instance (impl ~ (Int ->  IO (Maybe (Ref Image)))) => Op (GetIcon ()) Browser orig impl where
-  runOp _ _ browser line = withRef browser $ \browserPtr -> icon' browserPtr line >>= toMaybeRef
+instance (impl ~ (LineNumber ->  IO (Maybe (Ref Image)))) => Op (GetIcon ()) Browser orig impl where
+  runOp _ _ browser (LineNumber line) = withRef browser $ \browserPtr -> icon' browserPtr line >>= toMaybeRef
 {# fun Fl_Browser_remove_icon as removeIcon' { id `Ptr ()',`Int' } -> `()' #}
-instance (impl ~ (Int ->  IO ())) => Op (RemoveIcon ()) Browser orig impl where
-  runOp _ _ browser line = withRef browser $ \browserPtr -> removeIcon' browserPtr line
+instance (impl ~ (LineNumber ->  IO ())) => Op (RemoveIcon ()) Browser orig impl where
+  runOp _ _ browser (LineNumber line) = withRef browser $ \browserPtr -> removeIcon' browserPtr line
 {# fun Fl_Browser_deselect as deselect' { id `Ptr ()' } -> `Int' #}
-instance (impl ~ ( IO (Int))) => Op (Deselect ()) Browser orig impl where
-  runOp _ _ browser = withRef browser $ \browserPtr -> deselect' browserPtr
+instance (impl ~ ( IO (Either NoChange ()))) => Op (Deselect ()) Browser orig impl where
+  runOp _ _ browser = withRef browser $ \browserPtr -> deselect' browserPtr >>= return . successOrNoChange
 {# fun Fl_Browser_deselect_with_docallbacks as deselectWithDocallbacks' { id `Ptr ()',`Int' } -> `Int' #}
-instance (impl ~ (Int ->  IO (Int))) => Op (DeselectAndCallback ()) Browser orig impl where
-  runOp _ _ browser docallbacks = withRef browser $ \browserPtr -> deselectWithDocallbacks' browserPtr docallbacks
+instance (impl ~ (IO (Either NoChange ()))) => Op (DeselectAndCallback ()) Browser orig impl where
+  runOp _ _ browser = withRef browser $ \browserPtr -> deselectWithDocallbacks' browserPtr 1 >>= return . successOrNoChange
 {# fun Fl_Browser_position as position' { id `Ptr ()' } -> `Int' #}
-instance (impl ~ ( IO (Int))) => Op (GetPosition ()) Browser orig impl where
-  runOp _ _ browser = withRef browser $ \browserPtr -> position' browserPtr
+instance (impl ~ ( IO (PixelPosition))) => Op (GetPosition ()) Browser orig impl where
+  runOp _ _ browser = withRef browser $ \browserPtr -> position' browserPtr >>= return . PixelPosition
 {# fun Fl_Browser_set_position as setPosition' { id `Ptr ()',`Int' } -> `()' #}
-instance (impl ~ (Int ->  IO ())) => Op (SetPosition ()) Browser orig impl where
-  runOp _ _ browser pos = withRef browser $ \browserPtr -> setPosition' browserPtr pos
+instance (impl ~ (PixelPosition ->  IO ())) => Op (SetPosition ()) Browser orig impl where
+  runOp _ _ browser (PixelPosition pos) = withRef browser $ \browserPtr -> setPosition' browserPtr pos
 {# fun Fl_Browser_hposition as hposition' { id `Ptr ()' } -> `Int' #}
-instance (impl ~ ( IO (Int))) => Op (GetHposition ()) Browser orig impl where
-  runOp _ _ browser = withRef browser $ \browserPtr -> hposition' browserPtr
+instance (impl ~ ( IO (PixelPosition))) => Op (GetHposition ()) Browser orig impl where
+  runOp _ _ browser = withRef browser $ \browserPtr -> hposition' browserPtr >>= return . PixelPosition
 {# fun Fl_Browser_set_hposition as setHposition' { id `Ptr ()',`Int' } -> `()' #}
-instance (impl ~ (Int ->  IO ())) => Op (SetHposition ()) Browser orig impl where
-  runOp _ _ browser int = withRef browser $ \browserPtr -> setHposition' browserPtr int
+instance (impl ~ (PixelPosition ->  IO ())) => Op (SetHposition ()) Browser orig impl where
+  runOp _ _ browser (PixelPosition int) = withRef browser $ \browserPtr -> setHposition' browserPtr int
 {# fun Fl_Browser_has_scrollbar as hasScrollbar' { id `Ptr ()' } -> `ScrollbarMode' cToEnum #}
 instance (impl ~ ( IO (ScrollbarMode))) => Op (GetHasScrollbar ()) Browser orig impl where
   runOp _ _ browser = withRef browser $ \browserPtr -> hasScrollbar' browserPtr
@@ -255,13 +255,13 @@ instance (impl ~ IO (BrowserType)) => Op (GetType_ ()) Browser orig impl where
 --
 -- clear :: 'Ref' 'Browser' -> 'IO' ()
 --
--- deselect :: 'Ref' 'Browser' -> 'IO' ('Int')
+-- deselect :: 'Ref' 'Browser' -> 'IO' ('Either' 'NoChange' ())
 --
--- deselectAndCallback :: 'Ref' 'Browser' -> 'Int' -> 'IO' ('Int')
+-- deselectAndCallback :: 'Ref' 'Browser' -> 'IO' ('Either' 'NoChange' ())
 --
 -- destroy :: 'Ref' 'Browser' -> 'IO' ()
 --
--- displayed :: 'Ref' 'Browser' -> 'Int' -> 'IO' ('Bool')
+-- displayed :: 'Ref' 'Browser' -> 'LineNumber' -> 'IO' ('Bool')
 --
 -- getColumnChar :: 'Ref' 'Browser' -> 'IO' ('Char')
 --
@@ -271,11 +271,11 @@ instance (impl ~ IO (BrowserType)) => Op (GetType_ ()) Browser orig impl where
 --
 -- getHasScrollbar :: 'Ref' 'Browser' -> 'IO' ('ScrollbarMode')
 --
--- getHposition :: 'Ref' 'Browser' -> 'IO' ('Int')
+-- getHposition :: 'Ref' 'Browser' -> 'IO' ('PixelPosition')
 --
--- getIcon :: 'Ref' 'Browser' -> 'Int' -> 'IO' ('Maybe' ('Ref' 'Image'))
+-- getIcon :: 'Ref' 'Browser' -> 'LineNumber' -> 'IO' ('Maybe' ('Ref' 'Image'))
 --
--- getPosition :: 'Ref' 'Browser' -> 'IO' ('Int')
+-- getPosition :: 'Ref' 'Browser' -> 'IO' ('PixelPosition')
 --
 -- getScrollbarSize :: 'Ref' 'Browser' -> 'IO' ('Int')
 --
@@ -283,7 +283,7 @@ instance (impl ~ IO (BrowserType)) => Op (GetType_ ()) Browser orig impl where
 --
 -- getSize :: 'Ref' 'Browser' -> 'IO' ('Int')
 --
--- getText :: 'Ref' 'Browser' -> 'Int' -> 'IO' 'T.Text'
+-- getText :: 'Ref' 'Browser' -> 'LineNumber' -> 'IO' 'T.Text'
 --
 -- getTextcolor :: 'Ref' 'Browser' -> 'IO' ('Color')
 --
@@ -291,17 +291,17 @@ instance (impl ~ IO (BrowserType)) => Op (GetType_ ()) Browser orig impl where
 --
 -- getTextsize :: 'Ref' 'Browser' -> 'IO' ('FontSize')
 --
--- getTopline :: 'Ref' 'Browser' -> 'IO' ('Int')
+-- getTopline :: 'Ref' 'Browser' -> 'IO' ('LineNumber')
 --
 -- getType_ :: 'Ref' 'Browser' -> 'IO' ('BrowserType')
 --
--- getValue :: 'Ref' 'Browser' -> 'IO' ('Int')
+-- getValue :: 'Ref' 'Browser' -> 'IO' ('LineNumber')
 --
--- handle :: 'Ref' 'Browser' -> 'Event' -> 'IO' 'Int'
+-- handle :: 'Ref' 'Browser' -> 'Event' -> 'IO' ('Either' 'UnknownEvent' ())
 --
 -- hide :: 'Ref' 'Browser' -> 'IO' ()
 --
--- hideLine :: 'Ref' 'Browser' -> 'Int' -> 'IO' ()
+-- hideLine :: 'Ref' 'Browser' -> 'LineNumber' -> 'IO' ()
 --
 -- insert :: 'Ref' 'Browser' -> 'Int' -> 'T.Text' -> 'IO' ()
 --
@@ -309,19 +309,19 @@ instance (impl ~ IO (BrowserType)) => Op (GetType_ ()) Browser orig impl where
 --
 -- load :: 'Ref' 'Browser' -> 'T.Text' -> 'IO' ('Int')
 --
--- makeVisible :: 'Ref' 'Browser' -> 'Int' -> 'IO' ()
+-- makeVisible :: 'Ref' 'Browser' -> 'LineNumber' -> 'IO' ()
 --
--- move :: 'Ref' 'Browser' -> 'Int' -> 'Int' -> 'IO' ()
+-- move :: 'Ref' 'Browser' -> 'LineNumber' -> 'LineNumber' -> 'IO' ()
 --
 -- remove :: 'Ref' 'Browser' -> 'Int' -> 'IO' ()
 --
--- removeIcon :: 'Ref' 'Browser' -> 'Int' -> 'IO' ()
+-- removeIcon :: 'Ref' 'Browser' -> 'LineNumber' -> 'IO' ()
 --
--- select :: 'Ref' 'Browser' -> 'Int' -> 'Bool' -> 'IO' ('Int')
+-- select :: 'Ref' 'Browser' -> 'LineNumber' -> 'Bool' -> 'IO' ('Either' 'NoChange' ())
 --
--- selected :: 'Ref' 'Browser' -> 'Int' -> 'IO' ('Bool')
+-- selected :: 'Ref' 'Browser' -> 'LineNumber' -> 'IO' ('Bool')
 --
--- setBottomline :: 'Ref' 'Browser' -> 'Int' -> 'IO' ()
+-- setBottomline :: 'Ref' 'Browser' -> 'LineNumber' -> 'IO' ()
 --
 -- setColumnChar :: 'Ref' 'Browser' -> 'Char' -> 'IO' ()
 --
@@ -331,13 +331,13 @@ instance (impl ~ IO (BrowserType)) => Op (GetType_ ()) Browser orig impl where
 --
 -- setHasScrollbar :: 'Ref' 'Browser' -> 'ScrollbarMode' -> 'IO' ()
 --
--- setHposition :: 'Ref' 'Browser' -> 'Int' -> 'IO' ()
+-- setHposition :: 'Ref' 'Browser' -> 'PixelPosition' -> 'IO' ()
 --
--- setIcon :: 'Ref' 'Browser' -> 'Int' -> 'Ref' 'Image' -> 'IO' ()
+-- setIcon :: 'Ref' 'Browser' -> 'LineNumber' -> 'Ref' 'Image' -> 'IO' ()
 --
--- setMiddleline :: 'Ref' 'Browser' -> 'Int' -> 'IO' ()
+-- setMiddleline :: 'Ref' 'Browser' -> 'LineNumber' -> 'IO' ()
 --
--- setPosition :: 'Ref' 'Browser' -> 'Int' -> 'IO' ()
+-- setPosition :: 'Ref' 'Browser' -> 'PixelPosition' -> 'IO' ()
 --
 -- setScrollbarSize :: 'Ref' 'Browser' -> 'Int' -> 'IO' ()
 --
@@ -345,7 +345,7 @@ instance (impl ~ IO (BrowserType)) => Op (GetType_ ()) Browser orig impl where
 --
 -- setSize :: 'Ref' 'Browser' -> 'Int' -> 'Int' -> 'IO' ()
 --
--- setText :: 'Ref' 'Browser' -> 'Int' -> 'T.Text' -> 'IO' ()
+-- setText :: 'Ref' 'Browser' -> 'LineNumber' -> 'T.Text' -> 'IO' ()
 --
 -- setTextcolor :: 'Ref' 'Browser' -> 'Color' -> 'IO' ()
 --
@@ -353,24 +353,23 @@ instance (impl ~ IO (BrowserType)) => Op (GetType_ ()) Browser orig impl where
 --
 -- setTextsize :: 'Ref' 'Browser' -> 'FontSize' -> 'IO' ()
 --
--- setTopline :: 'Ref' 'Browser' -> 'Int' -> 'IO' ()
+-- setTopline :: 'Ref' 'Browser' -> 'LineNumber' -> 'IO' ()
 --
 -- setType :: 'Ref' 'Browser' -> 'BrowserType' -> 'IO' ()
 --
--- setValue :: 'Ref' 'Browser' -> 'Int' -> 'IO' ()
+-- setValue :: 'Ref' 'Browser' -> 'LineNumber' -> 'IO' ()
 --
 -- showWidget :: 'Ref' 'Browser' -> 'IO' ()
 --
--- showWidgetLine :: 'Ref' 'Browser' -> 'Int' -> 'IO' ()
+-- showWidgetLine :: 'Ref' 'Browser' -> 'LineNumber' -> 'IO' ()
 --
 -- sort :: 'Ref' 'Browser' -> 'IO' ()
 --
 -- sortWithSortType :: 'Ref' 'Browser' -> 'SortType' -> 'IO' ()
 --
--- swap :: 'Ref' 'Browser' -> 'Int' -> 'Int' -> 'IO' ()
+-- swap :: 'Ref' 'Browser' -> 'LineNumber' -> 'LineNumber' -> 'IO' ()
 --
--- visible :: 'Ref' 'Browser' -> 'Int' -> 'IO' ('Int')
-
+-- visible :: 'Ref' 'Browser' -> 'LineNumber' -> 'IO' ('Bool')
 -- @
 
 -- $hierarchy

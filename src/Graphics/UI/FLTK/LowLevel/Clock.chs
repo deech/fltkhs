@@ -88,8 +88,8 @@ instance (impl ~ (IO ClockByTime)) => Op (GetValue ()) Clock orig impl where
     return $ ClockByTime (Hour hour') (Minute minute') (Second second')
 
 {#fun Fl_Clock_handle as menu_Handle' { id `Ptr ()', id `CInt' } -> `Int' #}
-instance (impl ~ (Event -> IO Int)) => Op (Handle ()) Clock orig impl where
-  runOp _ _ menu_ event = withRef menu_ (\p -> menu_Handle' p (fromIntegral . fromEnum $ event))
+instance (impl ~ (Event -> IO (Either UnknownEvent ()))) => Op (Handle ()) Clock orig impl where
+  runOp _ _ menu_ event = withRef menu_ (\p -> menu_Handle' p (fromIntegral . fromEnum $ event)) >>= return  . successOrUnknownEvent
 
 {# fun Fl_Clock_set_type as setType' { id `Ptr ()',`Word8' } -> `()' #}
 instance (impl ~ (ClockType ->  IO ())) => Op (SetType ()) Clock orig impl where
@@ -107,7 +107,7 @@ instance (impl ~ ( IO (ClockType))) => Op (GetType_ ()) Clock orig impl where
 --
 -- getValueSinceEpoch :: 'Ref' 'Clock' -> 'IO' 'ClockSinceEpoch'
 --
--- handle :: 'Ref' 'Clock' -> 'Event' -> 'IO' 'Int'
+-- handle :: 'Ref' 'Clock' -> ('Event' -> 'IO' ('Either' 'UnknownEvent' ()))
 --
 -- setValue :: 'Ref' 'Clock' -> 'ClockSetTimeType' -> 'IO' ()
 -- @

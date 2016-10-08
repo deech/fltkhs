@@ -57,8 +57,8 @@ instance (impl ~ ( IO ())) => Op (Destroy ()) MenuButton orig impl where
     menuButtonDestroy' winPtr
     return nullPtr
 {#fun Fl_Menu_Button_handle as menuButtonHandle' { id `Ptr ()', id `CInt' } -> `Int' #}
-instance (impl ~ (Event -> IO Int)) => Op (Handle ()) MenuButton orig impl where
-  runOp _ _ menu_bar event = withRef menu_bar (\p -> menuButtonHandle' p (fromIntegral . fromEnum $ event))
+instance (impl ~ (Event -> IO (Either UnknownEvent ()))) => Op (Handle ()) MenuButton orig impl where
+  runOp _ _ menu_bar event = withRef menu_bar (\p -> menuButtonHandle' p (fromIntegral . fromEnum $ event)) >>= return  . successOrUnknownEvent
 {#fun Fl_Menu_Button_popup as menuButtonPopup' { id `Ptr ()' } -> `Ptr ()' id #}
 instance (impl ~ ( IO (Maybe (Ref MenuItem)))) => Op (Popup ()) MenuButton orig impl where
   runOp _ _ menu_bar = withRef menu_bar (\p -> menuButtonPopup' p >>= toMaybeRef)
@@ -68,7 +68,7 @@ instance (impl ~ ( IO (Maybe (Ref MenuItem)))) => Op (Popup ()) MenuButton orig 
 --
 -- destroy :: 'Ref' 'MenuButton' -> 'IO' ()
 --
--- handle :: 'Ref' 'MenuButton' -> 'Event' -> 'IO' 'Int'
+-- handle :: 'Ref' 'MenuButton' -> ('Event' -> 'IO' ('Either' 'UnknownEvent' ()))
 --
 -- popup :: 'Ref' 'MenuButton' -> 'IO' ('Maybe' ('Ref' 'MenuItem'))
 --

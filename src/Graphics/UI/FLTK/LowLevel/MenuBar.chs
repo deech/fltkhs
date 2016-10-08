@@ -43,8 +43,8 @@ instance (impl ~ (IO ())) => Op (Destroy ()) MenuBar orig impl where
                              widgetDestroy' menuBarPtr >>
                              return nullPtr
 {#fun Fl_Menu_Bar_handle as menuBarHandle' { id `Ptr ()', id `CInt' } -> `Int' #}
-instance (impl ~ (Event -> IO Int)) => Op (Handle ()) MenuBar orig impl where
-  runOp _ _ menuBar event = withRef menuBar (\p -> menuBarHandle' p (fromIntegral . fromEnum $ event))
+instance (impl ~ (Event -> IO (Either UnknownEvent ()))) => Op (Handle ()) MenuBar orig impl where
+  runOp _ _ menuBar event = withRef menuBar (\p -> menuBarHandle' p (fromIntegral . fromEnum $ event)) >>= return  . successOrUnknownEvent
 
 
 -- $functions
@@ -53,7 +53,7 @@ instance (impl ~ (Event -> IO Int)) => Op (Handle ()) MenuBar orig impl where
 --
 -- destroy :: 'Ref' 'MenuBar' -> 'IO' ()
 --
--- handle :: 'Ref' 'MenuBar' -> 'Event' -> 'IO' 'Int'
+-- handle :: 'Ref' 'MenuBar' -> ('Event' -> 'IO' ('Either' 'UnknownEvent' ()))
 --
 -- @
 
