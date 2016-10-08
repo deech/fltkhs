@@ -754,7 +754,7 @@ import Graphics.UI.FLTK.LowLevel.PNMImage
 -- And run `cmake` via `stack`:
 --
 -- @
--- > STACK_YAML=\<path-to-hello-world-skeleton\>/stack-windows.yaml stack exec cmake -- -DOPTION_BUILD_SHARED_LIBS=On .. -G "MSYS Makefiles"
+-- > stack exec cmake -- -DOPTION_BUILD_SHARED_LIBS=On .. -G "MSYS Makefiles"
 -- @
 --
 -- If you are confused about the 'STACK_YAML' environment variable please see the "GHC 7.10.3 And Beyond (Windows Only)" in the "Obstacles" section above.
@@ -810,8 +810,8 @@ import Graphics.UI.FLTK.LowLevel.PNMImage
 -- Now we can to build it:
 --
 -- @
--- > STACK_YAML=stack-windows.yaml stack setup
--- > STACK_YAML=stack-windows.yaml stack install
+-- > stack setup
+-- > stack install
 -- @
 -- If you are confused about the 'STACK_YAML' environment variable please see the "GHC 7.10.3 And Beyond (Windows Only)" in the "Obstacles" section above.
 --
@@ -828,9 +828,8 @@ import Graphics.UI.FLTK.LowLevel.PNMImage
 -- If all goes well there should be an incredibly unimpressive executable 'fltkhs-hello-world' in the 'stack' path. It can be invoked like:
 --
 -- @
--- > STACK_YAML=stack-windows.yaml stack exec fltkhs-hello-world
+-- > stack exec fltkhs-hello-world
 -- @
--- If you are confused about the 'STACK_YAML' environment variable please see the "GHC 7.10.3 And Beyond (Windows Only)" in the "Obstacles" section above.
 --
 
 -- $Demos
@@ -966,7 +965,7 @@ import Graphics.UI.FLTK.LowLevel.PNMImage
 -- (4) function arguments which are pointers to be filled are not exposed to the
 -- API user. For instance, a common C++ idiom is to return a string by taking a
 -- pointer to some initialized but empty chunk of memory and filling it up. The
--- corresponding Haskell function just returns a 'String'.
+-- corresponding Haskell function just returns a 'Data.Text'.
 --
 --
 -- It is hoped that until the documentation becomes more self-sustaining the
