@@ -350,7 +350,10 @@ widgetTreeG menuName menuPath widgetTree =
                                                                   "Submenu" -> menuName;
                                                                   _ -> (Just newName)
                                                                 })
-                                                               ([newLabel] ++ menuPath)
+                                                               (case flClassName of {
+                                                                    "Fl_Choice" -> [];
+                                                                    _ -> ([newLabel] ++ menuPath)
+                                                               })
                                                                tree)
                                                               takenNames'
                            in (concatTakenNames takenNames' newNames, outputSoFar ++ output))
@@ -379,6 +382,11 @@ widgetTreeG menuName menuPath widgetTree =
                            "MenuItem" ->
                              (constructorG newFlClassName hsConstructor (Just newName) posSize) ++
                              (map (attributeG newFlClassName newName) attrsWithoutLabel) ++
+                             innerTreeOutput
+                           "Fl_Choice" ->
+                             (constructorG newFlClassName hsConstructor (Just newName) posSize) ++
+                             (map (attributeG newFlClassName newName) restAttrs) ++
+                             ["setMenu " ++ newName ++ " ([] :: [Ref MenuItem])"] ++
                              innerTreeOutput
                            _ ->
                              (constructorG newFlClassName hsConstructor (Just newName) posSize) ++
