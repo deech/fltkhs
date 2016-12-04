@@ -157,6 +157,14 @@ module Graphics.UI.FLTK.LowLevel.FL
      setEventDispatch,
      eventText,
      eventLength,
+     setBoxColor,
+     boxColor,
+     abiVersion,
+     apiVersion,
+     localCtrl,
+     localMeta,
+     localAlt,
+     localShift
     )
 where
 #include "Fl_C.h"
@@ -826,3 +834,19 @@ releaseWidgetPointer :: (Parent a Widget) => Ref a -> IO ()
 releaseWidgetPointer wp = withRef wp {#call Fl_release_widget_pointer as fl_release_widget_pointer #}
 clearWidgetPointer :: (Parent a Widget) => Ref a -> IO ()
 clearWidgetPointer wp = withRef wp {#call Fl_clear_widget_pointer as fl_Clear_Widget_Pointer #}
+setBoxColor :: Color -> IO ()
+setBoxColor c = {#call Fl_set_box_color as fl_set_box_color #} (cFromColor c)
+boxColor :: Color -> IO Color
+boxColor c = {#call Fl_box_color as fl_box_color #} (cFromColor c) >>= return . cToColor
+abiVersion :: IO Int
+abiVersion = {#call Fl_abi_version as fl_abi_version #} >>= return . fromIntegral
+apiVersion :: IO Int
+apiVersion = {#call Fl_abi_version as fl_abi_version #} >>= return . fromIntegral
+localCtrl :: IO T.Text
+localCtrl = {#call Fl_local_ctrl as fl_local_ctrl #} >>= cStringToText
+localAlt :: IO T.Text
+localAlt = {#call Fl_local_alt as fl_local_alt #} >>= cStringToText
+localMeta :: IO T.Text
+localMeta = {#call Fl_local_meta as fl_local_meta #} >>= cStringToText
+localShift :: IO T.Text
+localShift = {#call Fl_local_shift as fl_local_shift #} >>= cStringToText

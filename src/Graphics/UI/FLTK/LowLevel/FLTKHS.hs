@@ -462,16 +462,16 @@ import Graphics.UI.FLTK.LowLevel.PNMImage
 --
 -- - Make sure to have OpenGL installed
 -- - Download & install <http://docs.haskellstack.org/en/stable/README/#how-to-install Stack>
--- - Download & install <http://www.fltk.org/software.php?VERSION=1.3.3&FILE=fltk/1.3.3/fltk-1.3.3-source.tar.gz FLTK 1.3.3>
+-- - Download & install <http://www.fltk.org/software.php?VERSION=1.3.4-1&FILE=fltk/1.3.4-1/fltk-1.3.4-1-source.tar.gz FLTK 1.3.4-1>
 -- - Download & install the <https://github.com/deech/fltkhs-hello-world/archive/master.tar.gz FLTKHS hello world skeleton>
 -- - Verify the install by running `fltkhs-hello-world`
 --
 -- == Download & Install Stack
 -- Pick the <http://docs.haskellstack.org/en/stable/README/#how-to-install Stack installer> that matches your distribution and install according the instructions.
 --
--- == Download & Install FLTK-1.3.3
+-- == Download & Install FLTK-1.3.4-1
 -- Please make sure to only download version
--- <http://www.fltk.org/software.php?VERSION=1.3.3&FILE=fltk/1.3.3/fltk-1.3.3-source.tar.gz FLTK 1.3.3>.
+-- <http://www.fltk.org/software.php?VERSION=1.3.4-1&FILE=fltk/1.3.4-1/fltk-1.3.4-1-source.tar.gz FLTK 1.3.4-1>.
 -- It should build and install smoothly with the standard:
 --
 -- @
@@ -486,11 +486,11 @@ import Graphics.UI.FLTK.LowLevel.PNMImage
 -- > ./configure --enable-shared --enable-gl
 -- @
 --
--- If you didn't install FLTK from source you can use the 'fltk-config' tool to ensure that version 1.3.3 is installed:
+-- If you didn't install FLTK from source you can use the 'fltk-config' tool to ensure that version 1.3.4-1 is installed:
 --
 -- @
 -- > fltk-config --version
--- 1.3.3
+-- 1.3.4-1
 -- @
 --
 -- Additionally the FLTK headers should be in the include path and, along with
@@ -538,7 +538,7 @@ import Graphics.UI.FLTK.LowLevel.PNMImage
 -- @
 --
 -- __Note:__ If the `install` step produces a flood of `undefined reference` errors
--- please ensure that you have the right version of FLTK (1.3.3) installed and
+-- please ensure that you have the right version of FLTK (1.3.4-1) installed and
 -- that the headers are in the expected locations. It seems as though some
 -- package managers put the libraries and headers in non-standard places so it
 -- is best to build from source.
@@ -557,8 +557,8 @@ import Graphics.UI.FLTK.LowLevel.PNMImage
 -- The general steps are:
 --
 -- - Brew Install Stack
--- - Brew Install FLTK-1.3.3 (Yosemite)
--- - Brew Install FLTK-1.3.3 (El Capitan)
+-- - Brew Install FLTK-1.3.4-1 (Yosemite)
+-- - Brew Install FLTK-1.3.4-1 (El Capitan)
 -- - Download & install the <https://github.com/deech/fltkhs-hello-world/archive/master.tar.gz FLTKHS hello world skeleton>
 -- - Verify the install by running `fltkhs-hello-world`
 --
@@ -569,7 +569,7 @@ import Graphics.UI.FLTK.LowLevel.PNMImage
 -- > brew install haskell-stack
 -- @
 --
--- == Brew Install FLTK-1.3.3 (Yosemite)
+-- == Brew Install FLTK-1.3.4-1 (Yosemite)
 --
 -- @
 -- > brew install autoconf
@@ -579,13 +579,13 @@ import Graphics.UI.FLTK.LowLevel.PNMImage
 -- Unfortunately 'autoconf' is required to build FLTKHS but has been removed
 -- for the default XCode install since Yosemite so it is required here.
 --
--- == Brew Install FLTK-1.3.3 (El Capitan)
+-- == Brew Install FLTK-1.3.4-1 (El Capitan)
 --
 -- @
 -- > brew install --devel fltk
 -- @
--- Unfortunately the version of Clang bundled with El Capitan does not compile the stable FLTK-1.3.3.
--- This installs the as-yet unreleased development version. Although FLTKHS only support 1.3.3
+-- Unfortunately the version of Clang bundled with El Capitan does not compile the stable FLTK-1.3.4-1.
+-- This installs the as-yet unreleased development version. Although FLTKHS only support 1.3.4-1
 -- it seems to work.
 --
 -- == Download & Install the FLTKHS Hello World Skeleton
@@ -644,7 +644,7 @@ import Graphics.UI.FLTK.LowLevel.PNMImage
 --  - Install 'make' via MSYS2.
 --  - Install <https://www.stackage.org/stack/windows-x86_64-installer Stack>
 --  - Download the <https://github.com/deech/fltkhs-hello-world/archive/master.tar.gz FLTKHS hello world skeleton>
---  - Download & compile <http://www.fltk.org/software.php?VERSION=1.3.3&FILE=fltk/1.3.3/fltk-1.3.3-source.tar.gz FLTK 1.3.3>
+--  - Download & compile <http://www.fltk.org/software.php?VERSION=1.3.4-1&FILE=fltk/1.3.4-1/fltk-1.3.4-1-source.tar.gz FLTK 1.3.4-1>
 --  - Build & install the FLTKHS hello world skeleton project.
 --  - Verify the install by running `fltkhs-hello-world`
 --
@@ -715,9 +715,9 @@ import Graphics.UI.FLTK.LowLevel.PNMImage
 -- started with a plain FLKTHS project, so two birds with one stone and all that ...
 --
 --
--- == Download & compile FLTK-1.3.3
+-- == Download & compile FLTK-1.3.4-1
 -- Please make sure to only download version
--- <http://www.fltk.org/software.php?VERSION=1.3.3&FILE=fltk/1.3.3/fltk-1.3.3-source.tar.gz FLTK 1.3.3>.
+-- <http://www.fltk.org/software.php?VERSION=1.3.4-1&FILE=fltk/1.3.4-1/fltk-1.3.4-1-source.tar.gz FLTK 1.3.4-1>.
 --
 -- If you haven't already installed 'tar' and 'gzip' at the MSYS prompt do:
 --
@@ -730,13 +730,13 @@ import Graphics.UI.FLTK.LowLevel.PNMImage
 --
 -- @
 -- > cd \<your-download-location\> # This is usually \/C\/Users/\<username\>\/Downloads
--- > tar -zxvf fltk-1.3.3-source.tar.gz
+-- > tar -zxvf fltk-1.3.4-1-source.tar.gz
 -- @
 --
 -- Then descend into the source directory:
 --
 -- @
--- > cd fltkh-1.3.3-source
+-- > cd fltkh-1.3.4-1-source
 -- @
 --
 -- Make a build directory to hold the generated CMake files:

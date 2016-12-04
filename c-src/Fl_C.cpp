@@ -594,6 +594,30 @@ EXPORT {
     Fl_Widget* refPtr = &ref;
     Fl::release_widget_pointer(refPtr);
   }
+  FL_EXPORT_C(void,Fl_set_box_color)(Fl_Color c) {
+    Fl::set_box_color(c);
+  }
+  FL_EXPORT_C(Fl_Color,Fl_box_color)(Fl_Color c){
+    return Fl::box_color(c);
+  }
+  FL_EXPORT_C(int,Fl_abi_version)(){
+    return Fl::abi_version();
+  }
+  FL_EXPORT_C(int,Fl_api_version)(){
+    return Fl::api_version();
+  }
+  FL_EXPORT_C(const char*,Fl_local_ctrl)(){
+    return fl_local_ctrl;
+  }
+  FL_EXPORT_C(const char*,Fl_local_meta)(){
+    return fl_local_meta;
+  }
+  FL_EXPORT_C(const char*,Fl_local_alt)(){
+    return fl_local_alt;
+  }
+  FL_EXPORT_C(const char*,Fl_local_shift)(){
+    return fl_local_shift;
+  }
 #ifdef __cplusplus
 }
 #endif

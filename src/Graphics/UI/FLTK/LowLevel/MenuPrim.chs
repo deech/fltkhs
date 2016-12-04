@@ -297,6 +297,10 @@ instance (impl ~ ( IO (Color))) => Op (GetDownColor ()) MenuPrim orig impl where
 {# fun Fl_Menu__set_down_color as setDownColor' { id `Ptr ()',`Int' } -> `()' #}
 instance (impl ~ (Int ->  IO ())) => Op (SetDownColor ()) MenuPrim orig impl where
   runOp _ _ menu_ c = withRef menu_ $ \menu_Ptr -> setDownColor' menu_Ptr c
+{# fun Fl_Menu__set_only as setonly' { id `Ptr ()', id `Ptr ()' } -> `()' #}
+instance (Parent a MenuItem, impl ~ (Ref a -> IO ())) => Op (SetOnly ()) MenuPrim orig impl where
+  runOp _ _ menu_ item = withRef menu_ $ \menu_Ptr ->
+                            withRef item $ \item_Ptr -> setonly' menu_Ptr item_Ptr
 
 -- $functions
 -- @
@@ -339,9 +343,9 @@ instance (impl ~ (Int ->  IO ())) => Op (SetDownColor ()) MenuPrim orig impl whe
 --
 -- global :: 'Ref' 'MenuPrim' -> 'IO' ()
 --
--- handle :: 'Ref' 'MenuPrim' -> ('Event' -> 'IO' ('Either' 'UnknownEvent' ()))
+-- handle :: 'Ref' 'MenuPrim' -> 'Event' -> 'IO' ('Either' 'UnknownEvent' ())
 --
--- handleSuper :: 'Ref' 'MenuPrim' -> 'Event' -> 'IO' ('Int')
+-- handleSuper :: 'Ref' 'MenuPrim' -> 'Event' -> 'IO' ('Either' 'UnknownEvent' ())
 --
 -- hide :: 'Ref' 'MenuPrim' -> 'IO' ()
 --
@@ -372,6 +376,8 @@ instance (impl ~ (Int ->  IO ())) => Op (SetDownColor ()) MenuPrim orig impl whe
 -- setMenu:: ('Parent' a 'MenuItem') => 'Ref' 'MenuPrim' -> ['Ref' a] -> 'IO' ()
 --
 -- setMode :: 'Ref' 'MenuPrim' -> 'Int' -> 'MenuItemFlags' -> 'IO' ()
+--
+-- setOnly:: ('Parent' a 'MenuItem') => 'Ref' 'MenuPrim' -> 'Ref' a -> 'IO' ()
 --
 -- setShortcut :: 'Ref' 'MenuPrim' -> 'Int' -> 'ShortcutKeySequence' -> 'IO' ()
 --

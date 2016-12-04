@@ -25,6 +25,7 @@ EXPORT {
   FL_EXPORT_C(Fl_Color, Fl_Graphics_Driver_color)(fl_Graphics_Driver graphics_driver);
   FL_EXPORT_C(fl_Font_Descriptor, Fl_Graphics_Driver_font_descriptor)(fl_Graphics_Driver graphics_driver);
   FL_EXPORT_C(void, Fl_Graphics_Driver_set_font_descriptor)(fl_Graphics_Driver graphics_driver,fl_Font_Descriptor d);
+  FL_EXPORT_C(int, fl_Graphics_Driver_draw_scaled)(fl_Graphics_Driver graphics_driver, fl_Image i,int X, int Y, int W, int H);
   FL_EXPORT_C(void, Fl_Graphics_Driver_Destroy)(fl_Graphics_Driver graphics_driver);
 
   // Fl_Surface_Device

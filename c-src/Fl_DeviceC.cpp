@@ -43,6 +43,10 @@ FL_EXPORT_C(void,Fl_Graphics_Driver_set_font_descriptor)(fl_Graphics_Driver grap
   Fl_Font_Descriptor* _d = static_cast<Fl_Font_Descriptor*>(d);
  return (static_cast<Fl_Graphics_Driver*>(graphics_driver))->font_descriptor(_d);
 }
+FL_EXPORT_C(int, fl_Graphics_Driver_draw_scaled)(fl_Graphics_Driver graphics_driver, fl_Image i,  int X, int Y, int W, int H)
+{
+  return (static_cast<Fl_Graphics_Driver*>(graphics_driver))->draw_scaled(static_cast<Fl_Image*>(i),X,Y,W,H);
+}
 FL_EXPORT_C(void,Fl_Graphics_Driver_Destroy)(fl_Graphics_Driver graphics_driver){
  delete (static_cast<Fl_Graphics_Driver*>(graphics_driver));
 }

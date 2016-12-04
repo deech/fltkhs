@@ -615,6 +615,9 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Menu__set_down_color)(fl_Menu_ menu_,unsigned c){
     (static_cast<Fl_DerivedMenu_*>(menu_))->down_color(c);
   }
+  FL_EXPORT_C(void, Fl_Menu__set_only)(fl_Menu_ menu_, fl_Menu_Item m){
+    (static_cast<Fl_DerivedMenu_*>(menu_))->setonly(static_cast<Fl_Menu_Item*>(m));
+  }
 #ifdef __cplusplus
 }
 #endif

@@ -2,6 +2,7 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 module Graphics.UI.FLTK.LowLevel.Image
        (
+       ImageFail(..),
        ImageFuncs(..),
        defaultImageFuncs,
        imageNew,
@@ -30,6 +31,15 @@ import Graphics.UI.FLTK.LowLevel.Fl_Types
 import Graphics.UI.FLTK.LowLevel.Utils
 import Graphics.UI.FLTK.LowLevel.Hierarchy
 import Graphics.UI.FLTK.LowLevel.Dispatch
+
+#c
+enum ImageFail {
+  ImageErrNoImage = ERR_NO_IMAGE,
+  ImageErrFileAccess = ERR_FILE_ACCESS,
+  ImageErrFormat = ERR_FORMAT
+};
+#endc
+{#enum ImageFail {} deriving (Show, Eq, Ord) #}
 
 type ColorAverageCallback        = Ref Image -> Color -> Float -> IO ()
 type ImageDrawCallback           = Ref Image -> Position -> Size -> Maybe X -> Maybe Y -> IO ()
@@ -171,9 +181,16 @@ instance (impl ~ (Position ->  IO ())) => Op (Draw ()) Image orig impl where
 instance (impl ~ ( IO ())) => Op (Uncache ()) Image orig impl where
   runOp _ _ image = withRef image $ \imagePtr -> uncache' imagePtr
 
+{#fun Fl_Image_fail as fail' { id `Ptr ()'} -> `CInt' #}
+instance (impl ~ (IO (Either ImageFail ()))) => Op (Fail ()) Image orig impl where
+  runOp _ _ image = withRef image $ \imagePtr -> do
+    res <- fail' imagePtr
+    if (res == 0)
+      then return (Right ())
+      else return (Left (cToEnum res))
+
 -- $functions
 -- @
---
 -- colorAverage :: 'Ref' 'Image' -> 'Color' -> 'Float' -> 'IO' ()
 --
 -- copy :: 'Ref' 'Image' -> 'Maybe' 'Size' -> 'IO' ('Maybe' ('Ref' 'Image'))
@@ -185,6 +202,8 @@ instance (impl ~ ( IO ())) => Op (Uncache ()) Image orig impl where
 -- draw :: 'Ref' 'Image' -> 'Position' -> 'IO' ()
 --
 -- drawResize :: 'Ref' 'Image' -> 'Position' -> 'Size' -> 'Maybe' 'X' -> 'Maybe' 'Y' -> 'IO' ()
+--
+-- fail :: 'Ref' 'Image' -> 'IO' ('Either' 'ImageFail' ())
 --
 -- getCount :: 'Ref' 'Image' -> 'IO' ('Int')
 --
@@ -200,7 +219,6 @@ instance (impl ~ ( IO ())) => Op (Uncache ()) Image orig impl where
 --
 -- uncache :: 'Ref' 'Image' -> 'IO' ()
 -- @
-
 
 -- $hierarchy
 -- @
