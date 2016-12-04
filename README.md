@@ -16,7 +16,7 @@ Install FLTK-1.3.4-1 from source:
    > wget http://fltk.org/pub/fltk/1.3.4/fltk-1.3.4-1-source.tar.gz
    > tar -zxvf fltk-1.3.4-1-source.tar.gz
    > cd fltk-1.3.4-1
-   > configure --enable-shared --enable-gl
+   > ./configure --enable-shared --enable-gl
    > make
    > sudo make install
    > fltk-config --version
