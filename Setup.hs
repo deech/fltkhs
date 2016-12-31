@@ -37,7 +37,7 @@ import Distribution.InstalledPackageInfo (extraGHCiLibraries, showInstalledPacka
 import System.Environment (getEnv, setEnv)
 
 main :: IO ()
-main = defaultMainWithHooks defaultUserHooks {
+main = defaultMainWithHooks autoconfUserHooks {
   preConf = case buildOS of
               Windows -> myCMakePreConf
               _ -> myPreConf,
@@ -51,7 +51,7 @@ myPreConf :: Args -> ConfigFlags -> IO HookedBuildInfo
 myPreConf args flags = do
    putStrLn "Running autoconf ..."
    rawSystemExit normal "autoconf" []
-   preConf defaultUserHooks args flags
+   preConf autoconfUserHooks args flags
 
 myCMakePreConf :: Args -> ConfigFlags -> IO HookedBuildInfo
 myCMakePreConf args flags =
@@ -69,7 +69,7 @@ myCMakePreConf args flags =
         then runCMake
         else return ()
        return ()
-    preConf defaultUserHooks args flags
+    preConf autoconfUserHooks args flags
 
 fltkcdir = unsafePerformIO getCurrentDirectory ++ "/c-lib"
 fltkclib = "fltkc"
@@ -102,11 +102,11 @@ myBuildHook pkg_descr local_bld_info user_hooks bld_flags =
        _ -> do
          addToEnvironmentVariable "DYLD_LIBRARY_PATH" fltkcdir
          addToEnvironmentVariable "LIBRARY_PATH" fltkcdir
-     buildHook defaultUserHooks pkg_descr local_bld_info user_hooks bld_flags
+     buildHook autoconfUserHooks pkg_descr local_bld_info user_hooks bld_flags
 
 copyCBindings :: PackageDescription -> LocalBuildInfo -> UserHooks -> CopyFlags -> IO ()
 copyCBindings pkg_descr lbi uhs flags = do
-    (copyHook defaultUserHooks) pkg_descr lbi uhs flags
+    (copyHook autoconfUserHooks) pkg_descr lbi uhs flags
     let libPref = libdir . absoluteInstallDirs pkg_descr lbi
                 . fromFlag . copyDest
                 $ flags
@@ -127,7 +127,7 @@ myCleanHook pd x uh cf = do
    os | os `elem` [FreeBSD, OpenBSD, NetBSD, DragonFly]
      -> rawSystemExit normal "gmake" ["clean"]
    _ -> rawSystemExit normal "make" ["clean"]
-  cleanHook defaultUserHooks pd x uh cf
+  cleanHook autoconfUserHooks pd x uh cf
 
 -- Based on code in "Gtk2HsSetup.hs" from "gtk" package
 registerHook pkg_descr localbuildinfo _ flags =
@@ -159,11 +159,7 @@ register pkg@PackageDescription { library = Just lib } lbi regFlags = do
      _ | modeGenerateRegFile   -> writeRegistrationFile installedPkgInfo
        | modeGenerateRegScript -> die "Generate Reg Script not supported"
        | otherwise             ->
-#if __GLASGOW_HASKELL__ >= 800
           registerPackage verbosity (compiler lbi) (withPrograms lbi) False {- multiinstance -} packageDbs installedPkgInfo
-#else
-          registerPackage verbosity installedPkgInfo pkg lbi inplace packageDbs
-#endif
   where
     modeGenerateRegFile = isJust (flagToMaybe (regGenPkgConf regFlags))
     regFile             = fromMaybe (display (packageId pkg) <.> "conf")
