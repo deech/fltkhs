@@ -582,5 +582,4 @@ instance (impl ~ IO (WindowType)) => Op (GetType_ ()) Window orig impl where
 -- sizeRangeWithArgs :: 'Ref' 'Window' -> 'Int' -> 'Int' -> 'OptionalSizeRangeArgs' -> 'IO' ()
 --
 -- waitForExpose :: 'Ref' 'Window' -> 'IO' ()
-
 -- @
