@@ -36,8 +36,13 @@ import Distribution.PackageDescription as PD
 import Distribution.InstalledPackageInfo (extraGHCiLibraries, showInstalledPackageInfo)
 import System.Environment (getEnv, setEnv)
 
+hooks =
+  case buildOS of
+    Windows -> simpleUserHooks
+    _ -> autoconfUserHooks
+
 main :: IO ()
-main = defaultMainWithHooks autoconfUserHooks {
+main = defaultMainWithHooks hooks {
   preConf = case buildOS of
               Windows -> myCMakePreConf
               _ -> myPreConf,
@@ -51,7 +56,7 @@ myPreConf :: Args -> ConfigFlags -> IO HookedBuildInfo
 myPreConf args flags = do
    putStrLn "Running autoconf ..."
    rawSystemExit normal "autoconf" []
-   preConf autoconfUserHooks args flags
+   preConf hooks args flags
 
 myCMakePreConf :: Args -> ConfigFlags -> IO HookedBuildInfo
 myCMakePreConf args flags =
@@ -69,7 +74,7 @@ myCMakePreConf args flags =
         then runCMake
         else return ()
        return ()
-    preConf autoconfUserHooks args flags
+    preConf hooks args flags
 
 fltkcdir = unsafePerformIO getCurrentDirectory ++ "/c-lib"
 fltkclib = "fltkc"
@@ -102,11 +107,11 @@ myBuildHook pkg_descr local_bld_info user_hooks bld_flags =
        _ -> do
          addToEnvironmentVariable "DYLD_LIBRARY_PATH" fltkcdir
          addToEnvironmentVariable "LIBRARY_PATH" fltkcdir
-     buildHook autoconfUserHooks pkg_descr local_bld_info user_hooks bld_flags
+     buildHook hooks pkg_descr local_bld_info user_hooks bld_flags
 
 copyCBindings :: PackageDescription -> LocalBuildInfo -> UserHooks -> CopyFlags -> IO ()
 copyCBindings pkg_descr lbi uhs flags = do
-    (copyHook autoconfUserHooks) pkg_descr lbi uhs flags
+    (copyHook hooks) pkg_descr lbi uhs flags
     let libPref = libdir . absoluteInstallDirs pkg_descr lbi
                 . fromFlag . copyDest
                 $ flags
@@ -127,7 +132,7 @@ myCleanHook pd x uh cf = do
    os | os `elem` [FreeBSD, OpenBSD, NetBSD, DragonFly]
      -> rawSystemExit normal "gmake" ["clean"]
    _ -> rawSystemExit normal "make" ["clean"]
-  cleanHook autoconfUserHooks pd x uh cf
+  cleanHook hooks pd x uh cf
 
 -- Based on code in "Gtk2HsSetup.hs" from "gtk" package
 registerHook pkg_descr localbuildinfo _ flags =
