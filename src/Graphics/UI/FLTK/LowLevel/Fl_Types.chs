@@ -288,8 +288,13 @@ type FileChooserCallback         = FunPtr (Ptr () -> Ptr () -> IO())
 type SharedImageHandler          = FunPtr (CString -> CUChar -> CInt -> Ptr ())
 type BoxDrawF                    = Rectangle -> Color -> IO ()
 type BoxDrawFPrim                = CInt -> CInt -> CInt -> CInt -> FlColor -> IO ()
+#ifdef WIN64
+type FDHandlerPrim               = CULLong -> Ptr () -> IO ()
+type FDHandler                   = CULLong -> IO ()
+#else
 type FDHandlerPrim               = CInt -> Ptr () -> IO ()
 type FDHandler                   = CInt -> IO ()
+#endif
 type TextModifyCb                = Int -> Int -> Int -> Int -> T.Text -> IO ()
 type TextModifyCbPrim            = CInt -> CInt -> CInt -> CInt -> Ptr CChar -> Ptr () -> IO ()
 type TextPredeleteCb             = BufferOffset -> Int -> IO ()
