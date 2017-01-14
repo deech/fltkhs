@@ -152,6 +152,7 @@ Executable fltkhs-fluidtohs
      cpp-options: -DWIN64
   if os(windows)
    ghc-Options: -optl-mwindows
+   ghc-Options: -pgml g++ "-optl-Wl,--whole-archive" "-optl-Wl,-Bstatic" "-optl-Wl,-lfltkc" "-optl-Wl,-Bdynamic" "-optl-Wl,--no-whole-archive"
   if os(darwin)
    ghc-Options: -pgml g++ "-optl-Wl,-lfltkc"
   if !os(darwin) && !os(windows)
@@ -166,8 +167,9 @@ Executable fltkhs-buttons
   default-language: Haskell2010
   ghc-Options: -Wall -threaded
   if os(windows)
-   ghc-Options: -optl-mwindows
+    ghc-Options: -optl-mwindows
+    ghc-Options: -pgml g++ "-optl-Wl,--whole-archive" "-optl-Wl,-Bstatic" "-optl-Wl,-lfltkc" "-optl-Wl,-Bdynamic" "-optl-Wl,--no-whole-archive"
   if os(darwin)
-   ghc-Options: -pgml g++ "-optl-Wl,-lfltkc"
+    ghc-Options: "-optl-Wl,-lfltkc"
   if !os(darwin) && !os(windows)
     ghc-Options: -pgml g++ "-optl-Wl,--whole-archive" "-optl-Wl,-Bstatic" "-optl-Wl,-lfltkc" "-optl-Wl,-Bdynamic" "-optl-Wl,--no-whole-archive"

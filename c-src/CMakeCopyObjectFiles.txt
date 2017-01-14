@@ -1,5 +1,0 @@
-function(copyObjectFiles)
-  file(GLOB_RECURSE ObjectFiles ${CMAKE_CURRENT_SOURCE_DIR} *.obj)
-  file(COPY ${ObjectFiles} DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/../static_object_files)
-endfunction(copyObjectFiles)
-copyObjectFiles()

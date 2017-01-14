@@ -26,7 +26,7 @@ import qualified Distribution.Simple.Program.Ar    as Ar
 import qualified Distribution.ModuleName as ModuleName
 import Distribution.Simple.BuildPaths
 import System.Directory(getCurrentDirectory, getDirectoryContents, doesDirectoryExist)
-import System.FilePath ( (</>), (<.>), takeExtension, combine, takeBaseName)
+import System.FilePath ( (</>), (<.>), takeExtension, combine, takeBaseName, takeDirectory)
 import qualified Distribution.Simple.GHC  as GHC
 import qualified Distribution.Simple.JHC  as JHC
 import qualified Distribution.Simple.LHC  as LHC
@@ -36,16 +36,9 @@ import Distribution.PackageDescription as PD
 import Distribution.InstalledPackageInfo (extraGHCiLibraries, showInstalledPackageInfo)
 import System.Environment (getEnv, setEnv)
 
-hooks =
-  case buildOS of
-    Windows -> simpleUserHooks
-    _ -> autoconfUserHooks
-
 main :: IO ()
-main = defaultMainWithHooks hooks {
-  preConf = case buildOS of
-              Windows -> myCMakePreConf
-              _ -> myPreConf,
+main = defaultMainWithHooks autoconfUserHooks {
+  preConf = myPreConf,
   buildHook = myBuildHook,
   cleanHook = myCleanHook,
   copyHook = copyCBindings,
@@ -55,34 +48,40 @@ main = defaultMainWithHooks hooks {
 myPreConf :: Args -> ConfigFlags -> IO HookedBuildInfo
 myPreConf args flags = do
    putStrLn "Running autoconf ..."
-   rawSystemExit normal "autoconf" []
-   preConf hooks args flags
+   case buildOS of
+     Windows -> rawSystemExit normal "sh" ["autoconf"]
+     _ -> rawSystemExit normal "autoconf" []
+   preConf autoconfUserHooks args flags
 
-myCMakePreConf :: Args -> ConfigFlags -> IO HookedBuildInfo
-myCMakePreConf args flags =
-  do
-    let runCMake = do
-        fltkHome <- getEnv "FLTK_HOME"
-        putStrLn "Running cmake ..."
-        rawSystemExit verbose "cmake" [".", "-G", "MSYS Makefiles", "-DFLTK_HOME=" ++ fltkHome]
-    clibExists <- doesDirectoryExist fltkcdir
-    if (not clibExists)
-     then runCMake
-     else do
-       libs <- getDirectoryContents fltkcdir
-       if (null $ filter ((==) "libfltkc.dll") libs)
-        then runCMake
-        else return ()
-       return ()
-    preConf hooks args flags
-
-fltkcdir = unsafePerformIO getCurrentDirectory ++ "/c-lib"
+fltkcdir :: FilePath
+fltkcdir = unsafePerformIO $ do
+  d <- getCurrentDirectory
+  return (d </> "c-lib")
 fltkclib = "fltkc"
+
+
+addFltkcDir :: PackageDescription -> PackageDescription
+addFltkcDir pkg_descr =
+  pkg_descr {
+     library = fmap (\l' -> l' {
+                              libBuildInfo =
+                                 (libBuildInfo l') {
+                                    extraLibDirs = (extraLibDirs (libBuildInfo l')) ++ [fltkcdir]
+                                 }
+                            }
+                    )
+                    (library pkg_descr)
+  }
 
 addToEnvironmentVariable :: String -> String -> IO ()
 addToEnvironmentVariable env value = do
   currentLdLibraryPath <- tryIOError (getEnv env)
-  setEnv env ((either (const "") (\curr -> curr ++ ":") currentLdLibraryPath) ++ value)
+  setEnv env ((either (const "")
+                      (\curr -> curr ++
+                               (case buildOS of
+                                  Windows -> ";"
+                                  _ -> ":"))
+                      currentLdLibraryPath) ++ value)
 
 myBuildHook pkg_descr local_bld_info user_hooks bld_flags =
   do let compileC = do
@@ -100,39 +99,82 @@ myBuildHook pkg_descr local_bld_info user_hooks bld_flags =
         when (null $ filter (Data.List.isInfixOf "fltkc") clibraries) compileC
        else compileC
      case buildOS of
-       Windows -> addToEnvironmentVariable "PATH" fltkcdir
+       Windows ->
+         let rewritePaths :: PackageDescription -> IO PackageDescription
+             rewritePaths pkg_descr =
+               let lib = library pkg_descr
+                   ld_incdirs :: Maybe ([String], [String])
+                   ld_incdirs = fmap (\lib' -> (ldOptions (libBuildInfo lib'), includeDirs (libBuildInfo lib')))  lib
+                   removeTrailingNewline = head . lines
+                   replaceAllInfixes :: String -> String -> String -> String
+                   replaceAllInfixes needle subString haystack =
+                     concat
+                       (unfoldr (\str -> if (null str)
+                                         then Nothing
+                                         else if (needle `isPrefixOf` str)
+                                              then Just (subString, drop (length needle) str)
+                                              else Just ([head str], tail str))
+                                haystack)
+                   stdCppGccPthreadPaths ghcPath =
+                      [
+                        ((takeDirectory . takeDirectory) ghcPath) </> "mingw" </> "lib" </> "gcc" </> "x86_64-w64-mingw32" </> "5.2.0"
+                      , ((takeDirectory . takeDirectory) ghcPath) </> "mingw" </> "x86_64-w64-mingw32" </> "lib"
+                      ]
+                   cygpath o p = removeTrailingNewline<$>(rawSystemStdout normal "cygpath" [o,  p])
+               in
+               do
+                 fullMingwPath <- cygpath "-m" "/mingw64"
+                 ghcPath <- rawSystemStdout normal "sh" ["-c", "which ghc"]
+                 cppGccPthreadPaths <- mapM (cygpath "-w") (stdCppGccPthreadPaths ghcPath)
+                 let replaceMingw = replaceAllInfixes "/mingw64" fullMingwPath
+                 let fixedLib = maybe Nothing
+                                     (\(ld, incDirs) ->
+                                          fmap (\l' -> l' {
+                                                   libBuildInfo =
+                                                     (libBuildInfo l') {
+                                                        ldOptions = fmap replaceMingw ld,
+                                                        includeDirs = fmap replaceMingw incDirs,
+                                                        extraLibDirs = cppGccPthreadPaths ++ (extraLibDirs (libBuildInfo l')),
+                                                        extraLibs = ["stdc++", "gcc", "pthread"]
+                                                     }
+                                                })
+                                                lib
+                                     )
+                                     ld_incdirs
+                 return (pkg_descr {library = fixedLib})
+         in do
+           fixedPkgDescr <- rewritePaths pkg_descr >>= return . addFltkcDir
+           buildHook autoconfUserHooks fixedPkgDescr local_bld_info user_hooks bld_flags
        Linux -> do
          addToEnvironmentVariable "LD_LIBRARY_PATH" fltkcdir
          addToEnvironmentVariable "LIBRARY_PATH" fltkcdir
+         buildHook autoconfUserHooks pkg_descr local_bld_info user_hooks bld_flags
        _ -> do
          addToEnvironmentVariable "DYLD_LIBRARY_PATH" fltkcdir
          addToEnvironmentVariable "LIBRARY_PATH" fltkcdir
-     buildHook hooks pkg_descr local_bld_info user_hooks bld_flags
+         buildHook autoconfUserHooks pkg_descr local_bld_info user_hooks bld_flags
+
 
 copyCBindings :: PackageDescription -> LocalBuildInfo -> UserHooks -> CopyFlags -> IO ()
 copyCBindings pkg_descr lbi uhs flags = do
-    (copyHook hooks) pkg_descr lbi uhs flags
+    (copyHook autoconfUserHooks) pkg_descr lbi uhs flags
     let libPref = libdir . absoluteInstallDirs pkg_descr lbi
                 . fromFlag . copyDest
                 $ flags
     rawSystemExit (fromFlag $ copyVerbosity flags) "cp"
-        ["c-lib" </> "libfltkc.a", libPref]
+        [fltkcdir </> "libfltkc.a" , libPref]
     case buildOS of
-     os | os `elem` [Linux, FreeBSD, OpenBSD, NetBSD, DragonFly]
-       -> rawSystemExit (fromFlag $ copyVerbosity flags) "cp"
-            ["c-lib" </> "libfltkc-dyn.so", libPref]
      OSX -> rawSystemExit (fromFlag $ copyVerbosity flags) "cp"
               ["c-lib" </> "libfltkc-dyn.dylib", libPref]
-     Windows ->
-            rawSystemExit (fromFlag $ copyVerbosity flags) "cp"
-              ["c-lib" </> "libfltkc-dyn.dll", libPref]
+     _ -> rawSystemExit (fromFlag $ copyVerbosity flags) "cp"
+            ["c-lib" </> "libfltkc-dyn.so", libPref]
 
 myCleanHook pd x uh cf = do
   case buildOS of
    os | os `elem` [FreeBSD, OpenBSD, NetBSD, DragonFly]
      -> rawSystemExit normal "gmake" ["clean"]
    _ -> rawSystemExit normal "make" ["clean"]
-  cleanHook hooks pd x uh cf
+  cleanHook autoconfUserHooks pd x uh cf
 
 -- Based on code in "Gtk2HsSetup.hs" from "gtk" package
 registerHook pkg_descr localbuildinfo _ flags =

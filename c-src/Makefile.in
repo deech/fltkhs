@@ -121,6 +121,12 @@ else
 	SHARED_EXT=so
 	SONAME_FLAGS= -shared -Wl,-soname
 endif
+
+ifdef MSYSTEM
+else
+	FPIC= -fPIC
+endif
+
 .SILENT:
 all: libfltkc.a libfltkc-dyn.$(SHARED_EXT)
 .SUFFIXES: .cpp .o
@@ -128,8 +134,8 @@ all: libfltkc.a libfltkc-dyn.$(SHARED_EXT)
 	test -d $(STATIC_OBJECT_FILES) || mkdir $(STATIC_OBJECT_FILES)
 	test -d $(SHARED_OBJECT_FILES) || mkdir $(SHARED_OBJECT_FILES)
 	@echo "*** Compiling $<..."
-	$(CXXSTATIC) -c -fPIC $^ -o $(STATIC_OBJECT_FILES)/$@
-	$(CXXSHARED) -c -fPIC $^ -o $(SHARED_OBJECT_FILES)/$@
+	$(CXXSTATIC) -c $(FPIC) $^ -o $(STATIC_OBJECT_FILES)/$@
+	$(CXXSHARED) -c $(FPIC) $^ -o $(SHARED_OBJECT_FILES)/$@
 libfltkc.a : $(OBJECTS)
 	test -d $(LIBDIR) || mkdir $(LIBDIR)
 	@echo "*** Linking $@..."
