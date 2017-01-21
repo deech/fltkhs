@@ -24,7 +24,14 @@ module Graphics.UI.FLTK.LowLevel.FLTKHS
 
          -- ** Installation (Windows 64-bit)
          --
-         -- $InstallationWindows
+         -- *** Windows 10
+         --
+         -- $InstallationWindows10
+         --
+
+         -- *** Windows 7
+         --
+         -- $InstallationWindows7
 
          -- * Demos
          --
@@ -630,9 +637,145 @@ import Graphics.UI.FLTK.LowLevel.PNMImage
 -- @
 --
 
--- $InstallationWindows
+-- $InstallationWindows10
 --
--- Note: Currently this package only works on 64-bit Windows.
+-- This install guide has been tested on a Windows 10, Thinkpad T450 w/ 16GB RAM.
+--
+-- == Install Stack
+-- Downloading and following the default instructions for the standard <https://www.stackage.org/stack/windows-x86_64-installer Windows installer> should be enough.
+-- If the install succeeded 'stack' should on the PATH. To test run 'cmd.exe' and do:
+--
+-- @
+-- > stack --version
+-- @
+--
+-- Now downloading and setup the latest GHC via 'stack':
+--
+-- @
+-- > stack setup
+-- @
+--
+-- From this point on we can live in the MSYS2 shell that comes with Stack. It is a far superior environment to the command prompt. To open the MSYS2 shell do:
+--
+-- @
+-- > stack exec mintty
+-- @
+--
+-- == Install Necessary Utilities via Pacman
+-- In the MSYS2 shell prompt do
+--
+-- @
+-- > pacman -Syy # updates the repos to pull the latest snapshot
+-- @
+--
+-- Now we need packages for download and extracting packages:
+--
+-- @
+-- > pacman -S wget
+-- > pacman -S tar
+-- > pacman -S unzip
+-- > pacman -S zip
+-- @
+--
+-- ... and building C/C++ programs:
+--
+-- @
+-- > pacman -S autoconf
+-- > pacman -S make
+-- > pacman -S automake
+-- @
+--
+-- == Download and Install FLTK
+--
+-- Download the latest stable build of FLTK:
+--
+-- @
+-- > wget --no-check-certificate http://www.fltk.org/software.php?VERSION=1.3.4-1&FILE=fltk/1.3.4-1/fltk-1.3.4-1-source.tar.gz
+-- @
+--
+-- Untar the FLTK archive and enter the directory:
+--
+-- @
+-- > tar -zxf fltk-1.3.4-1
+-- > cd fltk-1.3.4-1
+-- @
+--
+-- Configure, make and install:
+--
+-- @
+-- > ./configure --enable-gl --enable-shared --enable-localjpeg --enable-localzlib --enable-localpng
+-- > make
+-- > make install
+-- @
+--
+-- You can test your installation by running:
+--
+-- @
+-- > fltk-config
+-- 1.3.4-1
+-- @
+--
+-- == Download And Install The FLTKHS Hello World Skeleton
+-- The <https://github.com/deech/fltkhs-hello-world fltkhs-hello-world> skeleton is a simple Hello World GUI which provides the base structure for your application. Please see the 'Demos' section of this document for examples of apps that show off more complex uses of the API.
+--
+-- @
+-- > wget --no-check-certificate https://github.com/deech/fltkhs-hello-world/archive/master.zip
+-- > unzip fltkhs-hello-world-master.zip
+-- > mv fltkhs-hello-world-master fltkhs-hello-world
+-- > cd fltkhs-hello-world
+-- @
+--
+-- And install with:
+--
+-- @
+-- > stack install
+-- @
+--
+-- To test your installation do:
+--
+-- @
+-- > stack exec fltkhs-hello-world
+-- @
+--
+-- And you're off and running!
+--
+-- == Packaging A Windows Executable
+--
+-- While the 'fltkhs-hello-world' application you built above is mostly stand-alone the MSYS2 environment bundled with 'stack' seems to require 3 runtime DLLs. The DLLs are bundled with 'stack' so it's easy to zip them up with the executable and deploy. The required DLLs are: 'libstdc++-6.dll', 'libgcc_s_seh-1.dll' and 'libwinpthread-1.dll'.
+--
+--
+--
+-- First create the directory that will contain the executable and DLLs:
+--
+-- @
+-- > mkdir \/tmp\/fltkhs-hello-world
+-- @
+--
+-- Copy the executable over to that directory:
+--
+-- @
+-- > cp `which fltkhs-hello-world` \/tmp\/fltkhs-hello-world
+-- @
+--
+-- Copy over the DLLs. They are usually located in '../<ghc-version>/mingw/bin' but to make the process slightly less fragile we specify the directory relative to whatever 'ghc' is currently in 'stack' 's context:
+--
+-- @
+-- > cp `dirname $(which ghc)`..\/mingw\/bin\/libstdc++-6.dll \/tmp\/fltkhs-hello-world
+-- > cp `dirname $(which ghc)`..\/mingw\/bin\/libgcc_s_seh-1.dll \/tmp\/fltkhs-hello-world
+-- > cp `dirname $(which ghc)`..\/mingw\/bin\/libwinpthread-1.dll \/tmp\/fltkhs-hello-world
+-- @
+--
+-- Zip up archive:
+--
+-- @
+-- > cd /tmp
+-- > zip fltkhs-hello-world.zip fltkhs-hello-world/*
+-- @
+--
+-- And that's it! Any Windows 10 user should now be able to extract 'fltkhs-hello-world.zip' and run 'fltkhs-hello-world.exe'.
+--
+
+-- $InstallationWindows7
 --
 -- This install guide has been tested on Windows 7 64-bit with 8GB of RAM.
 --
