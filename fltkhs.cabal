@@ -130,6 +130,11 @@ library
   if impl(ghc >= 7.10)
      cpp-options: -DOVERLAPPING_INSTANCES_DEPRECATED
 
+custom-setup
+  setup-depends:
+    base >= 4.5 && < 4.11,
+    Cabal < 1.25
+
 Executable fltkhs-fluidtohs
   Main-Is: Main.hs
   Hs-Source-Dirs: src/Fluid
