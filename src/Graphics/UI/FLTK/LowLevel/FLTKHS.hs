@@ -671,6 +671,7 @@ import Graphics.UI.FLTK.LowLevel.PNMImage
 -- > pacman -S tar
 -- > pacman -S unzip
 -- > pacman -S zip
+-- > pacman -S man
 -- @
 --
 -- ... and building C/C++ programs:
@@ -692,7 +693,7 @@ import Graphics.UI.FLTK.LowLevel.PNMImage
 -- Untar the FLTK archive and enter the directory:
 --
 -- @
--- > tar -zxf fltk-1.3.4-1
+-- > tar -zxf fltk-1.3.4-1-source.tar.gz
 -- > cd fltk-1.3.4-1
 -- @
 --
@@ -716,7 +717,7 @@ import Graphics.UI.FLTK.LowLevel.PNMImage
 --
 -- @
 -- > wget --no-check-certificate https://github.com/deech/fltkhs-hello-world/archive/master.zip
--- > unzip fltkhs-hello-world-master.zip
+-- > unzip master.zip
 -- > mv fltkhs-hello-world-master fltkhs-hello-world
 -- > cd fltkhs-hello-world
 -- @
