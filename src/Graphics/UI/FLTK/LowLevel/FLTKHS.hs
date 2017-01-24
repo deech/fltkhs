@@ -29,10 +29,6 @@ module Graphics.UI.FLTK.LowLevel.FLTKHS
          -- $InstallationWindows10
          --
 
-         -- *** Windows 7
-         --
-         -- $InstallationWindows7
-
          -- * Demos
          --
          -- $Demos
@@ -634,7 +630,7 @@ import Graphics.UI.FLTK.LowLevel.PNMImage
 
 -- $InstallationWindows10
 --
--- This install guide has been tested on a Windows 10 and Windows 8.
+-- This install guide has been tested on a Windows 7, 8 and 10.
 --
 -- == Install Stack
 -- Downloading and following the default instructions for the standard <https://www.stackage.org/stack/windows-x86_64-installer Windows installer> should be enough.
