@@ -574,7 +574,7 @@ import Graphics.UI.FLTK.LowLevel.PNMImage
 -- The `brew` package for the current stable release of FLTK is broken. Fortunately installing from source is pretty
 -- quick and painless.
 --
-
+--
 -- @
 -- > wget http://fltk.org/pub/fltk/1.3.4/fltk-1.3.4-1-source.tar.gz
 -- > tar -zxf fltk-1.3.4-1-source.tar.gz
@@ -584,7 +584,7 @@ import Graphics.UI.FLTK.LowLevel.PNMImage
 -- > sudo make install
 -- > fltk-config --version
 -- 1.3.4-1
---
+-- @
 --
 -- == Download & Install the FLTKHS Hello World Skeleton
 -- === Downloading Without Git
