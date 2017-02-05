@@ -3,8 +3,8 @@ AC_INIT([fltkc], [0.1], [aditya dawt siram ayt gmail dawt com])
 AC_CONFIG_SRCDIR([c-src/Fl_C.h])
 
 # Checks for programs.
-AC_PROG_CXX
-AC_PROG_CC
+AC_PROG_CC([clang gcc cc])
+AC_PROG_CXX([clang++ g++ c++])
 
 # Checks for libraries.
 AC_CHECK_PROG(FLTKCONFIG,fltk-config,[fltk-config],[no])
