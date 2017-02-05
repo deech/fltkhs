@@ -555,8 +555,6 @@ import Graphics.UI.FLTK.LowLevel.PNMImage
 -- The general steps are:
 --
 -- - Brew Install Stack
--- - Brew Install FLTK-1.3.4-1 (Yosemite)
--- - Brew Install FLTK-1.3.4-1 (El Capitan)
 -- - Download & install the <https://github.com/deech/fltkhs-hello-world/archive/master.tar.gz FLTKHS hello world skeleton>
 -- - Verify the install by running `fltkhs-hello-world`
 --
@@ -567,24 +565,26 @@ import Graphics.UI.FLTK.LowLevel.PNMImage
 -- > brew install haskell-stack
 -- @
 --
--- == Brew Install FLTK-1.3.4-1 (Yosemite)
---
+-- == Brew Install Autoconf
 -- @
 -- > brew install autoconf
--- > brew install fltk
 -- @
 --
--- Unfortunately 'autoconf' is required to build FLTKHS but has been removed
--- for the default XCode install since Yosemite so it is required here.
+-- == Compile & Install FLTK from Source.
+-- The `brew` package for the current stable release of FLTK is broken. Fortunately installing from source is pretty
+-- quick and painless.
 --
--- == Brew Install FLTK-1.3.4-1 (El Capitan)
+
+-- @
+-- > wget http://fltk.org/pub/fltk/1.3.4/fltk-1.3.4-1-source.tar.gz
+-- > tar -zxf fltk-1.3.4-1-source.tar.gz
+-- > cd fltk-1.3.4-1
+-- > ./configure --enable-gl --enable-shared --enable-localjpeg --enable-localzlib --enable-localpng
+-- > make
+-- > sudo make install
+-- > fltk-config --version
+-- 1.3.4-1
 --
--- @
--- > brew install --devel fltk
--- @
--- Unfortunately the version of Clang bundled with El Capitan does not compile the stable FLTK-1.3.4-1.
--- This installs the as-yet unreleased development version. Although FLTKHS only support 1.3.4-1
--- it seems to work.
 --
 -- == Download & Install the FLTKHS Hello World Skeleton
 -- === Downloading Without Git
