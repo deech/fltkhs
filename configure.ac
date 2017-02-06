@@ -14,13 +14,13 @@ test "$FLTKCONFIG" == "no" && AC_MSG_ERROR([Cannot find the fltk-config executab
 AC_CHECK_HEADERS([stddef.h stdint.h stdlib.h string.h unistd.h])
 AC_CHECK_LIB([dl], [main])
 
-case $host_os in
-   mingw* )
-      AC_SUBST(FLTKCONFIGCOMMAND,"$(fltk-config --ldflags --use-gl --use-glut --use-images --use-forms) -lstdc++")
-      ;;
-   *)
-      AC_SUBST(FLTKCONFIGCOMMAND,"$(fltk-config --ldstaticflags --use-gl --use-glut --use-images --use-forms) -lstdc++")
-      ;;
+case $MSYSTEM in
+*MINGW*)
+   AC_SUBST(FLTKCONFIGCOMMAND,"$(fltk-config --ldflags --use-gl --use-glut --use-images --use-forms) -lstdc++")
+   ;;
+*)
+   AC_SUBST(FLTKCONFIGCOMMAND,"$(fltk-config --ldstaticflags --use-gl --use-glut --use-images --use-forms) -lstdc++")
+   ;;
 esac
 
 AC_SUBST(FLTK_HOME,`fltk-config --includedir`)
