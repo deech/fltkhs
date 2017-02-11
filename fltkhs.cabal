@@ -129,6 +129,8 @@ library
        cpp-options: -DCALLSTACK_AVAILABLE
   if impl(ghc >= 7.10)
      cpp-options: -DOVERLAPPING_INSTANCES_DEPRECATED
+  if os(darwin)
+     cc-options: -U__BLOCKS__ -D_Nonnull=
 
 custom-setup
   setup-depends:
