@@ -1,5 +1,5 @@
 name : fltkhs
-version : 0.5.0.5
+version : 0.5.0.8
 synopsis : FLTK bindings
 description:
     Low level bindings for the FLTK GUI toolkit. For installation and quick start instruction please scroll all the way down to the README.
@@ -129,11 +129,15 @@ library
        cpp-options: -DCALLSTACK_AVAILABLE
   if impl(ghc >= 7.10)
      cpp-options: -DOVERLAPPING_INSTANCES_DEPRECATED
+  if os(darwin)
+     cc-options: -U__BLOCKS__ -D_Nonnull=
 
 custom-setup
   setup-depends:
     base >= 4.5 && < 4.11,
-    Cabal < 1.25
+    Cabal < 1.25,
+    filepath,
+    directory
 
 Executable fltkhs-fluidtohs
   Main-Is: Main.hs

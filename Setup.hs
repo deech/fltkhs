@@ -123,10 +123,13 @@ myBuildHook pkg_descr local_bld_info user_hooks bld_flags =
                    cygpath o p = removeTrailingNewline<$>(rawSystemStdout normal "cygpath" [o,  p])
                in
                do
-                 fullMingwPath <- cygpath "-m" "/mingw64"
+                 let mingw = case buildArch of
+                       I386 -> "/mingw32"
+                       _ -> "/mingw64"
+                 fullMingwPath <- cygpath "-m" mingw
                  ghcPath <- rawSystemStdout normal "sh" ["-c", "which ghc"]
                  cppGccPthreadPaths <- mapM (cygpath "-w") (stdCppGccPthreadPaths ghcPath)
-                 let replaceMingw = replaceAllInfixes "/mingw64" fullMingwPath
+                 let replaceMingw = replaceAllInfixes mingw fullMingwPath
                  let fixedLib = maybe Nothing
                                      (\(ld, incDirs) ->
                                           fmap (\l' -> l' {
