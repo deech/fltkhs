@@ -135,7 +135,9 @@ library
 custom-setup
   setup-depends:
     base >= 4.5 && < 4.11,
-    Cabal < 1.25
+    Cabal < 1.25,
+    filepath,
+    directory
 
 Executable fltkhs-fluidtohs
   Main-Is: Main.hs
