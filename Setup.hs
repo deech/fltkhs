@@ -33,7 +33,7 @@ import qualified Distribution.Simple.LHC  as LHC
 import qualified Distribution.Simple.UHC  as UHC
 import qualified Distribution.Simple.PackageIndex as PackageIndex
 import Distribution.PackageDescription as PD
-import Distribution.InstalledPackageInfo (extraGHCiLibraries, showInstalledPackageInfo)
+import Distribution.InstalledPackageInfo (ldOptions, extraGHCiLibraries, showInstalledPackageInfo)
 import System.Environment (getEnv, setEnv)
 
 main :: IO ()
@@ -83,6 +83,28 @@ addToEnvironmentVariable env value = do
                                   _ -> ":"))
                       currentLdLibraryPath) ++ value)
 
+
+replaceAllInfixes :: String -> String -> String -> String
+replaceAllInfixes needle subString haystack =
+  concat
+    (unfoldr (\str -> if (null str)
+                      then Nothing
+                      else if (needle `isPrefixOf` str)
+                           then Just (subString, drop (length needle) str)
+                           else Just ([head str], tail str))
+             haystack)
+cygpath o p =
+  let removeTrailingNewline = head . lines  in
+  removeTrailingNewline<$>(rawSystemStdout normal "cygpath" [o,  p])
+
+replaceMingw =
+  let mingw = case buildArch of
+        I386 -> "/mingw32"
+        _ -> "/mingw64"
+      fullMingwPath = unsafePerformIO (cygpath "-m" mingw)
+  in
+  replaceAllInfixes mingw fullMingwPath
+
 myBuildHook pkg_descr local_bld_info user_hooks bld_flags =
   do let compileC = do
              putStrLn "==Compiling C bindings=="
@@ -104,38 +126,22 @@ myBuildHook pkg_descr local_bld_info user_hooks bld_flags =
              rewritePaths pkg_descr =
                let lib = library pkg_descr
                    ld_incdirs :: Maybe ([String], [String])
-                   ld_incdirs = fmap (\lib' -> (ldOptions (libBuildInfo lib'), includeDirs (libBuildInfo lib')))  lib
-                   removeTrailingNewline = head . lines
-                   replaceAllInfixes :: String -> String -> String -> String
-                   replaceAllInfixes needle subString haystack =
-                     concat
-                       (unfoldr (\str -> if (null str)
-                                         then Nothing
-                                         else if (needle `isPrefixOf` str)
-                                              then Just (subString, drop (length needle) str)
-                                              else Just ([head str], tail str))
-                                haystack)
+                   ld_incdirs = fmap (\lib' -> (PD.ldOptions (libBuildInfo lib'), includeDirs (libBuildInfo lib')))  lib
                    stdCppGccPthreadPaths ghcPath =
                       [
                         ((takeDirectory . takeDirectory) ghcPath) </> "mingw" </> "lib" </> "gcc" </> "x86_64-w64-mingw32" </> "5.2.0"
                       , ((takeDirectory . takeDirectory) ghcPath) </> "mingw" </> "x86_64-w64-mingw32" </> "lib"
                       ]
-                   cygpath o p = removeTrailingNewline<$>(rawSystemStdout normal "cygpath" [o,  p])
                in
                do
-                 let mingw = case buildArch of
-                       I386 -> "/mingw32"
-                       _ -> "/mingw64"
-                 fullMingwPath <- cygpath "-m" mingw
                  ghcPath <- rawSystemStdout normal "sh" ["-c", "which ghc"]
                  cppGccPthreadPaths <- mapM (cygpath "-w") (stdCppGccPthreadPaths ghcPath)
-                 let replaceMingw = replaceAllInfixes mingw fullMingwPath
                  let fixedLib = maybe Nothing
                                      (\(ld, incDirs) ->
                                           fmap (\l' -> l' {
                                                    libBuildInfo =
                                                      (libBuildInfo l') {
-                                                        ldOptions = fmap replaceMingw ld,
+                                                        PD.ldOptions = fmap replaceMingw ld,
                                                         includeDirs = fmap replaceMingw incDirs,
                                                         extraLibDirs = cppGccPthreadPaths ++ (extraLibDirs (libBuildInfo l')),
                                                         extraLibs = ["stdc++", "gcc", "pthread"]
@@ -190,12 +196,11 @@ registerHook pkg_descr localbuildinfo _ flags =
 register :: PackageDescription -> LocalBuildInfo -> RegisterFlags -> IO ()
 register pkg@PackageDescription { library = Just lib } lbi regFlags = do
     let clbi = getComponentLocalBuildInfo lbi CLibName
-
-    installedPkgInfoRaw <- generateRegistrationInfo
-
-                           verbosity pkg lib lbi clbi inplace False distPref packageDb
-
-
+    installedPkgInfoRaw' <- generateRegistrationInfo verbosity pkg lib lbi clbi inplace False distPref packageDb
+    let installedPkgInfoRaw =
+         case buildOS of
+           Windows -> installedPkgInfoRaw' { Distribution.InstalledPackageInfo.ldOptions = fmap replaceMingw (Distribution.InstalledPackageInfo.ldOptions installedPkgInfoRaw') }
+           _ -> installedPkgInfoRaw'
     let installedPkgInfo = installedPkgInfoRaw {
                                 -- this is what this whole register code is all about
                                 extraGHCiLibraries =
