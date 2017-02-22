@@ -46,7 +46,7 @@ typeToHs flClassName flWidgetType
     lookup flWidgetType browserType
   | flClassName == "Fl_MenuItem" =
     lookup flWidgetType menuItemType
-  | flClassName == "Fl_MenuButton" =
+  | flClassName == "Fl_Menu_Button" =
     lookup flWidgetType menuButtonType
   | flClassName == "Fl_Dial" =
     lookup flWidgetType dialType
@@ -148,7 +148,7 @@ attributeG flClassName name attr =
     Types.Tooltip t ->
       apply "setTooltip" name (Just $ show $ collapseString t)
     Types.When w ->
-      apply "setWhen" name (Just $ "[" ++ (snd (whenType !! w)) ++ "]")
+      apply "setWhen" name (Just $ "[" ++ (whenType !! w) ++ "]")
     Types.Hotspot ->
       (apply "getWindow" name Nothing) ++
       " >>= " ++
@@ -240,11 +240,14 @@ menuLabel menuItemName restAttrs =
   in
   (maybe menuItemName (\(Label l) -> (collapseString l)) label , attrsWithoutLabel)
 
-menuItemCode :: String -> String -> String -> [String] -> [Attribute] -> ([String], [Attribute])
-menuItemCode mn menuItemName label menuPath restAttrs =
+menuItemCode :: String -> String -> String -> String -> [String] -> [Attribute] -> ([String], [Attribute])
+menuItemCode mn menuItemName label flags menuPath restAttrs =
   let callbackCode callback = [
                                 "let { callback :: Maybe (Ref MenuItem -> IO ()); callback = " ++ callback ++ "}"
                               ]
+      shortcutCode sc = [
+                          "let { shortcut :: Maybe Shortcut ; shortcut = " ++ sc ++ "}"
+                        ]
       (((), attrs), haskellCode)
         = (runIdentity
             (runWriterT
@@ -259,25 +262,25 @@ menuItemCode mn menuItemName label menuPath restAttrs =
                           let (attr, restAttrs') = findDrop currentAttrs findAttr
                           modify (\_ -> restAttrs')
                           tell (maybe fallback toCode attr)
+                    tell ["let { label = \"" ++ (concat (intersperse "/" ((reverse menuPath) ++ [label]))) ++ "\"}" ]
                     attrCode (\a -> case a of Callback _ -> True; _ -> False)
                              (\(Callback c) -> callbackCode (collapseString c))
                              (callbackCode "(Nothing :: Maybe (Ref MenuItem -> IO ())) ")
-                    tell ["let { label = \"" ++ (concat (intersperse "/" ((reverse menuPath) ++ [label]))) ++ "\"}" ]
-                    tell ["(MenuItemIndex idx) <- add " ++
-                          mn ++ " label " ++
-                          "(Nothing :: Maybe Shortcut) " ++
-                          "callback " ++
-                          "(MenuItemFlags [])",
-                          mn ++ "_menuItems <- getMenu " ++ mn,
-                          "let {" ++ menuItemName ++ " = fromJust (" ++ mn ++ "_menuItems !! idx)}"
-                         ]
                     attrCode (\a -> case a of Shortcut _ -> True; _ -> False)
                              (\(Shortcut s) ->
                                  maybe
-                                 []
-                                 (\ks -> ["setShortcut " ++ mn ++ " idx (" ++ (show ks) ++ ")"])
+                                 (shortcutCode  "Nothing")
+                                 (\ks -> shortcutCode (show ks))
                                  (cIntToKeySequence ((read s) :: CInt)))
-                             []
+                             (shortcutCode "Nothing")
+                    tell ["(MenuItemIndex idx) <- add " ++
+                          mn ++ " label " ++
+                          "shortcut " ++
+                          "callback " ++
+                          flags,
+                          mn ++ "_menuItems <- getMenu " ++ mn,
+                          "let {" ++ menuItemName ++ " = fromJust (" ++ mn ++ "_menuItems !! idx)}"
+                         ]
                 ) restAttrs)))
   in
     (haskellCode, attrs)
@@ -352,6 +355,8 @@ widgetTreeG menuName menuPath widgetTree =
                                                                 })
                                                                (case flClassName of {
                                                                     "Fl_Choice" -> [];
+                                                                    "Fl_Menu_Bar" -> [];
+                                                                    "Fl_Menu_Button" -> [];
                                                                     _ -> ([newLabel] ++ menuPath)
                                                                })
                                                                tree)
@@ -364,14 +369,10 @@ widgetTreeG menuName menuPath widgetTree =
                            "Submenu" ->
                               case menuName of
                                 Just mn ->
-                                  let (haskellCode, newAttrs) = menuItemCode mn newName newLabel menuPath attrsWithoutLabel
+                                  let flags = "(MenuItemFlags [Submenu])"
+                                      (haskellCode, newAttrs) = menuItemCode mn newName newLabel flags menuPath attrsWithoutLabel
                                   in
                                   haskellCode ++
-                                  [
-                                    "flags " ++ " <- getFlags " ++ newName,
-                                    "let {newFlags = maybe (MenuItemFlags [Submenu]) (\\(MenuItemFlags fs)-> (MenuItemFlags (fs ++ [Submenu]))) flags}",
-                                    "setMode " ++ mn ++ " idx newFlags"
-                                  ] ++
                                   (map (attributeG newFlClassName newName) newAttrs) ++
                                   innerTreeOutput
                                 _ ->
@@ -383,11 +384,11 @@ widgetTreeG menuName menuPath widgetTree =
                              (constructorG newFlClassName hsConstructor (Just newName) posSize) ++
                              (map (attributeG newFlClassName newName) attrsWithoutLabel) ++
                              innerTreeOutput
-                           "Fl_Choice" ->
+                           m | m == "Fl_Choice" || m == "Fl_Menu_Button"->
                              (constructorG newFlClassName hsConstructor (Just newName) posSize) ++
                              (map (attributeG newFlClassName newName) restAttrs) ++
-                             ["setMenu " ++ newName ++ " ([] :: [Ref MenuItem])"] ++
-                             innerTreeOutput
+                             ["clear " ++ newName] ++
+                               innerTreeOutput
                            _ ->
                              (constructorG newFlClassName hsConstructor (Just newName) posSize) ++
                              (map (attributeG newFlClassName newName) attrsWithoutLabel) ++
@@ -413,7 +414,7 @@ widgetTreeG menuName menuPath widgetTree =
                                   case menuName of
                                      Just mn ->
                                        let (label, attrsWithoutLabel) = menuLabel newName restAttrs
-                                           (haskellCode, newAttrs) = menuItemCode mn newName label menuPath attrsWithoutLabel
+                                           (haskellCode, newAttrs) = menuItemCode mn newName label "(MenuItemFlags [])" menuPath attrsWithoutLabel
                                        in haskellCode ++ (map (attributeG newFlClassName newName) newAttrs)
                                      _ -> []
                                _ -> (constructorG newFlClassName hsConstructor (Just newName) posSize) ++

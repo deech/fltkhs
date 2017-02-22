@@ -29,7 +29,7 @@ boxType :: [(String, String)]
 labelType :: [(String, String)]
 alignmentType :: [(String, String)]
 sliderType :: [(String, String)]
-whenType :: [(String, String)]
+whenType :: [String]
 inputType :: [(String, String)]
 outputType :: [(String, String)]
 packType :: [(String, String)]
@@ -143,11 +143,16 @@ sliderType = [
   ("Vert Knob"  ,"VertNiceSliderType"),
   ("Horz Knob"  ,"HorNiceSliderType")
  ]
+
 whenType = [
-  ("Never"     ,"WhenNever"),
-  ("Release"   ,"WhenRelease"),
-  ("Changed"   ,"WhenChanged"),
-  ("Enter key" ,"WhenEnterKey")
+  "WhenNever"
+  ,"WhenChanged"
+  ,"WhenNotChanged"
+  ,"WhenRelease"
+  ,"WhenReleaseAlways"
+  ,"WhenEnterKey"
+  ,"WhenEnterKeyAlways"
+  ,"WhenEnterKeyChanged"
  ]
 inputType = [
   ("Normal", "FlNormalInput"),
@@ -284,7 +289,7 @@ flClasses =
   ,("Fl_Table",("Table", "tableNew"))
   ,("Fl_Scroll",("Scroll", "scrollNew"))
   ,("Fl_Menu_Bar",("MenuBar", "sysMenuBarNew"))
-  ,("Menu_Button",("MenuButton", "menuButtonNew"))
+  ,("Fl_Menu_Button",("MenuButton", "menuButtonNew"))
   ,("Fl_Choice",("Choice", "choiceNew"))
   ,("Fl_Browser",("Browser", "browserNew" ))
   ,("Fl_Tabs",("Tabs", "tabsNew"))
