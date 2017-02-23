@@ -3992,7 +3992,8 @@ type FileBrowserFuncs =
   (GetTextsize
   (GetFiletype
   (SetFiletype
-  ()))))))))
+  (Load
+  ())))))))))
 type instance Functions FileBrowser = FileBrowserFuncs
 
 MAKE_METHOD(SetIconsize, setIconsize)

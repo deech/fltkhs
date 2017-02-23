@@ -298,6 +298,7 @@ flClasses =
   ,("Fl_Text_Display", ("TextDisplay", "textDisplayNew"))
   ,("Fl_Text_Editor", ("TextEditor", "textEditorNew"))
   ,("Fl_Tile", ("Tile", "tileNew"))
+  ,("Fl_File_Browser", ("FileBrowser", "fileBrowserNew"))
   ]
 
 imageExtensions =
