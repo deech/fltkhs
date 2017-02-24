@@ -2,7 +2,9 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 module Graphics.UI.FLTK.LowLevel.Image
        (
+#if FL_API_VERSION == 10304
        ImageFail(..),
+#endif
        ImageFuncs(..),
        defaultImageFuncs,
        imageNew,
@@ -32,6 +34,7 @@ import Graphics.UI.FLTK.LowLevel.Utils
 import Graphics.UI.FLTK.LowLevel.Hierarchy
 import Graphics.UI.FLTK.LowLevel.Dispatch
 
+#if FL_API_VERSION == 10304
 #c
 enum ImageFail {
   ImageErrNoImage = ERR_NO_IMAGE,
@@ -40,6 +43,7 @@ enum ImageFail {
 };
 #endc
 {#enum ImageFail {} deriving (Show, Eq, Ord) #}
+#endif
 
 type ColorAverageCallback        = Ref Image -> Color -> Float -> IO ()
 type ImageDrawCallback           = Ref Image -> Position -> Size -> Maybe X -> Maybe Y -> IO ()
@@ -181,6 +185,7 @@ instance (impl ~ (Position ->  IO ())) => Op (Draw ()) Image orig impl where
 instance (impl ~ ( IO ())) => Op (Uncache ()) Image orig impl where
   runOp _ _ image = withRef image $ \imagePtr -> uncache' imagePtr
 
+#if FL_API_VERSION == 10304
 {#fun Fl_Image_fail as fail' { id `Ptr ()'} -> `CInt' #}
 instance (impl ~ (IO (Either ImageFail ()))) => Op (Fail ()) Image orig impl where
   runOp _ _ image = withRef image $ \imagePtr -> do
@@ -188,6 +193,7 @@ instance (impl ~ (IO (Either ImageFail ()))) => Op (Fail ()) Image orig impl whe
     if (res == 0)
       then return (Right ())
       else return (Left (cToEnum res))
+#endif
 
 -- $functions
 -- @

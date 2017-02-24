@@ -534,8 +534,10 @@ module Graphics.UI.FLTK.LowLevel.Hierarchy
          setTextcolor,
          DownBox,
          downBox,
+#if FL_API_VERSION == 10304
          SetOnly,
          setOnly,
+#endif
          -- * MenuBar
          MenuBar,
          -- * SysMenuBar
@@ -562,8 +564,10 @@ module Graphics.UI.FLTK.LowLevel.Hierarchy
          drawResize,
          Uncache,
          uncache,
+#if FL_API_VERSION == 10304
          Fail,
          fail,
+#endif
          -- * Bitmap
          Bitmap,
          -- * Pixmap
@@ -2278,8 +2282,13 @@ type MenuPrimFuncs =
   (SetDownBox
   (GetDownColor
   (SetDownColor
+#if FL_API_VERSION == 10304
   (SetOnly
-  ()))))))))))))))))))))))))))))))))))))))))))))))
+#endif
+  ())))))))))))))))))))))))))))))))))))))))))))))
+#if FL_API_VERSION == 10304
+  )
+#endif
 
 type instance Functions MenuPrim = MenuPrimFuncs
 
@@ -2308,7 +2317,9 @@ MAKE_METHOD(SetTextsize,setTextsize)
 MAKE_METHOD(GetTextcolor,getTextcolor)
 MAKE_METHOD(SetTextcolor,setTextcolor)
 MAKE_METHOD(DownBox,downBox)
+#if FL_API_VERSION == 10304
 MAKE_METHOD(SetOnly,setOnly)
+#endif
 
 data CMenuBar parent
 type MenuBar = CMenuBar MenuPrim
@@ -2379,8 +2390,13 @@ type ImageFuncs =
   (DrawResize
   (Draw
   (Uncache
+#if FL_API_VERSION == 10304
   (Fail
-  ()))))))))))))))
+#endif
+  ())))))))))))))
+#if FL_API_VERSION == 10304
+  )
+#endif
 
 type instance Functions Image = ImageFuncs
 
@@ -2392,7 +2408,9 @@ MAKE_METHOD(Inactive,inactive)
 MAKE_METHOD(Desaturate,desaturate)
 MAKE_METHOD(DrawResize,drawResize)
 MAKE_METHOD(Uncache,uncache)
+#if FL_API_VERSION == 10304
 MAKE_METHOD(Fail,fail)
+#endif
 
 data CBitmap parent
 type Bitmap = CBitmap Image

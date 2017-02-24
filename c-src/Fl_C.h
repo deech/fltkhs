@@ -257,6 +257,7 @@ EXPORT {
   FL_EXPORT_C(void              ,Fl_release_widget_pointer)(fl_Widget w);
   FL_EXPORT_C(void              ,Fl_clear_widget_pointer)(fl_Widget w);
   FL_EXPORT_C(void              ,Fl_clear_widget_pointer)(fl_Widget w);
+#if FL_API_VERSION == 10304
   FL_EXPORT_C(void              ,Fl_set_box_color)(Fl_Color c);
   FL_EXPORT_C(Fl_Color          ,Fl_box_color)(Fl_Color c);
   FL_EXPORT_C(int               ,Fl_abi_version)();
@@ -265,6 +266,7 @@ EXPORT {
   FL_EXPORT_C(const char*       ,Fl_local_meta)();
   FL_EXPORT_C(const char*       ,Fl_local_alt)();
   FL_EXPORT_C(const char*       ,Fl_local_shift)();
+#endif
 #ifdef __cplusplus
 }
 #endif
