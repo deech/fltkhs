@@ -594,6 +594,7 @@ EXPORT {
     Fl_Widget* refPtr = &ref;
     Fl::release_widget_pointer(refPtr);
   }
+#if FL_API_VERSION == 10304
   FL_EXPORT_C(void,Fl_set_box_color)(Fl_Color c) {
     Fl::set_box_color(c);
   }
@@ -618,6 +619,8 @@ EXPORT {
   FL_EXPORT_C(const char*,Fl_local_shift)(){
     return fl_local_shift;
   }
+#endif
+
 #ifdef __cplusplus
 }
 #endif

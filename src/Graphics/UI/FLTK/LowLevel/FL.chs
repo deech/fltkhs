@@ -157,6 +157,7 @@ module Graphics.UI.FLTK.LowLevel.FL
      setEventDispatch,
      eventText,
      eventLength,
+#if FL_API_VERSION == 10304
      setBoxColor,
      boxColor,
      abiVersion,
@@ -165,6 +166,7 @@ module Graphics.UI.FLTK.LowLevel.FL
      localMeta,
      localAlt,
      localShift
+#endif
     )
 where
 #include "Fl_C.h"
@@ -834,6 +836,7 @@ releaseWidgetPointer :: (Parent a Widget) => Ref a -> IO ()
 releaseWidgetPointer wp = withRef wp {#call Fl_release_widget_pointer as fl_release_widget_pointer #}
 clearWidgetPointer :: (Parent a Widget) => Ref a -> IO ()
 clearWidgetPointer wp = withRef wp {#call Fl_clear_widget_pointer as fl_Clear_Widget_Pointer #}
+#if FL_API_VERSION == 10304
 setBoxColor :: Color -> IO ()
 setBoxColor c = {#call Fl_set_box_color as fl_set_box_color #} (cFromColor c)
 boxColor :: Color -> IO Color
@@ -850,3 +853,4 @@ localMeta :: IO T.Text
 localMeta = {#call Fl_local_meta as fl_local_meta #} >>= cStringToText
 localShift :: IO T.Text
 localShift = {#call Fl_local_shift as fl_local_shift #} >>= cStringToText
+#endif

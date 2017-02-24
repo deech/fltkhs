@@ -61,7 +61,9 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Image_draw_with)(fl_Image image,int X,int Y,int W,int H);
   FL_EXPORT_C(void, Fl_Image_draw)(fl_Image image,int X, int Y);
   FL_EXPORT_C(void, Fl_Image_uncache)(fl_Image image);
+#if FL_API_VERSION == 10304
   FL_EXPORT_C(int, Fl_Image_fail)(fl_Image image);
+#endif
 #ifdef __cplusplus
 }
 #endif
