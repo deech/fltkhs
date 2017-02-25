@@ -320,90 +320,21 @@ import Graphics.UI.FLTK.LowLevel.PNMImage
 -- library is considered usable. And most of these issues are being aggressively
 -- addressed but in the interests of full disclosure ...
 --
--- == Look & Feel (All users)
--- The look and feel of FLTK apps can be charitably described as /retro/. And since
--- FLTK has no support for theming it is also baked in. FLTK was designed for the
+-- == Look & Feel
+-- The default look FLTK apps can be charitably described as /retro/. And
+-- FLTK has no support for theming since it was designed for the
 -- embedded domain and trades off slickness for speed, portability and
--- binary size. This is unlikely to change.
+-- binary size.
 --
--- == Compile Times (All users)
+-- But that doesn't mean the user is limited to the default! FLTK is quite flexible
+-- and it is pretty easy to change the way a widget looks and behaves but there is no
+-- "theme file" that applies uniformly to all widgets in the app.
+--
+-- == Compile Times
 -- Currently a dense app (~ 160-180 widgets crammed into the same window) takes
--- 9-12 seconds to compile on a 32GB quad-core machine. Surprisingly it only goes up
--- to 10-15 seconds on a 8GB machine indicating that GHC pegs one processor and RAM
--- does not matter. Educated guess, most of the time is being spent traversing type-level lists
--- and chasing down orphan instances. The hope is that this will all go away once GHC 8 has settled
--- in and all the type-level gymnastics can been replaced with OverloadedRecordFields.
+-- 9-12 seconds to compile with GHC 7.10.3 on a 32GB quad-core machine.
+-- The good news is that this is a <https://ghc.haskell.org/trac/ghc/ticket/12506 known issue>.
 --
--- == GHCi (Linux, *BSD & OSX Yosemite)
--- The GHC 7.10.x series has an unfortunate
--- <https://ghc.haskell.org/trac/ghc/ticket/10568 regression> that causes GHCi to
--- crash when loading the shared library that contains the C bindings to the C++
--- API. The REPL loads fine in GHC 7.8.x. This means that each FLTKHS app needs a
--- special GHC environment just for running the REPL. This is achieved by bundling
--- another Stack file (arbitrarily called 'stack-repl.yaml') with sample apps
--- and skeletons specially for loading an app into GHCi but also means that users
--- have to do the following to load a GUI app into the REPL:
---
--- @
--- > STACK_YAML=stack-repl.yaml stack ghci ...
--- @
---
--- Furthermore once an app is launched via the REPL closing the main app window
--- brings the REPL back to a prompt as it should but does not go away. The window
--- stays around ghosted for the life of the session. The user has to `:quit` GHCi in
--- order to get rid of it. So while the REPL is still useful for querying functions etc.
--- and trying things out it leaves a lot of trash behind. Hopefully the fix is simply a
--- case of the author knowing how GHCi and the FFI interact.
---
--- == GHCi + Stack (OSX El Capitan)
--- Running FLTKHS in GHCi via Stack on El Capitan is broken. The reason is that
--- the @Setup.hs@ that comes with FLTKHS requires Cabal-1.2.x. So before running the repl we need to do:
---
--- @
--- > STACK_YAML=stack-repl.yaml stack setup --upgrade-cabal
--- @
---
--- This breaks on El Capitan with an error:
---
--- @
--- > Setup: \/usr\/bin\/ar: permission denied
--- @
---
--- This is a known <https://github.com/haskell/cabal/issues/2653 bug> and unfortunately the
--- <https://ghc.haskell.org/trac/ghc/blog/weekly20150721#MacOSXElCapitansupport workaround> is
--- pretty horrific. Barring that there is no hope for FLTKHS and GHCi on El Capitan.
---
--- To see why it's necessary to use `stack-repl.yaml` please see the previous section
--- "GHCi (Linux, *BSD & OSD Yosemite)".
---
--- == GHC 7.10.3 And Beyond (Windows only)
--- _UPDATE_: This issue has been resolved by updates to 'language-c' and 'c2hs'. This
--- section will be removed in a subsequent release.
---
--- FLTKHS does not work with GHC 7.10.3 on Windows. Period. GHC 7.10.2 and 7.8.4 on
--- Windows work fine. The problem is the MinGW environment that comes bundled with
--- GHC 7.10.3 has brought to a light and unfortunate
--- <https://github.com/haskell/c2hs/issues/157 bug> in the `language-c` package
--- that C2HS depends on. Until this is fixed FLTKHS will not build.
---
--- The workaround is bundling yet another special Stack file (arbitrarily called
--- "stack-windows.yaml") that allows Windows users to run FLTKHS with GHC 7.10.2.
--- Most importantly this pins all Windows users to 7.10.2 until the issue is
--- resolved and as an added inconvenience all Stack commands in Windows have to be
--- prefixed with the cheesy:
---
--- @
--- > STACK_YAML= stack-windows.yaml stack ...
--- @
---
--- == GHCi (Windows only)
--- GHCi does not work with FLTKHS on Windows at all. At least on Windows 7, attempting
--- load an app into the REPL generates a weird error message about not being able to
--- find `uuid.dll`.
---
--- Hopefully this is just an issue of the author not understand GHCi on Windows and
--- will be resolved quickly.
-
 -- $StackTrace
 --
 -- In a traditional callback-heavy API such as FLTKHS null pointers happen which
@@ -1018,24 +949,7 @@ import Graphics.UI.FLTK.LowLevel.PNMImage
 -- @
 -- > stack build --flag fltkhs-hello-world:fastCompile
 -- @
-
--- $CabalREPLIssues
 --
--- The recommended way to load FLTKHS app into GHCi is the use the
--- `stack-repl.yaml` that comes bundled with the
--- <http://github.com/deech/fltkhs-hello-world FLTKHS project skeleton>. The
--- reasons are outlined in the "GHCi (All Users)" subsection of "Obstacles" above.
---
--- The REPL in the skeleton, for example, be run with:
---
--- @
--- > STACK_YAML=stack-repl.yaml stack setup --upgrade-cabal
--- > STACK_YAML=stack-repl.yaml stack ghci fltkhs-hello-world:exe:fltkhs-hello-world
--- @
---
--- The '--upgrade-cabal' flag above tells GHC to use the version in
--- 'stack-repl.yaml' (7.8.4) but upgrade the Cabal to 1.2.2.
-
 -- =File Layout
 -- @
 -- Root
