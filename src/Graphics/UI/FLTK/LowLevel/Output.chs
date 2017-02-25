@@ -21,7 +21,6 @@ where
 #include "Fl_Multiline_OutputC.h"
 #include "Fl_WidgetC.h"
 import C2HS hiding (cFromEnum, cFromBool, cToBool,cToEnum)
-import Foreign.C.Types
 import Graphics.UI.FLTK.LowLevel.Fl_Types
 import Graphics.UI.FLTK.LowLevel.Utils
 import Graphics.UI.FLTK.LowLevel.Hierarchy

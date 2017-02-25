@@ -20,7 +20,6 @@ where
 #include "Fl_WidgetC.h"
 #include "Fl_GroupC.h"
 import C2HS hiding (cFromEnum, cFromBool, cToBool,cToEnum)
-import Foreign.C.Types
 import Graphics.UI.FLTK.LowLevel.Dispatch
 import qualified Data.Text as T
 import Graphics.UI.FLTK.LowLevel.Fl_Types

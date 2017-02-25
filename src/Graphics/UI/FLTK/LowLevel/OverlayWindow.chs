@@ -20,7 +20,6 @@ import Graphics.UI.FLTK.LowLevel.Utils
 import Graphics.UI.FLTK.LowLevel.Hierarchy
 import Graphics.UI.FLTK.LowLevel.Dispatch
 import qualified Data.Text as T
-import C2HS hiding (cFromEnum, toBool,cToEnum)
 
 {# fun Fl_Overlay_Window_New_WithLabel as windowNewWithLabel' { `Int', `Int', unsafeToCString `T.Text', id `FunPtr CallbackPrim' } -> `Ptr ()' id #}
 {# fun Fl_Overlay_Window_New as windowNew' { `Int', `Int', id `FunPtr CallbackPrim' } -> `Ptr ()' id #}

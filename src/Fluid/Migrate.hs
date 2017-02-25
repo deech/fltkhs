@@ -3,7 +3,7 @@ import Numeric
 import Graphics.UI.FLTK.LowLevel.Utils
 import Fluid.Types
 import Fluid.Lookup
-import Foreign.C.Types
+
 import Data.List
 import Data.Ord
 

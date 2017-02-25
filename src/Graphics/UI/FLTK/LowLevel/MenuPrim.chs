@@ -19,7 +19,7 @@ where
 #include "Fl_Menu_C.h"
 #include "Fl_WidgetC.h"
 import C2HS hiding (cFromEnum, cFromBool, cToBool,cToEnum)
-import Foreign.C.Types
+
 import Graphics.UI.FLTK.LowLevel.Widget
 import Graphics.UI.FLTK.LowLevel.Fl_Enumerations
 import Graphics.UI.FLTK.LowLevel.Fl_Types

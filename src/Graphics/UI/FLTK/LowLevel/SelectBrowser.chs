@@ -12,7 +12,7 @@ where
 #include "Fl_Types.h"
 #include "Fl_Select_BrowserC.h"
 import C2HS hiding (cFromEnum, cFromBool, cToBool,cToEnum)
-import Foreign.C.Types
+
 import Graphics.UI.FLTK.LowLevel.Fl_Types
 import Graphics.UI.FLTK.LowLevel.Utils
 import Graphics.UI.FLTK.LowLevel.Hierarchy

@@ -16,14 +16,13 @@ where
 #include "Fl_Types.h"
 #include "Fl_Menu_BarC.h"
 import C2HS hiding (cFromEnum, cFromBool, cToBool,cToEnum)
-import Foreign.C.Types
+
 import Graphics.UI.FLTK.LowLevel.Fl_Enumerations
 import Graphics.UI.FLTK.LowLevel.Fl_Types
 import Graphics.UI.FLTK.LowLevel.Utils
 import Graphics.UI.FLTK.LowLevel.Dispatch
 import qualified Data.Text as T
 import Graphics.UI.FLTK.LowLevel.Hierarchy
-import Graphics.UI.FLTK.LowLevel.MenuItem
 
 {# fun Fl_Menu_Bar_New as widgetNew' { `Int',`Int',`Int',`Int' } -> `Ptr ()' id #}
 {# fun Fl_Menu_Bar_New_WithLabel as widgetNewWithLabel' { `Int',`Int',`Int',`Int',unsafeToCString `T.Text'} -> `Ptr ()' id #}

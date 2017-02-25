@@ -13,7 +13,7 @@ where
 #include "Fl_Types.h"
 #include "Fl_AskC.h"
 import C2HS hiding (cFromEnum, cToBool,cToEnum)
-import Foreign.C.Types
+
 import qualified Data.Text as T
 import Graphics.UI.FLTK.LowLevel.Utils
 
