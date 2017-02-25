@@ -379,8 +379,6 @@ instance (Parent a MenuItem, impl ~ (Ref a -> IO ())) => Op (SetOnly ()) MenuPri
 --
 -- setMode :: 'Ref' 'MenuPrim' -> 'Int' -> 'MenuItemFlags' -> 'IO' ()
 --
--- setOnly:: ('Parent' a 'MenuItem') => 'Ref' 'MenuPrim' -> 'Ref' a -> 'IO' ()
---
 -- setShortcut :: 'Ref' 'MenuPrim' -> 'Int' -> 'ShortcutKeySequence' -> 'IO' ()
 --
 -- setSize :: 'Ref' 'MenuPrim' -> 'Int' -> 'Int' -> 'IO' ()
@@ -398,6 +396,9 @@ instance (Parent a MenuItem, impl ~ (Ref a -> IO ())) => Op (SetOnly ()) MenuPri
 -- showWidgetSuper :: 'Ref' 'MenuPrim' -> 'IO' ()
 --
 -- testShortcut:: ('Parent' a 'MenuItem') => 'Ref' 'MenuPrim' -> 'IO' ('Maybe' ('Ref' a))
+--
+-- Available in FLTK 1.3.4 only:
+-- setOnly:: ('Parent' a 'MenuItem') => 'Ref' 'MenuPrim' -> 'Ref' a -> 'IO' ()
 --
 -- @
 

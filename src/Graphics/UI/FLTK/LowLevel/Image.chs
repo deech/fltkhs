@@ -209,8 +209,6 @@ instance (impl ~ (IO (Either ImageFail ()))) => Op (Fail ()) Image orig impl whe
 --
 -- drawResize :: 'Ref' 'Image' -> 'Position' -> 'Size' -> 'Maybe' 'X' -> 'Maybe' 'Y' -> 'IO' ()
 --
--- fail :: 'Ref' 'Image' -> 'IO' ('Either' 'ImageFail' ())
---
 -- getCount :: 'Ref' 'Image' -> 'IO' ('Int')
 --
 -- getD :: 'Ref' 'Image' -> 'IO' ('Int')
@@ -224,6 +222,9 @@ instance (impl ~ (IO (Either ImageFail ()))) => Op (Fail ()) Image orig impl whe
 -- inactive :: 'Ref' 'Image' -> 'IO' ()
 --
 -- uncache :: 'Ref' 'Image' -> 'IO' ()
+--
+-- Available in FLTK 1.3.4 only:
+-- fail :: 'Ref' 'Image' -> 'IO' ('Either' 'ImageFail' ())
 -- @
 
 -- $hierarchy

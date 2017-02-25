@@ -16,15 +16,25 @@ import Data.Maybe
 spacesOrNewLines =
   skipMany $ (char ' ') <|> (char '\n') <|> crlf
 
-parseInstances = go (return [])
+parseInstances = go False (return ([],[]))
   where
-    go accum = ((try (eof >> accum)) <|>
-                (try (do
-                    newline >> string "instance"
-                    soFar <- accum
-                    opInstance <- parseInstance
-                    go (return (soFar ++ [opInstance])))) <|>
-                (anyChar >> go accum))
+    go inIfdef accum = ((try (eof >> accum)) <|>
+                        (try (do
+                            newline >> string "#if FL_API_VERSION == 10304" >> endOfLine
+                            go True accum)) <|>
+                        (try (do
+                            newline >> string "#endif" >> endOfLine
+                            go False accum)) <|>
+                        (try (do
+                            newline >> string "instance"
+                            (soFar, newVersionOnly)<- accum
+                            opInstance <- parseInstance
+                            go inIfdef
+                               (return
+                                 (if inIfdef
+                                  then (soFar, newVersionOnly ++ [opInstance])
+                                  else (soFar ++ [opInstance], newVersionOnly))))) <|>
+                        (anyChar >> go inIfdef accum))
 parseInstance = do
   spaces
   char '('
@@ -140,7 +150,7 @@ main = do
   let parseWidgetFile contents =
         case (parse parseInstances "" contents) of
           Left err        -> error (show err)
-          Right instances -> Just instances
+          Right (functions, newVersionOnly) -> (Just functions, Just newVersionOnly)
   let hier' = map
                 (\o -> case (parse runHierarchyParser "" o) of
                    Left err -> Nothing
@@ -158,8 +168,10 @@ main = do
       putStr "\n"
     (Just (Functions w)) -> do
       contents <- readWidgetFile w
-      let parsed = parseWidgetFile contents
-      let instances = maybe [] (sort . map (\(c, sig, mName, wType) -> pprint ((c, sig), mName, wType)))
-                        parsed
-      putStr $ intercalate "\n--\n" (map ((++) "-- ") instances)
+      let (functions, inNewVersionOnly) = parseWidgetFile contents
+      let rendered = maybe [] (sort . map (\(c, sig, mName, wType) -> pprint ((c, sig), mName, wType)))
+      putStr $ intercalate "\n--\n" (map ((++) "-- ") (rendered functions))
+      putStr "\n"
+      putStr $ "\n-- Available in FLTK 1.3.4 only: \n"
+      putStr $ intercalate "\n--\n" (map ((++) "-- ") (rendered inNewVersionOnly))
       putStr "\n"
