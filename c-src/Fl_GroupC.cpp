@@ -1,5 +1,79 @@
 #include "Fl_GroupC.h"
 #ifdef __cplusplus
+Fl_DerivedGroup::Fl_DerivedGroup(int X, int Y, int W, int H, const char *l, fl_Widget_Virtual_Funcs* funcs) : Fl_Group(X,Y,W,H,l){
+  overriddenFuncs = funcs;
+  other_data = (void*)0;
+}
+Fl_DerivedGroup::Fl_DerivedGroup(int X, int Y, int W, int H, fl_Widget_Virtual_Funcs* funcs):Fl_Group(X,Y,W,H){
+  overriddenFuncs = funcs;
+  other_data = (void*)0;
+}
+Fl_DerivedGroup::~Fl_DerivedGroup(){
+  free(overriddenFuncs);
+}
+void Fl_DerivedGroup::draw(){
+  if (this->overriddenFuncs->draw != NULL) {
+    this->overriddenFuncs->draw((fl_Group) this);
+  }
+  else {
+    Fl_Group::draw();
+  }
+}
+
+void Fl_DerivedGroup::draw_super(){
+  Fl_Group::draw();
+}
+
+int Fl_DerivedGroup::handle(int event){
+  int i;
+  if (this->overriddenFuncs->handle != NULL) {
+    i = this->overriddenFuncs->handle((fl_Group) this,event);
+  }
+  else {
+    i = Fl_Group::handle(event);
+  }
+  return i;
+}
+int Fl_DerivedGroup::handle_super(int event){
+  return Fl_Group::handle(event);
+}
+
+void Fl_DerivedGroup::resize(int x, int y, int w, int h){
+  if (this->overriddenFuncs->resize != NULL) {
+    this->overriddenFuncs->resize((fl_Group) this,x,y,w,h);
+  }
+  else {
+    Fl_Group::resize(x,y,w,h);
+  }
+}
+
+void Fl_DerivedGroup::resize_super(int x, int y, int w, int h){
+  Fl_Group::resize(x,y,w,h);
+}
+void Fl_DerivedGroup::show(){
+  if (this->overriddenFuncs->show != NULL) {
+    this->overriddenFuncs->show((fl_Group) this);
+  }
+  else {
+    Fl_Group::show();
+  }
+}
+void Fl_DerivedGroup::show_super(){
+  Fl_Group::show();
+}
+
+void Fl_DerivedGroup::hide(){
+  if (this->overriddenFuncs->hide != NULL) {
+    this->overriddenFuncs->hide((fl_Group) this);
+  }
+  else {
+    Fl_Group::hide();
+  }
+}
+void Fl_DerivedGroup::hide_super(){
+  Fl_Group::hide();
+}
+
 void Fl_DerivedGroup::draw_child(Fl_Widget* widget){
   Fl_Group::draw_child(*widget);
 }
@@ -12,10 +86,38 @@ void Fl_DerivedGroup::draw_outside_label(Fl_Widget* widget){
 void Fl_DerivedGroup::update_child(Fl_Widget* widget){
   Fl_Group::update_child(*widget);
 }
+
 EXPORT {
 #endif
   FL_EXPORT_C(int,Fl_Group_handle)(fl_Group self, int event){
     return (static_cast<Fl_DerivedGroup*>(self))->handle(event);
+  }
+  FL_EXPORT_C(int,Fl_Group_handle_super)(fl_Group self, int event){
+    return (static_cast<Fl_DerivedGroup*>(self))->handle_super(event);
+  }
+  FL_EXPORT_C(void, Fl_Group_resize)(fl_Group self, int x, int y, int w, int h){
+    (static_cast<Fl_DerivedGroup*>(self))->resize(x, y, w, h);
+  }
+  FL_EXPORT_C(void, Fl_Group_resize_super)(fl_Group self, int x, int y, int w, int h){
+    (static_cast<Fl_DerivedGroup*>(self))->resize_super(x, y, w, h);
+  }
+  FL_EXPORT_C(void,Fl_Group_draw)(fl_Group self){
+    (static_cast<Fl_DerivedGroup*>(self))->draw();
+  }
+  FL_EXPORT_C(void,Fl_Group_draw_super)(fl_Group self){
+    (static_cast<Fl_DerivedGroup*>(self))->draw_super();
+  }
+  FL_EXPORT_C(void,Fl_Group_show)(fl_Group self){
+    (static_cast<Fl_DerivedGroup*>(self))->show();
+  }
+  FL_EXPORT_C(void,Fl_Group_show_super)(fl_Group self){
+    (static_cast<Fl_DerivedGroup*>(self))->show_super();
+  }
+  FL_EXPORT_C(void,Fl_Group_hide)(fl_Group self){
+    (static_cast<Fl_DerivedGroup*>(self))->hide();
+  }
+  FL_EXPORT_C(void,Fl_Group_hide_super)(fl_Group self){
+    (static_cast<Fl_DerivedGroup*>(self))->hide_super();
   }
   FL_EXPORT_C(fl_Group,Fl_Group_parent)(fl_Group win){
     return (fl_Group) (static_cast<Fl_DerivedGroup*>(win))->parent();
@@ -357,13 +459,23 @@ EXPORT {
   FL_EXPORT_C(fl_Widget, Fl_Group_child)(fl_Group self, int n){
     return (fl_Widget)(static_cast<Fl_DerivedGroup*>(self))->child(n);
   }
-  FL_EXPORT_C(fl_Group,     Fl_Group_New)(int x, int y, int w, int h){
-    Fl_DerivedGroup* g = new Fl_DerivedGroup(x,y,w,h);
-    return (fl_Group)g;
+  FL_EXPORT_C(fl_Group,    Fl_Group_New)(int X, int Y, int W, int H){
+    fl_Widget_Virtual_Funcs* fs = Fl_Widget_default_virtual_funcs();
+    Fl_DerivedGroup* w = new Fl_DerivedGroup(X,Y,W,H,fs);
+    return (fl_Group)w;
   }
-  FL_EXPORT_C(fl_Group,     Fl_Group_New_WithLabel)(int x, int y, int w, int h, const char* t){
-    Fl_DerivedGroup* g = new Fl_DerivedGroup(x,y,w,h,t);
-    return (fl_Group)g;
+  FL_EXPORT_C(fl_Group,    Fl_Group_New_WithLabel)(int X, int Y, int W, int H, const char* label){
+    fl_Widget_Virtual_Funcs* fs = Fl_Widget_default_virtual_funcs();
+    Fl_DerivedGroup* w = new Fl_DerivedGroup(X,Y,W,H,label,fs);
+    return (fl_Group)w;
+  }
+  FL_EXPORT_C(fl_Group,    Fl_OverriddenGroup_New)(int X, int Y, int W, int H,fl_Widget_Virtual_Funcs* fs){
+    Fl_DerivedGroup* w = new Fl_DerivedGroup(X,Y,W,H,fs);
+    return (fl_Group)w;
+  }
+  FL_EXPORT_C(fl_Group,    Fl_OverriddenGroup_New_WithLabel)(int X, int Y, int W, int H, const char* label, fl_Widget_Virtual_Funcs* fs){
+    Fl_DerivedGroup* w = new Fl_DerivedGroup(X,Y,W,H,label,fs);
+    return (fl_Group)w;
   }
   FL_EXPORT_C(void, Fl_Group_Destroy)(fl_Group group){
     delete (static_cast<Fl_DerivedGroup*>(group));

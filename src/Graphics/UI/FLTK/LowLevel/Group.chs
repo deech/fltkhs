@@ -4,6 +4,7 @@ module Graphics.UI.FLTK.LowLevel.Group
     (
     -- * Constructor
      groupNew,
+     groupCustom,
      groupSetCurrent,
      groupCurrent,
      -- * Hierarchy
@@ -25,6 +26,7 @@ import qualified Data.Text as T
 import Graphics.UI.FLTK.LowLevel.Fl_Types
 import Graphics.UI.FLTK.LowLevel.Utils
 import Graphics.UI.FLTK.LowLevel.Hierarchy
+import Graphics.UI.FLTK.LowLevel.Widget
 
 {# fun Fl_Group_set_current as groupSetCurrent' { id `Ptr ()' } -> `()' #}
 {# fun Fl_Group_current as groupCurrent' {} -> `Ptr ()' id #}
@@ -43,6 +45,12 @@ groupNew rectangle label' =
     in case label' of
         (Just l') -> groupNewWithLabel' x_pos y_pos width height l' >>= toRef
         Nothing -> groupNew' x_pos y_pos width height >>= toRef
+
+{# fun Fl_OverriddenGroup_New_WithLabel as overriddenGroupNewWithLabel' { `Int',`Int',`Int',`Int',unsafeToCString `T.Text', id `Ptr ()'} -> `Ptr ()' id #}
+{# fun Fl_OverriddenGroup_New as overriddenGroupNew' { `Int',`Int',`Int',`Int', id `Ptr ()'} -> `Ptr ()' id #}
+groupCustom :: Rectangle -> Maybe T.Text -> Maybe (Ref Group -> IO ()) -> CustomWidgetFuncs Group -> IO (Ref Group)
+groupCustom rectangle l' draw' funcs' =
+  widgetMaker rectangle l' draw' (Just funcs') overriddenGroupNew' overriddenGroupNewWithLabel'
 
 {# fun Fl_Group_Destroy as groupDestroy' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
 instance (impl ~ ( IO ())) => Op (Destroy ()) Group orig impl where

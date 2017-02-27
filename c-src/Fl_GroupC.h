@@ -7,19 +7,35 @@
 #include "FL/Fl.H"
 #include "FL/Fl_Group.H"
 #include "Fl_CallbackC.h"
-class Fl_DerivedGroup : public Fl_Group {
-public:
-  void draw_child(Fl_Widget* widget);
-  void draw_children();
-  void draw_outside_label(Fl_Widget* widget);
-  void update_child(Fl_Widget* widget);
-  Fl_DerivedGroup(int X, int Y, int W, int H, const char *l) : Fl_Group(X,Y,W,H,l){};
-  Fl_DerivedGroup(int X, int Y, int W, int H):Fl_Group(X,Y,W,H,0){};
-};
+#include "Fl_WidgetC.h"
 EXPORT {
+  class Fl_DerivedGroup : public Fl_Group {
+    fl_Widget_Virtual_Funcs* overriddenFuncs;
+    void* other_data;
+  public:
+    virtual void draw();
+    void draw_super();
+    virtual int handle(int event);
+    int handle_super(int event);
+    virtual void resize(int x, int y, int w, int h);
+    void resize_super(int x, int y, int w, int h);
+    virtual void show();
+    void show_super();
+    virtual void hide();
+    void hide_super();
+    void draw_child(Fl_Widget* widget);
+    void draw_children();
+    void draw_outside_label(Fl_Widget* widget);
+    void update_child(Fl_Widget* widget);
+    Fl_DerivedGroup(int X, int Y, int W, int H, const char *l, fl_Widget_Virtual_Funcs* funcs);
+    Fl_DerivedGroup(int X, int Y, int W, int H, fl_Widget_Virtual_Funcs* funcs);
+    ~Fl_DerivedGroup();
+  };
+
 #endif
   /* Inherited from Fl_Widget */
   FL_EXPORT_C(int,          Fl_Group_handle)(fl_Group self, int event);
+  FL_EXPORT_C(int,          Fl_Group_handle_super)(fl_Group self, int event);
   FL_EXPORT_C(fl_Group,     Fl_Group_parent)(fl_Group group);
   FL_EXPORT_C(void,         Fl_Group_set_parent)(fl_Group group, fl_Group grp);
   FL_EXPORT_C(uchar,        Fl_Group_type)(fl_Group group);
@@ -109,6 +125,7 @@ EXPORT {
   FL_EXPORT_C(fl_Gl_Window, Fl_Group_as_gl_window)(fl_Group group);
   FL_EXPORT_C(void,         Fl_Group_resize_super)(fl_Group group,int X, int Y, int W, int H);
   FL_EXPORT_C(void,         Fl_Group_resize)(fl_Group group,int X, int Y, int W, int H);
+  FL_EXPORT_C(void ,Fl_Group_resize_super)(fl_Group self, int x, int y, int w, int h);
 
   /* Fl_Group static members */
   FL_EXPORT_C(fl_Group,Fl_Group_current)();
@@ -120,6 +137,8 @@ EXPORT {
   FL_EXPORT_C(void,         Fl_Group_draw_outside_label)(fl_Group group, fl_Widget widget);
   FL_EXPORT_C(void,         Fl_Group_update_child)(fl_Group group, fl_Widget widget);
   FL_EXPORT_C(void,         Fl_Group_begin)(fl_Group group);
+  FL_EXPORT_C(void,         Fl_Group_draw)(fl_Group group);
+  FL_EXPORT_C(void,         Fl_Group_draw_super)(fl_Group group);
   FL_EXPORT_C(void,         Fl_Group_end)(fl_Group group);
   FL_EXPORT_C(int,          Fl_Group_find)(fl_Group group, fl_Widget w);
   FL_EXPORT_C(void,         Fl_Group_add)(fl_Group group, fl_Widget w);
@@ -142,6 +161,8 @@ EXPORT {
   FL_EXPORT_C(fl_Widget,    Fl_Group_child)(fl_Group self, int n);
   FL_EXPORT_C(fl_Group,     Fl_Group_New)(int x, int y, int w, int h);
   FL_EXPORT_C(fl_Group,     Fl_Group_New_WithLabel)(int x, int y, int w, int h, const char* t);
+  FL_EXPORT_C(fl_Group,    Fl_OverriddenGroup_New)(int X, int Y, int W, int H,fl_Widget_Virtual_Funcs* fs);
+  FL_EXPORT_C(fl_Group,    Fl_OverriddenGroup_New_WithLabel)(int X, int Y, int W, int H, const char* label, fl_Widget_Virtual_Funcs* fs);
   FL_EXPORT_C(void,         Fl_Group_Destroy)(fl_Group group);
 #ifdef __cplusplus
 }
