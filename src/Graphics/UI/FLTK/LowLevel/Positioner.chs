@@ -3,7 +3,8 @@
 module Graphics.UI.FLTK.LowLevel.Positioner
     (
      -- * Constructor
-     positionerNew
+     positionerNew,
+     positionerCustom
      -- * Hierarchy
      --
      -- $hierarchy
@@ -17,13 +18,31 @@ where
 #include "Fl_Types.h"
 #include "Fl_PositionerC.h"
 import C2HS hiding (cFromEnum, cFromBool, cToBool,cToEnum)
-
+import Graphics.UI.FLTK.LowLevel.Widget
 import Graphics.UI.FLTK.LowLevel.Fl_Enumerations
 import Graphics.UI.FLTK.LowLevel.Fl_Types
 import Graphics.UI.FLTK.LowLevel.Utils
 import Graphics.UI.FLTK.LowLevel.Hierarchy
 import Graphics.UI.FLTK.LowLevel.Dispatch
 import qualified Data.Text as T
+
+{# fun Fl_OverriddenPositioner_New_WithLabel as overriddenWidgetNewWithLabel' { `Int',`Int',`Int',`Int', unsafeToCString `T.Text', id `Ptr ()'} -> `Ptr ()' id #}
+{# fun Fl_OverriddenPositioner_New as overriddenWidgetNew' { `Int',`Int',`Int',`Int', id `Ptr ()'} -> `Ptr ()' id #}
+positionerCustom ::
+       Rectangle                         -- ^ The bounds of this Positioner
+    -> Maybe T.Text                      -- ^ The Positioner label
+    -> Maybe (Ref Positioner -> IO ())           -- ^ Optional custom drawing function
+    -> Maybe (CustomWidgetFuncs Positioner)      -- ^ Optional custom widget functions
+    -> IO (Ref Positioner)
+positionerCustom rectangle l' draw' funcs' =
+  widgetMaker
+    rectangle
+    l'
+    draw'
+    funcs'
+    overriddenWidgetNew'
+    overriddenWidgetNewWithLabel'
+
 
 {# fun Fl_Positioner_New as positionerNew' { `Int',`Int',`Int',`Int' } -> `Ptr ()' id #}
 {# fun Fl_Positioner_New_WithLabel as positionerNewWithLabel' { `Int',`Int',`Int',`Int', unsafeToCString `T.Text'} -> `Ptr ()' id #}
@@ -42,9 +61,6 @@ instance (impl ~ (IO ())) => Op (Destroy ()) Positioner orig impl where
     positionerDestroy' winPtr
     return nullPtr
 
-{#fun Fl_Positioner_handle as positionerHandle' { id `Ptr ()', id `CInt' } -> `Int' #}
-instance (impl ~ (Event -> IO (Either UnknownEvent ()))) => Op (Handle ()) Positioner orig impl where
-  runOp _ _ positioner event = withRef positioner (\p -> positionerHandle' p (fromIntegral . fromEnum $ event)) >>= return  . successOrUnknownEvent
 {# fun Fl_Positioner_set_xvalue as setXvalue' { id `Ptr ()',`Double' } -> `()' #}
 instance (impl ~ (Double ->  IO ())) => Op (SetXvalue ()) Positioner orig impl where
   runOp _ _ positioner xvalue = withRef positioner $ \positionerPtr -> setXvalue' positionerPtr xvalue
@@ -93,25 +109,72 @@ instance (impl ~ (Double ->  IO ())) => Op (SetXstep ()) Positioner orig impl wh
 {# fun Fl_Positioner_ystep as ystep' { id `Ptr ()',`Double' } -> `()' #}
 instance (impl ~ (Double ->  IO ())) => Op (SetYstep ()) Positioner orig impl where
   runOp _ _ positioner ystep = withRef positioner $ \positionerPtr -> ystep' positionerPtr ystep
+{# fun Fl_Positioner_draw as draw'' { id `Ptr ()' } -> `()' #}
+instance (impl ~ (  IO ())) => Op (Draw ()) Positioner orig impl where
+  runOp _ _ positioner = withRef positioner $ \positionerPtr -> draw'' positionerPtr
+{# fun Fl_Positioner_draw_super as drawSuper' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
+instance (impl ~ ( IO ())) => Op (DrawSuper ()) Positioner orig impl where
+  runOp _ _ positioner = withRef positioner $ \positionerPtr -> drawSuper' positionerPtr
+{#fun Fl_Positioner_handle as positionerHandle' { id `Ptr ()', id `CInt' } -> `Int' #}
+instance (impl ~ (Event -> IO (Either UnknownEvent ()))) => Op (Handle ()) Positioner orig impl where
+  runOp _ _ positioner event = withRef positioner (\p -> positionerHandle' p (fromIntegral . fromEnum $ event)) >>= return  . successOrUnknownEvent
+{# fun Fl_Positioner_handle_super as handleSuper' { id `Ptr ()',`Int' } -> `Int' #}
+instance (impl ~ (Event ->  IO (Either UnknownEvent ()))) => Op (HandleSuper ()) Positioner orig impl where
+  runOp _ _ positioner event = withRef positioner $ \positionerPtr -> handleSuper' positionerPtr (fromIntegral (fromEnum event)) >>= return . successOrUnknownEvent
+{# fun Fl_Positioner_resize as resize' { id `Ptr ()',`Int',`Int',`Int',`Int' } -> `()' supressWarningAboutRes #}
+instance (impl ~ (Rectangle -> IO ())) => Op (Resize ()) Positioner orig impl where
+  runOp _ _ positioner rectangle = withRef positioner $ \positionerPtr -> do
+                                 let (x_pos,y_pos,w_pos,h_pos) = fromRectangle rectangle
+                                 resize' positionerPtr x_pos y_pos w_pos h_pos
+{# fun Fl_Positioner_resize_super as resizeSuper' { id `Ptr ()',`Int',`Int',`Int',`Int' } -> `()' supressWarningAboutRes #}
+instance (impl ~ (Rectangle -> IO ())) => Op (ResizeSuper ()) Positioner orig impl where
+  runOp _ _ positioner rectangle =
+    let (x_pos, y_pos, width, height) = fromRectangle rectangle
+    in withRef positioner $ \positionerPtr -> resizeSuper' positionerPtr x_pos y_pos width height
+{# fun Fl_Positioner_hide as hide' { id `Ptr ()' } -> `()' #}
+instance (impl ~ (  IO ())) => Op (Hide ()) Positioner orig impl where
+  runOp _ _ positioner = withRef positioner $ \positionerPtr -> hide' positionerPtr
+{# fun Fl_Positioner_hide_super as hideSuper' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
+instance (impl ~ ( IO ())) => Op (HideSuper ()) Positioner orig impl where
+  runOp _ _ positioner = withRef positioner $ \positionerPtr -> hideSuper' positionerPtr
+{# fun Fl_Positioner_show as show' { id `Ptr ()' } -> `()' #}
+instance (impl ~ (  IO ())) => Op (ShowWidget ()) Positioner orig impl where
+  runOp _ _ positioner = withRef positioner $ \positionerPtr -> show' positionerPtr
+{# fun Fl_Positioner_show_super as showSuper' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
+instance (impl ~ ( IO ())) => Op (ShowWidgetSuper ()) Positioner orig impl where
+  runOp _ _ positioner = withRef positioner $ \positionerPtr -> showSuper' positionerPtr
 
 -- $functions
 -- @
---
 -- destroy :: 'Ref' 'Positioner' -> 'IO' ()
 --
--- getXmaximum :: 'Ref' 'Positioner' -> 'IO' 'Double'
+-- draw :: 'Ref' 'Positioner' -> 'IO' ()
 --
--- getXminimum :: 'Ref' 'Positioner' -> 'IO' 'Double'
+-- drawSuper :: 'Ref' 'Positioner' -> 'IO' ()
 --
--- getXvalue :: 'Ref' 'Positioner' -> 'IO' 'Double'
+-- getXmaximum :: 'Ref' 'Positioner' -> 'IO' ('Double')
 --
--- getYmaximum :: 'Ref' 'Positioner' -> 'IO' 'Double'
+-- getXminimum :: 'Ref' 'Positioner' -> 'IO' ('Double')
 --
--- getYminimum :: 'Ref' 'Positioner' -> 'IO' 'Double'
+-- getXvalue :: 'Ref' 'Positioner' -> 'IO' ('Double')
 --
--- getYvalue :: 'Ref' 'Positioner' -> 'IO' 'Double'
+-- getYmaximum :: 'Ref' 'Positioner' -> 'IO' ('Double')
 --
--- handle :: 'Ref' 'Positioner' -> ('Event' -> 'IO' ('Either' 'UnknownEvent' ()))
+-- getYminimum :: 'Ref' 'Positioner' -> 'IO' ('Double')
+--
+-- getYvalue :: 'Ref' 'Positioner' -> 'IO' ('Double')
+--
+-- handle :: 'Ref' 'Positioner' -> 'Event' -> 'IO' ('Either' 'UnknownEvent' ())
+--
+-- handleSuper :: 'Ref' 'Positioner' -> 'Event' -> 'IO' ('Either' 'UnknownEvent' ())
+--
+-- hide :: 'Ref' 'Positioner' -> 'IO' ()
+--
+-- hideSuper :: 'Ref' 'Positioner' -> 'IO' ()
+--
+-- resize :: 'Ref' 'Positioner' -> 'Rectangle' -> 'IO' ()
+--
+-- resizeSuper :: 'Ref' 'Positioner' -> 'Rectangle' -> 'IO' ()
 --
 -- setXbounds :: 'Ref' 'Positioner' -> 'Double' -> 'Double' -> 'IO' ()
 --
@@ -132,6 +195,10 @@ instance (impl ~ (Double ->  IO ())) => Op (SetYstep ()) Positioner orig impl wh
 -- setYstep :: 'Ref' 'Positioner' -> 'Double' -> 'IO' ()
 --
 -- setYvalue :: 'Ref' 'Positioner' -> 'Double' -> 'IO' ()
+--
+-- showWidget :: 'Ref' 'Positioner' -> 'IO' ()
+--
+-- showWidgetSuper :: 'Ref' 'Positioner' -> 'IO' ()
 -- @
 
 -- $hierarchy

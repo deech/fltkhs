@@ -1,7 +1,82 @@
 #include "Fl_RollerC.h"
 #ifdef __cplusplus
 EXPORT {
-#endif  
+  Fl_DerivedRoller::Fl_DerivedRoller(int X, int Y, int W, int H, const char *l, fl_Widget_Virtual_Funcs* funcs) : Fl_Roller(X,Y,W,H,l){
+    overriddenFuncs = funcs;
+    other_data = (void*)0;
+  }
+  Fl_DerivedRoller::Fl_DerivedRoller(int X, int Y, int W, int H, fl_Widget_Virtual_Funcs* funcs):Fl_Roller(X,Y,W,H){
+    overriddenFuncs = funcs;
+    other_data = (void*)0;
+  }
+  Fl_DerivedRoller::~Fl_DerivedRoller(){
+    free(overriddenFuncs);
+  }
+  void Fl_DerivedRoller::draw(){
+    if (this->overriddenFuncs->draw != NULL) {
+      this->overriddenFuncs->draw((fl_Roller) this);
+    }
+    else {
+      Fl_Roller::draw();
+    }
+  }
+
+  void Fl_DerivedRoller::draw_super(){
+    Fl_Roller::draw();
+  }
+
+  int Fl_DerivedRoller::handle(int event){
+    int i;
+    if (this->overriddenFuncs->handle != NULL) {
+      i = this->overriddenFuncs->handle((fl_Roller) this,event);
+    }
+    else {
+      i = Fl_Roller::handle(event);
+    }
+    return i;
+  }
+  int Fl_DerivedRoller::handle_super(int event){
+    return Fl_Roller::handle(event);
+  }
+
+  void Fl_DerivedRoller::resize(int x, int y, int w, int h){
+    if (this->overriddenFuncs->resize != NULL) {
+      this->overriddenFuncs->resize((fl_Roller) this,x,y,w,h);
+    }
+    else {
+      Fl_Roller::resize(x,y,w,h);
+    }
+  }
+
+  void Fl_DerivedRoller::resize_super(int x, int y, int w, int h){
+    Fl_Roller::resize(x,y,w,h);
+  }
+  void Fl_DerivedRoller::show(){
+    if (this->overriddenFuncs->show != NULL) {
+      this->overriddenFuncs->show((fl_Roller) this);
+    }
+    else {
+      Fl_Roller::show();
+    }
+  }
+  void Fl_DerivedRoller::show_super(){
+    Fl_Roller::show();
+  }
+
+  void Fl_DerivedRoller::hide(){
+    if (this->overriddenFuncs->hide != NULL) {
+      this->overriddenFuncs->hide((fl_Roller) this);
+    }
+    else {
+      Fl_Roller::hide();
+    }
+  }
+  void Fl_DerivedRoller::hide_super(){
+    Fl_Roller::hide();
+  }
+
+
+#endif
   FL_EXPORT_C(fl_Group,Fl_Roller_parent)(fl_Roller roller){
     return (static_cast<Fl_Roller*>(roller))->parent();
   }
@@ -152,12 +227,6 @@ EXPORT {
   FL_EXPORT_C(int,Fl_Roller_visible_r)(fl_Roller roller){
     return (static_cast<Fl_Roller*>(roller))->visible_r();
   }
-  FL_EXPORT_C(void,Fl_Roller_show)(fl_Roller roller){
-    (static_cast<Fl_Roller*>(roller))->show();
-  }
-  FL_EXPORT_C(void,Fl_Roller_hide)(fl_Roller roller){
-    (static_cast<Fl_Roller*>(roller))->hide();
-  }
   FL_EXPORT_C(void,Fl_Roller_set_visible)(fl_Roller roller){
     (static_cast<Fl_Roller*>(roller))->visible();
   }
@@ -254,9 +323,6 @@ EXPORT {
   FL_EXPORT_C(fl_Gl_Window,Fl_Roller_as_gl_window)(fl_Roller roller){
     return (static_cast<Fl_Roller*>(roller))->as_gl_window();
   }
-  FL_EXPORT_C(void,Fl_Roller_resize)(fl_Roller roller,int X,int Y,int W,int H){
-    (static_cast<Fl_Roller*>(roller))->resize(X,Y,W,H);
-  }
   FL_EXPORT_C(void,Fl_Roller_bounds)(fl_Roller roller,double a,double b){
     (static_cast<Fl_Roller*>(roller))->bounds(a,b);
   }
@@ -308,20 +374,58 @@ EXPORT {
   FL_EXPORT_C(double,Fl_Roller_increment)(fl_Roller roller,double v,int n){
     return (static_cast<Fl_Roller*>(roller))->increment(v,n);
   }
-  FL_EXPORT_C(fl_Roller,Fl_Roller_New_WithLabel)(int x,int y,int w,int h,const char* label){
-    Fl_Roller* roller = new Fl_Roller(x,y,w,h,label);
-    return (fl_Roller) roller;
-  }
-  FL_EXPORT_C(fl_Roller,Fl_Roller_New)(int x,int y,int w,int h){
-    Fl_Roller* roller = new Fl_Roller(x,y,w,h);
-    return (fl_Roller) roller;
-  }
   FL_EXPORT_C(void,Fl_Roller_Destroy)(fl_Roller roller){
     delete (static_cast<Fl_Roller*>(roller));
   }
-  FL_EXPORT_C(int,Fl_Roller_handle)(fl_Roller roller,int event){
-    return (static_cast<Fl_Roller*>(roller))->handle(event);
+  FL_EXPORT_C(fl_Roller,    Fl_Roller_New)(int X, int Y, int W, int H){
+    fl_Widget_Virtual_Funcs* fs = Fl_Widget_default_virtual_funcs();
+    Fl_DerivedRoller* w = new Fl_DerivedRoller(X,Y,W,H,fs);
+    return (fl_Roller)w;
   }
+  FL_EXPORT_C(fl_Roller,    Fl_Roller_New_WithLabel)(int X, int Y, int W, int H, const char* label){
+    fl_Widget_Virtual_Funcs* fs = Fl_Widget_default_virtual_funcs();
+    Fl_DerivedRoller* w = new Fl_DerivedRoller(X,Y,W,H,label,fs);
+    return (fl_Roller)w;
+  }
+  FL_EXPORT_C(fl_Roller,    Fl_OverriddenRoller_New)(int X, int Y, int W, int H,fl_Widget_Virtual_Funcs* fs){
+    Fl_DerivedRoller* w = new Fl_DerivedRoller(X,Y,W,H,fs);
+    return (fl_Roller)w;
+  }
+  FL_EXPORT_C(fl_Roller,    Fl_OverriddenRoller_New_WithLabel)(int X, int Y, int W, int H, const char* label, fl_Widget_Virtual_Funcs* fs){
+    Fl_DerivedRoller* w = new Fl_DerivedRoller(X,Y,W,H,label,fs);
+    return (fl_Roller)w;
+  }
+  FL_EXPORT_C(void, Fl_Roller_draw)(fl_Roller o){
+    (static_cast<Fl_DerivedRoller*>(o))->draw();
+  }
+  FL_EXPORT_C(void, Fl_Roller_draw_super)(fl_Roller o){
+    (static_cast<Fl_DerivedRoller*>(o))->draw_super();
+  }
+  FL_EXPORT_C(int, Fl_Roller_handle)(fl_Roller o, int event){
+    return (static_cast<Fl_DerivedRoller*>(o))->handle(event);
+  }
+  FL_EXPORT_C(int, Fl_Roller_handle_super)(fl_Roller o, int event){
+    return (static_cast<Fl_DerivedRoller*>(o))->handle_super(event);
+  }
+  FL_EXPORT_C(void, Fl_Roller_resize)(fl_Roller o, int x, int y, int w, int h){
+    (static_cast<Fl_DerivedRoller*>(o))->resize(x,y,w,h);
+  }
+  FL_EXPORT_C(void, Fl_Roller_resize_super)(fl_Roller o, int x, int y, int w, int h){
+    (static_cast<Fl_DerivedRoller*>(o))->resize_super(x,y,w,h);
+  }
+  FL_EXPORT_C(void, Fl_Roller_show)(fl_Roller o){
+    (static_cast<Fl_DerivedRoller*>(o))->show();
+  }
+  FL_EXPORT_C(void, Fl_Roller_show_super)(fl_Roller o){
+    (static_cast<Fl_DerivedRoller*>(o))->show_super();
+  }
+  FL_EXPORT_C(void, Fl_Roller_hide)(fl_Roller o){
+    (static_cast<Fl_DerivedRoller*>(o))->hide();
+  }
+  FL_EXPORT_C(void, Fl_Roller_hide_super)(fl_Roller o){
+    (static_cast<Fl_DerivedRoller*>(o))->hide_super();
+  }
+
 #ifdef __cplusplus
 }
-#endif 
+#endif

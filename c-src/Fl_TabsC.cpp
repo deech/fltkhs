@@ -1,10 +1,82 @@
 #include "Fl_TabsC.h"
 #ifdef __cplusplus
 EXPORT {
-#endif
-  FL_EXPORT_C(int,Fl_Tabs_handle)(fl_Tabs self, int event){
-    return (static_cast<Fl_Tabs*>(self))->handle(event);
+  Fl_DerivedTabs::Fl_DerivedTabs(int X, int Y, int W, int H, const char *l, fl_Widget_Virtual_Funcs* funcs) : Fl_Tabs(X,Y,W,H,l){
+    overriddenFuncs = funcs;
+    other_data = (void*)0;
   }
+  Fl_DerivedTabs::Fl_DerivedTabs(int X, int Y, int W, int H, fl_Widget_Virtual_Funcs* funcs):Fl_Tabs(X,Y,W,H){
+    overriddenFuncs = funcs;
+    other_data = (void*)0;
+  }
+  Fl_DerivedTabs::~Fl_DerivedTabs(){
+    free(overriddenFuncs);
+  }
+  void Fl_DerivedTabs::draw(){
+    if (this->overriddenFuncs->draw != NULL) {
+      this->overriddenFuncs->draw((fl_Tabs) this);
+    }
+    else {
+      Fl_Tabs::draw();
+    }
+  }
+
+  void Fl_DerivedTabs::draw_super(){
+    Fl_Tabs::draw();
+  }
+
+  int Fl_DerivedTabs::handle(int event){
+    int i;
+    if (this->overriddenFuncs->handle != NULL) {
+      i = this->overriddenFuncs->handle((fl_Tabs) this,event);
+    }
+    else {
+      i = Fl_Tabs::handle(event);
+    }
+    return i;
+  }
+  int Fl_DerivedTabs::handle_super(int event){
+    return Fl_Tabs::handle(event);
+  }
+
+  void Fl_DerivedTabs::resize(int x, int y, int w, int h){
+    if (this->overriddenFuncs->resize != NULL) {
+      this->overriddenFuncs->resize((fl_Tabs) this,x,y,w,h);
+    }
+    else {
+      Fl_Tabs::resize(x,y,w,h);
+    }
+  }
+
+  void Fl_DerivedTabs::resize_super(int x, int y, int w, int h){
+    Fl_Tabs::resize(x,y,w,h);
+  }
+  void Fl_DerivedTabs::show(){
+    if (this->overriddenFuncs->show != NULL) {
+      this->overriddenFuncs->show((fl_Tabs) this);
+    }
+    else {
+      Fl_Tabs::show();
+    }
+  }
+  void Fl_DerivedTabs::show_super(){
+    Fl_Tabs::show();
+  }
+
+  void Fl_DerivedTabs::hide(){
+    if (this->overriddenFuncs->hide != NULL) {
+      this->overriddenFuncs->hide((fl_Tabs) this);
+    }
+    else {
+      Fl_Tabs::hide();
+    }
+  }
+  void Fl_DerivedTabs::hide_super(){
+    Fl_Tabs::hide();
+  }
+
+
+#endif
   FL_EXPORT_C(fl_Group,Fl_Tabs_parent)(fl_Tabs tabs){
     return (fl_Group) (static_cast<Fl_Tabs*>(tabs))->parent();
   }
@@ -297,17 +369,6 @@ EXPORT {
   FL_EXPORT_C(fl_Widget, Fl_Tabs_child)(fl_Tabs self, int n){
     return (fl_Widget)(static_cast<Fl_Tabs*>(self))->child(n);
   }
-  // FL_EXPORT_C(void     , Fl_Tabs_forms_end)(fl_Tabs self){
-  //   (static_cast<Fl_Tabs*>(self))->forms_end();
-  // }
-  FL_EXPORT_C(fl_Tabs, Fl_Tabs_New)(int x, int y, int w, int h){
-    Fl_Tabs* t = new Fl_Tabs(x,y,w,h);
-    return (fl_Tabs)t;
-  }
-  FL_EXPORT_C(fl_Tabs, Fl_Tabs_New_WithLabel)(int x, int y, int w, int h, const char* l){
-    Fl_Tabs* t = new Fl_Tabs(x,y,w,h,l);
-    return (fl_Tabs)t;
-  }
   FL_EXPORT_C(fl_Widget,Fl_Tabs_value)(fl_Tabs tabs){
     return (fl_Widget)(static_cast<Fl_Tabs*>(tabs))->value();
   }
@@ -329,6 +390,55 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Tabs_client_area_with_tabh)(fl_Tabs tabs,int* rx,int* ry,int* rw,int* rh,int tabh){
     (static_cast<Fl_Tabs*>(tabs))->client_area(*rx,*ry,*rw,*rh,tabh);
   }
+  FL_EXPORT_C(void, Fl_Tabs_draw)(fl_Tabs o){
+    (static_cast<Fl_DerivedTabs*>(o))->draw();
+  }
+  FL_EXPORT_C(void, Fl_Tabs_draw_super)(fl_Tabs o){
+    (static_cast<Fl_DerivedTabs*>(o))->draw_super();
+  }
+  FL_EXPORT_C(int, Fl_Tabs_handle)(fl_Tabs o, int event){
+    return (static_cast<Fl_DerivedTabs*>(o))->handle(event);
+  }
+  FL_EXPORT_C(int, Fl_Tabs_handle_super)(fl_Tabs o, int event){
+    return (static_cast<Fl_DerivedTabs*>(o))->handle_super(event);
+  }
+  FL_EXPORT_C(void, Fl_Tabs_resize)(fl_Tabs o, int x, int y, int w, int h){
+    (static_cast<Fl_DerivedTabs*>(o))->resize(x,y,w,h);
+  }
+  FL_EXPORT_C(void, Fl_Tabs_resize_super)(fl_Tabs o, int x, int y, int w, int h){
+    (static_cast<Fl_DerivedTabs*>(o))->resize_super(x,y,w,h);
+  }
+  FL_EXPORT_C(void, Fl_Tabs_show)(fl_Tabs o){
+    (static_cast<Fl_DerivedTabs*>(o))->show();
+  }
+  FL_EXPORT_C(void, Fl_Tabs_show_super)(fl_Tabs o){
+    (static_cast<Fl_DerivedTabs*>(o))->show_super();
+  }
+  FL_EXPORT_C(void, Fl_Tabs_hide)(fl_Tabs o){
+    (static_cast<Fl_DerivedTabs*>(o))->hide();
+  }
+  FL_EXPORT_C(void, Fl_Tabs_hide_super)(fl_Tabs o){
+    (static_cast<Fl_DerivedTabs*>(o))->hide_super();
+  }
+  FL_EXPORT_C(fl_Tabs,    Fl_Tabs_New)(int X, int Y, int W, int H){
+    fl_Widget_Virtual_Funcs* fs = Fl_Widget_default_virtual_funcs();
+    Fl_DerivedTabs* w = new Fl_DerivedTabs(X,Y,W,H,fs);
+    return (fl_Tabs)w;
+  }
+  FL_EXPORT_C(fl_Tabs,    Fl_Tabs_New_WithLabel)(int X, int Y, int W, int H, const char* label){
+    fl_Widget_Virtual_Funcs* fs = Fl_Widget_default_virtual_funcs();
+    Fl_DerivedTabs* w = new Fl_DerivedTabs(X,Y,W,H,label,fs);
+    return (fl_Tabs)w;
+  }
+  FL_EXPORT_C(fl_Tabs,    Fl_OverriddenTabs_New)(int X, int Y, int W, int H,fl_Widget_Virtual_Funcs* fs){
+    Fl_DerivedTabs* w = new Fl_DerivedTabs(X,Y,W,H,fs);
+    return (fl_Tabs)w;
+  }
+  FL_EXPORT_C(fl_Tabs,    Fl_OverriddenTabs_New_WithLabel)(int X, int Y, int W, int H, const char* label, fl_Widget_Virtual_Funcs* fs){
+    Fl_DerivedTabs* w = new Fl_DerivedTabs(X,Y,W,H,label,fs);
+    return (fl_Tabs)w;
+  }
+
 #ifdef __cplusplus
 }
 #endif

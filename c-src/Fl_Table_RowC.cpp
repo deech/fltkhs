@@ -1,13 +1,13 @@
 #include "Fl_Table_RowC.h"
 #ifdef __cplusplus
 Fl_DerivedTable_Row::Fl_DerivedTable_Row(int X, int Y, int W, int H, const char *l, fl_Table_Virtual_Funcs* funcs) : Fl_Table_Row(X,Y,W,H,l){
-    overriddenFuncs = funcs;
-    other_data = (void*)"INIT";
- }
+  overriddenFuncs = funcs;
+  other_data = (void*)"INIT";
+}
 Fl_DerivedTable_Row::Fl_DerivedTable_Row(int X, int Y, int W, int H, fl_Table_Virtual_Funcs* funcs):Fl_Table_Row(X,Y,W,H,0){
-    overriddenFuncs = funcs;
-    other_data = (void*)"INIT";
-  }
+  overriddenFuncs = funcs;
+  other_data = (void*)"INIT";
+}
 Fl_DerivedTable_Row::~Fl_DerivedTable_Row(){
   destroy_data();
   free(overriddenFuncs);
@@ -199,28 +199,27 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Table_Row_set_parent)(fl_Table_Row table_row,fl_Group grp){
     (static_cast<Fl_DerivedTable_Row*>(table_row))->parent((static_cast<Fl_Group*>(grp)));
   }
-
-FL_EXPORT_C(void, Fl_Table_Row_draw_box)(fl_Table_Row Table_Row){
- (static_cast<Fl_DerivedTable_Row*>(Table_Row))->draw_box();
-}
-FL_EXPORT_C(void, Fl_Table_Row_draw_box_with_tc)(fl_Table_Row Table_Row,Fl_Boxtype t, Fl_Color c){
- (static_cast<Fl_DerivedTable_Row*>(Table_Row))->draw_box(t,c);
-}
-FL_EXPORT_C(void, Fl_Table_Row_draw_box_with_txywhc)(fl_Table_Row Table_Row,Fl_Boxtype t, int x,int y,int w,int h, Fl_Color c){
- (static_cast<Fl_DerivedTable_Row*>(Table_Row))->draw_box(t,x,y,w,h,c);
-}
-FL_EXPORT_C(void, Fl_Table_Row_draw_backdrop)(fl_Table_Row Table_Row){
- (static_cast<Fl_DerivedTable_Row*>(Table_Row))->draw_backdrop();
-}
-FL_EXPORT_C(void, Fl_Table_Row_draw_focus)(fl_Table_Row Table_Row){
- (static_cast<Fl_DerivedTable_Row*>(Table_Row))->draw_focus();
-}
-FL_EXPORT_C(void, Fl_Table_Row_draw_focus_with_txywh)(fl_Table_Row Table_Row,Fl_Boxtype t, int x,int y,int w,int h){
- (static_cast<Fl_DerivedTable_Row*>(Table_Row))->draw_focus(t,x,y,w,h);
-}
-FL_EXPORT_C(void, Fl_Table_Row_draw_label)(fl_Table_Row Table_Row){
- (static_cast<Fl_DerivedTable_Row*>(Table_Row))->draw_label();
-}
+  FL_EXPORT_C(void, Fl_Table_Row_draw_box)(fl_Table_Row Table_Row){
+    (static_cast<Fl_DerivedTable_Row*>(Table_Row))->draw_box();
+  }
+  FL_EXPORT_C(void, Fl_Table_Row_draw_box_with_tc)(fl_Table_Row Table_Row,Fl_Boxtype t, Fl_Color c){
+    (static_cast<Fl_DerivedTable_Row*>(Table_Row))->draw_box(t,c);
+  }
+  FL_EXPORT_C(void, Fl_Table_Row_draw_box_with_txywhc)(fl_Table_Row Table_Row,Fl_Boxtype t, int x,int y,int w,int h, Fl_Color c){
+    (static_cast<Fl_DerivedTable_Row*>(Table_Row))->draw_box(t,x,y,w,h,c);
+  }
+  FL_EXPORT_C(void, Fl_Table_Row_draw_backdrop)(fl_Table_Row Table_Row){
+    (static_cast<Fl_DerivedTable_Row*>(Table_Row))->draw_backdrop();
+  }
+  FL_EXPORT_C(void, Fl_Table_Row_draw_focus)(fl_Table_Row Table_Row){
+    (static_cast<Fl_DerivedTable_Row*>(Table_Row))->draw_focus();
+  }
+  FL_EXPORT_C(void, Fl_Table_Row_draw_focus_with_txywh)(fl_Table_Row Table_Row,Fl_Boxtype t, int x,int y,int w,int h){
+    (static_cast<Fl_DerivedTable_Row*>(Table_Row))->draw_focus(t,x,y,w,h);
+  }
+  FL_EXPORT_C(void, Fl_Table_Row_draw_label)(fl_Table_Row Table_Row){
+    (static_cast<Fl_DerivedTable_Row*>(Table_Row))->draw_label();
+  }
   FL_EXPORT_C(int,Fl_Table_Row_x)(fl_Table_Row table_row){
     return (static_cast<Fl_DerivedTable_Row*>(table_row))->x();
   }

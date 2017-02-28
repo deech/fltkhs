@@ -1,19 +1,80 @@
 #include "Fl_PositionerC.h"
 #ifdef __cplusplus
 EXPORT {
+  Fl_DerivedPositioner::Fl_DerivedPositioner(int X, int Y, int W, int H, const char *l, fl_Widget_Virtual_Funcs* funcs) : Fl_Positioner(X,Y,W,H,l){
+    overriddenFuncs = funcs;
+    other_data = (void*)0;
+  }
+  Fl_DerivedPositioner::Fl_DerivedPositioner(int X, int Y, int W, int H, fl_Widget_Virtual_Funcs* funcs):Fl_Positioner(X,Y,W,H){
+    overriddenFuncs = funcs;
+    other_data = (void*)0;
+  }
+  Fl_DerivedPositioner::~Fl_DerivedPositioner(){
+    free(overriddenFuncs);
+  }
+  void Fl_DerivedPositioner::draw(){
+    if (this->overriddenFuncs->draw != NULL) {
+      this->overriddenFuncs->draw((fl_Positioner) this);
+    }
+    else {
+      Fl_Positioner::draw();
+    }
+  }
+
+  void Fl_DerivedPositioner::draw_super(){
+    Fl_Positioner::draw();
+  }
+
+  int Fl_DerivedPositioner::handle(int event){
+    int i;
+    if (this->overriddenFuncs->handle != NULL) {
+      i = this->overriddenFuncs->handle((fl_Positioner) this,event);
+    }
+    else {
+      i = Fl_Positioner::handle(event);
+    }
+    return i;
+  }
+  int Fl_DerivedPositioner::handle_super(int event){
+    return Fl_Positioner::handle(event);
+  }
+
+  void Fl_DerivedPositioner::resize(int x, int y, int w, int h){
+    if (this->overriddenFuncs->resize != NULL) {
+      this->overriddenFuncs->resize((fl_Positioner) this,x,y,w,h);
+    }
+    else {
+      Fl_Positioner::resize(x,y,w,h);
+    }
+  }
+
+  void Fl_DerivedPositioner::resize_super(int x, int y, int w, int h){
+    Fl_Positioner::resize(x,y,w,h);
+  }
+  void Fl_DerivedPositioner::show(){
+    if (this->overriddenFuncs->show != NULL) {
+      this->overriddenFuncs->show((fl_Positioner) this);
+    }
+    else {
+      Fl_Positioner::show();
+    }
+  }
+  void Fl_DerivedPositioner::show_super(){
+    Fl_Positioner::show();
+  }
+
+  void Fl_DerivedPositioner::hide(){
+    if (this->overriddenFuncs->hide != NULL) {
+      this->overriddenFuncs->hide((fl_Positioner) this);
+    }
+    else {
+      Fl_Positioner::hide();
+    }
+  }
+  void Fl_DerivedPositioner::hide_super(){
+    Fl_Positioner::hide();
+  }
 #endif
-  FL_EXPORT_C(int,Fl_Positioner_handle )(fl_Positioner positioner, int event){
-    return (static_cast<Fl_Positioner*>(positioner))->handle(event);
-  }
-  FL_EXPORT_C(void,Fl_Positioner_resize )(fl_Positioner positioner,int x, int y, int w, int h){
-    (static_cast<Fl_Positioner*>(positioner))->resize(x,y,w,h);
-  }
-  FL_EXPORT_C(void,Fl_Positioner_show )(fl_Positioner positioner){
-    (static_cast<Fl_Positioner*>(positioner))->show();
-  }
-  FL_EXPORT_C(void,Fl_Positioner_hide )(fl_Positioner positioner){
-    (static_cast<Fl_Positioner*>(positioner))->hide();
-  }
   FL_EXPORT_C(fl_Window,Fl_Positioner_as_window )(fl_Positioner positioner){
     return (static_cast<Fl_Positioner*>(positioner))->as_window();
   }
@@ -276,14 +337,6 @@ EXPORT {
   FL_EXPORT_C(fl_Gl_Window,Fl_Positioner_as_gl_window)(fl_Positioner positioner){
     return (fl_Gl_Window) (static_cast<Fl_Positioner*>(positioner))->as_gl_window();
   }
-  FL_EXPORT_C(fl_Positioner, Fl_Positioner_New)(int x, int y, int w, int h){
-    Fl_Positioner* p = new Fl_Positioner(x,y,w,h);
-    return (fl_Positioner)p;
-  }
-  FL_EXPORT_C(fl_Positioner, Fl_Positioner_New_WithLabel)(int x, int y, int w, int h,const char *l){
-    Fl_Positioner* p = new Fl_Positioner(x,y,w,h,l);
-    return (fl_Positioner)p;
-  }
   FL_EXPORT_C(void , Fl_Positioner_Destroy)(fl_Positioner positioner){
     delete (static_cast<Fl_Positioner*>(positioner));
   }
@@ -334,6 +387,54 @@ EXPORT {
   }
   FL_EXPORT_C(void,Fl_Positioner_ystep)(fl_Positioner positioner,double x){
     (static_cast<Fl_Positioner*>(positioner))->ystep(x);
+  }
+  FL_EXPORT_C(fl_Positioner,    Fl_Positioner_New)(int X, int Y, int W, int H){
+    fl_Widget_Virtual_Funcs* fs = Fl_Widget_default_virtual_funcs();
+    Fl_DerivedPositioner* w = new Fl_DerivedPositioner(X,Y,W,H,fs);
+    return (fl_Positioner)w;
+  }
+  FL_EXPORT_C(fl_Positioner,    Fl_Positioner_New_WithLabel)(int X, int Y, int W, int H, const char* label){
+    fl_Widget_Virtual_Funcs* fs = Fl_Widget_default_virtual_funcs();
+    Fl_DerivedPositioner* w = new Fl_DerivedPositioner(X,Y,W,H,label,fs);
+    return (fl_Positioner)w;
+  }
+  FL_EXPORT_C(fl_Positioner,    Fl_OverriddenPositioner_New)(int X, int Y, int W, int H,fl_Widget_Virtual_Funcs* fs){
+    Fl_DerivedPositioner* w = new Fl_DerivedPositioner(X,Y,W,H,fs);
+    return (fl_Positioner)w;
+  }
+  FL_EXPORT_C(fl_Positioner,    Fl_OverriddenPositioner_New_WithLabel)(int X, int Y, int W, int H, const char* label, fl_Widget_Virtual_Funcs* fs){
+    Fl_DerivedPositioner* w = new Fl_DerivedPositioner(X,Y,W,H,label,fs);
+    return (fl_Positioner)w;
+  }
+  FL_EXPORT_C(void, Fl_Positioner_draw)(fl_Positioner o){
+    (static_cast<Fl_DerivedPositioner*>(o))->draw();
+  }
+  FL_EXPORT_C(void, Fl_Positioner_draw_super)(fl_Positioner o){
+    (static_cast<Fl_DerivedPositioner*>(o))->draw_super();
+  }
+  FL_EXPORT_C(int, Fl_Positioner_handle)(fl_Positioner o, int event){
+    return (static_cast<Fl_DerivedPositioner*>(o))->handle(event);
+  }
+  FL_EXPORT_C(int, Fl_Positioner_handle_super)(fl_Positioner o, int event){
+    return (static_cast<Fl_DerivedPositioner*>(o))->handle_super(event);
+  }
+  FL_EXPORT_C(void, Fl_Positioner_resize)(fl_Positioner o, int x, int y, int w, int h){
+    (static_cast<Fl_DerivedPositioner*>(o))->resize(x,y,w,h);
+  }
+  FL_EXPORT_C(void, Fl_Positioner_resize_super)(fl_Positioner o, int x, int y, int w, int h){
+    (static_cast<Fl_DerivedPositioner*>(o))->resize_super(x,y,w,h);
+  }
+  FL_EXPORT_C(void, Fl_Positioner_show)(fl_Positioner o){
+    (static_cast<Fl_DerivedPositioner*>(o))->show();
+  }
+  FL_EXPORT_C(void, Fl_Positioner_show_super)(fl_Positioner o){
+    (static_cast<Fl_DerivedPositioner*>(o))->show_super();
+  }
+  FL_EXPORT_C(void, Fl_Positioner_hide)(fl_Positioner o){
+    (static_cast<Fl_DerivedPositioner*>(o))->hide();
+  }
+  FL_EXPORT_C(void, Fl_Positioner_hide_super)(fl_Positioner o){
+    (static_cast<Fl_DerivedPositioner*>(o))->hide_super();
   }
 #ifdef __cplusplus
 }

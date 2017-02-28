@@ -2,19 +2,82 @@
 #include "UtilsC.h"
 #ifdef __cplusplus
 EXPORT {
+  Fl_DerivedMenu_Button::Fl_DerivedMenu_Button(int X, int Y, int W, int H, const char *l, fl_Widget_Virtual_Funcs* funcs) : Fl_Menu_Button(X,Y,W,H,l){
+    overriddenFuncs = funcs;
+    other_data = (void*)0;
+  }
+  Fl_DerivedMenu_Button::Fl_DerivedMenu_Button(int X, int Y, int W, int H, fl_Widget_Virtual_Funcs* funcs):Fl_Menu_Button(X,Y,W,H){
+    overriddenFuncs = funcs;
+    other_data = (void*)0;
+  }
+  Fl_DerivedMenu_Button::~Fl_DerivedMenu_Button(){
+    free(overriddenFuncs);
+  }
+  void Fl_DerivedMenu_Button::draw(){
+    if (this->overriddenFuncs->draw != NULL) {
+      this->overriddenFuncs->draw((fl_Menu_Button) this);
+    }
+    else {
+      Fl_Menu_Button::draw();
+    }
+  }
+
+  void Fl_DerivedMenu_Button::draw_super(){
+    Fl_Menu_Button::draw();
+  }
+
+  int Fl_DerivedMenu_Button::handle(int event){
+    int i;
+    if (this->overriddenFuncs->handle != NULL) {
+      i = this->overriddenFuncs->handle((fl_Menu_Button) this,event);
+    }
+    else {
+      i = Fl_Menu_Button::handle(event);
+    }
+    return i;
+  }
+  int Fl_DerivedMenu_Button::handle_super(int event){
+    return Fl_Menu_Button::handle(event);
+  }
+
+  void Fl_DerivedMenu_Button::resize(int x, int y, int w, int h){
+    if (this->overriddenFuncs->resize != NULL) {
+      this->overriddenFuncs->resize((fl_Menu_Button) this,x,y,w,h);
+    }
+    else {
+      Fl_Menu_Button::resize(x,y,w,h);
+    }
+  }
+
+  void Fl_DerivedMenu_Button::resize_super(int x, int y, int w, int h){
+    Fl_Menu_Button::resize(x,y,w,h);
+  }
+  void Fl_DerivedMenu_Button::show(){
+    if (this->overriddenFuncs->show != NULL) {
+      this->overriddenFuncs->show((fl_Menu_Button) this);
+    }
+    else {
+      Fl_Menu_Button::show();
+    }
+  }
+  void Fl_DerivedMenu_Button::show_super(){
+    Fl_Menu_Button::show();
+  }
+
+  void Fl_DerivedMenu_Button::hide(){
+    if (this->overriddenFuncs->hide != NULL) {
+      this->overriddenFuncs->hide((fl_Menu_Button) this);
+    }
+    else {
+      Fl_Menu_Button::hide();
+    }
+  }
+  void Fl_DerivedMenu_Button::hide_super(){
+    Fl_Menu_Button::hide();
+  }
+
+
 #endif
-  FL_EXPORT_C(int,Fl_Menu_Button_handle )(fl_Menu_Button menu_button, int event){
-    return (static_cast<Fl_Menu_Button*>(menu_button))->handle(event);
-  }
-  FL_EXPORT_C(void,Fl_Menu_Button_resize )(fl_Menu_Button menu_button,int x, int y, int w, int h){
-    (static_cast<Fl_Menu_Button*>(menu_button))->resize(x,y,w,h);
-  }
-  FL_EXPORT_C(void,Fl_Menu_Button_show )(fl_Menu_Button menu_button){
-    (static_cast<Fl_Menu_Button*>(menu_button))->show();
-  }
-  FL_EXPORT_C(void,Fl_Menu_Button_hide )(fl_Menu_Button menu_button){
-    (static_cast<Fl_Menu_Button*>(menu_button))->hide();
-  }
   FL_EXPORT_C(fl_Window,Fl_Menu_Button_as_window )(fl_Menu_Button menu_button){
     return (static_cast<Fl_Menu_Button*>(menu_button))->as_window();
   }
@@ -265,14 +328,6 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Menu_Button_measure_label)(fl_Menu_Button menu_button,int* ww,int* hh){
     (static_cast<Fl_Menu_Button*>(menu_button))->measure_label(*ww,*hh);
   }
-  FL_EXPORT_C(fl_Menu_Button, Fl_Menu_Button_New_WithLabel)(int x, int y, int w, int h, const char* label) {
-    Fl_Menu_Button* menu_button = new Fl_Menu_Button(x,y,w,h,label);
-    return (static_cast<fl_Menu_Button>(menu_button));
-  }
-  FL_EXPORT_C(fl_Menu_Button, Fl_Menu_Button_New)(int x, int y, int w, int h) {
-    Fl_Menu_Button* menu_button = new Fl_Menu_Button(x,y,w,h,0);
-    return (fl_Menu_Button)menu_button;
-  }
   FL_EXPORT_C(void   , Fl_Menu_Button_Destroy)(fl_Menu_Button menu_button){
     delete (static_cast<Fl_Menu_Button*>(menu_button));
   }
@@ -434,6 +489,54 @@ EXPORT {
   }
   FL_EXPORT_C(fl_Menu_Item, Fl_Menu_Button_popup)(fl_Menu_Button menu_button) {
     return (fl_Menu_Item)(static_cast<Fl_Menu_Button*>(menu_button))->popup();
+  }
+  FL_EXPORT_C(fl_Menu_Button,    Fl_Menu_Button_New)(int X, int Y, int W, int H){
+    fl_Widget_Virtual_Funcs* fs = Fl_Widget_default_virtual_funcs();
+    Fl_DerivedMenu_Button* w = new Fl_DerivedMenu_Button(X,Y,W,H,fs);
+    return (fl_Menu_Button)w;
+  }
+  FL_EXPORT_C(fl_Menu_Button,    Fl_Menu_Button_New_WithLabel)(int X, int Y, int W, int H, const char* label){
+    fl_Widget_Virtual_Funcs* fs = Fl_Widget_default_virtual_funcs();
+    Fl_DerivedMenu_Button* w = new Fl_DerivedMenu_Button(X,Y,W,H,label,fs);
+    return (fl_Menu_Button)w;
+  }
+  FL_EXPORT_C(fl_Menu_Button,    Fl_OverriddenMenu_Button_New)(int X, int Y, int W, int H,fl_Widget_Virtual_Funcs* fs){
+    Fl_DerivedMenu_Button* w = new Fl_DerivedMenu_Button(X,Y,W,H,fs);
+    return (fl_Menu_Button)w;
+  }
+  FL_EXPORT_C(fl_Menu_Button,    Fl_OverriddenMenu_Button_New_WithLabel)(int X, int Y, int W, int H, const char* label, fl_Widget_Virtual_Funcs* fs){
+    Fl_DerivedMenu_Button* w = new Fl_DerivedMenu_Button(X,Y,W,H,label,fs);
+    return (fl_Menu_Button)w;
+  }
+  FL_EXPORT_C(void, Fl_Menu_Button_draw)(fl_Menu_Button o){
+    (static_cast<Fl_DerivedMenu_Button*>(o))->draw();
+  }
+  FL_EXPORT_C(void, Fl_Menu_Button_draw_super)(fl_Menu_Button o){
+    (static_cast<Fl_DerivedMenu_Button*>(o))->draw_super();
+  }
+  FL_EXPORT_C(int, Fl_Menu_Button_handle)(fl_Menu_Button o, int event){
+    return (static_cast<Fl_DerivedMenu_Button*>(o))->handle(event);
+  }
+  FL_EXPORT_C(int, Fl_Menu_Button_handle_super)(fl_Menu_Button o, int event){
+    return (static_cast<Fl_DerivedMenu_Button*>(o))->handle_super(event);
+  }
+  FL_EXPORT_C(void, Fl_Menu_Button_resize)(fl_Menu_Button o, int x, int y, int w, int h){
+    (static_cast<Fl_DerivedMenu_Button*>(o))->resize(x,y,w,h);
+  }
+  FL_EXPORT_C(void, Fl_Menu_Button_resize_super)(fl_Menu_Button o, int x, int y, int w, int h){
+    (static_cast<Fl_DerivedMenu_Button*>(o))->resize_super(x,y,w,h);
+  }
+  FL_EXPORT_C(void, Fl_Menu_Button_show)(fl_Menu_Button o){
+    (static_cast<Fl_DerivedMenu_Button*>(o))->show();
+  }
+  FL_EXPORT_C(void, Fl_Menu_Button_show_super)(fl_Menu_Button o){
+    (static_cast<Fl_DerivedMenu_Button*>(o))->show_super();
+  }
+  FL_EXPORT_C(void, Fl_Menu_Button_hide)(fl_Menu_Button o){
+    (static_cast<Fl_DerivedMenu_Button*>(o))->hide();
+  }
+  FL_EXPORT_C(void, Fl_Menu_Button_hide_super)(fl_Menu_Button o){
+    (static_cast<Fl_DerivedMenu_Button*>(o))->hide_super();
   }
 #ifdef __cplusplus
 }

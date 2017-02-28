@@ -2,10 +2,82 @@
 
 #ifdef __cplusplus
 EXPORT {
-#endif
-  FL_EXPORT_C(int,Fl_Light_Button_handle)(fl_Light_Button self, int event){
-    return (static_cast<Fl_Light_Button*>(self))->handle(event);
+  Fl_DerivedLight_Button::Fl_DerivedLight_Button(int X, int Y, int W, int H, const char *l, fl_Widget_Virtual_Funcs* funcs) : Fl_Light_Button(X,Y,W,H,l){
+    overriddenFuncs = funcs;
+    other_data = (void*)0;
   }
+  Fl_DerivedLight_Button::Fl_DerivedLight_Button(int X, int Y, int W, int H, fl_Widget_Virtual_Funcs* funcs):Fl_Light_Button(X,Y,W,H){
+    overriddenFuncs = funcs;
+    other_data = (void*)0;
+  }
+  Fl_DerivedLight_Button::~Fl_DerivedLight_Button(){
+    free(overriddenFuncs);
+  }
+  void Fl_DerivedLight_Button::draw(){
+    if (this->overriddenFuncs->draw != NULL) {
+      this->overriddenFuncs->draw((fl_Light_Button) this);
+    }
+    else {
+      Fl_Light_Button::draw();
+    }
+  }
+
+  void Fl_DerivedLight_Button::draw_super(){
+    Fl_Light_Button::draw();
+  }
+
+  int Fl_DerivedLight_Button::handle(int event){
+    int i;
+    if (this->overriddenFuncs->handle != NULL) {
+      i = this->overriddenFuncs->handle((fl_Light_Button) this,event);
+    }
+    else {
+      i = Fl_Light_Button::handle(event);
+    }
+    return i;
+  }
+  int Fl_DerivedLight_Button::handle_super(int event){
+    return Fl_Light_Button::handle(event);
+  }
+
+  void Fl_DerivedLight_Button::resize(int x, int y, int w, int h){
+    if (this->overriddenFuncs->resize != NULL) {
+      this->overriddenFuncs->resize((fl_Light_Button) this,x,y,w,h);
+    }
+    else {
+      Fl_Light_Button::resize(x,y,w,h);
+    }
+  }
+
+  void Fl_DerivedLight_Button::resize_super(int x, int y, int w, int h){
+    Fl_Light_Button::resize(x,y,w,h);
+  }
+  void Fl_DerivedLight_Button::show(){
+    if (this->overriddenFuncs->show != NULL) {
+      this->overriddenFuncs->show((fl_Light_Button) this);
+    }
+    else {
+      Fl_Light_Button::show();
+    }
+  }
+  void Fl_DerivedLight_Button::show_super(){
+    Fl_Light_Button::show();
+  }
+
+  void Fl_DerivedLight_Button::hide(){
+    if (this->overriddenFuncs->hide != NULL) {
+      this->overriddenFuncs->hide((fl_Light_Button) this);
+    }
+    else {
+      Fl_Light_Button::hide();
+    }
+  }
+  void Fl_DerivedLight_Button::hide_super(){
+    Fl_Light_Button::hide();
+  }
+
+
+#endif
   FL_EXPORT_C(fl_Group,Fl_Light_Button_parent)(fl_Light_Button b){
     return (fl_Group) (static_cast<Fl_Light_Button*>(b))->parent();
   }
@@ -266,14 +338,6 @@ EXPORT {
   FL_EXPORT_C(fl_Gl_Window,Fl_Light_Button_as_gl_window)(fl_Light_Button light_button){
     return (fl_Gl_Window) (static_cast<Fl_Light_Button*>(light_button))->as_gl_window();
   }
-  FL_EXPORT_C(fl_Light_Button, Fl_Light_Button_New_WithLabel)(int x, int y, int w, int h, const char* label) {
-    Fl_Light_Button* button = new Fl_Light_Button(x,y,w,h,label);
-    return (static_cast<fl_Light_Button>(button));
-  }
-  FL_EXPORT_C(fl_Light_Button, Fl_Light_Button_New)(int x, int y, int w, int h) {
-    Fl_Light_Button* button = new Fl_Light_Button(x,y,w,h,0);
-    return (fl_Light_Button)button;
-  }
   FL_EXPORT_C(void,Fl_Light_Button_Destroy)(fl_Light_Button button){
     delete (static_cast<Fl_Light_Button*>(button));
   }
@@ -306,6 +370,54 @@ EXPORT {
   }
   FL_EXPORT_C(void,Fl_Light_Button_set_down_color)(fl_Light_Button b,Fl_Color c){
     (static_cast<Fl_Light_Button*>(b))->down_color(c);
+  }
+  FL_EXPORT_C(fl_Light_Button,    Fl_Light_Button_New)(int X, int Y, int W, int H){
+    fl_Widget_Virtual_Funcs* fs = Fl_Widget_default_virtual_funcs();
+    Fl_DerivedLight_Button* w = new Fl_DerivedLight_Button(X,Y,W,H,fs);
+    return (fl_Light_Button)w;
+  }
+  FL_EXPORT_C(fl_Light_Button,    Fl_Light_Button_New_WithLabel)(int X, int Y, int W, int H, const char* label){
+    fl_Widget_Virtual_Funcs* fs = Fl_Widget_default_virtual_funcs();
+    Fl_DerivedLight_Button* w = new Fl_DerivedLight_Button(X,Y,W,H,label,fs);
+    return (fl_Light_Button)w;
+  }
+  FL_EXPORT_C(fl_Light_Button,    Fl_OverriddenLight_Button_New)(int X, int Y, int W, int H,fl_Widget_Virtual_Funcs* fs){
+    Fl_DerivedLight_Button* w = new Fl_DerivedLight_Button(X,Y,W,H,fs);
+    return (fl_Light_Button)w;
+  }
+  FL_EXPORT_C(fl_Light_Button,    Fl_OverriddenLight_Button_New_WithLabel)(int X, int Y, int W, int H, const char* label, fl_Widget_Virtual_Funcs* fs){
+    Fl_DerivedLight_Button* w = new Fl_DerivedLight_Button(X,Y,W,H,label,fs);
+    return (fl_Light_Button)w;
+  }
+  FL_EXPORT_C(void, Fl_Light_Button_draw)(fl_Light_Button o){
+    (static_cast<Fl_DerivedLight_Button*>(o))->draw();
+  }
+  FL_EXPORT_C(void, Fl_Light_Button_draw_super)(fl_Light_Button o){
+    (static_cast<Fl_DerivedLight_Button*>(o))->draw_super();
+  }
+  FL_EXPORT_C(int, Fl_Light_Button_handle)(fl_Light_Button o, int event){
+    return (static_cast<Fl_DerivedLight_Button*>(o))->handle(event);
+  }
+  FL_EXPORT_C(int, Fl_Light_Button_handle_super)(fl_Light_Button o, int event){
+    return (static_cast<Fl_DerivedLight_Button*>(o))->handle_super(event);
+  }
+  FL_EXPORT_C(void, Fl_Light_Button_resize)(fl_Light_Button o, int x, int y, int w, int h){
+    (static_cast<Fl_DerivedLight_Button*>(o))->resize(x,y,w,h);
+  }
+  FL_EXPORT_C(void, Fl_Light_Button_resize_super)(fl_Light_Button o, int x, int y, int w, int h){
+    (static_cast<Fl_DerivedLight_Button*>(o))->resize_super(x,y,w,h);
+  }
+  FL_EXPORT_C(void, Fl_Light_Button_show)(fl_Light_Button o){
+    (static_cast<Fl_DerivedLight_Button*>(o))->show();
+  }
+  FL_EXPORT_C(void, Fl_Light_Button_show_super)(fl_Light_Button o){
+    (static_cast<Fl_DerivedLight_Button*>(o))->show_super();
+  }
+  FL_EXPORT_C(void, Fl_Light_Button_hide)(fl_Light_Button o){
+    (static_cast<Fl_DerivedLight_Button*>(o))->hide();
+  }
+  FL_EXPORT_C(void, Fl_Light_Button_hide_super)(fl_Light_Button o){
+    (static_cast<Fl_DerivedLight_Button*>(o))->hide_super();
   }
 #ifdef __cplusplus
 }

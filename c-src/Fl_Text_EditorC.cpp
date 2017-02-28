@@ -35,9 +35,6 @@ Key_BindingC* convertKeyBindings(DerivedText_Editor::Key_Binding_With_Callback* 
 }
 EXPORT {
 #endif
-  FL_EXPORT_C(int,Fl_Text_Editor_handle)(fl_Text_Editor self, int event){
-    return (static_cast<DerivedText_Editor*>(self))->handle(event);
-  }
   FL_EXPORT_C(fl_Group,Fl_Text_Editor_parent)(fl_Text_Editor win){
     return (fl_Group) (static_cast<DerivedText_Editor*>(win))->parent();
   }
@@ -355,14 +352,6 @@ EXPORT {
   FL_EXPORT_C(fl_Widget, Fl_Text_Editor_child)(fl_Text_Editor self, int n){
     return (fl_Widget)(static_cast<DerivedText_Editor*>(self))->child(n);
   }
-  FL_EXPORT_C(fl_Text_Editor,     Fl_Text_Editor_New)(int x, int y, int w, int h){
-    DerivedText_Editor* g = new DerivedText_Editor(x,y,w,h);
-    return (fl_Text_Editor)g;
-  }
-  FL_EXPORT_C(fl_Text_Editor,     Fl_Text_Editor_New_WithLabel)(int x, int y, int w, int h, const char* t){
-    DerivedText_Editor* g = new DerivedText_Editor(x,y,w,h,t);
-    return (fl_Text_Editor)g;
-  }
   FL_EXPORT_C(void,     Fl_Text_Editor_Destroy)(fl_Text_Editor text_editor){
     delete (static_cast<DerivedText_Editor*>(text_editor));
   }
@@ -523,136 +512,184 @@ EXPORT {
   FL_EXPORT_C(double,Fl_Text_Editor_col_to_x)(fl_Text_Editor text_editor,double col){
     return (static_cast<DerivedText_Editor*>(text_editor))->col_to_x(col);
   }
- FL_EXPORT_C(void,Fl_Text_Editor_set_insert_mode)(fl_Text_Editor text_editor,int b){
-   (static_cast<DerivedText_Editor*>(text_editor))->insert_mode(b);
- }
- FL_EXPORT_C(int,Fl_Text_Editor_insert_mode)(fl_Text_Editor text_editor){
-   return (static_cast<DerivedText_Editor*>(text_editor))->insert_mode();
- }
- FL_EXPORT_C(int, Fl_Text_Editor_num_key_bindings)(Key_BindingC* bindings){
-   int count = 0;
-   Key_BindingC* curr = bindings;
-   for (;curr;curr = curr->next){
-     if (curr) {
-       count++;
-     }
-   }
-   return count;
- }
- FL_EXPORT_C(void,Fl_Text_Editor_add_key_binding_with_list)(fl_Text_Editor text_editor,int key,int state,fl_Key_Func f,Key_BindingC* list){
-   DerivedText_Editor::Key_Binding_With_Callback* bs = convertKeyBindings(list);
-   DerivedText_Editor* e =  (static_cast<DerivedText_Editor*>(text_editor));
-   C_to_Fl_Callback* context = new C_to_Fl_Callback(f);
-   e->add_key_binding(key,state,context,&bs);
- }
- FL_EXPORT_C(void,Fl_Text_Editor_add_key_binding)(fl_Text_Editor text_editor,int key,int state,fl_Key_Func f){
-   C_to_Fl_Callback* context = new C_to_Fl_Callback(f);
-   (static_cast<DerivedText_Editor*>(text_editor))->add_key_binding(key,state,context);
- }
- FL_EXPORT_C(void,Fl_Text_Editor_remove_key_binding_with_list)(fl_Text_Editor text_editor,int key,int state,Key_BindingC* list){
-   DerivedText_Editor::Key_Binding_With_Callback* bs = convertKeyBindings(list);
-   (static_cast<DerivedText_Editor*>(text_editor))->remove_key_binding(key,state,&bs);
- }
- FL_EXPORT_C(void,Fl_Text_Editor_remove_key_binding)(fl_Text_Editor text_editor,int key,int state){
-   (static_cast<DerivedText_Editor*>(text_editor))->remove_key_binding(key,state);
- }
- FL_EXPORT_C(void,Fl_Text_Editor_remove_all_key_bindings_with_list)(fl_Text_Editor text_editor,Key_BindingC* list){
-   DerivedText_Editor::Key_Binding_With_Callback* bs = convertKeyBindings(list);
-   (static_cast<DerivedText_Editor*>(text_editor))->remove_all_key_bindings(&bs);
- }
- FL_EXPORT_C(void,Fl_Text_Editor_remove_all_key_bindings)(fl_Text_Editor text_editor){
-   (static_cast<DerivedText_Editor*>(text_editor))->remove_all_key_bindings();
- }
- FL_EXPORT_C(void,Fl_Text_Editor_replace_key_bindings)(fl_Text_Editor text_editor, Key_BindingC* list){
-   DerivedText_Editor::Key_Binding_With_Callback* bs = convertKeyBindings(list);
-   (static_cast<DerivedText_Editor*>(text_editor))->replace_key_bindings(&bs);
- }
- FL_EXPORT_C(void,Fl_Text_Editor_replace_key_bindings_with_list)(fl_Text_Editor text_editor, Key_BindingC* list1, Key_BindingC* list2){
-   DerivedText_Editor::Key_Binding_With_Callback* bs1 = convertKeyBindings(list1);
-   DerivedText_Editor::Key_Binding_With_Callback* bs2 = convertKeyBindings(list2);
-   (static_cast<DerivedText_Editor*>(text_editor))->replace_key_bindings(&bs1,&bs2);
- }
- FL_EXPORT_C(Key_BindingC* ,Fl_Text_Editor_add_default_key_bindings)(fl_Text_Editor text_editor,Key_BindingC* list){
-   DerivedText_Editor::Key_Binding_With_Callback* bs_ = new DerivedText_Editor::Key_Binding_With_Callback();
-   (static_cast<DerivedText_Editor*>(text_editor))->add_default_key_bindings(&bs_);
-   list = convertKeyBindings(bs_);
-   return list;
- }
- FL_EXPORT_C(int,Fl_Text_Editor_kf_undo)(int c,fl_Text_Editor e){
-   return Fl_Text_Editor::kf_undo(c,(static_cast<DerivedText_Editor*>(e)));
- }
- FL_EXPORT_C(int,Fl_Text_Editor_kf_ignore)(int c,fl_Text_Editor e){
-   return Fl_Text_Editor::kf_ignore(c,(static_cast<DerivedText_Editor*>(e)));
- }
- FL_EXPORT_C(int,Fl_Text_Editor_kf_backspace)(int c,fl_Text_Editor e){
-   return Fl_Text_Editor::kf_backspace(c,(static_cast<DerivedText_Editor*>(e)));
- }
- FL_EXPORT_C(int,Fl_Text_Editor_kf_enter)(int c,fl_Text_Editor e){
-   return Fl_Text_Editor::kf_enter(c,(static_cast<DerivedText_Editor*>(e)));
- }
- FL_EXPORT_C(int,Fl_Text_Editor_kf_move)(int c,fl_Text_Editor e){
-   return Fl_Text_Editor::kf_move(c,(static_cast<DerivedText_Editor*>(e)));
- }
- FL_EXPORT_C(int,Fl_Text_Editor_kf_shift_move)(int c,fl_Text_Editor e){
-   return Fl_Text_Editor::kf_shift_move(c,(static_cast<DerivedText_Editor*>(e)));
- }
- FL_EXPORT_C(int,Fl_Text_Editor_kf_ctrl_move)(int c,fl_Text_Editor e){
-   return Fl_Text_Editor::kf_ctrl_move(c,(static_cast<DerivedText_Editor*>(e)));
- }
- FL_EXPORT_C(int,Fl_Text_Editor_kf_c_s_move)(int c,fl_Text_Editor e){
-   return Fl_Text_Editor::kf_c_s_move(c,(static_cast<DerivedText_Editor*>(e)));
- }
- FL_EXPORT_C(int,Fl_Text_Editor_kf_meta_move)(int c,fl_Text_Editor e){
-   return Fl_Text_Editor::kf_meta_move(c,(static_cast<DerivedText_Editor*>(e)));
- }
- FL_EXPORT_C(int,Fl_Text_Editor_kf_m_s_move)(int c,fl_Text_Editor e){
-   return Fl_Text_Editor::kf_m_s_move(c,(static_cast<DerivedText_Editor*>(e)));
- }
- FL_EXPORT_C(int,Fl_Text_Editor_kf_home)(int c,fl_Text_Editor e){
-   return Fl_Text_Editor::kf_home(c,(static_cast<DerivedText_Editor*>(e)));
- }
- FL_EXPORT_C(int,Fl_Text_Editor_kf_end)(int c,fl_Text_Editor e){
-   return Fl_Text_Editor::kf_end(c,(static_cast<DerivedText_Editor*>(e)));
- }
- FL_EXPORT_C(int,Fl_Text_Editor_kf_left)(int c,fl_Text_Editor e){
-   return Fl_Text_Editor::kf_left(c,(static_cast<DerivedText_Editor*>(e)));
- }
- FL_EXPORT_C(int,Fl_Text_Editor_kf_up)(int c,fl_Text_Editor e){
-   return Fl_Text_Editor::kf_up(c,(static_cast<DerivedText_Editor*>(e)));
- }
- FL_EXPORT_C(int,Fl_Text_Editor_kf_right)(int c,fl_Text_Editor e){
-   return Fl_Text_Editor::kf_right(c,(static_cast<DerivedText_Editor*>(e)));
- }
- FL_EXPORT_C(int,Fl_Text_Editor_kf_down)(int c,fl_Text_Editor e){
-   return Fl_Text_Editor::kf_down(c,(static_cast<DerivedText_Editor*>(e)));
- }
- FL_EXPORT_C(int,Fl_Text_Editor_kf_page_up)(int c,fl_Text_Editor e){
-   return Fl_Text_Editor::kf_page_up(c,(static_cast<DerivedText_Editor*>(e)));
- }
- FL_EXPORT_C(int,Fl_Text_Editor_kf_page_down)(int c,fl_Text_Editor e){
-   return Fl_Text_Editor::kf_page_down(c,(static_cast<DerivedText_Editor*>(e)));
- }
- FL_EXPORT_C(int,Fl_Text_Editor_kf_insert)(int c,fl_Text_Editor e){
-   return Fl_Text_Editor::kf_insert(c,(static_cast<DerivedText_Editor*>(e)));
- }
- FL_EXPORT_C(int,Fl_Text_Editor_kf_delete)(int c,fl_Text_Editor e){
-   return Fl_Text_Editor::kf_delete(c,(static_cast<DerivedText_Editor*>(e)));
- }
- FL_EXPORT_C(int,Fl_Text_Editor_kf_copy)(int c,fl_Text_Editor e){
-   return Fl_Text_Editor::kf_copy(c,(static_cast<DerivedText_Editor*>(e)));
- }
- FL_EXPORT_C(int,Fl_Text_Editor_kf_cut)(int c,fl_Text_Editor e){
-   return Fl_Text_Editor::kf_cut(c,(static_cast<DerivedText_Editor*>(e)));
- }
- FL_EXPORT_C(int,Fl_Text_Editor_kf_paste)(int c,fl_Text_Editor e){
-   return Fl_Text_Editor::kf_paste(c,(static_cast<DerivedText_Editor*>(e)));
- }
- FL_EXPORT_C(int,Fl_Text_Editor_kf_select_all)(int c,fl_Text_Editor e){
-   return Fl_Text_Editor::kf_select_all(c,(static_cast<DerivedText_Editor*>(e)));
- }
- FL_EXPORT_C(int,Fl_Text_Editor_kf_default)(int c,fl_Text_Editor e){
-   return Fl_Text_Editor::kf_default(c,(static_cast<DerivedText_Editor*>(e)));
- }
+  FL_EXPORT_C(void,Fl_Text_Editor_set_insert_mode)(fl_Text_Editor text_editor,int b){
+    (static_cast<DerivedText_Editor*>(text_editor))->insert_mode(b);
+  }
+  FL_EXPORT_C(int,Fl_Text_Editor_insert_mode)(fl_Text_Editor text_editor){
+    return (static_cast<DerivedText_Editor*>(text_editor))->insert_mode();
+  }
+  FL_EXPORT_C(int, Fl_Text_Editor_num_key_bindings)(Key_BindingC* bindings){
+    int count = 0;
+    Key_BindingC* curr = bindings;
+    for (;curr;curr = curr->next){
+      if (curr) {
+        count++;
+      }
+    }
+    return count;
+  }
+  FL_EXPORT_C(void,Fl_Text_Editor_add_key_binding_with_list)(fl_Text_Editor text_editor,int key,int state,fl_Key_Func f,Key_BindingC* list){
+    DerivedText_Editor::Key_Binding_With_Callback* bs = convertKeyBindings(list);
+    DerivedText_Editor* e =  (static_cast<DerivedText_Editor*>(text_editor));
+    C_to_Fl_Callback* context = new C_to_Fl_Callback(f);
+    e->add_key_binding(key,state,context,&bs);
+  }
+  FL_EXPORT_C(void,Fl_Text_Editor_add_key_binding)(fl_Text_Editor text_editor,int key,int state,fl_Key_Func f){
+    C_to_Fl_Callback* context = new C_to_Fl_Callback(f);
+    (static_cast<DerivedText_Editor*>(text_editor))->add_key_binding(key,state,context);
+  }
+  FL_EXPORT_C(void,Fl_Text_Editor_remove_key_binding_with_list)(fl_Text_Editor text_editor,int key,int state,Key_BindingC* list){
+    DerivedText_Editor::Key_Binding_With_Callback* bs = convertKeyBindings(list);
+    (static_cast<DerivedText_Editor*>(text_editor))->remove_key_binding(key,state,&bs);
+  }
+  FL_EXPORT_C(void,Fl_Text_Editor_remove_key_binding)(fl_Text_Editor text_editor,int key,int state){
+    (static_cast<DerivedText_Editor*>(text_editor))->remove_key_binding(key,state);
+  }
+  FL_EXPORT_C(void,Fl_Text_Editor_remove_all_key_bindings_with_list)(fl_Text_Editor text_editor,Key_BindingC* list){
+    DerivedText_Editor::Key_Binding_With_Callback* bs = convertKeyBindings(list);
+    (static_cast<DerivedText_Editor*>(text_editor))->remove_all_key_bindings(&bs);
+  }
+  FL_EXPORT_C(void,Fl_Text_Editor_remove_all_key_bindings)(fl_Text_Editor text_editor){
+    (static_cast<DerivedText_Editor*>(text_editor))->remove_all_key_bindings();
+  }
+  FL_EXPORT_C(void,Fl_Text_Editor_replace_key_bindings)(fl_Text_Editor text_editor, Key_BindingC* list){
+    DerivedText_Editor::Key_Binding_With_Callback* bs = convertKeyBindings(list);
+    (static_cast<DerivedText_Editor*>(text_editor))->replace_key_bindings(&bs);
+  }
+  FL_EXPORT_C(void,Fl_Text_Editor_replace_key_bindings_with_list)(fl_Text_Editor text_editor, Key_BindingC* list1, Key_BindingC* list2){
+    DerivedText_Editor::Key_Binding_With_Callback* bs1 = convertKeyBindings(list1);
+    DerivedText_Editor::Key_Binding_With_Callback* bs2 = convertKeyBindings(list2);
+    (static_cast<DerivedText_Editor*>(text_editor))->replace_key_bindings(&bs1,&bs2);
+  }
+  FL_EXPORT_C(Key_BindingC* ,Fl_Text_Editor_add_default_key_bindings)(fl_Text_Editor text_editor,Key_BindingC* list){
+    DerivedText_Editor::Key_Binding_With_Callback* bs_ = new DerivedText_Editor::Key_Binding_With_Callback();
+    (static_cast<DerivedText_Editor*>(text_editor))->add_default_key_bindings(&bs_);
+    list = convertKeyBindings(bs_);
+    return list;
+  }
+  FL_EXPORT_C(int,Fl_Text_Editor_kf_undo)(int c,fl_Text_Editor e){
+    return Fl_Text_Editor::kf_undo(c,(static_cast<DerivedText_Editor*>(e)));
+  }
+  FL_EXPORT_C(int,Fl_Text_Editor_kf_ignore)(int c,fl_Text_Editor e){
+    return Fl_Text_Editor::kf_ignore(c,(static_cast<DerivedText_Editor*>(e)));
+  }
+  FL_EXPORT_C(int,Fl_Text_Editor_kf_backspace)(int c,fl_Text_Editor e){
+    return Fl_Text_Editor::kf_backspace(c,(static_cast<DerivedText_Editor*>(e)));
+  }
+  FL_EXPORT_C(int,Fl_Text_Editor_kf_enter)(int c,fl_Text_Editor e){
+    return Fl_Text_Editor::kf_enter(c,(static_cast<DerivedText_Editor*>(e)));
+  }
+  FL_EXPORT_C(int,Fl_Text_Editor_kf_move)(int c,fl_Text_Editor e){
+    return Fl_Text_Editor::kf_move(c,(static_cast<DerivedText_Editor*>(e)));
+  }
+  FL_EXPORT_C(int,Fl_Text_Editor_kf_shift_move)(int c,fl_Text_Editor e){
+    return Fl_Text_Editor::kf_shift_move(c,(static_cast<DerivedText_Editor*>(e)));
+  }
+  FL_EXPORT_C(int,Fl_Text_Editor_kf_ctrl_move)(int c,fl_Text_Editor e){
+    return Fl_Text_Editor::kf_ctrl_move(c,(static_cast<DerivedText_Editor*>(e)));
+  }
+  FL_EXPORT_C(int,Fl_Text_Editor_kf_c_s_move)(int c,fl_Text_Editor e){
+    return Fl_Text_Editor::kf_c_s_move(c,(static_cast<DerivedText_Editor*>(e)));
+  }
+  FL_EXPORT_C(int,Fl_Text_Editor_kf_meta_move)(int c,fl_Text_Editor e){
+    return Fl_Text_Editor::kf_meta_move(c,(static_cast<DerivedText_Editor*>(e)));
+  }
+  FL_EXPORT_C(int,Fl_Text_Editor_kf_m_s_move)(int c,fl_Text_Editor e){
+    return Fl_Text_Editor::kf_m_s_move(c,(static_cast<DerivedText_Editor*>(e)));
+  }
+  FL_EXPORT_C(int,Fl_Text_Editor_kf_home)(int c,fl_Text_Editor e){
+    return Fl_Text_Editor::kf_home(c,(static_cast<DerivedText_Editor*>(e)));
+  }
+  FL_EXPORT_C(int,Fl_Text_Editor_kf_end)(int c,fl_Text_Editor e){
+    return Fl_Text_Editor::kf_end(c,(static_cast<DerivedText_Editor*>(e)));
+  }
+  FL_EXPORT_C(int,Fl_Text_Editor_kf_left)(int c,fl_Text_Editor e){
+    return Fl_Text_Editor::kf_left(c,(static_cast<DerivedText_Editor*>(e)));
+  }
+  FL_EXPORT_C(int,Fl_Text_Editor_kf_up)(int c,fl_Text_Editor e){
+    return Fl_Text_Editor::kf_up(c,(static_cast<DerivedText_Editor*>(e)));
+  }
+  FL_EXPORT_C(int,Fl_Text_Editor_kf_right)(int c,fl_Text_Editor e){
+    return Fl_Text_Editor::kf_right(c,(static_cast<DerivedText_Editor*>(e)));
+  }
+  FL_EXPORT_C(int,Fl_Text_Editor_kf_down)(int c,fl_Text_Editor e){
+    return Fl_Text_Editor::kf_down(c,(static_cast<DerivedText_Editor*>(e)));
+  }
+  FL_EXPORT_C(int,Fl_Text_Editor_kf_page_up)(int c,fl_Text_Editor e){
+    return Fl_Text_Editor::kf_page_up(c,(static_cast<DerivedText_Editor*>(e)));
+  }
+  FL_EXPORT_C(int,Fl_Text_Editor_kf_page_down)(int c,fl_Text_Editor e){
+    return Fl_Text_Editor::kf_page_down(c,(static_cast<DerivedText_Editor*>(e)));
+  }
+  FL_EXPORT_C(int,Fl_Text_Editor_kf_insert)(int c,fl_Text_Editor e){
+    return Fl_Text_Editor::kf_insert(c,(static_cast<DerivedText_Editor*>(e)));
+  }
+  FL_EXPORT_C(int,Fl_Text_Editor_kf_delete)(int c,fl_Text_Editor e){
+    return Fl_Text_Editor::kf_delete(c,(static_cast<DerivedText_Editor*>(e)));
+  }
+  FL_EXPORT_C(int,Fl_Text_Editor_kf_copy)(int c,fl_Text_Editor e){
+    return Fl_Text_Editor::kf_copy(c,(static_cast<DerivedText_Editor*>(e)));
+  }
+  FL_EXPORT_C(int,Fl_Text_Editor_kf_cut)(int c,fl_Text_Editor e){
+    return Fl_Text_Editor::kf_cut(c,(static_cast<DerivedText_Editor*>(e)));
+  }
+  FL_EXPORT_C(int,Fl_Text_Editor_kf_paste)(int c,fl_Text_Editor e){
+    return Fl_Text_Editor::kf_paste(c,(static_cast<DerivedText_Editor*>(e)));
+  }
+  FL_EXPORT_C(int,Fl_Text_Editor_kf_select_all)(int c,fl_Text_Editor e){
+    return Fl_Text_Editor::kf_select_all(c,(static_cast<DerivedText_Editor*>(e)));
+  }
+  FL_EXPORT_C(int,Fl_Text_Editor_kf_default)(int c,fl_Text_Editor e){
+    return Fl_Text_Editor::kf_default(c,(static_cast<DerivedText_Editor*>(e)));
+  }
+  FL_EXPORT_C(void, Fl_Text_Editor_draw)(fl_Text_Editor o){
+    (static_cast<DerivedText_Editor*>(o))->draw();
+  }
+  FL_EXPORT_C(void, Fl_Text_Editor_draw_super)(fl_Text_Editor o){
+    (static_cast<DerivedText_Editor*>(o))->draw_super();
+  }
+  FL_EXPORT_C(int, Fl_Text_Editor_handle)(fl_Text_Editor o, int event){
+    return (static_cast<DerivedText_Editor*>(o))->handle(event);
+  }
+  FL_EXPORT_C(int, Fl_Text_Editor_handle_super)(fl_Text_Editor o, int event){
+    return (static_cast<DerivedText_Editor*>(o))->handle_super(event);
+  }
+  FL_EXPORT_C(void, Fl_Text_Editor_resize)(fl_Text_Editor o, int x, int y, int w, int h){
+    (static_cast<DerivedText_Editor*>(o))->resize(x,y,w,h);
+  }
+  FL_EXPORT_C(void, Fl_Text_Editor_resize_super)(fl_Text_Editor o, int x, int y, int w, int h){
+    (static_cast<DerivedText_Editor*>(o))->resize_super(x,y,w,h);
+  }
+  FL_EXPORT_C(void, Fl_Text_Editor_show)(fl_Text_Editor o){
+    (static_cast<DerivedText_Editor*>(o))->show();
+  }
+  FL_EXPORT_C(void, Fl_Text_Editor_show_super)(fl_Text_Editor o){
+    (static_cast<DerivedText_Editor*>(o))->show_super();
+  }
+  FL_EXPORT_C(void, Fl_Text_Editor_hide)(fl_Text_Editor o){
+    (static_cast<DerivedText_Editor*>(o))->hide();
+  }
+  FL_EXPORT_C(void, Fl_Text_Editor_hide_super)(fl_Text_Editor o){
+    (static_cast<DerivedText_Editor*>(o))->hide_super();
+  }
+  FL_EXPORT_C(fl_Text_Editor,    Fl_Text_Editor_New)(int X, int Y, int W, int H){
+    fl_Widget_Virtual_Funcs* fs = Fl_Widget_default_virtual_funcs();
+    DerivedText_Editor* w = new DerivedText_Editor(X,Y,W,H,fs);
+    return (fl_Text_Editor)w;
+  }
+  FL_EXPORT_C(fl_Text_Editor,    Fl_Text_Editor_New_WithLabel)(int X, int Y, int W, int H, const char* label){
+    fl_Widget_Virtual_Funcs* fs = Fl_Widget_default_virtual_funcs();
+    DerivedText_Editor* w = new DerivedText_Editor(X,Y,W,H,label,fs);
+    return (fl_Text_Editor)w;
+  }
+  FL_EXPORT_C(fl_Text_Editor,    Fl_OverriddenText_Editor_New)(int X, int Y, int W, int H,fl_Widget_Virtual_Funcs* fs){
+    DerivedText_Editor* w = new DerivedText_Editor(X,Y,W,H,fs);
+    return (fl_Text_Editor)w;
+  }
+  FL_EXPORT_C(fl_Text_Editor,    Fl_OverriddenText_Editor_New_WithLabel)(int X, int Y, int W, int H, const char* label, fl_Widget_Virtual_Funcs* fs){
+    DerivedText_Editor* w = new DerivedText_Editor(X,Y,W,H,label,fs);
+    return (fl_Text_Editor)w;
+  }
 #ifdef __cplusplus
 }
 #endif

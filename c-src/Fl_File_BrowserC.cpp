@@ -1,10 +1,82 @@
 #include "Fl_File_BrowserC.h"
 #ifdef __cplusplus
 EXPORT {
-#endif
-  FL_EXPORT_C(int,Fl_File_Browser_handle)(fl_File_Browser self, int event){
-    return (static_cast<Fl_File_Browser*>(self))->handle(event);
+  Fl_DerivedFile_Browser::Fl_DerivedFile_Browser(int X, int Y, int W, int H, const char *l, fl_Widget_Virtual_Funcs* funcs) : Fl_File_Browser(X,Y,W,H,l){
+    overriddenFuncs = funcs;
+    other_data = (void*)0;
   }
+  Fl_DerivedFile_Browser::Fl_DerivedFile_Browser(int X, int Y, int W, int H, fl_Widget_Virtual_Funcs* funcs):Fl_File_Browser(X,Y,W,H){
+    overriddenFuncs = funcs;
+    other_data = (void*)0;
+  }
+  Fl_DerivedFile_Browser::~Fl_DerivedFile_Browser(){
+    free(overriddenFuncs);
+  }
+  void Fl_DerivedFile_Browser::draw(){
+    if (this->overriddenFuncs->draw != NULL) {
+      this->overriddenFuncs->draw((fl_File_Browser) this);
+    }
+    else {
+      Fl_File_Browser::draw();
+    }
+  }
+
+  void Fl_DerivedFile_Browser::draw_super(){
+    Fl_File_Browser::draw();
+  }
+
+  int Fl_DerivedFile_Browser::handle(int event){
+    int i;
+    if (this->overriddenFuncs->handle != NULL) {
+      i = this->overriddenFuncs->handle((fl_File_Browser) this,event);
+    }
+    else {
+      i = Fl_File_Browser::handle(event);
+    }
+    return i;
+  }
+  int Fl_DerivedFile_Browser::handle_super(int event){
+    return Fl_File_Browser::handle(event);
+  }
+
+  void Fl_DerivedFile_Browser::resize(int x, int y, int w, int h){
+    if (this->overriddenFuncs->resize != NULL) {
+      this->overriddenFuncs->resize((fl_File_Browser) this,x,y,w,h);
+    }
+    else {
+      Fl_File_Browser::resize(x,y,w,h);
+    }
+  }
+
+  void Fl_DerivedFile_Browser::resize_super(int x, int y, int w, int h){
+    Fl_File_Browser::resize(x,y,w,h);
+  }
+  void Fl_DerivedFile_Browser::show(){
+    if (this->overriddenFuncs->show != NULL) {
+      this->overriddenFuncs->show((fl_File_Browser) this);
+    }
+    else {
+      Fl_File_Browser::show();
+    }
+  }
+  void Fl_DerivedFile_Browser::show_super(){
+    Fl_File_Browser::show();
+  }
+
+  void Fl_DerivedFile_Browser::hide(){
+    if (this->overriddenFuncs->hide != NULL) {
+      this->overriddenFuncs->hide((fl_File_Browser) this);
+    }
+    else {
+      Fl_File_Browser::hide();
+    }
+  }
+  void Fl_DerivedFile_Browser::hide_super(){
+    Fl_File_Browser::hide();
+  }
+
+
+#endif
   FL_EXPORT_C(fl_Group,Fl_File_Browser_parent)(fl_File_Browser file_browser){
     return (fl_Group) (static_cast<Fl_File_Browser*>(file_browser))->parent();
   }
@@ -153,12 +225,6 @@ EXPORT {
   FL_EXPORT_C(int,Fl_File_Browser_visible_r)(fl_File_Browser file_browser){
     return (static_cast<Fl_File_Browser*>(file_browser))->visible_r();
   }
-  FL_EXPORT_C(void,Fl_File_Browser_show_super)(fl_File_Browser file_browser){
-    return (static_cast<Fl_File_Browser*>(file_browser))->show();
-  }
-  FL_EXPORT_C(void,Fl_File_Browser_hide_super)(fl_File_Browser file_browser){
-    return (static_cast<Fl_File_Browser*>(file_browser))->hide();
-  }
   FL_EXPORT_C(void,Fl_File_Browser_clear_visible)(fl_File_Browser file_browser){
     (static_cast<Fl_File_Browser*>(file_browser))->clear_visible();
   }
@@ -285,18 +351,6 @@ EXPORT {
   FL_EXPORT_C(fl_Widget,Fl_File_Browser__ddfdesign_kludge)(fl_File_Browser file_browser){
     return (static_cast<Fl_File_Browser*>(file_browser))->_ddfdesign_kludge();
   }
-  // FL_EXPORT_C(void,Fl_File_Browser_forms_end)(fl_File_Browser self){
-  //   (static_cast<Fl_File_Browser*>(self))->forms_end();
-  // }
-
-  FL_EXPORT_C(fl_File_Browser, Fl_File_Browser_New_WithLabel)(int x, int y, int w, int h, const char* label) {
-    Fl_File_Browser* file_browser = new Fl_File_Browser(x,y,w,h,label);
-    return (static_cast<fl_File_Browser>(file_browser));
-  }
-  FL_EXPORT_C(fl_File_Browser, Fl_File_Browser_New)(int x, int y, int w, int h) {
-    Fl_File_Browser* file_browser = new Fl_File_Browser(x,y,w,h,0);
-    return (fl_File_Browser)file_browser;
-  }
   FL_EXPORT_C(void,Fl_File_Browser_Destroy)(fl_File_Browser file_browser){
     delete (static_cast<Fl_File_Browser*>(file_browser));
   }
@@ -361,14 +415,8 @@ EXPORT {
   FL_EXPORT_C(void,Fl_File_Browser_show_with_line)(fl_File_Browser file_browser,int line){
     (static_cast<Fl_File_Browser*>(file_browser))->show(line);
   }
-  FL_EXPORT_C(void,Fl_File_Browser_show)(fl_File_Browser file_browser){
-    (static_cast<Fl_File_Browser*>(file_browser))->show();
-  }
   FL_EXPORT_C(void,Fl_File_Browser_hide_with_line)(fl_File_Browser file_browser,int line){
     (static_cast<Fl_File_Browser*>(file_browser))->hide(line);
-  }
-  FL_EXPORT_C(void,Fl_File_Browser_hide)(fl_File_Browser file_browser){
-    (static_cast<Fl_File_Browser*>(file_browser))->hide();
   }
   FL_EXPORT_C(int,Fl_File_Browser_visible)(fl_File_Browser file_browser,int line){
     return (static_cast<Fl_File_Browser*>(file_browser))->visible(line);
@@ -516,6 +564,36 @@ EXPORT {
   }
   FL_EXPORT_C(void,Fl_File_Browser_set_filetype)(fl_File_Browser file_browser,int t){
     (static_cast<Fl_File_Browser*>(file_browser))->filetype(t);
+  }
+  FL_EXPORT_C(void, Fl_File_Browser_draw)(fl_File_Browser o){
+    (static_cast<Fl_DerivedFile_Browser*>(o))->draw();
+  }
+  FL_EXPORT_C(void, Fl_File_Browser_draw_super)(fl_File_Browser o){
+    (static_cast<Fl_DerivedFile_Browser*>(o))->draw_super();
+  }
+  FL_EXPORT_C(int, Fl_File_Browser_handle)(fl_File_Browser o, int event){
+    return (static_cast<Fl_DerivedFile_Browser*>(o))->handle(event);
+  }
+  FL_EXPORT_C(int, Fl_File_Browser_handle_super)(fl_File_Browser o, int event){
+    return (static_cast<Fl_DerivedFile_Browser*>(o))->handle_super(event);
+  }
+  FL_EXPORT_C(void, Fl_File_Browser_resize)(fl_File_Browser o, int x, int y, int w, int h){
+    (static_cast<Fl_DerivedFile_Browser*>(o))->resize(x,y,w,h);
+  }
+  FL_EXPORT_C(void, Fl_File_Browser_resize_super)(fl_File_Browser o, int x, int y, int w, int h){
+    (static_cast<Fl_DerivedFile_Browser*>(o))->resize_super(x,y,w,h);
+  }
+  FL_EXPORT_C(void, Fl_File_Browser_show)(fl_File_Browser o){
+    (static_cast<Fl_DerivedFile_Browser*>(o))->show();
+  }
+  FL_EXPORT_C(void, Fl_File_Browser_show_super)(fl_File_Browser o){
+    (static_cast<Fl_DerivedFile_Browser*>(o))->show_super();
+  }
+  FL_EXPORT_C(void, Fl_File_Browser_hide)(fl_File_Browser o){
+    (static_cast<Fl_DerivedFile_Browser*>(o))->hide();
+  }
+  FL_EXPORT_C(void, Fl_File_Browser_hide_super)(fl_File_Browser o){
+    (static_cast<Fl_DerivedFile_Browser*>(o))->hide_super();
   }
 #ifdef __cplusplus
 }

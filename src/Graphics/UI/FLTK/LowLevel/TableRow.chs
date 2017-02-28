@@ -95,6 +95,24 @@ instance (impl ~ ( TableRowSelectFlag -> IO ())) => Op (SelectAllRows ()) TableR
                               TableRowSelect -> selectAllRows' tablePtr 1
                               TableRowDeselect -> selectAllRows' tablePtr 0
                               TableRowToggle -> selectAllRows' tablePtr 2
+{# fun Fl_Table_Row_draw as draw'' { id `Ptr ()' } -> `()' #}
+instance (impl ~ (  IO ())) => Op (Draw ()) TableRow orig impl where
+  runOp _ _ tableRow = withRef tableRow $ \tableRowPtr -> draw'' tableRowPtr
+{# fun Fl_Table_Row_draw_super as drawSuper' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
+instance (impl ~ ( IO ())) => Op (DrawSuper ()) TableRow orig impl where
+  runOp _ _ tableRow = withRef tableRow $ \tableRowPtr -> drawSuper' tableRowPtr
+{# fun Fl_Table_Row_hide as hide' { id `Ptr ()' } -> `()' #}
+instance (impl ~ (  IO ())) => Op (Hide ()) TableRow orig impl where
+  runOp _ _ tableRow = withRef tableRow $ \tableRowPtr -> hide' tableRowPtr
+{# fun Fl_Table_Row_hide_super as hideSuper' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
+instance (impl ~ ( IO ())) => Op (HideSuper ()) TableRow orig impl where
+  runOp _ _ tableRow = withRef tableRow $ \tableRowPtr -> hideSuper' tableRowPtr
+{# fun Fl_Table_Row_show as show' { id `Ptr ()' } -> `()' #}
+instance (impl ~ (  IO ())) => Op (ShowWidget ()) TableRow orig impl where
+  runOp _ _ tableRow = withRef tableRow $ \tableRowPtr -> show' tableRowPtr
+{# fun Fl_Table_Row_show_super as showSuper' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
+instance (impl ~ ( IO ())) => Op (ShowWidgetSuper ()) TableRow orig impl where
+  runOp _ _ tableRow = withRef tableRow $ \tableRowPtr -> showSuper' tableRowPtr
 
 -- $functions
 -- @
@@ -104,15 +122,23 @@ instance (impl ~ ( TableRowSelectFlag -> IO ())) => Op (SelectAllRows ()) TableR
 --
 -- destroy :: 'Ref' 'TableRow' -> 'IO' ()
 --
+-- draw :: 'Ref' 'TableRow' -> 'IO' ()
+--
+-- drawSuper :: 'Ref' 'TableRow' -> 'IO' ()
+--
 -- getRowSelected :: 'Ref' 'TableRow' -> 'Int' -> 'IO' ('Either' 'OutOfRange' 'Bool')
 --
 -- getRows :: 'Ref' 'TableRow' -> 'IO' ('Int')
 --
 -- getType_ :: 'Ref' 'TableRow' -> 'IO' 'TableRowSelectMode'
 --
--- handle :: 'Ref' 'TableRow' -> 'Event' -> 'IO' ('Int')
+-- handle :: 'Ref' 'TableRow' -> 'Event' -> 'IO(Either' 'UnknownEvent' ())
 --
--- handleSuper :: 'Ref' 'TableRow' -> 'Event' -> 'IO' ('Int')
+-- handleSuper :: 'Ref' 'TableRow' -> 'Event' -> 'IO' ('Either' 'UnknownEvent' ())
+--
+-- hide :: 'Ref' 'TableRow' -> 'IO' ()
+--
+-- hideSuper :: 'Ref' 'TableRow' -> 'IO' ()
 --
 -- resize :: 'Ref' 'TableRow' -> 'Rectangle' -> 'IO' ()
 --
@@ -129,6 +155,10 @@ instance (impl ~ ( TableRowSelectFlag -> IO ())) => Op (SelectAllRows ()) TableR
 -- setRowsSuper :: 'Ref' 'TableRow' -> 'Int' -> 'IO' ()
 --
 -- setType :: 'Ref' 'TableRow' -> 'TableRowSelectMode' -> 'IO' ()
+--
+-- showWidget :: 'Ref' 'TableRow' -> 'IO' ()
+--
+-- showWidgetSuper :: 'Ref' 'TableRow' -> 'IO' ()
 --
 -- @
 

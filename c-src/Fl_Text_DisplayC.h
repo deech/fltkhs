@@ -7,7 +7,26 @@
 #include "FL/Fl.H"
 #include "FL/Fl_Text_Display.H"
 #include "Fl_CallbackC.h"
+#include "Fl_WidgetC.h"
 EXPORT {
+  class Fl_DerivedText_Display : public Fl_Text_Display {
+    fl_Widget_Virtual_Funcs* overriddenFuncs;
+    void* other_data;
+  public:
+    virtual void draw();
+    void draw_super();
+    virtual int handle(int event);
+    int handle_super(int event);
+    virtual void resize(int x, int y, int w, int h);
+    void resize_super(int x, int y, int w, int h);
+    virtual void show();
+    void show_super();
+    virtual void hide();
+    void hide_super();
+    Fl_DerivedText_Display(int X, int Y, int W, int H, const char *l, fl_Widget_Virtual_Funcs* funcs);
+    Fl_DerivedText_Display(int X, int Y, int W, int H, fl_Widget_Virtual_Funcs* funcs);
+    ~Fl_DerivedText_Display();
+  };
 #endif
   /* Inherited from Fl_Widget */
   FL_EXPORT_C(int,          Fl_Text_Display_handle)(fl_Text_Display self, int event);
@@ -193,6 +212,18 @@ EXPORT {
   FL_EXPORT_C(Fl_Align    ,linenumber_align)(fl_Text_Display text_display);
   FL_EXPORT_C(void        ,set_linenumber_format)(fl_Text_Display text_display,const char* val);
   FL_EXPORT_C(const char* ,linenumber_format)(fl_Text_Display text_display);
+  FL_EXPORT_C(fl_Text_Display,    Fl_OverriddenText_Display_New)(int X, int Y, int W, int H,fl_Widget_Virtual_Funcs* fs);
+  FL_EXPORT_C(fl_Text_Display,    Fl_OverriddenText_Display_New_WithLabel)(int X, int Y, int W, int H, const char* label, fl_Widget_Virtual_Funcs* fs);
+  FL_EXPORT_C(void, Fl_Text_Display_draw)(fl_Text_Display o);
+  FL_EXPORT_C(void, Fl_Text_Display_draw_super)(fl_Text_Display o);
+  FL_EXPORT_C(int, Fl_Text_Display_handle)(fl_Text_Display o, int event);
+  FL_EXPORT_C(int, Fl_Text_Display_handle_super)(fl_Text_Display o, int event);
+  FL_EXPORT_C(void, Fl_Text_Display_resize)(fl_Text_Display o, int x, int y, int w, int h);
+  FL_EXPORT_C(void, Fl_Text_Display_resize_super)(fl_Text_Display o, int x, int y, int w, int h);
+  FL_EXPORT_C(void, Fl_Text_Display_show)(fl_Text_Display o);
+  FL_EXPORT_C(void, Fl_Text_Display_show_super)(fl_Text_Display o);
+  FL_EXPORT_C(void, Fl_Text_Display_hide)(fl_Text_Display o);
+  FL_EXPORT_C(void, Fl_Text_Display_hide_super)(fl_Text_Display o);
 #ifdef __cplusplus
 }
 #endif

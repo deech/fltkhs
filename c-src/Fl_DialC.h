@@ -9,7 +9,26 @@
 #include "FL/Fl_Fill_Dial.H"
 #include "FL/Fl_Line_Dial.H"
 #include "Fl_CallbackC.h"
+#include "Fl_WidgetC.h"
 EXPORT {
+  class Fl_DerivedDial : public Fl_Dial {
+    fl_Widget_Virtual_Funcs* overriddenFuncs;
+    void* other_data;
+  public:
+    virtual void draw();
+    void draw_super();
+    virtual int handle(int event);
+    int handle_super(int event);
+    virtual void resize(int x, int y, int w, int h);
+    void resize_super(int x, int y, int w, int h);
+    virtual void show();
+    void show_super();
+    virtual void hide();
+    void hide_super();
+    Fl_DerivedDial(int X, int Y, int W, int H, const char *l, fl_Widget_Virtual_Funcs* funcs);
+    Fl_DerivedDial(int X, int Y, int W, int H, fl_Widget_Virtual_Funcs* funcs);
+    ~Fl_DerivedDial();
+  };
 #endif
 #ifndef INTERNAL_LINKAGE
   typedef enum Dial_Type {
@@ -134,6 +153,18 @@ EXPORT {
   FL_EXPORT_C(short,     Fl_Dial_angle1)(fl_Dial dial);
   FL_EXPORT_C(short,     Fl_Dial_angle2)(fl_Dial dial);
   FL_EXPORT_C(int,       Fl_Dial_handle)(fl_Dial dial, int event);
+  FL_EXPORT_C(fl_Dial,    Fl_OverriddenDial_New)(int X, int Y, int W, int H,fl_Widget_Virtual_Funcs* fs);
+  FL_EXPORT_C(fl_Dial,    Fl_OverriddenDial_New_WithLabel)(int X, int Y, int W, int H, const char* label, fl_Widget_Virtual_Funcs* fs);
+  FL_EXPORT_C(void, Fl_Dial_draw)(fl_Dial o);
+  FL_EXPORT_C(void, Fl_Dial_draw_super)(fl_Dial o);
+  FL_EXPORT_C(int, Fl_Dial_handle)(fl_Dial o, int event);
+  FL_EXPORT_C(int, Fl_Dial_handle_super)(fl_Dial o, int event);
+  FL_EXPORT_C(void, Fl_Dial_resize)(fl_Dial o, int x, int y, int w, int h);
+  FL_EXPORT_C(void, Fl_Dial_resize_super)(fl_Dial o, int x, int y, int w, int h);
+  FL_EXPORT_C(void, Fl_Dial_show)(fl_Dial o);
+  FL_EXPORT_C(void, Fl_Dial_show_super)(fl_Dial o);
+  FL_EXPORT_C(void, Fl_Dial_hide)(fl_Dial o);
+  FL_EXPORT_C(void, Fl_Dial_hide_super)(fl_Dial o);
 #ifdef __cplusplus
 }
 #endif

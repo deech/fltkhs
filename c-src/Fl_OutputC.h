@@ -7,7 +7,27 @@
 #include "FL/Fl.H"
 #include "FL/Fl_Output.H"
 #include "Fl_CallbackC.h"
+#include "Fl_WidgetC.h"
 EXPORT {
+  class Fl_DerivedOutput : public Fl_Output {
+    fl_Widget_Virtual_Funcs* overriddenFuncs;
+    void* other_data;
+  public:
+    virtual void draw();
+    void draw_super();
+    virtual int handle(int event);
+    int handle_super(int event);
+    virtual void resize(int x, int y, int w, int h);
+    void resize_super(int x, int y, int w, int h);
+    virtual void show();
+    void show_super();
+    virtual void hide();
+    void hide_super();
+    Fl_DerivedOutput(int X, int Y, int W, int H, const char *l, fl_Widget_Virtual_Funcs* funcs);
+    Fl_DerivedOutput(int X, int Y, int W, int H, fl_Widget_Virtual_Funcs* funcs);
+    ~Fl_DerivedOutput();
+  };
+
 #endif
   /* Inherited from Fl_Widget */
   FL_EXPORT_C(int,Fl_Output_handle)(fl_Output self, int event);
@@ -96,10 +116,10 @@ EXPORT {
   FL_EXPORT_C(fl_Gl_Window, Fl_Output_as_gl_window)(fl_Output output);
   /* Fl_Output specific functions */
   FL_EXPORT_C(int,      Fl_Output_handle)(fl_Output output, int event);
-  FL_EXPORT_C(fl_Output, Fl_Output_New_WithLabel)(int x, int y, int w, int h, const char* label); 
-  FL_EXPORT_C(fl_Output, Fl_Output_New)(int x, int y, int w, int h); 
+  FL_EXPORT_C(fl_Output, Fl_Output_New_WithLabel)(int x, int y, int w, int h, const char* label);
+  FL_EXPORT_C(fl_Output, Fl_Output_New)(int x, int y, int w, int h);
   FL_EXPORT_C(void,     Fl_Output_Destroy)(fl_Output output);
-  
+
   FL_EXPORT_C(void,         Fl_Output_resize)(fl_Output output, int X, int Y, int W, int H);
   FL_EXPORT_C(int,          Fl_Output_set_value)(fl_Output output, const char*);
   FL_EXPORT_C(int,          Fl_Output_set_value_with_length)(fl_Output output, const char* text, int length);
@@ -144,6 +164,18 @@ EXPORT {
   FL_EXPORT_C(void,         Fl_Output_set_wrap)(fl_Output output,int b);
   FL_EXPORT_C(void,         Fl_Output_tab_nav)(fl_Output output,int val);
   FL_EXPORT_C(int,          Fl_Output_set_tab_nav)(fl_Output output);
+  FL_EXPORT_C(fl_Output,    Fl_OverriddenOutput_New)(int X, int Y, int W, int H,fl_Widget_Virtual_Funcs* fs);
+  FL_EXPORT_C(fl_Output,    Fl_OverriddenOutput_New_WithLabel)(int X, int Y, int W, int H, const char* label, fl_Widget_Virtual_Funcs* fs);
+  FL_EXPORT_C(void, Fl_Output_draw)(fl_Output o);
+  FL_EXPORT_C(void, Fl_Output_draw_super)(fl_Output o);
+  FL_EXPORT_C(int, Fl_Output_handle)(fl_Output o, int event);
+  FL_EXPORT_C(int, Fl_Output_handle_super)(fl_Output o, int event);
+  FL_EXPORT_C(void, Fl_Output_resize)(fl_Output o, int x, int y, int w, int h);
+  FL_EXPORT_C(void, Fl_Output_resize_super)(fl_Output o, int x, int y, int w, int h);
+  FL_EXPORT_C(void, Fl_Output_show)(fl_Output o);
+  FL_EXPORT_C(void, Fl_Output_show_super)(fl_Output o);
+  FL_EXPORT_C(void, Fl_Output_hide)(fl_Output o);
+  FL_EXPORT_C(void, Fl_Output_hide_super)(fl_Output o);
 #ifdef __cplusplus
 }
 #endif

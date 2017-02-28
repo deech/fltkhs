@@ -14,14 +14,14 @@ EXPORT {
   FL_EXPORT_C(int,Fl_Table_Row_handle)(fl_Table_Row self, int event);
   FL_EXPORT_C(fl_Group,     Fl_Table_Row_parent)(fl_Table_Row table);
   FL_EXPORT_C(void,         Fl_Table_Row_set_parent)(fl_Table_Row table, fl_Group grp);
+  FL_EXPORT_C(void, Fl_Table_Row_draw_box)(fl_Table_Row Table_Row);
+  FL_EXPORT_C(void, Fl_Table_Row_draw_box_with_tc)(fl_Table_Row Table_Row,Fl_Boxtype t, Fl_Color c);
+  FL_EXPORT_C(void, Fl_Table_Row_draw_box_with_txywhc)(fl_Table_Row Table_Row,Fl_Boxtype t, int x,int y,int w,int h, Fl_Color c);
+  FL_EXPORT_C(void, Fl_Table_Row_draw_backdrop)(fl_Table_Row Table_Row);
+  FL_EXPORT_C(void, Fl_Table_Row_draw_focus)(fl_Table_Row Table_Row);
+  FL_EXPORT_C(void, Fl_Table_Row_draw_focus_with_txywh)(fl_Table_Row Table_Row,Fl_Boxtype t, int x,int y,int w,int h);
+  FL_EXPORT_C(void, Fl_Table_Row_draw_label)(fl_Table_Row Table_Row);
 
-FL_EXPORT_C(void, Fl_Table_Row_draw_box)(fl_Table_Row Table_Row);
-FL_EXPORT_C(void, Fl_Table_Row_draw_box_with_tc)(fl_Table_Row Table_Row,Fl_Boxtype t, Fl_Color c);
-FL_EXPORT_C(void, Fl_Table_Row_draw_box_with_txywhc)(fl_Table_Row Table_Row,Fl_Boxtype t, int x,int y,int w,int h, Fl_Color c);
-FL_EXPORT_C(void, Fl_Table_Row_draw_backdrop)(fl_Table_Row Table_Row);
-FL_EXPORT_C(void, Fl_Table_Row_draw_focus)(fl_Table_Row Table_Row);
-FL_EXPORT_C(void, Fl_Table_Row_draw_focus_with_txywh)(fl_Table_Row Table_Row,Fl_Boxtype t, int x,int y,int w,int h);
-FL_EXPORT_C(void, Fl_Table_Row_draw_label)(fl_Table_Row Table_Row);
   FL_EXPORT_C(int,          Fl_Table_Row_x)(fl_Table_Row table);
   FL_EXPORT_C(int,          Fl_Table_Row_y)(fl_Table_Row table);
   FL_EXPORT_C(int,          Fl_Table_Row_w)(fl_Table_Row table);
@@ -118,6 +118,7 @@ FL_EXPORT_C(void, Fl_Table_Row_draw_label)(fl_Table_Row Table_Row);
   FL_EXPORT_C(unsigned int, Fl_Table_Row_clip_children)(fl_Table_Row table);
   FL_EXPORT_C(void,         Fl_Table_Row_focus)(fl_Table_Row table,fl_Widget W);
   FL_EXPORT_C(fl_Widget,    Fl_Table_Row__ddfdesign_kludge)(fl_Table_Row table);
+  FL_EXPORT_C(void,Fl_Table_Row_draw_super)(fl_Table_Row table_row);
 
   FL_EXPORT_C(void,         Fl_Table_Row_insert_with_before)(fl_Table_Row self, fl_Widget w, fl_Widget before);
   FL_EXPORT_C(fl_Widget*, Fl_Table_Row_array)(fl_Table_Row self);

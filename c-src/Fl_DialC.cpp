@@ -1,7 +1,80 @@
 #include "Fl_DialC.h"
 #ifdef __cplusplus
 EXPORT {
-#endif  
+  Fl_DerivedDial::Fl_DerivedDial(int X, int Y, int W, int H, const char *l, fl_Widget_Virtual_Funcs* funcs) : Fl_Dial(X,Y,W,H,l){
+    overriddenFuncs = funcs;
+    other_data = (void*)0;
+  }
+  Fl_DerivedDial::Fl_DerivedDial(int X, int Y, int W, int H, fl_Widget_Virtual_Funcs* funcs):Fl_Dial(X,Y,W,H){
+    overriddenFuncs = funcs;
+    other_data = (void*)0;
+  }
+  Fl_DerivedDial::~Fl_DerivedDial(){
+    free(overriddenFuncs);
+  }
+  void Fl_DerivedDial::draw(){
+    if (this->overriddenFuncs->draw != NULL) {
+      this->overriddenFuncs->draw((fl_Dial) this);
+    }
+    else {
+      Fl_Dial::draw();
+    }
+  }
+
+  void Fl_DerivedDial::draw_super(){
+    Fl_Dial::draw();
+  }
+
+  int Fl_DerivedDial::handle(int event){
+    int i;
+    if (this->overriddenFuncs->handle != NULL) {
+      i = this->overriddenFuncs->handle((fl_Dial) this,event);
+    }
+    else {
+      i = Fl_Dial::handle(event);
+    }
+    return i;
+  }
+  int Fl_DerivedDial::handle_super(int event){
+    return Fl_Dial::handle(event);
+  }
+
+  void Fl_DerivedDial::resize(int x, int y, int w, int h){
+    if (this->overriddenFuncs->resize != NULL) {
+      this->overriddenFuncs->resize((fl_Dial) this,x,y,w,h);
+    }
+    else {
+      Fl_Dial::resize(x,y,w,h);
+    }
+  }
+
+  void Fl_DerivedDial::resize_super(int x, int y, int w, int h){
+    Fl_Dial::resize(x,y,w,h);
+  }
+  void Fl_DerivedDial::show(){
+    if (this->overriddenFuncs->show != NULL) {
+      this->overriddenFuncs->show((fl_Dial) this);
+    }
+    else {
+      Fl_Dial::show();
+    }
+  }
+  void Fl_DerivedDial::show_super(){
+    Fl_Dial::show();
+  }
+
+  void Fl_DerivedDial::hide(){
+    if (this->overriddenFuncs->hide != NULL) {
+      this->overriddenFuncs->hide((fl_Dial) this);
+    }
+    else {
+      Fl_Dial::hide();
+    }
+  }
+  void Fl_DerivedDial::hide_super(){
+    Fl_Dial::hide();
+  }
+#endif
   FL_EXPORT_C(fl_Group,Fl_Dial_parent)(fl_Dial dial){
     return (static_cast<Fl_Dial*>(dial))->parent();
   }
@@ -152,12 +225,6 @@ EXPORT {
   FL_EXPORT_C(int,Fl_Dial_visible_r)(fl_Dial dial){
     return (static_cast<Fl_Dial*>(dial))->visible_r();
   }
-  FL_EXPORT_C(void,Fl_Dial_show)(fl_Dial dial){
-    (static_cast<Fl_Dial*>(dial))->show();
-  }
-  FL_EXPORT_C(void,Fl_Dial_hide)(fl_Dial dial){
-    (static_cast<Fl_Dial*>(dial))->hide();
-  }
   FL_EXPORT_C(void,Fl_Dial_set_visible)(fl_Dial dial){
     (static_cast<Fl_Dial*>(dial))->visible();
   }
@@ -254,9 +321,6 @@ EXPORT {
   FL_EXPORT_C(fl_Gl_Window,Fl_Dial_as_gl_window)(fl_Dial dial){
     return (static_cast<Fl_Dial*>(dial))->as_gl_window();
   }
-  FL_EXPORT_C(void,Fl_Dial_resize)(fl_Dial dial,int X,int Y,int W,int H){
-    (static_cast<Fl_Dial*>(dial))->resize(X,Y,W,H);
-  }
   FL_EXPORT_C(void,Fl_Dial_bounds)(fl_Dial dial,double a,double b){
     (static_cast<Fl_Dial*>(dial))->bounds(a,b);
   }
@@ -308,14 +372,6 @@ EXPORT {
   FL_EXPORT_C(double,Fl_Dial_increment)(fl_Dial dial,double v,int n){
     return (static_cast<Fl_Dial*>(dial))->increment(v,n);
   }
-  FL_EXPORT_C(fl_Dial,Fl_Dial_New_WithLabel)(int x,int y,int w,int h,const char* label){
-    Fl_Dial* dial = new Fl_Dial(x,y,w,h,label);
-    return (fl_Dial) dial;
-  }
-  FL_EXPORT_C(fl_Dial,Fl_Dial_New)(int x,int y,int w,int h){
-    Fl_Dial* dial = new Fl_Dial(x,y,w,h);
-    return (fl_Dial) dial;
-  }
   FL_EXPORT_C(fl_Fill_Dial,Fl_Fill_Dial_New)(int x,int y,int w,int h,const char* label){
     Fl_Fill_Dial* dial = new Fl_Fill_Dial(x,y,w,h,label);
     return (fl_Fill_Dial) dial;
@@ -343,9 +399,54 @@ EXPORT {
   FL_EXPORT_C(short,Fl_Dial_angle2)(fl_Dial dial){
     return (static_cast<Fl_Dial*>(dial))->angle2();
   }
-  FL_EXPORT_C(int,Fl_Dial_handle)(fl_Dial dial,int event){
-    return (static_cast<Fl_Dial*>(dial))->handle(event);
+  FL_EXPORT_C(void, Fl_Dial_draw)(fl_Dial o){
+    (static_cast<Fl_DerivedDial*>(o))->draw();
+  }
+  FL_EXPORT_C(void, Fl_Dial_draw_super)(fl_Dial o){
+    (static_cast<Fl_DerivedDial*>(o))->draw_super();
+  }
+  FL_EXPORT_C(int, Fl_Dial_handle)(fl_Dial o, int event){
+    return (static_cast<Fl_DerivedDial*>(o))->handle(event);
+  }
+  FL_EXPORT_C(int, Fl_Dial_handle_super)(fl_Dial o, int event){
+    return (static_cast<Fl_DerivedDial*>(o))->handle_super(event);
+  }
+  FL_EXPORT_C(void, Fl_Dial_resize)(fl_Dial o, int x, int y, int w, int h){
+    (static_cast<Fl_DerivedDial*>(o))->resize(x,y,w,h);
+  }
+  FL_EXPORT_C(void, Fl_Dial_resize_super)(fl_Dial o, int x, int y, int w, int h){
+    (static_cast<Fl_DerivedDial*>(o))->resize_super(x,y,w,h);
+  }
+  FL_EXPORT_C(void, Fl_Dial_show)(fl_Dial o){
+    (static_cast<Fl_DerivedDial*>(o))->show();
+  }
+  FL_EXPORT_C(void, Fl_Dial_show_super)(fl_Dial o){
+    (static_cast<Fl_DerivedDial*>(o))->show_super();
+  }
+  FL_EXPORT_C(void, Fl_Dial_hide)(fl_Dial o){
+    (static_cast<Fl_DerivedDial*>(o))->hide();
+  }
+  FL_EXPORT_C(void, Fl_Dial_hide_super)(fl_Dial o){
+    (static_cast<Fl_DerivedDial*>(o))->hide_super();
+  }
+  FL_EXPORT_C(fl_Dial,    Fl_Dial_New)(int X, int Y, int W, int H){
+    fl_Widget_Virtual_Funcs* fs = Fl_Widget_default_virtual_funcs();
+    Fl_DerivedDial* w = new Fl_DerivedDial(X,Y,W,H,fs);
+    return (fl_Dial)w;
+  }
+  FL_EXPORT_C(fl_Dial,    Fl_Dial_New_WithLabel)(int X, int Y, int W, int H, const char* label){
+    fl_Widget_Virtual_Funcs* fs = Fl_Widget_default_virtual_funcs();
+    Fl_DerivedDial* w = new Fl_DerivedDial(X,Y,W,H,label,fs);
+    return (fl_Dial)w;
+  }
+  FL_EXPORT_C(fl_Dial,    Fl_OverriddenDial_New)(int X, int Y, int W, int H,fl_Widget_Virtual_Funcs* fs){
+    Fl_DerivedDial* w = new Fl_DerivedDial(X,Y,W,H,fs);
+    return (fl_Dial)w;
+  }
+  FL_EXPORT_C(fl_Dial,    Fl_OverriddenDial_New_WithLabel)(int X, int Y, int W, int H, const char* label, fl_Widget_Virtual_Funcs* fs){
+    Fl_DerivedDial* w = new Fl_DerivedDial(X,Y,W,H,label,fs);
+    return (fl_Dial)w;
   }
 #ifdef __cplusplus
 }
-#endif 
+#endif

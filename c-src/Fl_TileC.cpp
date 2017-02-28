@@ -1,10 +1,82 @@
 #include "Fl_TileC.h"
 #ifdef __cplusplus
 EXPORT {
-#endif
-  FL_EXPORT_C(int,Fl_Tile_handle)(fl_Tile tile, int event){
-    return (static_cast<Fl_Tile*>(tile))->handle(event);
+  Fl_DerivedTile::Fl_DerivedTile(int X, int Y, int W, int H, const char *l, fl_Widget_Virtual_Funcs* funcs) : Fl_Tile(X,Y,W,H,l){
+    overriddenFuncs = funcs;
+    other_data = (void*)0;
   }
+  Fl_DerivedTile::Fl_DerivedTile(int X, int Y, int W, int H, fl_Widget_Virtual_Funcs* funcs):Fl_Tile(X,Y,W,H){
+    overriddenFuncs = funcs;
+    other_data = (void*)0;
+  }
+  Fl_DerivedTile::~Fl_DerivedTile(){
+    free(overriddenFuncs);
+  }
+  void Fl_DerivedTile::draw(){
+    if (this->overriddenFuncs->draw != NULL) {
+      this->overriddenFuncs->draw((fl_Tile) this);
+    }
+    else {
+      Fl_Tile::draw();
+    }
+  }
+
+  void Fl_DerivedTile::draw_super(){
+    Fl_Tile::draw();
+  }
+
+  int Fl_DerivedTile::handle(int event){
+    int i;
+    if (this->overriddenFuncs->handle != NULL) {
+      i = this->overriddenFuncs->handle((fl_Tile) this,event);
+    }
+    else {
+      i = Fl_Tile::handle(event);
+    }
+    return i;
+  }
+  int Fl_DerivedTile::handle_super(int event){
+    return Fl_Tile::handle(event);
+  }
+
+  void Fl_DerivedTile::resize(int x, int y, int w, int h){
+    if (this->overriddenFuncs->resize != NULL) {
+      this->overriddenFuncs->resize((fl_Tile) this,x,y,w,h);
+    }
+    else {
+      Fl_Tile::resize(x,y,w,h);
+    }
+  }
+
+  void Fl_DerivedTile::resize_super(int x, int y, int w, int h){
+    Fl_Tile::resize(x,y,w,h);
+  }
+  void Fl_DerivedTile::show(){
+    if (this->overriddenFuncs->show != NULL) {
+      this->overriddenFuncs->show((fl_Tile) this);
+    }
+    else {
+      Fl_Tile::show();
+    }
+  }
+  void Fl_DerivedTile::show_super(){
+    Fl_Tile::show();
+  }
+
+  void Fl_DerivedTile::hide(){
+    if (this->overriddenFuncs->hide != NULL) {
+      this->overriddenFuncs->hide((fl_Tile) this);
+    }
+    else {
+      Fl_Tile::hide();
+    }
+  }
+  void Fl_DerivedTile::hide_super(){
+    Fl_Tile::hide();
+  }
+
+
+#endif
   FL_EXPORT_C(fl_Group,Fl_Tile_parent)(fl_Tile tile){
     return (fl_Group) (static_cast<Fl_Tile*>(tile))->parent();
   }
@@ -303,9 +375,6 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Tile_add_resizable)(fl_Tile tile,fl_Widget o){
     return (static_cast<Fl_Tile*>(tile))->add_resizable(*(static_cast<Fl_Widget*>(o)));
   }
-  FL_EXPORT_C(void,Fl_Tile_resize)(fl_Tile tile, int x, int y, int w, int h){
-    return (static_cast<Fl_Tile*>(tile))->resize(x, y, w, h);
-  }
   FL_EXPORT_C(void,Fl_Tile_init_sizes)(fl_Tile tile){
     (static_cast<Fl_Tile*>(tile))->init_sizes();
   }
@@ -333,14 +402,55 @@ EXPORT {
   FL_EXPORT_C(fl_Widget, Fl_Tile_child)(fl_Tile tile, int n){
     return (fl_Widget)(static_cast<Fl_Tile*>(tile))->child(n);
   }
-  FL_EXPORT_C(fl_Tile,     Fl_Tile_New)(int x, int y, int w, int h){
-    Fl_Tile* g = new Fl_Tile(x,y,w,h);
-    return (fl_Tile)g;
+  FL_EXPORT_C(fl_Tile,    Fl_Tile_New)(int X, int Y, int W, int H){
+    fl_Widget_Virtual_Funcs* fs = Fl_Widget_default_virtual_funcs();
+    Fl_DerivedTile* w = new Fl_DerivedTile(X,Y,W,H,fs);
+    return (fl_Tile)w;
   }
-  FL_EXPORT_C(fl_Tile,     Fl_Tile_New_WithLabel)(int x, int y, int w, int h, const char* t){
-    Fl_Tile* g = new Fl_Tile(x,y,w,h,t);
-    return (fl_Tile)g;
+  FL_EXPORT_C(fl_Tile,    Fl_Tile_New_WithLabel)(int X, int Y, int W, int H, const char* label){
+    fl_Widget_Virtual_Funcs* fs = Fl_Widget_default_virtual_funcs();
+    Fl_DerivedTile* w = new Fl_DerivedTile(X,Y,W,H,label,fs);
+    return (fl_Tile)w;
   }
+  FL_EXPORT_C(fl_Tile,    Fl_OverriddenTile_New)(int X, int Y, int W, int H,fl_Widget_Virtual_Funcs* fs){
+    Fl_DerivedTile* w = new Fl_DerivedTile(X,Y,W,H,fs);
+    return (fl_Tile)w;
+  }
+  FL_EXPORT_C(fl_Tile,    Fl_OverriddenTile_New_WithLabel)(int X, int Y, int W, int H, const char* label, fl_Widget_Virtual_Funcs* fs){
+    Fl_DerivedTile* w = new Fl_DerivedTile(X,Y,W,H,label,fs);
+    return (fl_Tile)w;
+  }
+  FL_EXPORT_C(void, Fl_Tile_draw)(fl_Tile o){
+    (static_cast<Fl_DerivedTile*>(o))->draw();
+  }
+  FL_EXPORT_C(void, Fl_Tile_draw_super)(fl_Tile o){
+    (static_cast<Fl_DerivedTile*>(o))->draw_super();
+  }
+  FL_EXPORT_C(int, Fl_Tile_handle)(fl_Tile o, int event){
+    return (static_cast<Fl_DerivedTile*>(o))->handle(event);
+  }
+  FL_EXPORT_C(int, Fl_Tile_handle_super)(fl_Tile o, int event){
+    return (static_cast<Fl_DerivedTile*>(o))->handle_super(event);
+  }
+  FL_EXPORT_C(void, Fl_Tile_resize)(fl_Tile o, int x, int y, int w, int h){
+    (static_cast<Fl_DerivedTile*>(o))->resize(x,y,w,h);
+  }
+  FL_EXPORT_C(void, Fl_Tile_resize_super)(fl_Tile o, int x, int y, int w, int h){
+    (static_cast<Fl_DerivedTile*>(o))->resize_super(x,y,w,h);
+  }
+  FL_EXPORT_C(void, Fl_Tile_show)(fl_Tile o){
+    (static_cast<Fl_DerivedTile*>(o))->show();
+  }
+  FL_EXPORT_C(void, Fl_Tile_show_super)(fl_Tile o){
+    (static_cast<Fl_DerivedTile*>(o))->show_super();
+  }
+  FL_EXPORT_C(void, Fl_Tile_hide)(fl_Tile o){
+    (static_cast<Fl_DerivedTile*>(o))->hide();
+  }
+  FL_EXPORT_C(void, Fl_Tile_hide_super)(fl_Tile o){
+    (static_cast<Fl_DerivedTile*>(o))->hide_super();
+  }
+
 #ifdef __cplusplus
 }
 #endif

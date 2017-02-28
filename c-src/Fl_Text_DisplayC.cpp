@@ -1,10 +1,82 @@
 #include "Fl_Text_DisplayC.h"
 #ifdef __cplusplus
 EXPORT {
-#endif
-  FL_EXPORT_C(int,Fl_Text_Display_handle)(fl_Text_Display self, int event){
-    return (static_cast<Fl_Text_Display*>(self))->handle(event);
+  Fl_DerivedText_Display::Fl_DerivedText_Display(int X, int Y, int W, int H, const char *l, fl_Widget_Virtual_Funcs* funcs) : Fl_Text_Display(X,Y,W,H,l){
+    overriddenFuncs = funcs;
+    other_data = (void*)0;
   }
+  Fl_DerivedText_Display::Fl_DerivedText_Display(int X, int Y, int W, int H, fl_Widget_Virtual_Funcs* funcs):Fl_Text_Display(X,Y,W,H){
+    overriddenFuncs = funcs;
+    other_data = (void*)0;
+  }
+  Fl_DerivedText_Display::~Fl_DerivedText_Display(){
+    free(overriddenFuncs);
+  }
+  void Fl_DerivedText_Display::draw(){
+    if (this->overriddenFuncs->draw != NULL) {
+      this->overriddenFuncs->draw((fl_Text_Display) this);
+    }
+    else {
+      Fl_Text_Display::draw();
+    }
+  }
+
+  void Fl_DerivedText_Display::draw_super(){
+    Fl_Text_Display::draw();
+  }
+
+  int Fl_DerivedText_Display::handle(int event){
+    int i;
+    if (this->overriddenFuncs->handle != NULL) {
+      i = this->overriddenFuncs->handle((fl_Text_Display) this,event);
+    }
+    else {
+      i = Fl_Text_Display::handle(event);
+    }
+    return i;
+  }
+  int Fl_DerivedText_Display::handle_super(int event){
+    return Fl_Text_Display::handle(event);
+  }
+
+  void Fl_DerivedText_Display::resize(int x, int y, int w, int h){
+    if (this->overriddenFuncs->resize != NULL) {
+      this->overriddenFuncs->resize((fl_Text_Display) this,x,y,w,h);
+    }
+    else {
+      Fl_Text_Display::resize(x,y,w,h);
+    }
+  }
+
+  void Fl_DerivedText_Display::resize_super(int x, int y, int w, int h){
+    Fl_Text_Display::resize(x,y,w,h);
+  }
+  void Fl_DerivedText_Display::show(){
+    if (this->overriddenFuncs->show != NULL) {
+      this->overriddenFuncs->show((fl_Text_Display) this);
+    }
+    else {
+      Fl_Text_Display::show();
+    }
+  }
+  void Fl_DerivedText_Display::show_super(){
+    Fl_Text_Display::show();
+  }
+
+  void Fl_DerivedText_Display::hide(){
+    if (this->overriddenFuncs->hide != NULL) {
+      this->overriddenFuncs->hide((fl_Text_Display) this);
+    }
+    else {
+      Fl_Text_Display::hide();
+    }
+  }
+  void Fl_DerivedText_Display::hide_super(){
+    Fl_Text_Display::hide();
+  }
+
+
+#endif
   FL_EXPORT_C(fl_Group,Fl_Text_Display_parent)(fl_Text_Display text_display){
     return (fl_Group) (static_cast<Fl_Text_Display*>(text_display))->parent();
   }
@@ -301,9 +373,6 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Text_Display_init_sizes)(fl_Text_Display text_display){
     (static_cast<Fl_Text_Display*>(text_display))->init_sizes();
   }
-  FL_EXPORT_C(void,Fl_Text_Display_resize)(fl_Text_Display text_display, int X, int Y, int W, int H){
-    (static_cast<Fl_Text_Display*>(text_display))->resize(X,Y,W,H);
-  }
   FL_EXPORT_C(int,Fl_Text_Display_children)(fl_Text_Display self){
     return (static_cast<Fl_Text_Display*>(self))->children();
   }
@@ -324,14 +393,6 @@ EXPORT {
   }
   FL_EXPORT_C(fl_Widget, Fl_Text_Display_child)(fl_Text_Display self, int n){
     return (fl_Widget)(static_cast<Fl_Text_Display*>(self))->child(n);
-  }
-  FL_EXPORT_C(fl_Text_Display,     Fl_Text_Display_New)(int x, int y, int w, int h){
-    Fl_Text_Display* g = new Fl_Text_Display(x,y,w,h);
-    return (fl_Text_Display)g;
-  }
-  FL_EXPORT_C(fl_Text_Display,     Fl_Text_Display_New_WithLabel)(int x, int y, int w, int h, const char* t){
-    Fl_Text_Display* g = new Fl_Text_Display(x,y,w,h,t);
-    return (fl_Text_Display)g;
   }
   FL_EXPORT_C(void, Fl_Text_Display_Destroy)(fl_Text_Display text_display){
     delete (static_cast<Fl_Text_Display*>(text_display));
@@ -496,48 +557,97 @@ EXPORT {
   FL_EXPORT_C(double,Fl_Text_Display_col_to_x)(fl_Text_Display text_display,double col){
     return (static_cast<Fl_Text_Display*>(text_display))->col_to_x(col);
   }
- FL_EXPORT_C(void,set_linenumber_width)(fl_Text_Display text_display,int width){
-   (static_cast<Fl_Text_Display*>(text_display))->linenumber_width(width);
- }
- FL_EXPORT_C(int         ,linenumber_width)(fl_Text_Display text_display){
-   return (static_cast<Fl_Text_Display*>(text_display))->linenumber_width();
- }
- FL_EXPORT_C(void        ,set_linenumber_font)(fl_Text_Display text_display,Fl_Font val){
-   (static_cast<Fl_Text_Display*>(text_display))->linenumber_font(val);
- }
- FL_EXPORT_C(Fl_Font     ,linenumber_font)(fl_Text_Display text_display){
-   return (static_cast<Fl_Text_Display*>(text_display))->linenumber_font();
- }
- FL_EXPORT_C(void        ,set_linenumber_size)(fl_Text_Display text_display,Fl_Fontsize val){
-   (static_cast<Fl_Text_Display*>(text_display))->linenumber_size(val);
- }
- FL_EXPORT_C(Fl_Fontsize ,linenumber_size)(fl_Text_Display text_display){
-   return (static_cast<Fl_Text_Display*>(text_display))->linenumber_size();
- }
- FL_EXPORT_C(void        ,set_linenumber_fgcolor)(fl_Text_Display text_display,Fl_Color val){
-   (static_cast<Fl_Text_Display*>(text_display))->linenumber_fgcolor(val);
- }
- FL_EXPORT_C(Fl_Color    ,linenumber_fgcolor)(fl_Text_Display text_display){
-   return (static_cast<Fl_Text_Display*>(text_display))->linenumber_fgcolor();
- }
- FL_EXPORT_C(void        ,set_linenumber_bgcolor)(fl_Text_Display text_display,Fl_Color val){
-   (static_cast<Fl_Text_Display*>(text_display))->linenumber_bgcolor(val);
- }
- FL_EXPORT_C(Fl_Color    ,linenumber_bgcolor)(fl_Text_Display text_display){
-   return (static_cast<Fl_Text_Display*>(text_display))->linenumber_bgcolor();
- }
- FL_EXPORT_C(void        ,set_linenumber_align)(fl_Text_Display text_display,Fl_Align val){
-   (static_cast<Fl_Text_Display*>(text_display))->linenumber_align(val);
- }
- FL_EXPORT_C(Fl_Align    ,linenumber_align)(fl_Text_Display text_display){
-   return (static_cast<Fl_Text_Display*>(text_display))->linenumber_align();
- }
- FL_EXPORT_C(void        ,set_linenumber_format)(fl_Text_Display text_display,const char* val){
-   (static_cast<Fl_Text_Display*>(text_display))->linenumber_format(val);
- }
- FL_EXPORT_C(const char* ,linenumber_format)(fl_Text_Display text_display){
-   return (static_cast<Fl_Text_Display*>(text_display))->linenumber_format();
- }
+  FL_EXPORT_C(void,set_linenumber_width)(fl_Text_Display text_display,int width){
+    (static_cast<Fl_Text_Display*>(text_display))->linenumber_width(width);
+  }
+  FL_EXPORT_C(int         ,linenumber_width)(fl_Text_Display text_display){
+    return (static_cast<Fl_Text_Display*>(text_display))->linenumber_width();
+  }
+  FL_EXPORT_C(void        ,set_linenumber_font)(fl_Text_Display text_display,Fl_Font val){
+    (static_cast<Fl_Text_Display*>(text_display))->linenumber_font(val);
+  }
+  FL_EXPORT_C(Fl_Font     ,linenumber_font)(fl_Text_Display text_display){
+    return (static_cast<Fl_Text_Display*>(text_display))->linenumber_font();
+  }
+  FL_EXPORT_C(void        ,set_linenumber_size)(fl_Text_Display text_display,Fl_Fontsize val){
+    (static_cast<Fl_Text_Display*>(text_display))->linenumber_size(val);
+  }
+  FL_EXPORT_C(Fl_Fontsize ,linenumber_size)(fl_Text_Display text_display){
+    return (static_cast<Fl_Text_Display*>(text_display))->linenumber_size();
+  }
+  FL_EXPORT_C(void        ,set_linenumber_fgcolor)(fl_Text_Display text_display,Fl_Color val){
+    (static_cast<Fl_Text_Display*>(text_display))->linenumber_fgcolor(val);
+  }
+  FL_EXPORT_C(Fl_Color    ,linenumber_fgcolor)(fl_Text_Display text_display){
+    return (static_cast<Fl_Text_Display*>(text_display))->linenumber_fgcolor();
+  }
+  FL_EXPORT_C(void        ,set_linenumber_bgcolor)(fl_Text_Display text_display,Fl_Color val){
+    (static_cast<Fl_Text_Display*>(text_display))->linenumber_bgcolor(val);
+  }
+  FL_EXPORT_C(Fl_Color    ,linenumber_bgcolor)(fl_Text_Display text_display){
+    return (static_cast<Fl_Text_Display*>(text_display))->linenumber_bgcolor();
+  }
+  FL_EXPORT_C(void        ,set_linenumber_align)(fl_Text_Display text_display,Fl_Align val){
+    (static_cast<Fl_Text_Display*>(text_display))->linenumber_align(val);
+  }
+  FL_EXPORT_C(Fl_Align    ,linenumber_align)(fl_Text_Display text_display){
+    return (static_cast<Fl_Text_Display*>(text_display))->linenumber_align();
+  }
+  FL_EXPORT_C(void        ,set_linenumber_format)(fl_Text_Display text_display,const char* val){
+    (static_cast<Fl_Text_Display*>(text_display))->linenumber_format(val);
+  }
+  FL_EXPORT_C(const char* ,linenumber_format)(fl_Text_Display text_display){
+    return (static_cast<Fl_Text_Display*>(text_display))->linenumber_format();
+  }
+  FL_EXPORT_C(fl_Text_Display,    Fl_Text_Display_New)(int X, int Y, int W, int H){
+    fl_Widget_Virtual_Funcs* fs = Fl_Widget_default_virtual_funcs();
+    Fl_DerivedText_Display* w = new Fl_DerivedText_Display(X,Y,W,H,fs);
+    return (fl_Text_Display)w;
+  }
+  FL_EXPORT_C(fl_Text_Display,    Fl_Text_Display_New_WithLabel)(int X, int Y, int W, int H, const char* label){
+    fl_Widget_Virtual_Funcs* fs = Fl_Widget_default_virtual_funcs();
+    Fl_DerivedText_Display* w = new Fl_DerivedText_Display(X,Y,W,H,label,fs);
+    return (fl_Text_Display)w;
+  }
+  FL_EXPORT_C(fl_Text_Display,    Fl_OverriddenText_Display_New)(int X, int Y, int W, int H,fl_Widget_Virtual_Funcs* fs){
+    Fl_DerivedText_Display* w = new Fl_DerivedText_Display(X,Y,W,H,fs);
+    return (fl_Text_Display)w;
+  }
+  FL_EXPORT_C(fl_Text_Display,    Fl_OverriddenText_Display_New_WithLabel)(int X, int Y, int W, int H, const char* label, fl_Widget_Virtual_Funcs* fs){
+    Fl_DerivedText_Display* w = new Fl_DerivedText_Display(X,Y,W,H,label,fs);
+    return (fl_Text_Display)w;
+  }
+  FL_EXPORT_C(void, Fl_Text_Display_draw)(fl_Text_Display o){
+    (static_cast<Fl_DerivedText_Display*>(o))->draw();
+  }
+  FL_EXPORT_C(void, Fl_Text_Display_draw_super)(fl_Text_Display o){
+    (static_cast<Fl_DerivedText_Display*>(o))->draw_super();
+  }
+  FL_EXPORT_C(int, Fl_Text_Display_handle)(fl_Text_Display o, int event){
+    return (static_cast<Fl_DerivedText_Display*>(o))->handle(event);
+  }
+  FL_EXPORT_C(int, Fl_Text_Display_handle_super)(fl_Text_Display o, int event){
+    return (static_cast<Fl_DerivedText_Display*>(o))->handle_super(event);
+  }
+  FL_EXPORT_C(void, Fl_Text_Display_resize)(fl_Text_Display o, int x, int y, int w, int h){
+    (static_cast<Fl_DerivedText_Display*>(o))->resize(x,y,w,h);
+  }
+  FL_EXPORT_C(void, Fl_Text_Display_resize_super)(fl_Text_Display o, int x, int y, int w, int h){
+    (static_cast<Fl_DerivedText_Display*>(o))->resize_super(x,y,w,h);
+  }
+  FL_EXPORT_C(void, Fl_Text_Display_show)(fl_Text_Display o){
+    (static_cast<Fl_DerivedText_Display*>(o))->show();
+  }
+  FL_EXPORT_C(void, Fl_Text_Display_show_super)(fl_Text_Display o){
+    (static_cast<Fl_DerivedText_Display*>(o))->show_super();
+  }
+  FL_EXPORT_C(void, Fl_Text_Display_hide)(fl_Text_Display o){
+    (static_cast<Fl_DerivedText_Display*>(o))->hide();
+  }
+  FL_EXPORT_C(void, Fl_Text_Display_hide_super)(fl_Text_Display o){
+    (static_cast<Fl_DerivedText_Display*>(o))->hide_super();
+  }
+
 #ifdef __cplusplus
 }
 #endif

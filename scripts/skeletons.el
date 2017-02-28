@@ -290,44 +290,44 @@
   ""
   nil
   '(setq v1 (skeleton-read "class:"))
-  > (format "FL_EXPORT_C(void, Fl_%s_draw)(fl_%s w){
-               (static_cast<Fl_Derived%s*>(w))->draw();
+  > (format "FL_EXPORT_C(void, Fl_%s_draw)(fl_%s o){
+               (static_cast<Fl_Derived%s*>(o))->draw();
              }" v1 v1 v1)
   ?\n
-  > (format "FL_EXPORT_C(void, Fl_%s_draw_super)(fl_%s w){
-               (static_cast<Fl_%s*>(w))->draw();
+  > (format "FL_EXPORT_C(void, Fl_%s_draw_super)(fl_%s o){
+               (static_cast<Fl_Derived%s*>(o))->draw_super();
              }" v1 v1 v1)
   ?\n
-  > (format "FL_EXPORT_C(int, Fl_%s_handle)(fl_%s w, int event){
-               return (static_cast<Fl_Derived%s*>(w))->handle(event);
+  > (format "FL_EXPORT_C(int, Fl_%s_handle)(fl_%s o, int event){
+               return (static_cast<Fl_Derived%s*>(o))->handle(event);
              }" v1 v1 v1)
   ?\n
-  > (format "FL_EXPORT_C(int, Fl_%s_handle_super)(fl_%s w, int event){
-               return (static_cast<Fl_%s*>(w))->handle(event);
+  > (format "FL_EXPORT_C(int, Fl_%s_handle_super)(fl_%s o, int event){
+               return (static_cast<Fl_Derived%s*>(o))->handle_super(event);
              }" v1 v1 v1)
   ?\n
-  > (format "FL_EXPORT_C(void, Fl_%s_resize)(fl_%s w, int x, int y, int w, int h){
-               (static_cast<Fl_Derived%s*>(w))->resize(x,y,w,h);
+  > (format "FL_EXPORT_C(void, Fl_%s_resize)(fl_%s o, int x, int y, int w, int h){
+               (static_cast<Fl_Derived%s*>(o))->resize(x,y,w,h);
              }" v1 v1 v1)
   ?\n
-  > (format "FL_EXPORT_C(void, Fl_%s_resize_super)(fl_%s w, int x, int y, int w, int h){
-               (static_cast<Fl_%s*>(w))->resize(x,y,w,h);
+  > (format "FL_EXPORT_C(void, Fl_%s_resize_super)(fl_%s o, int x, int y, int w, int h){
+               (static_cast<Fl_Derived%s*>(o))->resize_super(x,y,w,h);
              }" v1 v1 v1)
   ?\n
-  > (format "FL_EXPORT_C(void, Fl_%s_show)(fl_%s w){
-               (static_cast<Fl_Derived%s*>(w))->show();
+  > (format "FL_EXPORT_C(void, Fl_%s_show)(fl_%s o){
+               (static_cast<Fl_Derived%s*>(o))->show();
              }" v1 v1 v1)
   ?\n
-  > (format "FL_EXPORT_C(void, Fl_%s_show_super)(fl_%s w){
-               (static_cast<Fl_%s*>(w))->show();
+  > (format "FL_EXPORT_C(void, Fl_%s_show_super)(fl_%s o){
+               (static_cast<Fl_Derived%s*>(o))->show_super();
              }" v1 v1 v1)
   ?\n
-  > (format "FL_EXPORT_C(void, Fl_%s_hide)(fl_%s w){
-               (static_cast<Fl_Derived%s*>(w))->hide();
+  > (format "FL_EXPORT_C(void, Fl_%s_hide)(fl_%s o){
+               (static_cast<Fl_Derived%s*>(o))->hide();
              }" v1 v1 v1)
   ?\n
-  > (format "FL_EXPORT_C(void, Fl_%s_hide_super)(fl_%s w){
-               (static_cast<Fl_%s*>(w))->hide();
+  > (format "FL_EXPORT_C(void, Fl_%s_hide_super)(fl_%s o){
+               (static_cast<Fl_Derived%s*>(o))->hide_super();
              }" v1 v1 v1)
   ?\n
   )
@@ -336,24 +336,123 @@
   ""
   nil
   '(setq v1 (skeleton-read "class:"))
-  > (format "FL_EXPORT_C(void, Fl_%s_draw)(fl_%s w);" v1 v1)
+  > (format "FL_EXPORT_C(fl_%s,    Fl_Overridden%s_New)(int X, int Y, int W, int H,fl_Widget_Virtual_Funcs* fs);" v1 v1)
   ?\n
-  > (format "FL_EXPORT_C(void, Fl_%s_draw_super)(fl_%s w);" v1 v1)
+  > (format "FL_EXPORT_C(fl_%s,    Fl_Overridden%s_New_WithLabel)(int X, int Y, int W, int H, const char* label, fl_Widget_Virtual_Funcs* fs);" v1 v1)
   ?\n
-  > (format "FL_EXPORT_C(int, Fl_%s_handle)(fl_%s w, int event);" v1 v1)
+  > (format "FL_EXPORT_C(void, Fl_%s_draw)(fl_%s o);" v1 v1)
   ?\n
-  > (format "FL_EXPORT_C(int, Fl_%s_handle_super)(fl_%s w, int event);" v1 v1)
+  > (format "FL_EXPORT_C(void, Fl_%s_draw_super)(fl_%s o);" v1 v1)
   ?\n
-  > (format "FL_EXPORT_C(void, Fl_%s_resize)(fl_%s w, int x, int y, int w, int h);" v1 v1)
+  > (format "FL_EXPORT_C(int, Fl_%s_handle)(fl_%s o, int event);" v1 v1)
   ?\n
-  > (format "FL_EXPORT_C(void, Fl_%s_resize_super)(fl_%s w, int x, int y, int w, int h);" v1 v1)
+  > (format "FL_EXPORT_C(int, Fl_%s_handle_super)(fl_%s o, int event);" v1 v1)
   ?\n
-  > (format "FL_EXPORT_C(void, Fl_%s_show)(fl_%s w);" v1 v1)
+  > (format "FL_EXPORT_C(void, Fl_%s_resize)(fl_%s o, int x, int y, int w, int h);" v1 v1)
   ?\n
-  > (format "FL_EXPORT_C(void, Fl_%s_show_super)(fl_%s w);" v1 v1)
+  > (format "FL_EXPORT_C(void, Fl_%s_resize_super)(fl_%s o, int x, int y, int w, int h);" v1 v1)
   ?\n
-  > (format "FL_EXPORT_C(void, Fl_%s_hide)(fl_%s w);" v1 v1)
+  > (format "FL_EXPORT_C(void, Fl_%s_show)(fl_%s o);" v1 v1)
   ?\n
-  > (format "FL_EXPORT_C(void, Fl_%s_hide_super)(fl_%s w);" v1 v1)
+  > (format "FL_EXPORT_C(void, Fl_%s_show_super)(fl_%s o);" v1 v1)
+  ?\n
+  > (format "FL_EXPORT_C(void, Fl_%s_hide)(fl_%s o);" v1 v1)
+  ?\n
+  > (format "FL_EXPORT_C(void, Fl_%s_hide_super)(fl_%s o);" v1 v1)
   ?\n
   )
+
+(define-skeleton haskell-custom
+  ""
+  nil
+  '(setq v1 (skeleton-read "class:"))
+  > (format "{# fun Fl_Overridden%s_New_WithLabel as overriddenWidgetNewWithLabel' { `Int',`Int',`Int',`Int', unsafeToCString `T.Text', id `Ptr ()'} -> `Ptr ()' id #}" (capitalize v1))
+  ?\n
+  > (format "{# fun Fl_Overridden%s_New as overriddenWidgetNew' { `Int',`Int',`Int',`Int', id `Ptr ()'} -> `Ptr ()' id #}" (capitalize v1))
+  ?\n
+  > (format "%sCustom ::
+       Rectangle                         -- ^ The bounds of this %s
+    -> Maybe T.Text                      -- ^ The %s label
+    -> Maybe (Ref %s -> IO ())           -- ^ Optional custom drawing function
+    -> Maybe (CustomWidgetFuncs %s)      -- ^ Optional custom widget functions
+    -> IO (Ref %s)
+%sCustom rectangle l' draw' funcs' =
+  widgetMaker
+    rectangle
+    l'
+    draw'
+    funcs'
+    overriddenWidgetNew'
+    overriddenWidgetNewWithLabel'
+" (s-lower-camel-case v1) (s-upper-camel-case v1) (s-upper-camel-case v1) (s-upper-camel-case v1) (s-upper-camel-case v1) (s-upper-camel-case v1) (s-lower-camel-case v1))
+  ?\n
+  )
+
+
+(defun custom-instances-list (class)
+  (let (
+        (draw (format "{# fun Fl_%s_draw as draw'' { id `Ptr ()' } -> `()' #}
+instance (impl ~ (  IO ())) => Op (Draw ()) %s orig impl where
+  runOp _ _ %s = withRef %s $ \\%sPtr -> draw'' %sPtr"  class (s-upper-camel-case class) (s-lower-camel-case class) (s-lower-camel-case class) (s-lower-camel-case class) (s-lower-camel-case class)))
+        (draw-super (format "{# fun Fl_%s_draw_super as drawSuper' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
+instance (impl ~ ( IO ())) => Op (DrawSuper ()) %s orig impl where
+  runOp _ _ %s = withRef %s $ \\%sPtr -> drawSuper' %sPtr"  class (s-upper-camel-case class) (s-lower-camel-case class) (s-lower-camel-case class) (s-lower-camel-case class) (s-lower-camel-case class)))
+        (handle (format "{#fun Fl_%s_handle as %sHandle' { id `Ptr ()', id `CInt' } -> `Int' #}
+instance (impl ~ (Event -> IO (Either UnknownEvent ()))) => Op (Handle ()) %s orig impl where
+  runOp _ _ %s event = withRef %s (\\p -> %sHandle' p (fromIntegral . fromEnum $ event)) >>= return  . successOrUnknownEvent"  class (s-lower-camel-case class) (s-upper-camel-case class) (s-lower-camel-case class) (s-lower-camel-case class) (s-lower-camel-case class)))
+        (handle-super (format "{# fun Fl_%s_handle_super as handleSuper' { id `Ptr ()',`Int' } -> `Int' #}
+instance (impl ~ (Event ->  IO (Either UnknownEvent ()))) => Op (HandleSuper ()) %s orig impl where
+  runOp _ _ %s event = withRef %s $ \\%sPtr -> handleSuper' %sPtr (fromIntegral (fromEnum event)) >>= return . successOrUnknownEvent" class (s-upper-camel-case class) (s-lower-camel-case class) (s-lower-camel-case class) (s-lower-camel-case class) (s-lower-camel-case class)))
+        (resize (format "{# fun Fl_%s_resize as resize' { id `Ptr ()',`Int',`Int',`Int',`Int' } -> `()' supressWarningAboutRes #}
+instance (impl ~ (Rectangle -> IO ())) => Op (Resize ()) %s orig impl where
+  runOp _ _ %s rectangle = withRef %s $ \\%sPtr -> do
+                                 let (x_pos,y_pos,w_pos,h_pos) = fromRectangle rectangle
+                                 resize' %sPtr x_pos y_pos w_pos h_pos" class (s-upper-camel-case class) (s-lower-camel-case class) (s-lower-camel-case class) (s-lower-camel-case class) (s-lower-camel-case class)))
+        (resize-super (format "{# fun Fl_%s_resize_super as resizeSuper' { id `Ptr ()',`Int',`Int',`Int',`Int' } -> `()' supressWarningAboutRes #}
+instance (impl ~ (Rectangle -> IO ())) => Op (ResizeSuper ()) %s orig impl where
+  runOp _ _ %s rectangle =
+    let (x_pos, y_pos, width, height) = fromRectangle rectangle
+    in withRef %s $ \\%sPtr -> resizeSuper' %sPtr x_pos y_pos width height" class (s-upper-camel-case class) (s-lower-camel-case class) (s-lower-camel-case class) (s-lower-camel-case class) (s-lower-camel-case class)))
+        (hide (format "{# fun Fl_%s_hide as hide' { id `Ptr ()' } -> `()' #}
+instance (impl ~ (  IO ())) => Op (Hide ()) %s orig impl where
+  runOp _ _ %s = withRef %s $ \\%sPtr -> hide' %sPtr"  class (s-upper-camel-case class) (s-lower-camel-case class) (s-lower-camel-case class) (s-lower-camel-case class) (s-lower-camel-case class)))
+        (hide-super (format "{# fun Fl_%s_hide_super as hideSuper' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
+instance (impl ~ ( IO ())) => Op (HideSuper ()) %s orig impl where
+  runOp _ _ %s = withRef %s $ \\%sPtr -> hideSuper' %sPtr"  class (s-upper-camel-case class) (s-lower-camel-case class) (s-lower-camel-case class) (s-lower-camel-case class) (s-lower-camel-case class)))
+        (show (format "{# fun Fl_%s_show as show' { id `Ptr ()' } -> `()' #}
+instance (impl ~ (  IO ())) => Op (ShowWidget ()) %s orig impl where
+  runOp _ _ %s = withRef %s $ \\%sPtr -> show' %sPtr"  class (s-upper-camel-case class) (s-lower-camel-case class) (s-lower-camel-case class) (s-lower-camel-case class) (s-lower-camel-case class)))
+        (show-super (format "{# fun Fl_%s_show_super as showSuper' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
+instance (impl ~ ( IO ())) => Op (ShowWidgetSuper ()) %s orig impl where
+  runOp _ _ %s = withRef %s $ \\%sPtr -> showSuper' %sPtr"  class (s-upper-camel-case class) (s-lower-camel-case class) (s-lower-camel-case class) (s-lower-camel-case class) (s-lower-camel-case class)))
+        )
+    (list draw draw-super handle handle-super resize resize-super hide hide-super show show-super))
+  )
+
+(define-skeleton custom-instances
+  ""
+  nil
+  '(setq v1 (skeleton-read "class:"))
+  '(setq v2 (custom-instances-list v1))
+  > (format "%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n" (nth 0 v2) (nth 1 v2) (nth 2 v2) (nth 3 v2) (nth 4 v2) (nth 5 v2) (nth 6 v2) (nth 7 v2) (nth 8 v2) (nth 9 v2))
+  )
+
+(define-skeleton custom-datatype
+  ""
+  nil
+  > (format "%s"  "(Draw
+   (DrawSuper
+   (Handle
+   (HandleSuper
+   (ShowWidget
+   (ShowWidgetSuper
+   (Hide
+   (HideSuper")
+  )
+
+(define-skeleton imports
+  ""
+  nil
+  > (format "%s" "import Graphics.UI.FLTK.LowLevel.Fl_Enumerations
+import Graphics.UI.FLTK.LowLevel.Widget
+"))

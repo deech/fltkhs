@@ -7,7 +7,27 @@
 #include "FL/Fl.H"
 #include "FL/Fl_Tabs.H"
 #include "Fl_CallbackC.h"
+#include "Fl_WidgetC.h"
 EXPORT {
+  class Fl_DerivedTabs : public Fl_Tabs {
+    fl_Widget_Virtual_Funcs* overriddenFuncs;
+    void* other_data;
+  public:
+    virtual void draw();
+    void draw_super();
+    virtual int handle(int event);
+    int handle_super(int event);
+    virtual void resize(int x, int y, int w, int h);
+    void resize_super(int x, int y, int w, int h);
+    virtual void show();
+    void show_super();
+    virtual void hide();
+    void hide_super();
+    Fl_DerivedTabs(int X, int Y, int W, int H, const char *l, fl_Widget_Virtual_Funcs* funcs);
+    Fl_DerivedTabs(int X, int Y, int W, int H, fl_Widget_Virtual_Funcs* funcs);
+    ~Fl_DerivedTabs();
+  };
+
 #endif
   /* Inherited from Fl_Widget */
   FL_EXPORT_C(int,Fl_Tabs_handle)(fl_Tabs self, int event);
@@ -124,6 +144,18 @@ EXPORT {
   FL_EXPORT_C(fl_Widget, Fl_Tabs_which)(fl_Tabs tabs, int event_x, int event_y);
   FL_EXPORT_C(void, Fl_Tabs_client_area)(fl_Tabs tabs, int* rx, int* ry, int* rw, int* rh);
   FL_EXPORT_C(void, Fl_Tabs_client_area_with_tabh)(fl_Tabs tabs, int* rx, int* ry, int* rw, int* rh, int tabh);
+  FL_EXPORT_C(fl_Tabs,    Fl_OverriddenTabs_New)(int X, int Y, int W, int H,fl_Widget_Virtual_Funcs* fs);
+  FL_EXPORT_C(fl_Tabs,    Fl_OverriddenTabs_New_WithLabel)(int X, int Y, int W, int H, const char* label, fl_Widget_Virtual_Funcs* fs);
+  FL_EXPORT_C(void, Fl_Tabs_draw)(fl_Tabs o);
+  FL_EXPORT_C(void, Fl_Tabs_draw_super)(fl_Tabs o);
+  FL_EXPORT_C(int, Fl_Tabs_handle)(fl_Tabs o, int event);
+  FL_EXPORT_C(int, Fl_Tabs_handle_super)(fl_Tabs o, int event);
+  FL_EXPORT_C(void, Fl_Tabs_resize)(fl_Tabs o, int x, int y, int w, int h);
+  FL_EXPORT_C(void, Fl_Tabs_resize_super)(fl_Tabs o, int x, int y, int w, int h);
+  FL_EXPORT_C(void, Fl_Tabs_show)(fl_Tabs o);
+  FL_EXPORT_C(void, Fl_Tabs_show_super)(fl_Tabs o);
+  FL_EXPORT_C(void, Fl_Tabs_hide)(fl_Tabs o);
+  FL_EXPORT_C(void, Fl_Tabs_hide_super)(fl_Tabs o);
 #ifdef __cplusplus
 }
 #endif

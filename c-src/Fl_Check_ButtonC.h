@@ -7,7 +7,26 @@
 #include "FL/Fl.H"
 #include "FL/Fl_Check_Button.H"
 #include "Fl_CallbackC.h"
+#include "Fl_WidgetC.h"
 EXPORT {
+  class Fl_DerivedCheck_Button : public Fl_Check_Button {
+    fl_Widget_Virtual_Funcs* overriddenFuncs;
+    void* other_data;
+  public:
+    virtual void draw();
+    void draw_super();
+    virtual int handle(int event);
+    int handle_super(int event);
+    virtual void resize(int x, int y, int w, int h);
+    void resize_super(int x, int y, int w, int h);
+    virtual void show();
+    void show_super();
+    virtual void hide();
+    void hide_super();
+    Fl_DerivedCheck_Button(int X, int Y, int W, int H, const char *l, fl_Widget_Virtual_Funcs* funcs);
+    Fl_DerivedCheck_Button(int X, int Y, int W, int H, fl_Widget_Virtual_Funcs* funcs);
+    ~Fl_DerivedCheck_Button();
+  };
 #endif
   /* Inherited from Fl_Widget */
   FL_EXPORT_C(int,Fl_Check_Button_handle)(fl_Check_Button self, int event);
@@ -93,7 +112,7 @@ EXPORT {
   FL_EXPORT_C(fl_Check_Button, Fl_Check_Button_New_WithLabel)(int x, int y, int w, int h, const char* label);
   FL_EXPORT_C(fl_Check_Button, Fl_Check_Button_New)(int x, int y, int w, int h);
   FL_EXPORT_C(void,            Fl_Check_Button_Destroy)(fl_Check_Button button);
-  
+
   FL_EXPORT_C(char        , Fl_Check_Button_value)(fl_Check_Button b);
   FL_EXPORT_C(int         , Fl_Check_Button_set_value)(fl_Check_Button b, int v);
   FL_EXPORT_C(int         , Fl_Check_Button_set)(fl_Check_Button b);
@@ -105,6 +124,19 @@ EXPORT {
   FL_EXPORT_C(void        , Fl_Check_Button_set_down_box)(fl_Check_Button b,Fl_Boxtype boxtype);
   FL_EXPORT_C(Fl_Color    , Fl_Check_Button_down_color )(fl_Check_Button b);
   FL_EXPORT_C(void        , Fl_Check_Button_set_down_color)(fl_Check_Button b, Fl_Color c);
+  FL_EXPORT_C(fl_Check_Button,    Fl_OverriddenCheck_Button_New)(int X, int Y, int W, int H,fl_Widget_Virtual_Funcs* fs);
+  FL_EXPORT_C(fl_Check_Button,    Fl_OverriddenCheck_Button_New_WithLabel)(int X, int Y, int W, int H, const char* label, fl_Widget_Virtual_Funcs* fs);
+  FL_EXPORT_C(void, Fl_Check_Button_draw)(fl_Check_Button o);
+  FL_EXPORT_C(void, Fl_Check_Button_draw_super)(fl_Check_Button o);
+  FL_EXPORT_C(int, Fl_Check_Button_handle)(fl_Check_Button o, int event);
+  FL_EXPORT_C(int, Fl_Check_Button_handle_super)(fl_Check_Button o, int event);
+  FL_EXPORT_C(void, Fl_Check_Button_resize)(fl_Check_Button o, int x, int y, int w, int h);
+  FL_EXPORT_C(void, Fl_Check_Button_resize_super)(fl_Check_Button o, int x, int y, int w, int h);
+  FL_EXPORT_C(void, Fl_Check_Button_show)(fl_Check_Button o);
+  FL_EXPORT_C(void, Fl_Check_Button_show_super)(fl_Check_Button o);
+  FL_EXPORT_C(void, Fl_Check_Button_hide)(fl_Check_Button o);
+  FL_EXPORT_C(void, Fl_Check_Button_hide_super)(fl_Check_Button o);
+
 #ifdef __cplusplus
 }
 #endif

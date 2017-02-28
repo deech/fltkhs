@@ -7,7 +7,25 @@
 #include "FL/Fl.H"
 #include "FL/Fl_Timer.H"
 #include "Fl_CallbackC.h"
+#include "Fl_WidgetC.h"
 EXPORT {
+  class Fl_DerivedTimer : public Fl_Timer {
+    fl_Widget_Virtual_Funcs* overriddenFuncs;
+    void* other_data;
+  public:
+    virtual void draw();
+    void draw_super();
+    virtual int handle(int event);
+    int handle_super(int event);
+    virtual void resize(int x, int y, int w, int h);
+    void resize_super(int x, int y, int w, int h);
+    virtual void show();
+    void show_super();
+    virtual void hide();
+    void hide_super();
+    Fl_DerivedTimer(uchar t, int X, int Y, int W, int H, const char *l, fl_Widget_Virtual_Funcs* funcs);
+    ~Fl_DerivedTimer();
+  };
 #endif
   /* Inherited from Fl_Widget */
   FL_EXPORT_C(int ,         Fl_Timer_handle )(fl_Timer timer,int event);
@@ -111,6 +129,18 @@ EXPORT {
   FL_EXPORT_C(void,      Fl_Timer_set_value)(fl_Timer timer, double value);
   FL_EXPORT_C(char,      Fl_Timer_suspended)(fl_Timer timer);
   FL_EXPORT_C(void,      Fl_Timer_set_suspended)(fl_Timer timer, char s);
+  FL_EXPORT_C(fl_Timer,    Fl_OverriddenTimer_New)(int X, int Y, int W, int H,fl_Widget_Virtual_Funcs* fs);
+  FL_EXPORT_C(fl_Timer,    Fl_OverriddenTimer_New_WithLabel)(int X, int Y, int W, int H, const char* label, fl_Widget_Virtual_Funcs* fs);
+  FL_EXPORT_C(void, Fl_Timer_draw)(fl_Timer o);
+  FL_EXPORT_C(void, Fl_Timer_draw_super)(fl_Timer o);
+  FL_EXPORT_C(int, Fl_Timer_handle)(fl_Timer o, int event);
+  FL_EXPORT_C(int, Fl_Timer_handle_super)(fl_Timer o, int event);
+  FL_EXPORT_C(void, Fl_Timer_resize)(fl_Timer o, int x, int y, int w, int h);
+  FL_EXPORT_C(void, Fl_Timer_resize_super)(fl_Timer o, int x, int y, int w, int h);
+  FL_EXPORT_C(void, Fl_Timer_show)(fl_Timer o);
+  FL_EXPORT_C(void, Fl_Timer_show_super)(fl_Timer o);
+  FL_EXPORT_C(void, Fl_Timer_hide)(fl_Timer o);
+  FL_EXPORT_C(void, Fl_Timer_hide_super)(fl_Timer o);
 #ifdef __cplusplus
 }
 #endif

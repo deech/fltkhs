@@ -15,6 +15,7 @@
 #include <FL/Fl_Text_Editor.H>
 #include <FL/Fl_File_Chooser.H>
 #include <stdio.h>
+
 /**
   Pass a C callback function to an Fl_Window
 */

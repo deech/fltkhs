@@ -8,7 +8,27 @@
 #include "FL/Fl_Value_Slider.H"
 #include "FL/Fl_Hor_Value_Slider.H"
 #include "Fl_CallbackC.h"
+#include "Fl_WidgetC.h"
 EXPORT {
+  class Fl_DerivedValue_Slider : public Fl_Value_Slider {
+    fl_Widget_Virtual_Funcs* overriddenFuncs;
+    void* other_data;
+  public:
+    virtual void draw();
+    void draw_super();
+    virtual int handle(int event);
+    int handle_super(int event);
+    virtual void resize(int x, int y, int w, int h);
+    void resize_super(int x, int y, int w, int h);
+    virtual void show();
+    void show_super();
+    virtual void hide();
+    void hide_super();
+    Fl_DerivedValue_Slider(int X, int Y, int W, int H, const char *l, fl_Widget_Virtual_Funcs* funcs);
+    Fl_DerivedValue_Slider(int X, int Y, int W, int H, fl_Widget_Virtual_Funcs* funcs);
+    ~Fl_DerivedValue_Slider();
+  };
+
 #endif
   FL_EXPORT_C(fl_Group,     Fl_Value_Slider_parent)(fl_Value_Slider value_slider);
   FL_EXPORT_C(void,         Fl_Value_Slider_set_parent)(fl_Value_Slider value_slider, fl_Group grp);
@@ -119,7 +139,7 @@ EXPORT {
   FL_EXPORT_C(void, Fl_Value_Slider_value_slider_size)(fl_Value_Slider value_slider, double v);
   FL_EXPORT_C(Fl_Boxtype, Fl_Value_Slider_value_slider)(fl_Value_Slider value_slider);
   FL_EXPORT_C(void, Fl_Value_Slider_set_value_slider)(fl_Value_Slider value_slider, Fl_Boxtype c);
-  
+
 
   /* Fl_Value_Slider specific */
   FL_EXPORT_C(fl_Value_Slider,    Fl_Value_Slider_New_WithLabel)(int x, int y, int w, int h, const char* label);
@@ -134,6 +154,18 @@ EXPORT {
   FL_EXPORT_C(Fl_Color, Fl_Value_Slider_textcolor)(fl_Value_Slider value_slider);
   FL_EXPORT_C(void, Fl_Value_Slider_set_textcolor)(fl_Value_Slider value_slider, Fl_Color s);
   FL_EXPORT_C(int,Fl_Value_Slider_handle)(fl_Widget self, int event);
+  FL_EXPORT_C(fl_Value_Slider,    Fl_OverriddenValue_Slider_New)(int X, int Y, int W, int H,fl_Widget_Virtual_Funcs* fs);
+  FL_EXPORT_C(fl_Value_Slider,    Fl_OverriddenValue_Slider_New_WithLabel)(int X, int Y, int W, int H, const char* label, fl_Widget_Virtual_Funcs* fs);
+  FL_EXPORT_C(void, Fl_Value_Slider_draw)(fl_Value_Slider o);
+  FL_EXPORT_C(void, Fl_Value_Slider_draw_super)(fl_Value_Slider o);
+  FL_EXPORT_C(int, Fl_Value_Slider_handle)(fl_Value_Slider o, int event);
+  FL_EXPORT_C(int, Fl_Value_Slider_handle_super)(fl_Value_Slider o, int event);
+  FL_EXPORT_C(void, Fl_Value_Slider_resize)(fl_Value_Slider o, int x, int y, int w, int h);
+  FL_EXPORT_C(void, Fl_Value_Slider_resize_super)(fl_Value_Slider o, int x, int y, int w, int h);
+  FL_EXPORT_C(void, Fl_Value_Slider_show)(fl_Value_Slider o);
+  FL_EXPORT_C(void, Fl_Value_Slider_show_super)(fl_Value_Slider o);
+  FL_EXPORT_C(void, Fl_Value_Slider_hide)(fl_Value_Slider o);
+  FL_EXPORT_C(void, Fl_Value_Slider_hide_super)(fl_Value_Slider o);
 #ifdef __cplusplus
 }
 #endif

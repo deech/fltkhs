@@ -1,11 +1,82 @@
 #include "Fl_ClockC.h"
-
 #ifdef __cplusplus
 EXPORT {
-#endif
-  FL_EXPORT_C(int,Fl_Clock_handle)(fl_Clock self, int event){
-    return (static_cast<Fl_Clock*>(self))->handle(event);
+  Fl_DerivedClock::Fl_DerivedClock(int X, int Y, int W, int H, const char *l, fl_Widget_Virtual_Funcs* funcs) : Fl_Clock(X,Y,W,H,l){
+    overriddenFuncs = funcs;
+    other_data = (void*)0;
   }
+  Fl_DerivedClock::Fl_DerivedClock(int X, int Y, int W, int H, fl_Widget_Virtual_Funcs* funcs):Fl_Clock(X,Y,W,H){
+    overriddenFuncs = funcs;
+    other_data = (void*)0;
+  }
+  Fl_DerivedClock::~Fl_DerivedClock(){
+    free(overriddenFuncs);
+  }
+  void Fl_DerivedClock::draw(){
+    if (this->overriddenFuncs->draw != NULL) {
+      this->overriddenFuncs->draw((fl_Clock) this);
+    }
+    else {
+      Fl_Clock::draw();
+    }
+  }
+
+  void Fl_DerivedClock::draw_super(){
+    Fl_Clock::draw();
+  }
+
+  int Fl_DerivedClock::handle(int event){
+    int i;
+    if (this->overriddenFuncs->handle != NULL) {
+      i = this->overriddenFuncs->handle((fl_Clock) this,event);
+    }
+    else {
+      i = Fl_Clock::handle(event);
+    }
+    return i;
+  }
+  int Fl_DerivedClock::handle_super(int event){
+    return Fl_Clock::handle(event);
+  }
+
+  void Fl_DerivedClock::resize(int x, int y, int w, int h){
+    if (this->overriddenFuncs->resize != NULL) {
+      this->overriddenFuncs->resize((fl_Clock) this,x,y,w,h);
+    }
+    else {
+      Fl_Clock::resize(x,y,w,h);
+    }
+  }
+
+  void Fl_DerivedClock::resize_super(int x, int y, int w, int h){
+    Fl_Clock::resize(x,y,w,h);
+  }
+  void Fl_DerivedClock::show(){
+    if (this->overriddenFuncs->show != NULL) {
+      this->overriddenFuncs->show((fl_Clock) this);
+    }
+    else {
+      Fl_Clock::show();
+    }
+  }
+  void Fl_DerivedClock::show_super(){
+    Fl_Clock::show();
+  }
+
+  void Fl_DerivedClock::hide(){
+    if (this->overriddenFuncs->hide != NULL) {
+      this->overriddenFuncs->hide((fl_Clock) this);
+    }
+    else {
+      Fl_Clock::hide();
+    }
+  }
+  void Fl_DerivedClock::hide_super(){
+    Fl_Clock::hide();
+  }
+
+
+#endif
   FL_EXPORT_C(fl_Group,Fl_Clock_parent)(fl_Clock b){
     return (fl_Group) (static_cast<Fl_Clock*>(b))->parent();
   }
@@ -266,14 +337,6 @@ EXPORT {
   FL_EXPORT_C(fl_Gl_Window,Fl_Clock_as_gl_window)(fl_Clock clock){
     return (fl_Gl_Window) (static_cast<Fl_Clock*>(clock))->as_gl_window();
   }
-  FL_EXPORT_C(fl_Clock, Fl_Clock_New_WithLabel)(int x, int y, int w, int h, const char* label) {
-    Fl_Clock* clock = new Fl_Clock(x,y,w,h,label);
-    return (static_cast<fl_Clock>(clock));
-  }
-  FL_EXPORT_C(fl_Clock, Fl_Clock_New)(int x, int y, int w, int h) {
-    Fl_Clock* clock = new Fl_Clock(x,y,w,h,0);
-    return (fl_Clock)clock;
-  }
   FL_EXPORT_C(fl_Clock, Fl_Clock_New_WithClockType)(uchar t, int x, int y, int w, int h, const char* label) {
     Fl_Clock* clock = new Fl_Clock(t,x,y,w,h,label);
     return (fl_Clock)clock;
@@ -298,6 +361,54 @@ EXPORT {
   }
   FL_EXPORT_C(int,Fl_Clock_second)(fl_Clock clock){
     return (static_cast<Fl_Clock*>(clock))->second();
+  }
+  FL_EXPORT_C(void, Fl_Clock_draw)(fl_Clock o){
+    (static_cast<Fl_DerivedClock*>(o))->draw();
+  }
+  FL_EXPORT_C(void, Fl_Clock_draw_super)(fl_Clock o){
+    (static_cast<Fl_DerivedClock*>(o))->draw_super();
+  }
+  FL_EXPORT_C(int, Fl_Clock_handle)(fl_Clock o, int event){
+    return (static_cast<Fl_DerivedClock*>(o))->handle(event);
+  }
+  FL_EXPORT_C(int, Fl_Clock_handle_super)(fl_Clock o, int event){
+    return (static_cast<Fl_DerivedClock*>(o))->handle_super(event);
+  }
+  FL_EXPORT_C(void, Fl_Clock_resize)(fl_Clock o, int x, int y, int w, int h){
+    (static_cast<Fl_DerivedClock*>(o))->resize(x,y,w,h);
+  }
+  FL_EXPORT_C(void, Fl_Clock_resize_super)(fl_Clock o, int x, int y, int w, int h){
+    (static_cast<Fl_DerivedClock*>(o))->resize_super(x,y,w,h);
+  }
+  FL_EXPORT_C(void, Fl_Clock_show)(fl_Clock o){
+    (static_cast<Fl_DerivedClock*>(o))->show();
+  }
+  FL_EXPORT_C(void, Fl_Clock_show_super)(fl_Clock o){
+    (static_cast<Fl_DerivedClock*>(o))->show_super();
+  }
+  FL_EXPORT_C(void, Fl_Clock_hide)(fl_Clock o){
+    (static_cast<Fl_DerivedClock*>(o))->hide();
+  }
+  FL_EXPORT_C(void, Fl_Clock_hide_super)(fl_Clock o){
+    (static_cast<Fl_DerivedClock*>(o))->hide_super();
+  }
+  FL_EXPORT_C(fl_Clock,    Fl_Clock_New)(int X, int Y, int W, int H){
+    fl_Widget_Virtual_Funcs* fs = Fl_Widget_default_virtual_funcs();
+    Fl_DerivedClock* w = new Fl_DerivedClock(X,Y,W,H,fs);
+    return (fl_Clock)w;
+  }
+  FL_EXPORT_C(fl_Clock,    Fl_Clock_New_WithLabel)(int X, int Y, int W, int H, const char* label){
+    fl_Widget_Virtual_Funcs* fs = Fl_Widget_default_virtual_funcs();
+    Fl_DerivedClock* w = new Fl_DerivedClock(X,Y,W,H,label,fs);
+    return (fl_Clock)w;
+  }
+  FL_EXPORT_C(fl_Clock,    Fl_OverriddenClock_New)(int X, int Y, int W, int H,fl_Widget_Virtual_Funcs* fs){
+    Fl_DerivedClock* w = new Fl_DerivedClock(X,Y,W,H,fs);
+    return (fl_Clock)w;
+  }
+  FL_EXPORT_C(fl_Clock,    Fl_OverriddenClock_New_WithLabel)(int X, int Y, int W, int H, const char* label, fl_Widget_Virtual_Funcs* fs){
+    Fl_DerivedClock* w = new Fl_DerivedClock(X,Y,W,H,label,fs);
+    return (fl_Clock)w;
   }
 #ifdef __cplusplus
 }

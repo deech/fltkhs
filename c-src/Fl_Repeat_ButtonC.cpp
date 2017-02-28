@@ -2,10 +2,82 @@
 
 #ifdef __cplusplus
 EXPORT {
-#endif
-  FL_EXPORT_C(int,Fl_Repeat_Button_handle)(fl_Repeat_Button self, int event){
-    return (static_cast<Fl_Repeat_Button*>(self))->handle(event);
+  Fl_DerivedRepeat_Button::Fl_DerivedRepeat_Button(int X, int Y, int W, int H, const char *l, fl_Widget_Virtual_Funcs* funcs) : Fl_Repeat_Button(X,Y,W,H,l){
+    overriddenFuncs = funcs;
+    other_data = (void*)0;
   }
+  Fl_DerivedRepeat_Button::Fl_DerivedRepeat_Button(int X, int Y, int W, int H, fl_Widget_Virtual_Funcs* funcs):Fl_Repeat_Button(X,Y,W,H){
+    overriddenFuncs = funcs;
+    other_data = (void*)0;
+  }
+  Fl_DerivedRepeat_Button::~Fl_DerivedRepeat_Button(){
+    free(overriddenFuncs);
+  }
+  void Fl_DerivedRepeat_Button::draw(){
+    if (this->overriddenFuncs->draw != NULL) {
+      this->overriddenFuncs->draw((fl_Repeat_Button) this);
+    }
+    else {
+      Fl_Repeat_Button::draw();
+    }
+  }
+
+  void Fl_DerivedRepeat_Button::draw_super(){
+    Fl_Repeat_Button::draw();
+  }
+
+  int Fl_DerivedRepeat_Button::handle(int event){
+    int i;
+    if (this->overriddenFuncs->handle != NULL) {
+      i = this->overriddenFuncs->handle((fl_Repeat_Button) this,event);
+    }
+    else {
+      i = Fl_Repeat_Button::handle(event);
+    }
+    return i;
+  }
+  int Fl_DerivedRepeat_Button::handle_super(int event){
+    return Fl_Repeat_Button::handle(event);
+  }
+
+  void Fl_DerivedRepeat_Button::resize(int x, int y, int w, int h){
+    if (this->overriddenFuncs->resize != NULL) {
+      this->overriddenFuncs->resize((fl_Repeat_Button) this,x,y,w,h);
+    }
+    else {
+      Fl_Repeat_Button::resize(x,y,w,h);
+    }
+  }
+
+  void Fl_DerivedRepeat_Button::resize_super(int x, int y, int w, int h){
+    Fl_Repeat_Button::resize(x,y,w,h);
+  }
+  void Fl_DerivedRepeat_Button::show(){
+    if (this->overriddenFuncs->show != NULL) {
+      this->overriddenFuncs->show((fl_Repeat_Button) this);
+    }
+    else {
+      Fl_Repeat_Button::show();
+    }
+  }
+  void Fl_DerivedRepeat_Button::show_super(){
+    Fl_Repeat_Button::show();
+  }
+
+  void Fl_DerivedRepeat_Button::hide(){
+    if (this->overriddenFuncs->hide != NULL) {
+      this->overriddenFuncs->hide((fl_Repeat_Button) this);
+    }
+    else {
+      Fl_Repeat_Button::hide();
+    }
+  }
+  void Fl_DerivedRepeat_Button::hide_super(){
+    Fl_Repeat_Button::hide();
+  }
+
+
+#endif
   FL_EXPORT_C(fl_Group,Fl_Repeat_Button_parent)(fl_Repeat_Button b){
     return (fl_Group) (static_cast<Fl_Repeat_Button*>(b))->parent();
   }
@@ -266,14 +338,6 @@ EXPORT {
   FL_EXPORT_C(fl_Gl_Window,Fl_Repeat_Button_as_gl_window)(fl_Repeat_Button repeat_button){
     return (fl_Gl_Window) (static_cast<Fl_Repeat_Button*>(repeat_button))->as_gl_window();
   }
-  FL_EXPORT_C(fl_Repeat_Button, Fl_Repeat_Button_New_WithLabel)(int x, int y, int w, int h, const char* label) {
-    Fl_Repeat_Button* button = new Fl_Repeat_Button(x,y,w,h,label);
-    return (static_cast<fl_Repeat_Button>(button));
-  }
-  FL_EXPORT_C(fl_Repeat_Button, Fl_Repeat_Button_New)(int x, int y, int w, int h) {
-    Fl_Repeat_Button* button = new Fl_Repeat_Button(x,y,w,h,0);
-    return (fl_Repeat_Button)button;
-  }
   FL_EXPORT_C(void,Fl_Repeat_Button_Destroy)(fl_Repeat_Button button){
     delete (static_cast<Fl_Repeat_Button*>(button));
   }
@@ -306,6 +370,54 @@ EXPORT {
   }
   FL_EXPORT_C(void,Fl_Repeat_Button_set_down_color)(fl_Repeat_Button b,Fl_Color c){
     (static_cast<Fl_Repeat_Button*>(b))->down_color(c);
+  }
+  FL_EXPORT_C(fl_Repeat_Button,    Fl_Repeat_Button_New)(int X, int Y, int W, int H){
+    fl_Widget_Virtual_Funcs* fs = Fl_Widget_default_virtual_funcs();
+    Fl_DerivedRepeat_Button* w = new Fl_DerivedRepeat_Button(X,Y,W,H,fs);
+    return (fl_Repeat_Button)w;
+  }
+  FL_EXPORT_C(fl_Repeat_Button,    Fl_Repeat_Button_New_WithLabel)(int X, int Y, int W, int H, const char* label){
+    fl_Widget_Virtual_Funcs* fs = Fl_Widget_default_virtual_funcs();
+    Fl_DerivedRepeat_Button* w = new Fl_DerivedRepeat_Button(X,Y,W,H,label,fs);
+    return (fl_Repeat_Button)w;
+  }
+  FL_EXPORT_C(fl_Repeat_Button,    Fl_OverriddenRepeat_Button_New)(int X, int Y, int W, int H,fl_Widget_Virtual_Funcs* fs){
+    Fl_DerivedRepeat_Button* w = new Fl_DerivedRepeat_Button(X,Y,W,H,fs);
+    return (fl_Repeat_Button)w;
+  }
+  FL_EXPORT_C(fl_Repeat_Button,    Fl_OverriddenRepeat_Button_New_WithLabel)(int X, int Y, int W, int H, const char* label, fl_Widget_Virtual_Funcs* fs){
+    Fl_DerivedRepeat_Button* w = new Fl_DerivedRepeat_Button(X,Y,W,H,label,fs);
+    return (fl_Repeat_Button)w;
+  }
+  FL_EXPORT_C(void, Fl_Repeat_Button_draw)(fl_Repeat_Button o){
+    (static_cast<Fl_DerivedRepeat_Button*>(o))->draw();
+  }
+  FL_EXPORT_C(void, Fl_Repeat_Button_draw_super)(fl_Repeat_Button o){
+    (static_cast<Fl_DerivedRepeat_Button*>(o))->draw_super();
+  }
+  FL_EXPORT_C(int, Fl_Repeat_Button_handle)(fl_Repeat_Button o, int event){
+    return (static_cast<Fl_DerivedRepeat_Button*>(o))->handle(event);
+  }
+  FL_EXPORT_C(int, Fl_Repeat_Button_handle_super)(fl_Repeat_Button o, int event){
+    return (static_cast<Fl_DerivedRepeat_Button*>(o))->handle_super(event);
+  }
+  FL_EXPORT_C(void, Fl_Repeat_Button_resize)(fl_Repeat_Button o, int x, int y, int w, int h){
+    (static_cast<Fl_DerivedRepeat_Button*>(o))->resize(x,y,w,h);
+  }
+  FL_EXPORT_C(void, Fl_Repeat_Button_resize_super)(fl_Repeat_Button o, int x, int y, int w, int h){
+    (static_cast<Fl_DerivedRepeat_Button*>(o))->resize_super(x,y,w,h);
+  }
+  FL_EXPORT_C(void, Fl_Repeat_Button_show)(fl_Repeat_Button o){
+    (static_cast<Fl_DerivedRepeat_Button*>(o))->show();
+  }
+  FL_EXPORT_C(void, Fl_Repeat_Button_show_super)(fl_Repeat_Button o){
+    (static_cast<Fl_DerivedRepeat_Button*>(o))->show_super();
+  }
+  FL_EXPORT_C(void, Fl_Repeat_Button_hide)(fl_Repeat_Button o){
+    (static_cast<Fl_DerivedRepeat_Button*>(o))->hide();
+  }
+  FL_EXPORT_C(void, Fl_Repeat_Button_hide_super)(fl_Repeat_Button o){
+    (static_cast<Fl_DerivedRepeat_Button*>(o))->hide_super();
   }
 #ifdef __cplusplus
 }

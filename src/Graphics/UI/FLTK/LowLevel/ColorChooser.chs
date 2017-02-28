@@ -4,6 +4,7 @@ module Graphics.UI.FLTK.LowLevel.ColorChooser
     (
      -- * Constructor
      colorChooserNew,
+     colorChooserCustom,
      rgb2Hsv,
      hsv2Rgb,
      flcColorChooser
@@ -20,6 +21,7 @@ where
 #include "Fl_Types.h"
 #include "Fl_Color_ChooserC.h"
 import C2HS hiding (cFromEnum, cFromBool, cToBool,cToEnum)
+import Graphics.UI.FLTK.LowLevel.Widget
 
 import Graphics.UI.FLTK.LowLevel.Fl_Types
 import Graphics.UI.FLTK.LowLevel.Utils
@@ -27,6 +29,25 @@ import Graphics.UI.FLTK.LowLevel.Hierarchy
 import Graphics.UI.FLTK.LowLevel.Dispatch
 import qualified Data.Text as T
 import Data.List
+import Graphics.UI.FLTK.LowLevel.Fl_Enumerations
+
+{# fun Fl_OverriddenColor_Chooser_New_WithLabel as overriddenWidgetNewWithLabel' { `Int',`Int',`Int',`Int', unsafeToCString `T.Text', id `Ptr ()'} -> `Ptr ()' id #}
+{# fun Fl_OverriddenColor_Chooser_New as overriddenWidgetNew' { `Int',`Int',`Int',`Int', id `Ptr ()'} -> `Ptr ()' id #}
+colorChooserCustom ::
+       Rectangle                         -- ^ The bounds of this ColorChooser
+    -> Maybe T.Text                      -- ^ The ColorChooser label
+    -> Maybe (Ref ColorChooser -> IO ())           -- ^ Optional custom drawing function
+    -> Maybe (CustomWidgetFuncs ColorChooser)      -- ^ Optional custom widget functions
+    -> IO (Ref ColorChooser)
+colorChooserCustom rectangle l' draw' funcs' =
+  widgetMaker
+    rectangle
+    l'
+    draw'
+    funcs'
+    overriddenWidgetNew'
+    overriddenWidgetNewWithLabel'
+
 
 {# fun Fl_Color_Chooser_New as colorchooserNew' { `Int',`Int',`Int',`Int' } -> `Ptr ()' id #}
 {# fun Fl_Color_Chooser_New_WithLabel as colorchooserNewWithLabel' { `Int',`Int',`Int',`Int', unsafeToCString `T.Text'} -> `Ptr ()' id #}
@@ -109,6 +130,42 @@ instance (impl ~ ((Between0And1, Between0And1, Between0And1) ->  IO (Either NoCh
     withRef color_chooser $ \color_chooserPtr -> do
       ret <- rgb' color_chooserPtr r'' g'' b''
       if (ret == 0) then return (Left NoChange) else return (Right ())
+
+{# fun Fl_Color_Chooser_draw as draw' { id `Ptr ()' } -> `()' #}
+instance (impl ~ (  IO ())) => Op (Draw ()) ColorChooser orig impl where
+  runOp _ _ colorChooser = withRef colorChooser $ \colorChooserPtr -> draw' colorChooserPtr
+{# fun Fl_Color_Chooser_draw_super as drawSuper' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
+instance (impl ~ ( IO ())) => Op (DrawSuper ()) ColorChooser orig impl where
+  runOp _ _ colorChooser = withRef colorChooser $ \colorChooserPtr -> drawSuper' colorChooserPtr
+{#fun Fl_Color_Chooser_handle as colorChooserHandle' { id `Ptr ()', id `CInt' } -> `Int' #}
+instance (impl ~ (Event -> IO (Either UnknownEvent ()))) => Op (Handle ()) ColorChooser orig impl where
+  runOp _ _ colorChooser event = withRef colorChooser (\p -> colorChooserHandle' p (fromIntegral . fromEnum $ event)) >>= return  . successOrUnknownEvent
+{# fun Fl_Color_Chooser_handle_super as handleSuper' { id `Ptr ()',`Int' } -> `Int' #}
+instance (impl ~ (Event ->  IO (Either UnknownEvent ()))) => Op (HandleSuper ()) ColorChooser orig impl where
+  runOp _ _ colorChooser event = withRef colorChooser $ \colorChooserPtr -> handleSuper' colorChooserPtr (fromIntegral (fromEnum event)) >>= return . successOrUnknownEvent
+{# fun Fl_Color_Chooser_resize as resize' { id `Ptr ()',`Int',`Int',`Int',`Int' } -> `()' supressWarningAboutRes #}
+instance (impl ~ (Rectangle -> IO ())) => Op (Resize ()) ColorChooser orig impl where
+  runOp _ _ colorChooser rectangle = withRef colorChooser $ \colorChooserPtr -> do
+                                 let (x_pos,y_pos,w_pos,h_pos) = fromRectangle rectangle
+                                 resize' colorChooserPtr x_pos y_pos w_pos h_pos
+{# fun Fl_Color_Chooser_resize_super as resizeSuper' { id `Ptr ()',`Int',`Int',`Int',`Int' } -> `()' supressWarningAboutRes #}
+instance (impl ~ (Rectangle -> IO ())) => Op (ResizeSuper ()) ColorChooser orig impl where
+  runOp _ _ colorChooser rectangle =
+    let (x_pos, y_pos, width, height) = fromRectangle rectangle
+    in withRef colorChooser $ \colorChooserPtr -> resizeSuper' colorChooserPtr x_pos y_pos width height
+{# fun Fl_Color_Chooser_hide as hide' { id `Ptr ()' } -> `()' #}
+instance (impl ~ (  IO ())) => Op (Hide ()) ColorChooser orig impl where
+  runOp _ _ colorChooser = withRef colorChooser $ \colorChooserPtr -> hide' colorChooserPtr
+{# fun Fl_Color_Chooser_hide_super as hideSuper' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
+instance (impl ~ ( IO ())) => Op (HideSuper ()) ColorChooser orig impl where
+  runOp _ _ colorChooser = withRef colorChooser $ \colorChooserPtr -> hideSuper' colorChooserPtr
+{# fun Fl_Color_Chooser_show as show' { id `Ptr ()' } -> `()' #}
+instance (impl ~ (  IO ())) => Op (ShowWidget ()) ColorChooser orig impl where
+  runOp _ _ colorChooser = withRef colorChooser $ \colorChooserPtr -> show' colorChooserPtr
+{# fun Fl_Color_Chooser_show_super as showSuper' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
+instance (impl ~ ( IO ())) => Op (ShowWidgetSuper ()) ColorChooser orig impl where
+  runOp _ _ colorChooser = withRef colorChooser $ \colorChooserPtr -> showSuper' colorChooserPtr
+
 
 {# fun Fl_Color_Chooser_hsv2rgb as hsv2rgb' {`Double',`Double',`Double', id `Ptr CDouble', id `Ptr CDouble',id `Ptr CDouble' } -> `()' #}
 hsv2Rgb :: (Between0And6, Between0And1, Between0And1) ->  IO (Maybe (Between0And1, Between0And1, Between0And1))
@@ -195,6 +252,10 @@ flcColorChooser name (Words (r,g,b)) mode =
 
 -- $functions
 -- @
+-- draw :: 'Ref' 'ColorChooser' -> 'IO' ()
+--
+-- drawSuper :: 'Ref' 'ColorChooser' -> 'IO' ()
+--
 -- getB :: 'Ref' 'ColorChooser' -> 'IO' ('Either' 'OutOfRange' 'Between0And1')
 --
 -- getG :: 'Ref' 'ColorChooser' -> 'IO' ('Either' 'OutOfRange' 'Between0And1')
@@ -209,10 +270,26 @@ flcColorChooser name (Words (r,g,b)) mode =
 --
 -- getValue :: 'Ref' 'ColorChooser' -> 'IO' ('Either' 'OutOfRange' 'Between0And1')
 --
+-- handle :: 'Ref' 'ColorChooser' -> 'Event' -> 'IO' ('Either' 'UnknownEvent' ())
+--
+-- handleSuper :: 'Ref' 'ColorChooser' -> 'Event' -> 'IO' ('Either' 'UnknownEvent' ())
+--
+-- hide :: 'Ref' 'ColorChooser' -> 'IO' ()
+--
+-- hideSuper :: 'Ref' 'ColorChooser' -> 'IO' ()
+--
+-- resize :: 'Ref' 'ColorChooser' -> 'Rectangle' -> 'IO' ()
+--
+-- resizeSuper :: 'Ref' 'ColorChooser' -> 'Rectangle' -> 'IO' ()
+--
 -- setHsv :: 'Ref' 'ColorChooser' -> ('Between0And6', 'Between0And1', 'Between0And1') -> 'IO' ('Either' 'NoChange' ())
 --
 -- setMode :: 'Ref' 'ColorChooser' -> 'ColorChooserMode' -> 'IO' ()
 --
 -- setRgb :: 'Ref' 'ColorChooser' -> ('Between0And1', 'Between0And1', 'Between0And1') -> 'IO' ('Either' 'NoChange' ())
--- @
 --
+-- showWidget :: 'Ref' 'ColorChooser' -> 'IO' ()
+--
+-- showWidgetSuper :: 'Ref' 'ColorChooser' -> 'IO' ()
+--
+-- @

@@ -2018,7 +2018,17 @@ MAKE_METHOD(SetDownColor,setDownColor)
 
 data CLightButton parent
 type LightButtonFuncs =
-  (Destroy ())
+  (Destroy
+  (Draw
+  (DrawSuper
+  (Handle
+  (HandleSuper
+  (ShowWidget
+  (ShowWidgetSuper
+  (Hide
+  (HideSuper
+  ())))))))))
+
 type LightButton = CLightButton Button
 
 type instance Functions LightButton = LightButtonFuncs
@@ -2030,7 +2040,15 @@ type instance Functions RadioLightButton = ()
 
 data CCheckButton parent
 type CheckButtonFuncs =
-  (Destroy ())
+  (Draw
+  (DrawSuper
+  (Handle
+  (HandleSuper
+  (ShowWidget
+  (ShowWidgetSuper
+  (Hide
+  (HideSuper
+  (Destroy ())))))))))
 type CheckButton = CCheckButton Button
 
 type instance Functions CheckButton = CheckButtonFuncs
@@ -2039,14 +2057,31 @@ data CReturnButton parent
 type ReturnButton = CReturnButton Button
 type ReturnButtonFuncs =
   (Destroy
-  (Handle ()))
+  (Draw
+  (DrawSuper
+  (Handle
+  (HandleSuper
+  (ShowWidget
+  (ShowWidgetSuper
+  (Hide
+  (HideSuper
+  ())))))))))
 
 type instance Functions ReturnButton = ReturnButtonFuncs
 
 data CRoundButton parent
 type RoundButton = CRoundButton Button
 type RoundButtonFuncs =
-  (Destroy ())
+  (Destroy
+  (Draw
+  (DrawSuper
+  (Handle
+  (HandleSuper
+  (ShowWidget
+  (ShowWidgetSuper
+  (Hide
+  (HideSuper
+  ())))))))))
 
 type instance Functions RoundButton = RoundButtonFuncs
 
@@ -2054,9 +2089,16 @@ data CRepeatButton parent
 type RepeatButton = CRepeatButton Button
 type RepeatButtonFuncs =
   (Destroy
-  (Handle
   (Deactivate
-  ())))
+  (Draw
+  (DrawSuper
+  (Handle
+  (HandleSuper
+  (ShowWidget
+  (ShowWidgetSuper
+  (Hide
+  (HideSuper
+  ()))))))))))
 
 type instance Functions RepeatButton = RepeatButtonFuncs
 
@@ -2117,7 +2159,6 @@ data CSlider parent
 type Slider = CSlider Valuator
 type SliderFuncs =
   (Destroy
-  (Handle
   (Bounds
   (Scrollvalue
   (SetSliderSize
@@ -2125,7 +2166,16 @@ type SliderFuncs =
   (GetSlider
   (SetSlider
   (SetType
-  (GetType_ ()))))))))))
+  (GetType_
+  (Draw
+  (DrawSuper
+  (Handle
+  (HandleSuper
+  (ShowWidget
+  (ShowWidgetSuper
+  (Hide
+  (HideSuper
+  ())))))))))))))))))
 
 type instance Functions Slider = SliderFuncs
 
@@ -2325,8 +2375,15 @@ data CMenuBar parent
 type MenuBar = CMenuBar MenuPrim
 type MenuBarFuncs =
   (Destroy
+  (Draw
+  (DrawSuper
   (Handle
-  ()))
+  (HandleSuper
+  (ShowWidget
+  (ShowWidgetSuper
+  (Hide
+  (HideSuper
+  ())))))))))
 type instance Functions MenuBar = MenuBarFuncs
 
 
@@ -2344,11 +2401,18 @@ type SysMenuBarFuncs =
   (SetMode
   (GetMode
   (SetShortcut
-  (Handle
   (Add
   (AddName
   (Insert
-  ())))))))))))))))
+  (Draw
+  (DrawSuper
+  (Handle
+  (HandleSuper
+  (ShowWidget
+  (ShowWidgetSuper
+  (Hide
+  (HideSuper
+  ()))))))))))))))))))))))
 
 type instance Functions SysMenuBar = SysMenuBarFuncs
 
@@ -2359,7 +2423,14 @@ type ChoiceFuncs =
   (Handle
   (GetValue
   (SetValue
-  ()))))
+  (Draw
+  (DrawSuper
+  (HandleSuper
+  (ShowWidget
+  (ShowWidgetSuper
+  (Hide
+  (HideSuper
+  ())))))))))))
 
 type instance Functions Choice = ChoiceFuncs
 
@@ -2368,9 +2439,16 @@ data CMenuButton parent
 type MenuButton = CMenuButton MenuPrim
 type MenuButtonFuncs =
   (Destroy
+  (Draw
+  (DrawSuper
   (Handle
+  (HandleSuper
+  (ShowWidget
+  (ShowWidgetSuper
+  (Hide
+  (HideSuper
   (Popup
-  ())))
+  ()))))))))))
 
 type instance Functions MenuButton = MenuButtonFuncs
 
@@ -2484,7 +2562,15 @@ type AdjusterFuncs =
   (Destroy
   (SetSoft
   (GetSoft
-  ())))
+  (Draw
+  (DrawSuper
+  (Handle
+  (HandleSuper
+  (ShowWidget
+  (ShowWidgetSuper
+  (Hide
+  (HideSuper
+  ())))))))))))
 
 type instance Functions Adjuster = AdjusterFuncs
 
@@ -2496,14 +2582,22 @@ data CDial parent
 type Dial = CDial Valuator
 type DialFuncs =
   (Destroy
- (GetAngle1
- (SetAngle1
- (GetAngle2
- (SetAngle2
- (SetAngles
- (SetType
- (GetType_
- ()))))))))
+  (GetAngle1
+  (SetAngle1
+  (GetAngle2
+  (SetAngle2
+  (SetAngles
+  (SetType
+  (GetType_
+  (Draw
+  (DrawSuper
+  (Handle
+  (HandleSuper
+  (ShowWidget
+  (ShowWidgetSuper
+  (Hide
+  (HideSuper
+  ()))))))))))))))))
 
 type instance Functions Dial = DialFuncs
 
@@ -2527,8 +2621,15 @@ data CRoller parent
 type Roller = CRoller Valuator
 type RollerFuncs =
   (Destroy
+  (Draw
+  (DrawSuper
   (Handle
-  ()))
+  (HandleSuper
+  (ShowWidget
+  (ShowWidgetSuper
+  (Hide
+  (HideSuper
+  ())))))))))
 
 type instance Functions Roller = RollerFuncs
 
@@ -2546,7 +2647,14 @@ type CounterFuncs =
   (GetTextcolor
   (SetType
   (GetType_
-  ())))))))))))
+  (Draw
+  (DrawSuper
+  (HandleSuper
+  (ShowWidget
+  (ShowWidgetSuper
+  (Hide
+  (HideSuper
+  ()))))))))))))))))))
 
 type instance Functions Counter = CounterFuncs
 
@@ -2560,13 +2668,21 @@ type instance Functions SimpleCounter = ()
 data CScrollbar parent
 type Scrollbar = CScrollbar Slider
 type ScrollbarFuncs =
-  (Destroy
+ (Destroy
  (SetScrollValue
- (Handle
  (SetLinesize
  (GetLinesize
  (SetType
- (GetType_ ())))))))
+ (GetType_
+ (Draw
+ (DrawSuper
+ (Handle
+ (HandleSuper
+ (ShowWidget
+ (ShowWidgetSuper
+ (Hide
+ (HideSuper
+ ()))))))))))))))
 
 type instance Functions Scrollbar = ScrollbarFuncs
 
@@ -2578,14 +2694,21 @@ data CValueSlider parent
 type ValueSlider = CValueSlider Slider
 type ValueSliderFuncs =
   (Destroy
-  (Handle
   (GetTextfont
   (SetTextfont
   (GetTextsize
   (SetTextsize
   (GetTextcolor
   (SetTextcolor
-  ()))))))))
+  (Draw
+  (DrawSuper
+  (Handle
+  (HandleSuper
+  (ShowWidget
+  (ShowWidgetSuper
+  (Hide
+  (HideSuper
+  ())))))))))))))))
 
 type instance Functions ValueSlider = ValueSliderFuncs
 
@@ -2598,7 +2721,6 @@ data CInput parent
 type Input = CInput Widget
 type InputFuncs =
   (Destroy
-  (Handle
   (SetType
   (SetValue
   (StaticValue
@@ -2639,7 +2761,15 @@ type InputFuncs =
   (SetWrap
   (GetTabNav
   (SetTabNav
-  ()))))))))))))))))))))))))))))))))))))))))))
+  (Draw
+  (DrawSuper
+  (Handle
+  (HandleSuper
+  (ShowWidget
+  (ShowWidgetSuper
+  (Hide
+  (HideSuper
+  ())))))))))))))))))))))))))))))))))))))))))))))))))
 
 type instance Functions Input = InputFuncs
 
@@ -2671,7 +2801,16 @@ MAKE_METHOD(SetTabNav,setTabNav)
 data COutput parent
 type Output = COutput Input
 type OutputFuncs =
-  (SetType ())
+  (SetType
+  (Draw
+  (DrawSuper
+  (Handle
+  (HandleSuper
+  (ShowWidget
+  (ShowWidgetSuper
+  (Hide
+  (HideSuper
+  ())))))))))
 
 type instance Functions Output = OutputFuncs
 
@@ -2679,7 +2818,6 @@ data CValueInput parent
 type ValueInput = CValueInput Valuator
 type ValueInputFuncs =
   (Destroy
-  (Handle
   (GetSoft
   (SetSoft
   (GetShortcut
@@ -2690,7 +2828,15 @@ type ValueInputFuncs =
   (GetTextsize
   (SetTextcolor
   (GetTextcolor
-  ()))))))))))))
+  (Draw
+  (DrawSuper
+  (Handle
+  (HandleSuper
+  (ShowWidget
+  (ShowWidgetSuper
+  (Hide
+  (HideSuper
+  ())))))))))))))))))))
 
 type instance Functions ValueInput = ValueInputFuncs
 
@@ -2698,7 +2844,6 @@ data CValueOutput parent
 type ValueOutput = CValueOutput Valuator
 type ValueOutputFuncs =
   (Destroy
-  (Handle
   (GetSoft
   (SetSoft
   (SetTextfont
@@ -2707,7 +2852,15 @@ type ValueOutputFuncs =
   (GetTextsize
   (SetTextcolor
   (GetTextcolor
-  ()))))))))))
+  (Draw
+  (DrawSuper
+  (Handle
+  (HandleSuper
+  (ShowWidget
+  (ShowWidgetSuper
+  (Hide
+  (HideSuper
+  ())))))))))))))))))
 
 type instance Functions ValueOutput = ValueOutputFuncs
 
@@ -2715,14 +2868,21 @@ data CTimer parent
 type Timer = CTimer Widget
 type TimerFuncs =
   (Destroy
-  (Handle
   (GetDirection
   (SetDirection
   (GetValue
   (SetValue
   (GetSuspended
   (SetSuspended
-  ()))))))))
+  (Draw
+  (DrawSuper
+  (Handle
+  (HandleSuper
+  (ShowWidget
+  (ShowWidgetSuper
+  (Hide
+  (HideSuper
+  ())))))))))))))))
 
 type instance Functions Timer = TimerFuncs
 
@@ -2751,7 +2911,15 @@ type ProgressFuncs =
   (GetMinimum
   (SetValue
   (GetValue
-  ())))))))
+  (Draw
+  (DrawSuper
+  (Handle
+  (HandleSuper
+  (ShowWidget
+  (ShowWidgetSuper
+  (Hide
+  (HideSuper
+  ())))))))))))))))
 
 type instance Functions Progress = ProgressFuncs
 
@@ -2759,7 +2927,6 @@ data CPositioner parent
 type Positioner = CPositioner Widget
 type PositionerFuncs =
   (Destroy
-  (Handle
   (SetXvalue
   (GetXvalue
   (SetYvalue
@@ -2776,7 +2943,15 @@ type PositionerFuncs =
   (SetYbounds
   (SetXstep
   (SetYstep
-  ()))))))))))))))))))
+  (Draw
+  (DrawSuper
+  (Handle
+  (HandleSuper
+  (ShowWidget
+  (ShowWidgetSuper
+  (Hide
+  (HideSuper
+  ())))))))))))))))))))))))))
 
 type instance Functions Positioner = PositionerFuncs
 
@@ -2805,7 +2980,15 @@ type WizardFuncs =
   (Prev
   (SetValue
   (GetValue
-  ())))))
+  (Draw
+  (DrawSuper
+  (Handle
+  (HandleSuper
+  (ShowWidget
+  (ShowWidgetSuper
+  (Hide
+  (HideSuper
+  ())))))))))))))
 
 type instance Functions Wizard = WizardFuncs
 
@@ -3147,7 +3330,14 @@ type ClockFuncs =
   (SetValue
   (SetType
   (GetType_
-  ()))))))
+  (Draw
+  (DrawSuper
+  (HandleSuper
+  (ShowWidget
+  (ShowWidgetSuper
+  (Hide
+  (HideSuper
+  ())))))))))))))
 
 
 type instance Functions Clock = ClockFuncs
@@ -3389,8 +3579,6 @@ data CTree parent
 type Tree = CTree Group
 type TreeFuncs =
   (Destroy
-  (Handle
-  (Draw
   (ShowSelf
   (RootLabel
   (Root
@@ -3498,7 +3686,15 @@ type TreeFuncs =
   (GetCallbackItem
   (SetCallbackReason
   (GetCallbackReason
-  ()))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))
+  (Draw
+  (DrawSuper
+  (Handle
+  (HandleSuper
+  (ShowWidget
+  (ShowWidgetSuper
+  (Hide
+  (HideSuper
+  ()))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))
 
 
 type instance Functions Tree = TreeFuncs
@@ -3825,7 +4021,15 @@ type TextEditorFuncs =
   (GetInsertMode
   (GetDefaultKeyBindings
   (ReplaceKeyBindings
-  ())))))
+  (Draw
+  (DrawSuper
+  (Handle
+  (HandleSuper
+  (ShowWidget
+  (ShowWidgetSuper
+  (Hide
+  (HideSuper
+  ())))))))))))))
 
 type instance Functions TextEditor = TextEditorFuncs
 
@@ -3883,9 +4087,16 @@ data CTile parent
 type Tile = CTile Group
 type TileFuncs =
   (SetPosition
+  (Draw
+  (DrawSuper
   (Handle
+  (HandleSuper
+  (ShowWidget
+  (ShowWidgetSuper
+  (Hide
+  (HideSuper
   (Resize
-  ())))
+  ()))))))))))
 
 type instance Functions Tile = TileFuncs
 
@@ -3897,7 +4108,15 @@ type PackFuncs =
   (SetSpacing
   (GetSpacing
   (IsHorizontal
-  ())))))
+  (Draw
+  (DrawSuper
+  (Handle
+  (HandleSuper
+  (ShowWidget
+  (ShowWidgetSuper
+  (Hide
+  (HideSuper
+  ())))))))))))))
 
 type instance Functions Pack = PackFuncs
 
@@ -3917,7 +4136,15 @@ type ScrolledFuncs =
   (GetType_
   (SetType
   (Resize
-  (Handle ()))))))))))
+  (Draw
+  (DrawSuper
+  (Handle
+  (HandleSuper
+  (ShowWidget
+  (ShowWidgetSuper
+  (Hide
+  (HideSuper
+  ())))))))))))))))))
 
 type instance Functions Scrolled = ScrolledFuncs
 
@@ -3928,14 +4155,20 @@ MAKE_METHOD(Yposition,yposition)
 data CTabs parent
 type Tabs = CTabs Group
 type TabsFuncs =
+  (Draw
+  (DrawSuper
   (Handle
+  (HandleSuper
+  (ShowWidget
+  (ShowWidgetSuper
+  (Hide
+  (HideSuper
   (GetValue
   (SetValue
   (GetPush
   (SetPush
   (Which
-  (ClientArea ())))))))
-
+  (ClientArea ()))))))))))))))
 
 type instance Functions Tabs = TabsFuncs
 
@@ -3947,7 +4180,6 @@ MAKE_METHOD(ClientArea,clientArea)
 data CSpinner parent
 type Spinner = CSpinner Group
 type SpinnerFuncs =
-  (Handle
   (GetValue
   (SetValue
   (Handle
@@ -3968,7 +4200,15 @@ type SpinnerFuncs =
   (SetStep
   (GetStep
   (Resize
-  ())))))))))))))))))))))
+  (Draw
+  (DrawSuper
+  (Handle
+  (HandleSuper
+  (ShowWidget
+  (ShowWidgetSuper
+  (Hide
+  (HideSuper
+  ()))))))))))))))))))))))))))))
 
 
 type instance Functions Spinner = SpinnerFuncs
@@ -3987,7 +4227,15 @@ type ColorChooserFuncs =
   (GetB
   (SetHsv
   (SetRgb
-  ()))))))))))
+  (Draw
+  (DrawSuper
+  (Handle
+  (HandleSuper
+  (ShowWidget
+  (ShowWidgetSuper
+  (Hide
+  (HideSuper
+  ()))))))))))))))))))
 
 type instance Functions ColorChooser = ColorChooserFuncs
 
@@ -4011,7 +4259,15 @@ type FileBrowserFuncs =
   (GetFiletype
   (SetFiletype
   (Load
-  ())))))))))
+  (Draw
+  (DrawSuper
+  (Handle
+  (HandleSuper
+  (ShowWidget
+  (ShowWidgetSuper
+  (Hide
+  (HideSuper
+  ())))))))))))))))))
 type instance Functions FileBrowser = FileBrowserFuncs
 
 MAKE_METHOD(SetIconsize, setIconsize)
@@ -4076,7 +4332,15 @@ type FileInputFuncs =
   (GetErrorColor
   (GetValue
   (SetValue
-  ()))))))
+  (Draw
+  (DrawSuper
+  (Handle
+  (HandleSuper
+  (ShowWidget
+  (ShowWidgetSuper
+  (Hide
+  (HideSuper
+  ()))))))))))))))
 
 type instance Functions FileInput = FileInputFuncs
 MAKE_METHOD(SetErrorColor, setErrorColor)

@@ -6,7 +6,26 @@
 // the callback mechanism included below to work.
 #include "FL/Fl.H"
 #include "Fl_CallbackC.h"
+#include "Fl_WidgetC.h"
 EXPORT {
+  class Fl_DerivedFile_Browser : public Fl_File_Browser {
+    fl_Widget_Virtual_Funcs* overriddenFuncs;
+    void* other_data;
+  public:
+    virtual void draw();
+    void draw_super();
+    virtual int handle(int event);
+    int handle_super(int event);
+    virtual void resize(int x, int y, int w, int h);
+    void resize_super(int x, int y, int w, int h);
+    virtual void show();
+    void show_super();
+    virtual void hide();
+    void hide_super();
+    Fl_DerivedFile_Browser(int X, int Y, int W, int H, const char *l, fl_Widget_Virtual_Funcs* funcs);
+    Fl_DerivedFile_Browser(int X, int Y, int W, int H, fl_Widget_Virtual_Funcs* funcs);
+    ~Fl_DerivedFile_Browser();
+  };
 #endif
 #include "filenameC.h"
 
@@ -18,14 +37,6 @@ EXPORT {
 #endif
 
   /* Inherited from Fl_Widget */
-  FL_EXPORT_C(int ,         Fl_File_Browser_handle_super)(fl_File_Browser file_browser,int event);
-  FL_EXPORT_C(int ,         Fl_File_Browser_handle )(fl_File_Browser file_browser,int event);
-  FL_EXPORT_C(void,         Fl_File_Browser_resize_super)(fl_File_Browser file_browser,int x, int y, int w, int h);
-  FL_EXPORT_C(void,         Fl_File_Browser_resize )(fl_File_Browser file_browser,int x, int y, int w, int h);
-  FL_EXPORT_C(void,         Fl_File_Browser_show_super)(fl_File_Browser file_browser);
-  FL_EXPORT_C(void,         Fl_File_Browser_show )(fl_File_Browser file_browser);
-  FL_EXPORT_C(void,         Fl_File_Browser_hide_super)(fl_File_Browser file_browser);
-  FL_EXPORT_C(void,         Fl_File_Browser_hide )(fl_File_Browser file_browser);
   FL_EXPORT_C(fl_Window,    Fl_File_Browser_as_window_super)(fl_File_Browser file_browser);
   FL_EXPORT_C(fl_Window,    Fl_File_Browser_as_window )(fl_File_Browser file_browser);
   FL_EXPORT_C(fl_Gl_Window, Fl_File_Browser_as_gl_window_super)(fl_File_Browser file_browser);
@@ -208,6 +219,19 @@ EXPORT {
   FL_EXPORT_C(int, Fl_File_Browser_load)(fl_File_Browser file_browser,const char *directory, Fl_File_Sort_F* sort);
   FL_EXPORT_C(int, Fl_File_Browser_filetype)(fl_File_Browser file_browser);
   FL_EXPORT_C(void, Fl_File_Browser_set_filetype)(fl_File_Browser file_browser,int t);
+  FL_EXPORT_C(fl_File_Browser,    Fl_OverriddenFile_Browser_New)(int X, int Y, int W, int H,fl_Widget_Virtual_Funcs* fs);
+  FL_EXPORT_C(fl_File_Browser,    Fl_OverriddenFile_Browser_New_WithLabel)(int X, int Y, int W, int H, const char* label, fl_Widget_Virtual_Funcs* fs);
+  FL_EXPORT_C(void, Fl_File_Browser_draw)(fl_File_Browser o);
+  FL_EXPORT_C(void, Fl_File_Browser_draw_super)(fl_File_Browser o);
+  FL_EXPORT_C(int, Fl_File_Browser_handle)(fl_File_Browser o, int event);
+  FL_EXPORT_C(int, Fl_File_Browser_handle_super)(fl_File_Browser o, int event);
+  FL_EXPORT_C(void, Fl_File_Browser_resize)(fl_File_Browser o, int x, int y, int w, int h);
+  FL_EXPORT_C(void, Fl_File_Browser_resize_super)(fl_File_Browser o, int x, int y, int w, int h);
+  FL_EXPORT_C(void, Fl_File_Browser_show)(fl_File_Browser o);
+  FL_EXPORT_C(void, Fl_File_Browser_show_super)(fl_File_Browser o);
+  FL_EXPORT_C(void, Fl_File_Browser_hide)(fl_File_Browser o);
+  FL_EXPORT_C(void, Fl_File_Browser_hide_super)(fl_File_Browser o);
+
 #ifdef __cplusplus
 }
 #endif

@@ -7,7 +7,26 @@
 #include "FL/Fl.H"
 #include "FL/Fl_Tree.H"
 #include "Fl_CallbackC.h"
+#include "Fl_WidgetC.h"
 EXPORT {
+  class Fl_DerivedTree : public Fl_Tree {
+    fl_Widget_Virtual_Funcs* overriddenFuncs;
+    void* other_data;
+  public:
+    virtual void draw();
+    void draw_super();
+    virtual int handle(int event);
+    int handle_super(int event);
+    virtual void resize(int x, int y, int w, int h);
+    void resize_super(int x, int y, int w, int h);
+    virtual void show();
+    void show_super();
+    virtual void hide();
+    void hide_super();
+    Fl_DerivedTree(int X, int Y, int W, int H, const char *l, fl_Widget_Virtual_Funcs* funcs);
+    Fl_DerivedTree(int X, int Y, int W, int H, fl_Widget_Virtual_Funcs* funcs);
+    ~Fl_DerivedTree();
+  };
 #endif
   /* Inherited from Fl_Widget */
   FL_EXPORT_C(int,Fl_Tree_handle)(fl_Tree self, int event);
@@ -253,6 +272,18 @@ EXPORT {
   FL_EXPORT_C(void, Fl_Tree_set_callback_reason)(fl_Tree tree,Fl_Tree_Reason reason);
   FL_EXPORT_C(Fl_Tree_Reason, Fl_Tree_callback_reason)(fl_Tree tree);
   FL_EXPORT_C(void, Fl_Tree_load)(fl_Tree tree,fl_Preferences preferences);
+  FL_EXPORT_C(fl_Tree,    Fl_OverriddenTree_New)(int X, int Y, int W, int H,fl_Widget_Virtual_Funcs* fs);
+  FL_EXPORT_C(fl_Tree,    Fl_OverriddenTree_New_WithLabel)(int X, int Y, int W, int H, const char* label, fl_Widget_Virtual_Funcs* fs);
+  FL_EXPORT_C(void, Fl_Tree_draw)(fl_Tree o);
+  FL_EXPORT_C(void, Fl_Tree_draw_super)(fl_Tree o);
+  FL_EXPORT_C(int, Fl_Tree_handle)(fl_Tree o, int event);
+  FL_EXPORT_C(int, Fl_Tree_handle_super)(fl_Tree o, int event);
+  FL_EXPORT_C(void, Fl_Tree_resize)(fl_Tree o, int x, int y, int w, int h);
+  FL_EXPORT_C(void, Fl_Tree_resize_super)(fl_Tree o, int x, int y, int w, int h);
+  FL_EXPORT_C(void, Fl_Tree_show)(fl_Tree o);
+  FL_EXPORT_C(void, Fl_Tree_show_super)(fl_Tree o);
+  FL_EXPORT_C(void, Fl_Tree_hide)(fl_Tree o);
+  FL_EXPORT_C(void, Fl_Tree_hide_super)(fl_Tree o);
 #ifdef __cplusplus
 }
 #endif

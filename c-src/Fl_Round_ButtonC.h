@@ -7,7 +7,26 @@
 #include "FL/Fl.H"
 #include "FL/Fl_Round_Button.H"
 #include "Fl_CallbackC.h"
+#include "Fl_WidgetC.h"
 EXPORT {
+  class Fl_DerivedRound_Button : public Fl_Round_Button {
+    fl_Widget_Virtual_Funcs* overriddenFuncs;
+    void* other_data;
+  public:
+    virtual void draw();
+    void draw_super();
+    virtual int handle(int event);
+    int handle_super(int event);
+    virtual void resize(int x, int y, int w, int h);
+    void resize_super(int x, int y, int w, int h);
+    virtual void show();
+    void show_super();
+    virtual void hide();
+    void hide_super();
+    Fl_DerivedRound_Button(int X, int Y, int W, int H, const char *l, fl_Widget_Virtual_Funcs* funcs);
+    Fl_DerivedRound_Button(int X, int Y, int W, int H, fl_Widget_Virtual_Funcs* funcs);
+    ~Fl_DerivedRound_Button();
+  };
 #endif
   /* Inherited from Fl_Widget */
   FL_EXPORT_C(int,Fl_Round_Button_handle)(fl_Round_Button self, int event);
@@ -109,6 +128,18 @@ EXPORT {
   FL_EXPORT_C(void        , Fl_Round_Button_set_down_box)(fl_Round_Button b,Fl_Boxtype boxtype);
   FL_EXPORT_C(Fl_Color    , Fl_Round_Button_down_color )(fl_Round_Button b);
   FL_EXPORT_C(void        , Fl_Round_Button_set_down_color)(fl_Round_Button b, Fl_Color c);
+  FL_EXPORT_C(fl_Round_Button,    Fl_OverriddenRound_Button_New)(int X, int Y, int W, int H,fl_Widget_Virtual_Funcs* fs);
+  FL_EXPORT_C(fl_Round_Button,    Fl_OverriddenRound_Button_New_WithLabel)(int X, int Y, int W, int H, const char* label, fl_Widget_Virtual_Funcs* fs);
+  FL_EXPORT_C(void, Fl_Round_Button_draw)(fl_Round_Button o);
+  FL_EXPORT_C(void, Fl_Round_Button_draw_super)(fl_Round_Button o);
+  FL_EXPORT_C(int, Fl_Round_Button_handle)(fl_Round_Button o, int event);
+  FL_EXPORT_C(int, Fl_Round_Button_handle_super)(fl_Round_Button o, int event);
+  FL_EXPORT_C(void, Fl_Round_Button_resize)(fl_Round_Button o, int x, int y, int w, int h);
+  FL_EXPORT_C(void, Fl_Round_Button_resize_super)(fl_Round_Button o, int x, int y, int w, int h);
+  FL_EXPORT_C(void, Fl_Round_Button_show)(fl_Round_Button o);
+  FL_EXPORT_C(void, Fl_Round_Button_show_super)(fl_Round_Button o);
+  FL_EXPORT_C(void, Fl_Round_Button_hide)(fl_Round_Button o);
+  FL_EXPORT_C(void, Fl_Round_Button_hide_super)(fl_Round_Button o);
 #ifdef __cplusplus
 }
 #endif

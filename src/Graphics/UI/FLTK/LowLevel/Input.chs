@@ -4,7 +4,8 @@ module Graphics.UI.FLTK.LowLevel.Input
     (
      FlInputType(..),
      -- * Constructor
-     inputNew
+     inputNew,
+     inputCustom
      -- * Hierarchy
      --
      -- $hierarchy
@@ -32,6 +33,8 @@ import Graphics.UI.FLTK.LowLevel.Utils
 import Graphics.UI.FLTK.LowLevel.Hierarchy
 import Graphics.UI.FLTK.LowLevel.Dispatch
 import qualified Data.Text as T
+import Graphics.UI.FLTK.LowLevel.Widget
+
 #c
 enum FlInputType {
   FlNormalInput = FL_NORMAL_INPUT,
@@ -42,6 +45,23 @@ enum FlInputType {
 };
 #endc
 {#enum FlInputType {}#}
+{# fun Fl_OverriddenInput_New_WithLabel as overriddenWidgetNewWithLabel' { `Int',`Int',`Int',`Int', unsafeToCString `T.Text', id `Ptr ()'} -> `Ptr ()' id #}
+{# fun Fl_OverriddenInput_New as overriddenWidgetNew' { `Int',`Int',`Int',`Int', id `Ptr ()'} -> `Ptr ()' id #}
+inputCustom ::
+       Rectangle                         -- ^ The bounds of this Input
+    -> Maybe T.Text                      -- ^ The Input label
+    -> Maybe (Ref Input -> IO ())           -- ^ Optional custom drawing function
+    -> Maybe (CustomWidgetFuncs Input)      -- ^ Optional custom widget functions
+    -> IO (Ref Input)
+inputCustom rectangle l' draw' funcs' =
+  widgetMaker
+    rectangle
+    l'
+    draw'
+    funcs'
+    overriddenWidgetNew'
+    overriddenWidgetNewWithLabel'
+
 {# fun Fl_Input_New as inputNew' { `Int',`Int',`Int',`Int' } -> `Ptr ()' id #}
 {# fun Fl_Input_New_WithLabel as inputNewWithLabel' { `Int',`Int',`Int',`Int', unsafeToCString `T.Text'} -> `Ptr ()' id #}
 {# fun Fl_Multiline_Input_New as multilineInputNew' { `Int',`Int',`Int',`Int' } -> `Ptr ()' id #}
@@ -225,6 +245,38 @@ instance (impl ~ (Int ->  IO ())) => Op (GetTabNav ()) Input orig impl where
 {# fun Fl_Input_set_tab_nav as setTabNav' { id `Ptr ()' } -> `Int' #}
 instance (impl ~ ( IO (Int))) => Op (SetTabNav ()) Input orig impl where
   runOp _ _ input = withRef input $ \inputPtr -> setTabNav' inputPtr
+{# fun Fl_Input_draw as draw'' { id `Ptr ()' } -> `()' #}
+instance (impl ~ (  IO ())) => Op (Draw ()) Input orig impl where
+  runOp _ _ input = withRef input $ \inputPtr -> draw'' inputPtr
+{# fun Fl_Input_draw_super as drawSuper' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
+instance (impl ~ ( IO ())) => Op (DrawSuper ()) Input orig impl where
+  runOp _ _ input = withRef input $ \inputPtr -> drawSuper' inputPtr
+{# fun Fl_Input_handle_super as handleSuper' { id `Ptr ()',`Int' } -> `Int' #}
+instance (impl ~ (Event ->  IO (Either UnknownEvent ()))) => Op (HandleSuper ()) Input orig impl where
+  runOp _ _ input event = withRef input $ \inputPtr -> handleSuper' inputPtr (fromIntegral (fromEnum event)) >>= return . successOrUnknownEvent
+{# fun Fl_Input_resize as resize' { id `Ptr ()',`Int',`Int',`Int',`Int' } -> `()' supressWarningAboutRes #}
+instance (impl ~ (Rectangle -> IO ())) => Op (Resize ()) Input orig impl where
+  runOp _ _ input rectangle = withRef input $ \inputPtr -> do
+                                 let (x_pos,y_pos,w_pos,h_pos) = fromRectangle rectangle
+                                 resize' inputPtr x_pos y_pos w_pos h_pos
+{# fun Fl_Input_resize_super as resizeSuper' { id `Ptr ()',`Int',`Int',`Int',`Int' } -> `()' supressWarningAboutRes #}
+instance (impl ~ (Rectangle -> IO ())) => Op (ResizeSuper ()) Input orig impl where
+  runOp _ _ input rectangle =
+    let (x_pos, y_pos, width, height) = fromRectangle rectangle
+    in withRef input $ \inputPtr -> resizeSuper' inputPtr x_pos y_pos width height
+{# fun Fl_Input_hide as hide' { id `Ptr ()' } -> `()' #}
+instance (impl ~ (  IO ())) => Op (Hide ()) Input orig impl where
+  runOp _ _ input = withRef input $ \inputPtr -> hide' inputPtr
+{# fun Fl_Input_hide_super as hideSuper' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
+instance (impl ~ ( IO ())) => Op (HideSuper ()) Input orig impl where
+  runOp _ _ input = withRef input $ \inputPtr -> hideSuper' inputPtr
+{# fun Fl_Input_show as show' { id `Ptr ()' } -> `()' #}
+instance (impl ~ (  IO ())) => Op (ShowWidget ()) Input orig impl where
+  runOp _ _ input = withRef input $ \inputPtr -> show' inputPtr
+{# fun Fl_Input_show_super as showSuper' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
+instance (impl ~ ( IO ())) => Op (ShowWidgetSuper ()) Input orig impl where
+  runOp _ _ input = withRef input $ \inputPtr -> showSuper' inputPtr
+
 
 -- $Input
 -- @
@@ -239,6 +291,10 @@ instance (impl ~ ( IO (Int))) => Op (SetTabNav ()) Input orig impl where
 -- cutRange :: 'Ref' 'Input' -> 'Int' -> 'Int' -> 'IO' ('Either' 'NoChange' ())
 --
 -- destroy :: 'Ref' 'Input' -> 'IO' ()
+--
+-- draw :: 'Ref' 'Input' -> 'IO' ()
+--
+-- drawSuper :: 'Ref' 'Input' -> 'IO' ()
 --
 -- getCursorColor :: 'Ref' 'Input' -> 'IO' ('Color')
 --
@@ -268,7 +324,13 @@ instance (impl ~ ( IO (Int))) => Op (SetTabNav ()) Input orig impl where
 --
 -- getWrap :: 'Ref' 'Input' -> 'IO' ('Int')
 --
--- handle :: 'Ref' 'Input' -> ('Event' -> 'IO' ('Either' 'UnknownEvent' ()))
+-- handle :: 'Ref' 'Input' -> 'Event' -> 'IO' ('Either' 'UnknownEvent' ())
+--
+-- handleSuper :: 'Ref' 'Input' -> 'Event' -> 'IO' ('Either' 'UnknownEvent' ())
+--
+-- hide :: 'Ref' 'Input' -> 'IO' ()
+--
+-- hideSuper :: 'Ref' 'Input' -> 'IO' ()
 --
 -- index :: 'Ref' 'Input' -> 'Int' -> 'IO' ('Char')
 --
@@ -277,6 +339,10 @@ instance (impl ~ ( IO (Int))) => Op (SetTabNav ()) Input orig impl where
 -- insertWithLength :: 'Ref' 'Input' -> 'T.Text' -> 'Int' -> 'IO' ('Either' 'NoChange' ())
 --
 -- replace :: 'Ref' 'Input' -> 'Int' -> 'Int' -> 'T.Text' -> 'IO' ('Either' 'NoChange' ())
+--
+-- resize :: 'Ref' 'Input' -> 'Rectangle' -> 'IO' ()
+--
+-- resizeSuper :: 'Ref' 'Input' -> 'Rectangle' -> 'IO' ()
 --
 -- setCursorColor :: 'Ref' 'Input' -> 'Color' -> 'IO' ()
 --
@@ -307,6 +373,10 @@ instance (impl ~ ( IO (Int))) => Op (SetTabNav ()) Input orig impl where
 -- setValue :: 'Ref' 'Input' -> 'T.Text' -> 'Maybe' 'Int' -> 'IO' ('Int')
 --
 -- setWrap :: 'Ref' 'Input' -> 'Int' -> 'IO' ()
+--
+-- showWidget :: 'Ref' 'Input' -> 'IO' ()
+--
+-- showWidgetSuper :: 'Ref' 'Input' -> 'IO' ()
 --
 -- staticValue :: 'Ref' 'Input' -> 'T.Text' -> 'Maybe' 'Int' -> 'IO' ('Either' 'NoChange' ())
 --

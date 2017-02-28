@@ -2,11 +2,81 @@
 
 #ifdef __cplusplus
 EXPORT {
+  Fl_DerivedInput::Fl_DerivedInput(int X, int Y, int W, int H, const char *l, fl_Widget_Virtual_Funcs* funcs) : Fl_Input(X,Y,W,H,l){
+    overriddenFuncs = funcs;
+    other_data = (void*)0;
+  }
+  Fl_DerivedInput::Fl_DerivedInput(int X, int Y, int W, int H, fl_Widget_Virtual_Funcs* funcs):Fl_Input(X,Y,W,H){
+    overriddenFuncs = funcs;
+    other_data = (void*)0;
+  }
+  Fl_DerivedInput::~Fl_DerivedInput(){
+    free(overriddenFuncs);
+  }
+  void Fl_DerivedInput::draw(){
+    if (this->overriddenFuncs->draw != NULL) {
+      this->overriddenFuncs->draw((fl_Input) this);
+    }
+    else {
+      Fl_Input::draw();
+    }
+  }
+
+  void Fl_DerivedInput::draw_super(){
+    Fl_Input::draw();
+  }
+
+  int Fl_DerivedInput::handle(int event){
+    int i;
+    if (this->overriddenFuncs->handle != NULL) {
+      i = this->overriddenFuncs->handle((fl_Input) this,event);
+    }
+    else {
+      i = Fl_Input::handle(event);
+    }
+    return i;
+  }
+  int Fl_DerivedInput::handle_super(int event){
+    return Fl_Input::handle(event);
+  }
+
+  void Fl_DerivedInput::resize(int x, int y, int w, int h){
+    if (this->overriddenFuncs->resize != NULL) {
+      this->overriddenFuncs->resize((fl_Input) this,x,y,w,h);
+    }
+    else {
+      Fl_Input::resize(x,y,w,h);
+    }
+  }
+
+  void Fl_DerivedInput::resize_super(int x, int y, int w, int h){
+    Fl_Input::resize(x,y,w,h);
+  }
+  void Fl_DerivedInput::show(){
+    if (this->overriddenFuncs->show != NULL) {
+      this->overriddenFuncs->show((fl_Input) this);
+    }
+    else {
+      Fl_Input::show();
+    }
+  }
+  void Fl_DerivedInput::show_super(){
+    Fl_Input::show();
+  }
+
+  void Fl_DerivedInput::hide(){
+    if (this->overriddenFuncs->hide != NULL) {
+      this->overriddenFuncs->hide((fl_Input) this);
+    }
+    else {
+      Fl_Input::hide();
+    }
+  }
+  void Fl_DerivedInput::hide_super(){
+    Fl_Input::hide();
+  }
 #endif
   /* Inherited from Fl_Widget */
-  FL_EXPORT_C(int,Fl_Input_handle)(fl_Input self, int event){
-    return (static_cast<Fl_Input*>(self))->handle(event);
-  }
   FL_EXPORT_C(fl_Group,Fl_Input_parent)(fl_Input input){
     return (fl_Group) (static_cast<Fl_Input*>(input))->parent();
   }
@@ -268,19 +338,8 @@ EXPORT {
     return (fl_Gl_Window) (static_cast<Fl_Input*>(input))->as_gl_window();
   }
   /* Fl_Input specific functions */
-  FL_EXPORT_C(fl_Input, Fl_Input_New_WithLabel)(int x, int y, int w, int h, const char* label) {
-    Fl_Input* input = new Fl_Input(x,y,w,h,label);
-    return (static_cast<fl_Input>(input));
-  }
-  FL_EXPORT_C(fl_Input, Fl_Input_New)(int x, int y, int w, int h) {
-    Fl_Input* input = new Fl_Input(x,y,w,h,0);
-    return (fl_Input)input;
-  }
   FL_EXPORT_C(void,Fl_Input_Destroy)(fl_Input input){
     delete (static_cast<Fl_Input*>(input));
-  }
-  FL_EXPORT_C(void,Fl_Input_resize)(fl_Input input,int X,int Y,int W,int H){
-    (static_cast<Fl_Input*>(input))->resize(X,Y,W,H);
   }
   FL_EXPORT_C(int,Fl_Input_set_value)(fl_Input input,const char* text){
     return (static_cast<Fl_Input*>(input))->value(text);
@@ -411,6 +470,55 @@ EXPORT {
   FL_EXPORT_C(int,Fl_Input_set_tab_nav)(fl_Input input){
     return (static_cast<Fl_Input*>(input))->tab_nav();
   }
+  FL_EXPORT_C(void, Fl_Input_draw)(fl_Input o){
+    (static_cast<Fl_DerivedInput*>(o))->draw();
+  }
+  FL_EXPORT_C(void, Fl_Input_draw_super)(fl_Input o){
+    (static_cast<Fl_DerivedInput*>(o))->draw_super();
+  }
+  FL_EXPORT_C(int, Fl_Input_handle)(fl_Input o, int event){
+    return (static_cast<Fl_DerivedInput*>(o))->handle(event);
+  }
+  FL_EXPORT_C(int, Fl_Input_handle_super)(fl_Input o, int event){
+    return (static_cast<Fl_DerivedInput*>(o))->handle_super(event);
+  }
+  FL_EXPORT_C(void, Fl_Input_resize)(fl_Input o, int x, int y, int w, int h){
+    (static_cast<Fl_DerivedInput*>(o))->resize(x,y,w,h);
+  }
+  FL_EXPORT_C(void, Fl_Input_resize_super)(fl_Input o, int x, int y, int w, int h){
+    (static_cast<Fl_DerivedInput*>(o))->resize_super(x,y,w,h);
+  }
+  FL_EXPORT_C(void, Fl_Input_show)(fl_Input o){
+    (static_cast<Fl_DerivedInput*>(o))->show();
+  }
+  FL_EXPORT_C(void, Fl_Input_show_super)(fl_Input o){
+    (static_cast<Fl_DerivedInput*>(o))->show_super();
+  }
+  FL_EXPORT_C(void, Fl_Input_hide)(fl_Input o){
+    (static_cast<Fl_DerivedInput*>(o))->hide();
+  }
+  FL_EXPORT_C(void, Fl_Input_hide_super)(fl_Input o){
+    (static_cast<Fl_DerivedInput*>(o))->hide_super();
+  }
+  FL_EXPORT_C(fl_Input,    Fl_Input_New)(int X, int Y, int W, int H){
+    fl_Widget_Virtual_Funcs* fs = Fl_Widget_default_virtual_funcs();
+    Fl_DerivedInput* w = new Fl_DerivedInput(X,Y,W,H,fs);
+    return (fl_Input)w;
+  }
+  FL_EXPORT_C(fl_Input,    Fl_Input_New_WithLabel)(int X, int Y, int W, int H, const char* label){
+    fl_Widget_Virtual_Funcs* fs = Fl_Widget_default_virtual_funcs();
+    Fl_DerivedInput* w = new Fl_DerivedInput(X,Y,W,H,label,fs);
+    return (fl_Input)w;
+  }
+  FL_EXPORT_C(fl_Input,    Fl_OverriddenInput_New)(int X, int Y, int W, int H,fl_Widget_Virtual_Funcs* fs){
+    Fl_DerivedInput* w = new Fl_DerivedInput(X,Y,W,H,fs);
+    return (fl_Input)w;
+  }
+  FL_EXPORT_C(fl_Input,    Fl_OverriddenInput_New_WithLabel)(int X, int Y, int W, int H, const char* label, fl_Widget_Virtual_Funcs* fs){
+    Fl_DerivedInput* w = new Fl_DerivedInput(X,Y,W,H,label,fs);
+    return (fl_Input)w;
+  }
+
 #ifdef __cplusplus
 }
 #endif

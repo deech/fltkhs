@@ -1,10 +1,103 @@
 #include "Fl_WizardC.h"
 #ifdef __cplusplus
+#include <FL/Fl_Wizard.H>
+#include <FL/Fl_Window.H>
+#include <FL/fl_draw.H>
 EXPORT {
-#endif
-  FL_EXPORT_C(int,Fl_Wizard_handle)(fl_Wizard wizard, int event){
-    return (static_cast<Fl_Wizard*>(wizard))->handle(event);
+  Fl_DerivedWizard::Fl_DerivedWizard(int X, int Y, int W, int H, const char *l, fl_Widget_Virtual_Funcs* funcs) : Fl_Wizard(X,Y,W,H,l){
+    overriddenFuncs = funcs;
+    other_data = (void*)0;
   }
+  Fl_DerivedWizard::Fl_DerivedWizard(int X, int Y, int W, int H, fl_Widget_Virtual_Funcs* funcs):Fl_Wizard(X,Y,W,H){
+    overriddenFuncs = funcs;
+    other_data = (void*)0;
+  }
+  Fl_DerivedWizard::~Fl_DerivedWizard(){
+    free(overriddenFuncs);
+  }
+  void Fl_DerivedWizard::draw(){
+    if (this->overriddenFuncs->draw != NULL) {
+      this->overriddenFuncs->draw((fl_Wizard) this);
+    }
+    else {
+      draw_super();
+    }
+  }
+
+  void Fl_DerivedWizard::draw_super(){
+    Fl_Widget	*kid;	// Visible child
+
+
+    kid = value();
+
+    if (damage() & FL_DAMAGE_ALL)
+      {
+        // Redraw everything...
+        if (kid)
+          {
+            draw_box(box(), x(), y(), w(), h(), kid->color());
+            draw_child(*kid);
+          }
+        else
+          draw_box(box(), x(), y(), w(), h(), color());
+
+      }
+    else if (kid)
+      update_child(*kid);
+  }
+
+  int Fl_DerivedWizard::handle(int event){
+    int i;
+    if (this->overriddenFuncs->handle != NULL) {
+      i = this->overriddenFuncs->handle((fl_Wizard) this,event);
+    }
+    else {
+      i = Fl_Wizard::handle(event);
+    }
+    return i;
+  }
+  int Fl_DerivedWizard::handle_super(int event){
+    return Fl_Wizard::handle(event);
+  }
+
+  void Fl_DerivedWizard::resize(int x, int y, int w, int h){
+    if (this->overriddenFuncs->resize != NULL) {
+      this->overriddenFuncs->resize((fl_Wizard) this,x,y,w,h);
+    }
+    else {
+      Fl_Wizard::resize(x,y,w,h);
+    }
+  }
+
+  void Fl_DerivedWizard::resize_super(int x, int y, int w, int h){
+    Fl_Wizard::resize(x,y,w,h);
+  }
+  void Fl_DerivedWizard::show(){
+    if (this->overriddenFuncs->show != NULL) {
+      this->overriddenFuncs->show((fl_Wizard) this);
+    }
+    else {
+      Fl_Wizard::show();
+    }
+  }
+  void Fl_DerivedWizard::show_super(){
+    Fl_Wizard::show();
+  }
+
+  void Fl_DerivedWizard::hide(){
+    if (this->overriddenFuncs->hide != NULL) {
+      this->overriddenFuncs->hide((fl_Wizard) this);
+    }
+    else {
+      Fl_Wizard::hide();
+    }
+  }
+  void Fl_DerivedWizard::hide_super(){
+    Fl_Wizard::hide();
+  }
+
+
+#endif
   FL_EXPORT_C(fl_Group,Fl_Wizard_parent)(fl_Wizard wizard){
     return (fl_Group) (fl_Group)(static_cast<Fl_Wizard*>(wizard))->parent();
   }
@@ -328,14 +421,6 @@ EXPORT {
   FL_EXPORT_C(fl_Widget, Fl_Wizard_child)(fl_Wizard wizard, int n){
     return (fl_Widget)(static_cast<Fl_Wizard*>(wizard))->child(n);
   }
-  FL_EXPORT_C(fl_Group,     Fl_Wizard_New)(int x, int y, int w, int h){
-    Fl_Wizard* wizard = new Fl_Wizard(x,y,w,h);
-    return (fl_Wizard)wizard;
-  }
-  FL_EXPORT_C(fl_Wizard,     Fl_Wizard_New_WithLabel)(int x, int y, int w, int h, const char* t){
-    Fl_Wizard* wizard = new Fl_Wizard(x,y,w,h,t);
-    return (fl_Wizard)wizard;
-  }
   FL_EXPORT_C(void, Fl_Wizard_Destroy)(fl_Wizard wizard){
     delete (static_cast<Fl_Wizard*>(wizard));
   }
@@ -351,6 +436,55 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Wizard_set_value)(fl_Wizard wizard,fl_Widget w){
     (static_cast<Fl_Wizard*>(wizard))->value((static_cast<Fl_Widget*>(w)));
   }
+  FL_EXPORT_C(fl_Wizard,    Fl_Wizard_New)(int X, int Y, int W, int H){
+    fl_Widget_Virtual_Funcs* fs = Fl_Widget_default_virtual_funcs();
+    Fl_DerivedWizard* w = new Fl_DerivedWizard(X,Y,W,H,fs);
+    return (fl_Wizard)w;
+  }
+  FL_EXPORT_C(fl_Wizard,    Fl_Wizard_New_WithLabel)(int X, int Y, int W, int H, const char* label){
+    fl_Widget_Virtual_Funcs* fs = Fl_Widget_default_virtual_funcs();
+    Fl_DerivedWizard* w = new Fl_DerivedWizard(X,Y,W,H,label,fs);
+    return (fl_Wizard)w;
+  }
+  FL_EXPORT_C(fl_Wizard,    Fl_OverriddenWizard_New)(int X, int Y, int W, int H,fl_Widget_Virtual_Funcs* fs){
+    Fl_DerivedWizard* w = new Fl_DerivedWizard(X,Y,W,H,fs);
+    return (fl_Wizard)w;
+  }
+  FL_EXPORT_C(fl_Wizard,    Fl_OverriddenWizard_New_WithLabel)(int X, int Y, int W, int H, const char* label, fl_Widget_Virtual_Funcs* fs){
+    Fl_DerivedWizard* w = new Fl_DerivedWizard(X,Y,W,H,label,fs);
+    return (fl_Wizard)w;
+  }
+  FL_EXPORT_C(void, Fl_Wizard_draw)(fl_Wizard o){
+    (static_cast<Fl_DerivedWizard*>(o))->draw();
+  }
+  FL_EXPORT_C(void, Fl_Wizard_draw_super)(fl_Wizard o){
+    (static_cast<Fl_DerivedWizard*>(o))->draw_super();
+  }
+  FL_EXPORT_C(int, Fl_Wizard_handle)(fl_Wizard o, int event){
+    return (static_cast<Fl_DerivedWizard*>(o))->handle(event);
+  }
+  FL_EXPORT_C(int, Fl_Wizard_handle_super)(fl_Wizard o, int event){
+    return (static_cast<Fl_DerivedWizard*>(o))->handle_super(event);
+  }
+  FL_EXPORT_C(void, Fl_Wizard_resize)(fl_Wizard o, int x, int y, int w, int h){
+    (static_cast<Fl_DerivedWizard*>(o))->resize(x,y,w,h);
+  }
+  FL_EXPORT_C(void, Fl_Wizard_resize_super)(fl_Wizard o, int x, int y, int w, int h){
+    (static_cast<Fl_DerivedWizard*>(o))->resize_super(x,y,w,h);
+  }
+  FL_EXPORT_C(void, Fl_Wizard_show)(fl_Wizard o){
+    (static_cast<Fl_DerivedWizard*>(o))->show();
+  }
+  FL_EXPORT_C(void, Fl_Wizard_show_super)(fl_Wizard o){
+    (static_cast<Fl_DerivedWizard*>(o))->show_super();
+  }
+  FL_EXPORT_C(void, Fl_Wizard_hide)(fl_Wizard o){
+    (static_cast<Fl_DerivedWizard*>(o))->hide();
+  }
+  FL_EXPORT_C(void, Fl_Wizard_hide_super)(fl_Wizard o){
+    (static_cast<Fl_DerivedWizard*>(o))->hide_super();
+  }
+
 #ifdef __cplusplus
 }
 #endif

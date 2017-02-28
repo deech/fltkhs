@@ -2,7 +2,8 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 module Graphics.UI.FLTK.LowLevel.Tree
   (
-    treeNew
+    treeNew,
+    treeCustom
     -- * Hierarchy
     --
     -- $hierarchy
@@ -23,6 +24,25 @@ import Graphics.UI.FLTK.LowLevel.Utils
 import Graphics.UI.FLTK.LowLevel.Hierarchy
 import Graphics.UI.FLTK.LowLevel.Dispatch
 import qualified Data.Text as T
+import Graphics.UI.FLTK.LowLevel.Widget
+
+{# fun Fl_OverriddenTree_New_WithLabel as overriddenWidgetNewWithLabel' { `Int',`Int',`Int',`Int', unsafeToCString `T.Text', id `Ptr ()'} -> `Ptr ()' id #}
+{# fun Fl_OverriddenTree_New as overriddenWidgetNew' { `Int',`Int',`Int',`Int', id `Ptr ()'} -> `Ptr ()' id #}
+treeCustom ::
+       Rectangle                         -- ^ The bounds of this Tree
+    -> Maybe T.Text                      -- ^ The Tree label
+    -> Maybe (Ref Tree -> IO ())           -- ^ Optional custom drawing function
+    -> Maybe (CustomWidgetFuncs Tree)      -- ^ Optional custom widget functions
+    -> IO (Ref Tree)
+treeCustom rectangle l' draw' funcs' =
+  widgetMaker
+    rectangle
+    l'
+    draw'
+    funcs'
+    overriddenWidgetNew'
+    overriddenWidgetNewWithLabel'
+
 
 {# fun Fl_Tree_New as treeNew' { `Int',`Int',`Int',`Int' } -> `Ptr ()' id #}
 {# fun Fl_Tree_New_WithLabel as treeNewWithLabel' { `Int',`Int',`Int',`Int',unsafeToCString `T.Text'} -> `Ptr ()' id #}
@@ -40,12 +60,6 @@ instance (impl ~ (IO ())) => Op (Destroy ()) Tree orig impl where
     treeDestroy' treePtr
     return nullPtr
 
-{# fun Fl_Tree_handle as handle' { id `Ptr ()', cFromEnum `Event' } -> `Int' #}
-instance (impl ~ (Event ->  IO (Either UnknownEvent ())) ) => Op (Handle ()) Tree orig impl where
-  runOp _ _ tree e = withRef tree $ \treePtr -> handle' treePtr e >>= return  . successOrUnknownEvent
-{# fun Fl_Tree_draw as draw' { id `Ptr ()' } -> `()' #}
-instance (impl ~ ( IO ()) ) => Op (Draw ()) Tree orig impl where
-  runOp _ _ tree = withRef tree $ \treePtr -> draw' treePtr
 {# fun Fl_Tree_show_self as showSelf' { id `Ptr ()' } -> `()' #}
 instance (impl ~ ( IO ()) ) => Op (ShowSelf ()) Tree orig impl where
   runOp _ _ tree = withRef tree $ \treePtr -> showSelf' treePtr
@@ -442,6 +456,40 @@ instance (impl ~ (TreeReasonType ->  IO ()) ) => Op (SetCallbackReason ()) Tree 
 {# fun Fl_Tree_callback_reason as callbackReason' { id `Ptr ()' } -> `TreeReasonType' cToEnum #}
 instance (impl ~ ( IO (TreeReasonType)) ) => Op (GetCallbackReason ()) Tree orig impl where
   runOp _ _ tree = withRef tree $ \treePtr -> callbackReason' treePtr
+{# fun Fl_Tree_draw as draw'' { id `Ptr ()' } -> `()' #}
+instance (impl ~ (  IO ())) => Op (Draw ()) Tree orig impl where
+  runOp _ _ tree = withRef tree $ \treePtr -> draw'' treePtr
+{# fun Fl_Tree_draw_super as drawSuper' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
+instance (impl ~ ( IO ())) => Op (DrawSuper ()) Tree orig impl where
+  runOp _ _ tree = withRef tree $ \treePtr -> drawSuper' treePtr
+{#fun Fl_Tree_handle as treeHandle' { id `Ptr ()', id `CInt' } -> `Int' #}
+instance (impl ~ (Event -> IO (Either UnknownEvent ()))) => Op (Handle ()) Tree orig impl where
+  runOp _ _ tree event = withRef tree (\p -> treeHandle' p (fromIntegral . fromEnum $ event)) >>= return  . successOrUnknownEvent
+{# fun Fl_Tree_handle_super as handleSuper' { id `Ptr ()',`Int' } -> `Int' #}
+instance (impl ~ (Event ->  IO (Either UnknownEvent ()))) => Op (HandleSuper ()) Tree orig impl where
+  runOp _ _ tree event = withRef tree $ \treePtr -> handleSuper' treePtr (fromIntegral (fromEnum event)) >>= return . successOrUnknownEvent
+{# fun Fl_Tree_resize as resize' { id `Ptr ()',`Int',`Int',`Int',`Int' } -> `()' supressWarningAboutRes #}
+instance (impl ~ (Rectangle -> IO ())) => Op (Resize ()) Tree orig impl where
+  runOp _ _ tree rectangle = withRef tree $ \treePtr -> do
+                                 let (x_pos,y_pos,w_pos,h_pos) = fromRectangle rectangle
+                                 resize' treePtr x_pos y_pos w_pos h_pos
+{# fun Fl_Tree_resize_super as resizeSuper' { id `Ptr ()',`Int',`Int',`Int',`Int' } -> `()' supressWarningAboutRes #}
+instance (impl ~ (Rectangle -> IO ())) => Op (ResizeSuper ()) Tree orig impl where
+  runOp _ _ tree rectangle =
+    let (x_pos, y_pos, width, height) = fromRectangle rectangle
+    in withRef tree $ \treePtr -> resizeSuper' treePtr x_pos y_pos width height
+{# fun Fl_Tree_hide as hide' { id `Ptr ()' } -> `()' #}
+instance (impl ~ (  IO ())) => Op (Hide ()) Tree orig impl where
+  runOp _ _ tree = withRef tree $ \treePtr -> hide' treePtr
+{# fun Fl_Tree_hide_super as hideSuper' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
+instance (impl ~ ( IO ())) => Op (HideSuper ()) Tree orig impl where
+  runOp _ _ tree = withRef tree $ \treePtr -> hideSuper' treePtr
+{# fun Fl_Tree_show as show' { id `Ptr ()' } -> `()' #}
+instance (impl ~ (  IO ())) => Op (ShowWidget ()) Tree orig impl where
+  runOp _ _ tree = withRef tree $ \treePtr -> show' treePtr
+{# fun Fl_Tree_show_super as showSuper' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
+instance (impl ~ ( IO ())) => Op (ShowWidgetSuper ()) Tree orig impl where
+  runOp _ _ tree = withRef tree $ \treePtr -> showSuper' treePtr
 
 -- $functions
 -- @
@@ -472,6 +520,8 @@ instance (impl ~ ( IO (TreeReasonType)) ) => Op (GetCallbackReason ()) Tree orig
 -- displayed :: 'Ref' 'Tree' -> 'Ref' 'TreeItem' -> 'IO' ('Bool')
 --
 -- draw :: 'Ref' 'Tree' -> 'IO' ()
+--
+-- drawSuper :: 'Ref' 'Tree' -> 'IO' ()
 --
 -- findItem :: 'Ref' 'Tree' -> 'T.Text' -> 'IO' ('Maybe' ('Ref' 'TreeItem'))
 --
@@ -533,7 +583,13 @@ instance (impl ~ ( IO (TreeReasonType)) ) => Op (GetCallbackReason ()) Tree orig
 --
 -- getVposition :: 'Ref' 'Tree' -> 'IO' ('Int')
 --
--- handle :: 'Ref' 'Tree' -> 'Event' -> 'IO' ('Int')
+-- handle :: 'Ref' 'Tree' -> 'Event' -> 'IO' ('Either' 'UnknownEvent' ())
+--
+-- handleSuper :: 'Ref' 'Tree' -> 'Event' -> 'IO' ('Either' 'UnknownEvent' ())
+--
+-- hide :: 'Ref' 'Tree' -> 'IO' ()
+--
+-- hideSuper :: 'Ref' 'Tree' -> 'IO' ()
 --
 -- insert:: ('Parent' a 'TreeItem') => 'Ref' 'Tree' -> 'Ref' a -> 'T.Text' -> 'Int' -> 'IO' ('Maybe' ('Ref' a))
 --
@@ -580,6 +636,10 @@ instance (impl ~ ( IO (TreeReasonType)) ) => Op (GetCallbackReason ()) Tree orig
 -- prevBeforeItem :: 'Ref' 'Tree' -> 'Ref' 'TreeItem' -> 'IO' ('Maybe' ('Ref' 'TreeItem'))
 --
 -- remove :: 'Ref' 'Tree' -> 'Ref' 'TreeItem' -> 'IO' ('Either' 'TreeItemNotFound' ())
+--
+-- resize :: 'Ref' 'Tree' -> 'Rectangle' -> 'IO' ()
+--
+-- resizeSuper :: 'Ref' 'Tree' -> 'Rectangle' -> 'IO' ()
 --
 -- root :: 'Ref' 'Tree' -> 'IO' ('Maybe' ('Ref' 'TreeItem'))
 --
@@ -664,6 +724,10 @@ instance (impl ~ ( IO (TreeReasonType)) ) => Op (GetCallbackReason ()) Tree orig
 -- showItemWithYoff :: 'Ref' 'Tree' -> 'Ref' 'TreeItem' -> 'Maybe' 'Int' -> 'IO' ()
 --
 -- showSelf :: 'Ref' 'Tree' -> 'IO' ()
+--
+-- showWidget :: 'Ref' 'Tree' -> 'IO' ()
+--
+-- showWidgetSuper :: 'Ref' 'Tree' -> 'IO' ()
 -- @
 
 -- $hierarchy

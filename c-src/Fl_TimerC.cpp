@@ -1,10 +1,76 @@
 #include "Fl_TimerC.h"
 #ifdef __cplusplus
 EXPORT {
-#endif
-  FL_EXPORT_C(int , Fl_Timer_handle )(fl_Timer timer,int event) {
-    return (static_cast<Fl_Timer*>(timer))->handle(event);
+  Fl_DerivedTimer::Fl_DerivedTimer(uchar t,int X, int Y, int W, int H, const char *l, fl_Widget_Virtual_Funcs* funcs) : Fl_Timer(t,X,Y,W,H,l){
+    overriddenFuncs = funcs;
+    other_data = (void*)0;
   }
+  Fl_DerivedTimer::~Fl_DerivedTimer(){
+    free(overriddenFuncs);
+  }
+  void Fl_DerivedTimer::draw(){
+    if (this->overriddenFuncs->draw != NULL) {
+      this->overriddenFuncs->draw((fl_Timer) this);
+    }
+    else {
+      Fl_Timer::draw();
+    }
+  }
+
+  void Fl_DerivedTimer::draw_super(){
+    Fl_Timer::draw();
+  }
+
+  int Fl_DerivedTimer::handle(int event){
+    int i;
+    if (this->overriddenFuncs->handle != NULL) {
+      i = this->overriddenFuncs->handle((fl_Timer) this,event);
+    }
+    else {
+      i = Fl_Timer::handle(event);
+    }
+    return i;
+  }
+  int Fl_DerivedTimer::handle_super(int event){
+    return Fl_Timer::handle(event);
+  }
+
+  void Fl_DerivedTimer::resize(int x, int y, int w, int h){
+    if (this->overriddenFuncs->resize != NULL) {
+      this->overriddenFuncs->resize((fl_Timer) this,x,y,w,h);
+    }
+    else {
+      Fl_Timer::resize(x,y,w,h);
+    }
+  }
+
+  void Fl_DerivedTimer::resize_super(int x, int y, int w, int h){
+    Fl_Timer::resize(x,y,w,h);
+  }
+  void Fl_DerivedTimer::show(){
+    if (this->overriddenFuncs->show != NULL) {
+      this->overriddenFuncs->show((fl_Timer) this);
+    }
+    else {
+      Fl_Timer::show();
+    }
+  }
+  void Fl_DerivedTimer::show_super(){
+    Fl_Timer::show();
+  }
+
+  void Fl_DerivedTimer::hide(){
+    if (this->overriddenFuncs->hide != NULL) {
+      this->overriddenFuncs->hide((fl_Timer) this);
+    }
+    else {
+      Fl_Timer::hide();
+    }
+  }
+  void Fl_DerivedTimer::hide_super(){
+    Fl_Timer::hide();
+  }
+#endif
   FL_EXPORT_C(fl_Group,Fl_Timer_parent)(fl_Timer adjuster){
     return (static_cast<Fl_Timer*>(adjuster))->parent();
   }
@@ -155,12 +221,6 @@ EXPORT {
   FL_EXPORT_C(int,Fl_Timer_visible_r)(fl_Timer adjuster){
     return (static_cast<Fl_Timer*>(adjuster))->visible_r();
   }
-  FL_EXPORT_C(void,Fl_Timer_show)(fl_Timer adjuster){
-    (static_cast<Fl_Timer*>(adjuster))->show();
-  }
-  FL_EXPORT_C(void,Fl_Timer_hide)(fl_Timer adjuster){
-    (static_cast<Fl_Timer*>(adjuster))->hide();
-  }
   FL_EXPORT_C(void,Fl_Timer_set_visible)(fl_Timer adjuster){
     (static_cast<Fl_Timer*>(adjuster))->visible();
   }
@@ -257,13 +317,6 @@ EXPORT {
   FL_EXPORT_C(fl_Gl_Window,Fl_Timer_as_gl_window)(fl_Timer adjuster){
     return (static_cast<Fl_Timer*>(adjuster))->as_gl_window();
   }
-  FL_EXPORT_C(void,Fl_Timer_resize)(fl_Timer adjuster,int X,int Y,int W,int H){
-    (static_cast<Fl_Timer*>(adjuster))->resize(X,Y,W,H);
-  }
-  FL_EXPORT_C(fl_Timer,Fl_Timer_New)(int x,int y,int w,int h,const char* label){
-    Fl_Timer* adjuster = new Fl_Timer(FL_NORMAL_TIMER,x,y,w,h,label);
-    return (fl_Timer) adjuster;
-  }
   FL_EXPORT_C(fl_Timer,Fl_Value_Timer_New)(int x,int y,int w,int h,const char* label){
     Fl_Timer* adjuster = new Fl_Timer(FL_VALUE_TIMER,x,y,w,h,label);
     return (fl_Timer) adjuster;
@@ -292,6 +345,45 @@ EXPORT {
   }
   FL_EXPORT_C(void,Fl_Timer_set_suspended)(fl_Timer timer,char s){
     (static_cast<Fl_Timer*>(timer))->suspended(s);
+  }
+  FL_EXPORT_C(fl_Timer,    Fl_Timer_New_WithLabel)(int X, int Y, int W, int H, const char* label){
+    fl_Widget_Virtual_Funcs* fs = Fl_Widget_default_virtual_funcs();
+    Fl_DerivedTimer* w = new Fl_DerivedTimer(FL_NORMAL_TIMER,X,Y,W,H,label,fs);
+    return (fl_Timer)w;
+  }
+  FL_EXPORT_C(fl_Timer,    Fl_OverriddenTimer_New_WithLabel)(int X, int Y, int W, int H, const char* label, fl_Widget_Virtual_Funcs* fs){
+    Fl_DerivedTimer* w = new Fl_DerivedTimer(FL_NORMAL_TIMER,X,Y,W,H,label,fs);
+    return (fl_Timer)w;
+  }
+  FL_EXPORT_C(void, Fl_Timer_draw)(fl_Timer o){
+    (static_cast<Fl_DerivedTimer*>(o))->draw();
+  }
+  FL_EXPORT_C(void, Fl_Timer_draw_super)(fl_Timer o){
+    (static_cast<Fl_DerivedTimer*>(o))->draw_super();
+  }
+  FL_EXPORT_C(int, Fl_Timer_handle)(fl_Timer o, int event){
+    return (static_cast<Fl_DerivedTimer*>(o))->handle(event);
+  }
+  FL_EXPORT_C(int, Fl_Timer_handle_super)(fl_Timer o, int event){
+    return (static_cast<Fl_DerivedTimer*>(o))->handle_super(event);
+  }
+  FL_EXPORT_C(void, Fl_Timer_resize)(fl_Timer o, int x, int y, int w, int h){
+    (static_cast<Fl_DerivedTimer*>(o))->resize(x,y,w,h);
+  }
+  FL_EXPORT_C(void, Fl_Timer_resize_super)(fl_Timer o, int x, int y, int w, int h){
+    (static_cast<Fl_DerivedTimer*>(o))->resize_super(x,y,w,h);
+  }
+  FL_EXPORT_C(void, Fl_Timer_show)(fl_Timer o){
+    (static_cast<Fl_DerivedTimer*>(o))->show();
+  }
+  FL_EXPORT_C(void, Fl_Timer_show_super)(fl_Timer o){
+    (static_cast<Fl_DerivedTimer*>(o))->show_super();
+  }
+  FL_EXPORT_C(void, Fl_Timer_hide)(fl_Timer o){
+    (static_cast<Fl_DerivedTimer*>(o))->hide();
+  }
+  FL_EXPORT_C(void, Fl_Timer_hide_super)(fl_Timer o){
+    (static_cast<Fl_DerivedTimer*>(o))->hide_super();
   }
 #ifdef __cplusplus
 }

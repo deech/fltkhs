@@ -1,7 +1,81 @@
 #include "Fl_AdjusterC.h"
 #ifdef __cplusplus
 EXPORT {
-#endif  
+  Fl_DerivedAdjuster::Fl_DerivedAdjuster(int X, int Y, int W, int H, const char *l, fl_Widget_Virtual_Funcs* funcs) : Fl_Adjuster(X,Y,W,H,l){
+    overriddenFuncs = funcs;
+    other_data = (void*)0;
+  }
+  Fl_DerivedAdjuster::Fl_DerivedAdjuster(int X, int Y, int W, int H, fl_Widget_Virtual_Funcs* funcs):Fl_Adjuster(X,Y,W,H){
+    overriddenFuncs = funcs;
+    other_data = (void*)0;
+  }
+  Fl_DerivedAdjuster::~Fl_DerivedAdjuster(){
+    free(overriddenFuncs);
+  }
+  void Fl_DerivedAdjuster::draw(){
+    if (this->overriddenFuncs->draw != NULL) {
+      this->overriddenFuncs->draw((fl_Adjuster) this);
+    }
+    else {
+      Fl_Adjuster::draw();
+    }
+  }
+
+  void Fl_DerivedAdjuster::draw_super(){
+    Fl_Adjuster::draw();
+  }
+
+  int Fl_DerivedAdjuster::handle(int event){
+    int i;
+    if (this->overriddenFuncs->handle != NULL) {
+      i = this->overriddenFuncs->handle((fl_Adjuster) this,event);
+    }
+    else {
+      i = Fl_Adjuster::handle(event);
+    }
+    return i;
+  }
+  int Fl_DerivedAdjuster::handle_super(int event){
+    return Fl_Adjuster::handle(event);
+  }
+
+  void Fl_DerivedAdjuster::resize(int x, int y, int w, int h){
+    if (this->overriddenFuncs->resize != NULL) {
+      this->overriddenFuncs->resize((fl_Adjuster) this,x,y,w,h);
+    }
+    else {
+      Fl_Adjuster::resize(x,y,w,h);
+    }
+  }
+
+  void Fl_DerivedAdjuster::resize_super(int x, int y, int w, int h){
+    Fl_Adjuster::resize(x,y,w,h);
+  }
+  void Fl_DerivedAdjuster::show(){
+    if (this->overriddenFuncs->show != NULL) {
+      this->overriddenFuncs->show((fl_Adjuster) this);
+    }
+    else {
+      Fl_Adjuster::show();
+    }
+  }
+  void Fl_DerivedAdjuster::show_super(){
+    Fl_Adjuster::show();
+  }
+
+  void Fl_DerivedAdjuster::hide(){
+    if (this->overriddenFuncs->hide != NULL) {
+      this->overriddenFuncs->hide((fl_Adjuster) this);
+    }
+    else {
+      Fl_Adjuster::hide();
+    }
+  }
+  void Fl_DerivedAdjuster::hide_super(){
+    Fl_Adjuster::hide();
+  }
+
+#endif
   FL_EXPORT_C(fl_Group,Fl_Adjuster_parent)(fl_Adjuster adjuster){
     return (static_cast<Fl_Adjuster*>(adjuster))->parent();
   }
@@ -152,12 +226,6 @@ EXPORT {
   FL_EXPORT_C(int,Fl_Adjuster_visible_r)(fl_Adjuster adjuster){
     return (static_cast<Fl_Adjuster*>(adjuster))->visible_r();
   }
-  FL_EXPORT_C(void,Fl_Adjuster_show)(fl_Adjuster adjuster){
-    (static_cast<Fl_Adjuster*>(adjuster))->show();
-  }
-  FL_EXPORT_C(void,Fl_Adjuster_hide)(fl_Adjuster adjuster){
-    (static_cast<Fl_Adjuster*>(adjuster))->hide();
-  }
   FL_EXPORT_C(void,Fl_Adjuster_set_visible)(fl_Adjuster adjuster){
     (static_cast<Fl_Adjuster*>(adjuster))->visible();
   }
@@ -254,9 +322,6 @@ EXPORT {
   FL_EXPORT_C(fl_Gl_Window,Fl_Adjuster_as_gl_window)(fl_Adjuster adjuster){
     return (static_cast<Fl_Adjuster*>(adjuster))->as_gl_window();
   }
-  FL_EXPORT_C(void,Fl_Adjuster_resize)(fl_Adjuster adjuster,int X,int Y,int W,int H){
-    (static_cast<Fl_Adjuster*>(adjuster))->resize(X,Y,W,H);
-  }
   FL_EXPORT_C(void,Fl_Adjuster_bounds)(fl_Adjuster adjuster,double a,double b){
     (static_cast<Fl_Adjuster*>(adjuster))->bounds(a,b);
   }
@@ -308,14 +373,6 @@ EXPORT {
   FL_EXPORT_C(double,Fl_Adjuster_increment)(fl_Adjuster adjuster,double v,int n){
     return (static_cast<Fl_Adjuster*>(adjuster))->increment(v,n);
   }
-  FL_EXPORT_C(fl_Adjuster,Fl_Adjuster_New_WithLabel)(int x,int y,int w,int h,const char* label){
-    Fl_Adjuster* adjuster = new Fl_Adjuster(x,y,w,h,label);
-    return (fl_Adjuster) adjuster;
-  }
-  FL_EXPORT_C(fl_Adjuster,Fl_Adjuster_New)(int x,int y,int w,int h){
-    Fl_Adjuster* adjuster = new Fl_Adjuster(x,y,w,h);
-    return (fl_Adjuster) adjuster;
-  }
   FL_EXPORT_C(void,Fl_Adjuster_Destroy)(fl_Adjuster adjuster){
     delete (static_cast<Fl_Adjuster*>(adjuster));
   }
@@ -325,6 +382,55 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Adjuster_set_soft)(fl_Adjuster adjuster,int soft){
     (static_cast<Fl_Adjuster*>(adjuster))->soft(soft);
   }
+  FL_EXPORT_C(fl_Adjuster,    Fl_Adjuster_New)(int X, int Y, int W, int H){
+    fl_Widget_Virtual_Funcs* fs = Fl_Widget_default_virtual_funcs();
+    Fl_DerivedAdjuster* w = new Fl_DerivedAdjuster(X,Y,W,H,fs);
+    return (fl_Adjuster)w;
+  }
+  FL_EXPORT_C(fl_Adjuster,    Fl_Adjuster_New_WithLabel)(int X, int Y, int W, int H, const char* label){
+    fl_Widget_Virtual_Funcs* fs = Fl_Widget_default_virtual_funcs();
+    Fl_DerivedAdjuster* w = new Fl_DerivedAdjuster(X,Y,W,H,label,fs);
+    return (fl_Adjuster)w;
+  }
+  FL_EXPORT_C(fl_Adjuster,    Fl_OverriddenAdjuster_New)(int X, int Y, int W, int H,fl_Widget_Virtual_Funcs* fs){
+    Fl_DerivedAdjuster* w = new Fl_DerivedAdjuster(X,Y,W,H,fs);
+    return (fl_Adjuster)w;
+  }
+  FL_EXPORT_C(fl_Adjuster,    Fl_OverriddenAdjuster_New_WithLabel)(int X, int Y, int W, int H, const char* label, fl_Widget_Virtual_Funcs* fs){
+    Fl_DerivedAdjuster* w = new Fl_DerivedAdjuster(X,Y,W,H,label,fs);
+    return (fl_Adjuster)w;
+  }
+  FL_EXPORT_C(void, Fl_Adjuster_draw)(fl_Adjuster o){
+    (static_cast<Fl_DerivedAdjuster*>(o))->draw();
+  }
+  FL_EXPORT_C(void, Fl_Adjuster_draw_super)(fl_Adjuster o){
+    (static_cast<Fl_DerivedAdjuster*>(o))->draw_super();
+  }
+  FL_EXPORT_C(int, Fl_Adjuster_handle)(fl_Adjuster o, int event){
+    return (static_cast<Fl_DerivedAdjuster*>(o))->handle(event);
+  }
+  FL_EXPORT_C(int, Fl_Adjuster_handle_super)(fl_Adjuster o, int event){
+    return (static_cast<Fl_DerivedAdjuster*>(o))->handle_super(event);
+  }
+  FL_EXPORT_C(void, Fl_Adjuster_resize)(fl_Adjuster o, int x, int y, int w, int h){
+    (static_cast<Fl_DerivedAdjuster*>(o))->resize(x,y,w,h);
+  }
+  FL_EXPORT_C(void, Fl_Adjuster_resize_super)(fl_Adjuster o, int x, int y, int w, int h){
+    (static_cast<Fl_DerivedAdjuster*>(o))->resize_super(x,y,w,h);
+  }
+  FL_EXPORT_C(void, Fl_Adjuster_show)(fl_Adjuster o){
+    (static_cast<Fl_DerivedAdjuster*>(o))->show();
+  }
+  FL_EXPORT_C(void, Fl_Adjuster_show_super)(fl_Adjuster o){
+    (static_cast<Fl_DerivedAdjuster*>(o))->show_super();
+  }
+  FL_EXPORT_C(void, Fl_Adjuster_hide)(fl_Adjuster o){
+    (static_cast<Fl_DerivedAdjuster*>(o))->hide();
+  }
+  FL_EXPORT_C(void, Fl_Adjuster_hide_super)(fl_Adjuster o){
+    (static_cast<Fl_DerivedAdjuster*>(o))->hide_super();
+  }
+
 #ifdef __cplusplus
 }
-#endif 
+#endif

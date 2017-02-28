@@ -2,19 +2,80 @@
 #include "UtilsC.h"
 #ifdef __cplusplus
 EXPORT {
+  Fl_DerivedSys_Menu_Bar::Fl_DerivedSys_Menu_Bar(int X, int Y, int W, int H, const char *l, fl_Widget_Virtual_Funcs* funcs) : Fl_Sys_Menu_Bar(X,Y,W,H,l){
+    overriddenFuncs = funcs;
+    other_data = (void*)0;
+  }
+  Fl_DerivedSys_Menu_Bar::Fl_DerivedSys_Menu_Bar(int X, int Y, int W, int H, fl_Widget_Virtual_Funcs* funcs):Fl_Sys_Menu_Bar(X,Y,W,H){
+    overriddenFuncs = funcs;
+    other_data = (void*)0;
+  }
+  Fl_DerivedSys_Menu_Bar::~Fl_DerivedSys_Menu_Bar(){
+    free(overriddenFuncs);
+  }
+  void Fl_DerivedSys_Menu_Bar::draw(){
+    if (this->overriddenFuncs->draw != NULL) {
+      this->overriddenFuncs->draw((fl_Sys_Menu_Bar) this);
+    }
+    else {
+      Fl_Sys_Menu_Bar::draw();
+    }
+  }
+
+  void Fl_DerivedSys_Menu_Bar::draw_super(){
+    Fl_Sys_Menu_Bar::draw();
+  }
+
+  int Fl_DerivedSys_Menu_Bar::handle(int event){
+    int i;
+    if (this->overriddenFuncs->handle != NULL) {
+      i = this->overriddenFuncs->handle((fl_Sys_Menu_Bar) this,event);
+    }
+    else {
+      i = Fl_Sys_Menu_Bar::handle(event);
+    }
+    return i;
+  }
+  int Fl_DerivedSys_Menu_Bar::handle_super(int event){
+    return Fl_Sys_Menu_Bar::handle(event);
+  }
+
+  void Fl_DerivedSys_Menu_Bar::resize(int x, int y, int w, int h){
+    if (this->overriddenFuncs->resize != NULL) {
+      this->overriddenFuncs->resize((fl_Sys_Menu_Bar) this,x,y,w,h);
+    }
+    else {
+      Fl_Sys_Menu_Bar::resize(x,y,w,h);
+    }
+  }
+
+  void Fl_DerivedSys_Menu_Bar::resize_super(int x, int y, int w, int h){
+    Fl_Sys_Menu_Bar::resize(x,y,w,h);
+  }
+  void Fl_DerivedSys_Menu_Bar::show(){
+    if (this->overriddenFuncs->show != NULL) {
+      this->overriddenFuncs->show((fl_Sys_Menu_Bar) this);
+    }
+    else {
+      Fl_Sys_Menu_Bar::show();
+    }
+  }
+  void Fl_DerivedSys_Menu_Bar::show_super(){
+    Fl_Sys_Menu_Bar::show();
+  }
+
+  void Fl_DerivedSys_Menu_Bar::hide(){
+    if (this->overriddenFuncs->hide != NULL) {
+      this->overriddenFuncs->hide((fl_Sys_Menu_Bar) this);
+    }
+    else {
+      Fl_Sys_Menu_Bar::hide();
+    }
+  }
+  void Fl_DerivedSys_Menu_Bar::hide_super(){
+    Fl_Sys_Menu_Bar::hide();
+  }
 #endif
-  FL_EXPORT_C(int,Fl_Sys_Menu_Bar_handle )(fl_Sys_Menu_Bar sys_menu_bar, int event){
-    return (static_cast<Fl_Sys_Menu_Bar*>(sys_menu_bar))->handle(event);
-  }
-  FL_EXPORT_C(void,Fl_Sys_Menu_Bar_resize )(fl_Sys_Menu_Bar sys_menu_bar,int x, int y, int w, int h){
-    (static_cast<Fl_Sys_Menu_Bar*>(sys_menu_bar))->resize(x,y,w,h);
-  }
-  FL_EXPORT_C(void,Fl_Sys_Menu_Bar_show )(fl_Sys_Menu_Bar sys_menu_bar){
-    (static_cast<Fl_Sys_Menu_Bar*>(sys_menu_bar))->show();
-  }
-  FL_EXPORT_C(void,Fl_Sys_Menu_Bar_hide )(fl_Sys_Menu_Bar sys_menu_bar){
-    (static_cast<Fl_Sys_Menu_Bar*>(sys_menu_bar))->hide();
-  }
   FL_EXPORT_C(fl_Window,Fl_Sys_Menu_Bar_as_window )(fl_Sys_Menu_Bar sys_menu_bar){
     return (static_cast<Fl_Sys_Menu_Bar*>(sys_menu_bar))->as_window();
   }
@@ -265,14 +326,6 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Sys_Menu_Bar_measure_label)(fl_Sys_Menu_Bar sys_menu_bar,int* ww,int* hh){
     (static_cast<Fl_Sys_Menu_Bar*>(sys_menu_bar))->measure_label(*ww,*hh);
   }
-  FL_EXPORT_C(fl_Sys_Menu_Bar, Fl_Sys_Menu_Bar_New_WithLabel)(int x, int y, int w, int h, const char* label) {
-    Fl_Sys_Menu_Bar* sys_menu_bar = new Fl_Sys_Menu_Bar(x,y,w,h,label);
-    return (static_cast<fl_Sys_Menu_Bar>(sys_menu_bar));
-  }
-  FL_EXPORT_C(fl_Sys_Menu_Bar, Fl_Sys_Menu_Bar_New)(int x, int y, int w, int h) {
-    Fl_Sys_Menu_Bar* sys_menu_bar = new Fl_Sys_Menu_Bar(x,y,w,h,0);
-    return (fl_Sys_Menu_Bar)sys_menu_bar;
-  }
   FL_EXPORT_C(void   , Fl_Sys_Menu_Bar_Destroy)(fl_Sys_Menu_Bar sys_menu_bar){
     delete (static_cast<Fl_Sys_Menu_Bar*>(sys_menu_bar));
   }
@@ -438,6 +491,54 @@ EXPORT {
   }
   FL_EXPORT_C(void,Fl_Sys_Menu_Bar_set_down_color)(fl_Sys_Menu_Bar sys_menu_bar,unsigned c){
     (static_cast<Fl_Sys_Menu_Bar*>(sys_menu_bar))->down_color(c);
+  }
+  FL_EXPORT_C(fl_Sys_Menu_Bar,    Fl_Sys_Menu_Bar_New)(int X, int Y, int W, int H){
+    fl_Widget_Virtual_Funcs* fs = Fl_Widget_default_virtual_funcs();
+    Fl_DerivedSys_Menu_Bar* w = new Fl_DerivedSys_Menu_Bar(X,Y,W,H,fs);
+    return (fl_Sys_Menu_Bar)w;
+  }
+  FL_EXPORT_C(fl_Sys_Menu_Bar,    Fl_Sys_Menu_Bar_New_WithLabel)(int X, int Y, int W, int H, const char* label){
+    fl_Widget_Virtual_Funcs* fs = Fl_Widget_default_virtual_funcs();
+    Fl_DerivedSys_Menu_Bar* w = new Fl_DerivedSys_Menu_Bar(X,Y,W,H,label,fs);
+    return (fl_Sys_Menu_Bar)w;
+  }
+  FL_EXPORT_C(fl_Sys_Menu_Bar,    Fl_OverriddenSys_Menu_Bar_New)(int X, int Y, int W, int H,fl_Widget_Virtual_Funcs* fs){
+    Fl_DerivedSys_Menu_Bar* w = new Fl_DerivedSys_Menu_Bar(X,Y,W,H,fs);
+    return (fl_Sys_Menu_Bar)w;
+  }
+  FL_EXPORT_C(fl_Sys_Menu_Bar,    Fl_OverriddenSys_Menu_Bar_New_WithLabel)(int X, int Y, int W, int H, const char* label, fl_Widget_Virtual_Funcs* fs){
+    Fl_DerivedSys_Menu_Bar* w = new Fl_DerivedSys_Menu_Bar(X,Y,W,H,label,fs);
+    return (fl_Sys_Menu_Bar)w;
+  }
+  FL_EXPORT_C(void, Fl_Sys_Menu_Bar_draw)(fl_Sys_Menu_Bar o){
+    (static_cast<Fl_DerivedSys_Menu_Bar*>(o))->draw();
+  }
+  FL_EXPORT_C(void, Fl_Sys_Menu_Bar_draw_super)(fl_Sys_Menu_Bar o){
+    (static_cast<Fl_DerivedSys_Menu_Bar*>(o))->draw_super();
+  }
+  FL_EXPORT_C(int, Fl_Sys_Menu_Bar_handle)(fl_Sys_Menu_Bar o, int event){
+    return (static_cast<Fl_DerivedSys_Menu_Bar*>(o))->handle(event);
+  }
+  FL_EXPORT_C(int, Fl_Sys_Menu_Bar_handle_super)(fl_Sys_Menu_Bar o, int event){
+    return (static_cast<Fl_DerivedSys_Menu_Bar*>(o))->handle_super(event);
+  }
+  FL_EXPORT_C(void, Fl_Sys_Menu_Bar_resize)(fl_Sys_Menu_Bar o, int x, int y, int w, int h){
+    (static_cast<Fl_DerivedSys_Menu_Bar*>(o))->resize(x,y,w,h);
+  }
+  FL_EXPORT_C(void, Fl_Sys_Menu_Bar_resize_super)(fl_Sys_Menu_Bar o, int x, int y, int w, int h){
+    (static_cast<Fl_DerivedSys_Menu_Bar*>(o))->resize_super(x,y,w,h);
+  }
+  FL_EXPORT_C(void, Fl_Sys_Menu_Bar_show)(fl_Sys_Menu_Bar o){
+    (static_cast<Fl_DerivedSys_Menu_Bar*>(o))->show();
+  }
+  FL_EXPORT_C(void, Fl_Sys_Menu_Bar_show_super)(fl_Sys_Menu_Bar o){
+    (static_cast<Fl_DerivedSys_Menu_Bar*>(o))->show_super();
+  }
+  FL_EXPORT_C(void, Fl_Sys_Menu_Bar_hide)(fl_Sys_Menu_Bar o){
+    (static_cast<Fl_DerivedSys_Menu_Bar*>(o))->hide();
+  }
+  FL_EXPORT_C(void, Fl_Sys_Menu_Bar_hide_super)(fl_Sys_Menu_Bar o){
+    (static_cast<Fl_DerivedSys_Menu_Bar*>(o))->hide_super();
   }
 #ifdef __cplusplus
 }

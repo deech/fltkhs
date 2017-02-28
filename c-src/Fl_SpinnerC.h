@@ -7,7 +7,27 @@
 #include "FL/Fl.H"
 #include "FL/Fl_Spinner.H"
 #include "Fl_CallbackC.h"
+#include "Fl_WidgetC.h"
 EXPORT {
+  class Fl_DerivedSpinner : public Fl_Spinner {
+    fl_Widget_Virtual_Funcs* overriddenFuncs;
+    void* other_data;
+  public:
+    virtual void draw();
+    void draw_super();
+    virtual int handle(int event);
+    int handle_super(int event);
+    virtual void resize(int x, int y, int w, int h);
+    void resize_super(int x, int y, int w, int h);
+    virtual void show();
+    void show_super();
+    virtual void hide();
+    void hide_super();
+    Fl_DerivedSpinner(int X, int Y, int W, int H, const char *l, fl_Widget_Virtual_Funcs* funcs);
+    Fl_DerivedSpinner(int X, int Y, int W, int H, fl_Widget_Virtual_Funcs* funcs);
+    ~Fl_DerivedSpinner();
+  };
+
 #endif
 #ifndef INTERNAL_LINKAGE
   typedef enum Spinner_Type {
@@ -42,6 +62,18 @@ EXPORT {
   FL_EXPORT_C(Fl_Color,     Fl_Spinner_textcolor)(fl_Spinner spinner);
   FL_EXPORT_C(fl_Spinner,    Fl_Spinner_New_WithLabel)(int x, int y, int w, int h, const char* label);
   FL_EXPORT_C(fl_Spinner   , Fl_Spinner_New)(int x, int y, int w, int h);
+  FL_EXPORT_C(fl_Spinner,    Fl_OverriddenSpinner_New)(int X, int Y, int W, int H,fl_Widget_Virtual_Funcs* fs);
+  FL_EXPORT_C(fl_Spinner,    Fl_OverriddenSpinner_New_WithLabel)(int X, int Y, int W, int H, const char* label, fl_Widget_Virtual_Funcs* fs);
+  FL_EXPORT_C(void, Fl_Spinner_draw)(fl_Spinner o);
+  FL_EXPORT_C(void, Fl_Spinner_draw_super)(fl_Spinner o);
+  FL_EXPORT_C(int, Fl_Spinner_handle)(fl_Spinner o, int event);
+  FL_EXPORT_C(int, Fl_Spinner_handle_super)(fl_Spinner o, int event);
+  FL_EXPORT_C(void, Fl_Spinner_resize)(fl_Spinner o, int x, int y, int w, int h);
+  FL_EXPORT_C(void, Fl_Spinner_resize_super)(fl_Spinner o, int x, int y, int w, int h);
+  FL_EXPORT_C(void, Fl_Spinner_show)(fl_Spinner o);
+  FL_EXPORT_C(void, Fl_Spinner_show_super)(fl_Spinner o);
+  FL_EXPORT_C(void, Fl_Spinner_hide)(fl_Spinner o);
+  FL_EXPORT_C(void, Fl_Spinner_hide_super)(fl_Spinner o);
 #ifdef __cplusplus
 }
 #endif

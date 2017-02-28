@@ -7,6 +7,7 @@
 #include "FL/Fl.H"
 #include "FL/Fl_Text_Editor.H"
 #include "Fl_CallbackC.h"
+#include "Fl_WidgetC.h"
 EXPORT {
 #endif
   /* Inherited from Fl_Widget */
@@ -190,7 +191,7 @@ EXPORT {
   FL_EXPORT_C(void, Fl_Text_Editor_remove_all_key_bindings)(fl_Text_Editor text_editor);
   FL_EXPORT_C(Key_BindingC*, Fl_Text_Editor_add_default_key_bindings)(fl_Text_Editor text_editor, Key_BindingC* list);
 
-    // functions for the built in default bindings
+  // functions for the built in default bindings
   FL_EXPORT_C(int, Fl_Text_Editor_kf_default)(int c, fl_Text_Editor e);
   FL_EXPORT_C(int, Fl_Text_Editor_kf_ignore)(int c, fl_Text_Editor e);
   FL_EXPORT_C(int, Fl_Text_Editor_kf_backspace)(int c, fl_Text_Editor e);
@@ -218,6 +219,18 @@ EXPORT {
   FL_EXPORT_C(int, Fl_Text_Editor_kf_undo)(int c, fl_Text_Editor e);
   FL_EXPORT_C(void,Fl_Text_Editor_replace_key_bindings)(fl_Text_Editor text_editor, Key_BindingC* list);
   FL_EXPORT_C(void,Fl_Text_Editor_replace_key_bindings_with_list)(fl_Text_Editor text_editor, Key_BindingC* list1, Key_BindingC* list2);
+  FL_EXPORT_C(fl_Text_Editor,    Fl_OverriddenText_Editor_New)(int X, int Y, int W, int H,fl_Widget_Virtual_Funcs* fs);
+  FL_EXPORT_C(fl_Text_Editor,    Fl_OverriddenText_Editor_New_WithLabel)(int X, int Y, int W, int H, const char* label, fl_Widget_Virtual_Funcs* fs);
+  FL_EXPORT_C(void, Fl_Text_Editor_draw)(fl_Text_Editor o);
+  FL_EXPORT_C(void, Fl_Text_Editor_draw_super)(fl_Text_Editor o);
+  FL_EXPORT_C(int, Fl_Text_Editor_handle)(fl_Text_Editor o, int event);
+  FL_EXPORT_C(int, Fl_Text_Editor_handle_super)(fl_Text_Editor o, int event);
+  FL_EXPORT_C(void, Fl_Text_Editor_resize)(fl_Text_Editor o, int x, int y, int w, int h);
+  FL_EXPORT_C(void, Fl_Text_Editor_resize_super)(fl_Text_Editor o, int x, int y, int w, int h);
+  FL_EXPORT_C(void, Fl_Text_Editor_show)(fl_Text_Editor o);
+  FL_EXPORT_C(void, Fl_Text_Editor_show_super)(fl_Text_Editor o);
+  FL_EXPORT_C(void, Fl_Text_Editor_hide)(fl_Text_Editor o);
+  FL_EXPORT_C(void, Fl_Text_Editor_hide_super)(fl_Text_Editor o);
 #ifdef __cplusplus
 }
 #endif

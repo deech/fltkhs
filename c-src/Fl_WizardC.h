@@ -7,7 +7,27 @@
 #include "FL/Fl.H"
 #include "FL/Fl_Wizard.H"
 #include "Fl_CallbackC.h"
+#include "Fl_WidgetC.h"
 EXPORT {
+  class Fl_DerivedWizard : public Fl_Wizard {
+    fl_Widget_Virtual_Funcs* overriddenFuncs;
+    void* other_data;
+  public:
+    virtual void draw();
+    void draw_super();
+    virtual int handle(int event);
+    int handle_super(int event);
+    virtual void resize(int x, int y, int w, int h);
+    void resize_super(int x, int y, int w, int h);
+    virtual void show();
+    void show_super();
+    virtual void hide();
+    void hide_super();
+    Fl_DerivedWizard(int X, int Y, int W, int H, const char *l, fl_Widget_Virtual_Funcs* funcs);
+    Fl_DerivedWizard(int X, int Y, int W, int H, fl_Widget_Virtual_Funcs* funcs);
+    ~Fl_DerivedWizard();
+  };
+
 #endif
   /* Inherited from Fl_Widget */
   FL_EXPORT_C(int,          Fl_Wizard_handle)(fl_Wizard wizard, int event);
@@ -133,6 +153,19 @@ EXPORT {
   FL_EXPORT_C(fl_Wizard,     Fl_Wizard_New)(int x, int y, int w, int h);
   FL_EXPORT_C(fl_Wizard,     Fl_Wizard_New_WithLabel)(int x, int y, int w, int h, const char* t);
   FL_EXPORT_C(void,          Fl_Wizard_Destroy)(fl_Wizard wizard);
+  FL_EXPORT_C(fl_Wizard,    Fl_OverriddenWizard_New)(int X, int Y, int W, int H,fl_Widget_Virtual_Funcs* fs);
+  FL_EXPORT_C(fl_Wizard,    Fl_OverriddenWizard_New_WithLabel)(int X, int Y, int W, int H, const char* label, fl_Widget_Virtual_Funcs* fs);
+  FL_EXPORT_C(void, Fl_Wizard_draw)(fl_Wizard o);
+  FL_EXPORT_C(void, Fl_Wizard_draw_super)(fl_Wizard o);
+  FL_EXPORT_C(int, Fl_Wizard_handle)(fl_Wizard o, int event);
+  FL_EXPORT_C(int, Fl_Wizard_handle_super)(fl_Wizard o, int event);
+  FL_EXPORT_C(void, Fl_Wizard_resize)(fl_Wizard o, int x, int y, int w, int h);
+  FL_EXPORT_C(void, Fl_Wizard_resize_super)(fl_Wizard o, int x, int y, int w, int h);
+  FL_EXPORT_C(void, Fl_Wizard_show)(fl_Wizard o);
+  FL_EXPORT_C(void, Fl_Wizard_show_super)(fl_Wizard o);
+  FL_EXPORT_C(void, Fl_Wizard_hide)(fl_Wizard o);
+  FL_EXPORT_C(void, Fl_Wizard_hide_super)(fl_Wizard o);
+
 #ifdef __cplusplus
 }
 #endif

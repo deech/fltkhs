@@ -1,7 +1,82 @@
 #include "Fl_CounterC.h"
 #ifdef __cplusplus
 EXPORT {
-#endif  
+  Fl_DerivedCounter::Fl_DerivedCounter(int X, int Y, int W, int H, const char *l, fl_Widget_Virtual_Funcs* funcs) : Fl_Counter(X,Y,W,H,l){
+    overriddenFuncs = funcs;
+    other_data = (void*)0;
+  }
+  Fl_DerivedCounter::Fl_DerivedCounter(int X, int Y, int W, int H, fl_Widget_Virtual_Funcs* funcs):Fl_Counter(X,Y,W,H){
+    overriddenFuncs = funcs;
+    other_data = (void*)0;
+  }
+  Fl_DerivedCounter::~Fl_DerivedCounter(){
+    free(overriddenFuncs);
+  }
+  void Fl_DerivedCounter::draw(){
+    if (this->overriddenFuncs->draw != NULL) {
+      this->overriddenFuncs->draw((fl_Counter) this);
+    }
+    else {
+      Fl_Counter::draw();
+    }
+  }
+
+  void Fl_DerivedCounter::draw_super(){
+    Fl_Counter::draw();
+  }
+
+  int Fl_DerivedCounter::handle(int event){
+    int i;
+    if (this->overriddenFuncs->handle != NULL) {
+      i = this->overriddenFuncs->handle((fl_Counter) this,event);
+    }
+    else {
+      i = Fl_Counter::handle(event);
+    }
+    return i;
+  }
+  int Fl_DerivedCounter::handle_super(int event){
+    return Fl_Counter::handle(event);
+  }
+
+  void Fl_DerivedCounter::resize(int x, int y, int w, int h){
+    if (this->overriddenFuncs->resize != NULL) {
+      this->overriddenFuncs->resize((fl_Counter) this,x,y,w,h);
+    }
+    else {
+      Fl_Counter::resize(x,y,w,h);
+    }
+  }
+
+  void Fl_DerivedCounter::resize_super(int x, int y, int w, int h){
+    Fl_Counter::resize(x,y,w,h);
+  }
+  void Fl_DerivedCounter::show(){
+    if (this->overriddenFuncs->show != NULL) {
+      this->overriddenFuncs->show((fl_Counter) this);
+    }
+    else {
+      Fl_Counter::show();
+    }
+  }
+  void Fl_DerivedCounter::show_super(){
+    Fl_Counter::show();
+  }
+
+  void Fl_DerivedCounter::hide(){
+    if (this->overriddenFuncs->hide != NULL) {
+      this->overriddenFuncs->hide((fl_Counter) this);
+    }
+    else {
+      Fl_Counter::hide();
+    }
+  }
+  void Fl_DerivedCounter::hide_super(){
+    Fl_Counter::hide();
+  }
+
+
+#endif
   FL_EXPORT_C(fl_Group,Fl_Counter_parent)(fl_Counter counter){
     return (static_cast<Fl_Counter*>(counter))->parent();
   }
@@ -152,12 +227,6 @@ EXPORT {
   FL_EXPORT_C(int,Fl_Counter_visible_r)(fl_Counter counter){
     return (static_cast<Fl_Counter*>(counter))->visible_r();
   }
-  FL_EXPORT_C(void,Fl_Counter_show)(fl_Counter counter){
-    (static_cast<Fl_Counter*>(counter))->show();
-  }
-  FL_EXPORT_C(void,Fl_Counter_hide)(fl_Counter counter){
-    (static_cast<Fl_Counter*>(counter))->hide();
-  }
   FL_EXPORT_C(void,Fl_Counter_set_visible)(fl_Counter counter){
     (static_cast<Fl_Counter*>(counter))->visible();
   }
@@ -254,9 +323,6 @@ EXPORT {
   FL_EXPORT_C(fl_Gl_Window,Fl_Counter_as_gl_window)(fl_Counter counter){
     return (static_cast<Fl_Counter*>(counter))->as_gl_window();
   }
-  FL_EXPORT_C(void,Fl_Counter_resize)(fl_Counter counter,int X,int Y,int W,int H){
-    (static_cast<Fl_Counter*>(counter))->resize(X,Y,W,H);
-  }
   FL_EXPORT_C(void,Fl_Counter_bounds)(fl_Counter counter,double a,double b){
     (static_cast<Fl_Counter*>(counter))->bounds(a,b);
   }
@@ -308,14 +374,6 @@ EXPORT {
   FL_EXPORT_C(double,Fl_Counter_increment)(fl_Counter counter,double v,int n){
     return (static_cast<Fl_Counter*>(counter))->increment(v,n);
   }
-  FL_EXPORT_C(fl_Counter,Fl_Counter_New_WithLabel)(int x,int y,int w,int h,const char* label){
-    Fl_Counter* counter = new Fl_Counter(x,y,w,h,label);
-    return (fl_Counter) counter;
-  }
-  FL_EXPORT_C(fl_Counter,Fl_Counter_New)(int x,int y,int w,int h){
-    Fl_Counter* counter = new Fl_Counter(x,y,w,h);
-    return (fl_Counter) counter;
-  }
   FL_EXPORT_C(fl_Simple_Counter,Fl_Simple_Counter_New_WithLabel)(int x,int y,int w,int h,const char* label){
     Fl_Simple_Counter* simple_counter = new Fl_Simple_Counter(x,y,w,h,label);
     return (fl_Simple_Counter) simple_counter;
@@ -345,12 +403,57 @@ EXPORT {
   FL_EXPORT_C(Fl_Color,Fl_Counter_textcolor)(fl_Counter counter){
     return (static_cast<Fl_Counter*>(counter))->textcolor();
   }
-  FL_EXPORT_C(int,Fl_Counter_handle)(fl_Counter counter,int event){
-    return (static_cast<Fl_Counter*>(counter))->handle(event);
-  }
   FL_EXPORT_C(void,Fl_Counter_lstep)(fl_Counter counter,double lstep){
     (static_cast<Fl_Counter*>(counter))->lstep(lstep);
   }
+  FL_EXPORT_C(void, Fl_Counter_draw)(fl_Counter o){
+    (static_cast<Fl_DerivedCounter*>(o))->draw();
+  }
+  FL_EXPORT_C(void, Fl_Counter_draw_super)(fl_Counter o){
+    (static_cast<Fl_DerivedCounter*>(o))->draw_super();
+  }
+  FL_EXPORT_C(int, Fl_Counter_handle)(fl_Counter o, int event){
+    return (static_cast<Fl_DerivedCounter*>(o))->handle(event);
+  }
+  FL_EXPORT_C(int, Fl_Counter_handle_super)(fl_Counter o, int event){
+    return (static_cast<Fl_DerivedCounter*>(o))->handle_super(event);
+  }
+  FL_EXPORT_C(void, Fl_Counter_resize)(fl_Counter o, int x, int y, int w, int h){
+    (static_cast<Fl_DerivedCounter*>(o))->resize(x,y,w,h);
+  }
+  FL_EXPORT_C(void, Fl_Counter_resize_super)(fl_Counter o, int x, int y, int w, int h){
+    (static_cast<Fl_DerivedCounter*>(o))->resize_super(x,y,w,h);
+  }
+  FL_EXPORT_C(void, Fl_Counter_show)(fl_Counter o){
+    (static_cast<Fl_DerivedCounter*>(o))->show();
+  }
+  FL_EXPORT_C(void, Fl_Counter_show_super)(fl_Counter o){
+    (static_cast<Fl_DerivedCounter*>(o))->show_super();
+  }
+  FL_EXPORT_C(void, Fl_Counter_hide)(fl_Counter o){
+    (static_cast<Fl_DerivedCounter*>(o))->hide();
+  }
+  FL_EXPORT_C(void, Fl_Counter_hide_super)(fl_Counter o){
+    (static_cast<Fl_DerivedCounter*>(o))->hide_super();
+  }
+  FL_EXPORT_C(fl_Counter,    Fl_Counter_New)(int X, int Y, int W, int H){
+    fl_Widget_Virtual_Funcs* fs = Fl_Widget_default_virtual_funcs();
+    Fl_DerivedCounter* w = new Fl_DerivedCounter(X,Y,W,H,fs);
+    return (fl_Counter)w;
+  }
+  FL_EXPORT_C(fl_Counter,    Fl_Counter_New_WithLabel)(int X, int Y, int W, int H, const char* label){
+    fl_Widget_Virtual_Funcs* fs = Fl_Widget_default_virtual_funcs();
+    Fl_DerivedCounter* w = new Fl_DerivedCounter(X,Y,W,H,label,fs);
+    return (fl_Counter)w;
+  }
+  FL_EXPORT_C(fl_Counter,    Fl_OverriddenCounter_New)(int X, int Y, int W, int H,fl_Widget_Virtual_Funcs* fs){
+    Fl_DerivedCounter* w = new Fl_DerivedCounter(X,Y,W,H,fs);
+    return (fl_Counter)w;
+  }
+  FL_EXPORT_C(fl_Counter,    Fl_OverriddenCounter_New_WithLabel)(int X, int Y, int W, int H, const char* label, fl_Widget_Virtual_Funcs* fs){
+    Fl_DerivedCounter* w = new Fl_DerivedCounter(X,Y,W,H,label,fs);
+    return (fl_Counter)w;
+  }
 #ifdef __cplusplus
 }
-#endif 
+#endif

@@ -467,37 +467,33 @@ EXPORT {
   FL_EXPORT_C(int, flc_color_chooser_with_uchar_m)(const char* name, uchar* r, uchar* g, uchar* b, int m){
     return fl_color_chooser(name,*r,*g,*b,m);
   }
-  FL_EXPORT_C(void, Fl_Color_Chooser_draw)(fl_Color_Chooser w){
-    (static_cast<Fl_DerivedColor_Chooser*>(w))->draw();
+  FL_EXPORT_C(void, Fl_Color_Chooser_draw)(fl_Color_Chooser o){
+    (static_cast<Fl_DerivedColor_Chooser*>(o))->draw();
   }
-  FL_EXPORT_C(void, Fl_Color_Chooser_draw_super)(fl_Color_Chooser w){
-    (static_cast<Fl_Color_Chooser*>(w))->draw();
+  FL_EXPORT_C(void, Fl_Color_Chooser_draw_super)(fl_Color_Chooser o){
+    (static_cast<Fl_DerivedColor_Chooser*>(o))->draw_super();
   }
-  FL_EXPORT_C(int, Fl_Color_Chooser_handle)(fl_Color_Chooser w, int event){
-    return (static_cast<Fl_DerivedColor_Chooser*>(w))->handle(event);
+  FL_EXPORT_C(int, Fl_Color_Chooser_handle_super)(fl_Color_Chooser o, int event){
+    return (static_cast<Fl_DerivedColor_Chooser*>(o))->handle_super(event);
   }
-  FL_EXPORT_C(int, Fl_Color_Chooser_handle_super)(fl_Color_Chooser w, int event){
-    return (static_cast<Fl_Color_Chooser*>(w))->handle(event);
+  FL_EXPORT_C(void, Fl_Color_Chooser_resize)(fl_Color_Chooser o, int x, int y, int w, int h){
+    (static_cast<Fl_DerivedColor_Chooser*>(o))->resize(x,y,w,h);
   }
-  FL_EXPORT_C(void, Fl_Color_Chooser_resize)(fl_Color_Chooser w, int x, int y, int w, int h){
-    (static_cast<Fl_DerivedColor_Chooser*>(w))->resize(x,y,w,h);
+  FL_EXPORT_C(void, Fl_Color_Chooser_resize_super)(fl_Color_Chooser o, int x, int y, int w, int h){
+    (static_cast<Fl_DerivedColor_Chooser*>(o))->resize_super(x,y,w,h);
   }
-  FL_EXPORT_C(void, Fl_Color_Chooser_resize_super)(fl_Color_Chooser w, int x, int y, int w, int h){
-    (static_cast<Fl_Color_Chooser*>(w))->resize(x,y,w,h);
+  FL_EXPORT_C(void, Fl_Color_Chooser_show)(fl_Color_Chooser o){
+    (static_cast<Fl_DerivedColor_Chooser*>(o))->show();
   }
-  FL_EXPORT_C(void, Fl_Color_Chooser_show)(fl_Color_Chooser w){
-    (static_cast<Fl_DerivedColor_Chooser*>(w))->show();
+  FL_EXPORT_C(void, Fl_Color_Chooser_show_super)(fl_Color_Chooser o){
+    (static_cast<Fl_DerivedColor_Chooser*>(o))->show_super();
   }
-  FL_EXPORT_C(void, Fl_Color_Chooser_show_super)(fl_Color_Chooser w){
-    (static_cast<Fl_Color_Chooser*>(w))->show();
+  FL_EXPORT_C(void, Fl_Color_Chooser_hide)(fl_Color_Chooser o){
+    (static_cast<Fl_DerivedColor_Chooser*>(o))->hide();
   }
-  FL_EXPORT_C(void, Fl_Color_Chooser_hide)(fl_Color_Chooser w){
-    (static_cast<Fl_DerivedColor_Chooser*>(w))->hide();
+  FL_EXPORT_C(void, Fl_Color_Chooser_hide_super)(fl_Color_Chooser o){
+    (static_cast<Fl_DerivedColor_Chooser*>(o))->hide_super();
   }
-  FL_EXPORT_C(void, Fl_Color_Chooser_hide_super)(fl_Color_Chooser w){
-    (static_cast<Fl_Color_Chooser*>(w))->hide();
-  }
-
 #ifdef __cplusplus
 }
 #endif

@@ -7,7 +7,27 @@
 #include "FL/Fl.H"
 #include "FL/Fl_Adjuster.H"
 #include "Fl_CallbackC.h"
+#include "Fl_Types.h"
+#include "Fl_WidgetC.h"
 EXPORT {
+  class Fl_DerivedAdjuster : public Fl_Adjuster {
+    fl_Widget_Virtual_Funcs* overriddenFuncs;
+    void* other_data;
+  public:
+    virtual void draw();
+    void draw_super();
+    virtual int handle(int event);
+    int handle_super(int event);
+    virtual void resize(int x, int y, int w, int h);
+    void resize_super(int x, int y, int w, int h);
+    virtual void show();
+    void show_super();
+    virtual void hide();
+    void hide_super();
+    Fl_DerivedAdjuster(int X, int Y, int W, int H, const char *l, fl_Widget_Virtual_Funcs* funcs);
+    Fl_DerivedAdjuster(int X, int Y, int W, int H, fl_Widget_Virtual_Funcs* funcs);
+    ~Fl_DerivedAdjuster();
+  };
 #endif
   FL_EXPORT_C(fl_Group,     Fl_Adjuster_parent)(fl_Adjuster adjuster);
   FL_EXPORT_C(void,         Fl_Adjuster_set_parent)(fl_Adjuster adjuster, fl_Group grp);
@@ -57,8 +77,6 @@ EXPORT {
   FL_EXPORT_C(void,         Fl_Adjuster_set_when)(fl_Adjuster adjuster, uchar i);
   FL_EXPORT_C(unsigned int, Fl_Adjuster_visible)(fl_Adjuster adjuster);
   FL_EXPORT_C(int,          Fl_Adjuster_visible_r)(fl_Adjuster adjuster);
-  FL_EXPORT_C(void,         Fl_Adjuster_show)(fl_Adjuster adjuster);
-  FL_EXPORT_C(void,         Fl_Adjuster_hide)(fl_Adjuster adjuster);
   FL_EXPORT_C(void,         Fl_Adjuster_set_visible)(fl_Adjuster adjuster);
   FL_EXPORT_C(void,         Fl_Adjuster_clear_visible)(fl_Adjuster adjuster);
   FL_EXPORT_C(unsigned int, Fl_Adjuster_active)(fl_Adjuster adjuster);
@@ -91,7 +109,6 @@ EXPORT {
   FL_EXPORT_C(fl_Window,    Fl_Adjuster_top_window)(fl_Adjuster adjuster);
   FL_EXPORT_C(fl_Window ,   Fl_Adjuster_top_window_offset)(fl_Adjuster adjuster, int* xoff, int* yoff);
   FL_EXPORT_C(fl_Gl_Window, Fl_Adjuster_as_gl_window)(fl_Adjuster adjuster);
-  FL_EXPORT_C(void,         Fl_Adjuster_resize)(fl_Table table,int X, int Y, int W, int H);
 
   /* Inherited from Fl_Valuator */
   FL_EXPORT_C(void, Fl_Adjuster_bounds)(fl_Adjuster adjuster, double a, double b);
@@ -118,6 +135,20 @@ EXPORT {
   FL_EXPORT_C(void,      Fl_Adjuster_Destroy)(fl_Adjuster adjuster);
   FL_EXPORT_C(int,      Fl_Adjuster_soft)(fl_Adjuster adjuster);
   FL_EXPORT_C(void,      Fl_Adjuster_set_soft)(fl_Adjuster adjuster, int soft);
+
+  FL_EXPORT_C(fl_Adjuster,    Fl_OverriddenAdjuster_New)(int X, int Y, int W, int H,fl_Widget_Virtual_Funcs* fs);
+  FL_EXPORT_C(fl_Adjuster,    Fl_OverriddenAdjuster_New_WithLabel)(int X, int Y, int W, int H, const char* label, fl_Widget_Virtual_Funcs* fs);
+  FL_EXPORT_C(void, Fl_Adjuster_draw)(fl_Adjuster o);
+  FL_EXPORT_C(void, Fl_Adjuster_draw_super)(fl_Adjuster o);
+  FL_EXPORT_C(int, Fl_Adjuster_handle)(fl_Adjuster o, int event);
+  FL_EXPORT_C(int, Fl_Adjuster_handle_super)(fl_Adjuster o, int event);
+  FL_EXPORT_C(void, Fl_Adjuster_resize)(fl_Adjuster o, int x, int y, int w, int h);
+  FL_EXPORT_C(void, Fl_Adjuster_resize_super)(fl_Adjuster o, int x, int y, int w, int h);
+  FL_EXPORT_C(void, Fl_Adjuster_show)(fl_Adjuster o);
+  FL_EXPORT_C(void, Fl_Adjuster_show_super)(fl_Adjuster o);
+  FL_EXPORT_C(void, Fl_Adjuster_hide)(fl_Adjuster o);
+  FL_EXPORT_C(void, Fl_Adjuster_hide_super)(fl_Adjuster o);
+
 #ifdef __cplusplus
 }
 #endif

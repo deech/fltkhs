@@ -8,10 +8,28 @@
 #include "FL/Fl_Choice.H"
 #include "Fl_CallbackC.h"
 #include "Fl_Menu_C.h"
+#include "Fl_WidgetC.h"
 EXPORT {
+  class Fl_DerivedChoice : public Fl_Choice {
+    fl_Widget_Virtual_Funcs* overriddenFuncs;
+    void* other_data;
+  public:
+    virtual void draw();
+    void draw_super();
+    virtual int handle(int event);
+    int handle_super(int event);
+    virtual void resize(int x, int y, int w, int h);
+    void resize_super(int x, int y, int w, int h);
+    virtual void show();
+    void show_super();
+    virtual void hide();
+    void hide_super();
+    Fl_DerivedChoice(int X, int Y, int W, int H, const char *l, fl_Widget_Virtual_Funcs* funcs);
+    Fl_DerivedChoice(int X, int Y, int W, int H, fl_Widget_Virtual_Funcs* funcs);
+    ~Fl_DerivedChoice();
+  };
 #endif
   /* Inherited from Fl_Widget */
-  FL_EXPORT_C(int,          Fl_Choice_handle)(fl_Group self, int event);
   FL_EXPORT_C(fl_Group,     Fl_Choice_parent)(fl_Choice choice);
   FL_EXPORT_C(void,         Fl_Choice_set_parent)(fl_Choice choice, fl_Group grp);
   FL_EXPORT_C(uchar,        Fl_Choice_type)(fl_Choice choice);
@@ -60,10 +78,6 @@ EXPORT {
   FL_EXPORT_C(void,         Fl_Choice_set_when)(fl_Choice choice, uchar i);
   FL_EXPORT_C(unsigned int, Fl_Choice_visible)(fl_Choice choice);
   FL_EXPORT_C(int,          Fl_Choice_visible_r)(fl_Choice choice);
-  FL_EXPORT_C(void,         Fl_Choice_show_super)(fl_Choice choice);
-  FL_EXPORT_C(void,         Fl_Choice_show)(fl_Choice choice);
-  FL_EXPORT_C(void,         Fl_Choice_hide_super)(fl_Choice choice);
-  FL_EXPORT_C(void,         Fl_Choice_hide)(fl_Choice choice);
   FL_EXPORT_C(void,         Fl_Choice_set_visible)(fl_Choice choice);
   FL_EXPORT_C(void,         Fl_Choice_clear_visible)(fl_Choice choice);
   FL_EXPORT_C(unsigned int, Fl_Choice_active)(fl_Choice choice);
@@ -105,7 +119,7 @@ EXPORT {
   FL_EXPORT_C(void,         Fl_Choice_resize_super)(fl_Choice choice,int X, int Y, int W, int H);
   FL_EXPORT_C(void,         Fl_Choice_resize)(fl_Choice choice,int X, int Y, int W, int H);
 
-  /* Fl_Choice specific */ 
+  /* Fl_Choice specific */
   FL_EXPORT_C(fl_Choice,    Fl_Choice_New_WithLabel)(int x, int y, int w, int h, const char* label);
   FL_EXPORT_C(fl_Choice   , Fl_Choice_New)(int x, int y, int w, int h);
   FL_EXPORT_C(void, Fl_Choice_Destroy)(fl_Choice choice);
@@ -142,18 +156,18 @@ EXPORT {
   FL_EXPORT_C(int, Fl_Choice_add_with_shortcutname_user_data_flags)(fl_Choice choice, char* name,  char* shortcut, fl_Callback* cb, void* user_data, int flags);
   FL_EXPORT_C(int, Fl_Choice_add_with_name)(fl_Choice choice,  char* name);
   FL_EXPORT_C(int , Fl_Choice_size)(fl_Choice choice);
-  FL_EXPORT_C(void, Fl_Choice_set_size)(fl_Choice choice, int W, int H); 
+  FL_EXPORT_C(void, Fl_Choice_set_size)(fl_Choice choice, int W, int H);
   FL_EXPORT_C(void, Fl_Choice_clear)(fl_Choice choice);
   FL_EXPORT_C(int, Fl_Choice_clear_submenu)(fl_Choice choice, int index);
   FL_EXPORT_C(void, Fl_Choice_replace)(fl_Choice choice, int, char* name);
   FL_EXPORT_C(void, Fl_Choice_remove)(fl_Choice choice, int);
-  FL_EXPORT_C(void, Fl_Choice_shortcut)(fl_Choice choice, int i, int s); 
-  FL_EXPORT_C(void, Fl_Choice_set_mode)(fl_Choice choice, int i,int fl); 
-  FL_EXPORT_C(int , Fl_Choice_mode)(fl_Choice choice, int i);  
+  FL_EXPORT_C(void, Fl_Choice_shortcut)(fl_Choice choice, int i, int s);
+  FL_EXPORT_C(void, Fl_Choice_set_mode)(fl_Choice choice, int i,int fl);
+  FL_EXPORT_C(int , Fl_Choice_mode)(fl_Choice choice, int i);
   FL_EXPORT_C(fl_Menu_Item, Fl_Choice_mvalue)(fl_Choice choice);
   FL_EXPORT_C(int, Fl_Choice_value)(fl_Choice choice);
   FL_EXPORT_C(int, Fl_Choice_set_value_with_item)(fl_Choice choice,  fl_Menu_Item item);
-  FL_EXPORT_C(int, Fl_Choice_set_value_with_index)(fl_Choice choice, int index); 
+  FL_EXPORT_C(int, Fl_Choice_set_value_with_index)(fl_Choice choice, int index);
   FL_EXPORT_C(char*, Fl_Choice_text)(fl_Choice choice);
   FL_EXPORT_C(char*, Fl_Choice_text_with_index)(fl_Choice choice, int i);
   FL_EXPORT_C(Fl_Font, Fl_Choice_textfont)(fl_Choice choice);
@@ -166,6 +180,19 @@ EXPORT {
   FL_EXPORT_C(void, Fl_Choice_set_down_box)(fl_Choice choice, Fl_Boxtype b);
   FL_EXPORT_C(Fl_Color, Fl_Choice_down_color)(fl_Choice choice);
   FL_EXPORT_C(void, Fl_Choice_set_down_color)(fl_Choice choice, unsigned c);
+  FL_EXPORT_C(fl_Choice,    Fl_OverriddenChoice_New)(int X, int Y, int W, int H,fl_Widget_Virtual_Funcs* fs);
+  FL_EXPORT_C(fl_Choice,    Fl_OverriddenChoice_New_WithLabel)(int X, int Y, int W, int H, const char* label, fl_Widget_Virtual_Funcs* fs);
+  FL_EXPORT_C(void, Fl_Choice_draw)(fl_Choice o);
+  FL_EXPORT_C(void, Fl_Choice_draw_super)(fl_Choice o);
+  FL_EXPORT_C(int, Fl_Choice_handle)(fl_Choice o, int event);
+  FL_EXPORT_C(int, Fl_Choice_handle_super)(fl_Choice o, int event);
+  FL_EXPORT_C(void, Fl_Choice_resize)(fl_Choice o, int x, int y, int w, int h);
+  FL_EXPORT_C(void, Fl_Choice_resize_super)(fl_Choice o, int x, int y, int w, int h);
+  FL_EXPORT_C(void, Fl_Choice_show)(fl_Choice o);
+  FL_EXPORT_C(void, Fl_Choice_show_super)(fl_Choice o);
+  FL_EXPORT_C(void, Fl_Choice_hide)(fl_Choice o);
+  FL_EXPORT_C(void, Fl_Choice_hide_super)(fl_Choice o);
+
 #ifdef __cplusplus
 }
 #endif

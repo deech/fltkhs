@@ -7,7 +7,27 @@
 #include "FL/Fl.H"
 #include "FL/Fl_Value_Output.H"
 #include "Fl_CallbackC.h"
+#include "Fl_WidgetC.h"
 EXPORT {
+  class Fl_DerivedValue_Output : public Fl_Value_Output {
+    fl_Widget_Virtual_Funcs* overriddenFuncs;
+    void* other_data;
+  public:
+    virtual void draw();
+    void draw_super();
+    virtual int handle(int event);
+    int handle_super(int event);
+    virtual void resize(int x, int y, int w, int h);
+    void resize_super(int x, int y, int w, int h);
+    virtual void show();
+    void show_super();
+    virtual void hide();
+    void hide_super();
+    Fl_DerivedValue_Output(int X, int Y, int W, int H, const char *l, fl_Widget_Virtual_Funcs* funcs);
+    Fl_DerivedValue_Output(int X, int Y, int W, int H, fl_Widget_Virtual_Funcs* funcs);
+    ~Fl_DerivedValue_Output();
+  };
+
 #endif
   FL_EXPORT_C(int,Fl_Value_Output_handle)(fl_Value_Output self, int event);
   FL_EXPORT_C(fl_Group,     Fl_Value_Output_parent)(fl_Value_Output value_output);
@@ -125,6 +145,18 @@ EXPORT {
   FL_EXPORT_C(void,	Fl_Value_Output_set_textsize)(fl_Value_Output value_output,int v);
   FL_EXPORT_C(Fl_Color,	Fl_Value_Output_textcolor)(fl_Value_Output value_output);
   FL_EXPORT_C(void,	Fl_Value_Output_set_textcolor)(fl_Value_Output value_output,int v);
+  FL_EXPORT_C(fl_Value_Output,    Fl_OverriddenValue_Output_New)(int X, int Y, int W, int H,fl_Widget_Virtual_Funcs* fs);
+  FL_EXPORT_C(fl_Value_Output,    Fl_OverriddenValue_Output_New_WithLabel)(int X, int Y, int W, int H, const char* label, fl_Widget_Virtual_Funcs* fs);
+  FL_EXPORT_C(void, Fl_Value_Output_draw)(fl_Value_Output o);
+  FL_EXPORT_C(void, Fl_Value_Output_draw_super)(fl_Value_Output o);
+  FL_EXPORT_C(int, Fl_Value_Output_handle)(fl_Value_Output o, int event);
+  FL_EXPORT_C(int, Fl_Value_Output_handle_super)(fl_Value_Output o, int event);
+  FL_EXPORT_C(void, Fl_Value_Output_resize)(fl_Value_Output o, int x, int y, int w, int h);
+  FL_EXPORT_C(void, Fl_Value_Output_resize_super)(fl_Value_Output o, int x, int y, int w, int h);
+  FL_EXPORT_C(void, Fl_Value_Output_show)(fl_Value_Output o);
+  FL_EXPORT_C(void, Fl_Value_Output_show_super)(fl_Value_Output o);
+  FL_EXPORT_C(void, Fl_Value_Output_hide)(fl_Value_Output o);
+  FL_EXPORT_C(void, Fl_Value_Output_hide_super)(fl_Value_Output o);
 #ifdef __cplusplus
 }
 #endif

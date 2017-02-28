@@ -7,14 +7,33 @@
 #include "FL/Fl.H"
 #include "FL/Fl_Clock.H"
 #include "Fl_CallbackC.h"
+#include "Fl_WidgetC.h"
 EXPORT {
+  class Fl_DerivedClock : public Fl_Clock {
+    fl_Widget_Virtual_Funcs* overriddenFuncs;
+    void* other_data;
+  public:
+    virtual void draw();
+    void draw_super();
+    virtual int handle(int event);
+    int handle_super(int event);
+    virtual void resize(int x, int y, int w, int h);
+    void resize_super(int x, int y, int w, int h);
+    virtual void show();
+    void show_super();
+    virtual void hide();
+    void hide_super();
+    Fl_DerivedClock(int X, int Y, int W, int H, const char *l, fl_Widget_Virtual_Funcs* funcs);
+    Fl_DerivedClock(int X, int Y, int W, int H, fl_Widget_Virtual_Funcs* funcs);
+    ~Fl_DerivedClock();
+  };
+
 #endif
 #define FL_SQUARE_CLOCK		0
 #define FL_ROUND_CLOCK		1
 #define FL_ANALOG_CLOCK FL_SQUARE_CLOCK
 #define FL_DIGITAL_CLOCK FL_SQUARE_CLOCK
   /* Inherited from Fl_Widget */
-  FL_EXPORT_C(int,Fl_Clock_handle)(fl_Clock self, int event);
   FL_EXPORT_C(fl_Group,     Fl_Clock_parent)(fl_Clock clock);
   FL_EXPORT_C(void,         Fl_Clock_set_parent)(fl_Clock clock, fl_Group grp);
   FL_EXPORT_C(uchar,        Fl_Clock_type)(fl_Clock clock);
@@ -107,6 +126,19 @@ EXPORT {
   FL_EXPORT_C(int, Fl_Clock_hour)(fl_Clock clock);
   FL_EXPORT_C(int, Fl_Clock_minute)(fl_Clock clock);
   FL_EXPORT_C(int, Fl_Clock_second)(fl_Clock clock);
+  FL_EXPORT_C(fl_Clock,    Fl_OverriddenClock_New)(int X, int Y, int W, int H,fl_Widget_Virtual_Funcs* fs);
+  FL_EXPORT_C(fl_Clock,    Fl_OverriddenClock_New_WithLabel)(int X, int Y, int W, int H, const char* label, fl_Widget_Virtual_Funcs* fs);
+  FL_EXPORT_C(void, Fl_Clock_draw)(fl_Clock o);
+  FL_EXPORT_C(void, Fl_Clock_draw_super)(fl_Clock o);
+  FL_EXPORT_C(int, Fl_Clock_handle)(fl_Clock o, int event);
+  FL_EXPORT_C(int, Fl_Clock_handle_super)(fl_Clock o, int event);
+  FL_EXPORT_C(void, Fl_Clock_resize)(fl_Clock o, int x, int y, int w, int h);
+  FL_EXPORT_C(void, Fl_Clock_resize_super)(fl_Clock o, int x, int y, int w, int h);
+  FL_EXPORT_C(void, Fl_Clock_show)(fl_Clock o);
+  FL_EXPORT_C(void, Fl_Clock_show_super)(fl_Clock o);
+  FL_EXPORT_C(void, Fl_Clock_hide)(fl_Clock o);
+  FL_EXPORT_C(void, Fl_Clock_hide_super)(fl_Clock o);
+
 #ifdef __cplusplus
 }
 #endif

@@ -3,6 +3,7 @@
 module Graphics.UI.FLTK.LowLevel.TextEditor
        (
          textEditorNew,
+         textEditorCustom,
          KeyBinding(..),
          KeyFunc(..),
          KeyFuncPrim,
@@ -23,7 +24,7 @@ where
 #include "Fl_Types.h"
 #include "Fl_Text_EditorC.h"
 import C2HS hiding (cFromEnum, cFromBool, cToBool,cToEnum)
-
+import Graphics.UI.FLTK.LowLevel.Widget
 import Graphics.UI.FLTK.LowLevel.Fl_Types
 import Graphics.UI.FLTK.LowLevel.Fl_Enumerations
 import Graphics.UI.FLTK.LowLevel.Hierarchy
@@ -104,6 +105,23 @@ arrayToKeyBindings p =
       let currKb = KeyBinding (KeyBindingKeySequence evs keyType) (toFunRef function')
       go (accum ++ [currKb]) next'
 
+{# fun Fl_OverriddenText_Editor_New_WithLabel as overriddenWidgetNewWithLabel' { `Int',`Int',`Int',`Int', unsafeToCString `T.Text', id `Ptr ()'} -> `Ptr ()' id #}
+{# fun Fl_OverriddenText_Editor_New as overriddenWidgetNew' { `Int',`Int',`Int',`Int', id `Ptr ()'} -> `Ptr ()' id #}
+textEditorCustom ::
+       Rectangle                         -- ^ The bounds of this TextEditor
+    -> Maybe T.Text                      -- ^ The TextEditor label
+    -> Maybe (Ref TextEditor -> IO ())           -- ^ Optional custom drawing function
+    -> Maybe (CustomWidgetFuncs TextEditor)      -- ^ Optional custom widget functions
+    -> IO (Ref TextEditor)
+textEditorCustom rectangle l' draw' funcs' =
+  widgetMaker
+    rectangle
+    l'
+    draw'
+    funcs'
+    overriddenWidgetNew'
+    overriddenWidgetNewWithLabel'
+
 {# fun Fl_Text_Editor_New as textEditorNew' { `Int',`Int',`Int',`Int' } -> `Ptr ()' id #}
 {# fun Fl_Text_Editor_New_WithLabel as textEditorNewWithLabel' { `Int',`Int',`Int',`Int', unsafeToCString `T.Text'} -> `Ptr ()' id #}
 textEditorNew :: Rectangle -> Maybe T.Text -> IO (Ref TextEditor)
@@ -113,9 +131,6 @@ textEditorNew rectangle l' =
         Nothing -> textEditorNew' x_pos y_pos width height >>= toRef
         Just l -> textEditorNewWithLabel' x_pos y_pos width height l >>= toRef
 
-{# fun Fl_Text_Editor_handle as handle' { id `Ptr ()',`Int' } -> `Int' #}
-instance (impl ~ (Event ->  IO(Either UnknownEvent ()))) => Op (Handle ()) TextEditor orig impl where
-   runOp _ _ text_editor e = withRef text_editor $ \text_editorPtr -> handle' text_editorPtr (fromEnum e) >>= return  . successOrUnknownEvent
 {# fun Fl_Text_Editor_Destroy as textEditorDestroy' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
 instance (impl ~ (IO ())) => Op (Destroy ()) TextEditor orig impl where
   runOp _ _ editor = swapRef editor $ \editorPtr -> do
@@ -138,6 +153,40 @@ instance (impl ~ ([KeyBinding] -> IO ())) => Op (ReplaceKeyBindings ()) TextEdit
   runOp _ _ text_editor kbs = withRef text_editor $ \text_editorPtr -> do
         p <- keyBindingsToArray kbs
         replaceKeyBindings' text_editorPtr p
+{# fun Fl_Text_Editor_draw as draw'' { id `Ptr ()' } -> `()' #}
+instance (impl ~ (  IO ())) => Op (Draw ()) TextEditor orig impl where
+  runOp _ _ textEditor = withRef textEditor $ \textEditorPtr -> draw'' textEditorPtr
+{# fun Fl_Text_Editor_draw_super as drawSuper' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
+instance (impl ~ ( IO ())) => Op (DrawSuper ()) TextEditor orig impl where
+  runOp _ _ textEditor = withRef textEditor $ \textEditorPtr -> drawSuper' textEditorPtr
+{#fun Fl_Text_Editor_handle as textEditorHandle' { id `Ptr ()', id `CInt' } -> `Int' #}
+instance (impl ~ (Event -> IO (Either UnknownEvent ()))) => Op (Handle ()) TextEditor orig impl where
+  runOp _ _ textEditor event = withRef textEditor (\p -> textEditorHandle' p (fromIntegral . fromEnum $ event)) >>= return  . successOrUnknownEvent
+{# fun Fl_Text_Editor_handle_super as handleSuper' { id `Ptr ()',`Int' } -> `Int' #}
+instance (impl ~ (Event ->  IO (Either UnknownEvent ()))) => Op (HandleSuper ()) TextEditor orig impl where
+  runOp _ _ textEditor event = withRef textEditor $ \textEditorPtr -> handleSuper' textEditorPtr (fromIntegral (fromEnum event)) >>= return . successOrUnknownEvent
+{# fun Fl_Text_Editor_resize as resize' { id `Ptr ()',`Int',`Int',`Int',`Int' } -> `()' supressWarningAboutRes #}
+instance (impl ~ (Rectangle -> IO ())) => Op (Resize ()) TextEditor orig impl where
+  runOp _ _ textEditor rectangle = withRef textEditor $ \textEditorPtr -> do
+                                 let (x_pos,y_pos,w_pos,h_pos) = fromRectangle rectangle
+                                 resize' textEditorPtr x_pos y_pos w_pos h_pos
+{# fun Fl_Text_Editor_resize_super as resizeSuper' { id `Ptr ()',`Int',`Int',`Int',`Int' } -> `()' supressWarningAboutRes #}
+instance (impl ~ (Rectangle -> IO ())) => Op (ResizeSuper ()) TextEditor orig impl where
+  runOp _ _ textEditor rectangle =
+    let (x_pos, y_pos, width, height) = fromRectangle rectangle
+    in withRef textEditor $ \textEditorPtr -> resizeSuper' textEditorPtr x_pos y_pos width height
+{# fun Fl_Text_Editor_hide as hide' { id `Ptr ()' } -> `()' #}
+instance (impl ~ (  IO ())) => Op (Hide ()) TextEditor orig impl where
+  runOp _ _ textEditor = withRef textEditor $ \textEditorPtr -> hide' textEditorPtr
+{# fun Fl_Text_Editor_hide_super as hideSuper' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
+instance (impl ~ ( IO ())) => Op (HideSuper ()) TextEditor orig impl where
+  runOp _ _ textEditor = withRef textEditor $ \textEditorPtr -> hideSuper' textEditorPtr
+{# fun Fl_Text_Editor_show as show' { id `Ptr ()' } -> `()' #}
+instance (impl ~ (  IO ())) => Op (ShowWidget ()) TextEditor orig impl where
+  runOp _ _ textEditor = withRef textEditor $ \textEditorPtr -> show' textEditorPtr
+{# fun Fl_Text_Editor_show_super as showSuper' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
+instance (impl ~ ( IO ())) => Op (ShowWidgetSuper ()) TextEditor orig impl where
+  runOp _ _ textEditor = withRef textEditor $ \textEditorPtr -> showSuper' textEditorPtr
 
 -- $hierarchy
 -- @
@@ -158,14 +207,31 @@ instance (impl ~ ([KeyBinding] -> IO ())) => Op (ReplaceKeyBindings ()) TextEdit
 -- @
 -- destroy :: 'Ref' 'TextEditor' -> 'IO' ()
 --
+-- draw :: 'Ref' 'TextEditor' -> 'IO' ()
+--
+-- drawSuper :: 'Ref' 'TextEditor' -> 'IO' ()
+--
 -- getDefaultKeyBindings :: 'Ref' 'TextEditor' -> 'IO' ['KeyBinding']
 --
--- getInsertMode :: 'Ref' 'TextEditor' -> 'IO' 'Bool'
+-- getInsertMode :: 'Ref' 'TextEditor' -> 'IO' ('Bool')
 --
--- handle :: 'Ref' 'TextEditor' -> ('Event' -> 'IO' ('Either' 'UnknownEvent' ()))
+-- handle :: 'Ref' 'TextEditor' -> 'Event' -> 'IO' ('Either' 'UnknownEvent' ())
+--
+-- handleSuper :: 'Ref' 'TextEditor' -> 'Event' -> 'IO' ('Either' 'UnknownEvent' ())
+--
+-- hide :: 'Ref' 'TextEditor' -> 'IO' ()
+--
+-- hideSuper :: 'Ref' 'TextEditor' -> 'IO' ()
 --
 -- replaceKeyBindings :: 'Ref' 'TextEditor' -> ['KeyBinding'] -> 'IO' ()
 --
+-- resize :: 'Ref' 'TextEditor' -> 'Rectangle' -> 'IO' ()
+--
+-- resizeSuper :: 'Ref' 'TextEditor' -> 'Rectangle' -> 'IO' ()
+--
 -- setInsertMode :: 'Ref' 'TextEditor' -> 'Bool' -> 'IO' ()
 --
+-- showWidget :: 'Ref' 'TextEditor' -> 'IO' ()
+--
+-- showWidgetSuper :: 'Ref' 'TextEditor' -> 'IO' ()
 -- @

@@ -12,7 +12,26 @@
 #include "FL/Fl_Hor_Nice_Slider.H"
 #include "FL/Fl_Nice_Slider.H"
 #include "Fl_CallbackC.h"
+#include "Fl_WidgetC.h"
 EXPORT {
+  class Fl_DerivedSlider : public Fl_Slider {
+    fl_Widget_Virtual_Funcs* overriddenFuncs;
+    void* other_data;
+  public:
+    virtual void draw();
+    void draw_super();
+    virtual int handle(int event);
+    int handle_super(int event);
+    virtual void resize(int x, int y, int w, int h);
+    void resize_super(int x, int y, int w, int h);
+    virtual void show();
+    void show_super();
+    virtual void hide();
+    void hide_super();
+    Fl_DerivedSlider(int X, int Y, int W, int H, const char *l, fl_Widget_Virtual_Funcs* funcs);
+    Fl_DerivedSlider(int X, int Y, int W, int H, fl_Widget_Virtual_Funcs* funcs);
+    ~Fl_DerivedSlider();
+  };
 #endif
   FL_EXPORT_C(int,Fl_Slider_handle)(fl_Widget self, int event);
   FL_EXPORT_C(int,Fl_Slider_handle_super)(fl_Widget self, int event);
@@ -143,6 +162,18 @@ EXPORT {
   FL_EXPORT_C(void, Fl_Slider_slider_size)(fl_Slider slider, double v);
   FL_EXPORT_C(Fl_Boxtype, Fl_Slider_slider)(fl_Slider slider);
   FL_EXPORT_C(void, Fl_Slider_set_slider)(fl_Slider slider, Fl_Boxtype c);
+  FL_EXPORT_C(fl_Slider,    Fl_OverriddenSlider_New)(int X, int Y, int W, int H,fl_Widget_Virtual_Funcs* fs);
+  FL_EXPORT_C(fl_Slider,    Fl_OverriddenSlider_New_WithLabel)(int X, int Y, int W, int H, const char* label, fl_Widget_Virtual_Funcs* fs);
+  FL_EXPORT_C(void, Fl_Slider_draw)(fl_Slider o);
+  FL_EXPORT_C(void, Fl_Slider_draw_super)(fl_Slider o);
+  FL_EXPORT_C(int, Fl_Slider_handle)(fl_Slider o, int event);
+  FL_EXPORT_C(int, Fl_Slider_handle_super)(fl_Slider o, int event);
+  FL_EXPORT_C(void, Fl_Slider_resize)(fl_Slider o, int x, int y, int w, int h);
+  FL_EXPORT_C(void, Fl_Slider_resize_super)(fl_Slider o, int x, int y, int w, int h);
+  FL_EXPORT_C(void, Fl_Slider_show)(fl_Slider o);
+  FL_EXPORT_C(void, Fl_Slider_show_super)(fl_Slider o);
+  FL_EXPORT_C(void, Fl_Slider_hide)(fl_Slider o);
+  FL_EXPORT_C(void, Fl_Slider_hide_super)(fl_Slider o);
 #ifdef __cplusplus
 }
 #endif

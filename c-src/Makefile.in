@@ -20,6 +20,7 @@ CPPFILES= \
 	fl_utf8C.cpp \
 	glC.cpp \
 	glutC.cpp \
+	Fl_CallbackC.cpp \
 	DerivedText_Editor.cpp \
 	DerivedShared_Image.cpp \
 	filenameC.cpp \
@@ -28,7 +29,6 @@ CPPFILES= \
 	Fl_BoxC.cpp \
 	Fl_BrowserC.cpp \
 	Fl_ButtonC.cpp \
-	Fl_CallbackC.cpp \
 	Fl_C.cpp \
 	Fl_Check_ButtonC.cpp \
 	Fl_ChoiceC.cpp \

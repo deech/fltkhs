@@ -2,12 +2,14 @@
 #define __DERIVEDTEXT_EDITOR__
 #include "FL/Fl.H"
 #include "FL/Fl_Text_Editor.H"
-
+#include "Fl_Types.h"
 class C_to_Fl_Callback;
 
 class DerivedText_Editor : public Fl_Text_Editor {
  private:
   C_to_Fl_Callback* curr_callback_context;
+  fl_Widget_Virtual_Funcs* overriddenFuncs;
+  void* other_data;
  public:
   typedef int (*Key_Func)(int key, DerivedText_Editor* editor);
   struct Key_Binding_With_Callback {
@@ -32,10 +34,10 @@ class DerivedText_Editor : public Fl_Text_Editor {
 
   // Unlike Fl_Text_Editor a new binding is appended rather than prepended
   void add_key_binding(int key, int state, C_to_Fl_Callback* callback_context,
-		       Key_Binding_With_Callback** list);
+                       Key_Binding_With_Callback** list);
 
   void add_key_binding(Key_Binding_With_Callback* new_bindings,
-		       Key_Binding_With_Callback** old_bindings){
+                       Key_Binding_With_Callback** old_bindings){
     Key_Binding_With_Callback* curr = *old_bindings;
     // iterate to the last binding
     while(curr->next){curr = curr->next;}
@@ -58,11 +60,23 @@ class DerivedText_Editor : public Fl_Text_Editor {
   C_to_Fl_Callback* get_curr_callback_context();
   C_to_Fl_Callback* get_default_callback_context();
   DerivedText_Editor(int x,int y,int w,int h,const char* t=0);
+  DerivedText_Editor(int X, int Y, int W, int H, const char *l, fl_Widget_Virtual_Funcs* funcs);
+  DerivedText_Editor(int X, int Y, int W, int H, fl_Widget_Virtual_Funcs* funcs);
+  virtual void draw();
+  void draw_super();
+  virtual int handle(int event);
+  int handle_super(int event);
+  virtual void resize(int x, int y, int w, int h);
+  void resize_super(int x, int y, int w, int h);
+  virtual void show();
+  void show_super();
+  virtual void hide();
+  void hide_super();
+  ~DerivedText_Editor();
  protected:
   int handle_key();
   Key_Func default_key_function_;
   static Key_Binding_With_Callback* global_key_bindings;
   C_to_Fl_Callback* default_callback_context_;
 };
-
 #endif /* __DERIVEDTEXT_EDITOR__  */

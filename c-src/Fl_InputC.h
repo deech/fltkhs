@@ -7,7 +7,26 @@
 #include "FL/Fl.H"
 #include "FL/Fl_Input.H"
 #include "Fl_CallbackC.h"
+#include "Fl_WidgetC.h"
 EXPORT {
+  class Fl_DerivedInput : public Fl_Input {
+    fl_Widget_Virtual_Funcs* overriddenFuncs;
+    void* other_data;
+  public:
+    virtual void draw();
+    void draw_super();
+    virtual int handle(int event);
+    int handle_super(int event);
+    virtual void resize(int x, int y, int w, int h);
+    void resize_super(int x, int y, int w, int h);
+    virtual void show();
+    void show_super();
+    virtual void hide();
+    void hide_super();
+    Fl_DerivedInput(int X, int Y, int W, int H, const char *l, fl_Widget_Virtual_Funcs* funcs);
+    Fl_DerivedInput(int X, int Y, int W, int H, fl_Widget_Virtual_Funcs* funcs);
+    ~Fl_DerivedInput();
+  };
 #endif
   /* Inherited from Fl_Widget */
   FL_EXPORT_C(int,Fl_Input_handle)(fl_Input self, int event);
@@ -96,10 +115,10 @@ EXPORT {
   FL_EXPORT_C(fl_Gl_Window, Fl_Input_as_gl_window)(fl_Input input);
   /* Fl_Input specific functions */
   FL_EXPORT_C(int,      Fl_Input_handle)(fl_Input input, int event);
-  FL_EXPORT_C(fl_Input, Fl_Input_New_WithLabel)(int x, int y, int w, int h, const char* label); 
-  FL_EXPORT_C(fl_Input, Fl_Input_New)(int x, int y, int w, int h); 
+  FL_EXPORT_C(fl_Input, Fl_Input_New_WithLabel)(int x, int y, int w, int h, const char* label);
+  FL_EXPORT_C(fl_Input, Fl_Input_New)(int x, int y, int w, int h);
   FL_EXPORT_C(void,     Fl_Input_Destroy)(fl_Input input);
-  
+
   FL_EXPORT_C(void,         Fl_Input_resize)(fl_Input input, int X, int Y, int W, int H);
   FL_EXPORT_C(int,          Fl_Input_set_value)(fl_Input input, const char* text);
   FL_EXPORT_C(int,          Fl_Input_set_value_with_length)(fl_Input input, const char* text, int length);
@@ -144,6 +163,18 @@ EXPORT {
   FL_EXPORT_C(void,         Fl_Input_set_wrap)(fl_Input input,int b);
   FL_EXPORT_C(void,         Fl_Input_tab_nav)(fl_Input input,int val);
   FL_EXPORT_C(int,          Fl_Input_set_tab_nav)(fl_Input input);
+  FL_EXPORT_C(fl_Input,    Fl_OverriddenInput_New)(int X, int Y, int W, int H,fl_Widget_Virtual_Funcs* fs);
+  FL_EXPORT_C(fl_Input,    Fl_OverriddenInput_New_WithLabel)(int X, int Y, int W, int H, const char* label, fl_Widget_Virtual_Funcs* fs);
+  FL_EXPORT_C(void, Fl_Input_draw)(fl_Input o);
+  FL_EXPORT_C(void, Fl_Input_draw_super)(fl_Input o);
+  FL_EXPORT_C(int, Fl_Input_handle)(fl_Input o, int event);
+  FL_EXPORT_C(int, Fl_Input_handle_super)(fl_Input o, int event);
+  FL_EXPORT_C(void, Fl_Input_resize)(fl_Input o, int x, int y, int w, int h);
+  FL_EXPORT_C(void, Fl_Input_resize_super)(fl_Input o, int x, int y, int w, int h);
+  FL_EXPORT_C(void, Fl_Input_show)(fl_Input o);
+  FL_EXPORT_C(void, Fl_Input_show_super)(fl_Input o);
+  FL_EXPORT_C(void, Fl_Input_hide)(fl_Input o);
+  FL_EXPORT_C(void, Fl_Input_hide_super)(fl_Input o);
 #ifdef __cplusplus
 }
 #endif

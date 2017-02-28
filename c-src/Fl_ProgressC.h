@@ -7,7 +7,27 @@
 #include "FL/Fl.H"
 #include "FL/Fl_Progress.H"
 #include "Fl_CallbackC.h"
+#include "Fl_WidgetC.h"
 EXPORT {
+  class Fl_DerivedProgress : public Fl_Progress {
+    fl_Widget_Virtual_Funcs* overriddenFuncs;
+    void* other_data;
+  public:
+    virtual void draw();
+    void draw_super();
+    virtual int handle(int event);
+    int handle_super(int event);
+    virtual void resize(int x, int y, int w, int h);
+    void resize_super(int x, int y, int w, int h);
+    virtual void show();
+    void show_super();
+    virtual void hide();
+    void hide_super();
+    Fl_DerivedProgress(int X, int Y, int W, int H, const char *l, fl_Widget_Virtual_Funcs* funcs);
+    Fl_DerivedProgress(int X, int Y, int W, int H, fl_Widget_Virtual_Funcs* funcs);
+    ~Fl_DerivedProgress();
+  };
+
 #endif
   /* Inherited from Fl_Widget */
   FL_EXPORT_C(int ,         Fl_Progress_handle )(fl_Progress progress,int event);
@@ -109,6 +129,18 @@ EXPORT {
   FL_EXPORT_C(float,     Fl_Progress_minimum)(fl_Progress progress);
   FL_EXPORT_C(void ,     Fl_Progress_set_value  )(fl_Progress progress,float v);
   FL_EXPORT_C(float,     Fl_Progress_value  )(fl_Progress progress);
+  FL_EXPORT_C(fl_Progress,    Fl_OverriddenProgress_New)(int X, int Y, int W, int H,fl_Widget_Virtual_Funcs* fs);
+  FL_EXPORT_C(fl_Progress,    Fl_OverriddenProgress_New_WithLabel)(int X, int Y, int W, int H, const char* label, fl_Widget_Virtual_Funcs* fs);
+  FL_EXPORT_C(void, Fl_Progress_draw)(fl_Progress o);
+  FL_EXPORT_C(void, Fl_Progress_draw_super)(fl_Progress o);
+  FL_EXPORT_C(int, Fl_Progress_handle)(fl_Progress o, int event);
+  FL_EXPORT_C(int, Fl_Progress_handle_super)(fl_Progress o, int event);
+  FL_EXPORT_C(void, Fl_Progress_resize)(fl_Progress o, int x, int y, int w, int h);
+  FL_EXPORT_C(void, Fl_Progress_resize_super)(fl_Progress o, int x, int y, int w, int h);
+  FL_EXPORT_C(void, Fl_Progress_show)(fl_Progress o);
+  FL_EXPORT_C(void, Fl_Progress_show_super)(fl_Progress o);
+  FL_EXPORT_C(void, Fl_Progress_hide)(fl_Progress o);
+  FL_EXPORT_C(void, Fl_Progress_hide_super)(fl_Progress o);
 #ifdef __cplusplus
 }
 #endif

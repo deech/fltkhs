@@ -1,19 +1,80 @@
 #include "Fl_ScrollbarC.h"
 #ifdef __cplusplus
 EXPORT {
+  Fl_DerivedScrollbar::Fl_DerivedScrollbar(int X, int Y, int W, int H, const char *l, fl_Widget_Virtual_Funcs* funcs) : Fl_Scrollbar(X,Y,W,H,l){
+    overriddenFuncs = funcs;
+    other_data = (void*)0;
+  }
+  Fl_DerivedScrollbar::Fl_DerivedScrollbar(int X, int Y, int W, int H, fl_Widget_Virtual_Funcs* funcs):Fl_Scrollbar(X,Y,W,H){
+    overriddenFuncs = funcs;
+    other_data = (void*)0;
+  }
+  Fl_DerivedScrollbar::~Fl_DerivedScrollbar(){
+    free(overriddenFuncs);
+  }
+  void Fl_DerivedScrollbar::draw(){
+    if (this->overriddenFuncs->draw != NULL) {
+      this->overriddenFuncs->draw((fl_Scrollbar) this);
+    }
+    else {
+      Fl_Scrollbar::draw();
+    }
+  }
+
+  void Fl_DerivedScrollbar::draw_super(){
+    Fl_Scrollbar::draw();
+  }
+
+  int Fl_DerivedScrollbar::handle(int event){
+    int i;
+    if (this->overriddenFuncs->handle != NULL) {
+      i = this->overriddenFuncs->handle((fl_Scrollbar) this,event);
+    }
+    else {
+      i = Fl_Scrollbar::handle(event);
+    }
+    return i;
+  }
+  int Fl_DerivedScrollbar::handle_super(int event){
+    return Fl_Scrollbar::handle(event);
+  }
+
+  void Fl_DerivedScrollbar::resize(int x, int y, int w, int h){
+    if (this->overriddenFuncs->resize != NULL) {
+      this->overriddenFuncs->resize((fl_Scrollbar) this,x,y,w,h);
+    }
+    else {
+      Fl_Scrollbar::resize(x,y,w,h);
+    }
+  }
+
+  void Fl_DerivedScrollbar::resize_super(int x, int y, int w, int h){
+    Fl_Scrollbar::resize(x,y,w,h);
+  }
+  void Fl_DerivedScrollbar::show(){
+    if (this->overriddenFuncs->show != NULL) {
+      this->overriddenFuncs->show((fl_Scrollbar) this);
+    }
+    else {
+      Fl_Scrollbar::show();
+    }
+  }
+  void Fl_DerivedScrollbar::show_super(){
+    Fl_Scrollbar::show();
+  }
+
+  void Fl_DerivedScrollbar::hide(){
+    if (this->overriddenFuncs->hide != NULL) {
+      this->overriddenFuncs->hide((fl_Scrollbar) this);
+    }
+    else {
+      Fl_Scrollbar::hide();
+    }
+  }
+  void Fl_DerivedScrollbar::hide_super(){
+    Fl_Scrollbar::hide();
+  }
 #endif
-  FL_EXPORT_C(int,Fl_Scrollbar_handle )(fl_Scrollbar slider, int event){
-    return (static_cast<Fl_Scrollbar*>(slider))->handle(event);
-  }
-  FL_EXPORT_C(void,Fl_Scrollbar_resize )(fl_Scrollbar slider,int x, int y, int w, int h){
-    (static_cast<Fl_Scrollbar*>(slider))->resize(x,y,w,h);
-  }
-  FL_EXPORT_C(void,Fl_Scrollbar_show )(fl_Scrollbar slider){
-    (static_cast<Fl_Scrollbar*>(slider))->show();
-  }
-  FL_EXPORT_C(void,Fl_Scrollbar_hide )(fl_Scrollbar slider){
-    (static_cast<Fl_Scrollbar*>(slider))->hide();
-  }
   FL_EXPORT_C(fl_Window,Fl_Scrollbar_as_window )(fl_Scrollbar slider){
     return (static_cast<Fl_Scrollbar*>(slider))->as_window();
   }
@@ -327,14 +388,6 @@ EXPORT {
   FL_EXPORT_C(double,Fl_Scrollbar_increment)(fl_Scrollbar slider,double v,int n){
     return (static_cast<Fl_Scrollbar*>(slider))->increment(v,n);
   }
-  FL_EXPORT_C(fl_Scrollbar, Fl_Scrollbar_New_WithLabel)(int x, int y, int w, int h, const char* label) {
-    Fl_Scrollbar* slider = new Fl_Scrollbar(x,y,w,h,label);
-    return (static_cast<fl_Scrollbar>(slider));
-  }
-  FL_EXPORT_C(fl_Scrollbar, Fl_Scrollbar_New)(int x, int y, int w, int h) {
-    Fl_Scrollbar* slider = new Fl_Scrollbar(x,y,w,h,0);
-    return (fl_Scrollbar)slider;
-  }
   FL_EXPORT_C(void,      Fl_Scrollbar_Destroy)(fl_Scrollbar slider){
     delete (static_cast<Fl_Scrollbar*>(slider));
   }
@@ -358,6 +411,54 @@ EXPORT {
   }
   FL_EXPORT_C(int  , Fl_Scrollbar_linesize)(fl_Scrollbar slider){
     return (static_cast<Fl_Scrollbar*>(slider))->linesize();
+  }
+  FL_EXPORT_C(void, Fl_Scrollbar_draw)(fl_Scrollbar o){
+    (static_cast<Fl_DerivedScrollbar*>(o))->draw();
+  }
+  FL_EXPORT_C(void, Fl_Scrollbar_draw_super)(fl_Scrollbar o){
+    (static_cast<Fl_DerivedScrollbar*>(o))->draw_super();
+  }
+  FL_EXPORT_C(int, Fl_Scrollbar_handle)(fl_Scrollbar o, int event){
+    return (static_cast<Fl_DerivedScrollbar*>(o))->handle(event);
+  }
+  FL_EXPORT_C(int, Fl_Scrollbar_handle_super)(fl_Scrollbar o, int event){
+    return (static_cast<Fl_DerivedScrollbar*>(o))->handle_super(event);
+  }
+  FL_EXPORT_C(void, Fl_Scrollbar_resize)(fl_Scrollbar o, int x, int y, int w, int h){
+    (static_cast<Fl_DerivedScrollbar*>(o))->resize(x,y,w,h);
+  }
+  FL_EXPORT_C(void, Fl_Scrollbar_resize_super)(fl_Scrollbar o, int x, int y, int w, int h){
+    (static_cast<Fl_DerivedScrollbar*>(o))->resize_super(x,y,w,h);
+  }
+  FL_EXPORT_C(void, Fl_Scrollbar_show)(fl_Scrollbar o){
+    (static_cast<Fl_DerivedScrollbar*>(o))->show();
+  }
+  FL_EXPORT_C(void, Fl_Scrollbar_show_super)(fl_Scrollbar o){
+    (static_cast<Fl_DerivedScrollbar*>(o))->show_super();
+  }
+  FL_EXPORT_C(void, Fl_Scrollbar_hide)(fl_Scrollbar o){
+    (static_cast<Fl_DerivedScrollbar*>(o))->hide();
+  }
+  FL_EXPORT_C(void, Fl_Scrollbar_hide_super)(fl_Scrollbar o){
+    (static_cast<Fl_DerivedScrollbar*>(o))->hide_super();
+  }
+  FL_EXPORT_C(fl_Scrollbar,    Fl_Scrollbar_New)(int X, int Y, int W, int H){
+    fl_Widget_Virtual_Funcs* fs = Fl_Widget_default_virtual_funcs();
+    Fl_DerivedScrollbar* w = new Fl_DerivedScrollbar(X,Y,W,H,fs);
+    return (fl_Scrollbar)w;
+  }
+  FL_EXPORT_C(fl_Scrollbar,    Fl_Scrollbar_New_WithLabel)(int X, int Y, int W, int H, const char* label){
+    fl_Widget_Virtual_Funcs* fs = Fl_Widget_default_virtual_funcs();
+    Fl_DerivedScrollbar* w = new Fl_DerivedScrollbar(X,Y,W,H,label,fs);
+    return (fl_Scrollbar)w;
+  }
+  FL_EXPORT_C(fl_Scrollbar,    Fl_OverriddenScrollbar_New)(int X, int Y, int W, int H,fl_Widget_Virtual_Funcs* fs){
+    Fl_DerivedScrollbar* w = new Fl_DerivedScrollbar(X,Y,W,H,fs);
+    return (fl_Scrollbar)w;
+  }
+  FL_EXPORT_C(fl_Scrollbar,    Fl_OverriddenScrollbar_New_WithLabel)(int X, int Y, int W, int H, const char* label, fl_Widget_Virtual_Funcs* fs){
+    Fl_DerivedScrollbar* w = new Fl_DerivedScrollbar(X,Y,W,H,label,fs);
+    return (fl_Scrollbar)w;
   }
 #ifdef __cplusplus
 }

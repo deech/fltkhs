@@ -1,19 +1,82 @@
 #include "Fl_ProgressC.h"
 #ifdef __cplusplus
 EXPORT {
+  Fl_DerivedProgress::Fl_DerivedProgress(int X, int Y, int W, int H, const char *l, fl_Widget_Virtual_Funcs* funcs) : Fl_Progress(X,Y,W,H,l){
+    overriddenFuncs = funcs;
+    other_data = (void*)0;
+  }
+  Fl_DerivedProgress::Fl_DerivedProgress(int X, int Y, int W, int H, fl_Widget_Virtual_Funcs* funcs):Fl_Progress(X,Y,W,H){
+    overriddenFuncs = funcs;
+    other_data = (void*)0;
+  }
+  Fl_DerivedProgress::~Fl_DerivedProgress(){
+    free(overriddenFuncs);
+  }
+  void Fl_DerivedProgress::draw(){
+    if (this->overriddenFuncs->draw != NULL) {
+      this->overriddenFuncs->draw((fl_Progress) this);
+    }
+    else {
+      Fl_Progress::draw();
+    }
+  }
+
+  void Fl_DerivedProgress::draw_super(){
+    Fl_Progress::draw();
+  }
+
+  int Fl_DerivedProgress::handle(int event){
+    int i;
+    if (this->overriddenFuncs->handle != NULL) {
+      i = this->overriddenFuncs->handle((fl_Progress) this,event);
+    }
+    else {
+      i = Fl_Progress::handle(event);
+    }
+    return i;
+  }
+  int Fl_DerivedProgress::handle_super(int event){
+    return Fl_Progress::handle(event);
+  }
+
+  void Fl_DerivedProgress::resize(int x, int y, int w, int h){
+    if (this->overriddenFuncs->resize != NULL) {
+      this->overriddenFuncs->resize((fl_Progress) this,x,y,w,h);
+    }
+    else {
+      Fl_Progress::resize(x,y,w,h);
+    }
+  }
+
+  void Fl_DerivedProgress::resize_super(int x, int y, int w, int h){
+    Fl_Progress::resize(x,y,w,h);
+  }
+  void Fl_DerivedProgress::show(){
+    if (this->overriddenFuncs->show != NULL) {
+      this->overriddenFuncs->show((fl_Progress) this);
+    }
+    else {
+      Fl_Progress::show();
+    }
+  }
+  void Fl_DerivedProgress::show_super(){
+    Fl_Progress::show();
+  }
+
+  void Fl_DerivedProgress::hide(){
+    if (this->overriddenFuncs->hide != NULL) {
+      this->overriddenFuncs->hide((fl_Progress) this);
+    }
+    else {
+      Fl_Progress::hide();
+    }
+  }
+  void Fl_DerivedProgress::hide_super(){
+    Fl_Progress::hide();
+  }
+
+
 #endif
-  FL_EXPORT_C(int,Fl_Progress_handle )(fl_Progress progress, int event){
-    return (static_cast<Fl_Progress*>(progress))->handle(event);
-  }
-  FL_EXPORT_C(void,Fl_Progress_resize )(fl_Progress progress,int x, int y, int w, int h){
-    (static_cast<Fl_Progress*>(progress))->resize(x,y,w,h);
-  }
-  FL_EXPORT_C(void,Fl_Progress_show )(fl_Progress progress){
-    (static_cast<Fl_Progress*>(progress))->show();
-  }
-  FL_EXPORT_C(void,Fl_Progress_hide )(fl_Progress progress){
-    (static_cast<Fl_Progress*>(progress))->hide();
-  }
   FL_EXPORT_C(fl_Window,Fl_Progress_as_window )(fl_Progress progress){
     return (static_cast<Fl_Progress*>(progress))->as_window();
   }
@@ -276,14 +339,6 @@ EXPORT {
   FL_EXPORT_C(fl_Gl_Window,Fl_Progress_as_gl_window)(fl_Progress progress){
     return (fl_Gl_Window) (static_cast<Fl_Progress*>(progress))->as_gl_window();
   }
-  FL_EXPORT_C(fl_Progress, Fl_Progress_New)(int x, int y, int w, int h){
-    Fl_Progress* p = new Fl_Progress(x,y,w,h);
-    return (fl_Progress)p;
-  }
-  FL_EXPORT_C(fl_Progress, Fl_Progress_New_WithLabel)(int x, int y, int w, int h,const char *l){
-    Fl_Progress* p = new Fl_Progress(x,y,w,h,l);
-    return (fl_Progress)p;
-  }
   FL_EXPORT_C(void , Fl_Progress_Destroy)(fl_Progress progress){
     delete (static_cast<Fl_Progress*>(progress));
   }
@@ -305,6 +360,55 @@ EXPORT {
   FL_EXPORT_C(float,Fl_Progress_value)(fl_Progress progress){
     return (static_cast<Fl_Progress*>(progress))->value();
   }
+  FL_EXPORT_C(fl_Progress,    Fl_Progress_New)(int X, int Y, int W, int H){
+    fl_Widget_Virtual_Funcs* fs = Fl_Widget_default_virtual_funcs();
+    Fl_DerivedProgress* w = new Fl_DerivedProgress(X,Y,W,H,fs);
+    return (fl_Progress)w;
+  }
+  FL_EXPORT_C(fl_Progress,    Fl_Progress_New_WithLabel)(int X, int Y, int W, int H, const char* label){
+    fl_Widget_Virtual_Funcs* fs = Fl_Widget_default_virtual_funcs();
+    Fl_DerivedProgress* w = new Fl_DerivedProgress(X,Y,W,H,label,fs);
+    return (fl_Progress)w;
+  }
+  FL_EXPORT_C(fl_Progress,    Fl_OverriddenProgress_New)(int X, int Y, int W, int H,fl_Widget_Virtual_Funcs* fs){
+    Fl_DerivedProgress* w = new Fl_DerivedProgress(X,Y,W,H,fs);
+    return (fl_Progress)w;
+  }
+  FL_EXPORT_C(fl_Progress,    Fl_OverriddenProgress_New_WithLabel)(int X, int Y, int W, int H, const char* label, fl_Widget_Virtual_Funcs* fs){
+    Fl_DerivedProgress* w = new Fl_DerivedProgress(X,Y,W,H,label,fs);
+    return (fl_Progress)w;
+  }
+  FL_EXPORT_C(void, Fl_Progress_draw)(fl_Progress o){
+    (static_cast<Fl_DerivedProgress*>(o))->draw();
+  }
+  FL_EXPORT_C(void, Fl_Progress_draw_super)(fl_Progress o){
+    (static_cast<Fl_DerivedProgress*>(o))->draw_super();
+  }
+  FL_EXPORT_C(int, Fl_Progress_handle)(fl_Progress o, int event){
+    return (static_cast<Fl_DerivedProgress*>(o))->handle(event);
+  }
+  FL_EXPORT_C(int, Fl_Progress_handle_super)(fl_Progress o, int event){
+    return (static_cast<Fl_DerivedProgress*>(o))->handle_super(event);
+  }
+  FL_EXPORT_C(void, Fl_Progress_resize)(fl_Progress o, int x, int y, int w, int h){
+    (static_cast<Fl_DerivedProgress*>(o))->resize(x,y,w,h);
+  }
+  FL_EXPORT_C(void, Fl_Progress_resize_super)(fl_Progress o, int x, int y, int w, int h){
+    (static_cast<Fl_DerivedProgress*>(o))->resize_super(x,y,w,h);
+  }
+  FL_EXPORT_C(void, Fl_Progress_show)(fl_Progress o){
+    (static_cast<Fl_DerivedProgress*>(o))->show();
+  }
+  FL_EXPORT_C(void, Fl_Progress_show_super)(fl_Progress o){
+    (static_cast<Fl_DerivedProgress*>(o))->show_super();
+  }
+  FL_EXPORT_C(void, Fl_Progress_hide)(fl_Progress o){
+    (static_cast<Fl_DerivedProgress*>(o))->hide();
+  }
+  FL_EXPORT_C(void, Fl_Progress_hide_super)(fl_Progress o){
+    (static_cast<Fl_DerivedProgress*>(o))->hide_super();
+  }
+
 #ifdef __cplusplus
 }
 #endif

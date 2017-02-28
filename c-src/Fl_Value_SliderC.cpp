@@ -1,19 +1,82 @@
 #include "Fl_Value_SliderC.h"
 #ifdef __cplusplus
 EXPORT {
+  Fl_DerivedValue_Slider::Fl_DerivedValue_Slider(int X, int Y, int W, int H, const char *l, fl_Widget_Virtual_Funcs* funcs) : Fl_Value_Slider(X,Y,W,H,l){
+    overriddenFuncs = funcs;
+    other_data = (void*)0;
+  }
+  Fl_DerivedValue_Slider::Fl_DerivedValue_Slider(int X, int Y, int W, int H, fl_Widget_Virtual_Funcs* funcs):Fl_Value_Slider(X,Y,W,H){
+    overriddenFuncs = funcs;
+    other_data = (void*)0;
+  }
+  Fl_DerivedValue_Slider::~Fl_DerivedValue_Slider(){
+    free(overriddenFuncs);
+  }
+  void Fl_DerivedValue_Slider::draw(){
+    if (this->overriddenFuncs->draw != NULL) {
+      this->overriddenFuncs->draw((fl_Value_Slider) this);
+    }
+    else {
+      Fl_Value_Slider::draw();
+    }
+  }
+
+  void Fl_DerivedValue_Slider::draw_super(){
+    Fl_Value_Slider::draw();
+  }
+
+  int Fl_DerivedValue_Slider::handle(int event){
+    int i;
+    if (this->overriddenFuncs->handle != NULL) {
+      i = this->overriddenFuncs->handle((fl_Value_Slider) this,event);
+    }
+    else {
+      i = Fl_Value_Slider::handle(event);
+    }
+    return i;
+  }
+  int Fl_DerivedValue_Slider::handle_super(int event){
+    return Fl_Value_Slider::handle(event);
+  }
+
+  void Fl_DerivedValue_Slider::resize(int x, int y, int w, int h){
+    if (this->overriddenFuncs->resize != NULL) {
+      this->overriddenFuncs->resize((fl_Value_Slider) this,x,y,w,h);
+    }
+    else {
+      Fl_Value_Slider::resize(x,y,w,h);
+    }
+  }
+
+  void Fl_DerivedValue_Slider::resize_super(int x, int y, int w, int h){
+    Fl_Value_Slider::resize(x,y,w,h);
+  }
+  void Fl_DerivedValue_Slider::show(){
+    if (this->overriddenFuncs->show != NULL) {
+      this->overriddenFuncs->show((fl_Value_Slider) this);
+    }
+    else {
+      Fl_Value_Slider::show();
+    }
+  }
+  void Fl_DerivedValue_Slider::show_super(){
+    Fl_Value_Slider::show();
+  }
+
+  void Fl_DerivedValue_Slider::hide(){
+    if (this->overriddenFuncs->hide != NULL) {
+      this->overriddenFuncs->hide((fl_Value_Slider) this);
+    }
+    else {
+      Fl_Value_Slider::hide();
+    }
+  }
+  void Fl_DerivedValue_Slider::hide_super(){
+    Fl_Value_Slider::hide();
+  }
+
+
 #endif
-  FL_EXPORT_C(int,Fl_Value_Slider_handle )(fl_Value_Slider value_slider, int event){
-    return (static_cast<Fl_Value_Slider*>(value_slider))->handle(event);
-  }
-  FL_EXPORT_C(void,Fl_Value_Slider_resize )(fl_Value_Slider value_slider,int x, int y, int w, int h){
-    (static_cast<Fl_Value_Slider*>(value_slider))->resize(x,y,w,h);
-  }
-  FL_EXPORT_C(void,Fl_Value_Slider_show )(fl_Value_Slider value_slider){
-    (static_cast<Fl_Value_Slider*>(value_slider))->show();
-  }
-  FL_EXPORT_C(void,Fl_Value_Slider_hide )(fl_Value_Slider value_slider){
-    (static_cast<Fl_Value_Slider*>(value_slider))->hide();
-  }
   FL_EXPORT_C(fl_Window,Fl_Value_Slider_as_window )(fl_Value_Slider value_slider){
     return (static_cast<Fl_Value_Slider*>(value_slider))->as_window();
   }
@@ -330,14 +393,6 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Value_Slider_set_value_slider)(fl_Value_Slider value_slider,Fl_Boxtype c){
     (static_cast<Fl_Value_Slider*>(value_slider))->slider(c);
   }
-  FL_EXPORT_C(fl_Value_Slider, Fl_Value_Slider_New_WithLabel)(int x, int y, int w, int h, const char* label) {
-    Fl_Value_Slider* value_slider = new Fl_Value_Slider(x,y,w,h,label);
-    return (static_cast<fl_Value_Slider>(value_slider));
-  }
-  FL_EXPORT_C(fl_Value_Slider, Fl_Value_Slider_New)(int x, int y, int w, int h) {
-    Fl_Value_Slider* value_slider = new Fl_Value_Slider(x,y,w,h,0);
-    return (fl_Value_Slider)value_slider;
-  }
   FL_EXPORT_C(fl_Hor_Value_Slider, Fl_Hor_Value_Slider_New_WithLabel)(int x, int y, int w, int h, const char* label) {
     Fl_Hor_Value_Slider* hor_value_slider = new Fl_Hor_Value_Slider(x,y,w,h,label);
     return (static_cast<fl_Hor_Value_Slider>(hor_value_slider));
@@ -367,6 +422,55 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Value_Slider_set_textcolor)(fl_Value_Slider value_slider,Fl_Color s){
     return (static_cast<Fl_Value_Slider*>(value_slider))->textcolor(s);
   }
+  FL_EXPORT_C(fl_Value_Slider,    Fl_Value_Slider_New)(int X, int Y, int W, int H){
+    fl_Widget_Virtual_Funcs* fs = Fl_Widget_default_virtual_funcs();
+    Fl_DerivedValue_Slider* w = new Fl_DerivedValue_Slider(X,Y,W,H,fs);
+    return (fl_Value_Slider)w;
+  }
+  FL_EXPORT_C(fl_Value_Slider,    Fl_Value_Slider_New_WithLabel)(int X, int Y, int W, int H, const char* label){
+    fl_Widget_Virtual_Funcs* fs = Fl_Widget_default_virtual_funcs();
+    Fl_DerivedValue_Slider* w = new Fl_DerivedValue_Slider(X,Y,W,H,label,fs);
+    return (fl_Value_Slider)w;
+  }
+  FL_EXPORT_C(fl_Value_Slider,    Fl_OverriddenValue_Slider_New)(int X, int Y, int W, int H,fl_Widget_Virtual_Funcs* fs){
+    Fl_DerivedValue_Slider* w = new Fl_DerivedValue_Slider(X,Y,W,H,fs);
+    return (fl_Value_Slider)w;
+  }
+  FL_EXPORT_C(fl_Value_Slider,    Fl_OverriddenValue_Slider_New_WithLabel)(int X, int Y, int W, int H, const char* label, fl_Widget_Virtual_Funcs* fs){
+    Fl_DerivedValue_Slider* w = new Fl_DerivedValue_Slider(X,Y,W,H,label,fs);
+    return (fl_Value_Slider)w;
+  }
+  FL_EXPORT_C(void, Fl_Value_Slider_draw)(fl_Value_Slider o){
+    (static_cast<Fl_DerivedValue_Slider*>(o))->draw();
+  }
+  FL_EXPORT_C(void, Fl_Value_Slider_draw_super)(fl_Value_Slider o){
+    (static_cast<Fl_DerivedValue_Slider*>(o))->draw_super();
+  }
+  FL_EXPORT_C(int, Fl_Value_Slider_handle)(fl_Value_Slider o, int event){
+    return (static_cast<Fl_DerivedValue_Slider*>(o))->handle(event);
+  }
+  FL_EXPORT_C(int, Fl_Value_Slider_handle_super)(fl_Value_Slider o, int event){
+    return (static_cast<Fl_DerivedValue_Slider*>(o))->handle_super(event);
+  }
+  FL_EXPORT_C(void, Fl_Value_Slider_resize)(fl_Value_Slider o, int x, int y, int w, int h){
+    (static_cast<Fl_DerivedValue_Slider*>(o))->resize(x,y,w,h);
+  }
+  FL_EXPORT_C(void, Fl_Value_Slider_resize_super)(fl_Value_Slider o, int x, int y, int w, int h){
+    (static_cast<Fl_DerivedValue_Slider*>(o))->resize_super(x,y,w,h);
+  }
+  FL_EXPORT_C(void, Fl_Value_Slider_show)(fl_Value_Slider o){
+    (static_cast<Fl_DerivedValue_Slider*>(o))->show();
+  }
+  FL_EXPORT_C(void, Fl_Value_Slider_show_super)(fl_Value_Slider o){
+    (static_cast<Fl_DerivedValue_Slider*>(o))->show_super();
+  }
+  FL_EXPORT_C(void, Fl_Value_Slider_hide)(fl_Value_Slider o){
+    (static_cast<Fl_DerivedValue_Slider*>(o))->hide();
+  }
+  FL_EXPORT_C(void, Fl_Value_Slider_hide_super)(fl_Value_Slider o){
+    (static_cast<Fl_DerivedValue_Slider*>(o))->hide_super();
+  }
+
 #ifdef __cplusplus
 }
 #endif

@@ -2,28 +2,82 @@
 #include "UtilsC.h"
 #ifdef __cplusplus
 EXPORT {
+  Fl_DerivedChoice::Fl_DerivedChoice(int X, int Y, int W, int H, const char *l, fl_Widget_Virtual_Funcs* funcs) : Fl_Choice(X,Y,W,H,l){
+    overriddenFuncs = funcs;
+    other_data = (void*)0;
+  }
+  Fl_DerivedChoice::Fl_DerivedChoice(int X, int Y, int W, int H, fl_Widget_Virtual_Funcs* funcs):Fl_Choice(X,Y,W,H){
+    overriddenFuncs = funcs;
+    other_data = (void*)0;
+  }
+  Fl_DerivedChoice::~Fl_DerivedChoice(){
+    free(overriddenFuncs);
+  }
+  void Fl_DerivedChoice::draw(){
+    if (this->overriddenFuncs->draw != NULL) {
+      this->overriddenFuncs->draw((fl_Choice) this);
+    }
+    else {
+      Fl_Choice::draw();
+    }
+  }
+
+  void Fl_DerivedChoice::draw_super(){
+    Fl_Choice::draw();
+  }
+
+  int Fl_DerivedChoice::handle(int event){
+    int i;
+    if (this->overriddenFuncs->handle != NULL) {
+      i = this->overriddenFuncs->handle((fl_Choice) this,event);
+    }
+    else {
+      i = Fl_Choice::handle(event);
+    }
+    return i;
+  }
+  int Fl_DerivedChoice::handle_super(int event){
+    return Fl_Choice::handle(event);
+  }
+
+  void Fl_DerivedChoice::resize(int x, int y, int w, int h){
+    if (this->overriddenFuncs->resize != NULL) {
+      this->overriddenFuncs->resize((fl_Choice) this,x,y,w,h);
+    }
+    else {
+      Fl_Choice::resize(x,y,w,h);
+    }
+  }
+
+  void Fl_DerivedChoice::resize_super(int x, int y, int w, int h){
+    Fl_Choice::resize(x,y,w,h);
+  }
+  void Fl_DerivedChoice::show(){
+    if (this->overriddenFuncs->show != NULL) {
+      this->overriddenFuncs->show((fl_Choice) this);
+    }
+    else {
+      Fl_Choice::show();
+    }
+  }
+  void Fl_DerivedChoice::show_super(){
+    Fl_Choice::show();
+  }
+
+  void Fl_DerivedChoice::hide(){
+    if (this->overriddenFuncs->hide != NULL) {
+      this->overriddenFuncs->hide((fl_Choice) this);
+    }
+    else {
+      Fl_Choice::hide();
+    }
+  }
+  void Fl_DerivedChoice::hide_super(){
+    Fl_Choice::hide();
+  }
+
+
 #endif
-  FL_EXPORT_C(int,Fl_Choice_handle )(fl_Choice choice, int event){
-    return (static_cast<Fl_Choice*>(choice))->handle(event);
-  }
-  FL_EXPORT_C(void,Fl_Choice_resize_super )(fl_Choice choice,int x, int y, int w, int h){
-    (static_cast<Fl_Choice*>(choice))->resize(x,y,w,h);
-  }
-  FL_EXPORT_C(void,Fl_Choice_resize )(fl_Choice choice,int x, int y, int w, int h){
-    (static_cast<Fl_Choice*>(choice))->resize(x,y,w,h);
-  }
-  FL_EXPORT_C(void,Fl_Choice_show_super)(fl_Choice choice){
-    (static_cast<Fl_Choice*>(choice))->show();
-  }
-  FL_EXPORT_C(void,Fl_Choice_show )(fl_Choice choice){
-    (static_cast<Fl_Choice*>(choice))->show();
-  }
-  FL_EXPORT_C(void,Fl_Choice_hide_super)(fl_Choice choice){
-    (static_cast<Fl_Choice*>(choice))->hide();
-  }
-  FL_EXPORT_C(void,Fl_Choice_hide )(fl_Choice choice){
-    (static_cast<Fl_Choice*>(choice))->hide();
-  }
   FL_EXPORT_C(fl_Window,Fl_Choice_as_window_super)(fl_Choice choice){
     return (static_cast<Fl_Choice*>(choice))->as_window();
   }
@@ -273,14 +327,6 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Choice_measure_label)(fl_Choice choice,int* ww,int* hh){
     (static_cast<Fl_Choice*>(choice))->measure_label(*ww,*hh);
   }
-  FL_EXPORT_C(fl_Choice, Fl_Choice_New_WithLabel)(int x, int y, int w, int h, const char* label) {
-    Fl_Choice* choice = new Fl_Choice(x,y,w,h,label);
-    return (static_cast<fl_Choice>(choice));
-  }
-  FL_EXPORT_C(fl_Choice, Fl_Choice_New)(int x, int y, int w, int h) {
-    Fl_Choice* choice = new Fl_Choice(x,y,w,h);
-    return (static_cast<fl_Choice>(choice));
-  }
   FL_EXPORT_C(void, Fl_Choice_Destroy)(fl_Choice choice) {
     delete (static_cast<Fl_Choice*>(choice));
   }
@@ -439,6 +485,55 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Choice_set_down_color)(fl_Choice choice,unsigned c){
     (static_cast<Fl_Choice*>(choice))->down_color(c);
   }
+  FL_EXPORT_C(fl_Choice,    Fl_Choice_New)(int X, int Y, int W, int H){
+    fl_Widget_Virtual_Funcs* fs = Fl_Widget_default_virtual_funcs();
+    Fl_DerivedChoice* w = new Fl_DerivedChoice(X,Y,W,H,fs);
+    return (fl_Choice)w;
+  }
+  FL_EXPORT_C(fl_Choice,    Fl_Choice_New_WithLabel)(int X, int Y, int W, int H, const char* label){
+    fl_Widget_Virtual_Funcs* fs = Fl_Widget_default_virtual_funcs();
+    Fl_DerivedChoice* w = new Fl_DerivedChoice(X,Y,W,H,label,fs);
+    return (fl_Choice)w;
+  }
+  FL_EXPORT_C(fl_Choice,    Fl_OverriddenChoice_New)(int X, int Y, int W, int H,fl_Widget_Virtual_Funcs* fs){
+    Fl_DerivedChoice* w = new Fl_DerivedChoice(X,Y,W,H,fs);
+    return (fl_Choice)w;
+  }
+  FL_EXPORT_C(fl_Choice,    Fl_OverriddenChoice_New_WithLabel)(int X, int Y, int W, int H, const char* label, fl_Widget_Virtual_Funcs* fs){
+    Fl_DerivedChoice* w = new Fl_DerivedChoice(X,Y,W,H,label,fs);
+    return (fl_Choice)w;
+  }
+  FL_EXPORT_C(void, Fl_Choice_draw)(fl_Choice o){
+    (static_cast<Fl_DerivedChoice*>(o))->draw();
+  }
+  FL_EXPORT_C(void, Fl_Choice_draw_super)(fl_Choice o){
+    (static_cast<Fl_DerivedChoice*>(o))->draw_super();
+  }
+  FL_EXPORT_C(int, Fl_Choice_handle)(fl_Choice o, int event){
+    return (static_cast<Fl_DerivedChoice*>(o))->handle(event);
+  }
+  FL_EXPORT_C(int, Fl_Choice_handle_super)(fl_Choice o, int event){
+    return (static_cast<Fl_DerivedChoice*>(o))->handle_super(event);
+  }
+  FL_EXPORT_C(void, Fl_Choice_resize)(fl_Choice o, int x, int y, int w, int h){
+    (static_cast<Fl_DerivedChoice*>(o))->resize(x,y,w,h);
+  }
+  FL_EXPORT_C(void, Fl_Choice_resize_super)(fl_Choice o, int x, int y, int w, int h){
+    (static_cast<Fl_DerivedChoice*>(o))->resize_super(x,y,w,h);
+  }
+  FL_EXPORT_C(void, Fl_Choice_show)(fl_Choice o){
+    (static_cast<Fl_DerivedChoice*>(o))->show();
+  }
+  FL_EXPORT_C(void, Fl_Choice_show_super)(fl_Choice o){
+    (static_cast<Fl_DerivedChoice*>(o))->show_super();
+  }
+  FL_EXPORT_C(void, Fl_Choice_hide)(fl_Choice o){
+    (static_cast<Fl_DerivedChoice*>(o))->hide();
+  }
+  FL_EXPORT_C(void, Fl_Choice_hide_super)(fl_Choice o){
+    (static_cast<Fl_DerivedChoice*>(o))->hide_super();
+  }
+
 #ifdef __cplusplus
 }
 #endif

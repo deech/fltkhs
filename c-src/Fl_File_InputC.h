@@ -7,10 +7,28 @@
 #include "FL/Fl.H"
 #include "FL/Fl_File_Input.H"
 #include "Fl_CallbackC.h"
+#include "Fl_WidgetC.h"
 EXPORT {
+  class Fl_DerivedFile_Input : public Fl_File_Input {
+    fl_Widget_Virtual_Funcs* overriddenFuncs;
+    void* other_data;
+  public:
+    virtual void draw();
+    void draw_super();
+    virtual int handle(int event);
+    int handle_super(int event);
+    virtual void resize(int x, int y, int w, int h);
+    void resize_super(int x, int y, int w, int h);
+    virtual void show();
+    void show_super();
+    virtual void hide();
+    void hide_super();
+    Fl_DerivedFile_Input(int X, int Y, int W, int H, const char *l, fl_Widget_Virtual_Funcs* funcs);
+    Fl_DerivedFile_Input(int X, int Y, int W, int H, fl_Widget_Virtual_Funcs* funcs);
+    ~Fl_DerivedFile_Input();
+  };
 #endif
   /* Inherited from Fl_Widget */
-  FL_EXPORT_C(int,Fl_File_Input_handle)(fl_File_Input self, int event);
   FL_EXPORT_C(fl_Group,     Fl_File_Input_parent)(fl_File_Input file_input);
   FL_EXPORT_C(void,         Fl_File_Input_set_parent)(fl_File_Input file_input, fl_Group grp);
   FL_EXPORT_C(uchar,        Fl_File_Input_type)(fl_File_Input file_input);
@@ -95,7 +113,6 @@ EXPORT {
   FL_EXPORT_C(fl_Gl_Window, Fl_File_Input_as_gl_window)(fl_File_Input file_input);
   /* Inherited from Fl_Input */
   FL_EXPORT_C(int,           Fl_File_Input_handle)(fl_File_Input file_input, int event);
-  FL_EXPORT_C(void,        Fl_File_Input_resize)(fl_File_Input file_input, int X, int Y, int W, int H);
   FL_EXPORT_C(int,         Fl_File_Input_static_value)(fl_File_Input file_input, const char* text);
   FL_EXPORT_C(int,         Fl_File_Input_static_value_with_length)(fl_File_Input file_input, const char* text, int length);
   FL_EXPORT_C(Fl_Char,     Fl_File_Input_index)(fl_File_Input file_input, int i);
@@ -148,6 +165,18 @@ EXPORT {
   FL_EXPORT_C(void,         Fl_File_Input_set_errorcolor)(fl_File_Input file_input, Fl_Color color);
   FL_EXPORT_C(Fl_Boxtype,  Fl_File_Input_down_box)(fl_File_Input file_input);
   FL_EXPORT_C(void,         Fl_File_Input_set_down_box)(fl_File_Input file_input, Fl_Boxtype color);
+  FL_EXPORT_C(fl_File_Input,    Fl_OverriddenFile_Input_New)(int X, int Y, int W, int H,fl_Widget_Virtual_Funcs* fs);
+  FL_EXPORT_C(fl_File_Input,    Fl_OverriddenFile_Input_New_WithLabel)(int X, int Y, int W, int H, const char* label, fl_Widget_Virtual_Funcs* fs);
+  FL_EXPORT_C(void, Fl_File_Input_draw)(fl_File_Input o);
+  FL_EXPORT_C(void, Fl_File_Input_draw_super)(fl_File_Input o);
+  FL_EXPORT_C(int, Fl_File_Input_handle)(fl_File_Input o, int event);
+  FL_EXPORT_C(int, Fl_File_Input_handle_super)(fl_File_Input o, int event);
+  FL_EXPORT_C(void, Fl_File_Input_resize)(fl_File_Input o, int x, int y, int w, int h);
+  FL_EXPORT_C(void, Fl_File_Input_resize_super)(fl_File_Input o, int x, int y, int w, int h);
+  FL_EXPORT_C(void, Fl_File_Input_show)(fl_File_Input o);
+  FL_EXPORT_C(void, Fl_File_Input_show_super)(fl_File_Input o);
+  FL_EXPORT_C(void, Fl_File_Input_hide)(fl_File_Input o);
+  FL_EXPORT_C(void, Fl_File_Input_hide_super)(fl_File_Input o);
 #ifdef __cplusplus
 }
 #endif

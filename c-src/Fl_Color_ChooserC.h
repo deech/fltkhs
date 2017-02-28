@@ -166,17 +166,17 @@ EXPORT {
   FL_EXPORT_C(int, flc_color_chooser_with_m)(const char* name, double* r, double* g, double* b, int m);
   FL_EXPORT_C(int, flc_color_chooser_with_uchar)(const char* name, uchar* r, uchar* g, uchar* b);
   FL_EXPORT_C(int, flc_color_chooser_with_uchar_m)(const char* name, uchar* r, uchar* g, uchar* b, int m);
+  FL_EXPORT_C(void, Fl_Color_Chooser_draw)(fl_Color_Chooser o);
+  FL_EXPORT_C(void, Fl_Color_Chooser_draw_super)(fl_Color_Chooser o);
+  FL_EXPORT_C(int, Fl_Color_Chooser_handle)(fl_Color_Chooser o, int event);
+  FL_EXPORT_C(int, Fl_Color_Chooser_handle_super)(fl_Color_Chooser o, int event);
+  FL_EXPORT_C(void, Fl_Color_Chooser_resize)(fl_Color_Chooser o, int x, int y, int w, int h);
+  FL_EXPORT_C(void, Fl_Color_Chooser_resize_super)(fl_Color_Chooser o, int x, int y, int w, int h);
+  FL_EXPORT_C(void, Fl_Color_Chooser_show)(fl_Color_Chooser o);
+  FL_EXPORT_C(void, Fl_Color_Chooser_show_super)(fl_Color_Chooser o);
+  FL_EXPORT_C(void, Fl_Color_Chooser_hide)(fl_Color_Chooser o);
+  FL_EXPORT_C(void, Fl_Color_Chooser_hide_super)(fl_Color_Chooser o);
 
-  FL_EXPORT_C(void, Fl_Color_Chooser_draw)(fl_Color_Chooser w);
-  FL_EXPORT_C(void, Fl_Color_Chooser_draw_super)(fl_Color_Chooser w);
-  FL_EXPORT_C(int, Fl_Color_Chooser_handle)(fl_Color_Chooser w, int event);
-  FL_EXPORT_C(int, Fl_Color_Chooser_handle_super)(fl_Color_Chooser w, int event);
-  FL_EXPORT_C(void, Fl_Color_Chooser_resize)(fl_Color_Chooser w, int x, int y, int w, int h);
-  FL_EXPORT_C(void, Fl_Color_Chooser_resize_super)(fl_Color_Chooser w, int x, int y, int w, int h);
-  FL_EXPORT_C(void, Fl_Color_Chooser_show)(fl_Color_Chooser w);
-  FL_EXPORT_C(void, Fl_Color_Chooser_show_super)(fl_Color_Chooser w);
-  FL_EXPORT_C(void, Fl_Color_Chooser_hide)(fl_Color_Chooser w);
-  FL_EXPORT_C(void, Fl_Color_Chooser_hide_super)(fl_Color_Chooser w);
 
 #ifdef __cplusplus
 }

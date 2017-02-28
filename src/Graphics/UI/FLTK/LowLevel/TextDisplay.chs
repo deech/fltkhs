@@ -4,7 +4,8 @@ module Graphics.UI.FLTK.LowLevel.TextDisplay
        (
          mkStyleTableEntriesPtr,
          indexStyleTableEntries,
-         textDisplayNew
+         textDisplayNew,
+         textDisplayCustom
          -- * Hierarchy
          --
          -- $hierarchy
@@ -18,7 +19,7 @@ where
 #include "Fl_Types.h"
 #include "Fl_Text_DisplayC.h"
 import C2HS hiding (cFromEnum, cFromBool, cToBool,cToEnum)
-
+import Graphics.UI.FLTK.LowLevel.Widget
 import qualified Foreign.Concurrent as FC
 import Graphics.UI.FLTK.LowLevel.Fl_Types
 import Graphics.UI.FLTK.LowLevel.Fl_Enumerations
@@ -52,6 +53,23 @@ mkStyleTableEntriesPtr td stes = do
 indexStyleTableEntries :: [StyleTableEntry] -> [(Char, StyleTableEntry)]
 indexStyleTableEntries = zip ['A'..]
 
+{# fun Fl_OverriddenText_Display_New_WithLabel as overriddenWidgetNewWithLabel' { `Int',`Int',`Int',`Int', unsafeToCString `T.Text', id `Ptr ()'} -> `Ptr ()' id #}
+{# fun Fl_OverriddenText_Display_New as overriddenWidgetNew' { `Int',`Int',`Int',`Int', id `Ptr ()'} -> `Ptr ()' id #}
+textDisplayCustom ::
+       Rectangle                         -- ^ The bounds of this TextDisplay
+    -> Maybe T.Text                      -- ^ The TextDisplay label
+    -> Maybe (Ref TextDisplay -> IO ())           -- ^ Optional custom drawing function
+    -> Maybe (CustomWidgetFuncs TextDisplay)      -- ^ Optional custom widget functions
+    -> IO (Ref TextDisplay)
+textDisplayCustom rectangle l' draw' funcs' =
+  widgetMaker
+    rectangle
+    l'
+    draw'
+    funcs'
+    overriddenWidgetNew'
+    overriddenWidgetNewWithLabel'
+
 {# fun Fl_Text_Display_New as textDisplayNew' { `Int',`Int',`Int',`Int' } -> `Ptr ()' id #}
 {# fun Fl_Text_Display_New_WithLabel as textDisplayNewWithLabel' { `Int',`Int',`Int',`Int',unsafeToCString `T.Text'} -> `Ptr ()' id #}
 textDisplayNew :: Rectangle -> Maybe T.Text -> IO (Ref TextDisplay)
@@ -66,15 +84,6 @@ textDisplayNew rectangle l' =
 {# fun Fl_Text_Display_Destroy as textDisplayDestroy' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
 instance (impl ~ (IO ())) => Op (Destroy ()) TextDisplay orig impl where
   runOp _ _ text_display = withRef text_display $ \text_displayPtr -> textDisplayDestroy' text_displayPtr
-
-{# fun Fl_Text_Display_resize as resize' { id `Ptr ()',`Int',`Int',`Int',`Int' } -> `()' supressWarningAboutRes #}
-instance (impl ~ ( Rectangle -> IO ())) => Op (Resize ()) TextDisplay orig impl where
-  runOp _ _ text_display rectangle = withRef text_display $ \text_displayPtr -> do
-    let (x_pos,y_pos,w_pos,h_pos) = fromRectangle rectangle
-    resize' text_displayPtr x_pos y_pos w_pos h_pos
-{# fun Fl_Text_Display_handle as handle' { id `Ptr ()',`Int' } -> `Int' #}
-instance (impl ~ (Event ->  IO(Either UnknownEvent ()))) => Op (Handle ()) TextDisplay orig impl where
-   runOp _ _ text_display e = withRef text_display $ \text_displayPtr -> handle' text_displayPtr (fromEnum e) >>= return  . successOrUnknownEvent
 {# fun Fl_Text_Display_set_buffer as setBuffer' { id `Ptr ()',id `Ptr ()' } -> `()' #}
 instance (Parent a TextBuffer, impl ~ (Maybe ( Ref a ) ->  IO ())) => Op (SetBuffer ()) TextDisplay orig impl where
    runOp _ _ text_display buf = withRef text_display $ \text_displayPtr -> withMaybeRef buf $ \bufPtr -> setBuffer' text_displayPtr bufPtr
@@ -276,10 +285,51 @@ instance (impl ~ (T.Text ->  IO ())) => Op (SetLinenumberFormat ()) TextDisplay 
 {# fun linenumber_format as linenumberFormat' { id `Ptr ()' } -> `T.Text' unsafeFromCString #}
 instance (impl ~ ( IO T.Text)) => Op (GetLinenumberFormat ()) TextDisplay orig impl where
    runOp _ _ text_display = withRef text_display $ \text_displayPtr -> linenumberFormat' text_displayPtr
+{# fun Fl_Text_Display_draw as draw'' { id `Ptr ()' } -> `()' #}
+instance (impl ~ (  IO ())) => Op (Draw ()) TextDisplay orig impl where
+  runOp _ _ textDisplay = withRef textDisplay $ \textDisplayPtr -> draw'' textDisplayPtr
+{# fun Fl_Text_Display_draw_super as drawSuper' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
+instance (impl ~ ( IO ())) => Op (DrawSuper ()) TextDisplay orig impl where
+  runOp _ _ textDisplay = withRef textDisplay $ \textDisplayPtr -> drawSuper' textDisplayPtr
+{#fun Fl_Text_Display_handle as textDisplayHandle' { id `Ptr ()', id `CInt' } -> `Int' #}
+instance (impl ~ (Event -> IO (Either UnknownEvent ()))) => Op (Handle ()) TextDisplay orig impl where
+  runOp _ _ textDisplay event = withRef textDisplay (\p -> textDisplayHandle' p (fromIntegral . fromEnum $ event)) >>= return  . successOrUnknownEvent
+{# fun Fl_Text_Display_handle_super as handleSuper' { id `Ptr ()',`Int' } -> `Int' #}
+instance (impl ~ (Event ->  IO (Either UnknownEvent ()))) => Op (HandleSuper ()) TextDisplay orig impl where
+  runOp _ _ textDisplay event = withRef textDisplay $ \textDisplayPtr -> handleSuper' textDisplayPtr (fromIntegral (fromEnum event)) >>= return . successOrUnknownEvent
+{# fun Fl_Text_Display_resize as resize' { id `Ptr ()',`Int',`Int',`Int',`Int' } -> `()' supressWarningAboutRes #}
+instance (impl ~ (Rectangle -> IO ())) => Op (Resize ()) TextDisplay orig impl where
+  runOp _ _ textDisplay rectangle = withRef textDisplay $ \textDisplayPtr -> do
+                                 let (x_pos,y_pos,w_pos,h_pos) = fromRectangle rectangle
+                                 resize' textDisplayPtr x_pos y_pos w_pos h_pos
+{# fun Fl_Text_Display_resize_super as resizeSuper' { id `Ptr ()',`Int',`Int',`Int',`Int' } -> `()' supressWarningAboutRes #}
+instance (impl ~ (Rectangle -> IO ())) => Op (ResizeSuper ()) TextDisplay orig impl where
+  runOp _ _ textDisplay rectangle =
+    let (x_pos, y_pos, width, height) = fromRectangle rectangle
+    in withRef textDisplay $ \textDisplayPtr -> resizeSuper' textDisplayPtr x_pos y_pos width height
+{# fun Fl_Text_Display_hide as hide' { id `Ptr ()' } -> `()' #}
+instance (impl ~ (  IO ())) => Op (Hide ()) TextDisplay orig impl where
+  runOp _ _ textDisplay = withRef textDisplay $ \textDisplayPtr -> hide' textDisplayPtr
+{# fun Fl_Text_Display_hide_super as hideSuper' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
+instance (impl ~ ( IO ())) => Op (HideSuper ()) TextDisplay orig impl where
+  runOp _ _ textDisplay = withRef textDisplay $ \textDisplayPtr -> hideSuper' textDisplayPtr
+{# fun Fl_Text_Display_show as show' { id `Ptr ()' } -> `()' #}
+instance (impl ~ (  IO ())) => Op (ShowWidget ()) TextDisplay orig impl where
+  runOp _ _ textDisplay = withRef textDisplay $ \textDisplayPtr -> show' textDisplayPtr
+{# fun Fl_Text_Display_show_super as showSuper' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
+instance (impl ~ ( IO ())) => Op (ShowWidgetSuper ()) TextDisplay orig impl where
+  runOp _ _ textDisplay = withRef textDisplay $ \textDisplayPtr -> showSuper' textDisplayPtr
 
 -- $hierarchy
 -- @
+-- "Graphics.UI.FLTK.LowLevel.Widget"
+--  |
+--  v
+-- "Graphics.UI.FLTK.LowLevel.Group"
+--  |
+--  v
 -- "Graphics.UI.FLTK.LowLevel.TextDisplay"
+
 -- @
 
 -- $functions
@@ -289,6 +339,10 @@ instance (impl ~ ( IO T.Text)) => Op (GetLinenumberFormat ()) TextDisplay orig i
 -- countLines :: 'Ref' 'TextDisplay' -> 'BufferRange' -> 'Bool' -> 'IO' ('Int')
 --
 -- destroy :: 'Ref' 'TextDisplay' -> 'IO' ()
+--
+-- draw :: 'Ref' 'TextDisplay' -> 'IO' ()
+--
+-- drawSuper :: 'Ref' 'TextDisplay' -> 'IO' ()
 --
 -- getBuffer :: 'Ref' 'TextDisplay' -> 'IO' ('Maybe' ('Ref' 'TextBuffer'))
 --
@@ -322,7 +376,13 @@ instance (impl ~ ( IO T.Text)) => Op (GetLinenumberFormat ()) TextDisplay orig i
 --
 -- getTextsize :: 'Ref' 'TextDisplay' -> 'IO' ('FontSize')
 --
--- handle :: 'Ref' 'TextDisplay' -> 'Event' -> 'IO' ('Int')
+-- handle :: 'Ref' 'TextDisplay' -> 'Event' -> 'IO' ('Either' 'UnknownEvent' ())
+--
+-- handleSuper :: 'Ref' 'TextDisplay' -> 'Event' -> 'IO' ('Either' 'UnknownEvent' ())
+--
+-- hide :: 'Ref' 'TextDisplay' -> 'IO' ()
+--
+-- hideSuper :: 'Ref' 'TextDisplay' -> 'IO' ()
 --
 -- highlightData:: ('Parent' a 'TextBuffer') => 'Ref' 'TextDisplay' -> 'Ref' a -> [('Char', 'StyleTableEntry']) -> 'Maybe(Char,UnfinishedStyleCb') -> 'IO' ()
 --
@@ -353,6 +413,8 @@ instance (impl ~ ( IO T.Text)) => Op (GetLinenumberFormat ()) TextDisplay orig i
 -- redisplayRange :: 'Ref' 'TextDisplay' -> 'BufferRange' -> 'IO' ()
 --
 -- resize :: 'Ref' 'TextDisplay' -> 'Rectangle' -> 'IO' ()
+--
+-- resizeSuper :: 'Ref' 'TextDisplay' -> 'Rectangle' -> 'IO' ()
 --
 -- rewindLines :: 'Ref' 'TextDisplay' -> 'BufferOffset' -> 'Int' -> 'IO' ('BufferOffset')
 --
@@ -395,6 +457,10 @@ instance (impl ~ ( IO T.Text)) => Op (GetLinenumberFormat ()) TextDisplay orig i
 -- showCursor :: 'Ref' 'TextDisplay' -> 'Bool' -> 'IO' ()
 --
 -- showInsertPosition :: 'Ref' 'TextDisplay' -> 'IO' ()
+--
+-- showWidget :: 'Ref' 'TextDisplay' -> 'IO' ()
+--
+-- showWidgetSuper :: 'Ref' 'TextDisplay' -> 'IO' ()
 --
 -- skipLines :: 'Ref' 'TextDisplay' -> 'BufferOffset' -> 'Int' -> 'Bool' -> 'IO' ('BufferOffset')
 --

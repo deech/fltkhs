@@ -7,13 +7,28 @@
 #include "FL/Fl.H"
 #include "FL/Fl_Positioner.H"
 #include "Fl_CallbackC.h"
+#include "Fl_WidgetC.h"
 EXPORT {
+  class Fl_DerivedPositioner : public Fl_Positioner {
+    fl_Widget_Virtual_Funcs* overriddenFuncs;
+    void* other_data;
+  public:
+    virtual void draw();
+    void draw_super();
+    virtual int handle(int event);
+    int handle_super(int event);
+    virtual void resize(int x, int y, int w, int h);
+    void resize_super(int x, int y, int w, int h);
+    virtual void show();
+    void show_super();
+    virtual void hide();
+    void hide_super();
+    Fl_DerivedPositioner(int X, int Y, int W, int H, const char *l, fl_Widget_Virtual_Funcs* funcs);
+    Fl_DerivedPositioner(int X, int Y, int W, int H, fl_Widget_Virtual_Funcs* funcs);
+    ~Fl_DerivedPositioner();
+  };
 #endif
   /* Inherited from Fl_Widget */
-  FL_EXPORT_C(int ,         Fl_Positioner_handle )(fl_Positioner positioner,int event);
-  FL_EXPORT_C(void,         Fl_Positioner_resize )(fl_Positioner positioner,int x, int y, int w, int h);
-  FL_EXPORT_C(void,         Fl_Positioner_show )(fl_Positioner positioner);
-  FL_EXPORT_C(void,         Fl_Positioner_hide )(fl_Positioner positioner);
   FL_EXPORT_C(fl_Window,    Fl_Positioner_as_window )(fl_Positioner positioner);
   FL_EXPORT_C(fl_Gl_Window, Fl_Positioner_as_gl_window)(fl_Positioner positioner);
   FL_EXPORT_C(fl_Group,     Fl_Positioner_parent)(fl_Positioner positioner);
@@ -119,6 +134,18 @@ EXPORT {
   FL_EXPORT_C(void, Fl_Positioner_ybounds)(fl_Positioner positioner, double ystart, double yend);
   FL_EXPORT_C(void, Fl_Positioner_xstep)(fl_Positioner positioner, double xstep);
   FL_EXPORT_C(void, Fl_Positioner_ystep)(fl_Positioner positioner, double ystep);
+  FL_EXPORT_C(fl_Positioner,    Fl_OverriddenPositioner_New)(int X, int Y, int W, int H,fl_Widget_Virtual_Funcs* fs);
+  FL_EXPORT_C(fl_Positioner,    Fl_OverriddenPositioner_New_WithLabel)(int X, int Y, int W, int H, const char* label, fl_Widget_Virtual_Funcs* fs);
+  FL_EXPORT_C(void, Fl_Positioner_draw)(fl_Positioner o);
+  FL_EXPORT_C(void, Fl_Positioner_draw_super)(fl_Positioner o);
+  FL_EXPORT_C(int, Fl_Positioner_handle)(fl_Positioner o, int event);
+  FL_EXPORT_C(int, Fl_Positioner_handle_super)(fl_Positioner o, int event);
+  FL_EXPORT_C(void, Fl_Positioner_resize)(fl_Positioner o, int x, int y, int w, int h);
+  FL_EXPORT_C(void, Fl_Positioner_resize_super)(fl_Positioner o, int x, int y, int w, int h);
+  FL_EXPORT_C(void, Fl_Positioner_show)(fl_Positioner o);
+  FL_EXPORT_C(void, Fl_Positioner_show_super)(fl_Positioner o);
+  FL_EXPORT_C(void, Fl_Positioner_hide)(fl_Positioner o);
+  FL_EXPORT_C(void, Fl_Positioner_hide_super)(fl_Positioner o);
 #ifdef __cplusplus
 }
 #endif

@@ -1,10 +1,82 @@
 #include "Fl_TreeC.h"
 #ifdef __cplusplus
 EXPORT {
-#endif
-  FL_EXPORT_C(int,Fl_Tree_handle)(fl_Tree self, int event){
-    return (static_cast<Fl_Tree*>(self))->handle(event);
+  Fl_DerivedTree::Fl_DerivedTree(int X, int Y, int W, int H, const char *l, fl_Widget_Virtual_Funcs* funcs) : Fl_Tree(X,Y,W,H,l){
+    overriddenFuncs = funcs;
+    other_data = (void*)0;
   }
+  Fl_DerivedTree::Fl_DerivedTree(int X, int Y, int W, int H, fl_Widget_Virtual_Funcs* funcs):Fl_Tree(X,Y,W,H){
+    overriddenFuncs = funcs;
+    other_data = (void*)0;
+  }
+  Fl_DerivedTree::~Fl_DerivedTree(){
+    free(overriddenFuncs);
+  }
+  void Fl_DerivedTree::draw(){
+    if (this->overriddenFuncs->draw != NULL) {
+      this->overriddenFuncs->draw((fl_Tree) this);
+    }
+    else {
+      Fl_Tree::draw();
+    }
+  }
+
+  void Fl_DerivedTree::draw_super(){
+    Fl_Tree::draw();
+  }
+
+  int Fl_DerivedTree::handle(int event){
+    int i;
+    if (this->overriddenFuncs->handle != NULL) {
+      i = this->overriddenFuncs->handle((fl_Tree) this,event);
+    }
+    else {
+      i = Fl_Tree::handle(event);
+    }
+    return i;
+  }
+  int Fl_DerivedTree::handle_super(int event){
+    return Fl_Tree::handle(event);
+  }
+
+  void Fl_DerivedTree::resize(int x, int y, int w, int h){
+    if (this->overriddenFuncs->resize != NULL) {
+      this->overriddenFuncs->resize((fl_Tree) this,x,y,w,h);
+    }
+    else {
+      Fl_Tree::resize(x,y,w,h);
+    }
+  }
+
+  void Fl_DerivedTree::resize_super(int x, int y, int w, int h){
+    Fl_Tree::resize(x,y,w,h);
+  }
+  void Fl_DerivedTree::show(){
+    if (this->overriddenFuncs->show != NULL) {
+      this->overriddenFuncs->show((fl_Tree) this);
+    }
+    else {
+      Fl_Tree::show();
+    }
+  }
+  void Fl_DerivedTree::show_super(){
+    Fl_Tree::show();
+  }
+
+  void Fl_DerivedTree::hide(){
+    if (this->overriddenFuncs->hide != NULL) {
+      this->overriddenFuncs->hide((fl_Tree) this);
+    }
+    else {
+      Fl_Tree::hide();
+    }
+  }
+  void Fl_DerivedTree::hide_super(){
+    Fl_Tree::hide();
+  }
+
+
+#endif
   FL_EXPORT_C(fl_Group,Fl_Tree_parent)(fl_Tree tree){
     return (fl_Group) (static_cast<Fl_Tree*>(tree))->parent();
   }
@@ -252,10 +324,6 @@ EXPORT {
   FL_EXPORT_C(fl_Gl_Window,Fl_Tree_as_gl_window)(fl_Tree tree){
     return (fl_Gl_Window) (static_cast<Fl_Tree*>(tree))->as_gl_window();
   }
-  FL_EXPORT_C(void,Fl_Tree_draw)(fl_Tree tree){
-    return (static_cast<Fl_Tree*>(tree))->draw();
-  }
-
   FL_EXPORT_C(void,Fl_Tree_begin)(fl_Tree tree){
     (static_cast<Fl_Tree*>(tree))->begin();
   }
@@ -300,18 +368,6 @@ EXPORT {
   }
   FL_EXPORT_C(fl_Widget, Fl_Tree_child)(fl_Tree self, int n){
     return (fl_Widget)(static_cast<Fl_Tree*>(self))->child(n);
-  }
-  // FL_EXPORT_C(void     , Fl_Tree_forms_end)(fl_Tree self){
-  //   (static_cast<Fl_Tree*>(self))->forms_end();
-  // }
-
-  FL_EXPORT_C(fl_Tree, Fl_Tree_New_WithLabel)(int x, int y, int w, int h, const char* label) {
-    Fl_Tree* tree = new Fl_Tree(x,y,w,h,label);
-    return (static_cast<Fl_Tree*>(tree));
-  }
-  FL_EXPORT_C(fl_Tree, Fl_Tree_New)(int x, int y, int w, int h) {
-    Fl_Tree* tree = new Fl_Tree(x,y,w,h,0);
-    return (fl_Tree)tree;
   }
   FL_EXPORT_C(void,Fl_Tree_Destroy)(fl_Tree tree){
     delete (static_cast<Fl_Tree*>(tree));
@@ -479,19 +535,19 @@ EXPORT {
     return (static_cast<Fl_Tree*>(tree))->deselect_all((static_cast<Fl_Tree_Item*>(item)),docallback);
   }
   FL_EXPORT_C(void,Fl_Tree_select_only)(fl_Tree tree,fl_Tree_Item item){
-     (static_cast<Fl_Tree*>(tree))->select_only((static_cast<Fl_Tree_Item*>(item)));
+    (static_cast<Fl_Tree*>(tree))->select_only((static_cast<Fl_Tree_Item*>(item)));
   }
   FL_EXPORT_C(void,Fl_Tree_select_only_with_docallback)(fl_Tree tree,fl_Tree_Item item,int docallback){
-     (static_cast<Fl_Tree*>(tree))->select_only((static_cast<Fl_Tree_Item*>(item)),docallback);
+    (static_cast<Fl_Tree*>(tree))->select_only((static_cast<Fl_Tree_Item*>(item)),docallback);
   }
   FL_EXPORT_C(void,Fl_Tree_select_all)(fl_Tree tree,fl_Tree_Item item){
-     (static_cast<Fl_Tree*>(tree))->select_all((static_cast<Fl_Tree_Item*>(item)));
+    (static_cast<Fl_Tree*>(tree))->select_all((static_cast<Fl_Tree_Item*>(item)));
   }
   FL_EXPORT_C(void,Fl_Tree_select_all_with_docallback)(fl_Tree tree,fl_Tree_Item item,int docallback){
-     (static_cast<Fl_Tree*>(tree))->select_all((static_cast<Fl_Tree_Item*>(item)),docallback);
+    (static_cast<Fl_Tree*>(tree))->select_all((static_cast<Fl_Tree_Item*>(item)),docallback);
   }
   FL_EXPORT_C(void,Fl_Tree_set_item_focus)(fl_Tree tree,fl_Tree_Item item){
-     (static_cast<Fl_Tree*>(tree))->set_item_focus((static_cast<Fl_Tree_Item*>(item)));
+    (static_cast<Fl_Tree*>(tree))->set_item_focus((static_cast<Fl_Tree_Item*>(item)));
   }
   FL_EXPORT_C(fl_Tree_Item,Fl_Tree_get_item_focus)(fl_Tree tree){
     return (static_cast<Fl_Tree*>(tree))->get_item_focus();
@@ -672,7 +728,7 @@ EXPORT {
     (static_cast<Fl_Tree*>(tree))->show_item((static_cast<Fl_Tree_Item*>(item)));
   }
   FL_EXPORT_C(void,Fl_Tree_show_item_top)(fl_Tree tree,fl_Tree_Item item){
-     (static_cast<Fl_Tree*>(tree))->show_item_top((static_cast<Fl_Tree_Item*>(item)));
+    (static_cast<Fl_Tree*>(tree))->show_item_top((static_cast<Fl_Tree_Item*>(item)));
   }
   FL_EXPORT_C(void,Fl_Tree_show_item_middle)(fl_Tree tree,fl_Tree_Item item){
     (static_cast<Fl_Tree*>(tree))->show_item_middle((static_cast<Fl_Tree_Item*>(item)));
@@ -716,6 +772,55 @@ EXPORT {
   FL_EXPORT_C(Fl_Tree_Reason,Fl_Tree_callback_reason)(fl_Tree tree){
     return (static_cast<Fl_Tree*>(tree))->callback_reason();
   }
+  FL_EXPORT_C(fl_Tree,    Fl_Tree_New)(int X, int Y, int W, int H){
+    fl_Widget_Virtual_Funcs* fs = Fl_Widget_default_virtual_funcs();
+    Fl_DerivedTree* w = new Fl_DerivedTree(X,Y,W,H,fs);
+    return (fl_Tree)w;
+  }
+  FL_EXPORT_C(fl_Tree,    Fl_Tree_New_WithLabel)(int X, int Y, int W, int H, const char* label){
+    fl_Widget_Virtual_Funcs* fs = Fl_Widget_default_virtual_funcs();
+    Fl_DerivedTree* w = new Fl_DerivedTree(X,Y,W,H,label,fs);
+    return (fl_Tree)w;
+  }
+  FL_EXPORT_C(fl_Tree,    Fl_OverriddenTree_New)(int X, int Y, int W, int H,fl_Widget_Virtual_Funcs* fs){
+    Fl_DerivedTree* w = new Fl_DerivedTree(X,Y,W,H,fs);
+    return (fl_Tree)w;
+  }
+  FL_EXPORT_C(fl_Tree,    Fl_OverriddenTree_New_WithLabel)(int X, int Y, int W, int H, const char* label, fl_Widget_Virtual_Funcs* fs){
+    Fl_DerivedTree* w = new Fl_DerivedTree(X,Y,W,H,label,fs);
+    return (fl_Tree)w;
+  }
+  FL_EXPORT_C(void, Fl_Tree_draw)(fl_Tree o){
+    (static_cast<Fl_DerivedTree*>(o))->draw();
+  }
+  FL_EXPORT_C(void, Fl_Tree_draw_super)(fl_Tree o){
+    (static_cast<Fl_DerivedTree*>(o))->draw_super();
+  }
+  FL_EXPORT_C(int, Fl_Tree_handle)(fl_Tree o, int event){
+    return (static_cast<Fl_DerivedTree*>(o))->handle(event);
+  }
+  FL_EXPORT_C(int, Fl_Tree_handle_super)(fl_Tree o, int event){
+    return (static_cast<Fl_DerivedTree*>(o))->handle_super(event);
+  }
+  FL_EXPORT_C(void, Fl_Tree_resize)(fl_Tree o, int x, int y, int w, int h){
+    (static_cast<Fl_DerivedTree*>(o))->resize(x,y,w,h);
+  }
+  FL_EXPORT_C(void, Fl_Tree_resize_super)(fl_Tree o, int x, int y, int w, int h){
+    (static_cast<Fl_DerivedTree*>(o))->resize_super(x,y,w,h);
+  }
+  FL_EXPORT_C(void, Fl_Tree_show)(fl_Tree o){
+    (static_cast<Fl_DerivedTree*>(o))->show();
+  }
+  FL_EXPORT_C(void, Fl_Tree_show_super)(fl_Tree o){
+    (static_cast<Fl_DerivedTree*>(o))->show_super();
+  }
+  FL_EXPORT_C(void, Fl_Tree_hide)(fl_Tree o){
+    (static_cast<Fl_DerivedTree*>(o))->hide();
+  }
+  FL_EXPORT_C(void, Fl_Tree_hide_super)(fl_Tree o){
+    (static_cast<Fl_DerivedTree*>(o))->hide_super();
+  }
+
 #ifdef __cplusplus
 }
 #endif

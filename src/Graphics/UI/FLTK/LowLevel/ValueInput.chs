@@ -3,7 +3,8 @@
 module Graphics.UI.FLTK.LowLevel.ValueInput
     (
      -- * Constructor
-     valueInputNew
+     valueInputNew,
+     valueInputCustom
      -- * Hierarchy
      --
      -- $hierarchy
@@ -17,13 +18,29 @@ where
 #include "Fl_Types.h"
 #include "Fl_Value_InputC.h"
 import C2HS hiding (cFromEnum, cFromBool, cToBool,cToEnum)
-
+import Graphics.UI.FLTK.LowLevel.Widget
 import Graphics.UI.FLTK.LowLevel.Fl_Enumerations
 import Graphics.UI.FLTK.LowLevel.Fl_Types
 import Graphics.UI.FLTK.LowLevel.Utils
 import Graphics.UI.FLTK.LowLevel.Hierarchy
 import Graphics.UI.FLTK.LowLevel.Dispatch
 import qualified Data.Text as T
+{# fun Fl_OverriddenValue_Input_New_WithLabel as overriddenWidgetNewWithLabel' { `Int',`Int',`Int',`Int', unsafeToCString `T.Text', id `Ptr ()'} -> `Ptr ()' id #}
+{# fun Fl_OverriddenValue_Input_New as overriddenWidgetNew' { `Int',`Int',`Int',`Int', id `Ptr ()'} -> `Ptr ()' id #}
+valueInputCustom ::
+       Rectangle                         -- ^ The bounds of this ValueInput
+    -> Maybe T.Text                      -- ^ The ValueInput label
+    -> Maybe (Ref ValueInput -> IO ())           -- ^ Optional custom drawing function
+    -> Maybe (CustomWidgetFuncs ValueInput)      -- ^ Optional custom widget functions
+    -> IO (Ref ValueInput)
+valueInputCustom rectangle l' draw' funcs' =
+  widgetMaker
+    rectangle
+    l'
+    draw'
+    funcs'
+    overriddenWidgetNew'
+    overriddenWidgetNewWithLabel'
 
 {# fun Fl_Value_Input_New as valueInputNew' { `Int',`Int',`Int',`Int' } -> `Ptr ()' id #}
 {# fun Fl_Value_Input_New_WithLabel as valueInputNewWithLabel' { `Int',`Int',`Int',`Int',unsafeToCString `T.Text'} -> `Ptr ()' id #}
@@ -41,15 +58,9 @@ instance (impl ~ (IO ())) => Op (Destroy ()) ValueInput orig impl where
   runOp _ _ win = swapRef win $ \winPtr -> do
     valueInputDestroy' winPtr
     return nullPtr
-{#fun Fl_Value_Input_handle as valueInputHandle' { id `Ptr ()', id `CInt' } -> `Int' #}
-instance (impl ~ (Event -> IO (Either UnknownEvent ()))) => Op (Handle ()) ValueInput orig impl where
-  runOp _ _ valueInput event = withRef valueInput (\p -> valueInputHandle' p (fromIntegral . fromEnum $ event)) >>= return  . successOrUnknownEvent
 {# fun Fl_Value_Input_soft as soft' { id `Ptr ()' } -> `Bool' cToBool #}
 instance (impl ~ ( IO (Bool))) => Op (GetSoft ()) ValueInput orig impl where
   runOp _ _ value_input = withRef value_input $ \value_inputPtr -> soft' value_inputPtr
-{# fun Fl_Value_Input_resize as resize' { id `Ptr ()',`Int',`Int',`Int',`Int' } -> `()' #}
-instance (impl ~ (Rectangle ->  IO ())) => Op (Resize ()) ValueInput orig impl where
-  runOp _ _ value_input rectangle = let (x_pos', y_pos', width', height') = fromRectangle rectangle in withRef value_input $ \value_inputPtr -> resize' value_inputPtr x_pos' y_pos' width' height'
 {# fun Fl_Value_Input_set_soft as setSoft' { id `Ptr ()',cFromBool `Bool' } -> `()' #}
 instance (impl ~ (Bool->  IO ())) => Op (SetSoft ()) ValueInput orig impl where
   runOp _ _ value_input s = withRef value_input $ \value_inputPtr -> setSoft' value_inputPtr s
@@ -79,9 +90,48 @@ instance (impl ~ ( IO (Color))) => Op (GetTextcolor ()) ValueInput orig impl whe
 instance (impl ~ (Color ->  IO ())) => Op (SetTextcolor ()) ValueInput orig impl where
   runOp _ _ value_input (Color v) = withRef value_input $ \value_inputPtr -> setTextcolor' value_inputPtr (fromIntegral v)
 
+{# fun Fl_Value_Input_draw as draw'' { id `Ptr ()' } -> `()' #}
+instance (impl ~ (  IO ())) => Op (Draw ()) ValueInput orig impl where
+  runOp _ _ valueInput = withRef valueInput $ \valueInputPtr -> draw'' valueInputPtr
+{# fun Fl_Value_Input_draw_super as drawSuper' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
+instance (impl ~ ( IO ())) => Op (DrawSuper ()) ValueInput orig impl where
+  runOp _ _ valueInput = withRef valueInput $ \valueInputPtr -> drawSuper' valueInputPtr
+{#fun Fl_Value_Input_handle as valueInputHandle' { id `Ptr ()', id `CInt' } -> `Int' #}
+instance (impl ~ (Event -> IO (Either UnknownEvent ()))) => Op (Handle ()) ValueInput orig impl where
+  runOp _ _ valueInput event = withRef valueInput (\p -> valueInputHandle' p (fromIntegral . fromEnum $ event)) >>= return  . successOrUnknownEvent
+{# fun Fl_Value_Input_handle_super as handleSuper' { id `Ptr ()',`Int' } -> `Int' #}
+instance (impl ~ (Event ->  IO (Either UnknownEvent ()))) => Op (HandleSuper ()) ValueInput orig impl where
+  runOp _ _ valueInput event = withRef valueInput $ \valueInputPtr -> handleSuper' valueInputPtr (fromIntegral (fromEnum event)) >>= return . successOrUnknownEvent
+{# fun Fl_Value_Input_resize as resize' { id `Ptr ()',`Int',`Int',`Int',`Int' } -> `()' supressWarningAboutRes #}
+instance (impl ~ (Rectangle -> IO ())) => Op (Resize ()) ValueInput orig impl where
+  runOp _ _ valueInput rectangle = withRef valueInput $ \valueInputPtr -> do
+                                 let (x_pos,y_pos,w_pos,h_pos) = fromRectangle rectangle
+                                 resize' valueInputPtr x_pos y_pos w_pos h_pos
+{# fun Fl_Value_Input_resize_super as resizeSuper' { id `Ptr ()',`Int',`Int',`Int',`Int' } -> `()' supressWarningAboutRes #}
+instance (impl ~ (Rectangle -> IO ())) => Op (ResizeSuper ()) ValueInput orig impl where
+  runOp _ _ valueInput rectangle =
+    let (x_pos, y_pos, width, height) = fromRectangle rectangle
+    in withRef valueInput $ \valueInputPtr -> resizeSuper' valueInputPtr x_pos y_pos width height
+{# fun Fl_Value_Input_hide as hide' { id `Ptr ()' } -> `()' #}
+instance (impl ~ (  IO ())) => Op (Hide ()) ValueInput orig impl where
+  runOp _ _ valueInput = withRef valueInput $ \valueInputPtr -> hide' valueInputPtr
+{# fun Fl_Value_Input_hide_super as hideSuper' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
+instance (impl ~ ( IO ())) => Op (HideSuper ()) ValueInput orig impl where
+  runOp _ _ valueInput = withRef valueInput $ \valueInputPtr -> hideSuper' valueInputPtr
+{# fun Fl_Value_Input_show as show' { id `Ptr ()' } -> `()' #}
+instance (impl ~ (  IO ())) => Op (ShowWidget ()) ValueInput orig impl where
+  runOp _ _ valueInput = withRef valueInput $ \valueInputPtr -> show' valueInputPtr
+{# fun Fl_Value_Input_show_super as showSuper' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
+instance (impl ~ ( IO ())) => Op (ShowWidgetSuper ()) ValueInput orig impl where
+  runOp _ _ valueInput = withRef valueInput $ \valueInputPtr -> showSuper' valueInputPtr
+
 -- $functions
 -- @
 -- destroy :: 'Ref' 'ValueInput' -> 'IO' ()
+--
+-- draw :: 'Ref' 'ValueInput' -> 'IO' ()
+--
+-- drawSuper :: 'Ref' 'ValueInput' -> 'IO' ()
 --
 -- getShortcut :: 'Ref' 'ValueInput' -> 'IO' ('Maybe' 'ShortcutKeySequence')
 --
@@ -93,9 +143,17 @@ instance (impl ~ (Color ->  IO ())) => Op (SetTextcolor ()) ValueInput orig impl
 --
 -- getTextsize :: 'Ref' 'ValueInput' -> 'IO' ('FontSize')
 --
--- handle :: 'Ref' 'ValueInput' -> ('Event' -> 'IO' ('Either' 'UnknownEvent' ()))
+-- handle :: 'Ref' 'ValueInput' -> 'Event' -> 'IO' ('Either' 'UnknownEvent' ())
+--
+-- handleSuper :: 'Ref' 'ValueInput' -> 'Event' -> 'IO' ('Either' 'UnknownEvent' ())
+--
+-- hide :: 'Ref' 'ValueInput' -> 'IO' ()
+--
+-- hideSuper :: 'Ref' 'ValueInput' -> 'IO' ()
 --
 -- resize :: 'Ref' 'ValueInput' -> 'Rectangle' -> 'IO' ()
+--
+-- resizeSuper :: 'Ref' 'ValueInput' -> 'Rectangle' -> 'IO' ()
 --
 -- setShortcut :: 'Ref' 'ValueInput' -> 'ShortcutKeySequence' -> 'IO' ()
 --
@@ -106,6 +164,14 @@ instance (impl ~ (Color ->  IO ())) => Op (SetTextcolor ()) ValueInput orig impl
 -- setTextfont :: 'Ref' 'ValueInput' -> 'Font' -> 'IO' ()
 --
 -- setTextsize :: 'Ref' 'ValueInput' -> 'FontSize' -> 'IO' ()
+--
+-- showWidget :: 'Ref' 'ValueInput' -> 'IO' ()
+--
+-- showWidgetSuper :: 'Ref' 'ValueInput' -> 'IO' ()
+
+-- Available in FLTK 1.3.4 only:
+
+
 -- @
 
 -- $hierarchy

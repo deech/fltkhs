@@ -5,6 +5,7 @@ module Graphics.UI.FLTK.LowLevel.Clock
     ClockType(..),
     clockNew,
     clockNewWithType,
+    clockCustom,
     Hour(..),
     Minute(..),
     Second(..),
@@ -31,6 +32,8 @@ import Graphics.UI.FLTK.LowLevel.Hierarchy
 import Graphics.UI.FLTK.LowLevel.Dispatch
 import qualified Data.Text as T
 import Data.Char
+import Graphics.UI.FLTK.LowLevel.Widget
+
 #c
 enum ClockType {
   SquareClock = FL_SQUARE_CLOCK,
@@ -46,6 +49,26 @@ newtype Second = Second Int
 data ClockByTime = ClockByTime Hour Minute Second
 data ClockSinceEpoch = ClockSinceEpoch Second
 data ClockSetTimeType = ClockSetByTime ClockByTime | ClockSetSinceEpoch ClockSinceEpoch
+
+{# fun Fl_OverriddenClock_New_WithLabel as overriddenWidgetNewWithLabel' { `Int',`Int',`Int',`Int', unsafeToCString `T.Text', id `Ptr ()'} -> `Ptr ()' id #}
+{# fun Fl_OverriddenClock_New as overriddenWidgetNew' { `Int',`Int',`Int',`Int', id `Ptr ()'} -> `Ptr ()' id #}
+clockCustom ::
+       Rectangle                         -- ^ The bounds of this Clock
+    -> Maybe T.Text                      -- ^ The Clock label
+    -> Maybe (Ref Clock -> IO ())           -- ^ Optional custom drawing function
+    -> Maybe (CustomWidgetFuncs Clock)      -- ^ Optional custom widget functions
+    -> IO (Ref Clock)
+clockCustom rectangle l' draw' funcs' =
+  widgetMaker
+    rectangle
+    l'
+    draw'
+    funcs'
+    overriddenWidgetNew'
+    overriddenWidgetNewWithLabel'
+
+
+
 {# fun Fl_Clock_New as clockNew' { `Int',`Int',`Int',`Int' } -> `Ptr ()' id #}
 {# fun Fl_Clock_New_WithLabel as clockNewWithLabel' { `Int',`Int',`Int',`Int', unsafeToCString `T.Text'} -> `Ptr ()' id #}
 {# fun Fl_Clock_New_WithClockType as clockNewWithClockType' { id `CUChar', `Int',`Int',`Int',`Int', unsafeToCString `T.Text'} -> `Ptr ()' id #}
@@ -86,10 +109,6 @@ instance (impl ~ (IO ClockByTime)) => Op (GetValue ()) Clock orig impl where
     second' <- clockSecond' clockPtr
     return $ ClockByTime (Hour hour') (Minute minute') (Second second')
 
-{#fun Fl_Clock_handle as menu_Handle' { id `Ptr ()', id `CInt' } -> `Int' #}
-instance (impl ~ (Event -> IO (Either UnknownEvent ()))) => Op (Handle ()) Clock orig impl where
-  runOp _ _ menu_ event = withRef menu_ (\p -> menu_Handle' p (fromIntegral . fromEnum $ event)) >>= return  . successOrUnknownEvent
-
 {# fun Fl_Clock_set_type as setType' { id `Ptr ()',`Word8' } -> `()' #}
 instance (impl ~ (ClockType ->  IO ())) => Op (SetType ()) Clock orig impl where
   runOp _ _ clock type'' = withRef clock $ \clockPtr -> setType' clockPtr (fromIntegral (fromEnum type''))
@@ -97,6 +116,40 @@ instance (impl ~ (ClockType ->  IO ())) => Op (SetType ()) Clock orig impl where
 {# fun Fl_Clock_type as type' { id `Ptr ()' } -> `Word8' #}
 instance (impl ~ ( IO (ClockType))) => Op (GetType_ ()) Clock orig impl where
    runOp _ _ clock = withRef clock $ \clockPtr -> type' clockPtr >>= return . toEnum . fromIntegral
+{# fun Fl_Clock_draw as draw'' { id `Ptr ()' } -> `()' #}
+instance (impl ~ (  IO ())) => Op (Draw ()) Clock orig impl where
+  runOp _ _ clock = withRef clock $ \clockPtr -> draw'' clockPtr
+{# fun Fl_Clock_draw_super as drawSuper' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
+instance (impl ~ ( IO ())) => Op (DrawSuper ()) Clock orig impl where
+  runOp _ _ clock = withRef clock $ \clockPtr -> drawSuper' clockPtr
+{#fun Fl_Clock_handle as clockHandle' { id `Ptr ()', id `CInt' } -> `Int' #}
+instance (impl ~ (Event -> IO (Either UnknownEvent ()))) => Op (Handle ()) Clock orig impl where
+  runOp _ _ clock event = withRef clock (\p -> clockHandle' p (fromIntegral . fromEnum $ event)) >>= return  . successOrUnknownEvent
+{# fun Fl_Clock_handle_super as handleSuper' { id `Ptr ()',`Int' } -> `Int' #}
+instance (impl ~ (Event ->  IO (Either UnknownEvent ()))) => Op (HandleSuper ()) Clock orig impl where
+  runOp _ _ clock event = withRef clock $ \clockPtr -> handleSuper' clockPtr (fromIntegral (fromEnum event)) >>= return . successOrUnknownEvent
+{# fun Fl_Clock_resize as resize' { id `Ptr ()',`Int',`Int',`Int',`Int' } -> `()' supressWarningAboutRes #}
+instance (impl ~ (Rectangle -> IO ())) => Op (Resize ()) Clock orig impl where
+  runOp _ _ clock rectangle = withRef clock $ \clockPtr -> do
+                                 let (x_pos,y_pos,w_pos,h_pos) = fromRectangle rectangle
+                                 resize' clockPtr x_pos y_pos w_pos h_pos
+{# fun Fl_Clock_resize_super as resizeSuper' { id `Ptr ()',`Int',`Int',`Int',`Int' } -> `()' supressWarningAboutRes #}
+instance (impl ~ (Rectangle -> IO ())) => Op (ResizeSuper ()) Clock orig impl where
+  runOp _ _ clock rectangle =
+    let (x_pos, y_pos, width, height) = fromRectangle rectangle
+    in withRef clock $ \clockPtr -> resizeSuper' clockPtr x_pos y_pos width height
+{# fun Fl_Clock_hide as hide' { id `Ptr ()' } -> `()' #}
+instance (impl ~ (  IO ())) => Op (Hide ()) Clock orig impl where
+  runOp _ _ clock = withRef clock $ \clockPtr -> hide' clockPtr
+{# fun Fl_Clock_hide_super as hideSuper' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
+instance (impl ~ ( IO ())) => Op (HideSuper ()) Clock orig impl where
+  runOp _ _ clock = withRef clock $ \clockPtr -> hideSuper' clockPtr
+{# fun Fl_Clock_show as show' { id `Ptr ()' } -> `()' #}
+instance (impl ~ (  IO ())) => Op (ShowWidget ()) Clock orig impl where
+  runOp _ _ clock = withRef clock $ \clockPtr -> show' clockPtr
+{# fun Fl_Clock_show_super as showSuper' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
+instance (impl ~ ( IO ())) => Op (ShowWidgetSuper ()) Clock orig impl where
+  runOp _ _ clock = withRef clock $ \clockPtr -> showSuper' clockPtr
 
 -- $Clockfunctions
 --
@@ -109,6 +162,26 @@ instance (impl ~ ( IO (ClockType))) => Op (GetType_ ()) Clock orig impl where
 -- handle :: 'Ref' 'Clock' -> ('Event' -> 'IO' ('Either' 'UnknownEvent' ()))
 --
 -- setValue :: 'Ref' 'Clock' -> 'ClockSetTimeType' -> 'IO' ()
+--
+-- draw :: 'Ref' 'Clock' -> 'IO' ()
+--
+-- drawSuper :: 'Ref' 'Clock' -> 'IO' ()
+--
+-- handle :: 'Ref' 'Clock' -> 'Event' -> 'IO' ('Either' 'UnknownEvent' ())
+--
+-- handleSuper :: 'Ref' 'Clock' -> 'Event' -> 'IO' ('Either' 'UnknownEvent' ())
+--
+-- hide :: 'Ref' 'Clock' -> 'IO' ()
+--
+-- hideSuper :: 'Ref' 'Clock' -> 'IO' ()
+--
+-- resize :: 'Ref' 'Clock' -> 'Rectangle' -> 'IO' ()
+--
+-- resizeSuper :: 'Ref' 'Clock' -> 'Rectangle' -> 'IO' ()
+--
+-- showWidget :: 'Ref' 'Clock' -> 'IO' ()
+--
+-- showWidgetSuper :: 'Ref' 'Clock' -> 'IO' ()
 -- @
 
 -- $hierarchy

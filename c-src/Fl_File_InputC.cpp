@@ -2,11 +2,81 @@
 
 #ifdef __cplusplus
 EXPORT {
+  Fl_DerivedFile_Input::Fl_DerivedFile_Input(int X, int Y, int W, int H, const char *l, fl_Widget_Virtual_Funcs* funcs) : Fl_File_Input(X,Y,W,H,l){
+    overriddenFuncs = funcs;
+    other_data = (void*)0;
+  }
+  Fl_DerivedFile_Input::Fl_DerivedFile_Input(int X, int Y, int W, int H, fl_Widget_Virtual_Funcs* funcs):Fl_File_Input(X,Y,W,H){
+    overriddenFuncs = funcs;
+    other_data = (void*)0;
+  }
+  Fl_DerivedFile_Input::~Fl_DerivedFile_Input(){
+    free(overriddenFuncs);
+  }
+  void Fl_DerivedFile_Input::draw(){
+    if (this->overriddenFuncs->draw != NULL) {
+      this->overriddenFuncs->draw((fl_File_Input) this);
+    }
+    else {
+      Fl_File_Input::draw();
+    }
+  }
+
+  void Fl_DerivedFile_Input::draw_super(){
+    Fl_File_Input::draw();
+  }
+
+  int Fl_DerivedFile_Input::handle(int event){
+    int i;
+    if (this->overriddenFuncs->handle != NULL) {
+      i = this->overriddenFuncs->handle((fl_File_Input) this,event);
+    }
+    else {
+      i = Fl_File_Input::handle(event);
+    }
+    return i;
+  }
+  int Fl_DerivedFile_Input::handle_super(int event){
+    return Fl_File_Input::handle(event);
+  }
+
+  void Fl_DerivedFile_Input::resize(int x, int y, int w, int h){
+    if (this->overriddenFuncs->resize != NULL) {
+      this->overriddenFuncs->resize((fl_File_Input) this,x,y,w,h);
+    }
+    else {
+      Fl_File_Input::resize(x,y,w,h);
+    }
+  }
+
+  void Fl_DerivedFile_Input::resize_super(int x, int y, int w, int h){
+    Fl_File_Input::resize(x,y,w,h);
+  }
+  void Fl_DerivedFile_Input::show(){
+    if (this->overriddenFuncs->show != NULL) {
+      this->overriddenFuncs->show((fl_File_Input) this);
+    }
+    else {
+      Fl_File_Input::show();
+    }
+  }
+  void Fl_DerivedFile_Input::show_super(){
+    Fl_File_Input::show();
+  }
+
+  void Fl_DerivedFile_Input::hide(){
+    if (this->overriddenFuncs->hide != NULL) {
+      this->overriddenFuncs->hide((fl_File_Input) this);
+    }
+    else {
+      Fl_File_Input::hide();
+    }
+  }
+  void Fl_DerivedFile_Input::hide_super(){
+    Fl_File_Input::hide();
+  }
 #endif
   /* Inherited from Fl_Widget */
-  FL_EXPORT_C(int,Fl_File_Input_handle)(fl_File_Input self, int event){
-    return (static_cast<Fl_File_Input*>(self))->handle(event);
-  }
   FL_EXPORT_C(fl_Group,Fl_File_Input_parent)(fl_File_Input file_input){
     return (fl_Group) (static_cast<Fl_File_Input*>(file_input))->parent();
   }
@@ -267,19 +337,8 @@ EXPORT {
     return (fl_Gl_Window) (static_cast<Fl_File_Input*>(file_input))->as_gl_window();
   }
   /* Fl_File_Input specific functions */
-  FL_EXPORT_C(fl_File_Input, Fl_File_Input_New_WithLabel)(int x, int y, int w, int h, const char* label) {
-    Fl_File_Input* file_input = new Fl_File_Input(x,y,w,h,label);
-    return (static_cast<fl_File_Input>(file_input));
-  }
-  FL_EXPORT_C(fl_File_Input, Fl_File_Input_New)(int x, int y, int w, int h) {
-    Fl_File_Input* file_input = new Fl_File_Input(x,y,w,h,0);
-    return (static_cast<fl_File_Input>(file_input));
-  }
   FL_EXPORT_C(void,Fl_File_Input_Destroy)(fl_File_Input file_input){
     delete (static_cast<Fl_File_Input*>(file_input));
-  }
-  FL_EXPORT_C(void,Fl_File_Input_resize)(fl_File_Input file_input,int X,int Y,int W,int H){
-    (static_cast<Fl_File_Input*>(file_input))->resize(X,Y,W,H);
   }
   FL_EXPORT_C(int,Fl_File_Input_static_value)(fl_File_Input file_input,const char* text){
     return (static_cast<Fl_File_Input*>(file_input))->static_value(text);
@@ -421,6 +480,54 @@ EXPORT {
   }
   FL_EXPORT_C(void,Fl_File_Input_set_down_box)(fl_File_Input file_input,Fl_Boxtype color){
     (static_cast<Fl_File_Input*>(file_input))->down_box(color);
+  }
+  FL_EXPORT_C(void, Fl_File_Input_draw)(fl_File_Input o){
+    (static_cast<Fl_DerivedFile_Input*>(o))->draw();
+  }
+  FL_EXPORT_C(void, Fl_File_Input_draw_super)(fl_File_Input o){
+    (static_cast<Fl_DerivedFile_Input*>(o))->draw_super();
+  }
+  FL_EXPORT_C(int, Fl_File_Input_handle)(fl_File_Input o, int event){
+    return (static_cast<Fl_DerivedFile_Input*>(o))->handle(event);
+  }
+  FL_EXPORT_C(int, Fl_File_Input_handle_super)(fl_File_Input o, int event){
+    return (static_cast<Fl_DerivedFile_Input*>(o))->handle_super(event);
+  }
+  FL_EXPORT_C(void, Fl_File_Input_resize)(fl_File_Input o, int x, int y, int w, int h){
+    (static_cast<Fl_DerivedFile_Input*>(o))->resize(x,y,w,h);
+  }
+  FL_EXPORT_C(void, Fl_File_Input_resize_super)(fl_File_Input o, int x, int y, int w, int h){
+    (static_cast<Fl_DerivedFile_Input*>(o))->resize_super(x,y,w,h);
+  }
+  FL_EXPORT_C(void, Fl_File_Input_show)(fl_File_Input o){
+    (static_cast<Fl_DerivedFile_Input*>(o))->show();
+  }
+  FL_EXPORT_C(void, Fl_File_Input_show_super)(fl_File_Input o){
+    (static_cast<Fl_DerivedFile_Input*>(o))->show_super();
+  }
+  FL_EXPORT_C(void, Fl_File_Input_hide)(fl_File_Input o){
+    (static_cast<Fl_DerivedFile_Input*>(o))->hide();
+  }
+  FL_EXPORT_C(void, Fl_File_Input_hide_super)(fl_File_Input o){
+    (static_cast<Fl_DerivedFile_Input*>(o))->hide_super();
+  }
+  FL_EXPORT_C(fl_File_Input,    Fl_File_Input_New)(int X, int Y, int W, int H){
+    fl_Widget_Virtual_Funcs* fs = Fl_Widget_default_virtual_funcs();
+    Fl_DerivedFile_Input* w = new Fl_DerivedFile_Input(X,Y,W,H,fs);
+    return (fl_File_Input)w;
+  }
+  FL_EXPORT_C(fl_File_Input,    Fl_File_Input_New_WithLabel)(int X, int Y, int W, int H, const char* label){
+    fl_Widget_Virtual_Funcs* fs = Fl_Widget_default_virtual_funcs();
+    Fl_DerivedFile_Input* w = new Fl_DerivedFile_Input(X,Y,W,H,label,fs);
+    return (fl_File_Input)w;
+  }
+  FL_EXPORT_C(fl_File_Input,    Fl_OverriddenFile_Input_New)(int X, int Y, int W, int H,fl_Widget_Virtual_Funcs* fs){
+    Fl_DerivedFile_Input* w = new Fl_DerivedFile_Input(X,Y,W,H,fs);
+    return (fl_File_Input)w;
+  }
+  FL_EXPORT_C(fl_File_Input,    Fl_OverriddenFile_Input_New_WithLabel)(int X, int Y, int W, int H, const char* label, fl_Widget_Virtual_Funcs* fs){
+    Fl_DerivedFile_Input* w = new Fl_DerivedFile_Input(X,Y,W,H,label,fs);
+    return (fl_File_Input)w;
   }
 #ifdef __cplusplus
 }
