@@ -125,7 +125,7 @@ data UnbrokenOrBraced
 
 data BracedStringParts
   = BareString String
-  | QuotedCharCode Char
+  | QuotedCharCode String
   | QuotedHex Integer
   | QuotedOctal Integer
   | QuotedChar String

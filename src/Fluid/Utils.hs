@@ -1,13 +1,14 @@
 module Utils (collapseParts, collapseString) where
 import Types
 import Numeric
+import Debug.Trace
 
 collapseParts :: [BracedStringParts] -> String
 collapseParts parts = go parts []
   where go ((BareString s):_parts) accum =
           go _parts (accum ++ s)
         go ((QuotedCharCode c):_parts) accum =
-          go _parts (accum ++ "\\" ++ [c])
+          go _parts (accum ++ c)
         go ((QuotedHex h):_parts) accum =
           go _parts (accum ++ "0x" ++ (showHex h ""))
         go ((QuotedOctal o):_parts) accum =

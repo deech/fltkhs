@@ -48,31 +48,31 @@ functionName =
 quotedP
   :: ParsecT String a Identity BracedStringParts
 quotedP =
-  let charCodeP :: Char -> Char -> ParsecT String a Identity BracedStringParts
+  let charCodeP :: Char -> String -> ParsecT String a Identity BracedStringParts
       charCodeP c code = (char c) >> return (QuotedCharCode code)
   in foldl1 (<|>)
             ((map try
-                  [charCodeP 'a' '\a'
-                  ,charCodeP 'b' '\b'
-                  ,charCodeP 'a' '\a'
-                  ,charCodeP 'b' '\b'
-                  ,charCodeP 'f' '\f'
-                  ,charCodeP '\n' '\n'
-                  ,charCodeP 'r' '\r'
-                  ,charCodeP 't' '\t'
-                  ,charCodeP 'v' '\v'
+                  [charCodeP 'a' "\\a"
+                  ,charCodeP 'b' "\\b"
+                  ,charCodeP 'a' "\\a"
+                  ,charCodeP 'b' "\\b"
+                  ,charCodeP 'f' "\\f"
+                  ,charCodeP 'n' "\\n"
+                  ,charCodeP 'r' "\\r"
+                  ,charCodeP 't' "\\t"
+                  ,charCodeP 'v' "\\v"
                   ,((char 'x') >> hexP >>= return . QuotedHex)
                   ,(octalP >>= return . QuotedOctal)]) ++
              [(anyChar >>=
                \c ->
-                 return (QuotedChar (['\\'] ++ [c])))])
+                 return (QuotedChar ("\\" ++ [c])))])
 
 bracedContentsP
   :: ParsecT String () Identity [BracedStringParts]
 bracedContentsP = char '{' >> go (0 :: Int) []
   where go nesting accum =
           (try $
-           do _ <- char '\\'
+           do _ <- string "\\\\"
               quoted <- quotedP
               go nesting (accum ++ [quoted])) <|>
           (try $
@@ -89,8 +89,8 @@ bracedContentsP = char '{' >> go (0 :: Int) []
           (try $ (trimAfter $ char '}') >> return accum) <|>
           (do bare <-
                 manyTill anyChar
-                         ((lookAhead $ char '\\') <|> (lookAhead $ char '{') <|>
-                          (lookAhead $ char '}'))
+                         ((lookAhead $ string "\\\\") <|> (lookAhead $ string "{") <|>
+                          (lookAhead $ string "}"))
               go nesting (accum ++ [BareString bare]))
 
 unbrokenString
