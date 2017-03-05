@@ -1436,6 +1436,8 @@ module Graphics.UI.FLTK.LowLevel.Hierarchy
          setLinenumberFormat,
          GetLinenumberFormat,
          getLinenumberFormat,
+         WrapMode,
+         wrapMode,
          -- * TextEditor
          TextEditor,
          SetInsertMode,
@@ -3970,7 +3972,8 @@ type TextDisplayFuncs =
   (GetLinenumberAlign
   (SetLinenumberFormat
   (GetLinenumberFormat
-  ()))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))
+  (WrapMode
+  ())))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))
 
 type instance Functions TextDisplay = TextDisplayFuncs
 
@@ -4012,6 +4015,7 @@ MAKE_METHOD(SetLinenumberAlign,setLinenumberAlign)
 MAKE_METHOD(GetLinenumberAlign,getLinenumberAlign)
 MAKE_METHOD(SetLinenumberFormat,setLinenumberFormat)
 MAKE_METHOD(GetLinenumberFormat,getLinenumberFormat)
+MAKE_METHOD(WrapMode,wrapMode)
 
 data CTextEditor parent
 type TextEditor = CTextEditor TextDisplay

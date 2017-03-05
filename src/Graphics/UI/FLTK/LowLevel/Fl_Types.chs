@@ -126,11 +126,11 @@ import qualified Data.ByteString as B
     DragWord = DRAG_WORD,
     DragLine = DRAG_LINE
   };
-  enum WrapType {
-    WrapNone = WRAP_NONE,
-    WrapAtColumn = WRAP_AT_COLUMN,
-    WrapAtPixel = WRAP_AT_PIXEL,
-    WrapAtBounds = WRAP_AT_BOUNDS
+  enum WrapTypeFl {
+    WrapNoneFl = WRAP_NONE,
+    WrapAtColumnFl = WRAP_AT_COLUMN,
+    WrapAtPixelFl = WRAP_AT_PIXEL,
+    WrapAtBoundsFl = WRAP_AT_BOUNDS
   };
   enum PageFormat {
     A0 = 0,
@@ -238,7 +238,8 @@ allMenuItemFlags =
 {#enum CursorType {} deriving (Show, Eq) #}
 {#enum PositionType {} deriving (Show, Eq) #}
 {#enum DragType {} deriving (Show, Eq) #}
-{#enum WrapType {} deriving (Show, Eq) #}
+{#enum WrapTypeFl {} deriving (Show, Eq) #}
+data WrapType = WrapNone | WrapAtColumn ColumnNumber | WrapAtPixel PixelPosition | WrapAtBounds deriving (Eq, Show)
 {#enum PageFormat {} deriving (Show, Eq) #}
 {#enum PageLayout {} deriving (Show, Eq) #}
 {#enum TableRowSelectMode {} deriving (Show, Eq)  #}
@@ -335,6 +336,7 @@ data ByXY = ByXY ByX ByY deriving Show
 data Intersection = Contained | Partial deriving Show
 data Size = Size Width Height deriving (Eq, Show)
 newtype LineNumber = LineNumber Int deriving (Eq,Show,Ord)
+newtype ColumnNumber = ColumnNumber Int deriving (Eq, Show, Ord)
 newtype PixelPosition = PixelPosition Int deriving (Eq,Show,Ord)
 data KeyType = SpecialKeyType SpecialKey | NormalKeyType Char deriving (Show, Eq)
 data ShortcutKeySequence = ShortcutKeySequence [EventState] KeyType deriving Show
@@ -389,6 +391,9 @@ fromRectangle (Rectangle (Position
 
 toSize :: (Int, Int) -> Size
 toSize (width', height') = Size (Width width') (Height height')
+
+toPosition :: (Int,Int) -> Position
+toPosition (xPos', yPos') = Position (X xPos') (Y yPos')
 
 throwStackOnError :: IO a -> IO a
 throwStackOnError f =

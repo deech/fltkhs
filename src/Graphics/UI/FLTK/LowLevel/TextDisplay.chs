@@ -285,6 +285,16 @@ instance (impl ~ (T.Text ->  IO ())) => Op (SetLinenumberFormat ()) TextDisplay 
 {# fun linenumber_format as linenumberFormat' { id `Ptr ()' } -> `T.Text' unsafeFromCString #}
 instance (impl ~ ( IO T.Text)) => Op (GetLinenumberFormat ()) TextDisplay orig impl where
    runOp _ _ text_display = withRef text_display $ \text_displayPtr -> linenumberFormat' text_displayPtr
+{# fun Fl_Text_Display_wrap_mode as wrapMode' { id `Ptr ()', `CInt', `CInt'} -> `()' #}
+instance (impl ~ (WrapType -> IO ())) => Op (WrapMode ()) TextDisplay orig impl where
+  runOp _ _ textDisplay wt =
+    withRef textDisplay $ \textDisplayPtr ->
+      (case wt of
+        (WrapAtPixel (PixelPosition p')) -> wrapMode' textDisplayPtr ((fromIntegral . fromEnum) WrapAtPixelFl) (fromIntegral p')
+        (WrapAtColumn (ColumnNumber c')) -> wrapMode' textDisplayPtr ((fromIntegral . fromEnum) WrapAtColumnFl) (fromIntegral c')
+        WrapAtBounds -> wrapMode' textDisplayPtr ((fromIntegral . fromEnum) WrapAtBoundsFl) (fromIntegral (0 :: Int))
+        WrapNone -> wrapMode' textDisplayPtr ((fromIntegral . fromEnum) WrapNoneFl) (fromIntegral (0 :: Int))
+      )
 {# fun Fl_Text_Display_draw as draw'' { id `Ptr ()' } -> `()' #}
 instance (impl ~ (  IO ())) => Op (Draw ()) TextDisplay orig impl where
   runOp _ _ textDisplay = withRef textDisplay $ \textDisplayPtr -> draw'' textDisplayPtr
@@ -329,7 +339,6 @@ instance (impl ~ ( IO ())) => Op (ShowWidgetSuper ()) TextDisplay orig impl wher
 --  |
 --  v
 -- "Graphics.UI.FLTK.LowLevel.TextDisplay"
-
 -- @
 
 -- $functions
@@ -467,6 +476,8 @@ instance (impl ~ ( IO ())) => Op (ShowWidgetSuper ()) TextDisplay orig impl wher
 -- wordEnd :: 'Ref' 'TextDisplay' -> 'BufferOffset' -> 'IO' ('BufferOffset')
 --
 -- wordStart :: 'Ref' 'TextDisplay' -> 'BufferOffset' -> 'IO' ('BufferOffset')
+--
+-- wrapMode :: 'Ref' 'TextDisplay' -> 'WrapType' -> 'IO' ()
 --
 -- xToCol :: 'Ref' 'TextDisplay' -> 'Double' -> 'IO' ('Double')
 -- @
