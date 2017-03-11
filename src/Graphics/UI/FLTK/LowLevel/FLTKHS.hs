@@ -844,15 +844,19 @@ import Graphics.UI.FLTK.LowLevel.PNMImage
 --
 -- === Overriding C++ methods
 --
--- The binding API provides a /very/ limited form of inheritance by allowing the
--- user to provide Haskell implementations of certain key methods on a small set
--- of classes. Which methods and which classes were determined by original
--- author of this library based on a casual look at FLTK code in the wild and
--- what was required for porting the demoes. If there is a pressing need for
--- more methods or classes, please contact the maintainer.
+-- The binding API allows a limited but powerful form of "inheritance" allowing users to
+-- override certain key FLTK methods with Haskell functions. All GUI elements
+-- that derive from the C++ base class <http://www.fltk.org/doc-1.3/classFl__Widget.html Fl_Widget>
+-- and the Haskell analog <https://hackage.haskell.org/package/fltkhs-0.5.1.3/docs/Graphics-UI-FLTK-LowLevel-Widget.html Widget>
+-- now allow Haskell <https://hackage.haskell.org/package/fltkhs-0.5.1.3/docs/Graphics-UI-FLTK-LowLevel-Widget.html#g:2 functions> to be passed at
+-- widget construction time that give Haskell complete control on <https://hackage.haskell.org/package/fltkhs-0.5.1.3/docs/Graphics-UI-FLTK-LowLevel-Widget.html#v:widgetCustom drawing>,
+-- <https://hackage.haskell.org/package/fltkhs-0.5.1.3/docs/Graphics-UI-FLTK-LowLevel-Widget.html#t:CustomWidgetFuncs handling, resizing and other key functions>. This means that the Haskell user has
+-- complete control of look-and-feel and the event loop. The <https://github.com/deech/fltkhs-demos/blob/master/src/Examples/table-as-container.hs#L105 table> demos are
+-- an example of drawing in Haskell. An example of taking over the event loop is an FLTKHS <https://github.com/deech/fltkhs-reflex-host proof-of-concept> that <https://github.com/deech/fltkhs-reflex-host/blob/master/src/reflex-host.hs#L33 overrides> the FLTKHS event loop with the <https://hackage.haskell.org/package/reflex Reflex FRP> allowing
+-- native functional reactive programming. The sky is the limit!
 --
 -- When providing custom methods the object constructor is no longer
--- `<widgetName>New` but `<widgetName>Custom`, which, in addition the parameters
+-- `<widgetName>New` but `<widgetName>Custom`, which, in addition to the parameters
 -- taken by `<widgetName>New` also takes records of Haskell functions which are
 -- then passed to the C++ side.
 --
@@ -899,6 +903,7 @@ import Graphics.UI.FLTK.LowLevel.PNMImage
 -- function name suffixed with \"Super\". For instance, the user can provide a
 -- custom implementation of /handle/ on "Graphics.UI.FLTK.LowLevel.Window" via
 -- the constructor and every call to /handle/ invokes that implementation, but
+
 -- the user can also call /handleSuper/ to get at the default C++
 -- implementation. This comes in handy when the custom function is just setting
 -- up variables or logging and wants underlying implementation to take over at
