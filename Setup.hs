@@ -33,7 +33,7 @@ import qualified Distribution.Simple.LHC  as LHC
 import qualified Distribution.Simple.UHC  as UHC
 import qualified Distribution.Simple.PackageIndex as PackageIndex
 import Distribution.PackageDescription as PD
-import Distribution.InstalledPackageInfo (ldOptions, extraGHCiLibraries, showInstalledPackageInfo)
+import Distribution.InstalledPackageInfo (ldOptions, extraGHCiLibraries, showInstalledPackageInfo, libraryDynDirs, libraryDirs)
 import System.Environment (getEnv, setEnv)
 
 main :: IO ()
@@ -202,6 +202,7 @@ register pkg@PackageDescription { library = Just lib } lbi regFlags = do
            Windows -> installedPkgInfoRaw' { Distribution.InstalledPackageInfo.ldOptions = fmap replaceMingw (Distribution.InstalledPackageInfo.ldOptions installedPkgInfoRaw') }
            _ -> installedPkgInfoRaw'
     let installedPkgInfo = installedPkgInfoRaw {
+                                libraryDynDirs = (libraryDynDirs installedPkgInfoRaw) ++ (libraryDirs installedPkgInfoRaw),
                                 -- this is what this whole register code is all about
                                 extraGHCiLibraries =
                                   case buildOS of
