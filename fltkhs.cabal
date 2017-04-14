@@ -182,3 +182,15 @@ Executable fltkhs-buttons
     ghc-Options: "-optl-Wl,-lfltkc"
   if !os(darwin) && !os(windows)
     ghc-Options: -pgml g++ "-optl-Wl,--whole-archive" "-optl-Wl,-Bstatic" "-optl-Wl,-lfltkc" "-optl-Wl,-Bdynamic" "-optl-Wl,--no-whole-archive"
+
+Executable fltkhs-threads
+  Main-Is: threads.hs
+  Hs-Source-Dirs: src/Examples
+  Build-Depends:
+     base == 4.*,
+     fltkhs,
+     stm
+  default-language: Haskell2010
+  ghc-Options: -Wall -threaded -fcontext-stack=220
+  if !os(darwin)
+    ghc-Options: -pgml g++ "-optl-Wl,--whole-archive" "-optl-Wl,-Bstatic" "-optl-Wl,-lfltkc" "-optl-Wl,-Bdynamic" "-optl-Wl,--no-whole-archive"
