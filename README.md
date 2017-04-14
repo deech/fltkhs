@@ -1,6 +1,8 @@
 Fltkhs - A Haskell Binding to the FLTK GUI Library
 =============================================
 
+[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/deech/fltkhs?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 Fltkhs aims to be a complete Haskell binding to the [FLTK GUI library] [1].
 
 While the current recommended version of FLTK is 1.3.4, the previous version 1.3.3. is also supported since some Linux distributions haven't upgraded yet.
