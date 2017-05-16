@@ -1,6 +1,5 @@
 {-# LANGUAGE CPP #-}
 import Data.Maybe(fromJust, isJust, fromMaybe, maybeToList)
-import Distribution.Simple.Compiler
 import Distribution.Simple.LocalBuildInfo
 import Distribution.PackageDescription
 import Distribution.Simple
@@ -27,14 +26,11 @@ import qualified Distribution.ModuleName as ModuleName
 import Distribution.Simple.BuildPaths
 import System.Directory(getCurrentDirectory, getDirectoryContents, doesDirectoryExist)
 import System.FilePath ( (</>), (<.>), takeExtension, combine, takeBaseName, takeDirectory)
-import qualified Distribution.Simple.GHC  as GHC
-import qualified Distribution.Simple.JHC  as JHC
-import qualified Distribution.Simple.LHC  as LHC
-import qualified Distribution.Simple.UHC  as UHC
 import qualified Distribution.Simple.PackageIndex as PackageIndex
 import Distribution.PackageDescription as PD
 import Distribution.InstalledPackageInfo (ldOptions, extraGHCiLibraries, showInstalledPackageInfo, libraryDynDirs, libraryDirs)
 import System.Environment (getEnv, setEnv)
+import qualified Distribution.Simple.Program.HcPkg as HcPkg
 
 main :: IO ()
 main = defaultMainWithHooks autoconfUserHooks {
@@ -215,7 +211,8 @@ register pkg@PackageDescription { library = Just lib } lbi regFlags = do
      _ | modeGenerateRegFile   -> writeRegistrationFile installedPkgInfo
        | modeGenerateRegScript -> die "Generate Reg Script not supported"
        | otherwise             ->
-          registerPackage verbosity (compiler lbi) (withPrograms lbi) False {- multiinstance -} packageDbs installedPkgInfo
+          registerPackage verbosity (compiler lbi) (withPrograms lbi) packageDbs installedPkgInfo HcPkg.defaultRegisterOptions
+
   where
     modeGenerateRegFile = isJust (flagToMaybe (regGenPkgConf regFlags))
     regFile             = fromMaybe (display (packageId pkg) <.> "conf")
