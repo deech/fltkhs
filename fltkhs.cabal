@@ -1,5 +1,5 @@
 name : fltkhs
-version : 0.5.1.5
+version : 0.5.1.6
 synopsis : FLTK bindings
 description:
     Low level bindings for the FLTK GUI toolkit. For installation and quick start instruction please scroll all the way down to the README.
@@ -138,6 +138,11 @@ custom-setup
     Cabal < 1.25,
     filepath,
     directory
+
+Flag Bundled
+   Description: Use the bundled FLTK library.
+   Manual: True
+   Default: False
 
 Executable fltkhs-fluidtohs
   Main-Is: Main.hs

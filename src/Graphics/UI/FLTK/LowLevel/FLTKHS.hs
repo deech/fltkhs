@@ -14,20 +14,35 @@ module Graphics.UI.FLTK.LowLevel.FLTKHS
 
          -- * Installation
          --
-         -- ** Linux & *BSD
+         -- $InstallationSummary
+
+         -- ** Build With Bundled FLTK
+
+         -- *** Linux & *BSD
+         --
+         -- $InstallationLinuxBundled
+
+         -- *** Mac (Yosemite, El Capitan, Sierra)
+         --
+         -- $InstallationMacBundled
+
+         -- *** Windows(7,8,10)(64-bit)
+         --
+         -- $InstallationWindowsBundled
+
+         -- ** Compile FLTK Yourself
+
+         -- *** Linux & *BSD
          --
          -- $InstallationLinux
 
-         -- ** Mac (Yosemite & El Capitan)
+         -- *** Mac (Yosemite & El Capitan)
          --
          -- $InstallationMac
 
-         -- ** Installation (Windows 64-bit)
-         --
-         -- *** Windows 10
+         -- *** Windows(7,8,10)(64-bit)
          --
          -- $InstallationWindows10
-         --
 
          -- * Demos
          --
@@ -391,6 +406,59 @@ import Graphics.UI.FLTK.LowLevel.PNMImage
 -- @
 --
 
+-- $InstallationSummary
+-- There are two ways to install FLTKHS, building with the bundled FLTK GUI library, or compiling and installing FLTK from scratch yourself. The bundled way is
+-- by far the easiest on all platforms. It is completely self-contained, you don't need any sudo access to your system.
+--
+-- $InstallationLinuxBundled
+--  The steps are:
+--
+-- - Make sure to have OpenGL installed
+-- - Ensure that 'make', 'autoconf' and 'autoheader' are available on your system
+-- - Download & install <http://docs.haskellstack.org/en/stable/README/#how-to-install Stack>
+-- - Download & install the <https://github.com/deech/fltkhs-hello-world/archive/master.tar.gz FLTKHS hello world skeleton>
+-- - Verify the install by running `fltkhs-hello-world`
+--
+-- == Download & Install Stack
+-- Pick the <http://docs.haskellstack.org/en/stable/README/#how-to-install Stack installer> that matches your distribution and install according the instructions.
+--
+-- == Download & Install the FLTKHS Hello World Skeleton
+-- === Downloading Without Git
+-- If 'git' is not installed download the latest version of the fltkhs-hello-world application skeleton from <https://github.com/deech/fltkhs-hello-world/archive/master.tar.gz here>
+--
+--
+-- Extract and rename the archive:
+--
+-- @
+-- > tar -zxvf fltkhs-hello-world-master.tar.gz
+-- > mv fltkhs-hello-world-master fltkhs-hello-world
+-- @
+--
+-- === Downloading With Git
+-- If 'git' is available:
+--
+-- @
+-- > git clone http://github.com/deech/fltkhs-hello-world
+-- @
+--
+-- === Building
+-- Build it with Stack:
+--
+-- @
+-- > cd fltkhs-hello-world
+-- > stack setup
+-- > stack install --flag fltkhs:bundled
+-- @
+--
+-- == Verify The Install
+-- Test that the build completed successfully by invoking incredibly unimpressive
+--
+-- @
+-- > stack exec fltkhs-hello-world
+-- @
+--
+--
+--
 -- $InstallationLinux
 --  The steps are:
 --
@@ -437,17 +505,11 @@ import Graphics.UI.FLTK.LowLevel.PNMImage
 -- === Downloading Without Git
 -- If 'git' is not installed download the latest version of the fltkhs-hello-world application skeleton from <https://github.com/deech/fltkhs-hello-world/archive/master.tar.gz here>
 --
--- Rename it:
---
--- @
--- > mv fltkhs-hello-world-master.tar.gz fltkhs-hello-world.tar.gz
--- @
---
---
 -- Extract and enter the archive:
 --
 -- @
--- > tar -zxvf fltkhs-hello-world.tar.gz
+-- > tar -zxvf fltkhs-hello-world-master.tar.gz
+-- > mv fltkhs-hello-world-master fltkhs-hello-world
 -- @
 --
 -- === Downloading With Git
@@ -479,6 +541,65 @@ import Graphics.UI.FLTK.LowLevel.PNMImage
 -- > stack exec fltkhs-hello-world
 -- @
 --
+
+-- $InstallationMacBundled
+-- Unfortunately Mac version older than El Capitan and Yosemite are not supported.
+--
+-- The general steps are:
+--
+-- - Brew Install Stack
+-- - Download & install the <https://github.com/deech/fltkhs-hello-world/archive/master.tar.gz FLTKHS hello world skeleton>
+-- - Verify the install by running `fltkhs-hello-world`
+--
+-- == Brew Install Stack
+-- This should be as simple as:
+--
+-- @
+-- > brew install haskell-stack
+-- @
+--
+-- == Brew Install Autoconf
+-- @
+-- > brew install autoconf
+-- @
+--
+--
+-- == Download & Install the FLTKHS Hello World Skeleton
+-- === Downloading Without Git
+-- If 'git' is not installed download the latest version of the fltkhs-hello-world application skeleton from <https://github.com/deech/fltkhs-hello-world/archive/master.tar.gz here>
+--
+-- Extract the archive:
+--
+-- @
+-- > cd \/Users\/\<username\>/Downloads\/
+-- > tar -zxvf fltkhs-hello-world-master.tar.gz
+-- > mv fltkhs-hello-world-master fltkhs-hello-world
+-- @
+--
+-- === Downloading With Git
+-- If 'git' is available:
+--
+-- @
+-- > git clone http://github.com/deech/fltkhs-hello-world
+-- @
+--
+-- === Building
+-- Build it with Stack:
+--
+-- @
+-- > cd fltkhs-hello-world
+-- > stack setup
+-- > stack install --flag fltkhs:bundled
+-- @
+--
+-- == Verify The Install
+-- Test that the build completed successfully by invoking incredibly unimpressive
+--
+-- @
+-- > stack exec fltkhs-hello-world
+-- @
+--
+
 
 -- $InstallationMac
 -- Unfortunately Mac version older than El Capitan and Yosemite are not supported.
@@ -521,18 +642,13 @@ import Graphics.UI.FLTK.LowLevel.PNMImage
 -- === Downloading Without Git
 -- If 'git' is not installed download the latest version of the fltkhs-hello-world application skeleton from <https://github.com/deech/fltkhs-hello-world/archive/master.tar.gz here>
 --
--- Rename it:
---
--- @
--- > cd \/Users\/\<username\>/Downloads\/
--- > mv fltkhs-hello-world-master.tar.gz fltkhs-hello-world.tar.gz
--- @
---
 --
 -- Extract the archive:
 --
 -- @
--- > tar -zxvf fltkhs-hello-world.tar.gz
+-- > cd \/Users\/\<username\>/Downloads\/
+-- > tar -zxvf fltkhs-hello-world-master.tar.gz
+-- > mv fltkhs-hello-world-master fltkhs-hello-world
 -- @
 --
 -- === Downloading With Git
@@ -557,6 +673,116 @@ import Graphics.UI.FLTK.LowLevel.PNMImage
 -- @
 -- > stack exec fltkhs-hello-world
 -- @
+--
+
+-- $InstallationWindowsBundled
+--
+-- This install guide has been tested on a Windows 7, 8 and 10.
+--
+-- == Install Stack
+-- Downloading and following the default instructions for the standard <https://www.stackage.org/stack/windows-x86_64-installer Windows installer> should be enough.
+-- If the install succeeded 'stack' should on the PATH. To test run 'cmd.exe' and do:
+--
+-- @
+-- > stack --version
+-- @
+--
+-- Now downloading and setup the latest GHC via 'stack':
+--
+-- @
+-- > stack setup
+-- @
+--
+-- From this point on we can live in the MSYS2 shell that comes with Stack. It is a far superior environment to the command prompt. To open the MSYS2 shell do:
+--
+-- @
+-- > stack exec mintty
+-- @
+--
+-- == Install Necessary Utilities via Pacman
+-- In the MSYS2 shell prompt update and upgrade the MSYS2 installation:
+--
+-- @
+-- > pacman -Syy
+-- > pacmay -Syu
+-- @
+--
+-- ... install packages for download and extracting packages:
+--
+-- @
+-- > pacman -S wget
+-- > pacman -S tar
+-- > pacman -S unzip
+-- > pacman -S zip
+-- > pacman -S man
+-- @
+--
+-- ... and building C/C++ programs:
+--
+-- @
+-- > pacman -S autoconf
+-- > pacman -S make
+-- > pacman -S automake
+-- @
+--
+--
+-- == Download And Install The FLTKHS Hello World Skeleton
+-- The <https://github.com/deech/fltkhs-hello-world fltkhs-hello-world> skeleton is a simple Hello World GUI which provides the base structure for FLTKHS applications. Please see the 'Demos' section of this document for examples of apps that show off more complex uses of the API.
+--
+-- @
+-- > wget --no-check-certificate https://github.com/deech/fltkhs-hello-world/archive/master.zip
+-- > unzip master.zip
+-- > mv fltkhs-hello-world-master fltkhs-hello-world
+-- > cd fltkhs-hello-world
+-- @
+--
+-- And install with:
+--
+-- @
+-- > stack install --flag fltkhs:bundled
+-- @
+--
+-- To test the installation:
+--
+-- @
+-- > stack exec fltkhs-hello-world
+-- @
+--
+--
+-- == Packaging A Windows Executable
+--
+-- While the 'fltkhs-hello-world' application is mostly stand-alone the MSYS2 environment bundled with 'stack' seems to require 3 runtime DLLs. The DLLs are bundled with 'stack' so it's easy to zip them up with the executable and deploy. The required DLLs are: 'libstdc++-6.dll', 'libgcc_s_seh-1.dll' and 'libwinpthread-1.dll'.
+--
+--
+--
+-- First create the directory that will contain the executable and DLLs:
+--
+-- @
+-- > mkdir \/tmp\/fltkhs-hello-world
+-- @
+--
+-- Copy the executable over to that directory:
+--
+-- @
+-- > cp `which fltkhs-hello-world` \/tmp\/fltkhs-hello-world
+-- @
+--
+-- Copy over the DLLs. They are usually located in '../<ghc-version>/mingw/bin' but to make the process slightly less fragile we specify the directory relative to whatever 'ghc' is currently in 'stack' 's context:
+--
+-- @
+-- > cp `dirname $(which ghc)`..\/mingw\/bin\/libstdc++-6.dll \/tmp\/fltkhs-hello-world
+-- > cp `dirname $(which ghc)`..\/mingw\/bin\/libgcc_s_seh-1.dll \/tmp\/fltkhs-hello-world
+-- > cp `dirname $(which ghc)`..\/mingw\/bin\/libwinpthread-1.dll \/tmp\/fltkhs-hello-world
+-- @
+--
+-- Zip up archive:
+--
+-- @
+-- > cd /tmp
+-- > zip fltkhs-hello-world.zip fltkhs-hello-world/*
+-- @
+--
+-- And that's it! Any Windows 10 user should now be able to extract 'fltkhs-hello-world.zip' and run 'fltkhs-hello-world.exe'.
 --
 
 -- $InstallationWindows10
