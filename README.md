@@ -1,9 +1,7 @@
 Fltkhs - A Haskell Binding to the FLTK GUI Library
 =============================================
 
-Fltkhs aims to be a complete Haskell binding to the [FLTK GUI library] [1].
-
-While the current recommended version of FLTK is 1.3.4, the previous version 1.3.3. is also supported since some Linux distributions haven't upgraded yet.
+Fltkhs aims to be a complete Haskell binding to the [FLTK GUI library](http://www.fltk.org/index.php). The [main documentation](https://hackage.haskell.org/package/fltkhs-0.5.1.7/docs/Graphics-UI-FLTK-LowLevel-FLTKHS.html) has more detail on motivation and what this library hopes to achieve.
 
 Quick Install
 -------------
@@ -20,6 +18,8 @@ The fastest and easiest way of installing FLTKHS is to use the bundled FLTK libr
 ```
 
 And that's it!
+
+On [Windows](http://hackage.haskell.org/package/fltkhs-0.5.1.6/docs/Graphics-UI-FLTK-LowLevel-FLTKHS.html#g:8) it is only slightly more complicated because packages like `autotools` and `tar` are not available by default.
 
 The second fastest way is to compile FLTK from source yourself. For instructions please see the documentation for [Linux](http://hackage.haskell.org/package/fltkhs/docs/Graphics-UI-FLTK-LowLevel-FLTKHS.html#g:10), [OSX](http://hackage.haskell.org/package/fltkhs/docs/Graphics-UI-FLTK-LowLevel-FLTKHS.html#g:11), [Windows](http://hackage.haskell.org/package/fltkhs/docs/Graphics-UI-FLTK-LowLevel-FLTKHS.html#g:12).
 
