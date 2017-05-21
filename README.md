@@ -8,37 +8,24 @@ While the current recommended version of FLTK is 1.3.4, the previous version 1.3
 Quick Install
 -------------
 ### Linux, *BSD and OSX
-Installing FLTK from source (vs. package mangers) is recommended. Package managers sometimes put headers and libraries in unexpected places
-causing `fltkhs` compilation failures. On OSX the `brew` package for the current stable version of FLTK is broken. Furthermore some Linux distributions
-only ship the shared libraries which means that executables are less portable. Compiling from source is pretty quick and painless and fixes these problems.
-
-Install FLTK-1.3.4-1 from source:
-
-```
-  > wget http://fltk.org/pub/fltk/1.3.4/fltk-1.3.4-1-source.tar.gz
-  > tar -zxf fltk-1.3.4-1-source.tar.gz
-  > cd fltk-1.3.4-1
-  > ./configure --enable-gl --enable-shared --enable-localjpeg --enable-localzlib --enable-localpng
-  > make
-  > sudo make install
-  > fltk-config --version
-  1.3.4-1
-```
-
-Build the FLTKHS skeleton project:
+The fastest and easiest way of installing FLTKHS is to use the bundled FLTK library.
 
 ```
   > brew install autoconf # Only on OSX
   > git clone http://github.com/deech/fltkhs-hello-world
   > cd fltkhs-hello-world
-  > stack install
+  > stack install --flag fltkhs:bundled
   # About 6-8 minutes passes ...
   > stack exec fltkhs-hello-world
 ```
 
+And that's it!
+
+The second fastest way is to compile FLTK from source yourself. For instructions please see the documentation for [Linux](http://hackage.haskell.org/package/fltkhs/docs/Graphics-UI-FLTK-LowLevel-FLTKHS.html#g:10), [OSX](http://hackage.haskell.org/package/fltkhs/docs/Graphics-UI-FLTK-LowLevel-FLTKHS.html#g:11), [Windows](http://hackage.haskell.org/package/fltkhs/docs/Graphics-UI-FLTK-LowLevel-FLTKHS.html#g:12).
+
 ### Windows
 
-Please see the [detailed Windows installation instructions](http://hackage.haskell.org/package/fltkhs/docs/Graphics-UI-FLTK-LowLevel-FLTKHS.html#g:7)
+Please see the [detailed Windows installation instructions](http://hackage.haskell.org/package/fltkhs/docs/Graphics-UI-FLTK-LowLevel-FLTKHS.html#g:8)
 
 Screenshots
 -----------
