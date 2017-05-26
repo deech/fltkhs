@@ -457,6 +457,8 @@ import Graphics.UI.FLTK.LowLevel.PNMImage
 -- > stack exec fltkhs-hello-world
 -- @
 --
+-- You will be greeted by an incredibly boring little window with a button that says "Hello world",
+-- if you click it, it will change to "Goodbye world."
 --
 --
 -- $InstallationLinux
@@ -541,6 +543,8 @@ import Graphics.UI.FLTK.LowLevel.PNMImage
 -- > stack exec fltkhs-hello-world
 -- @
 --
+-- You will be greeted by an incredibly boring little window with a button that says "Hello world",
+-- if you click it, it will change to "Goodbye world."
 
 -- $InstallationMacBundled
 -- Unfortunately Mac version older than El Capitan and Yosemite are not supported.
@@ -599,7 +603,8 @@ import Graphics.UI.FLTK.LowLevel.PNMImage
 -- > stack exec fltkhs-hello-world
 -- @
 --
-
+-- You will be greeted by an incredibly boring little window with a button that says "Hello world",
+-- if you click it, it will change to "Goodbye world."
 
 -- $InstallationMac
 -- Unfortunately Mac version older than El Capitan and Yosemite are not supported.
@@ -674,6 +679,8 @@ import Graphics.UI.FLTK.LowLevel.PNMImage
 -- > stack exec fltkhs-hello-world
 -- @
 --
+-- You will be greeted by an incredibly boring little window with a button that says "Hello world",
+-- if you click it, it will change to "Goodbye world."
 
 -- $InstallationWindowsBundled
 --
@@ -704,7 +711,7 @@ import Graphics.UI.FLTK.LowLevel.PNMImage
 --
 -- @
 -- > pacman -Syy
--- > pacmay -Syu
+-- > pacman -Syu
 -- @
 --
 -- ... install packages for download and extracting packages:
@@ -748,6 +755,8 @@ import Graphics.UI.FLTK.LowLevel.PNMImage
 -- > stack exec fltkhs-hello-world
 -- @
 --
+-- You will be greeted by an incredibly boring little window with a button that says "Hello world",
+-- if you click it, it will change to "Goodbye world."
 --
 -- == Packaging A Windows Executable
 --
@@ -887,6 +896,8 @@ import Graphics.UI.FLTK.LowLevel.PNMImage
 -- > stack exec fltkhs-hello-world
 -- @
 --
+-- You will be greeted by an incredibly boring little window with a button that says "Hello world",
+-- if you click it, it will change to "Goodbye world."
 --
 -- == Packaging A Windows Executable
 --
