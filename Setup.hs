@@ -26,7 +26,7 @@ import System.IO.Error
 import qualified Distribution.Simple.Program.Ar    as Ar
 import qualified Distribution.ModuleName as ModuleName
 import Distribution.Simple.BuildPaths
-import System.Directory(getCurrentDirectory, getDirectoryContents, withCurrentDirectory, doesDirectoryExist, makeAbsolute)
+import System.Directory(getCurrentDirectory, getDirectoryContents, withCurrentDirectory, doesDirectoryExist, makeAbsolute, doesFileExist)
 import System.FilePath ( (</>), (<.>), takeExtension, combine, takeBaseName, takeDirectory)
 import qualified Distribution.Simple.GHC  as GHC
 import qualified Distribution.Simple.JHC  as JHC
@@ -60,9 +60,7 @@ buildFltk :: IO FilePath -> IO ()
 buildFltk prefix = do
   rawSystemExit normal "tar" ["-zxf", fltkSource ++ "-source.tar.gz"]
   projectRoot <- getCurrentDirectory
-  prefix' <- case buildOS of
-               Windows -> prefix >>= cygpath "-u"
-               _ -> prefix
+  prefix' <- prefix
   let fltkDir = projectRoot </>  fltkSource
       fltkFlags = [ "--enable-gl",
                     "--enable-shared",
@@ -89,7 +87,13 @@ buildFltk prefix = do
 myPreConf :: Args -> ConfigFlags -> IO HookedBuildInfo
 myPreConf args flags = do
    if (bundledBuild flags)
-   then putStrLn "Building bundled FLTK" >> buildFltk (bundlePrefix flags "")
+   then do
+     putStrLn "Building bundled FLTK"
+     prefix <- bundlePrefix flags ""
+     fltkBuilt <- doesDirectoryExist prefix
+     if (not fltkBuilt)
+     then buildFltk (case buildOS of { Windows -> cygpath "-u" prefix; _ -> return prefix;})
+     else putStrLn "FLTK already built."
    else return ()
    putStrLn "Running autoconf ..."
    case buildOS of
@@ -241,10 +245,18 @@ copyCBindingsAndBundledExecutables pkg_descr lbi uhs flags = do
       projectRoot <- getCurrentDirectory
       let binPref = bindir installDirs
       let fltkDir = projectRoot </>  fltkSource
-      rawSystemExit (fromFlag $ copyVerbosity flags) "cp"
-        [(executableDir </> "fluid"), binPref]
-      rawSystemExit (fromFlag $ copyVerbosity flags) "cp"
-        [(executableDir </> "fltk-config"), binPref]
+      fluidExists <- doesFileExist (binPref </> "fluid")
+      fltkConfigExists <- doesFileExist (binPref </> "fltk-config")
+      if (not fluidExists)
+      then rawSystemExit
+               (fromFlag $ copyVerbosity flags) "cp"
+               [(executableDir </> "fluid"), binPref]
+      else return ()
+      if (not fltkConfigExists)
+      then rawSystemExit
+               (fromFlag $ copyVerbosity flags) "cp"
+               [(executableDir </> "fltk-config"), binPref]
+      else return ()
     else return ()
 
 myCleanHook pd x uh cf = do
