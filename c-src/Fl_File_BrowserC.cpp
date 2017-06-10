@@ -595,6 +595,24 @@ EXPORT {
   FL_EXPORT_C(void, Fl_File_Browser_hide_super)(fl_File_Browser o){
     (static_cast<Fl_DerivedFile_Browser*>(o))->hide_super();
   }
+  FL_EXPORT_C(fl_File_Browser, Fl_File_Browser_New_WithLabel)(int x, int y, int w, int h, const char* label){
+    fl_Widget_Virtual_Funcs* fs = Fl_Widget_default_virtual_funcs();
+    Fl_DerivedFile_Browser* b = new Fl_DerivedFile_Browser(x,y,w,h,label,fs);
+    return (fl_File_Browser)b;
+  }
+  FL_EXPORT_C(fl_File_Browser, Fl_File_Browser_New)(int x, int y, int w, int h){
+    fl_Widget_Virtual_Funcs* fs = Fl_Widget_default_virtual_funcs();
+    Fl_DerivedFile_Browser* b = new Fl_DerivedFile_Browser(x,y,w,h,fs);
+    return (fl_File_Browser)b;
+  }
+  FL_EXPORT_C(fl_File_Browser,    Fl_OverriddenFile_Browser_New)(int X, int Y, int W, int H,fl_Widget_Virtual_Funcs* fs){
+    Fl_DerivedFile_Browser* b = new Fl_DerivedFile_Browser(X,Y,W,H,fs);
+    return (fl_File_Browser)b;
+  }
+  FL_EXPORT_C(fl_File_Browser,    Fl_OverriddenFile_Browser_New_WithLabel)(int X, int Y, int W, int H, const char* label, fl_Widget_Virtual_Funcs* fs){
+    Fl_DerivedFile_Browser* b = new Fl_DerivedFile_Browser(X,Y,W,H,label,fs);
+    return (fl_File_Browser)b;
+  }
 #ifdef __cplusplus
 }
 #endif

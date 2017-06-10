@@ -1,8 +1,7 @@
 name : fltkhs
-version : 0.5.2.4
+version : 0.5.2.5
 synopsis : FLTK bindings
-description:
-    Low level bindings for the FLTK GUI toolkit. For installation and quick start instruction please scroll all the way down to the README.
+description: Low level bindings for the FLTK GUI toolkit. For installation and quick start instruction please scroll all the way down to the README.
 license : MIT
 license-file : LICENSE
 tested-with: GHC >=7.8.1
@@ -76,7 +75,6 @@ library
                    Graphics.UI.FLTK.LowLevel.ValueSlider
                    Graphics.UI.FLTK.LowLevel.ValueInput
                    Graphics.UI.FLTK.LowLevel.ValueOutput
-                   Graphics.UI.FLTK.LowLevel.Timer
                    Graphics.UI.FLTK.LowLevel.Progress
                    Graphics.UI.FLTK.LowLevel.Positioner
                    Graphics.UI.FLTK.LowLevel.Input

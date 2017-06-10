@@ -128,7 +128,6 @@ module Graphics.UI.FLTK.LowLevel.FLTKHS
          module Graphics.UI.FLTK.LowLevel.Tabs,
          module Graphics.UI.FLTK.LowLevel.Table,
          module Graphics.UI.FLTK.LowLevel.TableRow,
-         module Graphics.UI.FLTK.LowLevel.Timer,
          module Graphics.UI.FLTK.LowLevel.ToggleButton,
          module Graphics.UI.FLTK.LowLevel.Tree,
          module Graphics.UI.FLTK.LowLevel.TreeItem,
@@ -215,7 +214,6 @@ import Graphics.UI.FLTK.LowLevel.Scrollbar
 import Graphics.UI.FLTK.LowLevel.ValueSlider
 import Graphics.UI.FLTK.LowLevel.ValueInput
 import Graphics.UI.FLTK.LowLevel.ValueOutput
-import Graphics.UI.FLTK.LowLevel.Timer
 import Graphics.UI.FLTK.LowLevel.Progress
 import Graphics.UI.FLTK.LowLevel.Positioner
 import Graphics.UI.FLTK.LowLevel.Input
@@ -264,7 +262,7 @@ import Graphics.UI.FLTK.LowLevel.PNMImage
 -- $Motivation
 -- This library aims to make it easy for users to build native apps that work portably across platforms.
 --
--- The original author is also very interested the renewed interested in user
+-- I'm also very interested the renewed interested in user
 -- interfaces in the programming community, whether the various kinds of
 -- functional reactive programming, meta-object protocol UI's, or something like
 -- React.js.
@@ -279,10 +277,10 @@ import Graphics.UI.FLTK.LowLevel.PNMImage
 -- security issues.
 --
 -- == Why FLTK?
--- - The original author chose FLTK because it was small enough that one person could bind the whole thing in an initial
+-- - I chose FLTK because it was small enough that one person could bind the whole thing in an initial
 -- pass. Larger toolkits like QT, although way slicker, would require many man-years of effort.
 -- - FLTK is quite featureful
--- - FLTK is mature and maintained, the project is about 20 years old and author has had good experiences with the community
+-- - FLTK is mature and maintained, the project is about 20 years old and I have had good experiences with the community
 -- - FLTK comes with a simple but quite useful GUI builder, <https://en.wikipedia.org/wiki/FLUID Fluid> which is now able to
 --   generate Haskell code. See the `Fluid Support` section for more details.
 --
@@ -290,7 +288,7 @@ import Graphics.UI.FLTK.LowLevel.PNMImage
 -- These are all great projects and produce really nice UI's, but they all fail
 -- at least one of criterion listed under the __Goals__ section below.
 --
--- To the author's knowledge, as of the first quarter of 2016, no other package
+-- To my knowledge, as of the second quarter of 2017, no other package
 -- in the Haskell ecosystem meets all those constraints.
 --
 
@@ -322,7 +320,7 @@ import Graphics.UI.FLTK.LowLevel.PNMImage
 -- the 'fltkhs-fluidtohs' utility to automatically convert any Fluid in 'src'
 -- directory into a Haskell module of the same name during the preprocess step.
 -- This means using Fluid in a FLTKHS project is as simple as creating a Fluid
--- interface and running 'cabal build' or 'cabal install'.
+-- interface and running 'stack build --flag fltkhs:bundled' or 'stack install --flag fltkhs:bundled'.
 --
 -- Additionally the <https://github.com/deech/fltkhs-fluid-demos fltkhs-fluid-demos> package
 -- comes with a number of demos that show off how Fluid integrates with FLTKS.
@@ -346,7 +344,7 @@ import Graphics.UI.FLTK.LowLevel.PNMImage
 -- "theme file" that applies uniformly to all widgets in the app.
 --
 -- == Compile Times
--- Currently a dense app (~ 160-180 widgets crammed into the same window) takes
+-- Currently a dense app with ~ 160-180 widgets crammed into the same window takes
 -- 9-12 seconds to compile with GHC 7.10.3 on a 32GB quad-core machine.
 -- The good news is that this is a <https://ghc.haskell.org/trac/ghc/ticket/12506 known issue>.
 --
@@ -947,21 +945,17 @@ import Graphics.UI.FLTK.LowLevel.PNMImage
 
 -- $GettingStarted
 --
--- It is assumed that by this point the user has successfully installed this
--- library and demos in <http://github.com/deech/fltkhs-demos fltkhs-demos> (see
--- above).
+-- By this point, I assume that you have successfully installed <https://github.com/deech/fltkhs-hello-world hello world>
+-- (see above) or one of the <https://github.com/deech/fltkhs-demos demo> <https://github.com/deech/fltkhs-fluid-demos packages>.
 --
 --
 -- = Quick Start
--- The quickest way to get started is to the download the
--- <http://github.com/deech/fltkhs-hello-world FLTKHS project skeleton>. It is a
--- simple `hello-world` program that shows the basics of widget creation and
--- callbacks. The project's Cabal file comes pre-configured with the options
--- necessary to produce a statically-linked executable so a simple 'cabal
--- configure && cabal build' should result in an 'fltkhs-hello-world' executable
--- in the 'dist' directory.
+-- The quickest way to get started is to look at the source for the
+-- <http://github.com/deech/fltkhs-hello-world FLTKHS project skeleton>. Though it is a
+-- simple app it shows the basics of widget creation and
+-- callbacks.
 --
--- Other demos that ship with this package show more complicated usage of the API.
+-- Other <https://github.com/deech/fltkhs-demos demo> <https://github.com/deech/fltkhs-fluid-demos packages> show more complicated usage of the API.
 --
 -- Since the API is a low-level binding, code using it takes on the imperative
 -- style of the underlying toolkit. Fortunately it should look pretty familiar
@@ -974,7 +968,7 @@ import Graphics.UI.FLTK.LowLevel.PNMImage
 -- = Guide to the Haddock Docs
 --
 -- Convenient access to the underlying C++ is achieved using typeclasses and
--- type-level programming to emulate classes and subclasses. This approach makes
+-- type-level programming to emulate OO classes and multiple dispatch. This approach makes
 -- Haddock very unhappy and the generated documentation is frequently unhelpful.
 -- For instance, newcomers to this library are urged not to look at
 -- "Graphics.UI.FLTK.LowLevel.Dispatch" or
@@ -1017,7 +1011,7 @@ import Graphics.UI.FLTK.LowLevel.PNMImage
 -- Unfortunately to see this more helpful type signature the poor reader has to
 -- navigate to the corresponding widget's module, find the __Functions__ header
 -- and scroll down to the desired function. Haddock, unfortunately, does not
--- support anchors that link to a named point in the page. The author is /very/
+-- support anchors that link to a named point in the page. I'm /very/
 -- open to ideas on how to make this easier.
 --
 -- Carrying on the previous example from the __Widget Creation__ section, the
@@ -1089,7 +1083,8 @@ import Graphics.UI.FLTK.LowLevel.PNMImage
 -- widget construction time that give Haskell complete control on <https://hackage.haskell.org/package/fltkhs-0.5.1.3/docs/Graphics-UI-FLTK-LowLevel-Widget.html#v:widgetCustom drawing>,
 -- <https://hackage.haskell.org/package/fltkhs-0.5.1.3/docs/Graphics-UI-FLTK-LowLevel-Widget.html#t:CustomWidgetFuncs handling, resizing and other key functions>. This means that the Haskell user has
 -- complete control of look-and-feel and the event loop. The <https://github.com/deech/fltkhs-demos/blob/master/src/Examples/table-as-container.hs#L105 table> demos are
--- an example of drawing in Haskell. An example of taking over the event loop is an FLTKHS <https://github.com/deech/fltkhs-reflex-host proof-of-concept> that <https://github.com/deech/fltkhs-reflex-host/blob/master/src/reflex-host.hs#L33 overrides> the FLTKHS event loop with the <https://hackage.haskell.org/package/reflex Reflex FRP> allowing
+-- an example of drawing in Haskell. An example of taking over the event loop is an FLTKHS <https://github.com/deech/fltkhs-reflex-host proof-of-concept> that <https://github.com/deech/fltkhs-reflex-host/blob/master/src/reflex-host.hs#L33 overrides>
+-- the FLTKHS event loop with the <https://hackage.haskell.org/package/reflex Reflex FRP> allowing
 -- native functional reactive programming. The sky is the limit!
 --
 -- When providing custom methods the object constructor is no longer
@@ -1140,7 +1135,6 @@ import Graphics.UI.FLTK.LowLevel.PNMImage
 -- function name suffixed with \"Super\". For instance, the user can provide a
 -- custom implementation of /handle/ on "Graphics.UI.FLTK.LowLevel.Window" via
 -- the constructor and every call to /handle/ invokes that implementation, but
-
 -- the user can also call /handleSuper/ to get at the default C++
 -- implementation. This comes in handy when the custom function is just setting
 -- up variables or logging and wants underlying implementation to take over at
@@ -1148,11 +1142,11 @@ import Graphics.UI.FLTK.LowLevel.PNMImage
 --
 -- __Warning__: since calls to the default implementation of the function,
 -- /handleSuper/, for example, are available to the widget they are
--- automatically available to all subclasses of the widget. The author
--- acknowledges this is a confusing aspect of the library's design but hopes the
+-- automatically available to all subclasses of the widget. I
+-- acknowledge this is a confusing aspect of the library's design but hopes the
 -- benefit of being able to get at the default implementation out-weighs the
--- trap the user might fall into. If this becomes a pervasive problem the author
--- is open to removing this functionality.
+-- trap the user might fall into. If this becomes a pervasive problem I'm
+-- open to removing this functionality.
 --
 
 -- $Compilation
@@ -1167,7 +1161,7 @@ import Graphics.UI.FLTK.LowLevel.PNMImage
 -- longer to compile. To further emphasize, there does not appear to be any
 -- runtime performance issues. This is only a compile time problem.
 --
--- To preserve the user's and the author's sanity a flag `fastCompile` has been
+-- To preserve the user's and my sanity a flag `fastCompile` has been
 -- introduced to the <https://github.com/deech/fltkhs-demos fltkhs-demos> and
 -- to the <https://github.com/deech/fltkhs-fluid-demos fltkhs-fluid-demos>.
 -- This flag which tells the compiler to skip the specialising step when
@@ -1179,7 +1173,7 @@ import Graphics.UI.FLTK.LowLevel.PNMImage
 -- Stack to ignore it during the `build` step:
 --
 -- @
--- > stack build --flag fltkhs-demos:-fastCompile
+-- > stack build --flag fltkhs:bundled --flag fltkhs-demos:-fastCompile
 -- @
 --
 -- In the <https://github.com/deech/fltkhs-hello-world fltkhs> and the
@@ -1189,20 +1183,21 @@ import Graphics.UI.FLTK.LowLevel.PNMImage
 -- Stack to enable it during the `configure` step:
 --
 -- @
--- > stack build --flag fltkhs-hello-world:fastCompile
+-- > stack build --flag fltkhs:bundled --flag fltkhs-hello-world:fastCompile
 -- @
 --
 -- =File Layout
 -- @
 -- Root
---   - c-src            -- The C bindings
---   - c-examples       -- demos written using the C bindings (not installed)
+--   - c-src                 -- The C bindings
+--   - c-examples            -- demos written using the C bindings (not installed)
+--   - fltk-<version>.tar.gz -- The bundled FLTK library
 --   - src
---     - TestPrograms   -- Haskell test programs
---     - Fluid          -- The Fluid file to Haskell conversion utility
+--     - TestPrograms        -- Haskell test programs
+--     - Fluid               -- The Fluid file to Haskell conversion utility
 --     - Graphics
 --       - UI
 --         - FLTK
---           - LowLevel -- Haskell bindings
---   - scripts          -- various helper scripts (probably not interesting to anyone but the original author)
+--           - LowLevel      -- Haskell bindings
+--   - scripts               -- various helper scripts (probably not interesting to anyone but myself)
 -- @
