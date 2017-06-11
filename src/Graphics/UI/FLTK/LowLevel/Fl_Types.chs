@@ -445,12 +445,10 @@ withRef (Ref fptr) f =
 
 isNull :: Ref a -> IO Bool
 isNull (Ref fptr) =
-  withForeignPtr fptr $
+  withForeignPtr fptr
    (\ptrToRefPtr -> do
         refPtr <- peek ptrToRefPtr
-        if (refPtr == nullPtr)
-          then return True
-          else return False
+        return (refPtr == nullPtr)
    )
 
 unsafeRefToPtr :: Ref a -> IO (Ptr ())

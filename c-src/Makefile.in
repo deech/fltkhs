@@ -6,7 +6,6 @@ CXXSTATIC = $(CXX) -static
 CPPFILES= \
 	Fl_Menu_ButtonC.cpp \
 	Fl_PositionerC.cpp \
-	Fl_TimerC.cpp \
 	Fl_Value_OutputC.cpp \
 	Fl_Value_SliderC.cpp \
 	Fl_ScrollbarC.cpp \
