@@ -1,7 +1,7 @@
 Fltkhs - A Haskell Binding to the FLTK GUI Library
 =============================================
 
-Fltkhs aims to be a complete Haskell binding to the [FLTK GUI library](http://www.fltk.org/index.php). The [main documentation](https://hackage.haskell.org/package/fltkhs-0.5.1.7/docs/Graphics-UI-FLTK-LowLevel-FLTKHS.html) has more detail on motivation and what this library hopes to achieve.
+Fltkhs aims to be a complete Haskell binding to the [FLTK GUI library][1]. The [main documentation][3]  has more detail on motivation and what this library hopes to achieve.
 
 Quick Install
 -------------
