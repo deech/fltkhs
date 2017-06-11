@@ -262,10 +262,9 @@ import Graphics.UI.FLTK.LowLevel.PNMImage
 -- $Motivation
 -- This library aims to make it easy for users to build native apps that work portably across platforms.
 --
--- I'm also very interested the renewed interested in user
--- interfaces in the programming community, whether the various kinds of
--- functional reactive programming, meta-object protocol UI's, or something like
--- React.js.
+-- I'm also very interested the user interface renaissance in the programming community,
+-- whether the various kinds of functional reactive programming, meta-object protocol UI's,
+-- or something like React.js.
 --
 -- The hope is that a low-cost hassle-free way of getting a UI up and running
 -- without having to deal with browser, authentication and compilation issues
@@ -298,10 +297,11 @@ import Graphics.UI.FLTK.LowLevel.PNMImage
 -- (1) provides full coverage of the toolkit allowing the user to write GUI's in pure Haskell.
 -- (2) feels like it has polymorphic dispatch, meaning a single function dispatches to the right implementation based on the type of widget it is given
 -- (3) is /not/ monolithic, meaning new widgets can be incorporated the user's application without needing to recompile this library
--- (4) is easy to install. This library has a minimum of dependencies and <http://fltk.org FLTK> itself compiles cleanly on most architectures
--- (5) allows the user to produce statically linked binaries with no external dependencies
--- (6) includes a lot of complete working demos so that the user can get up and running faster. (see note below)
--- (7) comes with GUI builder support to alleviate the tedium of laying out widgets by hand
+-- (4) is easy to install. This library has a minimum of dependencies and <http://fltk.org FLTK> itself compiles cleanly on most architectures.
+--     And now there is even a <https://hackage.haskell.org/package/fltkhs/docs/Graphics-UI-FLTK-LowLevel-FLTKHS.html#g:4 bundled option> where Cabal/Stack build FLTK for you behind the scenes.
+-- (5) allows the user to produce statically linked binaries with a minimum of external dependencies
+-- (6) includes a lot of <https://github.com/deech/fltkhs-demos complete> <https://github.com/deech/fltkhs-fluid-demos working> demos so that you can get up and running faster.
+-- (7) comes with <https://hackage.haskell.org/package/fltkhs/docs/Graphics-UI-FLTK-LowLevel-FLTKHS.html#g:15 GUI builder support> to alleviate the tedium of laying out widgets by hand
 --
 -- $FluidSupport
 --
@@ -405,7 +405,7 @@ import Graphics.UI.FLTK.LowLevel.PNMImage
 --
 
 -- $InstallationSummary
--- There are two ways to install FLTKHS, building with the bundled FLTK GUI library, or compiling and installing FLTK from scratch yourself. The bundled way is
+-- There are two ways to install FLTKHS, building with the <https://hackage.haskell.org/package/fltkhs/docs/Graphics-UI-FLTK-LowLevel-FLTKHS.html#g:5 bundled FLTK GUI library>, or compiling and installing FLTK <https://hackage.haskell.org/package/fltkhs/docs/Graphics-UI-FLTK-LowLevel-FLTKHS.html#g:9 from scratch yourself>. The bundled way is
 -- by far the easiest on all platforms. It is completely self-contained, you don't need any sudo access to your system.
 --
 -- $InstallationLinuxBundled
@@ -989,12 +989,12 @@ import Graphics.UI.FLTK.LowLevel.PNMImage
 -- that this reference is a pointer to a void pointer to a C++ object.
 --
 -- For instance, 'windowNew' creates a 'Ref' 'Window' which is a pointer to a
--- C++ object of type `Fl_Window`, the FLTK class that knows how to draw,
+-- C++ object of type <http://www.fltk.org/doc-1.3/classFl__Window.html `Fl_Window`>, the FLTK class that knows how to draw,
 -- display and handle window events.
 --
 -- This value of type 'Ref' 'Window' is then passed along to various functions
 -- which, transparent to the user, extract the pointer and pass it to the
--- appropriate /Fl_Window/ instance method.
+-- appropriate <http://www.fltk.org/doc-1.3/classFl__Window.html `Fl_Window`> instance method.
 --
 -- == Widget Methods
 --
@@ -1162,9 +1162,9 @@ import Graphics.UI.FLTK.LowLevel.PNMImage
 -- runtime performance issues. This is only a compile time problem.
 --
 -- To preserve the user's and my sanity a flag `fastCompile` has been
--- introduced to the <https://github.com/deech/fltkhs-demos fltkhs-demos> and
+-- introduced to the <https://github.com/deech/fltkhs-hello-world skeleton> <https://github.com/deech/fltkhs-fluid-hello-world projects>, the <https://github.com/deech/fltkhs-demos fltkhs-demos> and
 -- to the <https://github.com/deech/fltkhs-fluid-demos fltkhs-fluid-demos>.
--- This flag which tells the compiler to skip the specialising step when
+-- This flag which tells the compiler to skip some steps when
 -- compiling executables, dramatically decreases compile time but also bloats
 -- the resulting executable size and probably makes runtime performance much
 -- slower. In this package and <https://github.com/deech/fltkhs-fluid-demos fltkhs-fluid-demos>
@@ -1191,7 +1191,7 @@ import Graphics.UI.FLTK.LowLevel.PNMImage
 -- Root
 --   - c-src                 -- The C bindings
 --   - c-examples            -- demos written using the C bindings (not installed)
---   - fltk-<version>.tar.gz -- The bundled FLTK library
+--   - fltk-\<version\>.tar.gz -- The bundled FLTK library
 --   - src
 --     - TestPrograms        -- Haskell test programs
 --     - Fluid               -- The Fluid file to Haskell conversion utility

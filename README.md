@@ -29,6 +29,7 @@ Please see the [detailed Windows installation instructions](http://hackage.haske
 
 Screenshots
 -----------
+Unfortunately these screenshots seem to only work on the Github page. If you're seeing this from Hackage, please try from [Github](https://github.com/deech/fltkhs#screenshots).
 
 [Drawing with FLTKHS](images/arc-windows.png)
 
