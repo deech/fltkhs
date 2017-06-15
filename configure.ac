@@ -14,11 +14,25 @@ test "$FLTKCONFIG" == "no" && AC_MSG_ERROR([Cannot find the fltk-config executab
 # Checks for header files.
 AC_CHECK_HEADERS([stddef.h stdint.h stdlib.h string.h unistd.h])
 AC_CHECK_LIB([dl], [main])
-AC_SUBST(FLTKCONFIGCOMMAND,"$(fltk-config --ldstaticflags --use-gl --use-glut --use-images --use-forms) -lstdc++")
+
+AC_SUBST(FLTKCONFIGCOMMAND,"$(fltk-config --ldstaticflags --use-images --use-forms) -lstdc++")
+AC_DEFINE([HAVE_GL], [], [Support OpenGL]),
+AC_SUBST([GLSUPPORT],"")
+
+dnl Example of default-disabled feature
+AC_ARG_ENABLE([gl],
+AS_HELP_STRING([--enable-gl], [Enable feature OpenGL support]))
+
+AS_IF([test "x$enable_gl" = "xyes"], [
+   AC_SUBST([GLSUPPORT], 1)
+   AC_DEFINE([HAVE_GL], [1], [Support OpenGL]),
+   AC_SUBST(FLTKCONFIGCOMMAND,"$(fltk-config --ldstaticflags --use-gl --use-glut --use-images --use-forms) -lstdc++")
+])
+
 
 AC_SUBST(FLTK_HOME,`fltk-config --includedir`)
 # Checks for typedefs, structures, and compiler characteristics.
-AC_TYPE_SIZE_T
+AC_CONFIG_HEADER(config.h:configh.in)
 
 # Checks for library functions.
 AC_FUNC_MALLOC

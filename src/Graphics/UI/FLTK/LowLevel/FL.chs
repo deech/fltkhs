@@ -56,7 +56,7 @@ module Graphics.UI.FLTK.LowLevel.FL
      version,
      help,
      visual,
-#if !defined(__APPLE__)
+#if !defined(__APPLE__) && HAVE_GL
      glVisual,
      glVisualWithAlist,
 #endif
@@ -265,7 +265,7 @@ display :: T.Text -> IO ()
 display text = TF.withCStringLen text $ \(str,_) -> {#call Fl_display as fl_display #} str
 {# fun Fl_visual as visual
   {cFromEnum `Mode'} -> `Bool' cToBool #}
-#if !defined(__APPLE__)
+#if !defined(__APPLE__) && HAVE_GL
 {# fun Fl_gl_visual as glVisual
   {cFromEnum `Mode'} -> `Bool' cToBool #}
 {# fun Fl_gl_visual_with_alist as glVisualWithAlist

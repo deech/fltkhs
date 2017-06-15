@@ -90,7 +90,6 @@ module Graphics.UI.FLTK.LowLevel.FLTKHS
          module Graphics.UI.FLTK.LowLevel.Draw,
          module Graphics.UI.FLTK.LowLevel.FillDial,
          module Graphics.UI.FLTK.LowLevel.FillSlider,
-         module Graphics.UI.FLTK.LowLevel.GlWindow,
          module Graphics.UI.FLTK.LowLevel.Group,
          module Graphics.UI.FLTK.LowLevel.HorFillSlider,
          module Graphics.UI.FLTK.LowLevel.HorNiceSlider,
@@ -164,7 +163,6 @@ module Graphics.UI.FLTK.LowLevel.FLTKHS
          module Graphics.UI.FLTK.LowLevel.Hierarchy
        )
 where
-import Graphics.UI.FLTK.LowLevel.GlWindow
 import Graphics.UI.FLTK.LowLevel.SingleWindow
 import Graphics.UI.FLTK.LowLevel.Window
 import Graphics.UI.FLTK.LowLevel.DoubleWindow

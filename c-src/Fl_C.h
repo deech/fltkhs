@@ -86,7 +86,7 @@ EXPORT {
   FL_EXPORT_C(int, Fl_args_with_handler)(int argc,char **argv,int i,fl_Args_Handler cb);
   FL_EXPORT_C(void, Fl_display)(const char* text);
   FL_EXPORT_C(int, Fl_visual)(int mode);
-#if !defined(__APPLE__)
+#if !defined(__APPLE__) && HAVE_GL
   FL_EXPORT_C(int, Fl_gl_visual)(int mode);
   FL_EXPORT_C(int, Fl_gl_visual_with_alist)(int mode, int *alist);
 #endif

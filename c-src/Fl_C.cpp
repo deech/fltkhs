@@ -86,7 +86,7 @@ EXPORT {
   FL_EXPORT_C(int,Fl_visual)(int mode){
     return Fl::visual(mode);
   }
-#if !defined(__APPLE__)
+#if !defined(__APPLE__) && HAVE_GL
   FL_EXPORT_C(int,Fl_gl_visual)(int mode){
     return Fl::gl_visual(mode);
   }

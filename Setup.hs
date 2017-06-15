@@ -40,6 +40,7 @@ import System.Environment (getEnv, setEnv)
 main :: IO ()
 main = defaultMainWithHooks autoconfUserHooks {
   preConf = myPreConf,
+  postConf = myPostConf,
   buildHook = myBuildHook,
   cleanHook = myCleanHook,
   copyHook = copyCBindingsAndBundledExecutables,
@@ -56,18 +57,20 @@ runMake args =
       -> rawSystemExit normal "gmake" args
     _ -> rawSystemExit normal "make" args
 
-buildFltk :: IO FilePath -> IO ()
-buildFltk prefix = do
+buildFltk :: IO FilePath -> Bool -> IO ()
+buildFltk prefix openGL = do
   rawSystemExit normal "tar" ["-zxf", fltkSource ++ "-source.tar.gz"]
   projectRoot <- getCurrentDirectory
   prefix' <- prefix
   let fltkDir = projectRoot </>  fltkSource
-      fltkFlags = [ "--enable-gl",
-                    "--enable-shared",
-                    "--enable-localjpeg",
-                    "--enable-localzlib",
-                    "--enable-localpng",
-                    ("--prefix=" ++ prefix')]
+      fltkFlags = (if (openGL) then ["--enable-gl"] else ["--disable-gl"]) ++
+                  [
+                   "--enable-shared",
+                   "--enable-localjpeg",
+                   "--enable-localzlib",
+                   "--enable-localpng",
+                   ("--prefix=" ++ prefix')
+                  ]
   withCurrentDirectory
     fltkDir
     (
@@ -92,7 +95,7 @@ myPreConf args flags = do
      prefix <- bundlePrefix flags ""
      fltkBuilt <- doesDirectoryExist prefix
      if (not fltkBuilt)
-     then buildFltk (case buildOS of { Windows -> cygpath "-u" prefix; _ -> return prefix;})
+     then buildFltk (case buildOS of { Windows -> cygpath "-u" prefix; _ -> return prefix;}) (openGLSupport flags)
      else putStrLn "FLTK already built."
    else return ()
    putStrLn "Running autoconf ..."
@@ -100,6 +103,16 @@ myPreConf args flags = do
      Windows -> rawSystemExit normal "sh" ["autoconf"]
      _ -> rawSystemExit normal "autoconf" []
    preConf autoconfUserHooks args flags
+
+myPostConf :: Args -> ConfigFlags -> PackageDescription -> LocalBuildInfo -> IO ()
+myPostConf args flags pd lbi =
+  postConf autoconfUserHooks
+           args
+           (if (openGLSupport flags)
+            then (flags{ configConfigureArgs = (configConfigureArgs flags) ++ ["--enable-gl"]})
+            else flags)
+           pd
+           lbi
 
 fltkcdir :: FilePath
 fltkcdir = unsafePerformIO $ do
@@ -147,6 +160,8 @@ replaceAllInfixes needle subString haystack =
              haystack)
 
 bundledBuild flags = flagIsSet (FlagName "bundled") flags
+openGLSupport flags = flagIsSet (FlagName "opengl") flags
+
 bundlePrefix flags dir =
   let (Distribution.Simple.Setup.Flag prefixTemplate) = libdir (configInstallDirs flags)
   in

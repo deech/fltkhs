@@ -16,11 +16,32 @@ cabal-version: >=1.24
 source-repository head
   type: git
   location: http://github.com/deech/fltkhs
+
+Flag Bundled
+   Description: Use the bundled FLTK library.
+   Manual: True
+   Default: False
+
+Flag Opengl
+   Description: Enable OpenGL support.
+   Manual : True
+   Default: False
+
+custom-setup
+  setup-depends:
+    base >= 4.5 && < 4.11,
+    Cabal < 1.25,
+    filepath,
+    directory
+
 library
+  if flag(opengl)
+     exposed-modules:
+                   Graphics.UI.FLTK.LowLevel.Gl
+                   Graphics.UI.FLTK.LowLevel.GlWindow
   exposed-modules:
                    Graphics.UI.FLTK.LowLevel.FLTKHS
                    Graphics.UI.FLTK.LowLevel.Ask
-                   Graphics.UI.FLTK.LowLevel.GlWindow
                    Graphics.UI.FLTK.LowLevel.SingleWindow
                    Graphics.UI.FLTK.LowLevel.Window
                    Graphics.UI.FLTK.LowLevel.DoubleWindow
@@ -88,7 +109,6 @@ library
                    Graphics.UI.FLTK.LowLevel.TreeItem
                    Graphics.UI.FLTK.LowLevel.Tree
                    Graphics.UI.FLTK.LowLevel.FL
-                   Graphics.UI.FLTK.LowLevel.Gl
                    Graphics.UI.FLTK.LowLevel.TextSelection
                    Graphics.UI.FLTK.LowLevel.TextBuffer
                    Graphics.UI.FLTK.LowLevel.TextDisplay
@@ -129,18 +149,6 @@ library
      cpp-options: -DOVERLAPPING_INSTANCES_DEPRECATED
   if os(darwin)
      cc-options: -U__BLOCKS__ -D_Nonnull=
-
-custom-setup
-  setup-depends:
-    base >= 4.5 && < 4.11,
-    Cabal < 1.25,
-    filepath,
-    directory
-
-Flag Bundled
-   Description: Use the bundled FLTK library.
-   Manual: True
-   Default: False
 
 Executable fltkhs-fluidtohs
   Main-Is: Main.hs
