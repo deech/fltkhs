@@ -409,7 +409,7 @@ import Graphics.UI.FLTK.LowLevel.PNMImage
 -- $InstallationLinuxBundled
 --  The steps are:
 --
--- - Make sure to have OpenGL installed
+-- - Make sure to have OpenGL installed if you need it.
 -- - Ensure that 'make', 'autoconf' and 'autoheader' are available on your system
 -- - Download & install <http://docs.haskellstack.org/en/stable/README/#how-to-install Stack>
 -- - Download & install the <https://github.com/deech/fltkhs-hello-world/archive/master.tar.gz FLTKHS hello world skeleton>
@@ -444,6 +444,8 @@ import Graphics.UI.FLTK.LowLevel.PNMImage
 -- > cd fltkhs-hello-world
 -- > stack setup
 -- > stack install --flag fltkhs:bundled
+-- or if you need OpenGL support
+-- > stack install --flag fltkhs:bundled --flag fltkhs:opengl
 -- @
 --
 -- == Verify The Install
@@ -460,7 +462,7 @@ import Graphics.UI.FLTK.LowLevel.PNMImage
 -- $InstallationLinux
 --  The steps are:
 --
--- - Make sure to have OpenGL installed
+-- - Make sure to have OpenGL installed if you need it
 -- - Download & install <http://docs.haskellstack.org/en/stable/README/#how-to-install Stack>
 -- - Download & install <http://www.fltk.org/software.php?VERSION=1.3.4-1&FILE=fltk/1.3.4-1/fltk-1.3.4-1-source.tar.gz FLTK 1.3.4-1>
 -- - Download & install the <https://github.com/deech/fltkhs-hello-world/archive/master.tar.gz FLTKHS hello world skeleton>
@@ -475,6 +477,8 @@ import Graphics.UI.FLTK.LowLevel.PNMImage
 -- It should build and install smoothly with the standard:
 --
 -- @
+-- > ./configure --enable-shared --enable-localjpeg --enable-localzlib --enable-localpng
+-- or if you need OpenGL support
 -- > ./configure --enable-gl --enable-shared --enable-localjpeg --enable-localzlib --enable-localpng
 -- > make
 -- > sudo make install
@@ -524,6 +528,8 @@ import Graphics.UI.FLTK.LowLevel.PNMImage
 -- > cd fltkhs-hello-world
 -- > stack setup
 -- > stack install
+-- or if you need OpenGL support
+-- > stack install --flag fltkhs:opengl
 -- @
 --
 -- __Note:__ If the `install` step produces a flood of `undefined reference` errors
@@ -543,7 +549,7 @@ import Graphics.UI.FLTK.LowLevel.PNMImage
 -- if you click it, it will change to "Goodbye world."
 
 -- $InstallationMacBundled
--- Unfortunately Mac version older than El Capitan and Yosemite are not supported.
+-- Mac versions older than El Capitan and Yosemite are not supported.
 --
 -- The general steps are:
 --
@@ -590,6 +596,8 @@ import Graphics.UI.FLTK.LowLevel.PNMImage
 -- > cd fltkhs-hello-world
 -- > stack setup
 -- > stack install --flag fltkhs:bundled
+-- or if you need OpenGL support
+-- > stack install --flag fltkhs:bundled --flag fltkhs:opengl
 -- @
 --
 -- == Verify The Install
@@ -632,6 +640,8 @@ import Graphics.UI.FLTK.LowLevel.PNMImage
 -- > wget http://fltk.org/pub/fltk/1.3.4/fltk-1.3.4-1-source.tar.gz
 -- > tar -zxf fltk-1.3.4-1-source.tar.gz
 -- > cd fltk-1.3.4-1
+-- > ./configure --enable-shared --enable-localjpeg --enable-localzlib --enable-localpng
+-- or if you need OpenGL support
 -- > ./configure --enable-gl --enable-shared --enable-localjpeg --enable-localzlib --enable-localpng
 -- > make
 -- > sudo make install
@@ -666,6 +676,8 @@ import Graphics.UI.FLTK.LowLevel.PNMImage
 -- > cd fltkhs-hello-world
 -- > stack setup
 -- > stack install
+-- or if you need OpenGL support
+-- > stack install --flag fltkhs:opengl
 -- @
 --
 -- == Verify The Install
@@ -743,6 +755,8 @@ import Graphics.UI.FLTK.LowLevel.PNMImage
 --
 -- @
 -- > stack install --flag fltkhs:bundled
+-- or if you need OpenGL support
+-- > stack install --flag fltkhs:bundled --flag fltkhs:opengl
 -- @
 --
 -- To test the installation:
@@ -858,6 +872,8 @@ import Graphics.UI.FLTK.LowLevel.PNMImage
 -- Configure, make and install:
 --
 -- @
+-- > ./configure --enable-shared --enable-localjpeg --enable-localzlib --enable-localpng
+-- or if you need OpenGL support
 -- > ./configure --enable-gl --enable-shared --enable-localjpeg --enable-localzlib --enable-localpng
 -- > make
 -- > make install
@@ -884,6 +900,8 @@ import Graphics.UI.FLTK.LowLevel.PNMImage
 --
 -- @
 -- > stack install
+-- or if you need OpenGL support
+-- > stack install --flag fltkhs:opengl
 -- @
 --
 -- To test the installation:
