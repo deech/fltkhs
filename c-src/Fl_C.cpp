@@ -375,6 +375,9 @@ EXPORT {
   FL_EXPORT_C(void,Fl_paste_with_source)(fl_Widget receiver,int source){
     Fl::paste(*(static_cast<Fl_Widget*>(receiver)), source);
   }
+  FL_EXPORT_C(void,Fl_paste_with_source_type)(fl_Widget receiver,int source, const char* type){
+    Fl::paste(*(static_cast<Fl_Widget*>(receiver)), source, type);
+  };
   FL_EXPORT_C(int,Fl_dnd)( ){
     return Fl::dnd();
   }
@@ -594,6 +597,15 @@ EXPORT {
     Fl_Widget* refPtr = &ref;
     Fl::release_widget_pointer(refPtr);
   }
+  FL_EXPORT_C(void*,Fl_event_clipboard)(){
+    return Fl::event_clipboard();
+  };
+  FL_EXPORT_C(const char*,Fl_event_clipboard_type)(){
+    return Fl::event_clipboard_type();
+  };
+  FL_EXPORT_C(int ,Fl_reload_scheme()){
+    return Fl::reload_scheme();
+  };
 #if FL_API_VERSION == 10304
   FL_EXPORT_C(void,Fl_set_box_color)(Fl_Color c) {
     Fl::set_box_color(c);
@@ -607,6 +619,9 @@ EXPORT {
   FL_EXPORT_C(int,Fl_api_version)(){
     return Fl::api_version();
   }
+  FL_EXPORT_C(int ,Fl_abi_check(int val)){
+    return Fl::abi_check(val);
+      };
   FL_EXPORT_C(const char*,Fl_local_ctrl)(){
     return fl_local_ctrl;
   }

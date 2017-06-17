@@ -24,6 +24,7 @@ module Graphics.UI.FLTK.LowLevel.Fl_Enumerations
      kb_CommandState, kb_ControlState, kb_KpLast,
      -- * Widget damage types
      Damage(..),
+#ifdef GLSUPPORT
      -- * Glut attributes
      GlutDraw(..),
      GlutMouseCodes(..),
@@ -36,6 +37,7 @@ module Graphics.UI.FLTK.LowLevel.Fl_Enumerations
      GlutWindowProperties(..),
      GlutCursor(..),
      glutCursorFullCrossHair,
+#endif
      -- * Cursor type
      Cursor(..),
      -- * Various modes
@@ -341,6 +343,7 @@ enum Damage {
  DamageUser2   = FL_DAMAGE_USER2,
  DamageAll     = FL_DAMAGE_ALL
 };
+#ifdef GLSUPPORT
 enum GlutDraw {
  GlutNormal = GLUT_NORMAL,
  GlutOverlay = GLUT_OVERLAY
@@ -456,6 +459,7 @@ enum GlutCursor {
   GlutCursorUpDown = FL_CURSOR_NS,
   GlutCursorCrosshair = FL_CURSOR_CROSS
 };
+#endif
 enum Cursor {
  CursorDefault = FL_CURSOR_DEFAULT,
  CursorArrow   = FL_CURSOR_ARROW,
@@ -631,18 +635,31 @@ kb_ControlState = Kb_MetaState
 kb_KpLast :: SpecialKey
 kb_KpLast = Kb_F
 {#enum Damage {} deriving (Show) #}
+#ifdef GLSUPPORT
+-- | Only available if the 'opengl' flag is set (stack build --flag fltkhs:opengl).
 {#enum GlutDraw {} deriving (Show) #}
+-- | Only available if the 'opengl' flag is set (stack build --flag fltkhs:opengl).
 {#enum GlutMouseCodes {} deriving (Show) #}
+-- | Only available if the 'opengl' flag is set (stack build --flag fltkhs:opengl).
 {#enum GlutUpDown {} deriving (Show) #}
+-- | Only available if the 'opengl' flag is set (stack build --flag fltkhs:opengl).
 {#enum GlutVisibility {} deriving (Show) #}
+-- | Only available if the 'opengl' flag is set (stack build --flag fltkhs:opengl).
 {#enum GlutMenuProperties {} deriving (Show) #}
+-- | Only available if the 'opengl' flag is set (stack build --flag fltkhs:opengl).
 {#enum GlutEnteredLeft {} deriving (Show) #}
+-- | Only available if the 'opengl' flag is set (stack build --flag fltkhs:opengl).
 {#enum GlutKeyboardCodes {} deriving (Show) #}
+-- | Only available if the 'opengl' flag is set (stack build --flag fltkhs:opengl).
 {#enum GlutConstants {} deriving (Show) #}
+-- | Only available if the 'opengl' flag is set (stack build --flag fltkhs:opengl).
 {#enum GlutWindowProperties {} deriving (Show) #}
+-- | Only available if the 'opengl' flag is set (stack build --flag fltkhs:opengl).
 {#enum GlutCursor {} deriving (Show) #}
+-- | Only available if the 'opengl' flag is set (stack build --flag fltkhs:opengl).
 glutCursorFullCrossHair :: GlutCursor
 glutCursorFullCrossHair = GlutCursorCrosshair
+#endif
 {#enum Cursor {} deriving (Show) #}
 {#enum Mode   {} deriving (Show,Eq,Ord) #}
 {#enum AlignType {} deriving (Show, Eq, Ord) #}
@@ -913,8 +930,7 @@ instance Enum Boxtype where
            | x == defineGleamUpBox_ + 5 = GleamThinDownBox
            | x == defineGleamUpBox_ + 6 = GleamRoundUpBox
            | x == defineGleamUpBox_ + 7 = GleamRoundDownBox
-           | otherwise = error ("Boxtype.toEnum: Cannot match " ++
-	                                         show otherwise)
+           | otherwise = error ("Boxtype.toEnum: Cannot match " ++ show otherwise)
 frame,frameBox, circleBox, diamondBox :: Boxtype
 frame = EngravedFrame
 frameBox = EngravedBox

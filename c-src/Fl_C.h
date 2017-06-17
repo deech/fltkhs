@@ -182,6 +182,7 @@ EXPORT {
   FL_EXPORT_C(fl_Event_Dispatch ,Fl_event_dispatch)();
   FL_EXPORT_C(void      ,Fl_copy)(const char* stuff,int len);
   FL_EXPORT_C(void      ,Fl_copy_with_destination)(const char* stuff,int len,int destination);
+  FL_EXPORT_C(void      ,Fl_paste_with_source_type)(fl_Widget receiver,int source, const char* type);
   FL_EXPORT_C(void      ,Fl_paste_with_source)(fl_Widget receiver,int source);
   FL_EXPORT_C(int       ,Fl_dnd)();
   FL_EXPORT_C(fl_Widget ,Fl_selection_owner)();
@@ -257,11 +258,15 @@ EXPORT {
   FL_EXPORT_C(void              ,Fl_release_widget_pointer)(fl_Widget w);
   FL_EXPORT_C(void              ,Fl_clear_widget_pointer)(fl_Widget w);
   FL_EXPORT_C(void              ,Fl_clear_widget_pointer)(fl_Widget w);
+  FL_EXPORT_C(void*             ,Fl_event_clipboard)();
+  FL_EXPORT_C(const char*       ,Fl_event_clipboard_type)();
+  FL_EXPORT_C(int               ,Fl_reload_scheme());
 #if FL_API_VERSION == 10304
   FL_EXPORT_C(void              ,Fl_set_box_color)(Fl_Color c);
   FL_EXPORT_C(Fl_Color          ,Fl_box_color)(Fl_Color c);
   FL_EXPORT_C(int               ,Fl_abi_version)();
   FL_EXPORT_C(int               ,Fl_api_version)();
+  FL_EXPORT_C(int               ,Fl_abi_check(int val));
   FL_EXPORT_C(const char*       ,Fl_local_ctrl)();
   FL_EXPORT_C(const char*       ,Fl_local_meta)();
   FL_EXPORT_C(const char*       ,Fl_local_alt)();

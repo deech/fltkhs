@@ -74,7 +74,6 @@ data CustomWidgetFuncs a =
     ,hideCustom   :: Maybe (Ref a -> IO ())
     }
 
-
 -- | Fill up a struct with pointers to functions on the Haskell side that will get called instead of the default ones.
 --
 -- Fill up the 'Widget' part the function pointer struct.

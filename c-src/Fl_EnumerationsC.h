@@ -8,12 +8,17 @@
 EXPORT {
 #endif
 #ifndef INTERNAL_LINKAGE
-#define FL_MAJOR_VERSION        1
-#define FL_MINOR_VERSION        3
-#define FL_PATCH_VERSION        0
+#include "../config.h"
+#define FL_MAJOR_VERSION        FLTK_MAJOR_VERSION
+#define FL_MINOR_VERSION        FLTK_MINOR_VERSION
+#define FL_PATCH_VERSION        FLTK_PATCH_VERSION
 #define FL_VERSION              ((double)FL_MAJOR_VERSION +             \
                                  (double)FL_MINOR_VERSION * 0.01 +      \
                                  (double)FL_PATCH_VERSION * 0.0001)
+#define FL_API_VERSION (FL_MAJOR_VERSION*10000 + FL_MINOR_VERSION*100 + FL_PATCH_VERSION)
+#ifndef FL_ABI_VERSION
+#define FL_ABI_VERSION (FL_MAJOR_VERSION*10000 + FL_MINOR_VERSION*100)
+#endif
   typedef enum Fl_Event {       // events
     FL_NO_EVENT         = 0,
     FL_PUSH             = 1,
@@ -437,7 +442,7 @@ EXPORT {
 #    define down        fl_down
 #    define frame       fl_frame
 #    define inactive    fl_inactive
-#  endif // FLTK_1_0_COMPAT
+#  endif /* FLTK_1_0_COMPAT */
 #endif
   FL_EXPORT_C(Fl_Boxtype, fl_define_FL_ROUND_UP_BOXC)();
   FL_EXPORT_C(Fl_Boxtype, fl_define_FL_SHADOW_BOXC)();
