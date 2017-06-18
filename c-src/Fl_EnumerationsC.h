@@ -423,6 +423,9 @@ EXPORT {
     FL_MULTISAMPLE      = 128,
     FL_STEREO           = 256,
     FL_FAKE_SINGLE      = 512
+#if HAVE_GL
+    , FL_OPENGL3 = 1024
+#endif
   } Fl_Mode;
 #define FL_IMAGE_WITH_ALPHA 0x40000000
 

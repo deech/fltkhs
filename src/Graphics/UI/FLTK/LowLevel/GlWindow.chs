@@ -158,7 +158,17 @@ instance (impl ~ ( IO ())) => Op (HideOverlay ()) GlWindow orig impl where
 {# fun Fl_Gl_Window_make_overlay_current as makeOverlayCurrent' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
 instance (impl ~ ( IO ())) => Op (MakeOverlayCurrent ()) GlWindow orig impl where
   runOp _ _ win = withRef win $ \winPtr -> makeOverlayCurrent' winPtr
-
+{# fun Fl_Gl_Window_pixels_per_unit as pixelsPerUnit' { id `Ptr ()'} -> `Float' #}
+#if FLTK_API_VERSION == 10304
+instance (impl ~ ( IO (Float))) => Op (PixelsPerUnit ()) GlWindow orig impl where
+  runOp _ _ win = withRef win $ \winPtr -> pixelsPerUnit' winPtr
+{# fun Fl_Gl_Window_pixel_h as pixelH' { id `Ptr ()'} -> `Int' #}
+instance (impl ~ ( IO (Int))) => Op (PixelH ()) GlWindow orig impl where
+  runOp _ _ win = withRef win $ \winPtr -> pixelH' winPtr
+{# fun Fl_Gl_Window_pixel_w as pixelW' { id `Ptr ()'} -> `Int' #}
+instance (impl ~ ( IO (Int))) => Op (PixelW ()) GlWindow orig impl where
+  runOp _ _ win = withRef win $ \winPtr -> pixelW' winPtr
+#endif
 -- $GlWindowfunctions
 -- @
 -- canDo :: 'Ref' 'GlWindow' -> 'IO' ('Bool')
@@ -181,9 +191,9 @@ instance (impl ~ ( IO ())) => Op (MakeOverlayCurrent ()) GlWindow orig impl wher
 --
 -- getValid :: 'Ref' 'GlWindow' -> 'IO' ('Bool')
 --
--- handle :: 'Ref' 'GlWindow' -> 'Event' -> 'IO' ('Int')
+-- handle :: 'Ref' 'GlWindow' -> 'Event' -> 'IO(Either' 'UnknownEvent' ())
 --
--- handleSuper :: 'Ref' 'GlWindow' -> 'Event' -> 'IO' ('Int')
+-- handleSuper :: 'Ref' 'GlWindow' -> 'Event' -> 'IO' ('Either' 'UnknownEvent' ())
 --
 -- hide :: 'Ref' 'GlWindow' -> 'IO' ()
 --
@@ -218,6 +228,14 @@ instance (impl ~ ( IO ())) => Op (MakeOverlayCurrent ()) GlWindow orig impl wher
 -- showWidgetSuper :: 'Ref' 'GlWindow' -> 'IO' ()
 --
 -- swapBuffers :: 'Ref' 'GlWindow' -> 'IO' ()
+--
+-- Available in FLTK 1.3.4 only:
+--
+-- pixelH :: 'Ref' 'GlWindow' -> 'IO' ('Int')
+--
+-- pixelW :: 'Ref' 'GlWindow' -> 'IO' ('Int')
+--
+-- pixelsPerUnit :: 'Ref' 'GlWindow' -> 'IO' ('Float')
 -- @
 
 -- $hierarchy

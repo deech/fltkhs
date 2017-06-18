@@ -12,6 +12,10 @@ module Graphics.UI.FLTK.LowLevel.Fl_Enumerations
      TreeConnector(..),
      TreeSelect(..),
      SearchDirection(..),
+#if FLTK_ABI_VERSION >= 10302
+     TreeItemReselectMode(..),
+     TreeItemDrawMode(..),
+#endif
      -- * Keyboard and mouse codes
      SpecialKey(..),
      allSpecialKeys,
@@ -24,6 +28,8 @@ module Graphics.UI.FLTK.LowLevel.Fl_Enumerations
      kb_CommandState, kb_ControlState, kb_KpLast,
      -- * Widget damage types
      Damage(..),
+     -- * Cursor type
+     Cursor(..),
 #ifdef GLSUPPORT
      -- * Glut attributes
      GlutDraw(..),
@@ -37,14 +43,12 @@ module Graphics.UI.FLTK.LowLevel.Fl_Enumerations
      GlutWindowProperties(..),
      GlutCursor(..),
      glutCursorFullCrossHair,
-#endif
-     -- * Cursor type
-     Cursor(..),
      -- * Various modes
      Mode(..),
      Modes(..),
      single,
      allModes,
+#endif
      -- * Alignment
      Alignments(..),
      AlignType(..),
@@ -255,6 +259,17 @@ enum SearchDirection {
   SearchDirectionDown = FL_Down,
   SearchDirectionUp = FL_Up
 };
+#if FLTK_ABI_VERSION >= 10302
+enum  TreeItemReselectMode{
+  TreeSelectableOnce = FL_TREE_SELECTABLE_ONCE,
+  TreeSelectableAlways = FL_TREE_SELECTABLE_ALWAYS
+};
+enum TreeItemDrawMode{
+  TreeItemDrawDefault = FL_TREE_ITEM_DRAW_DEFAULT,
+  TreeItemDrawLabelAndWidget = FL_TREE_ITEM_DRAW_LABEL_AND_WIDGET,
+  TreeItemHeightFromWidget = FL_TREE_ITEM_HEIGHT_FROM_WIDGET
+};
+#endif
 enum SpecialKey {
   Button = FL_Button,
   Kb_Clear = FL_Clear,
@@ -485,16 +500,19 @@ enum Cursor {
 };
 enum Mode {
  ModeRGB         = FL_RGB,
+ ModeRGB8        = FL_RGB8,
  ModeIndex       = FL_INDEX,
  ModeDouble      = FL_DOUBLE,
  ModeAccum       = FL_ACCUM,
  ModeAlpha       = FL_ALPHA,
  ModeDepth       = FL_DEPTH,
  ModeStencil     = FL_STENCIL,
- ModeRGB8        = FL_RGB8,
  ModeMultisample = FL_MULTISAMPLE,
  ModeStereo      = FL_STEREO,
  ModeFakeSingle  = FL_FAKE_SINGLE
+#if FLTK_API_VERSION == 10304
+ , ModeOpenGL3     = FL_OPENGL3
+#endif
 };
 enum AlignType {
  AlignTypeCenter          = 0,
@@ -525,7 +543,7 @@ enum AlignType {
 #if FLTK_ABI_VERSION >= 10302
 {#enum TreeItemReselectMode {} deriving (Show, Eq) #}
 {#enum TreeItemDrawMode {} deriving (Show, Eq) #}
-#endif /*FLTK_ABI_VERSION*/
+#endif
 {#enum SpecialKey {} deriving (Show, Eq) #}
 
 allShortcutSpecialKeys :: [CInt]
@@ -635,6 +653,7 @@ kb_ControlState = Kb_MetaState
 kb_KpLast :: SpecialKey
 kb_KpLast = Kb_F
 {#enum Damage {} deriving (Show) #}
+{#enum Cursor {} deriving (Show) #}
 #ifdef GLSUPPORT
 -- | Only available if the 'opengl' flag is set (stack build --flag fltkhs:opengl).
 {#enum GlutDraw {} deriving (Show) #}
@@ -659,9 +678,35 @@ kb_KpLast = Kb_F
 -- | Only available if the 'opengl' flag is set (stack build --flag fltkhs:opengl).
 glutCursorFullCrossHair :: GlutCursor
 glutCursorFullCrossHair = GlutCursorCrosshair
-#endif
-{#enum Cursor {} deriving (Show) #}
+-- | Only available if the 'opengl' flag is set (stack build --flag fltkhs:opengl).
 {#enum Mode   {} deriving (Show,Eq,Ord) #}
+-- Fl_Mode Aliases
+-- | Only available if the 'opengl' flag is set (stack build --flag fltkhs:opengl).
+single :: Mode
+single = ModeRGB
+-- | Only available if the 'opengl' flag is set (stack build --flag fltkhs:opengl).
+newtype Modes = Modes [Mode] deriving (Show,Eq,Ord)
+-- | Only available if the 'opengl' flag is set (stack build --flag fltkhs:opengl).
+allModes :: [Mode]
+allModes =
+  [
+    ModeRGB,
+    ModeIndex,
+    ModeDouble,
+    ModeAccum,
+    ModeAlpha,
+    ModeDepth,
+    ModeStencil,
+    ModeRGB8,
+    ModeMultisample,
+    ModeStereo,
+    ModeFakeSingle
+#if FLTK_API_VERSION == 10304
+    , ModeOpenGL3
+#endif
+  ]
+#endif /* GLSUPPORT */
+
 {#enum AlignType {} deriving (Show, Eq, Ord) #}
 newtype Alignments = Alignments [AlignType] deriving Show
 alignCenter :: Alignments
@@ -1069,27 +1114,6 @@ numGreen :: Color
 numGreen = Color 8
 numBlue :: Color
 numBlue = Color 5
-
--- Fl_Mode Aliases
-
-single :: Mode
-single = ModeRGB
-newtype Modes = Modes [Mode] deriving (Show,Eq,Ord)
-allModes :: [Mode]
-allModes =
-  [
-    ModeRGB,
-    ModeIndex,
-    ModeDouble,
-    ModeAccum,
-    ModeAlpha,
-    ModeDepth,
-    ModeStencil,
-    ModeRGB8,
-    ModeMultisample,
-    ModeStereo,
-    ModeFakeSingle
-  ]
 
 -- Fl_LabelType
 

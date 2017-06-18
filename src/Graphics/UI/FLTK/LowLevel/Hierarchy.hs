@@ -863,6 +863,12 @@ module Graphics.UI.FLTK.LowLevel.Hierarchy
          hideOverlay,
          MakeOverlayCurrent,
          makeOverlayCurrent,
+         PixelsPerUnit,
+         pixelsPerUnit,
+         PixelH,
+         pixelH,
+         PixelW,
+         pixelW,
          -- * Box
          Box,
          -- * Browser
@@ -3174,7 +3180,15 @@ type GlWindowFuncs =
   (RedrawOverlay
   (HideOverlay
   (MakeOverlayCurrent
+#if FLTK_API_VERSION >= 10304
+  (PixelsPerUnit
+  (PixelH
+  (PixelW
+#endif
   ())))))))))))))))))))))))))))))
+#if FLTK_API_VERSION >= 10304
+  )))
+#endif
 
 type instance Functions GlWindow = GlWindowFuncs
 
@@ -3191,6 +3205,9 @@ MAKE_METHOD(SwapBuffers,swapBuffers)
 MAKE_METHOD(Ortho,ortho)
 MAKE_METHOD(HideOverlay,hideOverlay)
 MAKE_METHOD(MakeOverlayCurrent,makeOverlayCurrent)
+MAKE_METHOD(PixelsPerUnit,pixelsPerUnit)
+MAKE_METHOD(PixelH,pixelH)
+MAKE_METHOD(PixelW,pixelW)
 
 data CBox parent
 type Box = CBox Widget

@@ -1,6 +1,8 @@
 #ifndef __FL_GL_WINDOW_C__
 #define __FL_GL_WINDOW_C__
+#include "Fl_Types.h"
 #ifdef __cplusplus
+#include "Fl_EnumerationsC.h"
 #include "FL/Fl.H"
 #include "FL/Fl_Gl_Window.H" // always include the FL/*.H headers before local headers
                           // Fl_Widget is included transitively and needed for
@@ -17,13 +19,13 @@ EXPORT {
   FL_EXPORT_C(void,         Fl_Gl_Window_set_parent)(fl_Gl_Window win, fl_Group grp);
   FL_EXPORT_C(uchar,        Fl_Gl_Window_type)(fl_Gl_Window win);
   FL_EXPORT_C(void,         Fl_Gl_Window_set_type)(fl_Gl_Window win, uchar t);
-FL_EXPORT_C(void, Fl_Gl_Window_draw_box)(fl_Gl_Window Gl_Window);
-FL_EXPORT_C(void, Fl_Gl_Window_draw_box_with_tc)(fl_Gl_Window Gl_Window,Fl_Boxtype t, Fl_Color c);
-FL_EXPORT_C(void, Fl_Gl_Window_draw_box_with_txywhc)(fl_Gl_Window Gl_Window,Fl_Boxtype t, int x,int y,int w,int h, Fl_Color c);
-FL_EXPORT_C(void, Fl_Gl_Window_draw_backdrop)(fl_Gl_Window Gl_Window);
-FL_EXPORT_C(void, Fl_Gl_Window_draw_focus)(fl_Gl_Window Gl_Window);
-FL_EXPORT_C(void, Fl_Gl_Window_draw_focus_with_txywh)(fl_Gl_Window Gl_Window,Fl_Boxtype t, int x,int y,int w,int h);
-FL_EXPORT_C(void, Fl_Gl_Window_draw_label)(fl_Gl_Window Gl_Window);
+  FL_EXPORT_C(void, Fl_Gl_Window_draw_box)(fl_Gl_Window Gl_Window);
+  FL_EXPORT_C(void, Fl_Gl_Window_draw_box_with_tc)(fl_Gl_Window Gl_Window,Fl_Boxtype t, Fl_Color c);
+  FL_EXPORT_C(void, Fl_Gl_Window_draw_box_with_txywhc)(fl_Gl_Window Gl_Window,Fl_Boxtype t, int x,int y,int w,int h, Fl_Color c);
+  FL_EXPORT_C(void, Fl_Gl_Window_draw_backdrop)(fl_Gl_Window Gl_Window);
+  FL_EXPORT_C(void, Fl_Gl_Window_draw_focus)(fl_Gl_Window Gl_Window);
+  FL_EXPORT_C(void, Fl_Gl_Window_draw_focus_with_txywh)(fl_Gl_Window Gl_Window,Fl_Boxtype t, int x,int y,int w,int h);
+  FL_EXPORT_C(void, Fl_Gl_Window_draw_label)(fl_Gl_Window Gl_Window);
 
   FL_EXPORT_C(int,          Fl_Gl_Window_x)(fl_Gl_Window win);
   FL_EXPORT_C(int,          Fl_Gl_Window_y)(fl_Gl_Window win);
@@ -259,6 +261,11 @@ FL_EXPORT_C(void, Fl_Gl_Window_draw_label)(fl_Gl_Window Gl_Window);
   FL_EXPORT_C(void, Fl_Gl_Window_redraw_overlay)(fl_Gl_Window win);
   FL_EXPORT_C(void, Fl_Gl_Window_hide_overlay)(fl_Gl_Window win);
   FL_EXPORT_C(void, Fl_Gl_Window_make_overlay_current)(fl_Gl_Window win);
+#if FL_API_VERSION >= 10304
+  FL_EXPORT_C(float, Fl_Gl_Window_pixels_per_unit)(fl_Gl_Window win);
+  FL_EXPORT_C(int, Fl_Gl_Window_pixel_h)(fl_Gl_Window win);
+  FL_EXPORT_C(int, Fl_Gl_Window_pixel_w)(fl_Gl_Window win);
+#endif
   FL_EXPORT_C(int,Fl_Gl_Window_handle_super)(fl_Gl_Window self, int event);
   FL_EXPORT_C(void,Fl_Gl_Window_draw_super)(fl_Gl_Window self);
   FL_EXPORT_C(fl_Group,Fl_Gl_Window_as_group_super)(fl_Gl_Window win);
