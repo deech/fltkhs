@@ -841,7 +841,7 @@ FL_EXPORT_C(fl_Gl_Window, Fl_OverriddenGl_Window_NewXY_WithLabel)(int x, int y, 
   FL_EXPORT_C(int, Fl_Gl_Window_pixel_h)(fl_Gl_Window win){
     return (static_cast<Fl_DerivedGl_Window*>(win))->pixel_h();
   }
-  FL_EXPORT_C(int, Fl_Gl_Window_pixels_w)(fl_Gl_Window win){
+  FL_EXPORT_C(int, Fl_Gl_Window_pixel_w)(fl_Gl_Window win){
     return (static_cast<Fl_DerivedGl_Window*>(win))->pixel_w();
   }
 #endif

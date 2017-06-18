@@ -1,6 +1,7 @@
 #ifndef __FL_GL_WINDOW_C__
 #define __FL_GL_WINDOW_C__
 #include "Fl_Types.h"
+#include "Fl_EnumerationsC.h"
 #ifdef __cplusplus
 #include "Fl_EnumerationsC.h"
 #include "FL/Fl.H"

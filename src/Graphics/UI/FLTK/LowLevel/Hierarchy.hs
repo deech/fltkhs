@@ -2333,11 +2333,11 @@ type MenuPrimFuncs =
   (SetDownBox
   (GetDownColor
   (SetDownColor
-#if FLTK_API_VERSION == 10304
+#if FLTK_API_VERSION >= 10304
   (Setonly
 #endif
   ())))))))))))))))))))))))))))))))))))))))))))))
-#if FLTK_API_VERSION == 10304
+#if FLTK_API_VERSION >= 10304
   )
 #endif
 
@@ -2466,11 +2466,11 @@ type ImageFuncs =
   (DrawResize
   (Draw
   (Uncache
-#if FLTK_API_VERSION == 10304
+#if FLTK_API_VERSION >= 10304
   (Fail
 #endif
   ())))))))))))))
-#if FLTK_API_VERSION == 10304
+#if FLTK_API_VERSION >= 10304
   )
 #endif
 

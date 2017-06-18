@@ -510,7 +510,7 @@ enum Mode {
  ModeMultisample = FL_MULTISAMPLE,
  ModeStereo      = FL_STEREO,
  ModeFakeSingle  = FL_FAKE_SINGLE
-#if FLTK_API_VERSION == 10304
+#if FLTK_API_VERSION >= 10304
  , ModeOpenGL3     = FL_OPENGL3
 #endif
 };
@@ -701,7 +701,7 @@ allModes =
     ModeMultisample,
     ModeStereo,
     ModeFakeSingle
-#if FLTK_API_VERSION == 10304
+#if FLTK_API_VERSION >= 10304
     , ModeOpenGL3
 #endif
   ]

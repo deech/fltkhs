@@ -147,7 +147,7 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Image_uncache)(fl_Image image){
     return (static_cast<Fl_DerivedImage*>(image))->uncache();
   }
-#if FL_API_VERSION == 10304
+#if FL_API_VERSION >= 10304
   FL_EXPORT_C(int, Fl_Image_fail)(fl_Image image){
     return (static_cast<Fl_DerivedImage*>(image))->fail();
   }

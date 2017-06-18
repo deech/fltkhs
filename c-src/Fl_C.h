@@ -261,7 +261,7 @@ EXPORT {
   FL_EXPORT_C(void*             ,Fl_event_clipboard)();
   FL_EXPORT_C(const char*       ,Fl_event_clipboard_type)();
   FL_EXPORT_C(int               ,Fl_reload_scheme());
-#if FL_API_VERSION == 10304
+#if FL_API_VERSION >= 10304
   FL_EXPORT_C(void              ,Fl_set_box_color)(Fl_Color c);
   FL_EXPORT_C(Fl_Color          ,Fl_box_color)(Fl_Color c);
   FL_EXPORT_C(int               ,Fl_abi_version)();

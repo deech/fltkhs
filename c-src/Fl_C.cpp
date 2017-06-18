@@ -606,7 +606,7 @@ EXPORT {
   FL_EXPORT_C(int ,Fl_reload_scheme()){
     return Fl::reload_scheme();
   };
-#if FL_API_VERSION == 10304
+#if FL_API_VERSION >= 10304
   FL_EXPORT_C(void,Fl_set_box_color)(Fl_Color c) {
     Fl::set_box_color(c);
   }

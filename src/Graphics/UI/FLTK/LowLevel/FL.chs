@@ -162,7 +162,7 @@ module Graphics.UI.FLTK.LowLevel.FL
      eventText,
      eventLength,
      eventClipboardContents,
-#if FLTK_API_VERSION == 10304
+#if FLTK_API_VERSION >= 10304
      setBoxColor,
      boxColor,
      abiVersion,
@@ -879,7 +879,7 @@ releaseWidgetPointer :: (Parent a Widget) => Ref a -> IO ()
 releaseWidgetPointer wp = withRef wp {#call Fl_release_widget_pointer as fl_release_widget_pointer #}
 clearWidgetPointer :: (Parent a Widget) => Ref a -> IO ()
 clearWidgetPointer wp = withRef wp {#call Fl_clear_widget_pointer as fl_Clear_Widget_Pointer #}
-#if FLTK_API_VERSION == 10304
+#if FLTK_API_VERSION >= 10304
 -- | Only available on FLTK version 1.3.4 and above.
 setBoxColor :: Color -> IO ()
 setBoxColor c = {#call Fl_set_box_color as fl_set_box_color #} (cFromColor c)

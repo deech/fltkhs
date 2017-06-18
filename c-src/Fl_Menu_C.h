@@ -207,7 +207,7 @@ EXPORT {
   FL_EXPORT_C(void, Fl_Menu__set_down_box)(fl_Menu_ menu_, Fl_Boxtype b);
   FL_EXPORT_C(Fl_Color, Fl_Menu__down_color)(fl_Menu_ menu_);
   FL_EXPORT_C(void, Fl_Menu__set_down_color)(fl_Menu_ menu_, unsigned c);
-#if FL_API_VERSION == 10304
+#if FL_API_VERSION >= 10304
   FL_EXPORT_C(void, Fl_Menu__set_only)(fl_Menu_ menu_, fl_Menu_Item m);
 #endif
 #ifdef __cplusplus

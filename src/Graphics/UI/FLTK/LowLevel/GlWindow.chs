@@ -159,7 +159,7 @@ instance (impl ~ ( IO ())) => Op (HideOverlay ()) GlWindow orig impl where
 instance (impl ~ ( IO ())) => Op (MakeOverlayCurrent ()) GlWindow orig impl where
   runOp _ _ win = withRef win $ \winPtr -> makeOverlayCurrent' winPtr
 {# fun Fl_Gl_Window_pixels_per_unit as pixelsPerUnit' { id `Ptr ()'} -> `Float' #}
-#if FLTK_API_VERSION == 10304
+#if FLTK_API_VERSION >= 10304
 instance (impl ~ ( IO (Float))) => Op (PixelsPerUnit ()) GlWindow orig impl where
   runOp _ _ win = withRef win $ \winPtr -> pixelsPerUnit' winPtr
 {# fun Fl_Gl_Window_pixel_h as pixelH' { id `Ptr ()'} -> `Int' #}
