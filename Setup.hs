@@ -105,20 +105,41 @@ myPreConf args flags = do
    preConf autoconfUserHooks args flags
 
 myPostConf :: Args -> ConfigFlags -> PackageDescription -> LocalBuildInfo -> IO ()
-myPostConf args flags pd lbi =
-  postConf autoconfUserHooks
-           args
-           (if (openGLSupport flags)
-            then (flags{ configConfigureArgs = (configConfigureArgs flags) ++ ["--enable-gl"]})
-            else flags)
-           pd
-           lbi
+myPostConf args flags pd lbi = do
+  let confFlags = if (openGLSupport flags)
+                  then (flags{ configConfigureArgs = (configConfigureArgs flags) ++ ["--enable-gl"]})
+                  else flags
+  (major, minor, patch) <- getFltkVersion
+  let confFlagsWithVersion =
+        confFlags
+        {
+          configConfigureArgs = (configConfigureArgs confFlags) ++ [
+                   ("--with-fltk-major-version=" ++ major),
+                   ("--with-fltk-minor-version=" ++ minor),
+                   ("--with-fltk-patch-version=" ++ patch)
+                 ]
+        }
+  postConf autoconfUserHooks args confFlagsWithVersion pd lbi
 
 fltkcdir :: FilePath
 fltkcdir = unsafePerformIO $ do
   d <- getCurrentDirectory
   return (d </> "c-lib")
 fltkclib = "fltkc"
+
+getFltkVersion :: IO (String, String, String)
+getFltkVersion = do
+  versionString <- (case buildOS of
+                      Windows -> rawSystemStdout normal "sh" ["fltk-config", "--version"]
+                      _ -> rawSystemStdout normal "fltk-config" ["--version"])
+  return (fltkVersion versionString)
+
+fltkVersion :: String -> (String,String,String)
+fltkVersion version =
+  let (major, minorVersion) = break ((==) '.') (unlines (lines version))
+      (minor, patchVersion) = break ((==) '.') (drop 1 minorVersion)
+      patch = drop 1 patchVersion
+  in (major, minor, patch)
 
 flagIsSet :: PD.FlagName -> ConfigFlags -> Bool
 flagIsSet flag configFlags = maybe False id (lookup flag (configConfigurationsFlags configFlags))
@@ -192,6 +213,21 @@ myBuildHook pkg_descr local_bld_info user_hooks bld_flags = do
         clibraries <- getDirectoryContents fltkcdir
         when (null $ filter (Data.List.isInfixOf "fltkc") clibraries) compileC
        else compileC
+     (major, minor, patch) <- getFltkVersion
+     let apiVersion = ((((read major) :: Int) * 10000) +
+                       (((read minor) :: Int) * 100) +
+                       ((read patch) :: Int))
+     let fixedLib = do
+              l <- library pkg_descr
+              let cpp = cppOptions (libBuildInfo l)
+                  apiVersionAdded = cpp ++ ["-DFLTK_API_VERSION=" ++ (show apiVersion)]
+              return (l {
+                          libBuildInfo =
+                            (libBuildInfo l) {
+                               cppOptions = apiVersionAdded
+                            }
+                       })
+         apiVersionAddedPkgDescription = (pkg_descr { library = fixedLib })
      case buildOS of
        Windows ->
          let rewritePaths :: PackageDescription -> IO PackageDescription
@@ -230,15 +266,15 @@ myBuildHook pkg_descr local_bld_info user_hooks bld_flags = do
                                      ld_incdirs
                  return (pkg_descr {library = fixedLib})
          in do
-           fixedPkgDescr <- rewritePaths pkg_descr >>= return . addFltkcDir
+           fixedPkgDescr <- rewritePaths apiVersionAddedPkgDescription >>= return . addFltkcDir
            buildHook autoconfUserHooks fixedPkgDescr local_bld_info user_hooks bld_flags
        Linux -> do
          updateEnv "LIBRARY_PATH" fltkcdir
-         buildHook autoconfUserHooks pkg_descr local_bld_info user_hooks bld_flags
+         buildHook autoconfUserHooks apiVersionAddedPkgDescription local_bld_info user_hooks bld_flags
        _ -> do
          updateEnv "DYLD_LIBRARY_PATH" fltkcdir
          updateEnv "LIBRARY_PATH" fltkcdir
-         buildHook autoconfUserHooks pkg_descr local_bld_info user_hooks bld_flags
+         buildHook autoconfUserHooks apiVersionAddedPkgDescription local_bld_info user_hooks bld_flags
 
 copyCBindingsAndBundledExecutables :: PackageDescription -> LocalBuildInfo -> UserHooks -> CopyFlags -> IO ()
 copyCBindingsAndBundledExecutables pkg_descr lbi uhs flags = do

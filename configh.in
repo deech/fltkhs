@@ -1,5 +1,14 @@
 /* configh.in.  Generated from configure.ac by autoheader.  */
 
+/* Fltk Major Version */
+#undef FLTK_MAJOR_VERSION
+
+/* Fltk Minor Version */
+#undef FLTK_MINOR_VERSION
+
+/* Fltk Patch Version */
+#undef FLTK_PATCH_VERSION
+
 /* Support OpenGL */
 #undef HAVE_GL
 

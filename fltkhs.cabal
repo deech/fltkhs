@@ -39,6 +39,7 @@ library
      exposed-modules:
                    Graphics.UI.FLTK.LowLevel.Gl
                    Graphics.UI.FLTK.LowLevel.GlWindow
+     cpp-options: -DGLSUPPORT
   exposed-modules:
                    Graphics.UI.FLTK.LowLevel.FLTKHS
                    Graphics.UI.FLTK.LowLevel.Ask

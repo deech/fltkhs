@@ -184,6 +184,7 @@ EXPORT {
     int height;
     const char *name;
   } page_format;
+#ifdef HAVE_GL
 #  ifdef __APPLE__
 #    include <OpenGL/gl.h>
 #  else
@@ -349,6 +350,7 @@ EXPORT {
   Fl_Glut_StrokeFont glutStrokeMonoRoman;
 #  define GLUT_STROKE_ROMAN		(&glutStrokeRoman)
 #  define GLUT_STROKE_MONO_ROMAN	(&glutStrokeMonoRoman)
+#endif /* HAVE_GL */
   typedef ulong Fl_Bitmask;
   typedef unsigned int Fl_Char;
 #endif /* INTERNAL_LINKAGE */
