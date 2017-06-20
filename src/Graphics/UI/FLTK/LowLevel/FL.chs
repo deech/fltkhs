@@ -172,11 +172,15 @@ module Graphics.UI.FLTK.LowLevel.FL
      localMeta,
      localAlt,
      localShift
+#ifdef GLSUPPORT
+     , useHighResGL
+     , setUseHighResGL
+#endif
 #endif
     )
 where
 #include "Fl_C.h"
-import C2HS hiding (cFromEnum, cToBool,cToEnum)
+import C2HS hiding (cFromEnum, cToBool,cToEnum,cFromBool)
 import Data.IORef
 
 import Graphics.UI.FLTK.LowLevel.Fl_Enumerations
@@ -329,7 +333,7 @@ isScheme sch = TF.withCStringLen sch $ \(str,_) -> {#call Fl_is_scheme as fl_is_
        { `Int' } -> `()' #}
 
 {# fun Fl_readqueue as readqueue
-       {  } -> `Ref Widget' unsafeToRef #}
+       {  } -> `Maybe (Ref Widget)' unsafeToMaybeRef #}
 {# fun Fl_add_timeout as addTimeout
        { `Double', unsafeToCallbackPrim `GlobalCallback' } -> `()' supressWarningAboutRes #}
 {# fun Fl_repeat_timeout as repeatTimeout
@@ -907,4 +911,12 @@ localMeta = {#call Fl_local_meta as fl_local_meta #} >>= cStringToText
 -- | Only available on FLTK version 1.3.4 and above.
 localShift :: IO T.Text
 localShift = {#call Fl_local_shift as fl_local_shift #} >>= cStringToText
+#ifdef GLSUPPORT
+-- | Only available on FLTK version 1.3.4 and above if GL is enabled with 'stack build --flag fltkhs:opengl'
+useHighResGL :: IO Bool
+useHighResGL = {#call Fl_use_high_res_GL as fl_use_high_res_GL #} >>= return . cToBool
+-- | Only available on FLTK version 1.3.4 and above if GL is enabled with 'stack build --flag fltkhs:opengl'
+setUseHighResGL :: Bool -> IO ()
+setUseHighResGL use' = {#call Fl_set_use_high_res_GL as fl_set_use_high_res_GL #} (cFromBool use')
+#endif
 #endif

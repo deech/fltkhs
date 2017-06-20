@@ -271,6 +271,8 @@ EXPORT {
   FL_EXPORT_C(const char*       ,Fl_local_meta)();
   FL_EXPORT_C(const char*       ,Fl_local_alt)();
   FL_EXPORT_C(const char*       ,Fl_local_shift)();
+  FL_EXPORT_C(void              ,Fl_set_use_high_res_GL)(int val);
+  FL_EXPORT_C(int               ,Fl_use_high_res_GL)();
 #endif
 #ifdef __cplusplus
 }

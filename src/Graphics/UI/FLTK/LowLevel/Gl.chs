@@ -42,9 +42,9 @@ glRect rectangle = let (x_pos', y_pos', width', height') = fromRectangle rectang
 {# fun flc_gl_rectf as flcGlRectf' { `Int',`Int',`Int',`Int' } -> `()' #}
 glRectf :: Rectangle ->  IO ()
 glRectf rectangle = let (x_pos', y_pos', width', height') = fromRectangle rectangle in flcGlRectf' x_pos' y_pos' width' height'
-{# fun flc_gl_font as flcGlFont' {cFromFont `Font',`Int' } -> `()' #}
-glFont :: Font -> Int ->  IO ()
-glFont fontid size = flcGlFont' fontid size
+{# fun flc_gl_font as flcGlFont' {cFromFont `Font',`CInt' } -> `()' #}
+glFont :: Font -> FontSize ->  IO ()
+glFont fontid (FontSize size) = flcGlFont' fontid size
 
 {# fun flc_gl_width as flcGlWidth' { unsafeToCString `T.Text' } -> `Double' #}
 glWidth :: T.Text ->  IO (Double)

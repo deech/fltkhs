@@ -2,55 +2,55 @@
 #include "Fl_ExportMacros.h"
 #ifdef __cplusplus
 #include "Fl_C.h"
-  class C_to_Fl_Event_Dispatch {
-  public:
-    static fl_Event_Dispatch* cb;
-    static int intercept(int event, Fl_Window* window) {
-      fl_Window w = (fl_Window)window;
-      return (*cb)(event, w);
-    }
-  };
-  fl_Event_Dispatch* C_to_Fl_Event_Dispatch::cb = 0;
-  class C_to_Fl_Label_Draw_F {
-  public:
-    static fl_Label_Draw_F* cb;
-    static void intercept(const Fl_Label* label, int x, int y, int w, int h, Fl_Align align) {
-      fl_Label* l = (fl_Label*)label;
-      (*cb)(l, x, y, w, h, align);
-    }
-  };
-  fl_Label_Draw_F* C_to_Fl_Label_Draw_F::cb = 0;
-  class C_to_Fl_Label_Measure_F {
-  public:
-    static fl_Label_Measure_F* cb;
-    static void intercept(const Fl_Label* label, int& width, int& height) {
-      fl_Label* l = (fl_Label*)label;
-      int* w = &width;
-      int* h = &height;
-      (*cb)(l, w, h);
-    }
-  };
-  fl_Label_Measure_F* C_to_Fl_Label_Measure_F::cb = 0;
-  class C_to_Fl_Abort_Handler {
-  public:
-    static fl_Abort_Handler* cb;
-    static void intercept(const char* format, ...) {
-      va_list argp;
-      va_start(argp, format);
-      (*cb)(format, argp);
-      va_end(argp);
-    }
-  };
-  fl_Abort_Handler* C_to_Fl_Abort_Handler::cb = 0;
-  class C_to_Fl_Atclose_Handler {
-  public:
-    static fl_Atclose_Handler* cb;
-    static void intercept(Fl_Window* window, void* data){
-      fl_Window w = (fl_Window)window;
-      (*cb)(w,data);
-    }
-  };
-  fl_Atclose_Handler* C_to_Fl_Atclose_Handler::cb = 0;
+class C_to_Fl_Event_Dispatch {
+public:
+  static fl_Event_Dispatch* cb;
+  static int intercept(int event, Fl_Window* window) {
+    fl_Window w = (fl_Window)window;
+    return (*cb)(event, w);
+  }
+};
+fl_Event_Dispatch* C_to_Fl_Event_Dispatch::cb = 0;
+class C_to_Fl_Label_Draw_F {
+public:
+  static fl_Label_Draw_F* cb;
+  static void intercept(const Fl_Label* label, int x, int y, int w, int h, Fl_Align align) {
+    fl_Label* l = (fl_Label*)label;
+    (*cb)(l, x, y, w, h, align);
+  }
+};
+fl_Label_Draw_F* C_to_Fl_Label_Draw_F::cb = 0;
+class C_to_Fl_Label_Measure_F {
+public:
+  static fl_Label_Measure_F* cb;
+  static void intercept(const Fl_Label* label, int& width, int& height) {
+    fl_Label* l = (fl_Label*)label;
+    int* w = &width;
+    int* h = &height;
+    (*cb)(l, w, h);
+  }
+};
+fl_Label_Measure_F* C_to_Fl_Label_Measure_F::cb = 0;
+class C_to_Fl_Abort_Handler {
+public:
+  static fl_Abort_Handler* cb;
+  static void intercept(const char* format, ...) {
+    va_list argp;
+    va_start(argp, format);
+    (*cb)(format, argp);
+    va_end(argp);
+  }
+};
+fl_Abort_Handler* C_to_Fl_Abort_Handler::cb = 0;
+class C_to_Fl_Atclose_Handler {
+public:
+  static fl_Atclose_Handler* cb;
+  static void intercept(Fl_Window* window, void* data){
+    fl_Window w = (fl_Window)window;
+    (*cb)(w,data);
+  }
+};
+fl_Atclose_Handler* C_to_Fl_Atclose_Handler::cb = 0;
 EXPORT {
 #endif
   FL_EXPORT_C(int, Fl_run)(){ return Fl::run(); }
@@ -621,7 +621,7 @@ EXPORT {
   }
   FL_EXPORT_C(int ,Fl_abi_check(int val)){
     return Fl::abi_check(val);
-      };
+  };
   FL_EXPORT_C(const char*,Fl_local_ctrl)(){
     return fl_local_ctrl;
   }
@@ -633,6 +633,12 @@ EXPORT {
   }
   FL_EXPORT_C(const char*,Fl_local_shift)(){
     return fl_local_shift;
+  }
+  FL_EXPORT_C(void,Fl_set_use_high_res_GL)(int val){
+    Fl::use_high_res_GL(val);
+  }
+  FL_EXPORT_C(int,Fl_use_high_res_GL)(){
+    return Fl::use_high_res_GL();
   }
 #endif
 

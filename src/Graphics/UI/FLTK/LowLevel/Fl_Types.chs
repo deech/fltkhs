@@ -452,13 +452,25 @@ isNull (Ref fptr) =
         return (refPtr == nullPtr)
    )
 
+#ifdef CALLSTACK_AVAILABLE
+unsafeRefToPtr :: (?loc :: CallStack) => Ref a -> IO (Ptr ())
+#elif HASCALLSTACK_AVAILABLE
+unsafeRefToPtr :: HasCallStack => Ref a -> IO (Ptr ())
+#else
 unsafeRefToPtr :: Ref a -> IO (Ptr ())
+#endif
 unsafeRefToPtr (Ref fptr) =
     throwStackOnError $ do
       refPtr <- toRefPtr $ Unsafe.unsafeForeignPtrToPtr fptr
       return $ castPtr refPtr
 
+#ifdef CALLSTACK_AVAILABLE
+withRefs :: (?loc :: CallStack) => [Ref a] -> (Ptr (Ptr b) -> IO c) -> IO c
+#elif HASCALLSTACK_AVAILABLE
+withRefs :: HasCallStack => [Ref a] -> (Ptr (Ptr b) -> IO c) -> IO c
+#else
 withRefs :: [Ref a] -> (Ptr (Ptr b) -> IO c) -> IO c
+#endif
 withRefs refs f =
   throwStackOnError
   $ withForeignPtrs
@@ -486,3 +498,10 @@ toFunRef fptr = FunRef $ castFunPtr fptr
 
 fromFunRef :: FunRef -> (FunPtr ())
 fromFunRef (FunRef f) = castFunPtr f
+
+refPtrEquals :: Ref a -> Ref b -> IO Bool
+refPtrEquals w1 w2 = do
+  w1Null <- isNull w1
+  w2Null <- isNull w2
+  if (w1Null || w2Null) then return False
+    else withRef w1 (\w1Ptr -> withRef w2 (\w2Ptr -> return (w1Ptr == w2Ptr)))
