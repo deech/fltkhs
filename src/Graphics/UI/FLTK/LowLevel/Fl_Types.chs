@@ -412,7 +412,7 @@ withForeignPtrs fptrs io = do
 
 #ifdef CALLSTACK_AVAILABLE
 toRefPtr :: (?loc :: CallStack) => Ptr (Ptr a) -> IO (Ptr a)
-#elif HASCALLSTACK_AVAILABLE
+#elif defined(HASCALLSTACK_AVAILABLE)
 toRefPtr :: HasCallStack => Ptr (Ptr a) -> IO (Ptr a)
 #else
 toRefPtr :: Ptr (Ptr a) -> IO (Ptr a)
@@ -422,7 +422,7 @@ toRefPtr ptrToRefPtr = do
   if (refPtr == nullPtr)
 #ifdef CALLSTACK_AVAILABLE
    then error $ "Ref does not exist. " ++ (showCallStack ?loc)
-#elif HASCALLSTACK_AVAILABLE
+#elif defined(HASCALLSTACK_AVAILABLE)
    then error $ "Ref does not exist. " ++ (prettyCallStack callStack)
 #else
    then error "Ref does not exist. "
@@ -431,7 +431,7 @@ toRefPtr ptrToRefPtr = do
 
 #ifdef CALLSTACK_AVAILABLE
 withRef :: (?loc :: CallStack) => Ref a -> (Ptr b -> IO c) -> IO c
-#elif HASCALLSTACK_AVAILABLE
+#elif defined(HASCALLSTACK_AVAILABLE)
 withRef :: HasCallStack => Ref a -> (Ptr b -> IO c) -> IO c
 #else
 withRef :: Ref a -> (Ptr b -> IO c) -> IO c
@@ -454,7 +454,7 @@ isNull (Ref fptr) =
 
 #ifdef CALLSTACK_AVAILABLE
 unsafeRefToPtr :: (?loc :: CallStack) => Ref a -> IO (Ptr ())
-#elif HASCALLSTACK_AVAILABLE
+#elif defined(HASCALLSTACK_AVAILABLE)
 unsafeRefToPtr :: HasCallStack => Ref a -> IO (Ptr ())
 #else
 unsafeRefToPtr :: Ref a -> IO (Ptr ())

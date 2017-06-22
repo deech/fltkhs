@@ -267,7 +267,7 @@ unsafeFromCString cstring = Unsafe.unsafePerformIO (cStringToText cstring)
 
 #ifdef CALLSTACK_AVAILABLE
 cStringToText :: (?loc :: CallStack) => CString -> IO T.Text
-#elif HASCALLSTACK_AVAILABLE
+#elif defined(HASCALLSTACK_AVAILABLE)
 cStringToText :: (HasCallStack) => CString -> IO T.Text
 #else
 cStringToText :: CString -> IO T.Text

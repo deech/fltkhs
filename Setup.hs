@@ -11,6 +11,7 @@ import Distribution.Verbosity
 import Distribution.Text ( display )
 import Control.Monad
 import Data.List
+import Control.Applicative((<$>))
 import Distribution.Simple.Program
   ( Program(..), ConfiguredProgram(..), programPath
    , requireProgram, requireProgramVersion
