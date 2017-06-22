@@ -43,12 +43,12 @@ module Graphics.UI.FLTK.LowLevel.Fl_Enumerations
      GlutWindowProperties(..),
      GlutCursor(..),
      glutCursorFullCrossHair,
+#endif
      -- * Various modes
      Mode(..),
      Modes(..),
      single,
      allModes,
-#endif
      -- * Alignment
      Alignments(..),
      AlignType(..),
@@ -510,8 +510,10 @@ enum Mode {
  ModeMultisample = FL_MULTISAMPLE,
  ModeStereo      = FL_STEREO,
  ModeFakeSingle  = FL_FAKE_SINGLE
+#ifdef GLSUPPORT
 #if FLTK_API_VERSION >= 10304
  , ModeOpenGL3     = FL_OPENGL3
+#endif
 #endif
 };
 enum AlignType {
@@ -678,15 +680,12 @@ kb_KpLast = Kb_F
 -- | Only available if the 'opengl' flag is set (stack build --flag fltkhs:opengl).
 glutCursorFullCrossHair :: GlutCursor
 glutCursorFullCrossHair = GlutCursorCrosshair
--- | Only available if the 'opengl' flag is set (stack build --flag fltkhs:opengl).
+#endif /* GLSUPPORT */
 {#enum Mode   {} deriving (Show,Eq,Ord) #}
 -- Fl_Mode Aliases
--- | Only available if the 'opengl' flag is set (stack build --flag fltkhs:opengl).
 single :: Mode
 single = ModeRGB
--- | Only available if the 'opengl' flag is set (stack build --flag fltkhs:opengl).
 newtype Modes = Modes [Mode] deriving (Show,Eq,Ord)
--- | Only available if the 'opengl' flag is set (stack build --flag fltkhs:opengl).
 allModes :: [Mode]
 allModes =
   [
@@ -702,10 +701,11 @@ allModes =
     ModeStereo,
     ModeFakeSingle
 #if FLTK_API_VERSION >= 10304
+#ifdef GLSUPPORT
     , ModeOpenGL3
 #endif
+#endif
   ]
-#endif /* GLSUPPORT */
 
 {#enum AlignType {} deriving (Show, Eq, Ord) #}
 newtype Alignments = Alignments [AlignType] deriving Show
