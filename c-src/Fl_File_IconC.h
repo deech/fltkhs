@@ -27,7 +27,7 @@ EXPORT {
   FL_EXPORT_C(int, Fl_File_Icon_type)(fl_File_Icon file_icon);
   FL_EXPORT_C(short*, Fl_File_Icon_value)(fl_File_Icon file_icon);
   FL_EXPORT_C(void, Fl_File_Icon_labeltype)(fl_Label o, int x, int y, int w, int h, Fl_Align a);
-  FL_EXPORT_C(fl_File_Icon, Fl_File_Icon_find)(const char* filename, int filetype);
+  FL_EXPORT_C(fl_File_Icon, Fl_File_Icon_find)(const char* filename);
   FL_EXPORT_C(fl_File_Icon, Fl_File_Icon_find_with_filetype)(const char* filename, int filetype);
   FL_EXPORT_C(fl_File_Icon, Fl_File_Icon_first)();
   FL_EXPORT_C(void, Fl_File_Icon_load_system_icons)();

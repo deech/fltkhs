@@ -523,7 +523,7 @@ FL_EXPORT_C(void, Fl_Browser_draw_label)(fl_Browser Browser){
   }
   FL_EXPORT_C(void,Fl_Browser_lineposition)(fl_Browser browser,int line,Fl_Line_Position pos){
     Fl_Browser::Fl_Line_Position p = (Fl_Browser::Fl_Line_Position)-1;
-    switch(p){
+    switch(pos){
     case TOP :    {p = Fl_Browser::TOP; break;}
     case BOTTOM : {p = Fl_Browser::BOTTOM; break;}
     case MIDDLE : {p = Fl_Browser::MIDDLE; break;}
