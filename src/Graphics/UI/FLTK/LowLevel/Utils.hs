@@ -53,6 +53,8 @@ foreign import ccall "wrapper"
         mkTextPredeleteCb :: TextPredeleteCbPrim -> IO (FunPtr TextPredeleteCbPrim)
 foreign import ccall "wrapper"
         mkFDHandlerPrim :: FDHandlerPrim -> IO (FunPtr FDHandlerPrim)
+foreign import ccall "wrapper"
+        mkGlobalCallbackPtr:: GlobalCallback -> IO (FunPtr GlobalCallback)
 
 toCallbackPrim :: (Ref a -> IO ()) ->
                   IO (FunPtr (Ptr () -> IO ()))

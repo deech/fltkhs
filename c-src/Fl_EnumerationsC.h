@@ -447,35 +447,35 @@ EXPORT {
 #    define inactive    fl_inactive
 #  endif /* FLTK_1_0_COMPAT */
 #endif
-  FL_EXPORT_C(Fl_Boxtype, fl_define_FL_ROUND_UP_BOXC)();
-  FL_EXPORT_C(Fl_Boxtype, fl_define_FL_SHADOW_BOXC)();
-  FL_EXPORT_C(Fl_Boxtype, fl_define_FL_ROUNDED_BOXC)();
-  FL_EXPORT_C(Fl_Boxtype, fl_define_FL_RFLAT_BOXC)();
-  FL_EXPORT_C(Fl_Boxtype, fl_define_FL_RSHADOW_BOXC)();
-  FL_EXPORT_C(Fl_Boxtype, fl_define_FL_DIAMOND_BOXC)();
-  FL_EXPORT_C(Fl_Boxtype, fl_define_FL_OVAL_BOXC)();
-  FL_EXPORT_C(Fl_Boxtype, fl_define_FL_PLASTIC_UP_BOXC)();
-  FL_EXPORT_C(Fl_Boxtype, fl_define_FL_GTK_UP_BOXC)();
-  FL_EXPORT_C(Fl_Boxtype, fl_define_FL_GLEAM_UP_BOXC)();
-  FL_EXPORT_C(Fl_Boxtype, fl_boxC)(Fl_Boxtype b) ;
-  FL_EXPORT_C(Fl_Boxtype, fl_downC)(Fl_Boxtype b) ;
-  FL_EXPORT_C(Fl_Boxtype, fl_frameC)(Fl_Boxtype b) ;
-  FL_EXPORT_C(Fl_Labeltype, fl_define_FL_SHADOW_LABELC)() ;
-  FL_EXPORT_C(Fl_Labeltype, fl_define_FL_ENGRAVED_LABELC)() ;
-  FL_EXPORT_C(Fl_Labeltype, fl_define_FL_EMBOSSED_LABELC)() ;
-  FL_EXPORT_C(Fl_Align, FL_ALIGN_TOP_LEFTC)();
-  FL_EXPORT_C(Fl_Align, FL_ALIGN_TOP_RIGHTC)();
-  FL_EXPORT_C(Fl_Align, FL_ALIGN_BOTTOM_LEFTC)();
-  FL_EXPORT_C(Fl_Align, FL_ALIGN_BOTTOM_RIGHTC)();
-  FL_EXPORT_C(Fl_Color, fl_inactiveC)(Fl_Color c) ;
-  FL_EXPORT_C(Fl_Color, fl_contrastC)(Fl_Color fg, Fl_Color bg) ;
-  FL_EXPORT_C(Fl_Color, fl_color_averageC)(Fl_Color c1, Fl_Color c2, float weight);
-  FL_EXPORT_C(Fl_Color, fl_lighterC)(Fl_Color c);
-  FL_EXPORT_C(Fl_Color, fl_darkerC)(Fl_Color c);
-  FL_EXPORT_C(Fl_Color, fl_rgb_color_with_rgbC)(uchar r, uchar g, uchar b);
-  FL_EXPORT_C(Fl_Color, fl_rgb_color_with_grayscaleC)(uchar g);
-  FL_EXPORT_C(Fl_Color, fl_gray_rampC)(int i);
-  FL_EXPORT_C(Fl_Color, fl_color_cubeC)(int r, int g, int b);
+  FL_EXPORT_C_HEADER(Fl_Boxtype,fl_define_FL_ROUND_UP_BOXC,());
+  FL_EXPORT_C_HEADER(Fl_Boxtype,fl_define_FL_SHADOW_BOXC,());
+  FL_EXPORT_C_HEADER(Fl_Boxtype,fl_define_FL_ROUNDED_BOXC,());
+  FL_EXPORT_C_HEADER(Fl_Boxtype,fl_define_FL_RFLAT_BOXC,());
+  FL_EXPORT_C_HEADER(Fl_Boxtype,fl_define_FL_RSHADOW_BOXC,());
+  FL_EXPORT_C_HEADER(Fl_Boxtype,fl_define_FL_DIAMOND_BOXC,());
+  FL_EXPORT_C_HEADER(Fl_Boxtype,fl_define_FL_OVAL_BOXC,());
+  FL_EXPORT_C_HEADER(Fl_Boxtype,fl_define_FL_PLASTIC_UP_BOXC,());
+  FL_EXPORT_C_HEADER(Fl_Boxtype,fl_define_FL_GTK_UP_BOXC,());
+  FL_EXPORT_C_HEADER(Fl_Boxtype,fl_define_FL_GLEAM_UP_BOXC,());
+  FL_EXPORT_C_HEADER(Fl_Boxtype,fl_boxC,(Fl_Boxtype b) );
+  FL_EXPORT_C_HEADER(Fl_Boxtype,fl_downC,(Fl_Boxtype b) );
+  FL_EXPORT_C_HEADER(Fl_Boxtype,fl_frameC,(Fl_Boxtype b) );
+  FL_EXPORT_C_HEADER(Fl_Labeltype,fl_define_FL_SHADOW_LABELC,() );
+  FL_EXPORT_C_HEADER(Fl_Labeltype,fl_define_FL_ENGRAVED_LABELC,() );
+  FL_EXPORT_C_HEADER(Fl_Labeltype,fl_define_FL_EMBOSSED_LABELC,() );
+  FL_EXPORT_C_HEADER(Fl_Align,FL_ALIGN_TOP_LEFTC,());
+  FL_EXPORT_C_HEADER(Fl_Align,FL_ALIGN_TOP_RIGHTC,());
+  FL_EXPORT_C_HEADER(Fl_Align,FL_ALIGN_BOTTOM_LEFTC,());
+  FL_EXPORT_C_HEADER(Fl_Align,FL_ALIGN_BOTTOM_RIGHTC,());
+  FL_EXPORT_C_HEADER(Fl_Color,fl_inactiveC,(Fl_Color c) );
+  FL_EXPORT_C_HEADER(Fl_Color,fl_contrastC,(Fl_Color fg, Fl_Color bg) );
+  FL_EXPORT_C_HEADER(Fl_Color,fl_color_averageC,(Fl_Color c1, Fl_Color c2, float weight));
+  FL_EXPORT_C_HEADER(Fl_Color,fl_lighterC,(Fl_Color c));
+  FL_EXPORT_C_HEADER(Fl_Color,fl_darkerC,(Fl_Color c));
+  FL_EXPORT_C_HEADER(Fl_Color,fl_rgb_color_with_rgbC,(uchar r, uchar g, uchar b));
+  FL_EXPORT_C_HEADER(Fl_Color,fl_rgb_color_with_grayscaleC,(uchar g));
+  FL_EXPORT_C_HEADER(Fl_Color,fl_gray_rampC,(int i));
+  FL_EXPORT_C_HEADER(Fl_Color,fl_color_cubeC,(int r, int g, int b));
 #ifdef __cplusplus
 }
 #endif

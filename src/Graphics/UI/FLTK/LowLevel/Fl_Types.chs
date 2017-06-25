@@ -249,17 +249,6 @@ data WrapType = WrapNone | WrapAtColumn ColumnNumber | WrapAtPixel PixelPosition
 data StyleTableEntry = StyleTableEntry (Maybe Color) (Maybe Font) (Maybe FontSize) deriving Show
 
 {#enum PackType{} deriving (Show, Eq, Ord) #}
-#ifdef GLSUPPORT
-data GLUTproc = GLUTproc {#type GLUTproc#} deriving Show
-newtype GLUTIdleFunction = GLUTIdleFunction (FunPtr (IO ()))
-newtype GLUTMenuStateFunction = GLUTMenuStateFunction (FunPtr (CInt -> IO()))
-newtype GLUTMenuStatusFunction = GLUTMenuStatusFunction
-                                     (FunPtr (CInt -> CInt -> CInt -> IO ()))
-{#pointer *Fl_Glut_Bitmap_Font as GlutBitmapFontPtr newtype #}
-{#pointer *Fl_Glut_StrokeVertex as GlutStrokeVertexPtr newtype#}
-{#pointer *Fl_Glut_StrokeStrip as GlutStrokeStripPtr newtype#}
-{#pointer *Fl_Glut_StrokeFont as GlutStrokeFontPtr newtype#}
-#endif
 type FlShortcut = {#type Fl_Shortcut #}
 type FlColor    = {#type Fl_Color #}
 type FlFont     = {#type Fl_Font #}
