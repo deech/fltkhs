@@ -28,30 +28,30 @@ EXPORT {
     ~Fl_DerivedScroll();
   };
 #endif
-  FL_EXPORT_C(void,        Fl_Scroll_set_scrollbar_size)(fl_Scroll widget, int size);
-  FL_EXPORT_C(int,         Fl_Scroll_get_scrollbar_size)(fl_Scroll widget);
-  FL_EXPORT_C(void,        Fl_Scroll_clear)(fl_Scroll widget);
-  FL_EXPORT_C(void,        Fl_Scroll_scroll_to)(fl_Scroll widget, int x, int y);
-  FL_EXPORT_C(int,         Fl_Scroll_yposition)(fl_Scroll widget);
-  FL_EXPORT_C(int,         Fl_Scroll_xposition)(fl_Scroll widget);
-  FL_EXPORT_C(uchar,        Fl_Scroll_type)(fl_Scroll widget);
-  FL_EXPORT_C(void,         Fl_Scroll_set_type)(fl_Scroll widget, uchar t);
-  FL_EXPORT_C(void,         Fl_Scroll_resize)(fl_Scroll scroll,int X, int Y, int W, int H);
-  FL_EXPORT_C(int,Fl_Scroll_handle)(fl_Scroll scroll, int event);
-  FL_EXPORT_C(fl_Scroll,    Fl_Scroll_New_WithLabel)(int x, int y, int w, int h, const char* label);
-  FL_EXPORT_C(fl_Scroll,    Fl_Scroll_New)(int x, int y, int w, int h);
-  FL_EXPORT_C(fl_Scroll,    Fl_OverriddenScroll_New)(int X, int Y, int W, int H,fl_Widget_Virtual_Funcs* fs);
-  FL_EXPORT_C(fl_Scroll,    Fl_OverriddenScroll_New_WithLabel)(int X, int Y, int W, int H, const char* label, fl_Widget_Virtual_Funcs* fs);
-  FL_EXPORT_C(void, Fl_Scroll_draw)(fl_Scroll o);
-  FL_EXPORT_C(void, Fl_Scroll_draw_super)(fl_Scroll o);
-  FL_EXPORT_C(int, Fl_Scroll_handle)(fl_Scroll o, int event);
-  FL_EXPORT_C(int, Fl_Scroll_handle_super)(fl_Scroll o, int event);
-  FL_EXPORT_C(void, Fl_Scroll_resize)(fl_Scroll o, int x, int y, int w, int h);
-  FL_EXPORT_C(void, Fl_Scroll_resize_super)(fl_Scroll o, int x, int y, int w, int h);
-  FL_EXPORT_C(void, Fl_Scroll_show)(fl_Scroll o);
-  FL_EXPORT_C(void, Fl_Scroll_show_super)(fl_Scroll o);
-  FL_EXPORT_C(void, Fl_Scroll_hide)(fl_Scroll o);
-  FL_EXPORT_C(void, Fl_Scroll_hide_super)(fl_Scroll o);
+  FL_EXPORT_C_HEADER(void,Fl_Scroll_set_scrollbar_size,(fl_Scroll widget, int size));
+  FL_EXPORT_C_HEADER(int,Fl_Scroll_get_scrollbar_size,(fl_Scroll widget));
+  FL_EXPORT_C_HEADER(void,Fl_Scroll_clear,(fl_Scroll widget));
+  FL_EXPORT_C_HEADER(void,Fl_Scroll_scroll_to,(fl_Scroll widget, int x, int y));
+  FL_EXPORT_C_HEADER(int,Fl_Scroll_yposition,(fl_Scroll widget));
+  FL_EXPORT_C_HEADER(int,Fl_Scroll_xposition,(fl_Scroll widget));
+  FL_EXPORT_C_HEADER(uchar,Fl_Scroll_type,(fl_Scroll widget));
+  FL_EXPORT_C_HEADER(void,Fl_Scroll_set_type,(fl_Scroll widget, uchar t));
+  FL_EXPORT_C_HEADER(void,Fl_Scroll_resize,(fl_Scroll scroll,int X, int Y, int W, int H));
+  FL_EXPORT_C_HEADER(int,Fl_Scroll_handle,(fl_Scroll scroll, int event));
+  FL_EXPORT_C_HEADER(fl_Scroll,Fl_Scroll_New_WithLabel,(int x, int y, int w, int h, const char* label));
+  FL_EXPORT_C_HEADER(fl_Scroll,Fl_Scroll_New,(int x, int y, int w, int h));
+  FL_EXPORT_C_HEADER(fl_Scroll,Fl_OverriddenScroll_New,(int X, int Y, int W, int H,fl_Widget_Virtual_Funcs* fs));
+  FL_EXPORT_C_HEADER(fl_Scroll,Fl_OverriddenScroll_New_WithLabel,(int X, int Y, int W, int H, const char* label, fl_Widget_Virtual_Funcs* fs));
+  FL_EXPORT_C_HEADER(void,Fl_Scroll_draw,(fl_Scroll o));
+  FL_EXPORT_C_HEADER(void,Fl_Scroll_draw_super,(fl_Scroll o));
+  FL_EXPORT_C_HEADER(int,Fl_Scroll_handle,(fl_Scroll o, int event));
+  FL_EXPORT_C_HEADER(int,Fl_Scroll_handle_super,(fl_Scroll o, int event));
+  FL_EXPORT_C_HEADER(void,Fl_Scroll_resize,(fl_Scroll o, int x, int y, int w, int h));
+  FL_EXPORT_C_HEADER(void,Fl_Scroll_resize_super,(fl_Scroll o, int x, int y, int w, int h));
+  FL_EXPORT_C_HEADER(void,Fl_Scroll_show,(fl_Scroll o));
+  FL_EXPORT_C_HEADER(void,Fl_Scroll_show_super,(fl_Scroll o));
+  FL_EXPORT_C_HEADER(void,Fl_Scroll_hide,(fl_Scroll o));
+  FL_EXPORT_C_HEADER(void,Fl_Scroll_hide_super,(fl_Scroll o));
 #ifdef __cplusplus
 }
 #endif

@@ -6,8 +6,8 @@
 #include "Fl_CallbackC.h"
 EXPORT {
 #endif
-  FL_EXPORT_C(fl_JPEG_Image, Fl_JPEG_Image_New_WithData)(const char* name, const unsigned char* data);
-  FL_EXPORT_C(fl_JPEG_Image, Fl_JPEG_Image_New)(const char* filename);
+  FL_EXPORT_C_HEADER(fl_JPEG_Image,Fl_JPEG_Image_New_WithData,(const char* name, const unsigned char* data));
+  FL_EXPORT_C_HEADER(fl_JPEG_Image,Fl_JPEG_Image_New,(const char* filename));
 #ifdef __cplusplus
 }
 #endif

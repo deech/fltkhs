@@ -48,6 +48,7 @@ EXPORT {
 #define FL_SORT_ASCENDING	0	/**< sort browser items in ascending alphabetic order. */
 #define FL_SORT_DESCENDING	1	/**< sort in descending order */
 #ifndef INTERNAL_LINKAGE
+#include "../config.h"
   enum { FL_FILE_BROWSER_FILES, FL_FILE_BROWSER_DIRECTORIES };
   enum
   {

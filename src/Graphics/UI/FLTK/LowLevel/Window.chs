@@ -36,8 +36,6 @@ import qualified Data.Text as T
 import Graphics.UI.FLTK.LowLevel.Hierarchy
 import Graphics.UI.FLTK.LowLevel.Widget
 
-import C2HS hiding (cFromEnum, toBool,cToEnum,cToBool)
-
 #c
  enum WindowType {
    SingleWindowType = FL_WINDOWC,

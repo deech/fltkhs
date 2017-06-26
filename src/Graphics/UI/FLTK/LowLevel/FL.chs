@@ -411,8 +411,18 @@ getMouse = do
        {  } -> `Bool' toBool #}
 {# fun Fl_set_event_is_click as setEventIsClick
        { `Int' } -> `()' supressWarningAboutRes #}
-{# fun Fl_event_button as eventButton
-       {  } -> `MouseButton' cToEnum #}
+
+{# fun Fl_event_button as eventButton'
+       {  } -> `Int' #}
+eventButton :: IO (Maybe MouseButton)
+eventButton = do
+  mb <- eventButton'
+  case mb of
+    mb' | mb' == (fromEnum Mouse_Left) -> return (Just Mouse_Left)
+    mb' | mb' == (fromEnum Mouse_Middle) -> return (Just Mouse_Right)
+    mb' | mb' == (fromEnum Mouse_Right) -> return (Just Mouse_Middle)
+    _ -> return Nothing
+
 eventStates :: [EventState]
 eventStates = [
                Kb_ShiftState,
@@ -428,13 +438,7 @@ eventStates = [
               ]
 extractEventStates :: CInt -> [EventState]
 extractEventStates = extract eventStates
--- foldModifiers :: [KeyboardCode] -> CInt
--- foldModifiers codes =
---     let validKeysyms = map cFromEnum (filter (\c -> c `elem` validKeyboardStates) codes)
---     in
---       case validKeysyms of
---         [] -> (-1)
---         (k:ks) -> foldl (\accum k' -> accum .&. k') k ks
+
 {# fun Fl_event_state as eventState
        {  } -> `[EventState]' extractEventStates #}
 {# fun Fl_contains_event_state as containsEventState

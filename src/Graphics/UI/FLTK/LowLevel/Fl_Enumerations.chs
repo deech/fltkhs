@@ -30,20 +30,6 @@ module Graphics.UI.FLTK.LowLevel.Fl_Enumerations
      Damage(..),
      -- * Cursor type
      Cursor(..),
-#ifdef GLSUPPORT
-     -- * Glut attributes
-     GlutDraw(..),
-     GlutMouseCodes(..),
-     GlutUpDown(..),
-     GlutVisibility(..),
-     GlutMenuProperties(..),
-     GlutEnteredLeft(..),
-     GlutKeyboardCodes(..),
-     GlutConstants(..),
-     GlutWindowProperties(..),
-     GlutCursor(..),
-     glutCursorFullCrossHair,
-#endif
      -- * Various modes
      Mode(..),
      Modes(..),
@@ -358,123 +344,6 @@ enum Damage {
  DamageUser2   = FL_DAMAGE_USER2,
  DamageAll     = FL_DAMAGE_ALL
 };
-#ifdef GLSUPPORT
-enum GlutDraw {
- GlutNormal = GLUT_NORMAL,
- GlutOverlay = GLUT_OVERLAY
-};
-enum GlutMouseCodes {
- GlutLeftButton = GLUT_LEFT_BUTTON,
- GlutRightButton = GLUT_RIGHT_BUTTON,
- GlutMiddleButton = GLUT_MIDDLE_BUTTON
-};
-enum GlutUpDown {
- GlutUp = GLUT_UP,
- GlutDown = GLUT_DOWN
-};
-enum GlutVisibility {
- GlutVisible = GLUT_VISIBLE,
- GlutNotVisible = GLUT_NOT_VISIBLE
-};
-enum GlutMenuProperties {
- GlutMenuNotInUse = GLUT_MENU_NOT_IN_USE,
- GlutMenuInUse = GLUT_MENU_IN_USE,
- GlutMenuNumItems = GLUT_MENU_NUM_ITEMS
-};
-enum GlutEnteredLeft {
- GlutEntered = GLUT_ENTERED,
- GlutLeft = GLUT_LEFT
-};
-enum GlutKeyboardCodes {
- GlutKeyF1 =  GLUT_KEY_F1,
- GlutKeyF2 =  GLUT_KEY_F2,
- GlutKeyF3 =  GLUT_KEY_F3,
- GlutKeyF4 =  GLUT_KEY_F4,
- GlutKeyF5 =  GLUT_KEY_F5,
- GlutKeyF6 =  GLUT_KEY_F6,
- GlutKeyF7 =  GLUT_KEY_F7,
- GlutKeyF8 =  GLUT_KEY_F8,
- GlutKeyF9 =  GLUT_KEY_F9,
- GlutKeyF10 =  GLUT_KEY_F10,
- GlutKeyF11 =  GLUT_KEY_F11,
- GlutKeyF12 =  GLUT_KEY_F12,
- GlutKeyLeft =  GLUT_KEY_LEFT,
- GlutKeyUp =  GLUT_KEY_UP,
- GlutKeyRight =  GLUT_KEY_RIGHT,
- GlutKeyDown =  GLUT_KEY_DOWN,
- GlutKeyPageUp =  GLUT_KEY_PAGE_UP,
- GlutKeyPageDown =  GLUT_KEY_PAGE_DOWN,
- GlutKeyHome =  GLUT_KEY_HOME,
- GlutKeyEnd =  GLUT_KEY_END,
- GlutKeyInsert =  GLUT_KEY_INSERT,
- GlutActiveShift =  GLUT_ACTIVE_SHIFT,
- GlutActiveCtrl  =  GLUT_ACTIVE_CTRL,
- GlutActiveAlt   =  GLUT_ACTIVE_ALT
-};
-enum GlutConstants {
- GlutReturnZero =  GLUT_RETURN_ZERO,
- GlutDisplayModePossible =  GLUT_DISPLAY_MODE_POSSIBLE,
- GlutVersion =  GLUT_VERSION,
- GlutOverlayPossible =  GLUT_OVERLAY_POSSIBLE,
- GlutTransparentIndex =  GLUT_TRANSPARENT_INDEX,
- GlutNormalDamaged =  GLUT_NORMAL_DAMAGED,
- GlutOverlayDamaged =  GLUT_OVERLAY_DAMAGED
-};
-enum GlutWindowProperties {
- GlutWindowX =  GLUT_WINDOW_X,
- GlutWindowY =  GLUT_WINDOW_Y,
- GlutWindowWidth =  GLUT_WINDOW_WIDTH,
- GlutWindowHeight =  GLUT_WINDOW_HEIGHT,
- GlutWindowParent =  GLUT_WINDOW_PARENT,
- GlutScreenWidth =  GLUT_SCREEN_WIDTH,
- GlutScreenHeight =  GLUT_SCREEN_HEIGHT,
- GlutInitWindowX =  GLUT_INIT_WINDOW_X,
- GlutInitWindowY =  GLUT_INIT_WINDOW_Y,
- GlutInitWindowWidth =  GLUT_INIT_WINDOW_WIDTH,
- GlutInitWindowHeight =  GLUT_INIT_WINDOW_HEIGHT,
- GlutInitDisplayMode =  GLUT_INIT_DISPLAY_MODE,
- GlutWindowBufferSize =  GLUT_WINDOW_BUFFER_SIZE,
- GlutWindowStencilSize =  GLUT_WINDOW_STENCIL_SIZE,
- GlutWindowDepthSize =  GLUT_WINDOW_DEPTH_SIZE,
- GlutWindowRedSize =  GLUT_WINDOW_RED_SIZE,
- GlutWindowGreenSize =  GLUT_WINDOW_GREEN_SIZE,
- GlutWindowBlueSize =  GLUT_WINDOW_BLUE_SIZE,
- GlutWindowAlphaSize =  GLUT_WINDOW_ALPHA_SIZE,
- GlutWindowAccumRedSize =  GLUT_WINDOW_ACCUM_RED_SIZE,
- GlutWindowAccumGreenSize =  GLUT_WINDOW_ACCUM_GREEN_SIZE,
- GlutWindowAccumBlueSize =  GLUT_WINDOW_ACCUM_BLUE_SIZE,
- GlutWindowAccumAlphaSize =  GLUT_WINDOW_ACCUM_ALPHA_SIZE,
- GlutWindowDoublebuffer =  GLUT_WINDOW_DOUBLEBUFFER,
- GlutWindowRgba =  GLUT_WINDOW_RGBA,
- GlutWindowColormapSize =  GLUT_WINDOW_COLORMAP_SIZE,
- GlutWindowNumSamples =  GLUT_WINDOW_NUM_SAMPLES,
- GlutWindowStereo =  GLUT_WINDOW_STEREO
-};
-enum GlutCursor {
-  GlutCursorRightArrow = 2,
-  GlutCursorLeftArrow = 67,
-  GlutCursorDestroy = 45,
-  GlutCursorCycle = 26,
-  GlutCursorSpray = 63,
-  GlutCursorInfo = FL_CURSOR_HAND,
-  GlutCursorHelp = FL_CURSOR_HELP,
-  GlutCursorWait = FL_CURSOR_WAIT,
-  GlutCursorText = FL_CURSOR_INSERT,
-  GlutCursorLeftRight = FL_CURSOR_WE,
-  GlutCursorTopSide = FL_CURSOR_N,
-  GlutCursorBottomSide = FL_CURSOR_S,
-  GlutCursorLeftSide = FL_CURSOR_W,
-  GlutCursorRightSide = FL_CURSOR_E,
-  GlutCursorTopLeftCorner = FL_CURSOR_NW,
-  GlutCursorTopRightCorner = FL_CURSOR_NE,
-  GlutCursorBottomRightCorner = FL_CURSOR_SE,
-  GlutCursorBottomLeftCorner = FL_CURSOR_SW,
-  GlutCursorInherit = FL_CURSOR_DEFAULT,
-  GlutCursorNone = FL_CURSOR_NONE,
-  GlutCursorUpDown = FL_CURSOR_NS,
-  GlutCursorCrosshair = FL_CURSOR_CROSS
-};
-#endif
 enum Cursor {
  CursorDefault = FL_CURSOR_DEFAULT,
  CursorArrow   = FL_CURSOR_ARROW,
@@ -656,31 +525,6 @@ kb_KpLast :: SpecialKey
 kb_KpLast = Kb_F
 {#enum Damage {} deriving (Show) #}
 {#enum Cursor {} deriving (Show) #}
-#ifdef GLSUPPORT
--- | Only available if the 'opengl' flag is set (stack build --flag fltkhs:opengl).
-{#enum GlutDraw {} deriving (Show) #}
--- | Only available if the 'opengl' flag is set (stack build --flag fltkhs:opengl).
-{#enum GlutMouseCodes {} deriving (Show) #}
--- | Only available if the 'opengl' flag is set (stack build --flag fltkhs:opengl).
-{#enum GlutUpDown {} deriving (Show) #}
--- | Only available if the 'opengl' flag is set (stack build --flag fltkhs:opengl).
-{#enum GlutVisibility {} deriving (Show) #}
--- | Only available if the 'opengl' flag is set (stack build --flag fltkhs:opengl).
-{#enum GlutMenuProperties {} deriving (Show) #}
--- | Only available if the 'opengl' flag is set (stack build --flag fltkhs:opengl).
-{#enum GlutEnteredLeft {} deriving (Show) #}
--- | Only available if the 'opengl' flag is set (stack build --flag fltkhs:opengl).
-{#enum GlutKeyboardCodes {} deriving (Show) #}
--- | Only available if the 'opengl' flag is set (stack build --flag fltkhs:opengl).
-{#enum GlutConstants {} deriving (Show) #}
--- | Only available if the 'opengl' flag is set (stack build --flag fltkhs:opengl).
-{#enum GlutWindowProperties {} deriving (Show) #}
--- | Only available if the 'opengl' flag is set (stack build --flag fltkhs:opengl).
-{#enum GlutCursor {} deriving (Show) #}
--- | Only available if the 'opengl' flag is set (stack build --flag fltkhs:opengl).
-glutCursorFullCrossHair :: GlutCursor
-glutCursorFullCrossHair = GlutCursorCrosshair
-#endif /* GLSUPPORT */
 {#enum Mode   {} deriving (Show,Eq,Ord) #}
 -- Fl_Mode Aliases
 single :: Mode
