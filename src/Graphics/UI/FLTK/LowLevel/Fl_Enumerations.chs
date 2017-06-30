@@ -28,6 +28,7 @@ module Graphics.UI.FLTK.LowLevel.Fl_Enumerations
      kb_CommandState, kb_ControlState, kb_KpLast,
      -- * Widget damage types
      Damage(..),
+     allDamages,
      -- * Cursor type
      Cursor(..),
      -- * Various modes
@@ -523,8 +524,20 @@ kb_ControlState = Kb_MetaState
 #endif
 kb_KpLast :: SpecialKey
 kb_KpLast = Kb_F
-{#enum Damage {} deriving (Show) #}
-{#enum Cursor {} deriving (Show) #}
+{#enum Damage {} deriving (Show, Eq, Ord) #}
+allDamages :: [Damage]
+allDamages =
+  [
+   DamageChild
+   , DamageExpose
+   , DamageScroll
+   , DamageOverlay
+   , DamageUser1
+   , DamageUser2
+   , DamageAll
+  ]
+
+{#enum Cursor {} deriving (Show, Eq, Ord) #}
 {#enum Mode   {} deriving (Show,Eq,Ord) #}
 -- Fl_Mode Aliases
 single :: Mode

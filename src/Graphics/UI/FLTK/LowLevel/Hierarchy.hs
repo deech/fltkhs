@@ -173,14 +173,14 @@ module Graphics.UI.FLTK.LowLevel.Hierarchy
          redrawLabel,
          GetDamage,
          getDamage,
-         ClearDamageWithBitmask,
-         clearDamageWithBitmask,
+         ClearDamageExcept,
+         clearDamageExcept,
          ClearDamage,
          clearDamage,
-         GetDamageWithText,
-         getDamageWithText,
-         GetDamageInsideWidget,
-         getDamageInsideWidget,
+         SetDamage,
+         setDamage,
+         SetDamageInside,
+         setDamageInside,
          MeasureLabel,
          measureLabel,
          GetWindow,
@@ -1653,10 +1653,10 @@ type WidgetFuncs =
   (Redraw
   (RedrawLabel
   (GetDamage
-  (ClearDamageWithBitmask
+  (ClearDamageExcept
   (ClearDamage
-  (GetDamageWithText
-  (GetDamageInsideWidget
+  (SetDamage
+  (SetDamageInside
   (MeasureLabel
   (GetWindow
   (GetTopWindow
@@ -1743,10 +1743,10 @@ MAKE_METHOD(Inside,inside)
 MAKE_METHOD(Redraw,redraw)
 MAKE_METHOD(RedrawLabel,redrawLabel)
 MAKE_METHOD(GetDamage,getDamage)
-MAKE_METHOD(ClearDamageWithBitmask,clearDamageWithBitmask)
+MAKE_METHOD(ClearDamageExcept,clearDamageExcept)
 MAKE_METHOD(ClearDamage,clearDamage)
-MAKE_METHOD(GetDamageWithText,getDamageWithText)
-MAKE_METHOD(GetDamageInsideWidget,getDamageInsideWidget)
+MAKE_METHOD(SetDamage,setDamage)
+MAKE_METHOD(SetDamageInside,setDamageInside)
 MAKE_METHOD(MeasureLabel,measureLabel)
 MAKE_METHOD(GetWindow,getWindow)
 MAKE_METHOD(GetTopWindow,getTopWindow)
