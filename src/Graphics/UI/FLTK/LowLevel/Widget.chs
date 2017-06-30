@@ -416,7 +416,7 @@ instance (impl ~ (IO ())) => Op (ClearDamage ()) Widget orig impl where
 instance (impl ~ ( [Damage] ->  IO ())) => Op (SetDamage ()) Widget orig impl where
   runOp _ _ widget damages = withRef widget $ \widgetPtr -> damageWithText' widgetPtr (fromIntegral (combine damages))
 {# fun Fl_Widget_damage_inside_widget as damageInsideWidget' { id `Ptr ()',`Word8',`Int',`Int',`Int',`Int' } -> `()' supressWarningAboutRes #}
-instance (impl ~ ( [Damage] -> Rectangle ->  IO ())) => Op (SetDamageInside()) Widget orig impl where
+instance (impl ~ ( [Damage] -> Rectangle ->  IO ())) => Op (SetDamageInside ()) Widget orig impl where
   runOp _ _ widget damages rectangle = withRef widget $ \widgetPtr -> do
     let (x_pos,y_pos,w_pos,h_pos) = fromRectangle rectangle
     damageInsideWidget' widgetPtr (fromIntegral (combine damages)) x_pos y_pos w_pos h_pos
@@ -481,7 +481,6 @@ instance (impl ~ ( Maybe (Boxtype, Rectangle) -> IO ())) => Op (DrawFocus ()) Wi
 
 -- $widgetfunctions
 -- @
---
 -- activate :: 'Ref' 'Widget' -> 'IO' ()
 --
 -- active :: 'Ref' 'Widget' -> 'IO' ('Bool')
@@ -496,7 +495,7 @@ instance (impl ~ ( Maybe (Boxtype, Rectangle) -> IO ())) => Op (DrawFocus ()) Wi
 --
 -- clearDamage :: 'Ref' 'Widget' -> 'IO' ()
 --
--- clearDamageWithBitmask :: 'Ref' 'Widget' -> 'Word8' -> 'IO' ()
+-- clearDamageExcept :: 'Ref' 'Widget' -> ['Damage'] -> 'IO' ()
 --
 -- clearOutput :: 'Ref' 'Widget' -> 'IO' ()
 --
@@ -532,11 +531,7 @@ instance (impl ~ ( Maybe (Boxtype, Rectangle) -> IO ())) => Op (DrawFocus ()) Wi
 --
 -- getColor :: 'Ref' 'Widget' -> 'IO' ('Color')
 --
--- getDamage :: 'Ref' 'Widget' -> 'IO' ('Word8')
---
--- getDamageInsideWidget :: 'Ref' 'Widget' -> 'Word8' -> 'Rectangle' -> 'IO' ()
---
--- getDamageWithText :: 'Ref' 'Widget' -> 'Word8' -> 'IO' ()
+-- getDamage :: 'Ref' 'Widget' -> 'IO' (['Damage')]
 --
 -- getDeimage :: 'Ref' 'Widget' -> 'IO' ('Ref' 'Image')
 --
@@ -586,7 +581,7 @@ instance (impl ~ ( Maybe (Boxtype, Rectangle) -> IO ())) => Op (DrawFocus ()) Wi
 --
 -- getY :: 'Ref' 'Widget' -> 'IO' ('Int')
 --
--- handle :: 'Ref' 'Widget' -> ('Event' -> 'IO' ('Either' 'UnknownEvent' ()))
+-- handle :: 'Ref' 'Widget' -> 'Event' -> 'IO' ('Either' 'UnknownEvent' ())
 --
 -- hasCallback :: 'Ref' 'Widget' -> 'IO' ('Bool')
 --
@@ -621,6 +616,10 @@ instance (impl ~ ( Maybe (Boxtype, Rectangle) -> IO ())) => Op (DrawFocus ()) Wi
 -- setColor :: 'Ref' 'Widget' -> 'Color' -> 'IO' ()
 --
 -- setColorWithBgSel :: 'Ref' 'Widget' -> 'Color' -> 'Color' -> 'IO' ()
+--
+-- setDamage :: 'Ref' 'Widget' -> ['Damage'] -> 'IO' ()
+--
+-- setDamageInside :: 'Ref' 'Widget' -> ['Damage'] -> 'Rectangle' -> 'IO' ()
 --
 -- setDeimage:: ('Parent' a 'Image') => 'Ref' 'Widget' -> 'Maybe'( 'Ref' a ) -> 'IO' ()
 --
