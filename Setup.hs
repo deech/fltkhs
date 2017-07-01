@@ -111,6 +111,7 @@ myPostConf args flags pd lbi = do
                   then (flags{ configConfigureArgs = (configConfigureArgs flags) ++ ["--enable-gl"]})
                   else flags
   (major, minor, patch) <- getFltkVersion
+  apiVersion <- getApiVersion
   let confFlagsWithVersion =
         confFlags
         {
@@ -120,7 +121,7 @@ myPostConf args flags pd lbi = do
                    ("--with-fltk-patch-version=" ++ patch)
                  ]
         }
-  postConf autoconfUserHooks args confFlagsWithVersion pd lbi
+  postConf autoconfUserHooks args confFlagsWithVersion (addApiVersion pd apiVersion) lbi
 
 fltkcdir :: FilePath
 fltkcdir = unsafePerformIO $ do
@@ -198,6 +199,32 @@ windowsFriendlyPaths s =
   then unsafePerformIO (cygpath "-m" s)
   else s
 
+getApiVersion :: IO Int
+getApiVersion = do
+  (major, minor, patch) <- getFltkVersion
+  return ((((read major) :: Int) * 10000) +
+            (((read minor) :: Int) * 100) +
+            ((read patch) :: Int))
+
+addApiVersion :: PackageDescription -> Int -> PackageDescription
+addApiVersion pkg_descr apiVersion =
+  let fixedLib =
+        do
+          l <- library pkg_descr
+          let cpp = cppOptions (libBuildInfo l)
+              -- have to add to ccOptions as well otherwise c2hs won't see it.
+              cc = ccOptions (libBuildInfo l)
+              fltkApiFlag = "-DFLTK_API_VERSION=" ++ (show apiVersion)
+          return (l {
+                      libBuildInfo =
+                        (libBuildInfo l) {
+                           cppOptions = cpp ++ [fltkApiFlag],
+                           ccOptions = cc ++ [fltkApiFlag]
+                        }
+                   })
+  in
+  pkg_descr{ library = fixedLib }
+
 myBuildHook pkg_descr local_bld_info user_hooks bld_flags = do
      let confFlags = configFlags local_bld_info
      if (bundledBuild confFlags)
@@ -214,21 +241,8 @@ myBuildHook pkg_descr local_bld_info user_hooks bld_flags = do
         clibraries <- getDirectoryContents fltkcdir
         when (null $ filter (Data.List.isInfixOf "fltkc") clibraries) compileC
        else compileC
-     (major, minor, patch) <- getFltkVersion
-     let apiVersion = ((((read major) :: Int) * 10000) +
-                       (((read minor) :: Int) * 100) +
-                       ((read patch) :: Int))
-     let fixedLib = do
-              l <- library pkg_descr
-              let cpp = cppOptions (libBuildInfo l)
-                  apiVersionAdded = cpp ++ ["-DFLTK_API_VERSION=" ++ (show apiVersion)]
-              return (l {
-                          libBuildInfo =
-                            (libBuildInfo l) {
-                               cppOptions = apiVersionAdded
-                            }
-                       })
-         apiVersionAddedPkgDescription = (pkg_descr { library = fixedLib })
+     apiVersion <- getApiVersion
+     let apiVersionAddedPkgDescription = addApiVersion pkg_descr apiVersion
      case buildOS of
        Windows ->
          let rewritePaths :: PackageDescription -> IO PackageDescription

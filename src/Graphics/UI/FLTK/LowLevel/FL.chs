@@ -622,6 +622,7 @@ paste widget PasteSourceClipboardImage =
          alloca- `Int' peekIntConv* ,
          alloca- `Int' peekIntConv*
        } -> `()'  #}
+
 {# fun Fl_screen_xywh_with_mxmy as screenXYWYWithMXMY
        {
          alloca- `Int' peekIntConv* ,
@@ -631,6 +632,7 @@ paste widget PasteSourceClipboardImage =
          `Int',
          `Int'
        } -> `()'  #}
+
 {# fun Fl_screen_xywh_with_n as screenXYWNWithN
        {
          alloca- `Int' peekIntConv* ,
@@ -639,6 +641,7 @@ paste widget PasteSourceClipboardImage =
          alloca- `Int' peekIntConv* ,
          `Int'
        } -> `()'  #}
+
 {# fun Fl_screen_xywh_with_mxmymwmh as screenXYWHWithNMXMYMWMH
        {
          alloca- `Int' peekIntConv* ,
