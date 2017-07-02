@@ -2,6 +2,9 @@
 #ifndef OVERLAPPING_INSTANCES_DEPRECATED
 {-# LANGUAGE OverlappingInstances #-}
 #endif
+#ifdef CUSTOM_TYPE_ERRORS
+{-# LANGUAGE TypeOperators #-}
+#endif
 module Graphics.UI.FLTK.LowLevel.Dispatch
        (
          -- * FindOp
@@ -27,6 +30,9 @@ module Graphics.UI.FLTK.LowLevel.Dispatch
        )
 where
 import Graphics.UI.FLTK.LowLevel.Fl_Types
+#ifdef CUSTOM_TYPE_ERRORS
+import GHC.TypeLits
+#endif
 
 -- Type level function where `b` is Same
 -- if `x` and `y` are equal and `Different`
@@ -60,7 +66,17 @@ type family FindOpHelper orig hierarchy  (needle :: *) (found :: *) :: * where
   FindOpHelper orig (child ancestors) needle Different = FindOp orig ancestors needle
 
 type family FindOp orig hierarchy (needle :: *) :: * where
+#ifdef CUSTOM_TYPE_ERRORS
+  FindOp (w ws) () (n ()) = TypeError (
+                                        ('ShowType n)
+                                        ':<>:
+                                        ('Text " is not supported by ")
+                                        ':<>:
+                                        ('ShowType w)
+                                      )
+#else
   FindOp orig () n = NoFunction n orig
+#endif
   FindOp orig hierarchy needle = FindOpHelper orig hierarchy needle (Contains (Functions hierarchy) needle)
 
 -- | Find the first "object" of the given type
@@ -80,7 +96,6 @@ type family FindInHierarchy (needle :: * ) (curr :: *) (haystack :: *) :: * wher
 
 class Parent a b
 instance (InHierarchy ~ FindInHierarchy a a b) => Parent a b
-
 
 -- | Associate a "class" with it's member functions
 type family Functions (x :: *) :: *
