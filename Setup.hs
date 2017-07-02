@@ -91,19 +91,29 @@ buildFltk prefix openGL = do
 myPreConf :: Args -> ConfigFlags -> IO HookedBuildInfo
 myPreConf args flags = do
    if (bundledBuild flags)
-   then do
-     putStrLn "Building bundled FLTK"
-     prefix <- bundlePrefix flags ""
-     fltkBuilt <- doesDirectoryExist prefix
-     if (not fltkBuilt)
-     then buildFltk (case buildOS of { Windows -> cygpath "-u" prefix; _ -> return prefix;}) (openGLSupport flags)
-     else putStrLn "FLTK already built."
-   else return ()
+    then do
+      putStrLn "Building bundled FLTK"
+      prefix <- bundlePrefix flags ""
+      fltkBuilt <- doesDirectoryExist prefix
+      if (not fltkBuilt)
+        then do
+          buildFltk (case buildOS of { Windows -> cygpath "-u" prefix; _ -> return prefix;}) (openGLSupport flags)
+          case buildOS of
+            Windows -> updateEnv "PATH" (windowsFriendlyPaths (prefix </> "bin"))
+            _ -> updateEnv "PATH" (prefix </> "bin")
+        else putStrLn "FLTK already built."
+      else return ()
    putStrLn "Running autoconf ..."
    case buildOS of
      Windows -> rawSystemExit normal "sh" ["autoconf"]
      _ -> rawSystemExit normal "autoconf" []
-   preConf autoconfUserHooks args flags
+   fltkPathAdded <-
+     if (bundledBuild flags)
+     then do
+       prefix <- bundlePrefix flags ""
+       return flags{ configProgramPaths = [("fltk-config", prefix </> "bin" </> "fltk-config")] ++ (configProgramPaths flags)}
+     else return flags
+   preConf autoconfUserHooks args fltkPathAdded
 
 myPostConf :: Args -> ConfigFlags -> PackageDescription -> LocalBuildInfo -> IO ()
 myPostConf args flags pd lbi = do
