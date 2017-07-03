@@ -22,7 +22,7 @@ import Graphics.UI.FLTK.LowLevel.Hierarchy
 import Graphics.UI.FLTK.LowLevel.Dispatch
 
 {# fun Fl_Text_Selection_set as set' { id `Ptr ()',`Int',`Int' } -> `()' #}
-instance  ( impl ~ (BufferRange -> IO ())) => Op (Set ()) TextSelection orig impl where
+instance  ( impl ~ (BufferRange -> IO ())) => Op (SetRange ()) TextSelection orig impl where
   runOp _ _ text_selection (BufferRange (BufferOffset start'') (BufferOffset end'')) = withRef text_selection $ \text_selectionPtr -> set' text_selectionPtr start'' end''
 {# fun Fl_Text_Selection_update as update' { id `Ptr ()',`Int',`Int',`Int' } -> `()' #}
 instance  ( impl ~ (BufferOffset -> Int -> Int ->  IO ())) => Op (Update ()) TextSelection orig impl where
@@ -55,15 +55,15 @@ instance  ( impl ~ (IO (Maybe BufferRange))) => Op (GetPosition ()) TextSelectio
 
 -- $functions
 -- @
--- end :: 'Ref' 'TextSelection' -> 'IO' 'BufferOffset'
+-- end :: 'Ref' 'TextSelection' -> 'IO' ('BufferOffset')
 --
 -- getPosition :: 'Ref' 'TextSelection' -> 'IO' ('Maybe' 'BufferRange')
 --
--- includes :: 'Ref' 'TextSelection' -> 'BufferOffset' -> 'IO' 'Bool'
+-- includes :: 'Ref' 'TextSelection' -> 'BufferOffset' -> 'IO' ('Bool')
 --
--- selected :: 'Ref' 'TextSelection' -> 'IO' 'Bool'
+-- selected :: 'Ref' 'TextSelection' -> 'IO' ('Bool')
 --
--- set :: 'Ref' 'TextSelection' -> 'BufferRange' -> 'IO' ()
+-- setRange :: 'Ref' 'TextSelection' -> 'BufferRange' -> 'IO' ()
 --
 -- setSelected :: 'Ref' 'TextSelection' -> 'Bool' -> 'IO' ()
 --

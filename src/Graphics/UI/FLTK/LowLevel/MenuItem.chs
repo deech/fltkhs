@@ -133,7 +133,7 @@ instance (impl ~  IO (Int)) => Op (GetValue ()) MenuItem orig impl where
   runOp _ _ menu_item = withRef menu_item $ \menu_itemPtr -> value' menu_itemPtr
 
 {# fun Fl_Menu_Item_set as set' { id `Ptr ()' } -> `()' #}
-instance (impl ~  IO ()) => Op (Set ()) MenuItem orig impl where
+instance (impl ~  IO ()) => Op (SetOn ()) MenuItem orig impl where
   runOp _ _ menu_item = withRef menu_item $ \menu_itemPtr -> set' menu_itemPtr
 
 {# fun Fl_Menu_Item_clear as clear' { id `Ptr ()' } -> `()' #}
@@ -380,8 +380,6 @@ instance (impl ~ ( IO (Int))) => Op (GetSize ()) MenuItem orig impl where
 --
 -- radio :: 'Ref' 'MenuItem' -> 'IO' ('Bool')
 --
--- set :: 'Ref' 'MenuItem' -> 'IO' ()
---
 -- setCallback :: 'Ref' 'MenuItem' -> ('Ref' orig -> 'IO' ()) -> 'IO' ()
 --
 -- setFlags :: 'Ref' 'MenuItem' -> 'MenuItemFlags' -> 'IO' ()
@@ -398,6 +396,8 @@ instance (impl ~ ( IO (Int))) => Op (GetSize ()) MenuItem orig impl where
 --
 -- setLabeltype :: 'Ref' 'MenuItem' -> 'Labeltype' -> 'IO' ()
 --
+-- setOn :: 'Ref' 'MenuItem' -> 'IO' ()
+--
 -- setShortcut :: 'Ref' 'MenuItem' -> 'ShortcutKeySequence' -> 'IO' ()
 --
 -- setonly :: 'Ref' 'MenuItem' -> 'IO' ()
@@ -409,5 +409,4 @@ instance (impl ~ ( IO (Int))) => Op (GetSize ()) MenuItem orig impl where
 -- testShortcut:: ('Parent' a 'MenuItem') => 'Ref' 'MenuItem' -> 'IO' ('Maybe' ('Ref' a))
 --
 -- visible :: 'Ref' 'MenuItem' -> 'IO' ('Bool')
---
 -- @

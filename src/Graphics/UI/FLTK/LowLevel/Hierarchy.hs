@@ -359,8 +359,6 @@ module Graphics.UI.FLTK.LowLevel.Hierarchy
          getValue,
          SetValue,
          setValue,
-         Set,
-         set,
          Setonly,
          setonly,
          GetShortcut,
@@ -483,6 +481,8 @@ module Graphics.UI.FLTK.LowLevel.Hierarchy
          doCallback,
          GetSize,
          getSize,
+         SetOn,
+         setOn,
          -- * MenuPrim
          MenuPrim,
          ItemPathname,
@@ -1225,6 +1225,8 @@ module Graphics.UI.FLTK.LowLevel.Hierarchy
          setSelected,
          Includes,
          includes,
+         SetRange,
+         setRange,
          -- * TextBuffer
          TextBuffer,
          InputFileWasTranscoded,
@@ -1988,7 +1990,6 @@ type ButtonFuncs =
   (ShowWidget
   (GetValue
   (SetValue
-  (Set
   (Clear
   (Setonly
   (GetShortcut
@@ -2002,7 +2003,7 @@ type ButtonFuncs =
   (DrawFocus
   (SetType
   (GetType_
-  ()))))))))))))))))))))))))))
+  ())))))))))))))))))))))))))
 
 type instance Functions Button = ButtonFuncs
 
@@ -2236,7 +2237,7 @@ type MenuItemFuncs =
   (Checkbox
   (Radio
   (GetValue
-  (Set
+  (SetOn
   (Clear
   (Setonly
   (Visible
@@ -2284,6 +2285,7 @@ MAKE_METHOD(TestShortcut,testShortcut)
 MAKE_METHOD(FindShortcut,findShortcut)
 MAKE_METHOD(DoCallback,doCallback)
 MAKE_METHOD(GetSize,getSize)
+MAKE_METHOD(SetOn, setOn)
 
 data CMenuPrim parent
 type MenuPrim = CMenuPrim Widget
@@ -3750,7 +3752,7 @@ MAKE_METHOD(GetCallbackReason,getCallbackReason)
 data CTextSelection parent
 type TextSelection = CTextSelection Base
 type TextSelectionFuncs =
-  (Set
+  (SetRange
   (Update
   (Start
   (End
@@ -3761,6 +3763,7 @@ type TextSelectionFuncs =
   ()))))))))
 
 type instance Functions TextSelection = TextSelectionFuncs
+MAKE_METHOD(SetRange,setRange)
 MAKE_METHOD(Update,update)
 MAKE_METHOD(Start,start)
 MAKE_METHOD(SetSelected,setSelected)

@@ -99,9 +99,6 @@ instance (impl ~ (( IO (Bool)))) => Op (GetValue ()) Button orig impl where
 {# fun Fl_Button_set_value as setValue' { id `Ptr ()', fromBool `Bool' } -> `Bool' toBool #}
 instance (impl ~ ((Bool ->  IO (Bool)))) => Op (SetValue ()) Button orig impl where
   runOp _ _ b v = withRef b $ \bPtr -> setValue' bPtr v
-{# fun Fl_Button_set as set' { id `Ptr ()' } -> `Bool' cToBool #}
-instance (impl ~ (( IO (Bool)))) => Op (Set ()) Button orig impl where
-  runOp _ _ b = withRef b $ \bPtr -> set' bPtr
 {# fun Fl_Button_clear as clear' { id `Ptr ()' } -> `Bool' cToBool #}
 instance (impl ~ (( IO (Bool)))) => Op (Clear ()) Button orig impl where
   runOp _ _ b = withRef b $ \bPtr -> clear' bPtr
@@ -197,8 +194,6 @@ instance (impl ~ (ButtonType ->  IO ())) => Op (SetType ()) Button orig impl whe
 --
 -- resizeSuper :: 'Ref' 'Button' -> ('Rectangle' -> 'IO' ())
 --
--- set :: 'Ref' 'Button' -> ( 'IO' ('Bool'))
---
 -- setDownBox :: 'Ref' 'Button' -> ('Boxtype' -> 'IO' ())
 --
 -- setDownColor :: 'Ref' 'Button' -> ('Color' -> 'IO' ())
@@ -214,6 +209,10 @@ instance (impl ~ (ButtonType ->  IO ())) => Op (SetType ()) Button orig impl whe
 -- showWidget :: 'Ref' 'Button' -> ('IO' ())
 --
 -- showWidgetSuper :: 'Ref' 'Button' -> ( 'IO' ())
+
+-- Available in FLTK 1.3.4 only:
+
+
 -- @
 
 -- $hierarchy
