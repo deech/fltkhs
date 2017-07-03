@@ -1177,7 +1177,7 @@ import Graphics.UI.FLTK.LowLevel.PNMImage
 -- longer to compile. To further emphasize, there does not appear to be any
 -- runtime performance issues. This is only a compile time problem.
 --
--- To preserve the user's and my sanity a flag `fastCompile` has been
+-- To preserve the user's sanity and mine a flag `fastCompile` has been
 -- introduced to the <https://github.com/deech/fltkhs-hello-world skeleton> <https://github.com/deech/fltkhs-fluid-hello-world projects>, the <https://github.com/deech/fltkhs-demos fltkhs-demos> and
 -- to the <https://github.com/deech/fltkhs-fluid-demos fltkhs-fluid-demos>.
 -- This flag which tells the compiler to skip some steps when

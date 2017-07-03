@@ -82,10 +82,22 @@ type family FindOp orig hierarchy (needle :: *) :: * where
 -- | Find the first "object" of the given type
 -- | in the hierarchy.
 data InHierarchy
+#ifndef CUSTOM_TYPE_ERRORS
 data NotInHierarchy a b
+#endif
 
 type family FindInHierarchy (needle :: * ) (curr :: *) (haystack :: *) :: * where
+#ifdef CUSTOM_TYPE_ERRORS
+  FindInHierarchy (n ns) () (a as) = TypeError (
+                                                 ('ShowType n)
+                                                 ':<>:
+                                                 ('Text " is not a kind of ")
+                                                 ':<>:
+                                                 ('ShowType a)
+                                               )
+#else
   FindInHierarchy needle () (a as) = NotInHierarchy needle (a as)
+#endif
   FindInHierarchy needle (a as) (a as) = InHierarchy
   FindInHierarchy needle (a as) (b bs) = FindInHierarchy needle as (b bs)
 
@@ -106,7 +118,7 @@ type family Functions (x :: *) :: *
 --     * @op@ - name of the function
 --     * @obj@ - the class that implements @op@
 --     * @origObj@ - the class in the hierarchy where the search for @op@ started.
---       Kept around in case the type in needed. The best example is `setCallback`
+--
 --       whose implementation is usually found much lower in the hierarchy but where
 --       we also want to enforce that the implementation take the type of the widget calling
 --       it.
