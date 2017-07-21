@@ -1,5 +1,5 @@
 name : fltkhs
-version : 0.5.2.6
+version : 0.5.3.4
 synopsis : FLTK bindings
 description: Low level bindings for the FLTK GUI toolkit. For installation and quick start instruction please scroll all the way down to the README.
 license : MIT
@@ -38,7 +38,9 @@ library
   if flag(opengl)
      exposed-modules:
                    Graphics.UI.FLTK.LowLevel.Gl
+                   Graphics.UI.FLTK.LowLevel.Glut
                    Graphics.UI.FLTK.LowLevel.GlWindow
+     cpp-options: -DGLSUPPORT
   exposed-modules:
                    Graphics.UI.FLTK.LowLevel.FLTKHS
                    Graphics.UI.FLTK.LowLevel.Ask
@@ -139,9 +141,10 @@ library
   include-dirs: ./c-src, ./
   default-extensions: GADTs
   default-language: Haskell2010
-  ghc-options: -Wall
+  ghc-options: -Wall -fno-warn-name-shadowing -fno-warn-orphans -fno-warn-unused-matches -fno-warn-dodgy-exports
   if impl(ghc >= 8.0.1)
      cpp-options: -DHASCALLSTACK_AVAILABLE
+     cpp-options: -DCUSTOM_TYPE_ERRORS
   else
      if impl(ghc >= 7.10.2)
        cpp-options: -DCALLSTACK_AVAILABLE

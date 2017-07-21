@@ -2,6 +2,9 @@
 #ifndef OVERLAPPING_INSTANCES_DEPRECATED
 {-# LANGUAGE OverlappingInstances #-}
 #endif
+#ifdef CUSTOM_TYPE_ERRORS
+{-# LANGUAGE TypeOperators #-}
+#endif
 module Graphics.UI.FLTK.LowLevel.Dispatch
        (
          -- * FindOp
@@ -27,6 +30,9 @@ module Graphics.UI.FLTK.LowLevel.Dispatch
        )
 where
 import Graphics.UI.FLTK.LowLevel.Fl_Types
+#ifdef CUSTOM_TYPE_ERRORS
+import GHC.TypeLits
+#endif
 
 -- Type level function where `b` is Same
 -- if `x` and `y` are equal and `Different`
@@ -60,16 +66,38 @@ type family FindOpHelper orig hierarchy  (needle :: *) (found :: *) :: * where
   FindOpHelper orig (child ancestors) needle Different = FindOp orig ancestors needle
 
 type family FindOp orig hierarchy (needle :: *) :: * where
+#ifdef CUSTOM_TYPE_ERRORS
+  FindOp (w ws) () (n ()) = TypeError (
+                                        ('ShowType n)
+                                        ':<>:
+                                        ('Text " is not supported by ")
+                                        ':<>:
+                                        ('ShowType w)
+                                      )
+#else
   FindOp orig () n = NoFunction n orig
+#endif
   FindOp orig hierarchy needle = FindOpHelper orig hierarchy needle (Contains (Functions hierarchy) needle)
 
 -- | Find the first "object" of the given type
 -- | in the hierarchy.
 data InHierarchy
+#ifndef CUSTOM_TYPE_ERRORS
 data NotInHierarchy a b
+#endif
 
 type family FindInHierarchy (needle :: * ) (curr :: *) (haystack :: *) :: * where
+#ifdef CUSTOM_TYPE_ERRORS
+  FindInHierarchy (n ns) () (a as) = TypeError (
+                                                 ('ShowType n)
+                                                 ':<>:
+                                                 ('Text " is not a kind of ")
+                                                 ':<>:
+                                                 ('ShowType a)
+                                               )
+#else
   FindInHierarchy needle () (a as) = NotInHierarchy needle (a as)
+#endif
   FindInHierarchy needle (a as) (a as) = InHierarchy
   FindInHierarchy needle (a as) (b bs) = FindInHierarchy needle as (b bs)
 
@@ -81,7 +109,6 @@ type family FindInHierarchy (needle :: * ) (curr :: *) (haystack :: *) :: * wher
 class Parent a b
 instance (InHierarchy ~ FindInHierarchy a a b) => Parent a b
 
-
 -- | Associate a "class" with it's member functions
 type family Functions (x :: *) :: *
 
@@ -91,7 +118,7 @@ type family Functions (x :: *) :: *
 --     * @op@ - name of the function
 --     * @obj@ - the class that implements @op@
 --     * @origObj@ - the class in the hierarchy where the search for @op@ started.
---       Kept around in case the type in needed. The best example is `setCallback`
+--
 --       whose implementation is usually found much lower in the hierarchy but where
 --       we also want to enforce that the implementation take the type of the widget calling
 --       it.

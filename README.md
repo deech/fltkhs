@@ -25,7 +25,7 @@ The second fastest way is to compile FLTK from source yourself. For instructions
 
 ### Windows
 
-Please see the [detailed Windows installation instructions](http://hackage.haskell.org/package/fltkhs/docs/Graphics-UI-FLTK-LowLevel-FLTKHS.html#g:8)
+Please see the [detailed Windows installation instructions](http://hackage.haskell.org/package/fltkhs/docs/Graphics-UI-FLTK-LowLevel-FLTKHS.html#g:8).
 
 Screenshots
 -----------
@@ -35,7 +35,7 @@ Unfortunately these screenshots seem to only work on the Github page. If you're 
 
 [A table of widgets](images/widget-table-windows.png)
 
-[A complex tree](images/tree-complex-windows.png) Done completely using Fluid. Notice how tree nodes can be arbitrary widgets.
+[A complex tree](images/tree-complex-windows.png) done completely using Fluid. Notice how tree nodes can be arbitrary widgets.
 
 Demos
 -----

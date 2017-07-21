@@ -1,5 +1,4 @@
 {-# LANGUAGE TypeSynonymInstances, TypeFamilies, GADTs, FlexibleContexts, EmptyDataDecls, CPP #-}
-
 #ifdef CALLSTACK_AVAILABLE
 {-# LANGUAGE ImplicitParams #-}
 #endif
@@ -9,7 +8,7 @@
 data Datatype a; \
 Method :: (?loc :: CallStack, Match r ~ FindOp a a (Datatype ()), Op (Datatype ()) r a impl) => Ref a -> impl; \
 Method aRef = (unsafePerformIO $ withRef aRef (\_ -> return ())) `seq` dispatch (undefined :: Datatype()) aRef
-#elif HASCALLSTACK_AVAILABLE
+#elif defined(HASCALLSTACK_AVAILABLE)
 #define MAKE_METHOD(Datatype, Method) \
 data Datatype a; \
 Method :: (HasCallStack, Match r ~ FindOp a a (Datatype ()), Op (Datatype ()) r a impl) => Ref a -> impl; \
@@ -174,14 +173,14 @@ module Graphics.UI.FLTK.LowLevel.Hierarchy
          redrawLabel,
          GetDamage,
          getDamage,
-         ClearDamageWithBitmask,
-         clearDamageWithBitmask,
+         ClearDamageExcept,
+         clearDamageExcept,
          ClearDamage,
          clearDamage,
-         GetDamageWithText,
-         getDamageWithText,
-         GetDamageInsideWidget,
-         getDamageInsideWidget,
+         SetDamage,
+         setDamage,
+         SetDamageInside,
+         setDamageInside,
          MeasureLabel,
          measureLabel,
          GetWindow,
@@ -534,10 +533,6 @@ module Graphics.UI.FLTK.LowLevel.Hierarchy
          setTextcolor,
          DownBox,
          downBox,
-#if FL_API_VERSION == 10304
-         SetOnly,
-         setOnly,
-#endif
          -- * MenuBar
          MenuBar,
          -- * SysMenuBar
@@ -564,10 +559,8 @@ module Graphics.UI.FLTK.LowLevel.Hierarchy
          drawResize,
          Uncache,
          uncache,
-#if FL_API_VERSION == 10304
          Fail,
          fail,
-#endif
          -- * Bitmap
          Bitmap,
          -- * Pixmap
@@ -870,6 +863,12 @@ module Graphics.UI.FLTK.LowLevel.Hierarchy
          hideOverlay,
          MakeOverlayCurrent,
          makeOverlayCurrent,
+         PixelsPerUnit,
+         pixelsPerUnit,
+         PixelH,
+         pixelH,
+         PixelW,
+         pixelW,
          -- * Box
          Box,
          -- * Browser
@@ -1654,10 +1653,10 @@ type WidgetFuncs =
   (Redraw
   (RedrawLabel
   (GetDamage
-  (ClearDamageWithBitmask
+  (ClearDamageExcept
   (ClearDamage
-  (GetDamageWithText
-  (GetDamageInsideWidget
+  (SetDamage
+  (SetDamageInside
   (MeasureLabel
   (GetWindow
   (GetTopWindow
@@ -1744,10 +1743,10 @@ MAKE_METHOD(Inside,inside)
 MAKE_METHOD(Redraw,redraw)
 MAKE_METHOD(RedrawLabel,redrawLabel)
 MAKE_METHOD(GetDamage,getDamage)
-MAKE_METHOD(ClearDamageWithBitmask,clearDamageWithBitmask)
+MAKE_METHOD(ClearDamageExcept,clearDamageExcept)
 MAKE_METHOD(ClearDamage,clearDamage)
-MAKE_METHOD(GetDamageWithText,getDamageWithText)
-MAKE_METHOD(GetDamageInsideWidget,getDamageInsideWidget)
+MAKE_METHOD(SetDamage,setDamage)
+MAKE_METHOD(SetDamageInside,setDamageInside)
 MAKE_METHOD(MeasureLabel,measureLabel)
 MAKE_METHOD(GetWindow,getWindow)
 MAKE_METHOD(GetTopWindow,getTopWindow)
@@ -2334,11 +2333,11 @@ type MenuPrimFuncs =
   (SetDownBox
   (GetDownColor
   (SetDownColor
-#if FL_API_VERSION == 10304
-  (SetOnly
+#if FLTK_API_VERSION >= 10304
+  (Setonly
 #endif
   ())))))))))))))))))))))))))))))))))))))))))))))
-#if FL_API_VERSION == 10304
+#if FLTK_API_VERSION >= 10304
   )
 #endif
 
@@ -2369,9 +2368,6 @@ MAKE_METHOD(SetTextsize,setTextsize)
 MAKE_METHOD(GetTextcolor,getTextcolor)
 MAKE_METHOD(SetTextcolor,setTextcolor)
 MAKE_METHOD(DownBox,downBox)
-#if FL_API_VERSION == 10304
-MAKE_METHOD(SetOnly,setOnly)
-#endif
 
 data CMenuBar parent
 type MenuBar = CMenuBar MenuPrim
@@ -2470,11 +2466,11 @@ type ImageFuncs =
   (DrawResize
   (Draw
   (Uncache
-#if FL_API_VERSION == 10304
+#if FLTK_API_VERSION >= 10304
   (Fail
 #endif
   ())))))))))))))
-#if FL_API_VERSION == 10304
+#if FLTK_API_VERSION >= 10304
   )
 #endif
 
@@ -2488,9 +2484,7 @@ MAKE_METHOD(Inactive,inactive)
 MAKE_METHOD(Desaturate,desaturate)
 MAKE_METHOD(DrawResize,drawResize)
 MAKE_METHOD(Uncache,uncache)
-#if FL_API_VERSION == 10304
 MAKE_METHOD(Fail,fail)
-#endif
 
 data CBitmap parent
 type Bitmap = CBitmap Image
@@ -3186,7 +3180,15 @@ type GlWindowFuncs =
   (RedrawOverlay
   (HideOverlay
   (MakeOverlayCurrent
+#if FLTK_API_VERSION >= 10304
+  (PixelsPerUnit
+  (PixelH
+  (PixelW
+#endif
   ())))))))))))))))))))))))))))))
+#if FLTK_API_VERSION >= 10304
+  )))
+#endif
 
 type instance Functions GlWindow = GlWindowFuncs
 
@@ -3203,6 +3205,9 @@ MAKE_METHOD(SwapBuffers,swapBuffers)
 MAKE_METHOD(Ortho,ortho)
 MAKE_METHOD(HideOverlay,hideOverlay)
 MAKE_METHOD(MakeOverlayCurrent,makeOverlayCurrent)
+MAKE_METHOD(PixelsPerUnit,pixelsPerUnit)
+MAKE_METHOD(PixelH,pixelH)
+MAKE_METHOD(PixelW,pixelW)
 
 data CBox parent
 type Box = CBox Widget

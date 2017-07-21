@@ -2,7 +2,7 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 module Graphics.UI.FLTK.LowLevel.Image
        (
-#if FL_API_VERSION == 10304
+#if FLTK_API_VERSION >= 10304
        ImageFail(..),
 #endif
        ImageFuncs(..),
@@ -33,7 +33,7 @@ import Graphics.UI.FLTK.LowLevel.Utils
 import Graphics.UI.FLTK.LowLevel.Hierarchy
 import Graphics.UI.FLTK.LowLevel.Dispatch
 
-#if FL_API_VERSION == 10304
+#if FLTK_API_VERSION >= 10304
 #c
 enum ImageFail {
   ImageErrNoImage = ERR_NO_IMAGE,
@@ -41,6 +41,7 @@ enum ImageFail {
   ImageErrFormat = ERR_FORMAT
 };
 #endc
+-- | Only available on FLTK version 1.3.4 and above.
 {#enum ImageFail {} deriving (Show, Eq, Ord) #}
 #endif
 
@@ -184,8 +185,9 @@ instance (impl ~ (Position ->  IO ())) => Op (Draw ()) Image orig impl where
 instance (impl ~ ( IO ())) => Op (Uncache ()) Image orig impl where
   runOp _ _ image = withRef image $ \imagePtr -> uncache' imagePtr
 
-#if FL_API_VERSION == 10304
+#if FLTK_API_VERSION >= 10304
 {#fun Fl_Image_fail as fail' { id `Ptr ()'} -> `CInt' #}
+-- | Only available on FLTK version 1.3.4 and above.
 instance (impl ~ (IO (Either ImageFail ()))) => Op (Fail ()) Image orig impl where
   runOp _ _ image = withRef image $ \imagePtr -> do
     res <- fail' imagePtr

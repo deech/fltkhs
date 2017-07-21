@@ -58,7 +58,7 @@ EXPORT {
   FL_EXPORT_C(void,Fl_File_Icon_labeltype)(fl_Label o,int x,int y,int w,int h,Fl_Align a){
     Fl_File_Icon::labeltype((static_cast<Fl_Label*>(o)),x,y,w,h,a);
   }
-  FL_EXPORT_C(fl_File_Icon,Fl_File_Icon_find)(const char* filename,int filetype){
+  FL_EXPORT_C(fl_File_Icon,Fl_File_Icon_find)(const char* filename){
     return (fl_File_Icon)Fl_File_Icon::find(filename);
   }
   FL_EXPORT_C(fl_File_Icon,Fl_File_Icon_find_with_filetype)(const char* filename,int filetype){

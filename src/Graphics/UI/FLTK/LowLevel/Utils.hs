@@ -53,6 +53,8 @@ foreign import ccall "wrapper"
         mkTextPredeleteCb :: TextPredeleteCbPrim -> IO (FunPtr TextPredeleteCbPrim)
 foreign import ccall "wrapper"
         mkFDHandlerPrim :: FDHandlerPrim -> IO (FunPtr FDHandlerPrim)
+foreign import ccall "wrapper"
+        mkGlobalCallbackPtr:: GlobalCallback -> IO (FunPtr GlobalCallback)
 
 toCallbackPrim :: (Ref a -> IO ()) ->
                   IO (FunPtr (Ptr () -> IO ()))
@@ -267,7 +269,7 @@ unsafeFromCString cstring = Unsafe.unsafePerformIO (cStringToText cstring)
 
 #ifdef CALLSTACK_AVAILABLE
 cStringToText :: (?loc :: CallStack) => CString -> IO T.Text
-#elif HASCALLSTACK_AVAILABLE
+#elif defined(HASCALLSTACK_AVAILABLE)
 cStringToText :: (HasCallStack) => CString -> IO T.Text
 #else
 cStringToText :: CString -> IO T.Text

@@ -10,11 +10,11 @@
 #include "FL/Fl_Copy_Surface.H"
 EXPORT {
 #endif
-  FL_EXPORT_C(const char* ,Fl_Copy_Surface_class_name)(fl_Copy_Surface copy_surface);
-  FL_EXPORT_C(void        ,Fl_Copy_Surface_set_current)(fl_Copy_Surface copy_surface);
-  FL_EXPORT_C(void        ,Fl_Copy_Surface_draw)(fl_Copy_Surface copy_surface, fl_Widget widget, int delta_x, int delta_y);
-  FL_EXPORT_C(fl_Copy_Surface, Fl_Copy_Surface_New)(int w, int h);
-  FL_EXPORT_C(void, Fl_Copy_Surface_Destroy)(fl_Copy_Surface copy_surface);
+  FL_EXPORT_C_HEADER(const char* ,Fl_Copy_Surface_class_name,(fl_Copy_Surface copy_surface));
+  FL_EXPORT_C_HEADER(void        ,Fl_Copy_Surface_set_current,(fl_Copy_Surface copy_surface));
+  FL_EXPORT_C_HEADER(void        ,Fl_Copy_Surface_draw,(fl_Copy_Surface copy_surface, fl_Widget widget, int delta_x, int delta_y));
+  FL_EXPORT_C_HEADER(fl_Copy_Surface,Fl_Copy_Surface_New,(int w, int h));
+  FL_EXPORT_C_HEADER(void,Fl_Copy_Surface_Destroy,(fl_Copy_Surface copy_surface));
 #ifdef __cplusplus
 }
 #endif

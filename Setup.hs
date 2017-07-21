@@ -11,6 +11,7 @@ import Distribution.Verbosity
 import Distribution.Text ( display )
 import Control.Monad
 import Data.List
+import Control.Applicative((<$>))
 import Distribution.Simple.Program
   ( Program(..), ConfiguredProgram(..), programPath
    , requireProgram, requireProgramVersion
@@ -90,35 +91,67 @@ buildFltk prefix openGL = do
 myPreConf :: Args -> ConfigFlags -> IO HookedBuildInfo
 myPreConf args flags = do
    if (bundledBuild flags)
-   then do
-     putStrLn "Building bundled FLTK"
-     prefix <- bundlePrefix flags ""
-     fltkBuilt <- doesDirectoryExist prefix
-     if (not fltkBuilt)
-     then buildFltk (case buildOS of { Windows -> cygpath "-u" prefix; _ -> return prefix;}) (openGLSupport flags)
-     else putStrLn "FLTK already built."
-   else return ()
+    then do
+      putStrLn "Building bundled FLTK"
+      prefix <- bundlePrefix flags ""
+      fltkBuilt <- doesDirectoryExist prefix
+      if (not fltkBuilt)
+        then do
+          buildFltk (case buildOS of { Windows -> cygpath "-u" prefix; _ -> return prefix;}) (openGLSupport flags)
+          case buildOS of
+            Windows -> updateEnv "PATH" (windowsFriendlyPaths (prefix </> "bin"))
+            _ -> updateEnv "PATH" (prefix </> "bin")
+        else putStrLn "FLTK already built."
+      else return ()
    putStrLn "Running autoconf ..."
    case buildOS of
      Windows -> rawSystemExit normal "sh" ["autoconf"]
      _ -> rawSystemExit normal "autoconf" []
-   preConf autoconfUserHooks args flags
+   fltkPathAdded <-
+     if (bundledBuild flags)
+     then do
+       prefix <- bundlePrefix flags ""
+       return flags{ configProgramPaths = [("fltk-config", prefix </> "bin" </> "fltk-config")] ++ (configProgramPaths flags)}
+     else return flags
+   preConf autoconfUserHooks args fltkPathAdded
 
 myPostConf :: Args -> ConfigFlags -> PackageDescription -> LocalBuildInfo -> IO ()
-myPostConf args flags pd lbi =
-  postConf autoconfUserHooks
-           args
-           (if (openGLSupport flags)
-            then (flags{ configConfigureArgs = (configConfigureArgs flags) ++ ["--enable-gl"]})
-            else flags)
-           pd
-           lbi
+myPostConf args flags pd lbi = do
+  let confFlags = if (openGLSupport flags)
+                  then (flags{ configConfigureArgs = (configConfigureArgs flags) ++ ["--enable-gl"]})
+                  else flags
+  (major, minor, patch) <- getFltkVersion
+  apiVersion <- getApiVersion
+  let confFlagsWithVersion =
+        confFlags
+        {
+          configConfigureArgs = (configConfigureArgs confFlags) ++ [
+                   ("--with-fltk-major-version=" ++ major),
+                   ("--with-fltk-minor-version=" ++ minor),
+                   ("--with-fltk-patch-version=" ++ patch)
+                 ]
+        }
+  postConf autoconfUserHooks args confFlagsWithVersion (addApiVersion pd apiVersion) lbi
 
 fltkcdir :: FilePath
 fltkcdir = unsafePerformIO $ do
   d <- getCurrentDirectory
   return (d </> "c-lib")
 fltkclib = "fltkc"
+
+getFltkVersion :: IO (String, String, String)
+getFltkVersion = do
+  versionString <- (case buildOS of
+                      Windows -> rawSystemStdout normal "sh" ["fltk-config", "--version"]
+                      _ -> rawSystemStdout normal "fltk-config" ["--version"])
+  return (fltkVersion versionString)
+
+fltkVersion :: String -> (String,String,String)
+fltkVersion version =
+  let (major, minorVersion) = break ((==) '.') (unlines (lines version))
+      (minor, patchVersion) = break ((==) '.') (drop 1 minorVersion)
+      patch = drop 1 patchVersion
+  in (major, minor, patch)
 
 flagIsSet :: PD.FlagName -> ConfigFlags -> Bool
 flagIsSet flag configFlags = maybe False id (lookup flag (configConfigurationsFlags configFlags))
@@ -176,6 +209,32 @@ windowsFriendlyPaths s =
   then unsafePerformIO (cygpath "-m" s)
   else s
 
+getApiVersion :: IO Int
+getApiVersion = do
+  (major, minor, patch) <- getFltkVersion
+  return ((((read major) :: Int) * 10000) +
+            (((read minor) :: Int) * 100) +
+            ((read patch) :: Int))
+
+addApiVersion :: PackageDescription -> Int -> PackageDescription
+addApiVersion pkg_descr apiVersion =
+  let fixedLib =
+        do
+          l <- library pkg_descr
+          let cpp = cppOptions (libBuildInfo l)
+              -- have to add to ccOptions as well otherwise c2hs won't see it.
+              cc = ccOptions (libBuildInfo l)
+              fltkApiFlag = "-DFLTK_API_VERSION=" ++ (show apiVersion)
+          return (l {
+                      libBuildInfo =
+                        (libBuildInfo l) {
+                           cppOptions = cpp ++ [fltkApiFlag],
+                           ccOptions = cc ++ [fltkApiFlag]
+                        }
+                   })
+  in
+  pkg_descr{ library = fixedLib }
+
 myBuildHook pkg_descr local_bld_info user_hooks bld_flags = do
      let confFlags = configFlags local_bld_info
      if (bundledBuild confFlags)
@@ -192,6 +251,8 @@ myBuildHook pkg_descr local_bld_info user_hooks bld_flags = do
         clibraries <- getDirectoryContents fltkcdir
         when (null $ filter (Data.List.isInfixOf "fltkc") clibraries) compileC
        else compileC
+     apiVersion <- getApiVersion
+     let apiVersionAddedPkgDescription = addApiVersion pkg_descr apiVersion
      case buildOS of
        Windows ->
          let rewritePaths :: PackageDescription -> IO PackageDescription
@@ -230,15 +291,15 @@ myBuildHook pkg_descr local_bld_info user_hooks bld_flags = do
                                      ld_incdirs
                  return (pkg_descr {library = fixedLib})
          in do
-           fixedPkgDescr <- rewritePaths pkg_descr >>= return . addFltkcDir
+           fixedPkgDescr <- rewritePaths apiVersionAddedPkgDescription >>= return . addFltkcDir
            buildHook autoconfUserHooks fixedPkgDescr local_bld_info user_hooks bld_flags
        Linux -> do
          updateEnv "LIBRARY_PATH" fltkcdir
-         buildHook autoconfUserHooks pkg_descr local_bld_info user_hooks bld_flags
+         buildHook autoconfUserHooks apiVersionAddedPkgDescription local_bld_info user_hooks bld_flags
        _ -> do
          updateEnv "DYLD_LIBRARY_PATH" fltkcdir
          updateEnv "LIBRARY_PATH" fltkcdir
-         buildHook autoconfUserHooks pkg_descr local_bld_info user_hooks bld_flags
+         buildHook autoconfUserHooks apiVersionAddedPkgDescription local_bld_info user_hooks bld_flags
 
 copyCBindingsAndBundledExecutables :: PackageDescription -> LocalBuildInfo -> UserHooks -> CopyFlags -> IO ()
 copyCBindingsAndBundledExecutables pkg_descr lbi uhs flags = do

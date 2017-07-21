@@ -10,12 +10,12 @@
 #include "FL/Fl_Image_Surface.H"
 EXPORT {
 #endif
-  FL_EXPORT_C(const char* ,Fl_Image_Surface_class_name)(fl_Image_Surface image_surface);
-  FL_EXPORT_C(void        ,Fl_Image_Surface_set_current)(fl_Image_Surface image_surface);
-  FL_EXPORT_C(void        ,Fl_Image_Surface_draw)(fl_Image_Surface image_surface, fl_Widget widget, int x, int y);
-  FL_EXPORT_C(fl_Image_Surface, Fl_Image_Surface_New)(int w, int h);
-  FL_EXPORT_C(void, Fl_Image_Surface_Destroy)(fl_Image_Surface image_surface);
-  FL_EXPORT_C(fl_Image, Fl_Image_Surface_image)(fl_Image_Surface image_surface);
+  FL_EXPORT_C_HEADER(const char* ,Fl_Image_Surface_class_name,(fl_Image_Surface image_surface));
+  FL_EXPORT_C_HEADER(void        ,Fl_Image_Surface_set_current,(fl_Image_Surface image_surface));
+  FL_EXPORT_C_HEADER(void        ,Fl_Image_Surface_draw,(fl_Image_Surface image_surface, fl_Widget widget, int x, int y));
+  FL_EXPORT_C_HEADER(fl_Image_Surface,Fl_Image_Surface_New,(int w, int h));
+  FL_EXPORT_C_HEADER(void,Fl_Image_Surface_Destroy,(fl_Image_Surface image_surface));
+  FL_EXPORT_C_HEADER(fl_Image,Fl_Image_Surface_image,(fl_Image_Surface image_surface));
 #ifdef __cplusplus
 }
 #endif

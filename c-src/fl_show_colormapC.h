@@ -9,7 +9,7 @@
 #include "Fl_CallbackC.h"
 EXPORT {
 #endif
-  FL_EXPORT_C(Fl_Color, flc_show_colormap)(Fl_Color oldcol);
+  FL_EXPORT_C_HEADER(Fl_Color,flc_show_colormap,(Fl_Color oldcol));
 #ifdef __cplusplus
 }
 #endif
