@@ -153,46 +153,46 @@ library
   if os(darwin)
      cc-options: -U__BLOCKS__ -D_Nonnull=
 
--- Executable fltkhs-fluidtohs
---   Main-Is: Main.hs
---   Hs-Source-Dirs: src/Fluid
---   Other-modules:
---                 Generate
---                 Lookup
---                 Parser
---                 Types
---                 Utils
---   Build-Depends:
---     base == 4.*,
---     filepath,
---     fltkhs,
---     parsec >= 3.1.6,
---     directory >= 1.2.1.0,
---     mtl
---   default-language: Haskell2010
---   ghc-Options: -Wall -threaded
---   if os(windows) && arch(x86_64)
---      cpp-options: -DWIN64
---   if os(windows)
---    ghc-Options: -optl-mwindows
---    ghc-Options: -pgml g++ "-optl-Wl,--whole-archive" "-optl-Wl,-Bstatic" "-optl-Wl,-lfltkc" "-optl-Wl,-Bdynamic" "-optl-Wl,--no-whole-archive"
---   if os(darwin)
---    ghc-Options: "-optl-Wl,-lfltkc"
---   if !os(darwin) && !os(windows)
---    ghc-Options: -pgml g++ "-optl-Wl,--whole-archive" "-optl-Wl,-Bstatic" "-optl-Wl,-lfltkc" "-optl-Wl,-Bdynamic" "-optl-Wl,--no-whole-archive"
+Executable fltkhs-fluidtohs
+  Main-Is: Main.hs
+  Hs-Source-Dirs: src/Fluid
+  Other-modules:
+                Generate
+                Lookup
+                Parser
+                Types
+                Utils
+  Build-Depends:
+    base == 4.*,
+    filepath,
+    fltkhs,
+    parsec >= 3.1.6,
+    directory >= 1.2.1.0,
+    mtl
+  default-language: Haskell2010
+  ghc-Options: -Wall -threaded
+  if os(windows) && arch(x86_64)
+     cpp-options: -DWIN64
+  if os(windows)
+   ghc-Options: -optl-mwindows
+   ghc-Options: -pgml g++ "-optl-Wl,--whole-archive" "-optl-Wl,-Bstatic" "-optl-Wl,-lfltkc" "-optl-Wl,-Bdynamic" "-optl-Wl,--no-whole-archive"
+  if os(darwin)
+   ghc-Options: "-optl-Wl,-lfltkc"
+  if !os(darwin) && !os(windows)
+   ghc-Options: -pgml g++ "-optl-Wl,--whole-archive" "-optl-Wl,-Bstatic" "-optl-Wl,-lfltkc" "-optl-Wl,-Bdynamic" "-optl-Wl,--no-whole-archive"
 
--- Executable fltkhs-buttons
---   Main-Is: Buttons.hs
---   Hs-Source-Dirs: src/TestPrograms
---   Build-Depends:
---     base == 4.*,
---     fltkhs
---   default-language: Haskell2010
---   ghc-Options: -Wall -threaded
---   if os(windows)
---     ghc-Options: -optl-mwindows
---     ghc-Options: -pgml g++ "-optl-Wl,--whole-archive" "-optl-Wl,-Bstatic" "-optl-Wl,-lfltkc" "-optl-Wl,-Bdynamic" "-optl-Wl,--no-whole-archive"
---   if os(darwin)
---     ghc-Options: "-optl-Wl,-lfltkc"
---   if !os(darwin) && !os(windows)
---     ghc-Options: -pgml g++ "-optl-Wl,--whole-archive" "-optl-Wl,-Bstatic" "-optl-Wl,-lfltkc" "-optl-Wl,-Bdynamic" "-optl-Wl,--no-whole-archive"
+Executable fltkhs-buttons
+  Main-Is: Buttons.hs
+  Hs-Source-Dirs: src/TestPrograms
+  Build-Depends:
+    base == 4.*,
+    fltkhs
+  default-language: Haskell2010
+  ghc-Options: -Wall -threaded
+  if os(windows)
+    ghc-Options: -optl-mwindows
+    ghc-Options: -pgml g++ "-optl-Wl,--whole-archive" "-optl-Wl,-Bstatic" "-optl-Wl,-lfltkc" "-optl-Wl,-Bdynamic" "-optl-Wl,--no-whole-archive"
+  if os(darwin)
+    ghc-Options: "-optl-Wl,-lfltkc"
+  if !os(darwin) && !os(windows)
+    ghc-Options: -pgml g++ "-optl-Wl,--whole-archive" "-optl-Wl,-Bstatic" "-optl-Wl,-lfltkc" "-optl-Wl,-Bdynamic" "-optl-Wl,--no-whole-archive"
