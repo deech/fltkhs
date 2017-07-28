@@ -1235,18 +1235,24 @@ import Graphics.UI.FLTK.LowLevel.PNMImage
 --
 -- Unfortunately since FLTKHS is hybrid Haskell/C++ there are limitations compared to
 -- running a plain 'ol Haskell library on the REPL:
---    1. The `stack build ...` is an essential first step before running `stack
---       ghci ...`. The reason is it uses `-fobject-code` to link in all the C++
+--
+--    1. The 'stack build ...' is an essential first step before running 'stack
+--       ghci ...'. The reason is it uses '-fobject-code' to link in all the C++
 --       libraries which must be built first.
---    2. The use of `replMain` instead of just `:main` as you might expect. This
---       is because (1) it allows closing the GUI to correctly return control to
---       the REPL prompt and (2) typing 'Ctrl-C' also correctly hands control
---       back to the REPL. With just `:main` (1) works but (2) results in a
---       "ghosted" UI where the GUI windows is still visible but unable to
---       accept any keyboard/mouse input. The reason for the ghosted GUI is that
---       `:main` delegates to the FLTK C++ event loop which is unable to see
---       user interrupts and so has no of knowing that it should destroy
---       itself.`replRun` emulates the event loop on the Haskell side allowing
---       it stop, clean up and return control when it `catch`es a
---       'UserInterrupt'. Thus the `replRun` is slower than the optimized C++
---       event loop but hopefully that's not too big an impediment for REPL work.
+--    2. The use of 'replMain' instead of just ':main' as you might expect. This
+--       is because
+--
+--            (1) it allows closing the GUI to correctly return control to
+--                the REPL prompt and
+--            (2) typing 'Ctrl-C' also correctly hands control back to the REPL.
+--
+--       With just ':main' (1) works but (2) results in a "ghosted" UI where the
+--       GUI window is still visible but unable to accept any keyboard/mouse
+--       input. The reason for the ghosted GUI is that ':main' delegates to the
+--       FLTK C++ event loop which is unable to listen for user interrupts on
+--       the Haskell side and so has no of knowing that it should destroy
+--       itself.'replMain' emulates the event loop on the Haskell side allowing
+--       it to stop, clean up and return control when it 'catch'es a
+--       'UserInterrupt'. Thus the 'replMain' is slower than the optimized C++
+--       event loop but hopefully that's not too big an impediment for REPL
+--       work.
