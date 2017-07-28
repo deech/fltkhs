@@ -10,6 +10,7 @@ module Graphics.UI.FLTK.LowLevel.FL
      selectionOwner,
      setSelectionOwner,
      run,
+     replRun,
      check,
      ready,
      option,
@@ -67,6 +68,7 @@ module Graphics.UI.FLTK.LowLevel.FL
 #endif
      wait,
      setWait,
+     waitFor,
      readqueue,
      addTimeout,
      repeatTimeout,
@@ -203,6 +205,7 @@ import Graphics.UI.FLTK.LowLevel.Dispatch
 import qualified Data.Text as T
 import qualified Data.Text.Foreign as TF
 import qualified System.IO.Unsafe as Unsafe (unsafePerformIO)
+import Control.Exception(catch, throw, AsyncException(UserInterrupt))
 #c
  enum Option {
    OptionArrowFocus = OPTION_ARROW_FOCUS,
@@ -324,9 +327,11 @@ isScheme :: T.Text -> IO Bool
 isScheme sch = TF.withCStringLen sch $ \(str,_) -> {#call Fl_is_scheme as fl_is_scheme #} str >>= return . toBool
 {# fun Fl_wait as wait
        {  } -> `Int' #}
-{# fun Fl_set_wait as setWait
+{# fun Fl_set_wait as waitFor
        { `Double' } -> `Double' #}
 
+setWait :: Double -> IO Double
+setWait = waitFor
 {# fun Fl_scrollbar_size as scrollbarSize
        {  } -> `Int' #}
 {# fun Fl_set_scrollbar_size as setScrollbarSize
@@ -927,3 +932,23 @@ setUseHighResGL :: Bool -> IO ()
 setUseHighResGL use' = {#call Fl_set_use_high_res_GL as fl_set_use_high_res_GL #} (cFromBool use')
 #endif
 #endif
+
+
+-- | Use this function to run a GUI in GHCi.
+replRun :: IO ()
+replRun = do
+  flush
+  w <- firstWindow
+  case w of
+    Just w' ->
+      catch (waitFor 0 >> replRun)
+            (\e -> if (e == UserInterrupt)
+                   then do
+                     allToplevelWindows [] (Just w') >>= mapM_ deleteWidget
+                     flush
+                   else throw e)
+    Nothing -> return ()
+  where
+    allToplevelWindows :: [Ref Window] -> Maybe (Ref Window) -> IO [Ref Window]
+    allToplevelWindows ws (Just w) = nextWindow w >>= allToplevelWindows (w:ws)
+    allToplevelWindows ws Nothing = return ws
