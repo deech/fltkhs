@@ -122,10 +122,9 @@ module Graphics.UI.FLTK.LowLevel.FL
      getFontName,
      getFont,
      getFontSizes,
-     setFontByString,
-     setFontByFont,
+     setFontToString,
+     setFontToFont,
      setFonts,
-     setFontsWithString,
      -- * File Descriptor Callbacks
      addFd,
      addFdWhen,
@@ -772,14 +771,17 @@ getFontName :: Font -> IO (T.Text, Maybe FontAttribute)
 getFontName f = getFontNameWithAttributes' f
 {# fun Fl_get_font_sizes as getFontSizes
        { cFromFont `Font', alloca- `Int' peekIntConv* } -> `Int' #}
-{# fun Fl_set_font_by_string as setFontByString
+{# fun Fl_set_font_by_string as setFontToString
        { cFromFont `Font', unsafeToCString `T.Text' } -> `()' supressWarningAboutRes #}
-{# fun Fl_set_font_by_font as setFontByFont
+{# fun Fl_set_font_by_font as setFontToFont
        { cFromFont `Font',cFromFont `Font' } -> `()' supressWarningAboutRes #}
-{# fun Fl_set_fonts as setFonts
-       {  } -> `Font' cToFont #}
-{# fun Fl_set_fonts_with_string as setFontsWithString
-       { unsafeToCString `T.Text' } -> `Font' cToFont #}
+{# fun Fl_set_fonts as setFonts'
+       {  } -> `Int' #}
+{# fun Fl_set_fonts_with_string as setFontsWithString'
+       { id `Ptr CChar' } -> `Int' #}
+setFonts :: Maybe T.Text -> IO Int
+setFonts (Just xstarName) = withText xstarName (\starNamePtr -> setFontsWithString' starNamePtr)
+setFonts Nothing = setFonts'
 
 {# fun Fl_add_fd_with_when as addFdWhen'
        {
