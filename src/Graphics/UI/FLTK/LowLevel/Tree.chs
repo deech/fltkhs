@@ -63,21 +63,22 @@ instance (impl ~ (IO ())) => Op (Destroy ()) Tree orig impl where
 {# fun Fl_Tree_show_self as showSelf' { id `Ptr ()' } -> `()' #}
 instance (impl ~ ( IO ()) ) => Op (ShowSelf ()) Tree orig impl where
   runOp _ _ tree = withRef tree $ \treePtr -> showSelf' treePtr
-{# fun Fl_Tree_root_label as rootLabel' { id `Ptr ()',unsafeToCString `T.Text' } -> `()' #}
+{# fun Fl_Tree_root_label as rootLabel' { id `Ptr ()',id `Ptr CChar' } -> `()' #}
 instance (impl ~ (T.Text ->  IO ()) ) => Op (RootLabel ()) Tree orig impl where
-  runOp _ _ tree new_label = withRef tree $ \treePtr -> rootLabel' treePtr new_label
+  runOp _ _ tree new_label = withRef tree $ \treePtr -> withText new_label (\new_labelPtr -> rootLabel' treePtr new_labelPtr)
 {# fun Fl_Tree_root as root' { id `Ptr ()' } -> `Ptr ()' id #}
 instance (impl ~ ( IO (Maybe (Ref TreeItem))) ) => Op (Root ()) Tree orig impl where
   runOp _ _  tree = withRef tree $ \treePtr -> root' treePtr >>= toMaybeRef
-{# fun Fl_Tree_add as add' { id `Ptr ()',unsafeToCString `T.Text' } -> `Ptr ()' id #}
-{# fun Fl_Tree_add_with_item_name as addWithItemName' { id `Ptr ()',id `Ptr ()',unsafeToCString `T.Text' } -> `Ptr ()' id #}
+{# fun Fl_Tree_add as add' { id `Ptr ()',id `Ptr CChar' } -> `Ptr ()' id #}
+{# fun Fl_Tree_add_with_item_name as addWithItemName' { id `Ptr ()',id `Ptr ()', id `Ptr CChar' } -> `Ptr ()' id #}
 instance (impl ~ (T.Text ->  IO (Maybe (Ref TreeItem)))) => Op (Add ()) Tree orig impl where
-  runOp _ _  tree path' = withRef tree $ \treePtr -> add' treePtr path' >>= toMaybeRef
+  runOp _ _  tree path' = withRef tree $ \treePtr -> withText path' (\pathPtr' -> add' treePtr pathPtr' >>= toMaybeRef )
 instance (Parent a TreeItem, impl ~ (T.Text -> Ref a -> IO (Maybe (Ref TreeItem)))) => Op (AddAt ()) Tree orig impl where
   runOp _ _ tree path' item' =
     withRef tree  $ \treePtr ->
     withRef item' $ \itemPtr ->
-    addWithItemName' treePtr itemPtr path' >>= toMaybeRef
+    withText path' $ \pathPtr ->
+    addWithItemName' treePtr itemPtr pathPtr >>= toMaybeRef
 {# fun Fl_Tree_insert_above as insertAbove' { id `Ptr ()',id `Ptr ()',unsafeToCString `T.Text' } -> `Ptr ()' id #}
 instance (Parent a TreeItem, impl ~ (Ref a -> T.Text ->  IO (Maybe (Ref a)))) => Op (InsertAbove ()) Tree orig impl where
   runOp _ _  tree above name = withRef tree $ \treePtr -> withRef above $ \abovePtr -> insertAbove' treePtr abovePtr name >>= toMaybeRef
