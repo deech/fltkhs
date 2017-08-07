@@ -461,8 +461,11 @@ EXPORT {
   FL_EXPORT_C(const char*,Fl_get_font_name_with_attributes)(Fl_Font font,int* attributes){
     return Fl::get_font_name(font,attributes);
   }
-  FL_EXPORT_C(int,Fl_get_font_sizes)(Fl_Font font,int* sizep){
-    return Fl::get_font_sizes(font,sizep);
+  FL_EXPORT_C(int,Fl_get_font_sizes)(Fl_Font font, int** sizes){
+    int* size;
+    int length = Fl::get_font_sizes((Fl_Font)font,size);
+    *sizes = size;
+    return length;
   }
   FL_EXPORT_C(void,Fl_set_font_by_string)(Fl_Font font,const char* text){
     Fl::set_font(font,text);

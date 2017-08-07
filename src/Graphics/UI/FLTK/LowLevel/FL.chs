@@ -769,8 +769,25 @@ toAttribute ptr =
           return $ cToFontAttribute attributeCode
 getFontName :: Font -> IO (T.Text, Maybe FontAttribute)
 getFontName f = getFontNameWithAttributes' f
-{# fun Fl_get_font_sizes as getFontSizes
-       { cFromFont `Font', alloca- `Int' peekIntConv* } -> `Int' #}
+{# fun Fl_get_font_sizes as getFontSizes'
+       { cFromFont `Font', id `Ptr (Ptr CInt)' } -> `CInt' #}
+getFontSizes :: Font -> IO [Int]
+getFontSizes font = do
+   arrPtr <- (newArray [] :: IO (Ptr (Ptr CInt)))
+   arrLength <- getFontSizes' font arrPtr
+   zeroth <- peekElemOff arrPtr 0
+   if (arrLength == 0) then return []
+   else do
+     (sizes :: [CInt]) <-
+         mapM
+           (
+            \offset -> do
+               size <- peek (advancePtr zeroth offset)
+               return size
+           )
+           [0 .. ((fromIntegral arrLength) - 1)]
+     return (map fromIntegral sizes)
+
 {# fun Fl_set_font_by_string as setFontToString
        { cFromFont `Font', unsafeToCString `T.Text' } -> `()' supressWarningAboutRes #}
 {# fun Fl_set_font_by_font as setFontToFont

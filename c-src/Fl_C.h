@@ -215,7 +215,7 @@ EXPORT {
   FL_EXPORT_C_HEADER(const char*       ,Fl_get_font,(Fl_Font font));
   FL_EXPORT_C_HEADER(const char*       ,Fl_get_font_name,(Fl_Font font));
   FL_EXPORT_C_HEADER(const char*       ,Fl_get_font_name_with_attributes,(Fl_Font font,int* attributes));
-  FL_EXPORT_C_HEADER(int               ,Fl_get_font_sizes,(Fl_Font font,int* sizep));
+  FL_EXPORT_C_HEADER(int               ,Fl_get_font_sizes,(Fl_Font font,int** sizep));
   FL_EXPORT_C_HEADER(void              ,Fl_set_font_by_string,(Fl_Font font,const char* fontString));
   FL_EXPORT_C_HEADER(void              ,Fl_set_font_by_font,(Fl_Font to,Fl_Font from));
   FL_EXPORT_C_HEADER(Fl_Font           ,Fl_set_fonts,());
