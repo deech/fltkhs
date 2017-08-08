@@ -771,7 +771,7 @@ getFontName :: Font -> IO (T.Text, Maybe FontAttribute)
 getFontName f = getFontNameWithAttributes' f
 {# fun Fl_get_font_sizes as getFontSizes'
        { cFromFont `Font', id `Ptr (Ptr CInt)' } -> `CInt' #}
-getFontSizes :: Font -> IO [Int]
+getFontSizes :: Font -> IO [FontSize]
 getFontSizes font = do
    arrPtr <- (newArray [] :: IO (Ptr (Ptr CInt)))
    arrLength <- getFontSizes' font arrPtr
@@ -786,7 +786,7 @@ getFontSizes font = do
                return size
            )
            [0 .. ((fromIntegral arrLength) - 1)]
-     return (map fromIntegral sizes)
+     return (map FontSize sizes)
 
 {# fun Fl_set_font_by_string as setFontToString
        { cFromFont `Font', unsafeToCString `T.Text' } -> `()' supressWarningAboutRes #}
