@@ -295,7 +295,7 @@ myBuildHook pkg_descr local_bld_info user_hooks bld_flags = do
            buildHook autoconfUserHooks fixedPkgDescr local_bld_info user_hooks bld_flags
        Linux -> do
          updateEnv "LIBRARY_PATH" fltkcdir
-         buildHook autoconfUserHooks apiVersionAddedPkgDescription local_bld_info user_hooks bld_flags
+         buildHook autoconfUserHooks (addFltkcDir apiVersionAddedPkgDescription) local_bld_info user_hooks bld_flags
        _ -> do
          updateEnv "DYLD_LIBRARY_PATH" fltkcdir
          updateEnv "LIBRARY_PATH" fltkcdir
@@ -314,7 +314,7 @@ copyCBindingsAndBundledExecutables pkg_descr lbi uhs flags = do
      OSX -> rawSystemExit (fromFlag $ copyVerbosity flags) "cp"
               ["c-lib" </> "libfltkc-dyn.dylib", libPref]
      _ -> rawSystemExit (fromFlag $ copyVerbosity flags) "cp"
-            ["c-lib" </> "libfltkc-dyn.so", libPref]
+            ["c-lib" </> "libfltkc.so", libPref]
     if (bundledBuild (configFlags lbi))
     then do
       executableDir <- (bundlePrefix (configFlags lbi)) "bin"
@@ -352,6 +352,7 @@ registerHook pkg_descr localbuildinfo _ flags =
 
 register :: PackageDescription -> LocalBuildInfo -> RegisterFlags -> IO ()
 register pkg@PackageDescription { library = Just lib } lbi regFlags = do
+    putStrLn "registering ..."
     let clbi = getComponentLocalBuildInfo lbi CLibName
     installedPkgInfoRaw' <- generateRegistrationInfo verbosity pkg lib lbi clbi inplace False distPref packageDb
     let installedPkgInfoRaw =
@@ -363,8 +364,8 @@ register pkg@PackageDescription { library = Just lib } lbi regFlags = do
                                 -- this is what this whole register code is all about
                                 extraGHCiLibraries =
                                   case buildOS of
-                                    Windows -> ["libfltkc-dyn"]
-                                    _ -> ["fltkc-dyn"]
+                                    Windows -> ["libfltkc"]
+                                    _ -> ["fltkc"]
                                 }
 
      -- Three different modes:
