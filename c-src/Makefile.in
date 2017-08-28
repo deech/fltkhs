@@ -135,7 +135,7 @@ else
 endif
 
 .SILENT:
-all: libfltkc.a libfltkc-dyn.$(SHARED_EXT)
+all: libfltkc.a libfltkc.$(SHARED_EXT)
 .SUFFIXES: .cpp .o
 .cpp.o:
 	test -d $(STATIC_OBJECT_FILES) || mkdir $(STATIC_OBJECT_FILES)
@@ -148,12 +148,12 @@ libfltkc.a : $(OBJECTS)
 	@echo "*** Linking $@..."
 	(cd $(STATIC_OBJECT_FILES); \
 	ar rcs $(LIBDIR)/$@ $^;)
-libfltkc-dyn.so : $(OBJECTS)
+libfltkc.so : $(OBJECTS)
 	test -d $(LIBDIR) || mkdir $(LIBDIR)
 	@echo "*** Linking $@..."
 	(cd $(SHARED_OBJECT_FILES); \
 	$(CXX)  -Wno-attributes -Wall $(SONAME_FLAGS),$(LIBDIR)/$@ -o $(LIBDIR)/$@ $^ $(FLTKCONFIGCOMMAND));
-libfltkc-dyn.dylib: $(OBJECTS)
+libfltkc.dylib: $(OBJECTS)
 	test -d $(LIBDIR) || mkdir $(LIBDIR)
 	@echo "*** Linking $@..."
 	(cd $(SHARED_OBJECT_FILES); \

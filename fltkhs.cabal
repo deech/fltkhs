@@ -167,4 +167,4 @@ Executable fltkhs-buttons
   if os(darwin)
     ghc-Options: "-optl-Wl,-lfltkc"
   if !os(darwin) && !os(windows)
-    ghc-Options: -pgml g++ "-optl-Wl,-lfltkc"
+   ghc-Options:  "-optl-Wl,-lfltkc"

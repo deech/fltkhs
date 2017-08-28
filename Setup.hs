@@ -131,13 +131,12 @@ myPostConf args flags pd lbi = do
                    ("--with-fltk-patch-version=" ++ patch)
                  ]
         }
-  postConf autoconfUserHooks args confFlagsWithVersion (addApiVersion pd apiVersion) lbi
+  postConf autoconfUserHooks args confFlagsWithVersion (addApiVersion apiVersion pd) lbi
 
-fltkcdir :: FilePath
-fltkcdir = unsafePerformIO $ do
+fltkcDir :: IO FilePath
+fltkcDir = do
   d <- getCurrentDirectory
   return (d </> "c-lib")
-fltkclib = "fltkc"
 
 getFltkVersion :: IO (String, String, String)
 getFltkVersion = do
@@ -156,17 +155,24 @@ fltkVersion version =
 flagIsSet :: PD.FlagName -> ConfigFlags -> Bool
 flagIsSet flag configFlags = maybe False id (lookup flag (configConfigurationsFlags configFlags))
 
-addFltkcDir :: PackageDescription -> PackageDescription
-addFltkcDir pkg_descr =
-  pkg_descr {
-     library = fmap (\l' -> l' {
-                              libBuildInfo =
-                                 (libBuildInfo l') {
-                                    extraLibDirs = (extraLibDirs (libBuildInfo l')) ++ [fltkcdir]
-                                 }
-                            }
-                    )
-                    (library pkg_descr)
+addFltkcDir :: FilePath -> PackageDescription -> PackageDescription
+addFltkcDir prefix pkg_descr =
+  pkg_descr
+  {
+    library =
+      fmap
+        (
+          \l' ->
+            l'
+            {
+              libBuildInfo =
+                (libBuildInfo l')
+                {
+                  extraLibDirs = (extraLibDirs (libBuildInfo l')) ++ [prefix </> "c-lib"]
+                }
+            }
+        )
+        (library pkg_descr)
   }
 
 updateEnv :: String -> String -> IO ()
@@ -194,11 +200,17 @@ replaceAllInfixes needle subString haystack =
 
 bundledBuild flags = flagIsSet (FlagName "bundled") flags
 openGLSupport flags = flagIsSet (FlagName "opengl") flags
+profiling flag = fromFlagOrDefault False flag
 
 bundlePrefix flags dir =
   let (Distribution.Simple.Setup.Flag prefixTemplate) = libdir (configInstallDirs flags)
   in
   makeAbsolute ((fromPathTemplate prefixTemplate) </> "fltk-bundled" </> dir)
+
+libPrefix flags =
+  let (Distribution.Simple.Setup.Flag prefixTemplate) = libdir (configInstallDirs flags)
+  in
+  makeAbsolute (fromPathTemplate prefixTemplate)
 
 cygpath o p =
   let removeTrailingNewline = head . lines  in
@@ -216,8 +228,39 @@ getApiVersion = do
             (((read minor) :: Int) * 100) +
             ((read patch) :: Int))
 
-addApiVersion :: PackageDescription -> Int -> PackageDescription
-addApiVersion pkg_descr apiVersion =
+noWholeArchive :: PackageDescription -> PackageDescription
+noWholeArchive pkg_descr =
+  let wholeArchiveOption = ["-pgml","g++","-optl-Wl,--whole-archive","-optl-Wl,-Bstatic","-optl-Wl,-lfltkc","-optl-Wl,-Bdynamic","-optl-Wl,--no-whole-archive"]
+      sharedLibOption = ["-optl-Wl,-lfltkc"]
+      removeWholeArchive =
+        map
+          (
+            \option ->
+              case option of
+                (GHC, os) | os == wholeArchiveOption -> (GHC, sharedLibOption)
+                o -> o
+          )
+  in
+    pkg_descr
+    {
+      executables =
+        map
+          (
+            \executable ->
+              executable
+              {
+                buildInfo =
+                  (buildInfo executable)
+                    {
+                      options = removeWholeArchive (options (buildInfo executable))
+                    }
+              }
+          )
+          (executables pkg_descr)
+    }
+
+addApiVersion :: Int -> PackageDescription -> PackageDescription
+addApiVersion apiVersion pkg_descr =
   let fixedLib =
         do
           l <- library pkg_descr
@@ -243,16 +286,23 @@ myBuildHook pkg_descr local_bld_info user_hooks bld_flags = do
             Windows -> updateEnv "PATH" . windowsFriendlyPaths
             _ -> updateEnv "PATH"
      else return ()
-     let compileC = putStrLn "==Compiling C bindings==" >> runMake []
-     cdirexists <- doesDirectoryExist fltkcdir
+     fltkc <- fltkcDir
+     let compileC = do
+                      putStrLn "==Compiling C bindings=="
+                      runMake []
+                      prefix <- libPrefix confFlags
+                      rawSystemExit (fromFlag $ buildVerbosity bld_flags) "mkdir" ["-p", prefix]
+                      rawSystemExit (fromFlag $ buildVerbosity bld_flags) "cp" ["-r", fltkc, prefix]
+     cdirexists <- doesDirectoryExist fltkc
      if cdirexists
        then
        do
-        clibraries <- getDirectoryContents fltkcdir
+        clibraries <- getDirectoryContents fltkc
         when (null $ filter (Data.List.isInfixOf "fltkc") clibraries) compileC
        else compileC
      apiVersion <- getApiVersion
-     let apiVersionAddedPkgDescription = addApiVersion pkg_descr apiVersion
+     prefix <- libPrefix confFlags
+     let fixedPkgDescr = ((if (profiling (configProf confFlags)) then noWholeArchive else id) . (addFltkcDir prefix) . (addApiVersion apiVersion))  pkg_descr
      case buildOS of
        Windows ->
          let rewritePaths :: PackageDescription -> IO PackageDescription
@@ -291,30 +341,33 @@ myBuildHook pkg_descr local_bld_info user_hooks bld_flags = do
                                      ld_incdirs
                  return (pkg_descr {library = fixedLib})
          in do
-           fixedPkgDescr <- rewritePaths apiVersionAddedPkgDescription >>= return . addFltkcDir
-           buildHook autoconfUserHooks fixedPkgDescr local_bld_info user_hooks bld_flags
+           windowsFriendlyPaths <- rewritePaths fixedPkgDescr
+           buildHook autoconfUserHooks windowsFriendlyPaths local_bld_info user_hooks bld_flags
        Linux -> do
-         updateEnv "LIBRARY_PATH" fltkcdir
-         buildHook autoconfUserHooks (addFltkcDir apiVersionAddedPkgDescription) local_bld_info user_hooks bld_flags
+         updateEnv "LIBRARY_PATH" (prefix </> "c-lib")
+         buildHook autoconfUserHooks fixedPkgDescr local_bld_info user_hooks bld_flags
        _ -> do
-         updateEnv "DYLD_LIBRARY_PATH" fltkcdir
-         updateEnv "LIBRARY_PATH" fltkcdir
-         buildHook autoconfUserHooks apiVersionAddedPkgDescription local_bld_info user_hooks bld_flags
+         updateEnv "DYLD_LIBRARY_PATH" fltkc
+         updateEnv "LIBRARY_PATH" fltkc
+         buildHook autoconfUserHooks fixedPkgDescr local_bld_info user_hooks bld_flags
 
 copyCBindingsAndBundledExecutables :: PackageDescription -> LocalBuildInfo -> UserHooks -> CopyFlags -> IO ()
 copyCBindingsAndBundledExecutables pkg_descr lbi uhs flags = do
+    putStrLn "copying ..."
     (copyHook autoconfUserHooks) pkg_descr lbi uhs flags
+    fltkc <- fltkcDir
     let installDirs = absoluteInstallDirs pkg_descr lbi
                       . fromFlag . copyDest
                       $ flags
         libPref = libdir installDirs
+    putStrLn (show libPref)
     rawSystemExit (fromFlag $ copyVerbosity flags) "cp"
-        [fltkcdir </> "libfltkc.a" , libPref]
+        [fltkc </> "libfltkc.a" , libPref]
     case buildOS of
      OSX -> rawSystemExit (fromFlag $ copyVerbosity flags) "cp"
-              ["c-lib" </> "libfltkc-dyn.dylib", libPref]
+              [fltkc </> "libfltkc.dylib", libPref]
      _ -> rawSystemExit (fromFlag $ copyVerbosity flags) "cp"
-            ["c-lib" </> "libfltkc.so", libPref]
+            [fltkc </> "libfltkc.so", libPref]
     if (bundledBuild (configFlags lbi))
     then do
       executableDir <- (bundlePrefix (configFlags lbi)) "bin"
@@ -361,6 +414,7 @@ register pkg@PackageDescription { library = Just lib } lbi regFlags = do
            _ -> installedPkgInfoRaw'
     let installedPkgInfo = installedPkgInfoRaw {
                                 libraryDynDirs = (libraryDynDirs installedPkgInfoRaw) ++ (libraryDirs installedPkgInfoRaw),
+                                Distribution.InstalledPackageInfo.ldOptions = (map (\l -> "-L" ++ l) (libraryDirs installedPkgInfoRaw)) ++ (Distribution.InstalledPackageInfo.ldOptions installedPkgInfoRaw),
                                 -- this is what this whole register code is all about
                                 extraGHCiLibraries =
                                   case buildOS of
