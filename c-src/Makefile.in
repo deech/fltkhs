@@ -157,7 +157,7 @@ libfltkc-dyn.dylib: $(OBJECTS)
 	test -d $(LIBDIR) || mkdir $(LIBDIR)
 	@echo "*** Linking $@..."
 	(cd $(SHARED_OBJECT_FILES); \
-	$(CXX)  -Wno-attributes -Wall $(SONAME_FLAGS),$(LIBDIR)/$@ -o $(LIBDIR)/$@ $^ -L/usr/local/lib $(FLTKCONFIGCOMMAND));
+	$(CXX)  -Wno-attributes -Wall $(SONAME_FLAGS),$(LIBDIR)/$@ -o $(LIBDIR)/$@ $^ $(FLTKCONFIGCOMMAND) -L/usr/local/lib);
 clean:
 	test -d $(LIBDIR) && rm -rf $(LIBDIR)
 	test -d $(SHARED_OBJECT_FILES) && rm -rf $(SHARED_OBJECT_FILES)

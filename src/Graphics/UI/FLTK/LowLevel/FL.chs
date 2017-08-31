@@ -10,6 +10,7 @@ module Graphics.UI.FLTK.LowLevel.FL
      selectionOwner,
      setSelectionOwner,
      run,
+     replRun,
      check,
      ready,
      option,
@@ -67,6 +68,7 @@ module Graphics.UI.FLTK.LowLevel.FL
 #endif
      wait,
      setWait,
+     waitFor,
      readqueue,
      addTimeout,
      repeatTimeout,
@@ -120,10 +122,9 @@ module Graphics.UI.FLTK.LowLevel.FL
      getFontName,
      getFont,
      getFontSizes,
-     setFontByString,
-     setFontByFont,
+     setFontToString,
+     setFontToFont,
      setFonts,
-     setFontsWithString,
      -- * File Descriptor Callbacks
      addFd,
      addFdWhen,
@@ -203,6 +204,7 @@ import Graphics.UI.FLTK.LowLevel.Dispatch
 import qualified Data.Text as T
 import qualified Data.Text.Foreign as TF
 import qualified System.IO.Unsafe as Unsafe (unsafePerformIO)
+import Control.Exception(catch, throw, AsyncException(UserInterrupt))
 #c
  enum Option {
    OptionArrowFocus = OPTION_ARROW_FOCUS,
@@ -324,9 +326,11 @@ isScheme :: T.Text -> IO Bool
 isScheme sch = TF.withCStringLen sch $ \(str,_) -> {#call Fl_is_scheme as fl_is_scheme #} str >>= return . toBool
 {# fun Fl_wait as wait
        {  } -> `Int' #}
-{# fun Fl_set_wait as setWait
+{# fun Fl_set_wait as waitFor
        { `Double' } -> `Double' #}
 
+setWait :: Double -> IO Double
+setWait = waitFor
 {# fun Fl_scrollbar_size as scrollbarSize
        {  } -> `Int' #}
 {# fun Fl_set_scrollbar_size as setScrollbarSize
@@ -765,16 +769,36 @@ toAttribute ptr =
           return $ cToFontAttribute attributeCode
 getFontName :: Font -> IO (T.Text, Maybe FontAttribute)
 getFontName f = getFontNameWithAttributes' f
-{# fun Fl_get_font_sizes as getFontSizes
-       { cFromFont `Font', alloca- `Int' peekIntConv* } -> `Int' #}
-{# fun Fl_set_font_by_string as setFontByString
+{# fun Fl_get_font_sizes as getFontSizes'
+       { cFromFont `Font', id `Ptr (Ptr CInt)' } -> `CInt' #}
+getFontSizes :: Font -> IO [FontSize]
+getFontSizes font = do
+   arrPtr <- (newArray [] :: IO (Ptr (Ptr CInt)))
+   arrLength <- getFontSizes' font arrPtr
+   zeroth <- peekElemOff arrPtr 0
+   if (arrLength == 0) then return []
+   else do
+     (sizes :: [CInt]) <-
+         mapM
+           (
+            \offset -> do
+               size <- peek (advancePtr zeroth offset)
+               return size
+           )
+           [0 .. ((fromIntegral arrLength) - 1)]
+     return (map FontSize sizes)
+
+{# fun Fl_set_font_by_string as setFontToString
        { cFromFont `Font', unsafeToCString `T.Text' } -> `()' supressWarningAboutRes #}
-{# fun Fl_set_font_by_font as setFontByFont
+{# fun Fl_set_font_by_font as setFontToFont
        { cFromFont `Font',cFromFont `Font' } -> `()' supressWarningAboutRes #}
-{# fun Fl_set_fonts as setFonts
-       {  } -> `Font' cToFont #}
-{# fun Fl_set_fonts_with_string as setFontsWithString
-       { unsafeToCString `T.Text' } -> `Font' cToFont #}
+{# fun Fl_set_fonts as setFonts'
+       {  } -> `Int' #}
+{# fun Fl_set_fonts_with_string as setFontsWithString'
+       { id `Ptr CChar' } -> `Int' #}
+setFonts :: Maybe T.Text -> IO Int
+setFonts (Just xstarName) = withText xstarName (\starNamePtr -> setFontsWithString' starNamePtr)
+setFonts Nothing = setFonts'
 
 {# fun Fl_add_fd_with_when as addFdWhen'
        {
@@ -927,3 +951,23 @@ setUseHighResGL :: Bool -> IO ()
 setUseHighResGL use' = {#call Fl_set_use_high_res_GL as fl_set_use_high_res_GL #} (cFromBool use')
 #endif
 #endif
+
+
+-- | Use this function to run a GUI in GHCi.
+replRun :: IO ()
+replRun = do
+  flush
+  w <- firstWindow
+  case w of
+    Just w' ->
+      catch (waitFor 0 >> replRun)
+            (\e -> if (e == UserInterrupt)
+                   then do
+                     allToplevelWindows [] (Just w') >>= mapM_ deleteWidget
+                     flush
+                   else throw e)
+    Nothing -> return ()
+  where
+    allToplevelWindows :: [Ref Window] -> Maybe (Ref Window) -> IO [Ref Window]
+    allToplevelWindows ws (Just w) = nextWindow w >>= allToplevelWindows (w:ws)
+    allToplevelWindows ws Nothing = return ws

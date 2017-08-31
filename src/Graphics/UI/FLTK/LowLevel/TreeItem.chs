@@ -81,9 +81,9 @@ instance (impl ~ (Maybe T.Text -> IO ())) => Op (ShowSelf ()) TreeItem orig impl
   runOp _ _ tree_item indent = case indent of
     Just s' -> withRef tree_item $ \tree_itemPtr -> showSelfWithIndent' tree_itemPtr s'
     Nothing -> withRef tree_item $ \tree_itemPtr -> showSelfWithIndent' tree_itemPtr ""
-{# fun Fl_Tree_Item_set_label as setLabel' { id `Ptr ()',unsafeToCString `T.Text' } -> `()' #}
+{# fun Fl_Tree_Item_set_label as setLabel' { id `Ptr ()',id `Ptr CChar ' } -> `()' #}
 instance (impl ~ ( T.Text ->  IO ())) => Op (SetLabel ()) TreeItem orig impl where
-  runOp _ _ tree_item val = withRef tree_item $ \tree_itemPtr -> setLabel' tree_itemPtr val
+  runOp _ _ tree_item val = withRef tree_item $ \tree_itemPtr -> withText val (\valPtr -> setLabel' tree_itemPtr valPtr)
 {# fun Fl_Tree_Item_label as label' { id `Ptr ()' } -> `T.Text' unsafeFromCString #}
 instance (impl ~ (IO T.Text)) => Op (GetLabel ()) TreeItem orig impl where
   runOp _ _ tree_item = withRef tree_item $ \tree_itemPtr -> label' tree_itemPtr

@@ -70,7 +70,7 @@ module Graphics.UI.FLTK.LowLevel.FLTKHS
 
          -- * Running in the REPL
          --
-         -- $CabalREPLIssues
+         -- $REPL
 
          -- * Core Types
          module Graphics.UI.FLTK.LowLevel.Fl_Types,
@@ -1217,3 +1217,42 @@ import Graphics.UI.FLTK.LowLevel.PNMImage
 --           - LowLevel      -- Haskell bindings
 --   - scripts               -- various helper scripts (probably not interesting to anyone but myself)
 -- @
+
+-- $REPL
+-- Running GUIs in GHCi is fully supported. Using the <https://github.com/deech/fltkhs-hello-world hello world skeleton> as
+-- an example the following steps will run it in the REPL:
+--
+-- @
+-- > git clone http://github.com/deech/fltkhs-hello-world
+-- > cd fltkhs-hello-world
+-- > stack build --flag fltkhs:bundled
+-- > stack ghci --flag fltkhs:bundled fltkhs-hello-world:exe:fltkhs-hello-world
+-- [1 of 1] Compiling Main ...
+-- Ok, modules loaded: Main ...
+-- Loaded GHCi configuration ...
+-- Prelude Main> replMain
+-- @
+--
+-- Unfortunately since FLTKHS is hybrid Haskell/C++ there are limitations compared to
+-- running a plain 'ol Haskell library on the REPL:
+--
+--    1. The 'stack build ...' is an essential first step before running 'stack
+--       ghci ...'. The reason is it uses '-fobject-code' to link in all the C++
+--       libraries which must be built first.
+--    2. The use of 'replMain' instead of just ':main' as you might expect. This
+--       is because
+--
+--            (1) it allows closing the GUI to correctly return control to
+--                the REPL prompt and
+--            (2) typing 'Ctrl-C' also correctly hands control back to the REPL.
+--
+--       With just ':main' (1) works but (2) results in a "ghosted" UI where the
+--       GUI window is still visible but unable to accept any keyboard/mouse
+--       input. The reason for the ghosted GUI is that ':main' delegates to the
+--       FLTK C++ event loop which is unable to listen for user interrupts on
+--       the Haskell side and so has no of knowing that it should destroy
+--       itself.'replMain' emulates the event loop on the Haskell side allowing
+--       it to stop, clean up and return control when it 'catch'es a
+--       'UserInterrupt'. Thus the 'replMain' is slower than the optimized C++
+--       event loop but hopefully that's not too big an impediment for REPL
+--       work.
