@@ -131,6 +131,7 @@ library
                    Graphics.UI.FLTK.LowLevel.XPMImage
                    Graphics.UI.FLTK.LowLevel.PNGImage
                    Graphics.UI.FLTK.LowLevel.PNMImage
+                   Graphics.UI.FLTK.LowLevel.X
   build-depends:
                 base == 4.*,
                 bytestring,

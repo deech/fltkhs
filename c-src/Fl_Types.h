@@ -488,6 +488,7 @@ EXPORT {
   typedef void* fl_XBM_Image;
   typedef void* fl_XPM_Image;
   typedef void* fl_Region;
+  typedef void* fl_Window_Handle;
   typedef void (fl_Callback )(fl_Widget, void*);
   typedef void (fl_Text_Buffer_Callback)(fl_Text_Buffer);
   typedef void (*Unfinished_Style_Cb)(int, void *);

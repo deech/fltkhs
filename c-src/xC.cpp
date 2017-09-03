@@ -5,6 +5,9 @@ EXPORT {
   FL_EXPORT_C(void,flc_open_display)( ){
     fl_open_display();
   }
+  FL_EXPORT_C(fl_Window_Handle ,flc_xid)(fl_Window w){
+    return (fl_Window_Handle) fl_xid(static_cast<Fl_Window*>(w));
+  }
   FL_EXPORT_C(Fl_Bitmask,flc_create_bitmask)(int w,int h,const uchar* data){
     return fl_create_bitmask(w,h,data);
   }

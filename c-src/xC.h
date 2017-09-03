@@ -17,6 +17,7 @@ EXPORT {
 # include <X11/Xutil.h>
 #endif
  FL_EXPORT_C_HEADER(void,flc_open_display,());
+ FL_EXPORT_C_HEADER(fl_Window_Handle ,flc_xid,(fl_Window w));
  FL_EXPORT_C_HEADER(Fl_Bitmask,flc_create_bitmask,(int w, int h, const uchar *data));
  FL_EXPORT_C_HEADER(Fl_Bitmask,flc_create_alphamask,(int w, int h, int d, int ld, const uchar *data));
  FL_EXPORT_C_HEADER(void,flc_delete_bitmask,(Fl_Bitmask bm));
