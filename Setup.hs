@@ -311,10 +311,23 @@ copyCBindingsAndBundledExecutables pkg_descr lbi uhs flags = do
     rawSystemExit (fromFlag $ copyVerbosity flags) "cp"
         [fltkcdir </> "libfltkc.a" , libPref]
     case buildOS of
-     OSX -> rawSystemExit (fromFlag $ copyVerbosity flags) "cp"
-              ["c-lib" </> "libfltkc-dyn.dylib", libPref]
-     _ -> rawSystemExit (fromFlag $ copyVerbosity flags) "cp"
-            ["c-lib" </> "libfltkc-dyn.so", libPref]
+     OSX -> do
+       updateEnv "DYLD_LIBRARY_PATH" (takeDirectory libPref)
+       rawSystemExit
+         (fromFlag $ copyVerbosity flags)
+          "cp"
+          [
+            "c-lib" </> "libfltkc-dyn.dylib"
+          , libPref
+          ]
+     _ -> do
+       updateEnv "LIBRARY_PATH" (takeDirectory libPref)
+       rawSystemExit
+         (fromFlag $ copyVerbosity flags) "cp"
+         [
+           "c-lib" </> "libfltkc-dyn.so"
+         , libPref
+         ]
     if (bundledBuild (configFlags lbi))
     then do
       executableDir <- (bundlePrefix (configFlags lbi)) "bin"

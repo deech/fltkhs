@@ -249,17 +249,18 @@ data WrapType = WrapNone | WrapAtColumn ColumnNumber | WrapAtPixel PixelPosition
 data StyleTableEntry = StyleTableEntry (Maybe Color) (Maybe Font) (Maybe FontSize) deriving Show
 
 {#enum PackType{} deriving (Show, Eq, Ord) #}
-type FlShortcut = {#type Fl_Shortcut #}
-type FlColor    = {#type Fl_Color #}
-type FlFont     = {#type Fl_Font #}
-type FlAlign    = {#type Fl_Align #}
-type LineDelta  = Maybe Int
-type Delta      = Maybe Int
-type FlIntPtr   = {#type fl_intptr_t #}
-type FlUIntPtr  = {#type fl_uintptr_t#}
-type ID         = {#type ID#}
-data Ref a      = Ref !(ForeignPtr (Ptr ())) deriving (Eq, Show)
-data FunRef     = FunRef !(FunPtr ())
+type FlShortcut      = {#type Fl_Shortcut #}
+type FlColor         = {#type Fl_Color #}
+type FlFont          = {#type Fl_Font #}
+type FlAlign         = {#type Fl_Align #}
+type LineDelta       = Maybe Int
+type Delta           = Maybe Int
+type FlIntPtr        = {#type fl_intptr_t #}
+type FlUIntPtr       = {#type fl_uintptr_t#}
+type ID              = {#type ID#}
+newtype WindowHandle = WindowHandle (Ptr ())
+data Ref a           = Ref !(ForeignPtr (Ptr ())) deriving (Eq, Show)
+data FunRef          = FunRef !(FunPtr ())
 -- * The FLTK widget hierarchy
 data CBase parent
 type Base = CBase ()

@@ -1,5 +1,5 @@
 name : fltkhs
-version : 0.5.3.9
+version : 0.5.4.1
 synopsis : FLTK bindings
 description: Low level bindings for the FLTK GUI toolkit. For installation and quick start instruction please scroll all the way down to the README.
 license : MIT
@@ -131,6 +131,7 @@ library
                    Graphics.UI.FLTK.LowLevel.XPMImage
                    Graphics.UI.FLTK.LowLevel.PNGImage
                    Graphics.UI.FLTK.LowLevel.PNMImage
+                   Graphics.UI.FLTK.LowLevel.X
   build-depends:
                 base == 4.*,
                 bytestring,
@@ -175,11 +176,11 @@ Executable fltkhs-fluidtohs
      cpp-options: -DWIN64
   if os(windows)
    ghc-Options: -optl-mwindows
-   ghc-Options: -pgml g++ "-optl-Wl,--whole-archive" "-optl-Wl,-Bstatic" "-optl-Wl,-lfltkc" "-optl-Wl,-Bdynamic" "-optl-Wl,--no-whole-archive"
+   ghc-Options: -pgml g++ "-optl-Wl,--allow-multiple-definition" "-optl-Wl,--whole-archive" "-optl-Wl,-Bstatic" "-optl-Wl,-lfltkc" "-optl-Wl,-Bdynamic" "-optl-Wl,--no-whole-archive"
   if os(darwin)
    ghc-Options: "-optl-Wl,-lfltkc"
   if !os(darwin) && !os(windows)
-   ghc-Options: -pgml g++ "-optl-Wl,--whole-archive" "-optl-Wl,-Bstatic" "-optl-Wl,-lfltkc" "-optl-Wl,-Bdynamic" "-optl-Wl,--no-whole-archive"
+   ghc-Options: -pgml g++ "-optl-Wl,--allow-multiple-definition" "-optl-Wl,--whole-archive" "-optl-Wl,-Bstatic" "-optl-Wl,-lfltkc" "-optl-Wl,-Bdynamic" "-optl-Wl,--no-whole-archive"
 
 Executable fltkhs-buttons
   Main-Is: Buttons.hs
@@ -191,8 +192,8 @@ Executable fltkhs-buttons
   ghc-Options: -Wall -threaded
   if os(windows)
     ghc-Options: -optl-mwindows
-    ghc-Options: -pgml g++ "-optl-Wl,--whole-archive" "-optl-Wl,-Bstatic" "-optl-Wl,-lfltkc" "-optl-Wl,-Bdynamic" "-optl-Wl,--no-whole-archive"
+    ghc-Options: -pgml g++ "-optl-Wl,--allow-multiple-definition" "-optl-Wl,--whole-archive" "-optl-Wl,-Bstatic" "-optl-Wl,-lfltkc" "-optl-Wl,-Bdynamic" "-optl-Wl,--no-whole-archive"
   if os(darwin)
     ghc-Options: "-optl-Wl,-lfltkc"
   if !os(darwin) && !os(windows)
-    ghc-Options: -pgml g++ "-optl-Wl,--whole-archive" "-optl-Wl,-Bstatic" "-optl-Wl,-lfltkc" "-optl-Wl,-Bdynamic" "-optl-Wl,--no-whole-archive"
+   ghc-Options: -pgml g++ "-optl-Wl,--allow-multiple-definition" "-optl-Wl,--whole-archive" "-optl-Wl,-Bstatic" "-optl-Wl,-lfltkc" "-optl-Wl,-Bdynamic" "-optl-Wl,--no-whole-archive"
