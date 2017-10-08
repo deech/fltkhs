@@ -12,7 +12,7 @@ bug-reports: https://github.com/deech/fltkhs/issues
 copyright: © 2017 Aditya Siram All Rights Reserved
 category: UI,Graphics,GUI,User Interfaces
 build-type: Custom
-cabal-version: >=1.24
+cabal-version: >=2.0
 source-repository head
   type: git
   location: http://github.com/deech/fltkhs
@@ -30,7 +30,7 @@ Flag Opengl
 custom-setup
   setup-depends:
     base >= 4.5 && < 4.11,
-    Cabal >= 1.24.1 && < 1.25,
+    Cabal >= 2.0,
     filepath,
     directory >= 1.2.3.0
 

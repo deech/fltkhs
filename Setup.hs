@@ -37,7 +37,7 @@ import qualified Distribution.Simple.PackageIndex as PackageIndex
 import Distribution.PackageDescription as PD
 import Distribution.InstalledPackageInfo (ldOptions, extraGHCiLibraries, showInstalledPackageInfo, libraryDynDirs, libraryDirs)
 import System.Environment (getEnv, setEnv)
-
+import Distribution.Simple.Program.HcPkg (defaultRegisterOptions)
 main :: IO ()
 main = defaultMainWithHooks autoconfUserHooks {
   preConf = myPreConf,
@@ -192,8 +192,8 @@ replaceAllInfixes needle subString haystack =
                            else Just ([head str], tail str))
              haystack)
 
-bundledBuild flags = flagIsSet (FlagName "bundled") flags
-openGLSupport flags = flagIsSet (FlagName "opengl") flags
+bundledBuild flags = flagIsSet (mkFlagName "bundled") flags
+openGLSupport flags = flagIsSet (mkFlagName "opengl") flags
 
 bundlePrefix flags dir =
   let (Distribution.Simple.Setup.Flag prefixTemplate) = libdir (configInstallDirs flags)
@@ -385,7 +385,7 @@ register pkg@PackageDescription { library = Just lib } lbi regFlags = do
      _ | modeGenerateRegFile   -> writeRegistrationFile installedPkgInfo
        | modeGenerateRegScript -> die "Generate Reg Script not supported"
        | otherwise             ->
-          registerPackage verbosity (compiler lbi) (withPrograms lbi) False {- multiinstance -} packageDbs installedPkgInfo
+          registerPackage verbosity (compiler lbi) (withPrograms lbi) packageDbs installedPkgInfo defaultRegisterOptions
   where
     modeGenerateRegFile = isJust (flagToMaybe (regGenPkgConf regFlags))
     regFile             = fromMaybe (display (packageId pkg) <.> "conf")
