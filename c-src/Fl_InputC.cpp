@@ -464,10 +464,10 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Input_set_wrap)(fl_Input input,int b){
     (static_cast<Fl_Input*>(input))->wrap(b);
   }
-  FL_EXPORT_C(void,Fl_Input_tab_nav)(fl_Input input,int val){
+  FL_EXPORT_C(void,Fl_Input_set_tab_nav)(fl_Input input,int val){
     (static_cast<Fl_Input*>(input))->tab_nav(val);
   }
-  FL_EXPORT_C(int,Fl_Input_set_tab_nav)(fl_Input input){
+  FL_EXPORT_C(int,Fl_Input_tab_nav)(fl_Input input){
     return (static_cast<Fl_Input*>(input))->tab_nav();
   }
   FL_EXPORT_C(void, Fl_Input_draw)(fl_Input o){

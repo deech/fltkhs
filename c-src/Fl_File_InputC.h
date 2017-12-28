@@ -151,8 +151,8 @@ EXPORT {
   FL_EXPORT_C_HEADER(void,Fl_File_Input_set_readonly,(fl_File_Input file_input,int b));
   FL_EXPORT_C_HEADER(int,Fl_File_Input_wrap,(fl_File_Input file_input));
   FL_EXPORT_C_HEADER(void,Fl_File_Input_set_wrap,(fl_File_Input file_input,int b));
-  FL_EXPORT_C_HEADER(void,Fl_File_Input_tab_nav,(fl_File_Input file_input,int val));
-  FL_EXPORT_C_HEADER(int,Fl_File_Input_set_tab_nav,(fl_File_Input file_input));
+  FL_EXPORT_C_HEADER(void,Fl_File_Input_set_tab_nav,(fl_File_Input file_input,int val));
+  FL_EXPORT_C_HEADER(int,Fl_File_Input_tab_nav,(fl_File_Input file_input));
 
   /* Fl_File_Input specific functions */
   FL_EXPORT_C_HEADER(fl_File_Input,Fl_File_Input_New_WithLabel,(int x, int y, int w, int h, const char* label));

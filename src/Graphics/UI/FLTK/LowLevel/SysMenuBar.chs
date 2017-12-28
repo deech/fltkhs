@@ -69,8 +69,8 @@ instance (impl ~ (Int -> T.Text ->  IO ())) => Op (Replace ()) SysMenuBar orig i
 instance (impl ~ ( IO ())) => Op (Clear ()) SysMenuBar orig impl where
   runOp _ _ menu_ = withRef menu_ $ \menu_Ptr -> clear' menu_Ptr
 {# fun Fl_Sys_Menu_Bar_clear_submenu as clearSubmenu' { id `Ptr ()',`Int' } -> `Int' #}
-instance (impl ~ (Int ->  IO (Int))) => Op (ClearSubmenu ()) SysMenuBar orig impl where
-  runOp _ _ menu_ index' = withRef menu_ $ \menu_Ptr -> clearSubmenu' menu_Ptr index'
+instance (impl ~ (Int ->  IO (Either OutOfRangeOrNotSubmenu ()))) => Op (ClearSubmenu ()) SysMenuBar orig impl where
+  runOp _ _ menu_ index' = withRef menu_ $ \menu_Ptr -> clearSubmenu' menu_Ptr index' >>= return . successOrOutOfRangeOrNotSubmenu
 {# fun Fl_Sys_Menu_Bar_shortcut as shortcut' { id `Ptr ()',`Int',id `CInt' } -> `()' #}
 instance (impl ~ (Int -> ShortcutKeySequence ->  IO ())) => Op (SetShortcut ()) SysMenuBar orig impl where
   runOp _ _ menu_ index' (ShortcutKeySequence modifiers char) =
@@ -149,7 +149,7 @@ instance (impl ~ ( IO ())) => Op (ShowWidgetSuper ()) SysMenuBar orig impl where
 --
 -- clear :: 'Ref' 'SysMenuBar' -> 'IO' ()
 --
--- clearSubmenu :: 'Ref' 'SysMenuBar' -> 'Int' -> 'IO' ('Int')
+-- clearSubmenu :: 'Ref' 'SysMenuBar' -> 'Int' -> 'IO' ('Either' 'OutOfRangeOrNotSubmenu' ())
 --
 -- destroy :: 'Ref' 'SysMenuBar' -> 'IO' ()
 --
@@ -160,8 +160,6 @@ instance (impl ~ ( IO ())) => Op (ShowWidgetSuper ()) SysMenuBar orig impl where
 -- getMode :: 'Ref' 'SysMenuBar' -> 'Int' -> 'IO' ('Maybe' 'MenuItemFlags')
 --
 -- global :: 'Ref' 'SysMenuBar' -> 'IO' ()
---
--- handle :: 'Ref' 'SysMenuBar' -> 'Event' -> 'IO' ('Either' 'UnknownEvent' ())
 --
 -- handle :: 'Ref' 'SysMenuBar' -> 'Event' -> 'IO' ('Either' 'UnknownEvent' ())
 --

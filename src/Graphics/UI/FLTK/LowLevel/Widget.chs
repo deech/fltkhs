@@ -390,11 +390,13 @@ instance (impl ~ ( Int ->  IO ())) => Op (ModifyVisibleFocus ()) Widget orig imp
 instance (impl ~ (IO (Bool))) => Op (GetVisibleFocus ()) Widget orig impl where
   runOp _ _ widget = withRef widget $ \widgetPtr -> visibleFocus' widgetPtr
 {# fun Fl_Widget_contains as contains' { id `Ptr ()',id `Ptr ()' } -> `Int' #}
-instance (Parent a Widget, impl ~  (Ref a ->  IO Int)) => Op (Contains ()) Widget orig impl where
-  runOp _ _ widget otherWidget = withRef widget $ \widgetPtr -> withRef otherWidget $ \otherWidgetPtr -> contains' widgetPtr otherWidgetPtr
+instance (Parent a Widget, impl ~  (Ref a ->  IO Bool)) => Op (Contains ()) Widget orig impl where
+  runOp _ _ widget otherWidget = withRef widget $ \widgetPtr -> withRef otherWidget $ \otherWidgetPtr ->
+    contains' widgetPtr otherWidgetPtr >>= return . cToBool
 {# fun Fl_Widget_inside as inside' { id `Ptr ()',id `Ptr ()' } -> `Int' #}
-instance (Parent a Widget, impl ~ (Ref a -> IO (Int))) => Op (Inside ()) Widget orig impl where
-  runOp _ _ widget otherWidget = withRef widget $ \widgetPtr -> withRef otherWidget $ \otherWidgetPtr -> inside' widgetPtr otherWidgetPtr
+instance (Parent a Widget, impl ~ (Ref a -> IO (Bool))) => Op (Inside ()) Widget orig impl where
+  runOp _ _ widget otherWidget = withRef widget $ \widgetPtr -> withRef otherWidget $ \otherWidgetPtr ->
+    inside' widgetPtr otherWidgetPtr >>= return . cToBool
 {# fun Fl_Widget_redraw as redraw' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
 instance (impl ~ (IO ())) => Op (Redraw ()) Widget orig impl where
   runOp _ _ widget = withRef widget $ \widgetPtr -> redraw' widgetPtr
@@ -503,7 +505,7 @@ instance (impl ~ ( Maybe (Boxtype, Rectangle) -> IO ())) => Op (DrawFocus ()) Wi
 --
 -- clearVisibleFocus :: 'Ref' 'Widget' -> 'IO' ()
 --
--- contains:: ('Parent' a 'Widget') => 'Ref' 'Widget' -> 'Ref' a -> 'IO' 'Int'
+-- contains:: ('Parent' a 'Widget') => 'Ref' 'Widget' -> 'Ref' a -> 'IO' 'Bool'
 --
 -- copyLabel :: 'Ref' 'Widget' -> 'T.Text' -> 'IO' ()
 --
@@ -589,7 +591,7 @@ instance (impl ~ ( Maybe (Boxtype, Rectangle) -> IO ())) => Op (DrawFocus ()) Wi
 --
 -- hideSuper :: 'Ref' 'Widget' -> 'IO' ()
 --
--- inside:: ('Parent' a 'Widget') => 'Ref' 'Widget' -> 'Ref' a -> 'IO' ('Int')
+-- inside:: ('Parent' a 'Widget') => 'Ref' 'Widget' -> 'Ref' a -> 'IO' ('Bool')
 --
 -- measureLabel :: 'Ref' 'Widget' -> 'IO' ('Size')
 --

@@ -161,8 +161,8 @@ EXPORT {
   FL_EXPORT_C_HEADER(void,Fl_Input_set_readonly,(fl_Input input,int b));
   FL_EXPORT_C_HEADER(int,Fl_Input_wrap,(fl_Input input));
   FL_EXPORT_C_HEADER(void,Fl_Input_set_wrap,(fl_Input input,int b));
-  FL_EXPORT_C_HEADER(void,Fl_Input_tab_nav,(fl_Input input,int val));
-  FL_EXPORT_C_HEADER(int,Fl_Input_set_tab_nav,(fl_Input input));
+  FL_EXPORT_C_HEADER(void,Fl_Input_set_tab_nav,(fl_Input input,int val));
+  FL_EXPORT_C_HEADER(int,Fl_Input_tab_nav,(fl_Input input));
   FL_EXPORT_C_HEADER(fl_Input,Fl_OverriddenInput_New,(int X, int Y, int W, int H,fl_Widget_Virtual_Funcs* fs));
   FL_EXPORT_C_HEADER(fl_Input,Fl_OverriddenInput_New_WithLabel,(int X, int Y, int W, int H, const char* label, fl_Widget_Virtual_Funcs* fs));
   FL_EXPORT_C_HEADER(void,Fl_Input_draw,(fl_Input o));

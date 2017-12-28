@@ -147,8 +147,8 @@ EXPORT {
   FL_EXPORT_C_HEADER(void,Fl_Input__set_readonly,(fl_Input_ input_,int b));
   FL_EXPORT_C_HEADER(int,Fl_Input__wrap,(fl_Input_ input_));
   FL_EXPORT_C_HEADER(void,Fl_Input__set_wrap,(fl_Input_ input_,int b));
-  FL_EXPORT_C_HEADER(void,Fl_Input__tab_nav,(fl_Input_ input_,int val));
-  FL_EXPORT_C_HEADER(int,Fl_Input__set_tab_nav,(fl_Input_ input_));
+  FL_EXPORT_C_HEADER(void,Fl_Input__set_tab_nav,(fl_Input_ input_,int val));
+  FL_EXPORT_C_HEADER(int,Fl_Input__tab_nav,(fl_Input_ input_));
 #ifdef __cplusplus
 }
 #endif

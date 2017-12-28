@@ -99,7 +99,7 @@ instance (impl ~ (Event -> IO (Either UnknownEvent ()))) => Op (Handle ()) Input
       input
       (\p -> do
           t <- getInputType input
-          case (toEnum (fromIntegral t)) of
+          case t of
            FlSecretInput -> secretInputHandle' p (fromIntegral . fromEnum $ event)
            _             -> inputHandle' p (fromIntegral . fromEnum $ event)
       )
@@ -222,11 +222,11 @@ instance (impl ~ ( IO (Color))) => Op (GetCursorColor ()) Input orig impl where
 instance (impl ~ (Color ->  IO ())) => Op (SetCursorColor ()) Input orig impl where
   runOp _ _ input n = withRef input $ \inputPtr -> setCursorColor' inputPtr n
 {# fun Fl_Input_input_type as inputType' { id `Ptr ()' } -> `Int' #}
-instance (impl ~ ( IO (Int))) => Op (GetInputType ()) Input orig impl where
-  runOp _ _ input = withRef input $ \inputPtr -> inputType' inputPtr
+instance (impl ~ ( IO (FlInputType))) => Op (GetInputType ()) Input orig impl where
+  runOp _ _ input = withRef input $ \inputPtr -> inputType' inputPtr >>= return . toEnum . fromIntegral
 {# fun Fl_Input_set_input_type as setInputType' { id `Ptr ()',`Int' } -> `()' #}
-instance (impl ~ (Int ->  IO ())) => Op (SetInputType ()) Input orig impl where
-  runOp _ _ input t = withRef input $ \inputPtr -> setInputType' inputPtr t
+instance (impl ~ (FlInputType ->  IO ())) => Op (SetInputType ()) Input orig impl where
+  runOp _ _ input t = withRef input $ \inputPtr -> setInputType' inputPtr (fromIntegral (fromEnum t))
 {# fun Fl_Input_readonly as readonly' { id `Ptr ()' } -> `Int' #}
 instance (impl ~ ( IO (Int))) => Op (GetReadonly ()) Input orig impl where
   runOp _ _ input = withRef input $ \inputPtr -> readonly' inputPtr
@@ -234,17 +234,17 @@ instance (impl ~ ( IO (Int))) => Op (GetReadonly ()) Input orig impl where
 instance (impl ~ (Int ->  IO ())) => Op (SetReadonly ()) Input orig impl where
   runOp _ _ input b = withRef input $ \inputPtr -> setReadonly' inputPtr b
 {# fun Fl_Input_wrap as wrap' { id `Ptr ()' } -> `Int' #}
-instance (impl ~ ( IO (Int))) => Op (GetWrap ()) Input orig impl where
-  runOp _ _ input = withRef input $ \inputPtr -> wrap' inputPtr
-{# fun Fl_Input_set_wrap as setWrap' { id `Ptr ()',`Int' } -> `()' #}
-instance (impl ~ (Int ->  IO ())) => Op (SetWrap ()) Input orig impl where
-  runOp _ _ input b = withRef input $ \inputPtr -> setWrap' inputPtr b
-{# fun Fl_Input_tab_nav as tabNav' { id `Ptr ()',`Int' } -> `()' #}
-instance (impl ~ (Int ->  IO ())) => Op (GetTabNav ()) Input orig impl where
-  runOp _ _ input val = withRef input $ \inputPtr -> tabNav' inputPtr val
-{# fun Fl_Input_set_tab_nav as setTabNav' { id `Ptr ()' } -> `Int' #}
-instance (impl ~ ( IO (Int))) => Op (SetTabNav ()) Input orig impl where
-  runOp _ _ input = withRef input $ \inputPtr -> setTabNav' inputPtr
+instance (impl ~ ( IO (Bool))) => Op (GetWrap ()) Input orig impl where
+  runOp _ _ input = withRef input $ \inputPtr -> wrap' inputPtr >>= return . cToBool
+{# fun Fl_Input_set_wrap as setWrap' { id `Ptr ()', `Int' } -> `()' #}
+instance (impl ~ (Bool ->  IO ())) => Op (SetWrap ()) Input orig impl where
+  runOp _ _ input b = withRef input $ \inputPtr -> setWrap' inputPtr (cFromBool b)
+{# fun Fl_Input_set_tab_nav as setTabNav' { id `Ptr ()', `Int'} -> `()' #}
+instance (impl ~ (Bool ->  IO ())) => Op (SetTabNav ()) Input orig impl where
+  runOp _ _ input val = withRef input $ \inputPtr -> setTabNav' inputPtr (cFromBool val)
+{# fun Fl_Input_tab_nav as tabNav' { id `Ptr ()' } -> `Int' #}
+instance (impl ~ ( IO (Bool))) => Op (GetTabNav ()) Input orig impl where
+  runOp _ _ input = withRef input $ \inputPtr -> tabNav' inputPtr >>= return . cToBool
 {# fun Fl_Input_draw as draw'' { id `Ptr ()' } -> `()' #}
 instance (impl ~ (  IO ())) => Op (Draw ()) Input orig impl where
   runOp _ _ input = withRef input $ \inputPtr -> draw'' inputPtr
@@ -298,7 +298,7 @@ instance (impl ~ ( IO ())) => Op (ShowWidgetSuper ()) Input orig impl where
 --
 -- getCursorColor :: 'Ref' 'Input' -> 'IO' ('Color')
 --
--- getInputType :: 'Ref' 'Input' -> 'IO' ('Int')
+-- getInputType :: 'Ref' 'Input' -> 'IO' ('FlInputType')
 --
 -- getMark :: 'Ref' 'Input' -> 'IO' ('Int')
 --
@@ -312,7 +312,7 @@ instance (impl ~ ( IO ())) => Op (ShowWidgetSuper ()) Input orig impl where
 --
 -- getSize :: 'Ref' 'Input' -> 'IO' ('Int')
 --
--- getTabNav :: 'Ref' 'Input' -> 'Int' -> 'IO' ()
+-- getTabNav :: 'Ref' 'Input' -> 'IO' ('Bool')
 --
 -- getTextcolor :: 'Ref' 'Input' -> 'IO' ('Color')
 --
@@ -322,7 +322,7 @@ instance (impl ~ ( IO ())) => Op (ShowWidgetSuper ()) Input orig impl where
 --
 -- getValue :: 'Ref' 'Input' -> 'IO' 'T.Text'
 --
--- getWrap :: 'Ref' 'Input' -> 'IO' ('Int')
+-- getWrap :: 'Ref' 'Input' -> 'IO' ('Bool')
 --
 -- handle :: 'Ref' 'Input' -> 'Event' -> 'IO' ('Either' 'UnknownEvent' ())
 --
@@ -346,7 +346,7 @@ instance (impl ~ ( IO ())) => Op (ShowWidgetSuper ()) Input orig impl where
 --
 -- setCursorColor :: 'Ref' 'Input' -> 'Color' -> 'IO' ()
 --
--- setInputType :: 'Ref' 'Input' -> 'Int' -> 'IO' ()
+-- setInputType :: 'Ref' 'Input' -> 'FlInputType' -> 'IO' ()
 --
 -- setMark :: 'Ref' 'Input' -> 'Int' -> 'IO' ('Either' 'NoChange' ())
 --
@@ -360,7 +360,7 @@ instance (impl ~ ( IO ())) => Op (ShowWidgetSuper ()) Input orig impl where
 --
 -- setSize :: 'Ref' 'Input' -> 'Size' -> 'IO' ()
 --
--- setTabNav :: 'Ref' 'Input' -> 'IO' ('Int')
+-- setTabNav :: 'Ref' 'Input' -> 'Bool' -> 'IO' ()
 --
 -- setTextcolor :: 'Ref' 'Input' -> 'Color' -> 'IO' ()
 --
@@ -372,7 +372,7 @@ instance (impl ~ ( IO ())) => Op (ShowWidgetSuper ()) Input orig impl where
 --
 -- setValue :: 'Ref' 'Input' -> 'T.Text' -> 'Maybe' 'Int' -> 'IO' ('Int')
 --
--- setWrap :: 'Ref' 'Input' -> 'Int' -> 'IO' ()
+-- setWrap :: 'Ref' 'Input' -> 'Bool' -> 'IO' ()
 --
 -- showWidget :: 'Ref' 'Input' -> 'IO' ()
 --

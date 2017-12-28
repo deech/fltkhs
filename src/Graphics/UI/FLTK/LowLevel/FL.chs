@@ -15,7 +15,7 @@ module Graphics.UI.FLTK.LowLevel.FL
      ready,
      option,
      setOption,
-     addAwakeHandler,
+     addAwakeHandler_,
      getAwakeHandler_,
      display,
      ownColormap,
@@ -262,11 +262,12 @@ unsafeToCallbackPrim = (Unsafe.unsafePerformIO) . toGlobalCallbackPrim
 
 {# fun Fl_add_awake_handler_ as addAwakeHandler'
   {id `FunPtr CallbackPrim', id `(Ptr ())'} -> `Int' #}
-addAwakeHandler :: GlobalCallback -> IO Int
-addAwakeHandler awakeHandler =
+addAwakeHandler_ :: GlobalCallback -> IO (Either AwakeRingFull ())
+addAwakeHandler_ awakeHandler =
     do
       callbackPtr <-  toGlobalCallbackPrim awakeHandler
-      addAwakeHandler' callbackPtr nullPtr
+      res <- addAwakeHandler' callbackPtr nullPtr
+      return (successOrAwakeRingFull res)
 
 {# fun Fl_get_awake_handler_ as getAwakeHandler_'
   {id `Ptr (FunPtr CallbackPrim)', id `Ptr (Ptr ())'} -> `Int' #}
@@ -510,14 +511,14 @@ eventInsideWidget wp =
        {} -> `()' supressWarningAboutRes #}
 {# fun Fl_handle as handle'
        { `Int',id `Ptr ()' } -> `Int' #}
-handle :: (Parent a Window) =>  Event -> Ref a -> IO Int
+handle :: (Parent a Window) =>  Event -> Ref a -> IO (Either UnknownEvent ())
 handle e wp =
-    withRef wp (handle' (cFromEnum e))
+    withRef wp (handle' (cFromEnum e)) >>= return . successOrUnknownEvent
 {# fun Fl_handle_ as handle_'
        { `Int',id `Ptr ()' } -> `Int' #}
-handle_ :: (Parent a Window) =>  Event -> Ref a -> IO Int
+handle_ :: (Parent a Window) =>  Event -> Ref a -> IO (Either UnknownEvent ())
 handle_ e wp =
-    withRef wp (handle_' (cFromEnum e))
+    withRef wp (handle_' (cFromEnum e)) >>= return . successOrUnknownEvent
 {# fun Fl_belowmouse as belowmouse
        {  } -> `Maybe (Ref Widget)' unsafeToMaybeRef #}
 {# fun Fl_set_belowmouse as setBelowmouse'
@@ -562,7 +563,8 @@ setHandler eh = do
        { id `Ptr (FunPtr EventDispatchPrim)' } -> `()' supressWarningAboutRes #}
 {# fun Fl_event_dispatch as eventDispatch'
        {  } -> `FunPtr EventDispatchPrim' id #}
-eventDispatch :: (Parent a Widget) => IO (Event -> Ref a -> IO (Int))
+eventDispatch :: (Parent a Widget) =>
+   IO (Event -> Ref a -> IO (Either UnknownEvent ()))
 eventDispatch =
     do
       funPtr <- eventDispatch'
@@ -573,11 +575,13 @@ eventDispatch =
                          let eventNum = fromIntegral (fromEnum e)
                              fun = unwrapEventDispatchPrim funPtr
                          in fun eventNum (castPtr ptr) >>=
-                            return . fromIntegral
+                            return . successOrUnknownEvent . fromIntegral
                     )
              )
 
-setEventDispatch :: (Parent a Widget) => (Event -> Ref a -> IO Int) -> IO ()
+setEventDispatch ::
+    (Parent a Widget) =>
+    (Event -> Ref a -> IO (Either UnknownEvent ())) -> IO ()
 setEventDispatch ed = do
     do
       let toPrim = (\e ptr ->
@@ -585,7 +589,9 @@ setEventDispatch ed = do
                       in do
                       obj <- toRef ptr
                       result <- ed eventEnum obj
-                      return $ fromIntegral result
+                      case result of
+                        Left _ -> return 0
+                        _ -> return 1
                     )
       callbackPtr <-  wrapEventDispatchPrim toPrim
       ptrToCallbackPtr <- new callbackPtr
@@ -893,10 +899,10 @@ setBoxtype bt (FromBoxtype template) =
       {  } -> `Bool' toBool #}
 release :: IO ()
 release = {#call Fl_release as fl_release #}
-setVisibleFocus :: Int -> IO ()
-setVisibleFocus = {#call Fl_set_visible_focus as fl_set_visible_focus #} . fromIntegral
-visibleFocus :: IO Int
-visibleFocus = {#call Fl_visible_focus as fl_visible_focus #} >>= return . fromIntegral
+setVisibleFocus :: Bool -> IO ()
+setVisibleFocus = {#call Fl_set_visible_focus as fl_set_visible_focus #} . cFromBool
+visibleFocus :: IO Bool
+visibleFocus = {#call Fl_visible_focus as fl_visible_focus #} >>= return . cToBool
 setDndTextOps :: Bool -> IO ()
 setDndTextOps =  {#call Fl_set_dnd_text_ops as fl_set_dnd_text_ops #} . fromBool
 dndTextOps :: IO Option

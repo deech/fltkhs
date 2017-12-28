@@ -54,8 +54,8 @@ instance (impl ~ (Rectangle -> IO ())) => Op (Resize ()) OverlayWindow orig impl
 instance (impl ~ ( IO ())) => Op (Hide ()) OverlayWindow orig impl where
   runOp _ _ window = withRef window $ \windowPtr -> hide' windowPtr
 {# fun Fl_Overlay_Window_can_do_overlay as canDoOverlay' { id `Ptr ()' } -> `Int' #}
-instance (impl ~ ( IO (Int))) => Op (CanDoOverlay ()) OverlayWindow orig impl where
-  runOp _ _ win = withRef win $ \winPtr -> canDoOverlay' winPtr
+instance (impl ~ ( IO (Bool))) => Op (CanDoOverlay ()) OverlayWindow orig impl where
+  runOp _ _ win = withRef win $ \winPtr -> canDoOverlay' winPtr >>= return . cToBool
 {# fun Fl_Overlay_Window_redraw_overlay as redrawOverlay' { id `Ptr ()' } -> `()' #}
 instance (impl ~ ( IO ())) => Op (RedrawOverlay ()) OverlayWindow orig impl where
   runOp _ _ win = withRef win $ \winPtr -> redrawOverlay' winPtr
@@ -63,7 +63,7 @@ instance (impl ~ ( IO ())) => Op (RedrawOverlay ()) OverlayWindow orig impl wher
 -- $functions
 -- @
 --
--- canDoOverlay :: 'Ref' 'OverlayWindow' -> 'IO' 'Int'
+-- canDoOverlay :: 'Ref' 'OverlayWindow' -> 'IO' ('Bool')
 --
 -- destroy :: 'Ref' 'OverlayWindow' -> 'IO' ()
 --

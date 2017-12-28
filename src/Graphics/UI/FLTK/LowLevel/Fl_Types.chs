@@ -342,6 +342,12 @@ newtype FontSize = FontSize CInt deriving Show
 newtype PixmapHs = PixmapHs [T.Text] deriving Show
 data BitmapHs = BitmapHs B.ByteString Size deriving Show
 data Clipboard = InternalClipboard | SharedClipboard deriving Show
+data OutOfRangeOrNotSubmenu = OutOfRangeOrNotSubmenu deriving Show
+successOrOutOfRangeOrNotSubmenu :: Int -> Either OutOfRangeOrNotSubmenu ()
+successOrOutOfRangeOrNotSubmenu status = if (status == (-1)) then Left OutOfRangeOrNotSubmenu else Right ()
+data AwakeRingFull = AwakeRingFull deriving Show
+successOrAwakeRingFull :: Int -> Either AwakeRingFull ()
+successOrAwakeRingFull status = if (status == (-1)) then Left AwakeRingFull else Right ()
 data UnknownEvent = UnknownEvent deriving Show
 successOrUnknownEvent :: Int -> Either UnknownEvent ()
 successOrUnknownEvent status = if (status == 0) then Left UnknownEvent else Right ()

@@ -275,8 +275,8 @@ instance (impl ~ IO (TableCoordinate, TableCoordinate)) => Op (GetSelection ()) 
 instance (impl ~ ( Int -> Int -> Int -> Int ->  IO ())) => Op (SetSelection ()) Table orig impl where
   runOp _ _ table row_top col_left row_bot col_right = withRef table $ \tablePtr -> setSelection' tablePtr row_top col_left row_bot col_right
 {# fun Fl_Table_move_cursor as moveCursor' { id `Ptr ()',`Int',`Int' } -> `Int' #}
-instance (impl ~ ( TableCoordinate ->  IO (Int))) => Op (MoveCursor ()) Table orig impl where
-  runOp _ _ table (TableCoordinate (Row r) (Column c)) = withRef table $ \tablePtr -> moveCursor' tablePtr r c
+instance (impl ~ ( TableCoordinate ->  IO (Either NoChange ()))) => Op (MoveCursor ()) Table orig impl where
+  runOp _ _ table (TableCoordinate (Row r) (Column c)) = withRef table $ \tablePtr -> moveCursor' tablePtr r c >>= return . successOrNoChange
 {# fun Fl_Table_init_sizes as initSizes' { id `Ptr ()' } -> `()' #}
 instance (impl ~ (  IO ())) => Op (InitSizes ()) Table orig impl where
   runOp _ _ table = withRef table $ \tablePtr -> initSizes' tablePtr
@@ -337,7 +337,7 @@ instance (impl ~ (  IO ())) => Op (DrawSuper ()) Table orig impl where
 instance (impl ~ (  IO ())) => Op (Draw ()) Table orig impl where
   runOp _ _ table = withRef table $ \tablePtr -> draw' tablePtr
 {# fun Fl_Table_handle as handle' { id `Ptr ()', cFromEnum `Event' } -> `Int' #}
-instance (impl ~ ( Event ->  IO(Either UnknownEvent ()))) => Op (Handle ()) Table orig impl where
+instance (impl ~ ( Event ->  IO( Either UnknownEvent ()))) => Op (Handle ()) Table orig impl where
   runOp _ _ table event = withRef table $ \tablePtr -> handle' tablePtr event >>= return  . successOrUnknownEvent
 {# fun Fl_Table_resize_super as resizeSuper' { id `Ptr ()',`Int',`Int',`Int',`Int' } -> `()' #}
 instance (impl ~ ( Rectangle ->  IO ())) => Op (ResizeSuper ()) Table orig impl where
@@ -447,7 +447,7 @@ instance (impl ~ ( IO ())) => Op (Hide ()) Table orig impl where
 --
 -- getVisibleCells :: 'Ref' 'Table' -> 'IO' ('TableCoordinate,TableCoordinate')
 --
--- handle :: 'Ref' 'Table' -> 'Event' -> 'IO' ('Int')
+-- handle :: 'Ref' 'Table' -> 'Event' -> 'IO' ( 'Either' 'UnknownEvent' () )
 --
 -- hide :: 'Ref' 'Table' -> 'IO' ()
 --
@@ -463,7 +463,7 @@ instance (impl ~ ( IO ())) => Op (Hide ()) Table orig impl where
 --
 -- isSelected :: 'Ref' 'Table' -> 'TableCoordinate' -> 'IO' 'Bool'
 --
--- moveCursor :: 'Ref' 'Table' -> 'TableCoordinate' -> 'IO' ('Int')
+-- moveCursor :: 'Ref' 'Table' -> 'TableCoordinate' -> 'IO' ('Either' 'NoChange' ())
 --
 -- resize :: 'Ref' 'Table' -> 'Rectangle' -> 'IO' ()
 --

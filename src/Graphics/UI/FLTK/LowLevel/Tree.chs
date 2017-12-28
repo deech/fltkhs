@@ -212,12 +212,12 @@ instance (impl ~ (TreeItemLocator ->  IO (Bool)) ) => Op (IsClose ()) Tree orig 
 {# fun Fl_Tree_select_with_item_docallback as selectWithItemDocallback' { id `Ptr ()',id `Ptr ()',cFromBool `Bool' } -> `Int' #}
 {# fun Fl_Tree_select_with_path as selectWithPath' { id `Ptr ()',unsafeToCString `T.Text' } -> `Int' #}
 {# fun Fl_Tree_select_with_path_docallback as selectWithPathDocallback' { id `Ptr ()',unsafeToCString `T.Text',cFromBool `Bool' } -> `Int' #}
-instance (impl ~ (TreeItemLocator  ->  IO (Int)) ) => Op (Select ()) Tree orig impl where
+instance (impl ~ (TreeItemLocator  ->  IO (Either NoChange ())) ) => Op (Select ()) Tree orig impl where
   runOp _ _ tree locator' =
     withRef tree $ \treePtr ->
     case locator' of
-      TreeItemPointerLocator (TreeItemPointer r') -> withRef r' $ \r'Ptr -> selectWithItem' treePtr r'Ptr
-      TreeItemNameLocator (TreeItemName n') -> selectWithPath' treePtr n'
+      TreeItemPointerLocator (TreeItemPointer r') -> withRef r' $ \r'Ptr -> selectWithItem' treePtr r'Ptr >>= return . successOrNoChange
+      TreeItemNameLocator (TreeItemName n') -> selectWithPath' treePtr n' >>= return . successOrNoChange
 instance  (impl ~ (TreeItemLocator -> Bool -> IO ())) => Op (SelectAndCallback ()) Tree orig impl where
   runOp _ _ tree_item locator' docallback' =
     withRef tree_item $ \tree_itemPtr ->
@@ -234,12 +234,12 @@ instance (impl ~ (Ref TreeItem  -> Bool ->  IO ()) ) => Op (SelectToggleAndCallb
 {# fun Fl_Tree_deselect_with_item_docallback as deselectWithItemDocallback' { id `Ptr ()',id `Ptr ()',cFromBool `Bool' } -> `Int' #}
 {# fun Fl_Tree_deselect_with_path as deselectWithPath' { id `Ptr ()', unsafeToCString `T.Text'} -> `Int' #}
 {# fun Fl_Tree_deselect_with_path_docallback as deselectWithPathDocallback' { id `Ptr ()',unsafeToCString `T.Text',cFromBool `Bool' } -> `Int' #}
-instance (impl ~ (TreeItemLocator  ->  IO (Int)) ) => Op (Deselect ()) Tree orig impl where
+instance (impl ~ (TreeItemLocator  ->  IO (Either NoChange ())) ) => Op (Deselect ()) Tree orig impl where
   runOp _ _ tree locator' =
     withRef tree $ \treePtr ->
     case locator' of
-      TreeItemPointerLocator (TreeItemPointer r') -> withRef r' $ \r'Ptr -> deselectWithItem' treePtr r'Ptr
-      TreeItemNameLocator (TreeItemName n') -> deselectWithPath' treePtr n'
+      TreeItemPointerLocator (TreeItemPointer r') -> withRef r' $ \r'Ptr -> deselectWithItem' treePtr r'Ptr >>= return . successOrNoChange
+      TreeItemNameLocator (TreeItemName n') -> deselectWithPath' treePtr n' >>= return . successOrNoChange
 instance  (impl ~ (TreeItemLocator -> Bool -> IO ())) => Op (DeselectAndCallback ()) Tree orig impl where
   runOp _ _ tree_item locator' docallback' =
     withRef tree_item $ \tree_itemPtr ->
