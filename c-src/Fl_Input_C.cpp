@@ -394,10 +394,10 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Input__set_wrap)(fl_Input_ input_,int b){
     (static_cast<Fl_Input_*>(input_))->wrap(b);
   }
-  FL_EXPORT_C(void,Fl_Input__tab_nav)(fl_Input_ input_,int val){
+  FL_EXPORT_C(void,Fl_Input__set_tab_nav)(fl_Input_ input_,int val){
     (static_cast<Fl_Input_*>(input_))->tab_nav(val);
   }
-  FL_EXPORT_C(int,Fl_Input__set_tab_nav)(fl_Input_ input_){
+  FL_EXPORT_C(int,Fl_Input__tab_nav)(fl_Input_ input_){
     return (static_cast<Fl_Input_*>(input_))->tab_nav();
   }
 #ifdef __cplusplus

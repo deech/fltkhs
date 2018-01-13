@@ -48,6 +48,7 @@ EXPORT {
 #define FL_SORT_ASCENDING	0	/**< sort browser items in ascending alphabetic order. */
 #define FL_SORT_DESCENDING	1	/**< sort in descending order */
 #ifndef INTERNAL_LINKAGE
+#include "../config.h"
   enum { FL_FILE_BROWSER_FILES, FL_FILE_BROWSER_DIRECTORIES };
   enum
   {
@@ -86,7 +87,7 @@ EXPORT {
     FL_TREE_REASON_DESELECTED,
 #if FLTK_ABI_VERSION >= 10302
     FL_TREE_REASON_RESELECTED,
-#endif /*FLTK_ABI_VERSION*/
+#endif
     FL_TREE_REASON_OPENED,
     FL_TREE_REASON_CLOSED,
     FL_TREE_REASON_DRAGGED
@@ -184,6 +185,7 @@ EXPORT {
     int height;
     const char *name;
   } page_format;
+#ifdef HAVE_GL
 #  ifdef __APPLE__
 #    include <OpenGL/gl.h>
 #  else
@@ -349,6 +351,7 @@ EXPORT {
   Fl_Glut_StrokeFont glutStrokeMonoRoman;
 #  define GLUT_STROKE_ROMAN		(&glutStrokeRoman)
 #  define GLUT_STROKE_MONO_ROMAN	(&glutStrokeMonoRoman)
+#endif /* HAVE_GL */
   typedef ulong Fl_Bitmask;
   typedef unsigned int Fl_Char;
 #endif /* INTERNAL_LINKAGE */
@@ -485,6 +488,7 @@ EXPORT {
   typedef void* fl_XBM_Image;
   typedef void* fl_XPM_Image;
   typedef void* fl_Region;
+  typedef void* fl_Window_Handle;
   typedef void (fl_Callback )(fl_Widget, void*);
   typedef void (fl_Text_Buffer_Callback)(fl_Text_Buffer);
   typedef void (*Unfinished_Style_Cb)(int, void *);

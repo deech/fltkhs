@@ -53,6 +53,8 @@ foreign import ccall "wrapper"
         mkTextPredeleteCb :: TextPredeleteCbPrim -> IO (FunPtr TextPredeleteCbPrim)
 foreign import ccall "wrapper"
         mkFDHandlerPrim :: FDHandlerPrim -> IO (FunPtr FDHandlerPrim)
+foreign import ccall "wrapper"
+        mkGlobalCallbackPtr:: GlobalCallback -> IO (FunPtr GlobalCallback)
 
 toCallbackPrim :: (Ref a -> IO ()) ->
                   IO (FunPtr (Ptr () -> IO ()))
@@ -267,7 +269,7 @@ unsafeFromCString cstring = Unsafe.unsafePerformIO (cStringToText cstring)
 
 #ifdef CALLSTACK_AVAILABLE
 cStringToText :: (?loc :: CallStack) => CString -> IO T.Text
-#elif HASCALLSTACK_AVAILABLE
+#elif defined(HASCALLSTACK_AVAILABLE)
 cStringToText :: (HasCallStack) => CString -> IO T.Text
 #else
 cStringToText :: CString -> IO T.Text
@@ -339,7 +341,23 @@ withBitmap (BitmapHs bitmap (Size (Width width') (Height height'))) f =
      (\ptr -> f ptr width' height')
 
 withStrings :: [T.Text] -> (Ptr (Ptr CChar) -> IO a) -> IO a
-withStrings ss f = TF.withCStringLen (T.concat ss) (\(cstring,_) -> new cstring >>= f) -- withByteStrings (map C.pack ss) f
+withStrings ss f = do
+  copies <- mapM
+             (
+               \s ->
+                 B.useAsCStringLen
+                   (E.encodeUtf8 s)
+                   (
+                     \(ptr, len) -> do
+                         arrPtr <- mallocArray len
+                         copyArray arrPtr ptr len
+                         return arrPtr
+                   )
+             )
+             ss
+  result <- allocaArray (length copies) f
+  mapM_ free copies
+  return result
 
 copyByteStringToCString :: B.ByteString -> IO CString
 copyByteStringToCString bs =
@@ -355,3 +373,6 @@ copyTextToCString t =
   let bs = E.encodeUtf8 t
   in
     copyByteStringToCString bs
+
+withText :: T.Text -> (CString -> IO a) -> IO a
+withText t f = B.useAsCString (E.encodeUtf8 t) f

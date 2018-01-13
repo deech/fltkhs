@@ -14,20 +14,35 @@ module Graphics.UI.FLTK.LowLevel.FLTKHS
 
          -- * Installation
          --
-         -- ** Linux & *BSD
+         -- $InstallationSummary
+
+         -- ** Build With Bundled FLTK
+
+         -- *** Linux & *BSD
+         --
+         -- $InstallationLinuxBundled
+
+         -- *** Mac (Yosemite, El Capitan, Sierra)
+         --
+         -- $InstallationMacBundled
+
+         -- *** Windows(7,8,10)(64-bit)
+         --
+         -- $InstallationWindowsBundled
+
+         -- ** Compile FLTK Yourself
+
+         -- *** Linux & *BSD
          --
          -- $InstallationLinux
 
-         -- ** Mac (Yosemite & El Capitan)
+         -- *** Mac (Yosemite & El Capitan)
          --
          -- $InstallationMac
 
-         -- ** Installation (Windows 64-bit)
-         --
-         -- *** Windows 10
+         -- *** Windows(7,8,10)(64-bit)
          --
          -- $InstallationWindows10
-         --
 
          -- * Demos
          --
@@ -55,7 +70,7 @@ module Graphics.UI.FLTK.LowLevel.FLTKHS
 
          -- * Running in the REPL
          --
-         -- $CabalREPLIssues
+         -- $REPL
 
          -- * Core Types
          module Graphics.UI.FLTK.LowLevel.Fl_Types,
@@ -75,7 +90,6 @@ module Graphics.UI.FLTK.LowLevel.FLTKHS
          module Graphics.UI.FLTK.LowLevel.Draw,
          module Graphics.UI.FLTK.LowLevel.FillDial,
          module Graphics.UI.FLTK.LowLevel.FillSlider,
-         module Graphics.UI.FLTK.LowLevel.GlWindow,
          module Graphics.UI.FLTK.LowLevel.Group,
          module Graphics.UI.FLTK.LowLevel.HorFillSlider,
          module Graphics.UI.FLTK.LowLevel.HorNiceSlider,
@@ -113,7 +127,6 @@ module Graphics.UI.FLTK.LowLevel.FLTKHS
          module Graphics.UI.FLTK.LowLevel.Tabs,
          module Graphics.UI.FLTK.LowLevel.Table,
          module Graphics.UI.FLTK.LowLevel.TableRow,
-         module Graphics.UI.FLTK.LowLevel.Timer,
          module Graphics.UI.FLTK.LowLevel.ToggleButton,
          module Graphics.UI.FLTK.LowLevel.Tree,
          module Graphics.UI.FLTK.LowLevel.TreeItem,
@@ -150,7 +163,6 @@ module Graphics.UI.FLTK.LowLevel.FLTKHS
          module Graphics.UI.FLTK.LowLevel.Hierarchy
        )
 where
-import Graphics.UI.FLTK.LowLevel.GlWindow
 import Graphics.UI.FLTK.LowLevel.SingleWindow
 import Graphics.UI.FLTK.LowLevel.Window
 import Graphics.UI.FLTK.LowLevel.DoubleWindow
@@ -200,7 +212,6 @@ import Graphics.UI.FLTK.LowLevel.Scrollbar
 import Graphics.UI.FLTK.LowLevel.ValueSlider
 import Graphics.UI.FLTK.LowLevel.ValueInput
 import Graphics.UI.FLTK.LowLevel.ValueOutput
-import Graphics.UI.FLTK.LowLevel.Timer
 import Graphics.UI.FLTK.LowLevel.Progress
 import Graphics.UI.FLTK.LowLevel.Positioner
 import Graphics.UI.FLTK.LowLevel.Input
@@ -249,46 +260,46 @@ import Graphics.UI.FLTK.LowLevel.PNMImage
 -- $Motivation
 -- This library aims to make it easy for users to build native apps that work portably across platforms.
 --
--- The original author is also very interested the renewed interested in user
--- interfaces in the programming community, whether the various kinds of
--- functional reactive programming, meta-object protocol UI's, or something like
--- React.js.
+-- I'm also very interested in the user interface renaissance in the programming community,
+-- whether the various kinds of functional reactive programming, meta-object protocol UIs,
+-- or something like React.js.
 --
--- The hope is that a low-cost hassle-free way of getting a UI up and running
--- without having to deal with browser, authentication and compilation issues
+-- The hope is that a low-cost, hassle-free way of getting a UI up and running
+-- without having to deal with browser, authentication, and compilation issues
 -- will make it more fun to play around with these great ideas using Haskell.
 --
 -- == Why a native toolkit?
--- Even in this era of web interfaces it is still
+-- Even in this era of web interfaces, it is still
 -- useful to be able to make native apps. They are usually faster and have fewer
 -- security issues.
 --
 -- == Why FLTK?
--- - The original author chose FLTK because it was small enough that one person could bind the whole thing in an initial
--- pass. Larger toolkits like QT, although way slicker, would require many man-years of effort.
--- - FLTK is quite featureful
--- - FLTK is mature and maintained, the project is about 20 years old and author has had good experiences with the community
+-- - I chose FLTK because it was small enough that one person could bind the whole thing in an initial
+-- pass. Larger toolkits like QT, although much slicker, would require many man-years of effort.
+-- - FLTK is quite featureful.
+-- - FLTK is mature and maintained. The project is about 20 years old, and I have had good experiences with the community.
 -- - FLTK comes with a simple but quite useful GUI builder, <https://en.wikipedia.org/wiki/FLUID Fluid> which is now able to
 --   generate Haskell code. See the `Fluid Support` section for more details.
 --
 -- == What about HsQML\/WxHaskell/Gtk2Hs?
--- These are all great projects and produce really nice UI's, but they all fail
+-- These are all great projects and produce really nice UIs, but they all fail
 -- at least one of criterion listed under the __Goals__ section below.
 --
--- To the author's knowledge, as of the first quarter of 2016, no other package
+-- To my knowledge, as of the second quarter of 2017, no other package
 -- in the Haskell ecosystem meets all those constraints.
 --
 
 -- $Goals
--- The goals of this library are to provide a low level API to the <http://fltk.org FLTK> that:
+-- The goals of this library are to provide a low-level API to the <http://fltk.org FLTK> that:
 --
--- (1) provides full coverage of the toolkit allowing the user to write GUI's in pure Haskell.
--- (2) feels like it has polymorphic dispatch, meaning a single function dispatches to the right implementation based on the type of widget it is given
--- (3) is /not/ monolithic, meaning new widgets can be incorporated the user's application without needing to recompile this library
--- (4) is easy to install. This library has a minimum of dependencies and <http://fltk.org FLTK> itself compiles cleanly on most architectures
--- (5) allows the user to produce statically linked binaries with no external dependencies
--- (6) includes a lot of complete working demos so that the user can get up and running faster. (see note below)
--- (7) comes with GUI builder support to alleviate the tedium of laying out widgets by hand
+-- (1) provides full coverage of the toolkit allowing the user to write GUIs in pure Haskell.
+-- (2) feels like it has polymorphic dispatch, meaning a single function dispatches to the right implementation based on the type of widget it is given.
+-- (3) is /not/ monolithic, meaning new widgets can be incorporated the user's application without needing to recompile this library.
+-- (4) is easy to install. This library has a minimum of dependencies and <http://fltk.org FLTK> itself compiles cleanly on most architectures.
+--     And now there is a <https://hackage.haskell.org/package/fltkhs/docs/Graphics-UI-FLTK-LowLevel-FLTKHS.html#g:4 bundled option> where Cabal/Stack build FLTK for you behind the scenes.
+-- (5) allows the user to produce statically linked binaries with a minimum of external dependencies.
+-- (6) includes a lot of <https://github.com/deech/fltkhs-demos complete> <https://github.com/deech/fltkhs-fluid-demos working> demos so that you can get up and running faster.
+-- (7) comes with <https://hackage.haskell.org/package/fltkhs/docs/Graphics-UI-FLTK-LowLevel-FLTKHS.html#g:15 GUI builder support> to alleviate the tedium of laying out widgets by hand.
 --
 -- $FluidSupport
 --
@@ -297,8 +308,8 @@ import Graphics.UI.FLTK.LowLevel.PNMImage
 -- that ships with FLTK and generates Haskell code.
 --
 -- Now the user can drag and drop widgets into place instead of having to
--- calculate coordinates and sizes by hand. Additionally arbitrary Haskell code
--- can be inserted into Fluid interfaces allowing user to do most of callback
+-- calculate coordinates and sizes by hand. Additionally, arbitrary Haskell code
+-- can be inserted into Fluid interfaces, allowing the user to do most of the callback
 -- wiring directly from Fluid.
 --
 -- The quickest way to get started is to download the
@@ -307,10 +318,10 @@ import Graphics.UI.FLTK.LowLevel.PNMImage
 -- the 'fltkhs-fluidtohs' utility to automatically convert any Fluid in 'src'
 -- directory into a Haskell module of the same name during the preprocess step.
 -- This means using Fluid in a FLTKHS project is as simple as creating a Fluid
--- interface and running 'cabal build' or 'cabal install'.
+-- interface and running 'stack build --flag fltkhs:bundled' or 'stack install --flag fltkhs:bundled'.
 --
--- Additionally the <https://github.com/deech/fltkhs-fluid-demos fltkhs-fluid-demos> package
--- comes with a number of demos that show off how Fluid integrates with FLTKS.
+-- Additionally, the <https://github.com/deech/fltkhs-fluid-demos fltkhs-fluid-demos> package
+-- comes with a number of demos that show how Fluid integrates with FLTKS.
 --
 
 -- $Obstacles
@@ -321,35 +332,35 @@ import Graphics.UI.FLTK.LowLevel.PNMImage
 -- addressed but in the interests of full disclosure ...
 --
 -- == Look & Feel
--- The default look FLTK apps can be charitably described as /retro/. And
+-- The default look of FLTK apps can be charitably described as /retro/. And
 -- FLTK has no support for theming since it was designed for the
 -- embedded domain and trades off slickness for speed, portability and
 -- binary size.
 --
 -- But that doesn't mean the user is limited to the default! FLTK is quite flexible
--- and it is pretty easy to change the way a widget looks and behaves but there is no
+-- and it is pretty easy to change the way a widget looks and behaves, but there is no
 -- "theme file" that applies uniformly to all widgets in the app.
 --
 -- == Compile Times
--- Currently a dense app (~ 160-180 widgets crammed into the same window) takes
+-- Currently a dense app with ~ 160-180 widgets crammed into the same window takes
 -- 9-12 seconds to compile with GHC 7.10.3 on a 32GB quad-core machine.
 -- The good news is that this is a <https://ghc.haskell.org/trac/ghc/ticket/12506 known issue>.
 --
 -- $StackTrace
 --
--- In a traditional callback-heavy API such as FLTKHS null pointers happen which
+-- In a traditional callback-heavy API such as FLTKHS, null pointers happen, which
 -- is why FLTKHS supports partial stack traces. All FLTK functions throw an
 -- error along with a stack trace when given a null 'Ref'.
 --
--- For pre-7.10 GHCs stack traces will only be shown if the
+-- For pre-7.10 GHCs, stack traces will only be shown if the
 -- <https://wiki.haskell.org/Debugging#General_usage 'xc'> flag is used when
 -- compiling FLTKHS.
 --
--- If compiled with GHC > 7.10 a partial stack trace is transparently available
+-- If compiled with GHC > 7.10, a partial stack trace is transparently available
 -- to the user. The recently minted
 -- <https://hackage.haskell.org/package/base-4.8.1.0/docs/GHC-Stack.html#g:3 'CallStack'>
 -- implicit parameter is used to get a trace of the function that
--- made the offending call along with a file name and line number. So, for
+-- made the offending call along with a file name and line number. For
 -- example, in the following code:
 --
 -- @
@@ -368,8 +379,8 @@ import Graphics.UI.FLTK.LowLevel.PNMImage
 --  ...
 -- @
 --
--- a button is placed inside a window in the main method but the first time it is clicked the callback will delete it and then try
--- the extract the label from the null 'Ref'.
+-- a button is placed inside a window in the main method, but the first time it is clicked, the callback will delete it and then try
+-- to extract the label from the null 'Ref'.
 -- The resulting stack trace will look something like:
 --
 -- @
@@ -379,9 +390,9 @@ import Graphics.UI.FLTK.LowLevel.PNMImage
 --   getLabel, called at src\/Main.hs:11:10 in main:Main
 -- @
 --
--- It says that the null pointer was originally detected in the library function 'toRefPtr' function which was called by the library function 'withRef', which
+-- It says that the null pointer was originally detected in the library function 'toRefPtr' function, which was called by the library function 'withRef', which
 -- was called by 'getLabel' on line 11 of 'src/Main.hs'. Notice, however, that the trace stops there. It does not tell you 'getLabel' was invoked from 'buttonCb'.
--- For a more detailed trace the 'CallStack' implicit parameter needs to be passed to each function in the chain like:
+-- For a more detailed trace, the 'CallStack' implicit parameter needs to be passed to each function in the chain like:
 --
 -- @
 -- buttonCb :: (?loc :: CallStack) => Ref Button ...
@@ -391,14 +402,71 @@ import Graphics.UI.FLTK.LowLevel.PNMImage
 -- @
 --
 
+-- $InstallationSummary
+-- There are two ways to install FLTKHS, building with the <https://hackage.haskell.org/package/fltkhs/docs/Graphics-UI-FLTK-LowLevel-FLTKHS.html#g:5 bundled FLTK GUI library>, or compiling and installing FLTK <https://hackage.haskell.org/package/fltkhs/docs/Graphics-UI-FLTK-LowLevel-FLTKHS.html#g:9 from scratch yourself>. The bundled way is
+-- by far the easiest on all platforms. It is completely self-contained, you don't need any sudo access to your system.
+--
+-- $InstallationLinuxBundled
+--  The steps are:
+--
+-- - Make sure to have OpenGL installed if you need it.
+-- - Ensure that 'make', 'autoconf' and 'autoheader' are available on your system.
+-- - Download & install <http://docs.haskellstack.org/en/stable/README/#how-to-install Stack>.
+-- - Download & install the <https://github.com/deech/fltkhs-hello-world/archive/master.tar.gz FLTKHS hello world skeleton>.
+-- - Verify the install by running `fltkhs-hello-world`.
+--
+-- == Download & Install Stack
+-- Pick the <http://docs.haskellstack.org/en/stable/README/#how-to-install Stack installer> that matches your distribution and install according to the instructions.
+--
+-- == Download & Install the FLTKHS Hello World Skeleton
+-- === Downloading Without Git
+-- If 'git' is not installed, download the latest version of the fltkhs-hello-world application skeleton from <https://github.com/deech/fltkhs-hello-world/archive/master.tar.gz here>.
+--
+--
+-- Extract and rename the archive:
+--
+-- @
+-- > tar -zxvf fltkhs-hello-world-master.tar.gz
+-- > mv fltkhs-hello-world-master fltkhs-hello-world
+-- @
+--
+-- === Downloading With Git
+-- If 'git' is available:
+--
+-- @
+-- > git clone http://github.com/deech/fltkhs-hello-world
+-- @
+--
+-- === Building
+-- Build it with Stack:
+--
+-- @
+-- > cd fltkhs-hello-world
+-- > stack setup
+-- > stack install --flag fltkhs:bundled
+-- or if you need OpenGL support
+-- > stack install --flag fltkhs:bundled --flag fltkhs:opengl
+-- @
+--
+-- == Verify The Install
+-- Test that the build completed successfully by invoking:
+--
+-- @
+-- > stack exec fltkhs-hello-world
+-- @
+--
+-- You will be greeted by an incredibly boring little window with a button that says "Hello world".
+-- If you click it, it will change to "Goodbye world".
+--
+--
 -- $InstallationLinux
 --  The steps are:
 --
--- - Make sure to have OpenGL installed
--- - Download & install <http://docs.haskellstack.org/en/stable/README/#how-to-install Stack>
--- - Download & install <http://www.fltk.org/software.php?VERSION=1.3.4-1&FILE=fltk/1.3.4-1/fltk-1.3.4-1-source.tar.gz FLTK 1.3.4-1>
--- - Download & install the <https://github.com/deech/fltkhs-hello-world/archive/master.tar.gz FLTKHS hello world skeleton>
--- - Verify the install by running `fltkhs-hello-world`
+-- - Make sure you have OpenGL installed.
+-- - Download & install <http://docs.haskellstack.org/en/stable/README/#how-to-install Stack>.
+-- - Download & install <http://www.fltk.org/software.php?VERSION=1.3.4-1&FILE=fltk/1.3.4-1/fltk-1.3.4-1-source.tar.gz FLTK 1.3.4-1>.
+-- - Download & install the <https://github.com/deech/fltkhs-hello-world/archive/master.tar.gz FLTKHS hello world skeleton>.
+-- - Verify the install by running `fltkhs-hello-world`.
 --
 -- == Download & Install Stack
 -- Pick the <http://docs.haskellstack.org/en/stable/README/#how-to-install Stack installer> that matches your distribution and install according the instructions.
@@ -409,45 +477,41 @@ import Graphics.UI.FLTK.LowLevel.PNMImage
 -- It should build and install smoothly with the standard:
 --
 -- @
+-- > ./configure --enable-shared --enable-localjpeg --enable-localzlib --enable-localpng
+-- or if you need OpenGL support
 -- > ./configure --enable-gl --enable-shared --enable-localjpeg --enable-localzlib --enable-localpng
 -- > make
 -- > sudo make install
 -- @
 --
 --
--- If you didn't install FLTK from source you can use the 'fltk-config' tool to ensure that version 1.3.4-1 is installed:
+-- If you didn't install FLTK from source, you can use the 'fltk-config' tool to ensure that version 1.3.4-1 is installed:
 --
 -- @
 -- > fltk-config --version
 -- 1.3.4-1
 -- @
 --
--- Additionally the FLTK headers should be in the include path and, along with
+-- The FLTK headers should be in the include path, along with
 -- the standard FLTK libraries, `fltk_images`, and `fltk_gl`. You will also need
 -- the `make`, `autoconf`, and `autoheader` tools to build the Haskell bindings.
 --
 --
 -- The reason we install from source is that some package managers seem to be
 -- behind on versions (as of this writing Ubuntu 14.04 is still on 1.3.2) and
--- others put the headers and libraries in a non-standard locations which will
+-- others put the headers and libraries in nonstandard locations, which will
 -- cause the Haskell bindings to throw compilation errors.
 --
 --
 -- == Download & Install the FLTKHS Hello World Skeleton
 -- === Downloading Without Git
--- If 'git' is not installed download the latest version of the fltkhs-hello-world application skeleton from <https://github.com/deech/fltkhs-hello-world/archive/master.tar.gz here>
---
--- Rename it:
---
--- @
--- > mv fltkhs-hello-world-master.tar.gz fltkhs-hello-world.tar.gz
--- @
---
+-- If 'git' is not installed, download the latest version of the `fltkhs-hello-world` application skeleton from <https://github.com/deech/fltkhs-hello-world/archive/master.tar.gz here>.
 --
 -- Extract and enter the archive:
 --
 -- @
--- > tar -zxvf fltkhs-hello-world.tar.gz
+-- > tar -zxvf fltkhs-hello-world-master.tar.gz
+-- > mv fltkhs-hello-world-master fltkhs-hello-world
 -- @
 --
 -- === Downloading With Git
@@ -464,30 +528,96 @@ import Graphics.UI.FLTK.LowLevel.PNMImage
 -- > cd fltkhs-hello-world
 -- > stack setup
 -- > stack install
+-- or if you need OpenGL support
+-- > stack install --flag fltkhs:opengl
 -- @
 --
--- __Note:__ If the `install` step produces a flood of `undefined reference` errors
+-- __Note:__ If the `install` step produces a flood of `undefined reference` errors,
 -- please ensure that you have the right version of FLTK (1.3.4-1) installed and
--- that the headers are in the expected locations. It seems as though some
--- package managers put the libraries and headers in non-standard places so it
+-- that the headers are in the expected locations. Some package 
+-- managers put the libraries and headers in nonstandard places, so it
 -- is best to build from source.
 --
 -- == Verify The Install
--- Test that the build completed successfully by invoking incredibly unimpressive
+-- Test that the build completed successfully by invoking:
 --
 -- @
 -- > stack exec fltkhs-hello-world
 -- @
 --
+-- You will be greeted by an incredibly boring little window with a button that says "Hello world". 
+-- If you click it, it will change to "Goodbye world."
 
--- $InstallationMac
--- Unfortunately Mac version older than El Capitan and Yosemite are not supported.
+-- $InstallationMacBundled
+-- Mac versions older than El Capitan and Yosemite are not supported.
 --
 -- The general steps are:
 --
--- - Brew Install Stack
--- - Download & install the <https://github.com/deech/fltkhs-hello-world/archive/master.tar.gz FLTKHS hello world skeleton>
--- - Verify the install by running `fltkhs-hello-world`
+-- - Brew Install Stack.
+-- - Download & install the <https://github.com/deech/fltkhs-hello-world/archive/master.tar.gz FLTKHS hello world skeleton>.
+-- - Verify the install by running `fltkhs-hello-world`.
+--
+-- == Brew Install Stack
+-- This should be as simple as:
+--
+-- @
+-- > brew install haskell-stack
+-- @
+--
+-- == Brew Install Autoconf
+-- @
+-- > brew install autoconf
+-- @
+--
+--
+-- == Download & Install the FLTKHS Hello World Skeleton
+-- === Downloading Without Git
+-- If 'git' is not installed, download the latest version of the fltkhs-hello-world application skeleton from <https://github.com/deech/fltkhs-hello-world/archive/master.tar.gz here>.
+--
+-- Extract the archive:
+--
+-- @
+-- > cd \/Users\/\<username\>/Downloads\/
+-- > tar -zxvf fltkhs-hello-world-master.tar.gz
+-- > mv fltkhs-hello-world-master fltkhs-hello-world
+-- @
+--
+-- === Downloading With Git
+-- If 'git' is available:
+--
+-- @
+-- > git clone http://github.com/deech/fltkhs-hello-world
+-- @
+--
+-- === Building
+-- Build it with Stack:
+--
+-- @
+-- > cd fltkhs-hello-world
+-- > stack setup
+-- > stack install --flag fltkhs:bundled
+-- or if you need OpenGL support
+-- > stack install --flag fltkhs:bundled --flag fltkhs:opengl
+-- @
+--
+-- == Verify The Install
+-- Test that the build completed successfully by invoking:
+--
+-- @
+-- > stack exec fltkhs-hello-world
+-- @
+--
+-- You will be greeted by an incredibly boring little window with a button that says "Hello world",
+-- if you click it, it will change to "Goodbye world."
+
+-- $InstallationMac
+-- Unfortunately Mac versions older than El Capitan and Yosemite are not supported.
+--
+-- The general steps are:
+--
+-- - Brew Install Stack.
+-- - Download & install the <https://github.com/deech/fltkhs-hello-world/archive/master.tar.gz FLTKHS hello world skeleton>.
+-- - Verify the install by running `fltkhs-hello-world`.
 --
 -- == Brew Install Stack
 -- This should be as simple as:
@@ -510,6 +640,8 @@ import Graphics.UI.FLTK.LowLevel.PNMImage
 -- > wget http://fltk.org/pub/fltk/1.3.4/fltk-1.3.4-1-source.tar.gz
 -- > tar -zxf fltk-1.3.4-1-source.tar.gz
 -- > cd fltk-1.3.4-1
+-- > ./configure --enable-shared --enable-localjpeg --enable-localzlib --enable-localpng
+-- or if you need OpenGL support
 -- > ./configure --enable-gl --enable-shared --enable-localjpeg --enable-localzlib --enable-localpng
 -- > make
 -- > sudo make install
@@ -519,20 +651,15 @@ import Graphics.UI.FLTK.LowLevel.PNMImage
 --
 -- == Download & Install the FLTKHS Hello World Skeleton
 -- === Downloading Without Git
--- If 'git' is not installed download the latest version of the fltkhs-hello-world application skeleton from <https://github.com/deech/fltkhs-hello-world/archive/master.tar.gz here>
---
--- Rename it:
---
--- @
--- > cd \/Users\/\<username\>/Downloads\/
--- > mv fltkhs-hello-world-master.tar.gz fltkhs-hello-world.tar.gz
--- @
+-- If 'git' is not installed, download the latest version of the fltkhs-hello-world application skeleton from <https://github.com/deech/fltkhs-hello-world/archive/master.tar.gz here>.
 --
 --
 -- Extract the archive:
 --
 -- @
--- > tar -zxvf fltkhs-hello-world.tar.gz
+-- > cd \/Users\/\<username\>/Downloads\/
+-- > tar -zxvf fltkhs-hello-world-master.tar.gz
+-- > mv fltkhs-hello-world-master fltkhs-hello-world
 -- @
 --
 -- === Downloading With Git
@@ -549,14 +676,132 @@ import Graphics.UI.FLTK.LowLevel.PNMImage
 -- > cd fltkhs-hello-world
 -- > stack setup
 -- > stack install
+-- or if you need OpenGL support
+-- > stack install --flag fltkhs:opengl
 -- @
 --
 -- == Verify The Install
--- Test that the build completed successfully by invoking incredibly unimpressive
+-- Test that the build completed successfully by invoking:
 --
 -- @
 -- > stack exec fltkhs-hello-world
 -- @
+--
+-- You will be greeted by an incredibly boring little window with a button that says "Hello world".
+-- If you click it, it will change to "Goodbye world".
+
+-- $InstallationWindowsBundled
+--
+-- This install guide has been tested on a Windows 7, 8 and 10.
+--
+-- == Install Stack
+-- Downloading and following the default instructions for the standard <https://www.stackage.org/stack/windows-x86_64-installer Windows installer> should be enough.
+-- If the install succeeded 'stack' should on the PATH. To test run 'cmd.exe' and do:
+--
+-- @
+-- > stack --version
+-- @
+--
+-- Now downloading and setup the latest GHC via 'stack':
+--
+-- @
+-- > stack setup
+-- @
+--
+-- From this point on we can live in the MSYS2 shell that comes with Stack. It is a far superior environment to the command prompt. To open the MSYS2 shell do:
+--
+-- @
+-- > stack exec mintty
+-- @
+--
+-- == Install Necessary Utilities via Pacman
+-- In the MSYS2 shell prompt update and upgrade the MSYS2 installation:
+--
+-- @
+-- > pacman -Syy
+-- > pacman -Syu
+-- @
+--
+-- ... install packages for download and extracting packages:
+--
+-- @
+-- > pacman -S wget
+-- > pacman -S tar
+-- > pacman -S unzip
+-- > pacman -S zip
+-- > pacman -S man
+-- @
+--
+-- ... and building C/C++ programs:
+--
+-- @
+-- > pacman -S autoconf
+-- > pacman -S make
+-- > pacman -S automake
+-- @
+--
+--
+-- == Download And Install The FLTKHS Hello World Skeleton
+-- The <https://github.com/deech/fltkhs-hello-world fltkhs-hello-world> skeleton is a simple Hello World GUI which provides the base structure for FLTKHS applications. Please see the 'Demos' section of this document for examples of apps that show off more complex uses of the API.
+--
+-- @
+-- > wget --no-check-certificate https://github.com/deech/fltkhs-hello-world/archive/master.zip
+-- > unzip master.zip
+-- > mv fltkhs-hello-world-master fltkhs-hello-world
+-- > cd fltkhs-hello-world
+-- @
+--
+-- And install with:
+--
+-- @
+-- > stack install --flag fltkhs:bundled
+-- or if you need OpenGL support
+-- > stack install --flag fltkhs:bundled --flag fltkhs:opengl
+-- @
+--
+-- To test the installation:
+--
+-- @
+-- > stack exec fltkhs-hello-world
+-- @
+--
+-- You will be greeted by an incredibly boring little window with a button that says "Hello world",
+-- if you click it, it will change to "Goodbye world."
+--
+-- == Packaging A Windows Executable
+--
+-- While the 'fltkhs-hello-world' application is mostly stand-alone the MSYS2 environment bundled with 'stack' seems to require 3 runtime DLLs. The DLLs are bundled with 'stack' so it's easy to zip them up with the executable and deploy. The required DLLs are: 'libstdc++-6.dll', 'libgcc_s_seh-1.dll' and 'libwinpthread-1.dll'.
+--
+--
+--
+-- First create the directory that will contain the executable and DLLs:
+--
+-- @
+-- > mkdir \/tmp\/fltkhs-hello-world
+-- @
+--
+-- Copy the executable over to that directory:
+--
+-- @
+-- > cp `which fltkhs-hello-world` \/tmp\/fltkhs-hello-world
+-- @
+--
+-- Copy over the DLLs. They are usually located in '../<ghc-version>/mingw/bin' but to make the process slightly less fragile we specify the directory relative to whatever 'ghc' is currently in 'stack' 's context:
+--
+-- @
+-- > cp `dirname $(which ghc)`..\/mingw\/bin\/libstdc++-6.dll \/tmp\/fltkhs-hello-world
+-- > cp `dirname $(which ghc)`..\/mingw\/bin\/libgcc_s_seh-1.dll \/tmp\/fltkhs-hello-world
+-- > cp `dirname $(which ghc)`..\/mingw\/bin\/libwinpthread-1.dll \/tmp\/fltkhs-hello-world
+-- @
+--
+-- Zip up archive:
+--
+-- @
+-- > cd /tmp
+-- > zip fltkhs-hello-world.zip fltkhs-hello-world/*
+-- @
+--
+-- And that's it! Any Windows 10 user should now be able to extract 'fltkhs-hello-world.zip' and run 'fltkhs-hello-world.exe'.
 --
 
 -- $InstallationWindows10
@@ -627,6 +872,8 @@ import Graphics.UI.FLTK.LowLevel.PNMImage
 -- Configure, make and install:
 --
 -- @
+-- > ./configure --enable-shared --enable-localjpeg --enable-localzlib --enable-localpng
+-- or if you need OpenGL support
 -- > ./configure --enable-gl --enable-shared --enable-localjpeg --enable-localzlib --enable-localpng
 -- > make
 -- > make install
@@ -653,6 +900,8 @@ import Graphics.UI.FLTK.LowLevel.PNMImage
 --
 -- @
 -- > stack install
+-- or if you need OpenGL support
+-- > stack install --flag fltkhs:opengl
 -- @
 --
 -- To test the installation:
@@ -661,10 +910,12 @@ import Graphics.UI.FLTK.LowLevel.PNMImage
 -- > stack exec fltkhs-hello-world
 -- @
 --
+-- You will be greeted by an incredibly boring little window with a button that says "Hello world".
+-- If you click it, it will change to "Goodbye world".
 --
 -- == Packaging A Windows Executable
 --
--- While the 'fltkhs-hello-world' application is mostly stand-alone the MSYS2 environment bundled with 'stack' seems to require 3 runtime DLLs. The DLLs are bundled with 'stack' so it's easy to zip them up with the executable and deploy. The required DLLs are: 'libstdc++-6.dll', 'libgcc_s_seh-1.dll' and 'libwinpthread-1.dll'.
+-- While the 'fltkhs-hello-world' application can mostly stand alone, the MSYS2 environment bundled with 'stack' seems to require 3 runtime DLLs. The DLLs are bundled with 'stack', so you can zip them up with the executable and deploy. The required DLLs are: 'libstdc++-6.dll', 'libgcc_s_seh-1.dll' and 'libwinpthread-1.dll'.
 --
 --
 --
@@ -680,7 +931,7 @@ import Graphics.UI.FLTK.LowLevel.PNMImage
 -- > cp `which fltkhs-hello-world` \/tmp\/fltkhs-hello-world
 -- @
 --
--- Copy over the DLLs. They are usually located in '../<ghc-version>/mingw/bin' but to make the process slightly less fragile we specify the directory relative to whatever 'ghc' is currently in 'stack' 's context:
+-- Copy over the DLLs. They are usually located in '../<ghc-version>/mingw/bin', but to make the process slightly less fragile we specify the directory relative to whatever 'ghc' is currently in Stack's context:
 --
 -- @
 -- > cp `dirname $(which ghc)`..\/mingw\/bin\/libstdc++-6.dll \/tmp\/fltkhs-hello-world
@@ -688,7 +939,7 @@ import Graphics.UI.FLTK.LowLevel.PNMImage
 -- > cp `dirname $(which ghc)`..\/mingw\/bin\/libwinpthread-1.dll \/tmp\/fltkhs-hello-world
 -- @
 --
--- Zip up archive:
+-- Zip up the archive:
 --
 -- @
 -- > cd /tmp
@@ -700,34 +951,30 @@ import Graphics.UI.FLTK.LowLevel.PNMImage
 
 -- $Demos
 --
--- FLTKHS has a almost 25 end-to-end demo applications to help the user get started. They are
--- split into two sets, those <http://github.com/deech/fltkhs-demos written manually> and those
+-- FLTKHS has almost 25 end-to-end demo applications to help you get started. They are
+-- split into two sets: those <http://github.com/deech/fltkhs-demos written manually> and those
 -- that <http://github.com/deech/fltkhs-fluid-demos show how to use FLUID>.
 --
--- The READMEs in the repos have installation instructions but they assume that the user has
+-- The READMEs in the repos have installation instructions, but they assume that you have
 -- successfully installed FLTK and the 'fltkhs-hello-world' app (see platform specific instructions above).
 --
 
 -- $GettingStarted
 --
--- It is assumed that by this point the user has successfully installed this
--- library and demos in <http://github.com/deech/fltkhs-demos fltkhs-demos> (see
--- above).
+-- By this point, I assume that you have successfully installed <https://github.com/deech/fltkhs-hello-world hello world>
+-- (see above) or one of the <https://github.com/deech/fltkhs-demos demo> <https://github.com/deech/fltkhs-fluid-demos packages>.
 --
 --
 -- = Quick Start
--- The quickest way to get started is to the download the
--- <http://github.com/deech/fltkhs-hello-world FLTKHS project skeleton>. It is a
--- simple `hello-world` program that shows the basics of widget creation and
--- callbacks. The project's Cabal file comes pre-configured with the options
--- necessary to produce a statically-linked executable so a simple 'cabal
--- configure && cabal build' should result in an 'fltkhs-hello-world' executable
--- in the 'dist' directory.
+-- The quickest way to get started is to look at the source for the
+-- <http://github.com/deech/fltkhs-hello-world FLTKHS project skeleton>. Though it is a
+-- simple app, it shows the basics of widget creation and
+-- callbacks.
 --
--- Other demos that ship with this package show more complicated usage of the API.
+-- Other <https://github.com/deech/fltkhs-demos demo> <https://github.com/deech/fltkhs-fluid-demos packages> show more complicated usage of the API.
 --
 -- Since the API is a low-level binding, code using it takes on the imperative
--- style of the underlying toolkit. Fortunately it should look pretty familiar
+-- style of the underlying toolkit. Fortunately, it should look pretty familiar
 -- to those who have used object-oriented GUI toolkits before.
 --
 --
@@ -737,12 +984,12 @@ import Graphics.UI.FLTK.LowLevel.PNMImage
 -- = Guide to the Haddock Docs
 --
 -- Convenient access to the underlying C++ is achieved using typeclasses and
--- type-level programming to emulate classes and subclasses. This approach makes
+-- type-level programming to emulate OO classes and multiple dispatch. This approach makes
 -- Haddock very unhappy and the generated documentation is frequently unhelpful.
--- For instance, newcomers to this library are urged not to look at
+-- For instance, I urge newcomers to this library not to look at
 -- "Graphics.UI.FLTK.LowLevel.Dispatch" or
 -- "Graphics.UI.FLTK.LowLevel.Hierarchy". The purpose of this guide is to point
--- users in a more useful direction.
+-- you in a more useful direction.
 --
 --
 -- The documentation provided with this API is not yet self-contained and is
@@ -751,19 +998,19 @@ import Graphics.UI.FLTK.LowLevel.PNMImage
 -- functions and datatypes map to the C++ ones.
 --
 -- == Widget Construction
--- Each widget has its own module all of which are listed
--- below under the __Widgets__ heading . Most modules include a function named
--- `<widgetName>New` that returns a reference to that widget. Although the user
--- does not have to deal with raw pointers directly it might help to understand
+-- Each widget has its own module, all of which are listed
+-- below under the __Widgets__ heading. Most modules include a function named
+-- `<widgetName>New` that returns a reference to that widget. Although you
+-- do not have to deal with raw pointers directly, it might help to understand
 -- that this reference is a pointer to a void pointer to a C++ object.
 --
--- For instance, 'windowNew' creates a 'Ref' 'Window' which is a pointer to a
--- C++ object of type `Fl_Window`, the FLTK class that knows how to draw,
--- display and handle window events.
+-- For instance, 'windowNew' creates a 'Ref' 'Window', which is a pointer to a
+-- C++ object of type <http://www.fltk.org/doc-1.3/classFl__Window.html `Fl_Window`>, the FLTK class that knows how to draw,
+-- display, and handle window events.
 --
 -- This value of type 'Ref' 'Window' is then passed along to various functions
--- which, transparent to the user, extract the pointer and pass it to the
--- appropriate /Fl_Window/ instance method.
+-- which transparently extract the pointer and pass it to the
+-- appropriate <http://www.fltk.org/doc-1.3/classFl__Window.html `Fl_Window`> instance method.
 --
 -- == Widget Methods
 --
@@ -773,15 +1020,15 @@ import Graphics.UI.FLTK.LowLevel.PNMImage
 -- under the __Functions__ heading are not the real ones but are artifically
 -- generated because they are much more helpful to users. For instance, the
 -- actual type of 'activate' exposes all the type level arithmetic required so
--- it can be used by subclasses of 'Widget' but is pretty unhelpful as a
+-- it can be used by subclasses of 'Widget' but is unhelpful as a
 -- reference compared to the artificial type under __Functions__ heading of
 -- "Graphics.UI.FLTK.LowLevel.Widget".
 --
 -- Unfortunately to see this more helpful type signature the poor reader has to
 -- navigate to the corresponding widget's module, find the __Functions__ header
 -- and scroll down to the desired function. Haddock, unfortunately, does not
--- support anchors that link to a named point in the page. The author is /very/
--- open to ideas on how to make this easier.
+-- support anchors that link to a named point in the page. I'm /very/
+-- open to ideas on how to make this easier. -- JULIE HAS A QUESTION: wait, so which signatures are listed where exactly? like, what is this opposed to?
 --
 -- Carrying on the previous example from the __Widget Creation__ section, the
 -- methods on a 'Ref' 'Window' widget are documented in
@@ -789,7 +1036,7 @@ import Graphics.UI.FLTK.LowLevel.PNMImage
 -- the 'Ref' 'Window' reference as its first argument followed by whatever else
 -- it needs and delegates it appropriately.
 --
--- As this is a low-level binding the Haskell functions are kept as close as
+-- As this is a low-level binding, the Haskell functions are kept as close as
 -- possible in name and argument list to the underlying C++. This allows users
 -- familiar with the FLTK API to use this library with less learning overhead
 -- and it lets newcomers to FLTK take advantage of the already extensive
@@ -798,22 +1045,22 @@ import Graphics.UI.FLTK.LowLevel.PNMImage
 -- Functions are named to make it as easy as possible to find the corresponding
 -- C++ function, however there are some naming conventions to keep in mind:
 --
--- (1) setters and getters are prefixed with /set/ and /get/ respectively. In
+-- (1) Setters and getters are prefixed with /set/ and /get/ respectively. In
 -- C++ both have the same name; the setter takes an argument while the getter
--- does not. Since Haskell does not support overloading this convention is used.
+-- does not. Since Haskell does not support overloading, this convention is used.
 --
--- (2) in many cases C++ uses overloading to provide default values to
+-- (2) In many cases C++ uses overloading to provide default values to
 -- arguments. Since Haskell does not support overloading, these arguments are
--- 'Maybe' types eg. the `hotspot` function in
--- "Graphics.UI.FLTK.LowLevel.Window". In other cases where the common use case
--- leaves the default arguments unspecified the binding provides two functions,
--- a longer less-convenient-to-type one that takes the default argument and a
--- short one that does not eg. `drawBox` and `drawBoxWithBoxtype`, also in
+-- 'Maybe' types, e.g., the `hotspot` function in
+-- "Graphics.UI.FLTK.LowLevel.Window". In other cases, where the common use case
+-- leaves the default arguments unspecified, the binding provides two functions:
+-- a longer less-convenient-to-type one that takes the default argument, and a
+-- short one that does not, e.g., `drawBox` and `drawBoxWithBoxtype`, also in
 -- "Graphics.UI.FLTK.LowLevel.Window".
 --
--- (3) error codes are 'Either' types
+-- (3) Error codes are 'Either' types.
 --
--- (4) function arguments which are pointers to be filled are not exposed to the
+-- (4) Function arguments that are pointers to be filled are not exposed to the
 -- API user. For instance, a common C++ idiom is to return a string by taking a
 -- pointer to some initialized but empty chunk of memory and filling it up. The
 -- corresponding Haskell function just returns a 'Data.Text'.
@@ -835,10 +1082,10 @@ import Graphics.UI.FLTK.LowLevel.PNMImage
 -- to /getModal/ to check if the window is modal, but it can also be passed to
 -- /children/ in "Graphics.UI.FLTK.LowLevel.Group" which counts up the number of
 -- widgets inside the 'Window' and /getX/ in "Graphics.UI.FLTK.LowLevel.Widget"
--- which returns the X coordinate of the 'Window''s top-left hand corner.
+-- which returns the X coordinate of the 'Window''s top-left hand corner. JULIE: should these emph'd words be straight-quoted?
 --
 -- The hierarchy corresponds almost exactly to the underlying C++ class
--- hierarchy so, again, the user is able to take advantage of the
+-- hierarchy so, again, you should be able to take advantage of the
 -- <http://www.fltk.org/doc-1.3/classes.html C++ documentation> to use the
 -- binding API.
 --
@@ -851,11 +1098,12 @@ import Graphics.UI.FLTK.LowLevel.PNMImage
 -- now allow Haskell <https://hackage.haskell.org/package/fltkhs-0.5.1.3/docs/Graphics-UI-FLTK-LowLevel-Widget.html#g:2 functions> to be passed at
 -- widget construction time that give Haskell complete control on <https://hackage.haskell.org/package/fltkhs-0.5.1.3/docs/Graphics-UI-FLTK-LowLevel-Widget.html#v:widgetCustom drawing>,
 -- <https://hackage.haskell.org/package/fltkhs-0.5.1.3/docs/Graphics-UI-FLTK-LowLevel-Widget.html#t:CustomWidgetFuncs handling, resizing and other key functions>. This means that the Haskell user has
--- complete control of look-and-feel and the event loop. The <https://github.com/deech/fltkhs-demos/blob/master/src/Examples/table-as-container.hs#L105 table> demos are
--- an example of drawing in Haskell. An example of taking over the event loop is an FLTKHS <https://github.com/deech/fltkhs-reflex-host proof-of-concept> that <https://github.com/deech/fltkhs-reflex-host/blob/master/src/reflex-host.hs#L33 overrides> the FLTKHS event loop with the <https://hackage.haskell.org/package/reflex Reflex FRP> allowing
+-- complete control of the look and feel as well as the event loop. The <https://github.com/deech/fltkhs-demos/blob/master/src/Examples/table-as-container.hs#L105 table> demos are
+-- an example of drawing in Haskell. An example of taking over the event loop is an FLTKHS <https://github.com/deech/fltkhs-reflex-host proof-of-concept> that <https://github.com/deech/fltkhs-reflex-host/blob/master/src/reflex-host.hs#L33 overrides>
+-- the FLTKHS event loop with the <https://hackage.haskell.org/package/reflex Reflex FRP> allowing
 -- native functional reactive programming. The sky is the limit!
 --
--- When providing custom methods the object constructor is no longer
+-- When providing custom methods, the object constructor is no longer
 -- `<widgetName>New` but `<widgetName>Custom`, which, in addition to the parameters
 -- taken by `<widgetName>New` also takes records of Haskell functions which are
 -- then passed to the C++ side.
@@ -872,10 +1120,10 @@ import Graphics.UI.FLTK.LowLevel.PNMImage
 -- display itself.
 --
 -- Again "Graphics.UI.FLTK.LowLevel.Window" can be used a motivating example.
--- Its custom constructor 'windowCustom', in fact, takes two records. A
--- 'CustomWidgetFuncs' which allows the user to override methods in its
--- "Graphics.UI.FLTK.LowLevel.Widget" parent class and also a
--- 'CustomWindowFuncs' record which allows the user to override /flush/, a
+-- Its custom constructor 'windowCustom', in fact, takes two records: a
+-- 'CustomWidgetFuncs' which allows you to override methods in its
+-- "Graphics.UI.FLTK.LowLevel.Widget" parent class, and also a
+-- 'CustomWindowFuncs' record which allows you to override /flush/, a
 -- method on the Window class which tells the window how to force a redraw. For
 -- example, the demo /src\/Examples\/doublebuffer.hs/ (which corresponds to the
 -- executable 'ftlkhs-doublebuffer') tells both windows how to draw themselves
@@ -886,7 +1134,7 @@ import Graphics.UI.FLTK.LowLevel.PNMImage
 -- record that can be passed to the constructor. For example,
 -- "Graphics.UI.FLTK.LowLevel.Widget" provides 'defaultCustomWidgetFuncs' and
 -- "Graphics.UI.FLTK.LowLevel.Window" has 'defaultCustomWindowFuncs'. In the
--- demo mentioned above the 'singleWindowCustom' function is given
+-- demo mentioned above, the 'singleWindowCustom' function is given
 -- 'defaultCustomWidgetFuncs' but with an overridden 'drawCustom'.
 --
 -- Another case where customization comes up a lot is when using
@@ -896,76 +1144,115 @@ import Graphics.UI.FLTK.LowLevel.PNMImage
 -- 'fltkhs-table-simple') shows this in action.
 --
 -- Hopefully the demos just mentioned and others included with this library show
--- that even though customizing is limited it is possible to do a lot.
+-- that, even though customizing is limited, it is possible to do a lot.
 --
--- Additionally for most customizable functions a widget provides a
+-- For most customizable functions, a widget provides a
 -- corresponding function that calls the default C++ implementation as the
--- function name suffixed with \"Super\". For instance, the user can provide a
+-- function name suffixed with \"Super\". For instance, you can provide a
 -- custom implementation of /handle/ on "Graphics.UI.FLTK.LowLevel.Window" via
 -- the constructor and every call to /handle/ invokes that implementation, but
-
--- the user can also call /handleSuper/ to get at the default C++
+-- you can also call /handleSuper/ to get at the default C++
 -- implementation. This comes in handy when the custom function is just setting
--- up variables or logging and wants underlying implementation to take over at
+-- up variables or logging and you want the underlying implementation to take over at
 -- some point.
 --
--- __Warning__: since calls to the default implementation of the function,
--- /handleSuper/, for example, are available to the widget they are
--- automatically available to all subclasses of the widget. The author
--- acknowledges this is a confusing aspect of the library's design but hopes the
--- benefit of being able to get at the default implementation out-weighs the
--- trap the user might fall into. If this becomes a pervasive problem the author
--- is open to removing this functionality.
+-- __Warning__: Since calls to the default implementation of the function
+-- /handleSuper/, for example, are available to the widget, they are
+-- automatically available to all subclasses of the widget. I
+-- acknowledge this is a confusing aspect of the library's design but hope the
+-- benefit of being able to get at the default implementation outweighs the
+-- trap users might fall into. If this becomes a pervasive problem, I'm
+-- open to removing this functionality.
 --
 
 -- $Compilation
 --
 -- As described above, the API emulates multiple dispatch using type-level
--- programming, closed type families and typeclasses. While this is makes for a
--- nice API it has also
+-- programming, closed type families, and typeclasses. While this makes for a
+-- nice API, it has also
 -- slowed down compilation of executables much more than expected.
 --
--- To clarify the time taken to compile the library itself has not changed, but
+-- To clarify, the time taken to compile the library itself has not changed, but
 -- applications that use the library to create executables are taking a lot
--- longer to compile. To further emphasize, there does not appear to be any
+-- longer to compile. To further emphasize, there do not appear to be any
 -- runtime performance issues. This is only a compile time problem.
 --
--- To preserve the user's and the author's sanity a flag `fastCompile` has been
--- introduced to the <https://github.com/deech/fltkhs-demos fltkhs-demos> and
--- to the <https://github.com/deech/fltkhs-fluid-demos fltkhs-fluid-demos>.
--- This flag which tells the compiler to skip the specialising step when
+-- To preserve your and my sanity, a flag `fastCompile` has been
+-- introduced to the <https://github.com/deech/fltkhs-hello-world skeleton>, the <https://github.com/deech/fltkhs-fluid-hello-world projects>, the <https://github.com/deech/fltkhs-demos fltkhs-demos>, and
+-- the <https://github.com/deech/fltkhs-fluid-demos fltkhs-fluid-demos>.
+-- This flag, which tells the compiler to skip some steps when
 -- compiling executables, dramatically decreases compile time but also bloats
 -- the resulting executable size and probably makes runtime performance much
 -- slower. In this package and <https://github.com/deech/fltkhs-fluid-demos fltkhs-fluid-demos>
--- it is enabled by default, since the executables are just
+-- it is enabled by default since the executables are 
 -- demos that are not meant to show off performance. To disable this flag, tell
 -- Stack to ignore it during the `build` step:
 --
 -- @
--- > stack build --flag fltkhs-demos:-fastCompile
+-- > stack build --flag fltkhs:bundled --flag fltkhs-demos:-fastCompile
 -- @
 --
 -- In the <https://github.com/deech/fltkhs-hello-world fltkhs> and the
 -- <https://github.com/deech/fltkhs-fluid-hello-world fltkhs-fluid> project
--- skeletons this flag is /disabled/ by default to provide the best runtime
+-- skeletons, this flag is /disabled/ by default to provide the best runtime
 -- performance. To enable the flag for a smoother development workflow, tell
 -- Stack to enable it during the `configure` step:
 --
 -- @
--- > stack build --flag fltkhs-hello-world:fastCompile
+-- > stack build --flag fltkhs:bundled --flag fltkhs-hello-world:fastCompile
 -- @
 --
 -- =File Layout
 -- @
 -- Root
---   - c-src            -- The C bindings
---   - c-examples       -- demos written using the C bindings (not installed)
+--   - c-src                 -- The C bindings
+--   - c-examples            -- demos written using the C bindings (not installed)
+--   - fltk-\<version\>.tar.gz -- The bundled FLTK library
 --   - src
---     - TestPrograms   -- Haskell test programs
---     - Fluid          -- The Fluid file to Haskell conversion utility
+--     - TestPrograms        -- Haskell test programs
+--     - Fluid               -- The Fluid file to Haskell conversion utility
 --     - Graphics
 --       - UI
 --         - FLTK
---           - LowLevel -- Haskell bindings
---   - scripts          -- various helper scripts (probably not interesting to anyone but the original author)
+--           - LowLevel      -- Haskell bindings
+--   - scripts               -- various helper scripts (probably not interesting to anyone but myself)
 -- @
+
+-- $REPL
+-- Running GUIs in GHCi is fully supported. Using the <https://github.com/deech/fltkhs-hello-world hello world skeleton> as
+-- an example the following steps will run it in the REPL:
+--
+-- @
+-- > git clone http://github.com/deech/fltkhs-hello-world
+-- > cd fltkhs-hello-world
+-- > stack build --flag fltkhs:bundled
+-- > stack ghci --flag fltkhs:bundled fltkhs-hello-world:exe:fltkhs-hello-world
+-- [1 of 1] Compiling Main ...
+-- Ok, modules loaded: Main ...
+-- Loaded GHCi configuration ...
+-- Prelude Main> replMain
+-- @
+--
+-- Unfortunately since FLTKHS is hybrid Haskell/C++ there are limitations compared to
+-- running a plain 'ol Haskell library on the REPL:
+--
+--    1. The 'stack build ...' is an essential first step before running 'stack
+--       ghci ...'. The reason is it uses '-fobject-code' to link in all the C++
+--       libraries which must be built first.
+--    2. The use of 'replMain' instead of just ':main' as you might expect. This
+--       is because
+--
+--            (1) it allows closing the GUI to correctly return control to
+--                the REPL prompt and
+--            (2) typing 'Ctrl-C' also correctly hands control back to the REPL.
+--
+--       With just ':main' (1) works but (2) results in a "ghosted" UI where the
+--       GUI window is still visible but unable to accept any keyboard/mouse
+--       input. The reason for the ghosted GUI is that ':main' delegates to the
+--       FLTK C++ event loop which is unable to listen for user interrupts on
+--       the Haskell side and so has no of knowing that it should destroy
+--       itself.'replMain' emulates the event loop on the Haskell side allowing
+--       it to stop, clean up and return control when it 'catch'es a
+--       'UserInterrupt'. Thus the 'replMain' is slower than the optimized C++
+--       event loop but hopefully that's not too big an impediment for REPL
+--       work.

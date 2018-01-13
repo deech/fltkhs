@@ -28,22 +28,22 @@ EXPORT {
     ~Fl_DerivedMenu_Bar();
   };
 #endif
-  FL_EXPORT_C(int,          Fl_Menu_Bar_handle)(fl_Group self, int event);
-  FL_EXPORT_C(fl_Menu_Bar,   Fl_Menu_Bar_New_WithLabel)(int x, int y, int w, int h, const char* label);
-  FL_EXPORT_C(fl_Menu_Bar   , Fl_Menu_Bar_New)(int x, int y, int w, int h);
-  FL_EXPORT_C(void   , Fl_Menu_Bar_Destroy)(fl_Menu_Bar menu_bar);
-  FL_EXPORT_C(fl_Menu_Bar,    Fl_OverriddenMenu_Bar_New)(int X, int Y, int W, int H,fl_Widget_Virtual_Funcs* fs);
-  FL_EXPORT_C(fl_Menu_Bar,    Fl_OverriddenMenu_Bar_New_WithLabel)(int X, int Y, int W, int H, const char* label, fl_Widget_Virtual_Funcs* fs);
-  FL_EXPORT_C(void, Fl_Menu_Bar_draw)(fl_Menu_Bar o);
-  FL_EXPORT_C(void, Fl_Menu_Bar_draw_super)(fl_Menu_Bar o);
-  FL_EXPORT_C(int, Fl_Menu_Bar_handle)(fl_Menu_Bar o, int event);
-  FL_EXPORT_C(int, Fl_Menu_Bar_handle_super)(fl_Menu_Bar o, int event);
-  FL_EXPORT_C(void, Fl_Menu_Bar_resize)(fl_Menu_Bar o, int x, int y, int w, int h);
-  FL_EXPORT_C(void, Fl_Menu_Bar_resize_super)(fl_Menu_Bar o, int x, int y, int w, int h);
-  FL_EXPORT_C(void, Fl_Menu_Bar_show)(fl_Menu_Bar o);
-  FL_EXPORT_C(void, Fl_Menu_Bar_show_super)(fl_Menu_Bar o);
-  FL_EXPORT_C(void, Fl_Menu_Bar_hide)(fl_Menu_Bar o);
-  FL_EXPORT_C(void, Fl_Menu_Bar_hide_super)(fl_Menu_Bar o);
+  FL_EXPORT_C_HEADER(int,Fl_Menu_Bar_handle,(fl_Group self, int event));
+  FL_EXPORT_C_HEADER(fl_Menu_Bar,Fl_Menu_Bar_New_WithLabel,(int x, int y, int w, int h, const char* label));
+  FL_EXPORT_C_HEADER(fl_Menu_Bar   ,Fl_Menu_Bar_New,(int x, int y, int w, int h));
+  FL_EXPORT_C_HEADER(void   ,Fl_Menu_Bar_Destroy,(fl_Menu_Bar menu_bar));
+  FL_EXPORT_C_HEADER(fl_Menu_Bar,Fl_OverriddenMenu_Bar_New,(int X, int Y, int W, int H,fl_Widget_Virtual_Funcs* fs));
+  FL_EXPORT_C_HEADER(fl_Menu_Bar,Fl_OverriddenMenu_Bar_New_WithLabel,(int X, int Y, int W, int H, const char* label, fl_Widget_Virtual_Funcs* fs));
+  FL_EXPORT_C_HEADER(void,Fl_Menu_Bar_draw,(fl_Menu_Bar o));
+  FL_EXPORT_C_HEADER(void,Fl_Menu_Bar_draw_super,(fl_Menu_Bar o));
+  FL_EXPORT_C_HEADER(int,Fl_Menu_Bar_handle,(fl_Menu_Bar o, int event));
+  FL_EXPORT_C_HEADER(int,Fl_Menu_Bar_handle_super,(fl_Menu_Bar o, int event));
+  FL_EXPORT_C_HEADER(void,Fl_Menu_Bar_resize,(fl_Menu_Bar o, int x, int y, int w, int h));
+  FL_EXPORT_C_HEADER(void,Fl_Menu_Bar_resize_super,(fl_Menu_Bar o, int x, int y, int w, int h));
+  FL_EXPORT_C_HEADER(void,Fl_Menu_Bar_show,(fl_Menu_Bar o));
+  FL_EXPORT_C_HEADER(void,Fl_Menu_Bar_show_super,(fl_Menu_Bar o));
+  FL_EXPORT_C_HEADER(void,Fl_Menu_Bar_hide,(fl_Menu_Bar o));
+  FL_EXPORT_C_HEADER(void,Fl_Menu_Bar_hide_super,(fl_Menu_Bar o));
 #ifdef __cplusplus
 }
 #endif

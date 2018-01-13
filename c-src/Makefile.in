@@ -2,11 +2,21 @@ FLTKCONFIG=@FLTKCONFIG@
 CXX = $(shell $(FLTKCONFIG) --cxx) $(shell $(FLTKCONFIG) --cxxflags) -Wall -DINTERNAL_LINKAGE -g -Icpp -I../
 CXXSHARED = $(CXX)
 CXXSTATIC = $(CXX) -static
+GLSUPPORT = @GLSUPPORT@
 
-CPPFILES= \
+ifdef GLSUPPORT
+	FLTKCONFIGCOMMAND = $(shell $(FLTKCONFIG) --use-images --use-glut --use-forms --use-gl --ldflags)
+	GL_FILES = \
+		glC.cpp \
+		glutC.cpp \
+		Fl_Gl_WindowC.cpp
+else
+	FLTKCONFIGCOMMAND = $(shell $(FLTKCONFIG) --use-images --use-forms --ldflags)
+endif
+
+CPPFILES= $(GL_FILES) \
 	Fl_Menu_ButtonC.cpp \
 	Fl_PositionerC.cpp \
-	Fl_TimerC.cpp \
 	Fl_Value_OutputC.cpp \
 	Fl_Value_SliderC.cpp \
 	Fl_ScrollbarC.cpp \
@@ -18,8 +28,6 @@ CPPFILES= \
 	UtilsC.cpp \
 	xC.cpp \
 	fl_utf8C.cpp \
-	glC.cpp \
-	glutC.cpp \
 	Fl_CallbackC.cpp \
 	DerivedText_Editor.cpp \
 	DerivedShared_Image.cpp \
@@ -44,7 +52,6 @@ CPPFILES= \
 	Fl_File_InputC.cpp \
 	Fl_File_ChooserC.cpp \
 	Fl_Float_InputC.cpp \
-	Fl_Gl_WindowC.cpp \
 	Fl_GroupC.cpp \
 	Fl_Hold_BrowserC.cpp \
 	Fl_Image_SurfaceC.cpp \
@@ -134,8 +141,8 @@ all: libfltkc.a libfltkc-dyn.$(SHARED_EXT)
 	test -d $(STATIC_OBJECT_FILES) || mkdir $(STATIC_OBJECT_FILES)
 	test -d $(SHARED_OBJECT_FILES) || mkdir $(SHARED_OBJECT_FILES)
 	@echo "*** Compiling $<..."
-	$(CXXSTATIC) -c $(FPIC) $^ -o $(STATIC_OBJECT_FILES)/$@
-	$(CXXSHARED) -c $(FPIC) $^ -o $(SHARED_OBJECT_FILES)/$@
+	$(CXXSTATIC)  -Wno-attributes -Wall -c $(FPIC) $^ -o $(STATIC_OBJECT_FILES)/$@
+	$(CXXSHARED)  -Wno-attributes -Wall -c $(FPIC) $^ -o $(SHARED_OBJECT_FILES)/$@
 libfltkc.a : $(OBJECTS)
 	test -d $(LIBDIR) || mkdir $(LIBDIR)
 	@echo "*** Linking $@..."
@@ -145,12 +152,12 @@ libfltkc-dyn.so : $(OBJECTS)
 	test -d $(LIBDIR) || mkdir $(LIBDIR)
 	@echo "*** Linking $@..."
 	(cd $(SHARED_OBJECT_FILES); \
-	$(CXX) $(SONAME_FLAGS),$(LIBDIR)/$@ -o $(LIBDIR)/$@ $^ $(shell $(FLTKCONFIG) --use-images --use-glut --use-forms --use-gl --ldflags));
+	$(CXX)  -Wno-attributes -Wall $(SONAME_FLAGS),$(LIBDIR)/$@ -o $(LIBDIR)/$@ $^ $(FLTKCONFIGCOMMAND));
 libfltkc-dyn.dylib: $(OBJECTS)
 	test -d $(LIBDIR) || mkdir $(LIBDIR)
 	@echo "*** Linking $@..."
 	(cd $(SHARED_OBJECT_FILES); \
-	$(CXX) $(SONAME_FLAGS),$(LIBDIR)/$@ -o $(LIBDIR)/$@ $^ -L/usr/local/lib $(shell $(FLTKCONFIG) --use-images --use-glut --use-forms --use-gl --ldflags));
+	$(CXX)  -Wno-attributes -Wall $(SONAME_FLAGS),$(LIBDIR)/$@ -o $(LIBDIR)/$@ $^ $(FLTKCONFIGCOMMAND) -L/usr/local/lib);
 clean:
 	test -d $(LIBDIR) && rm -rf $(LIBDIR)
 	test -d $(SHARED_OBJECT_FILES) && rm -rf $(SHARED_OBJECT_FILES)

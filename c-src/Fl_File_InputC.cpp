@@ -454,10 +454,10 @@ EXPORT {
   FL_EXPORT_C(void,Fl_File_Input_set_wrap)(fl_File_Input file_input,int b){
     (static_cast<Fl_File_Input*>(file_input))->wrap(b);
   }
-  FL_EXPORT_C(void,Fl_File_Input_tab_nav)(fl_File_Input file_input,int val){
+  FL_EXPORT_C(void,Fl_File_Input_set_tab_nav)(fl_File_Input file_input,int val){
     (static_cast<Fl_File_Input*>(file_input))->tab_nav(val);
   }
-  FL_EXPORT_C(int,Fl_File_Input_set_tab_nav)(fl_File_Input file_input){
+  FL_EXPORT_C(int,Fl_File_Input_tab_nav)(fl_File_Input file_input){
     return (static_cast<Fl_File_Input*>(file_input))->tab_nav();
   }
   FL_EXPORT_C(int,Fl_File_Input_set_value)(fl_File_Input file_input,const char* text){

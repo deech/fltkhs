@@ -1,11 +1,11 @@
 {-# LANGUAGE OverloadedStrings #-}
 module Main where
 
-import Graphics.UI.FLTK.LowLevel.FL
+import Graphics.UI.FLTK.LowLevel.FL as FL
 import Graphics.UI.FLTK.LowLevel.FLTKHS
 
-main :: IO ()
-main = do
+ui :: IO ()
+ui = do
      window <- windowNew
                 (Size (Width 320) (Height 170))
                 Nothing
@@ -34,5 +34,8 @@ main = do
            (Just "Fl_Check_Button")
      end window
      showWidget window
-     _ <- run
+     _ <- FL.run
      return ()
+
+main :: IO ()
+main = ui >> FL.flush

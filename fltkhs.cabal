@@ -1,8 +1,7 @@
 name : fltkhs
-version : 0.5.1.4
+version : 0.5.4.3
 synopsis : FLTK bindings
-description:
-    Low level bindings for the FLTK GUI toolkit. For installation and quick start instruction please scroll all the way down to the README.
+description: Low level bindings for the FLTK GUI toolkit. For installation and quick start instruction please scroll all the way down to the README.
 license : MIT
 license-file : LICENSE
 tested-with: GHC >=7.8.1
@@ -17,11 +16,34 @@ cabal-version: >=1.24
 source-repository head
   type: git
   location: http://github.com/deech/fltkhs
+
+Flag Bundled
+   Description: Use the bundled FLTK library.
+   Manual: True
+   Default: False
+
+Flag Opengl
+   Description: Enable OpenGL support.
+   Manual : True
+   Default: False
+
+custom-setup
+  setup-depends:
+    base >= 4.5 && < 4.11,
+    Cabal >= 1.24.1 && < 1.25,
+    filepath,
+    directory >= 1.2.3.0
+
 library
+  if flag(opengl)
+     exposed-modules:
+                   Graphics.UI.FLTK.LowLevel.Gl
+                   Graphics.UI.FLTK.LowLevel.Glut
+                   Graphics.UI.FLTK.LowLevel.GlWindow
+     cpp-options: -DGLSUPPORT
   exposed-modules:
                    Graphics.UI.FLTK.LowLevel.FLTKHS
                    Graphics.UI.FLTK.LowLevel.Ask
-                   Graphics.UI.FLTK.LowLevel.GlWindow
                    Graphics.UI.FLTK.LowLevel.SingleWindow
                    Graphics.UI.FLTK.LowLevel.Window
                    Graphics.UI.FLTK.LowLevel.DoubleWindow
@@ -76,7 +98,6 @@ library
                    Graphics.UI.FLTK.LowLevel.ValueSlider
                    Graphics.UI.FLTK.LowLevel.ValueInput
                    Graphics.UI.FLTK.LowLevel.ValueOutput
-                   Graphics.UI.FLTK.LowLevel.Timer
                    Graphics.UI.FLTK.LowLevel.Progress
                    Graphics.UI.FLTK.LowLevel.Positioner
                    Graphics.UI.FLTK.LowLevel.Input
@@ -90,7 +111,6 @@ library
                    Graphics.UI.FLTK.LowLevel.TreeItem
                    Graphics.UI.FLTK.LowLevel.Tree
                    Graphics.UI.FLTK.LowLevel.FL
-                   Graphics.UI.FLTK.LowLevel.Gl
                    Graphics.UI.FLTK.LowLevel.TextSelection
                    Graphics.UI.FLTK.LowLevel.TextBuffer
                    Graphics.UI.FLTK.LowLevel.TextDisplay
@@ -111,6 +131,7 @@ library
                    Graphics.UI.FLTK.LowLevel.XPMImage
                    Graphics.UI.FLTK.LowLevel.PNGImage
                    Graphics.UI.FLTK.LowLevel.PNMImage
+                   Graphics.UI.FLTK.LowLevel.X
   build-depends:
                 base == 4.*,
                 bytestring,
@@ -121,9 +142,10 @@ library
   include-dirs: ./c-src, ./
   default-extensions: GADTs
   default-language: Haskell2010
-  ghc-options: -Wall
+  ghc-options: -Wall -fno-warn-name-shadowing -fno-warn-orphans -fno-warn-unused-matches -fno-warn-dodgy-exports
   if impl(ghc >= 8.0.1)
      cpp-options: -DHASCALLSTACK_AVAILABLE
+     cpp-options: -DCUSTOM_TYPE_ERRORS
   else
      if impl(ghc >= 7.10.2)
        cpp-options: -DCALLSTACK_AVAILABLE
@@ -131,13 +153,6 @@ library
      cpp-options: -DOVERLAPPING_INSTANCES_DEPRECATED
   if os(darwin)
      cc-options: -U__BLOCKS__ -D_Nonnull=
-
-custom-setup
-  setup-depends:
-    base >= 4.5 && < 4.11,
-    Cabal < 1.25,
-    filepath,
-    directory
 
 Executable fltkhs-fluidtohs
   Main-Is: Main.hs
@@ -161,11 +176,11 @@ Executable fltkhs-fluidtohs
      cpp-options: -DWIN64
   if os(windows)
    ghc-Options: -optl-mwindows
-   ghc-Options: -pgml g++ "-optl-Wl,--whole-archive" "-optl-Wl,-Bstatic" "-optl-Wl,-lfltkc" "-optl-Wl,-Bdynamic" "-optl-Wl,--no-whole-archive"
+   ghc-Options: -pgml g++ "-optl-Wl,--allow-multiple-definition" "-optl-Wl,--whole-archive" "-optl-Wl,-Bstatic" "-optl-Wl,-lfltkc" "-optl-Wl,-Bdynamic" "-optl-Wl,--no-whole-archive"
   if os(darwin)
    ghc-Options: "-optl-Wl,-lfltkc"
   if !os(darwin) && !os(windows)
-   ghc-Options: -pgml g++ "-optl-Wl,--whole-archive" "-optl-Wl,-Bstatic" "-optl-Wl,-lfltkc" "-optl-Wl,-Bdynamic" "-optl-Wl,--no-whole-archive"
+   ghc-Options: -pgml g++ "-optl-Wl,--allow-multiple-definition" "-optl-Wl,--whole-archive" "-optl-Wl,-Bstatic" "-optl-Wl,-lfltkc" "-optl-Wl,-Bdynamic" "-optl-Wl,--no-whole-archive"
 
 Executable fltkhs-buttons
   Main-Is: Buttons.hs
@@ -177,8 +192,8 @@ Executable fltkhs-buttons
   ghc-Options: -Wall -threaded
   if os(windows)
     ghc-Options: -optl-mwindows
-    ghc-Options: -pgml g++ "-optl-Wl,--whole-archive" "-optl-Wl,-Bstatic" "-optl-Wl,-lfltkc" "-optl-Wl,-Bdynamic" "-optl-Wl,--no-whole-archive"
+    ghc-Options: -pgml g++ "-optl-Wl,--allow-multiple-definition" "-optl-Wl,--whole-archive" "-optl-Wl,-Bstatic" "-optl-Wl,-lfltkc" "-optl-Wl,-Bdynamic" "-optl-Wl,--no-whole-archive"
   if os(darwin)
     ghc-Options: "-optl-Wl,-lfltkc"
   if !os(darwin) && !os(windows)
-    ghc-Options: -pgml g++ "-optl-Wl,--whole-archive" "-optl-Wl,-Bstatic" "-optl-Wl,-lfltkc" "-optl-Wl,-Bdynamic" "-optl-Wl,--no-whole-archive"
+   ghc-Options: -pgml g++ "-optl-Wl,--allow-multiple-definition" "-optl-Wl,--whole-archive" "-optl-Wl,-Bstatic" "-optl-Wl,-lfltkc" "-optl-Wl,-Bdynamic" "-optl-Wl,--no-whole-archive"

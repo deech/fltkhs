@@ -1,4 +1,6 @@
 {-# LANGUAGE ScopedTypeVariables #-}
+{-# OPTIONS_GHC -fno-warn-name-shadowing #-}
+{-# OPTIONS_GHC -fno-warn-type-defaults #-}
 module Generate
        (typeToHs,
         typicalConstructorG,
@@ -284,7 +286,7 @@ menuItemCode mn menuItemName label flags menuPath restAttrs =
                              (\(Shortcut s) ->
                                  maybe
                                  (shortcutCode  "Nothing")
-                                 (\ks -> shortcutCode (show ks))
+                                 (\ks -> shortcutCode ("Just (KeySequence (" ++ show ks ++ "))"))
                                  (cIntToKeySequence ((read s) :: CInt)))
                              (shortcutCode "Nothing")
                              False

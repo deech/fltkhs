@@ -39,30 +39,30 @@ EXPORT {
     ERR_FORMAT      = -3
   } Image_Fail_Type;
 #endif
-  FL_EXPORT_C(fl_Image_Virtual_Funcs*, Fl_Image_default_virtual_funcs)();
-  FL_EXPORT_C(void*, Fl_Image_other_data)(fl_Image image);
-  FL_EXPORT_C(void, Fl_Image_set_other_data)(fl_Image image, void* v);
-  FL_EXPORT_C(fl_Image, Fl_Image_New)(int W, int H, int D);
-  FL_EXPORT_C(fl_Image, Fl_OverriddenImage_New)(int W, int H, int D, fl_Image_Virtual_Funcs* fs);
-  FL_EXPORT_C(void, Fl_Image_Destroy)(fl_Image image);
-  FL_EXPORT_C(int, Fl_Image_w)(fl_Image image);
-  FL_EXPORT_C(int, Fl_Image_h)(fl_Image image);
-  FL_EXPORT_C(int, Fl_Image_d)(fl_Image image);
-  FL_EXPORT_C(int, Fl_Image_ld)(fl_Image image);
-  FL_EXPORT_C(int, Fl_Image_count)(fl_Image image);
-  FL_EXPORT_C(fl_Image, Fl_Image_copy_with_w_h)(fl_Image image,int W, int H);
-  FL_EXPORT_C(fl_Image, Fl_Image_copy)(fl_Image image);
-  FL_EXPORT_C(void, Fl_Image_color_average)(fl_Image image,Fl_Color c, float i);
-  FL_EXPORT_C(void, Fl_Image_inactive)(fl_Image image);
-  FL_EXPORT_C(void, Fl_Image_desaturate)(fl_Image image);
-  FL_EXPORT_C(void, Fl_Image_draw_with_cx_cy)(fl_Image image,int X, int Y, int W, int H, int cx, int cy);
-  FL_EXPORT_C(void, Fl_Image_draw_with_cx)(fl_Image image,int X, int Y, int W, int H, int cx);
-  FL_EXPORT_C(void, Fl_Image_draw_with_cy)(fl_Image image,int X, int Y, int W, int H, int cy);
-  FL_EXPORT_C(void,Fl_Image_draw_with)(fl_Image image,int X,int Y,int W,int H);
-  FL_EXPORT_C(void, Fl_Image_draw)(fl_Image image,int X, int Y);
-  FL_EXPORT_C(void, Fl_Image_uncache)(fl_Image image);
-#if FL_API_VERSION == 10304
-  FL_EXPORT_C(int, Fl_Image_fail)(fl_Image image);
+  FL_EXPORT_C_HEADER(fl_Image_Virtual_Funcs*,Fl_Image_default_virtual_funcs,());
+  FL_EXPORT_C_HEADER(void*,Fl_Image_other_data,(fl_Image image));
+  FL_EXPORT_C_HEADER(void,Fl_Image_set_other_data,(fl_Image image, void* v));
+  FL_EXPORT_C_HEADER(fl_Image,Fl_Image_New,(int W, int H, int D));
+  FL_EXPORT_C_HEADER(fl_Image,Fl_OverriddenImage_New,(int W, int H, int D, fl_Image_Virtual_Funcs* fs));
+  FL_EXPORT_C_HEADER(void,Fl_Image_Destroy,(fl_Image image));
+  FL_EXPORT_C_HEADER(int,Fl_Image_w,(fl_Image image));
+  FL_EXPORT_C_HEADER(int,Fl_Image_h,(fl_Image image));
+  FL_EXPORT_C_HEADER(int,Fl_Image_d,(fl_Image image));
+  FL_EXPORT_C_HEADER(int,Fl_Image_ld,(fl_Image image));
+  FL_EXPORT_C_HEADER(int,Fl_Image_count,(fl_Image image));
+  FL_EXPORT_C_HEADER(fl_Image,Fl_Image_copy_with_w_h,(fl_Image image,int W, int H));
+  FL_EXPORT_C_HEADER(fl_Image,Fl_Image_copy,(fl_Image image));
+  FL_EXPORT_C_HEADER(void,Fl_Image_color_average,(fl_Image image,Fl_Color c, float i));
+  FL_EXPORT_C_HEADER(void,Fl_Image_inactive,(fl_Image image));
+  FL_EXPORT_C_HEADER(void,Fl_Image_desaturate,(fl_Image image));
+  FL_EXPORT_C_HEADER(void,Fl_Image_draw_with_cx_cy,(fl_Image image,int X, int Y, int W, int H, int cx, int cy));
+  FL_EXPORT_C_HEADER(void,Fl_Image_draw_with_cx,(fl_Image image,int X, int Y, int W, int H, int cx));
+  FL_EXPORT_C_HEADER(void,Fl_Image_draw_with_cy,(fl_Image image,int X, int Y, int W, int H, int cy));
+  FL_EXPORT_C_HEADER(void,Fl_Image_draw_with,(fl_Image image,int X,int Y,int W,int H));
+  FL_EXPORT_C_HEADER(void,Fl_Image_draw,(fl_Image image,int X, int Y));
+  FL_EXPORT_C_HEADER(void,Fl_Image_uncache,(fl_Image image));
+#if FL_API_VERSION >= 10304
+  FL_EXPORT_C_HEADER(int,Fl_Image_fail,(fl_Image image));
 #endif
 #ifdef __cplusplus
 }

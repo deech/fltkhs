@@ -74,7 +74,6 @@ data CustomWidgetFuncs a =
     ,hideCustom   :: Maybe (Ref a -> IO ())
     }
 
-
 -- | Fill up a struct with pointers to functions on the Haskell side that will get called instead of the default ones.
 --
 -- Fill up the 'Widget' part the function pointer struct.
@@ -280,14 +279,14 @@ instance (impl ~ (IO (FontSize))) => Op (GetLabelsize ()) Widget orig impl where
 {# fun Fl_Widget_set_labelsize as setLabelsize' { id `Ptr ()',id `CInt' } -> `()' supressWarningAboutRes #}
 instance (impl ~ ( FontSize ->  IO ())) => Op (SetLabelsize ()) Widget orig impl where
   runOp _ _ widget (FontSize pix) = withRef widget $ \widgetPtr -> setLabelsize' widgetPtr pix
-{# fun Fl_Widget_image as image' { id `Ptr ()' } -> `(Ref Image)' unsafeToRef #}
-instance (impl ~ (IO (Ref Image))) => Op (GetImage ()) Widget orig impl where
+{# fun Fl_Widget_image as image' { id `Ptr ()' } -> `Maybe (Ref Image)' unsafeToMaybeRef #}
+instance (impl ~ (IO (Maybe (Ref Image)))) => Op (GetImage ()) Widget orig impl where
   runOp _ _ widget = withRef widget $ \widgetPtr -> image' widgetPtr
 {# fun Fl_Widget_set_image as setImage' { id `Ptr ()',id `Ptr ()'} -> `()' supressWarningAboutRes #}
 instance (Parent a Image, impl ~ (Maybe( Ref a ) ->  IO ())) => Op (SetImage ()) Widget orig impl where
   runOp _ _ widget pix = withRef widget $ \widgetPtr -> withMaybeRef pix $ \pixPtr -> setImage' widgetPtr pixPtr
-{# fun Fl_Widget_deimage as deimage' { id `Ptr ()' } -> `(Ref Image)' unsafeToRef #}
-instance (impl ~ (IO (Ref Image))) => Op (GetDeimage ()) Widget orig impl where
+{# fun Fl_Widget_deimage as deimage' { id `Ptr ()' } -> `Maybe (Ref Image)' unsafeToMaybeRef #}
+instance (impl ~ (IO (Maybe (Ref Image)))) => Op (GetDeimage ()) Widget orig impl where
   runOp _ _ widget = withRef widget $ \widgetPtr -> deimage' widgetPtr
 {# fun Fl_Widget_set_deimage as setDeimage' { id `Ptr ()',id `Ptr ()'} -> `()' supressWarningAboutRes #}
 instance (Parent a Image, impl ~ (Maybe( Ref a ) ->  IO ())) => Op (SetDeimage ()) Widget orig impl where
@@ -391,11 +390,13 @@ instance (impl ~ ( Int ->  IO ())) => Op (ModifyVisibleFocus ()) Widget orig imp
 instance (impl ~ (IO (Bool))) => Op (GetVisibleFocus ()) Widget orig impl where
   runOp _ _ widget = withRef widget $ \widgetPtr -> visibleFocus' widgetPtr
 {# fun Fl_Widget_contains as contains' { id `Ptr ()',id `Ptr ()' } -> `Int' #}
-instance (Parent a Widget, impl ~  (Ref a ->  IO Int)) => Op (Contains ()) Widget orig impl where
-  runOp _ _ widget otherWidget = withRef widget $ \widgetPtr -> withRef otherWidget $ \otherWidgetPtr -> contains' widgetPtr otherWidgetPtr
+instance (Parent a Widget, impl ~  (Ref a ->  IO Bool)) => Op (Contains ()) Widget orig impl where
+  runOp _ _ widget otherWidget = withRef widget $ \widgetPtr -> withRef otherWidget $ \otherWidgetPtr ->
+    contains' widgetPtr otherWidgetPtr >>= return . cToBool
 {# fun Fl_Widget_inside as inside' { id `Ptr ()',id `Ptr ()' } -> `Int' #}
-instance (Parent a Widget, impl ~ (Ref a -> IO (Int))) => Op (Inside ()) Widget orig impl where
-  runOp _ _ widget otherWidget = withRef widget $ \widgetPtr -> withRef otherWidget $ \otherWidgetPtr -> inside' widgetPtr otherWidgetPtr
+instance (Parent a Widget, impl ~ (Ref a -> IO (Bool))) => Op (Inside ()) Widget orig impl where
+  runOp _ _ widget otherWidget = withRef widget $ \widgetPtr -> withRef otherWidget $ \otherWidgetPtr ->
+    inside' widgetPtr otherWidgetPtr >>= return . cToBool
 {# fun Fl_Widget_redraw as redraw' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
 instance (impl ~ (IO ())) => Op (Redraw ()) Widget orig impl where
   runOp _ _ widget = withRef widget $ \widgetPtr -> redraw' widgetPtr
@@ -403,22 +404,24 @@ instance (impl ~ (IO ())) => Op (Redraw ()) Widget orig impl where
 instance (impl ~ (IO ())) => Op (RedrawLabel ()) Widget orig impl where
   runOp _ _ widget = withRef widget $ \widgetPtr -> redrawLabel' widgetPtr
 {# fun Fl_Widget_damage as damage' { id `Ptr ()' } -> `Word8' #}
-instance (impl ~ (IO (Word8))) => Op (GetDamage ()) Widget orig impl where
-  runOp _ _ widget = withRef widget $ \widgetPtr -> damage' widgetPtr
+instance (impl ~ (IO ([Damage]))) => Op (GetDamage ()) Widget orig impl where
+  runOp _ _ widget = withRef widget $ \widgetPtr -> do
+    d <- damage' widgetPtr
+    return (extract allDamages (fromIntegral d))
 {# fun Fl_Widget_clear_damage_with_bitmask as clearDamageWithBitmask' { id `Ptr ()',`Word8' } -> `()' supressWarningAboutRes #}
-instance (impl ~ ( Word8 ->  IO ())) => Op (ClearDamageWithBitmask ()) Widget orig impl where
-  runOp _ _ widget c = withRef widget $ \widgetPtr -> clearDamageWithBitmask' widgetPtr c
+instance (impl ~ ( [Damage] ->  IO ())) => Op (ClearDamageExcept ()) Widget orig impl where
+  runOp _ _ widget damages = withRef widget $ \widgetPtr -> clearDamageWithBitmask' widgetPtr (fromIntegral (combine damages))
 {# fun Fl_Widget_clear_damage as clearDamage' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
 instance (impl ~ (IO ())) => Op (ClearDamage ()) Widget orig impl where
   runOp _ _ widget = withRef widget $ \widgetPtr -> clearDamage' widgetPtr
 {# fun Fl_Widget_damage_with_text as damageWithText' { id `Ptr ()',`Word8' } -> `()' supressWarningAboutRes #}
-instance (impl ~ ( Word8 ->  IO ())) => Op (GetDamageWithText ()) Widget orig impl where
-  runOp _ _ widget c = withRef widget $ \widgetPtr -> damageWithText' widgetPtr c
+instance (impl ~ ( [Damage] ->  IO ())) => Op (SetDamage ()) Widget orig impl where
+  runOp _ _ widget damages = withRef widget $ \widgetPtr -> damageWithText' widgetPtr (fromIntegral (combine damages))
 {# fun Fl_Widget_damage_inside_widget as damageInsideWidget' { id `Ptr ()',`Word8',`Int',`Int',`Int',`Int' } -> `()' supressWarningAboutRes #}
-instance (impl ~ ( Word8 -> Rectangle ->  IO ())) => Op (GetDamageInsideWidget ()) Widget orig impl where
-  runOp _ _ widget c rectangle = withRef widget $ \widgetPtr -> do
+instance (impl ~ ( [Damage] -> Rectangle ->  IO ())) => Op (SetDamageInside ()) Widget orig impl where
+  runOp _ _ widget damages rectangle = withRef widget $ \widgetPtr -> do
     let (x_pos,y_pos,w_pos,h_pos) = fromRectangle rectangle
-    damageInsideWidget' widgetPtr c x_pos y_pos w_pos h_pos
+    damageInsideWidget' widgetPtr (fromIntegral (combine damages)) x_pos y_pos w_pos h_pos
 {# fun Fl_Widget_measure_label as measureLabel' {id `Ptr ()',alloca- `Int' peekIntConv*, alloca- `Int' peekIntConv*} -> `()' #}
 instance (impl ~ ( IO (Size))) => Op (MeasureLabel ()) Widget orig impl where
   runOp _ _ widget = withRef widget $ \widgetPtr -> measureLabel' widgetPtr >>= \(width, height) -> return $ Size (Width width) (Height height)
@@ -480,7 +483,6 @@ instance (impl ~ ( Maybe (Boxtype, Rectangle) -> IO ())) => Op (DrawFocus ()) Wi
 
 -- $widgetfunctions
 -- @
---
 -- activate :: 'Ref' 'Widget' -> 'IO' ()
 --
 -- active :: 'Ref' 'Widget' -> 'IO' ('Bool')
@@ -495,7 +497,7 @@ instance (impl ~ ( Maybe (Boxtype, Rectangle) -> IO ())) => Op (DrawFocus ()) Wi
 --
 -- clearDamage :: 'Ref' 'Widget' -> 'IO' ()
 --
--- clearDamageWithBitmask :: 'Ref' 'Widget' -> 'Word8' -> 'IO' ()
+-- clearDamageExcept :: 'Ref' 'Widget' -> ['Damage'] -> 'IO' ()
 --
 -- clearOutput :: 'Ref' 'Widget' -> 'IO' ()
 --
@@ -503,7 +505,7 @@ instance (impl ~ ( Maybe (Boxtype, Rectangle) -> IO ())) => Op (DrawFocus ()) Wi
 --
 -- clearVisibleFocus :: 'Ref' 'Widget' -> 'IO' ()
 --
--- contains:: ('Parent' a 'Widget') => 'Ref' 'Widget' -> 'Ref' a -> 'IO' 'Int'
+-- contains:: ('Parent' a 'Widget') => 'Ref' 'Widget' -> 'Ref' a -> 'IO' 'Bool'
 --
 -- copyLabel :: 'Ref' 'Widget' -> 'T.Text' -> 'IO' ()
 --
@@ -531,17 +533,13 @@ instance (impl ~ ( Maybe (Boxtype, Rectangle) -> IO ())) => Op (DrawFocus ()) Wi
 --
 -- getColor :: 'Ref' 'Widget' -> 'IO' ('Color')
 --
--- getDamage :: 'Ref' 'Widget' -> 'IO' ('Word8')
+-- getDamage :: 'Ref' 'Widget' -> 'IO' (['Damage')]
 --
--- getDamageInsideWidget :: 'Ref' 'Widget' -> 'Word8' -> 'Rectangle' -> 'IO' ()
---
--- getDamageWithText :: 'Ref' 'Widget' -> 'Word8' -> 'IO' ()
---
--- getDeimage :: 'Ref' 'Widget' -> 'IO' ('Ref' 'Image')
+-- getDeimage :: 'Ref' 'Widget' -> 'IO' ('Maybe' ('Ref' 'Image'))
 --
 -- getH :: 'Ref' 'Widget' -> 'IO' ('Int')
 --
--- getImage :: 'Ref' 'Widget' -> 'IO' ('Ref' 'Image')
+-- getImage :: 'Ref' 'Widget' -> 'IO' ('Maybe' ('Ref' 'Image'))
 --
 -- getLabel :: 'Ref' 'Widget' -> 'IO' 'T.Text'
 --
@@ -585,7 +583,7 @@ instance (impl ~ ( Maybe (Boxtype, Rectangle) -> IO ())) => Op (DrawFocus ()) Wi
 --
 -- getY :: 'Ref' 'Widget' -> 'IO' ('Int')
 --
--- handle :: 'Ref' 'Widget' -> ('Event' -> 'IO' ('Either' 'UnknownEvent' ()))
+-- handle :: 'Ref' 'Widget' -> 'Event' -> 'IO' ('Either' 'UnknownEvent' ())
 --
 -- hasCallback :: 'Ref' 'Widget' -> 'IO' ('Bool')
 --
@@ -593,7 +591,7 @@ instance (impl ~ ( Maybe (Boxtype, Rectangle) -> IO ())) => Op (DrawFocus ()) Wi
 --
 -- hideSuper :: 'Ref' 'Widget' -> 'IO' ()
 --
--- inside:: ('Parent' a 'Widget') => 'Ref' 'Widget' -> 'Ref' a -> 'IO' ('Int')
+-- inside:: ('Parent' a 'Widget') => 'Ref' 'Widget' -> 'Ref' a -> 'IO' ('Bool')
 --
 -- measureLabel :: 'Ref' 'Widget' -> 'IO' ('Size')
 --
@@ -620,6 +618,10 @@ instance (impl ~ ( Maybe (Boxtype, Rectangle) -> IO ())) => Op (DrawFocus ()) Wi
 -- setColor :: 'Ref' 'Widget' -> 'Color' -> 'IO' ()
 --
 -- setColorWithBgSel :: 'Ref' 'Widget' -> 'Color' -> 'Color' -> 'IO' ()
+--
+-- setDamage :: 'Ref' 'Widget' -> ['Damage'] -> 'IO' ()
+--
+-- setDamageInside :: 'Ref' 'Widget' -> ['Damage'] -> 'Rectangle' -> 'IO' ()
 --
 -- setDeimage:: ('Parent' a 'Image') => 'Ref' 'Widget' -> 'Maybe'( 'Ref' a ) -> 'IO' ()
 --

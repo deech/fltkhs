@@ -249,27 +249,18 @@ data WrapType = WrapNone | WrapAtColumn ColumnNumber | WrapAtPixel PixelPosition
 data StyleTableEntry = StyleTableEntry (Maybe Color) (Maybe Font) (Maybe FontSize) deriving Show
 
 {#enum PackType{} deriving (Show, Eq, Ord) #}
-
-data GLUTproc = GLUTproc {#type GLUTproc#} deriving Show
-newtype GLUTIdleFunction = GLUTIdleFunction (FunPtr (IO ()))
-newtype GLUTMenuStateFunction = GLUTMenuStateFunction (FunPtr (CInt -> IO()))
-newtype GLUTMenuStatusFunction = GLUTMenuStatusFunction
-                                     (FunPtr (CInt -> CInt -> CInt -> IO ()))
-{#pointer *Fl_Glut_Bitmap_Font as GlutBitmapFontPtr newtype #}
-{#pointer *Fl_Glut_StrokeVertex as GlutStrokeVertexPtr newtype#}
-{#pointer *Fl_Glut_StrokeStrip as GlutStrokeStripPtr newtype#}
-{#pointer *Fl_Glut_StrokeFont as GlutStrokeFontPtr newtype#}
-type FlShortcut = {#type Fl_Shortcut #}
-type FlColor    = {#type Fl_Color #}
-type FlFont     = {#type Fl_Font #}
-type FlAlign    = {#type Fl_Align #}
-type LineDelta  = Maybe Int
-type Delta      = Maybe Int
-type FlIntPtr   = {#type fl_intptr_t #}
-type FlUIntPtr  = {#type fl_uintptr_t#}
-type ID         = {#type ID#}
-data Ref a      = Ref !(ForeignPtr (Ptr ())) deriving (Eq, Show)
-data FunRef     = FunRef !(FunPtr ())
+type FlShortcut      = {#type Fl_Shortcut #}
+type FlColor         = {#type Fl_Color #}
+type FlFont          = {#type Fl_Font #}
+type FlAlign         = {#type Fl_Align #}
+type LineDelta       = Maybe Int
+type Delta           = Maybe Int
+type FlIntPtr        = {#type fl_intptr_t #}
+type FlUIntPtr       = {#type fl_uintptr_t#}
+type ID              = {#type ID#}
+newtype WindowHandle = WindowHandle (Ptr ())
+data Ref a           = Ref !(ForeignPtr (Ptr ())) deriving (Eq, Show)
+data FunRef          = FunRef !(FunPtr ())
 -- * The FLTK widget hierarchy
 data CBase parent
 type Base = CBase ()
@@ -351,6 +342,12 @@ newtype FontSize = FontSize CInt deriving Show
 newtype PixmapHs = PixmapHs [T.Text] deriving Show
 data BitmapHs = BitmapHs B.ByteString Size deriving Show
 data Clipboard = InternalClipboard | SharedClipboard deriving Show
+data OutOfRangeOrNotSubmenu = OutOfRangeOrNotSubmenu deriving Show
+successOrOutOfRangeOrNotSubmenu :: Int -> Either OutOfRangeOrNotSubmenu ()
+successOrOutOfRangeOrNotSubmenu status = if (status == (-1)) then Left OutOfRangeOrNotSubmenu else Right ()
+data AwakeRingFull = AwakeRingFull deriving Show
+successOrAwakeRingFull :: Int -> Either AwakeRingFull ()
+successOrAwakeRingFull status = if (status == (-1)) then Left AwakeRingFull else Right ()
 data UnknownEvent = UnknownEvent deriving Show
 successOrUnknownEvent :: Int -> Either UnknownEvent ()
 successOrUnknownEvent status = if (status == 0) then Left UnknownEvent else Right ()
@@ -411,7 +408,7 @@ withForeignPtrs fptrs io = do
 
 #ifdef CALLSTACK_AVAILABLE
 toRefPtr :: (?loc :: CallStack) => Ptr (Ptr a) -> IO (Ptr a)
-#elif HASCALLSTACK_AVAILABLE
+#elif defined(HASCALLSTACK_AVAILABLE)
 toRefPtr :: HasCallStack => Ptr (Ptr a) -> IO (Ptr a)
 #else
 toRefPtr :: Ptr (Ptr a) -> IO (Ptr a)
@@ -421,7 +418,7 @@ toRefPtr ptrToRefPtr = do
   if (refPtr == nullPtr)
 #ifdef CALLSTACK_AVAILABLE
    then error $ "Ref does not exist. " ++ (showCallStack ?loc)
-#elif HASCALLSTACK_AVAILABLE
+#elif defined(HASCALLSTACK_AVAILABLE)
    then error $ "Ref does not exist. " ++ (prettyCallStack callStack)
 #else
    then error "Ref does not exist. "
@@ -430,7 +427,7 @@ toRefPtr ptrToRefPtr = do
 
 #ifdef CALLSTACK_AVAILABLE
 withRef :: (?loc :: CallStack) => Ref a -> (Ptr b -> IO c) -> IO c
-#elif HASCALLSTACK_AVAILABLE
+#elif defined(HASCALLSTACK_AVAILABLE)
 withRef :: HasCallStack => Ref a -> (Ptr b -> IO c) -> IO c
 #else
 withRef :: Ref a -> (Ptr b -> IO c) -> IO c
@@ -445,21 +442,31 @@ withRef (Ref fptr) f =
 
 isNull :: Ref a -> IO Bool
 isNull (Ref fptr) =
-  withForeignPtr fptr $
+  withForeignPtr fptr
    (\ptrToRefPtr -> do
         refPtr <- peek ptrToRefPtr
-        if (refPtr == nullPtr)
-          then return True
-          else return False
+        return (refPtr == nullPtr)
    )
 
+#ifdef CALLSTACK_AVAILABLE
+unsafeRefToPtr :: (?loc :: CallStack) => Ref a -> IO (Ptr ())
+#elif defined(HASCALLSTACK_AVAILABLE)
+unsafeRefToPtr :: HasCallStack => Ref a -> IO (Ptr ())
+#else
 unsafeRefToPtr :: Ref a -> IO (Ptr ())
+#endif
 unsafeRefToPtr (Ref fptr) =
     throwStackOnError $ do
       refPtr <- toRefPtr $ Unsafe.unsafeForeignPtrToPtr fptr
       return $ castPtr refPtr
 
+#ifdef CALLSTACK_AVAILABLE
+withRefs :: (?loc :: CallStack) => [Ref a] -> (Ptr (Ptr b) -> IO c) -> IO c
+#elif HASCALLSTACK_AVAILABLE
+withRefs :: HasCallStack => [Ref a] -> (Ptr (Ptr b) -> IO c) -> IO c
+#else
 withRefs :: [Ref a] -> (Ptr (Ptr b) -> IO c) -> IO c
+#endif
 withRefs refs f =
   throwStackOnError
   $ withForeignPtrs
@@ -487,3 +494,10 @@ toFunRef fptr = FunRef $ castFunPtr fptr
 
 fromFunRef :: FunRef -> (FunPtr ())
 fromFunRef (FunRef f) = castFunPtr f
+
+refPtrEquals :: Ref a -> Ref b -> IO Bool
+refPtrEquals w1 w2 = do
+  w1Null <- isNull w1
+  w2Null <- isNull w2
+  if (w1Null || w2Null) then return False
+    else withRef w1 (\w1Ptr -> withRef w2 (\w2Ptr -> return (w1Ptr == w2Ptr)))

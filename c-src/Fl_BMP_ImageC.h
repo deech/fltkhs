@@ -6,7 +6,7 @@
 #include "Fl_CallbackC.h"
 EXPORT {
 #endif
-  FL_EXPORT_C(fl_BMP_Image, Fl_BMP_Image_New)(const char* filename);
+  FL_EXPORT_C_HEADER(fl_BMP_Image,Fl_BMP_Image_New,(const char* filename));
 #ifdef __cplusplus
 }
 #endif

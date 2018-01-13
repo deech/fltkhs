@@ -21,22 +21,22 @@ EXPORT {
   } Fl_Beep;
 #endif
 
-  FL_EXPORT_C(void,flc_beep)();
-  FL_EXPORT_C(void,flc_beep_with_type)(int type);
-  FL_EXPORT_C(void,flc_message)(const char* message);
-  FL_EXPORT_C(void,flc_message_with_args)(const char* fmt,const char* arg1,const char* arg2,const char* arg3,const char* arg4,const char* arg5,const char* arg6,const char* arg7,const char* arg8,const char* arg9,const char* arg10);
-  FL_EXPORT_C(void,flc_alert)(const char* alert);
-  FL_EXPORT_C(void,flc_alert_with_args)(const char* fmt,const char* arg1,const char* arg2,const char* arg3,const char* arg4,const char* arg5,const char* arg6,const char* arg7,const char* arg8,const char* arg9,const char* arg10);
-  FL_EXPORT_C(int,flc_choice)(const char *q,const char *b0,const char *b1,const char *b2);
-  FL_EXPORT_C(int,flc_choice_with_args)(const char *q,const char *b0,const char *b1,const char *b2,const char* arg1,const char* arg2,const char* arg3,const char* arg4,const char* arg5,const char* arg6,const char* arg7,const char* arg8,const char* arg9,const char* arg10);
-  FL_EXPORT_C(const char*,flc_input)(const char *label);
-  FL_EXPORT_C(const char*,flc_input_with_deflt)(const char *label,const char* deflt);
-  FL_EXPORT_C(const char*,flc_input_with_args)(const char *label,const char* arg1,const char* arg2,const char* arg3,const char* arg4,const char* arg5,const char* arg6,const char* arg7,const char* arg8,const char* arg9,const char* arg10);
-  FL_EXPORT_C(const char *,flc_input_with_args_deflt)(const char *label,const char *deflt,const char* arg1,const char* arg2,const char* arg3,const char* arg4,const char* arg5,const char* arg6,const char* arg7,const char* arg8,const char* arg9,const char* arg10);
-  FL_EXPORT_C(const char *,flc_password)(const char *label);
-  FL_EXPORT_C(const char *,flc_password_with_deflt)(const char *label,const char* deflt);
-  FL_EXPORT_C(const char *,flc_password_with_args)(const char *label,const char* arg1,const char* arg2,const char* arg3,const char* arg4,const char* arg5,const char* arg6,const char* arg7,const char* arg8,const char* arg9,const char* arg10);
-  FL_EXPORT_C(const char *,flc_password_with_args_deflt)(const char *label,const char *deflt,const char* arg1,const char* arg2,const char* arg3,const char* arg4,const char* arg5,const char* arg6,const char* arg7,const char* arg8,const char* arg9,const char* arg10);
+  FL_EXPORT_C_HEADER(void,flc_beep,());
+  FL_EXPORT_C_HEADER(void,flc_beep_with_type,(int type));
+  FL_EXPORT_C_HEADER(void,flc_message,(const char* message));
+  FL_EXPORT_C_HEADER(void,flc_message_with_args,(const char* fmt,const char* arg1,const char* arg2,const char* arg3,const char* arg4,const char* arg5,const char* arg6,const char* arg7,const char* arg8,const char* arg9,const char* arg10));
+  FL_EXPORT_C_HEADER(void,flc_alert,(const char* alert));
+  FL_EXPORT_C_HEADER(void,flc_alert_with_args,(const char* fmt,const char* arg1,const char* arg2,const char* arg3,const char* arg4,const char* arg5,const char* arg6,const char* arg7,const char* arg8,const char* arg9,const char* arg10));
+  FL_EXPORT_C_HEADER(int,flc_choice,(const char *q,const char *b0,const char *b1,const char *b2));
+  FL_EXPORT_C_HEADER(int,flc_choice_with_args,(const char *q,const char *b0,const char *b1,const char *b2,const char* arg1,const char* arg2,const char* arg3,const char* arg4,const char* arg5,const char* arg6,const char* arg7,const char* arg8,const char* arg9,const char* arg10));
+  FL_EXPORT_C_HEADER(const char*,flc_input,(const char *label));
+  FL_EXPORT_C_HEADER(const char*,flc_input_with_deflt,(const char *label,const char* deflt));
+  FL_EXPORT_C_HEADER(const char*,flc_input_with_args,(const char *label,const char* arg1,const char* arg2,const char* arg3,const char* arg4,const char* arg5,const char* arg6,const char* arg7,const char* arg8,const char* arg9,const char* arg10));
+  FL_EXPORT_C_HEADER(const char *,flc_input_with_args_deflt,(const char *label,const char *deflt,const char* arg1,const char* arg2,const char* arg3,const char* arg4,const char* arg5,const char* arg6,const char* arg7,const char* arg8,const char* arg9,const char* arg10));
+  FL_EXPORT_C_HEADER(const char *,flc_password,(const char *label));
+  FL_EXPORT_C_HEADER(const char *,flc_password_with_deflt,(const char *label,const char* deflt));
+  FL_EXPORT_C_HEADER(const char *,flc_password_with_args,(const char *label,const char* arg1,const char* arg2,const char* arg3,const char* arg4,const char* arg5,const char* arg6,const char* arg7,const char* arg8,const char* arg9,const char* arg10));
+  FL_EXPORT_C_HEADER(const char *,flc_password_with_args_deflt,(const char *label,const char *deflt,const char* arg1,const char* arg2,const char* arg3,const char* arg4,const char* arg5,const char* arg6,const char* arg7,const char* arg8,const char* arg9,const char* arg10));
 #ifdef __cplusplus
 }
 #endif

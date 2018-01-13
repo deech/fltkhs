@@ -1,17 +1,21 @@
 {-# LANGUAGE CPP, ExistentialQuantification, TypeSynonymInstances, FlexibleInstances, MultiParamTypeClasses, FlexibleContexts, ScopedTypeVariables #-}
+
 module Graphics.UI.FLTK.LowLevel.FL
     (
      Option(..),
+     ClipboardContents(..),
+     PasteSource(..),
      scrollbarSize,
      setScrollbarSize,
      selectionOwner,
      setSelectionOwner,
      run,
+     replRun,
      check,
      ready,
      option,
      setOption,
-     addAwakeHandler,
+     addAwakeHandler_,
      getAwakeHandler_,
      display,
      ownColormap,
@@ -20,6 +24,8 @@ module Graphics.UI.FLTK.LowLevel.FL
      background,
      background2,
      setScheme,
+     getScheme,
+     reloadScheme,
      isScheme,
      setFirstWindow,
      nextWindow,
@@ -56,13 +62,13 @@ module Graphics.UI.FLTK.LowLevel.FL
      version,
      help,
      visual,
-#if !defined(__APPLE__)
+#if !defined(__APPLE__) && defined(GLSUPPORT)
      glVisual,
      glVisualWithAlist,
 #endif
-     scheme,
      wait,
      setWait,
+     waitFor,
      readqueue,
      addTimeout,
      repeatTimeout,
@@ -116,10 +122,9 @@ module Graphics.UI.FLTK.LowLevel.FL
      getFontName,
      getFont,
      getFontSizes,
-     setFontByString,
-     setFontByFont,
+     setFontToString,
+     setFontToFont,
      setFonts,
-     setFontsWithString,
      -- * File Descriptor Callbacks
      addFd,
      addFdWhen,
@@ -157,20 +162,26 @@ module Graphics.UI.FLTK.LowLevel.FL
      setEventDispatch,
      eventText,
      eventLength,
-#if FL_API_VERSION == 10304
+     eventClipboardContents,
+#if FLTK_API_VERSION >= 10304
      setBoxColor,
      boxColor,
      abiVersion,
      apiVersion,
+     abiCheck,
      localCtrl,
      localMeta,
      localAlt,
      localShift
+#ifdef GLSUPPORT
+     , useHighResGL
+     , setUseHighResGL
+#endif
 #endif
     )
 where
 #include "Fl_C.h"
-import C2HS hiding (cFromEnum, cToBool,cToEnum)
+import C2HS hiding (cFromEnum, cToBool,cToEnum,cFromBool)
 import Data.IORef
 
 import Graphics.UI.FLTK.LowLevel.Fl_Enumerations
@@ -193,6 +204,7 @@ import Graphics.UI.FLTK.LowLevel.Dispatch
 import qualified Data.Text as T
 import qualified Data.Text.Foreign as TF
 import qualified System.IO.Unsafe as Unsafe (unsafePerformIO)
+import Control.Exception(catch, throw, AsyncException(UserInterrupt))
 #c
  enum Option {
    OptionArrowFocus = OPTION_ARROW_FOCUS,
@@ -209,6 +221,16 @@ ptrToGlobalEventHandler :: IORef (FunPtr GlobalEventHandlerPrim)
 ptrToGlobalEventHandler = Unsafe.unsafePerformIO $ do
                             initialHandler <- toGlobalEventHandlerPrim (\_ -> return (-1))
                             newIORef initialHandler
+
+-- | Contents of the clipboard following a copy or cut. Can be either an <./Graphics-UI-FLTK-LowLevel-Image.html Image> or plain 'T.Text'.
+data ClipboardContents =
+  ClipboardContentsImage (Maybe (Ref Image))
+  | ClipboardContentsPlainText (Maybe T.Text)
+
+data PasteSource =
+  PasteSourceSelectionBuffer
+  | PasteSourceClipboardPlainText
+  | PasteSourceClipboardImage
 
 type EventDispatchPrim = (CInt ->
                           Ptr () ->
@@ -240,11 +262,12 @@ unsafeToCallbackPrim = (Unsafe.unsafePerformIO) . toGlobalCallbackPrim
 
 {# fun Fl_add_awake_handler_ as addAwakeHandler'
   {id `FunPtr CallbackPrim', id `(Ptr ())'} -> `Int' #}
-addAwakeHandler :: GlobalCallback -> IO Int
-addAwakeHandler awakeHandler =
+addAwakeHandler_ :: GlobalCallback -> IO (Either AwakeRingFull ())
+addAwakeHandler_ awakeHandler =
     do
       callbackPtr <-  toGlobalCallbackPrim awakeHandler
-      addAwakeHandler' callbackPtr nullPtr
+      res <- addAwakeHandler' callbackPtr nullPtr
+      return (successOrAwakeRingFull res)
 
 {# fun Fl_get_awake_handler_ as getAwakeHandler_'
   {id `Ptr (FunPtr CallbackPrim)', id `Ptr (Ptr ())'} -> `Int' #}
@@ -265,9 +288,11 @@ display :: T.Text -> IO ()
 display text = TF.withCStringLen text $ \(str,_) -> {#call Fl_display as fl_display #} str
 {# fun Fl_visual as visual
   {cFromEnum `Mode'} -> `Bool' cToBool #}
-#if !defined(__APPLE__)
+#if !defined(__APPLE__) && defined(GLSUPPORT)
+-- | Only available if on a non OSX platform and if the 'opengl' flag is set (stack build --flag fltkhs:opengl).
 {# fun Fl_gl_visual as glVisual
   {cFromEnum `Mode'} -> `Bool' cToBool #}
+-- | Only available if on a non OSX platform and if the 'opengl' flag is set (stack build --flag fltkhs:opengl).
 {# fun Fl_gl_visual_with_alist as glVisualWithAlist
   {cFromEnum `Mode', id `Ptr CInt'} -> `Bool' cToBool #}
 #endif
@@ -293,24 +318,27 @@ background2 (r,g,b) = {#call Fl_background2 as fl_background2 #}
                     (fromIntegral r)
                     (fromIntegral g)
                     (fromIntegral b)
-{# fun pure Fl_scheme as scheme
+{# fun pure Fl_scheme as getScheme
   {} -> `T.Text' unsafeFromCString #}
 setScheme :: T.Text -> IO Int
 setScheme sch = TF.withCStringLen sch $ \(str,_) -> {#call Fl_set_scheme as fl_set_scheme #} str >>= return . fromIntegral
+{# fun pure Fl_reload_scheme as reloadScheme {} -> `Int' #}
 isScheme :: T.Text -> IO Bool
 isScheme sch = TF.withCStringLen sch $ \(str,_) -> {#call Fl_is_scheme as fl_is_scheme #} str >>= return . toBool
 {# fun Fl_wait as wait
        {  } -> `Int' #}
-{# fun Fl_set_wait as setWait
+{# fun Fl_set_wait as waitFor
        { `Double' } -> `Double' #}
 
+setWait :: Double -> IO Double
+setWait = waitFor
 {# fun Fl_scrollbar_size as scrollbarSize
        {  } -> `Int' #}
 {# fun Fl_set_scrollbar_size as setScrollbarSize
        { `Int' } -> `()' #}
 
 {# fun Fl_readqueue as readqueue
-       {  } -> `Ref Widget' unsafeToRef #}
+       {  } -> `Maybe (Ref Widget)' unsafeToMaybeRef #}
 {# fun Fl_add_timeout as addTimeout
        { `Double', unsafeToCallbackPrim `GlobalCallback' } -> `()' supressWarningAboutRes #}
 {# fun Fl_repeat_timeout as repeatTimeout
@@ -388,8 +416,18 @@ getMouse = do
        {  } -> `Bool' toBool #}
 {# fun Fl_set_event_is_click as setEventIsClick
        { `Int' } -> `()' supressWarningAboutRes #}
-{# fun Fl_event_button as eventButton
-       {  } -> `MouseButton' cToEnum #}
+
+{# fun Fl_event_button as eventButton'
+       {  } -> `Int' #}
+eventButton :: IO (Maybe MouseButton)
+eventButton = do
+  mb <- eventButton'
+  case mb of
+    mb' | mb' == (fromEnum Mouse_Left) -> return (Just Mouse_Left)
+    mb' | mb' == (fromEnum Mouse_Middle) -> return (Just Mouse_Right)
+    mb' | mb' == (fromEnum Mouse_Right) -> return (Just Mouse_Middle)
+    _ -> return Nothing
+
 eventStates :: [EventState]
 eventStates = [
                Kb_ShiftState,
@@ -405,13 +443,7 @@ eventStates = [
               ]
 extractEventStates :: CInt -> [EventState]
 extractEventStates = extract eventStates
--- foldModifiers :: [KeyboardCode] -> CInt
--- foldModifiers codes =
---     let validKeysyms = map cFromEnum (filter (\c -> c `elem` validKeyboardStates) codes)
---     in
---       case validKeysyms of
---         [] -> (-1)
---         (k:ks) -> foldl (\accum k' -> accum .&. k') k ks
+
 {# fun Fl_event_state as eventState
        {  } -> `[EventState]' extractEventStates #}
 {# fun Fl_contains_event_state as containsEventState
@@ -428,6 +460,25 @@ extractEventStates = extract eventStates
        {  } -> `T.Text' unsafeFromCString #}
 {# fun Fl_event_length as eventLength
        {  } -> `Int' #}
+
+{# fun Fl_event_clipboard as flEventClipboard' { } -> `Ptr ()' #}
+{# fun Fl_event_clipboard_type as flEventClipboardType' { } -> `T.Text' unsafeFromCString #}
+eventClipboardContents :: IO (Maybe ClipboardContents)
+eventClipboardContents = do
+  typeString <- flEventClipboardType'
+  if (T.length typeString == 0)
+  then return Nothing
+  else case typeString of
+         s | (T.unpack s == "Fl::clipboard_image") -> do
+             stringContents <- flEventClipboard' >>= cStringToText . castPtr
+             return (if (T.length stringContents == 0)
+                     then (Just (ClipboardContentsPlainText Nothing))
+                     else (Just (ClipboardContentsPlainText (Just stringContents))))
+         s | (T.unpack s == "Fl::clipboard_plain_text") -> do
+             imageRef <- flEventClipboard' >>= toMaybeRef
+             return (Just (ClipboardContentsImage imageRef))
+         _ -> error "eventClipboardContents :: The type of the clipboard contents must be either the string \"Fl::clipboard_image\" or \"Fl::clipboard_plain_image\"."
+
 {# fun Fl_compose as compose
        { alloca- `Int' peekIntConv* } -> `Bool' toBool #}
 {# fun Fl_compose_reset as composeReset
@@ -460,14 +511,14 @@ eventInsideWidget wp =
        {} -> `()' supressWarningAboutRes #}
 {# fun Fl_handle as handle'
        { `Int',id `Ptr ()' } -> `Int' #}
-handle :: (Parent a Window) =>  Event -> Ref a -> IO Int
+handle :: (Parent a Window) =>  Event -> Ref a -> IO (Either UnknownEvent ())
 handle e wp =
-    withRef wp (handle' (cFromEnum e))
+    withRef wp (handle' (cFromEnum e)) >>= return . successOrUnknownEvent
 {# fun Fl_handle_ as handle_'
        { `Int',id `Ptr ()' } -> `Int' #}
-handle_ :: (Parent a Window) =>  Event -> Ref a -> IO Int
+handle_ :: (Parent a Window) =>  Event -> Ref a -> IO (Either UnknownEvent ())
 handle_ e wp =
-    withRef wp (handle_' (cFromEnum e))
+    withRef wp (handle_' (cFromEnum e)) >>= return . successOrUnknownEvent
 {# fun Fl_belowmouse as belowmouse
        {  } -> `Maybe (Ref Widget)' unsafeToMaybeRef #}
 {# fun Fl_set_belowmouse as setBelowmouse'
@@ -512,7 +563,8 @@ setHandler eh = do
        { id `Ptr (FunPtr EventDispatchPrim)' } -> `()' supressWarningAboutRes #}
 {# fun Fl_event_dispatch as eventDispatch'
        {  } -> `FunPtr EventDispatchPrim' id #}
-eventDispatch :: (Parent a Widget) => IO (Event -> Ref a -> IO (Int))
+eventDispatch :: (Parent a Widget) =>
+   IO (Event -> Ref a -> IO (Either UnknownEvent ()))
 eventDispatch =
     do
       funPtr <- eventDispatch'
@@ -523,11 +575,13 @@ eventDispatch =
                          let eventNum = fromIntegral (fromEnum e)
                              fun = unwrapEventDispatchPrim funPtr
                          in fun eventNum (castPtr ptr) >>=
-                            return . fromIntegral
+                            return . successOrUnknownEvent . fromIntegral
                     )
              )
 
-setEventDispatch :: (Parent a Widget) => (Event -> Ref a -> IO Int) -> IO ()
+setEventDispatch ::
+    (Parent a Widget) =>
+    (Event -> Ref a -> IO (Either UnknownEvent ())) -> IO ()
 setEventDispatch ed = do
     do
       let toPrim = (\e ptr ->
@@ -535,7 +589,9 @@ setEventDispatch ed = do
                       in do
                       obj <- toRef ptr
                       result <- ed eventEnum obj
-                      return $ fromIntegral result
+                      case result of
+                        Left _ -> return 0
+                        _ -> return 1
                     )
       callbackPtr <-  wrapEventDispatchPrim toPrim
       ptrToCallbackPtr <- new callbackPtr
@@ -547,9 +603,14 @@ setEventDispatch ed = do
        { unsafeToCString `T.Text',`Int',`Int' } -> `()' supressWarningAboutRes #}
 {# fun Fl_paste_with_source as pasteWithSource
        { id `Ptr ()',`Int' } -> `()' supressWarningAboutRes #}
-paste :: (Parent a Widget) => Ref a -> Maybe Int -> IO ()
-paste widget (Just clipboard) = withRef widget ((flip pasteWithSource) clipboard)
-paste widget Nothing          = withRef widget ((flip pasteWithSource) 0)
+{# fun Fl_paste_with_source_type as pasteWithSourceType
+       { id `Ptr ()',`Int', unsafeToCString `T.Text' } -> `()' supressWarningAboutRes #}
+paste :: (Parent a Widget) => Ref a -> PasteSource -> IO ()
+paste widget PasteSourceSelectionBuffer = withRef widget (\widgetPtr -> pasteWithSource widgetPtr 0)
+paste widget PasteSourceClipboardPlainText =
+  withRef widget (\widgetPtr -> pasteWithSourceType widgetPtr 1 (T.pack "Fl::clipboard_plain_text"))
+paste widget PasteSourceClipboardImage =
+  withRef widget (\widgetPtr -> pasteWithSourceType widgetPtr 1 (T.pack "Fl::clipboard_image"))
 
 {# fun Fl_dnd as dnd
        {  } -> `Int' #}
@@ -571,6 +632,7 @@ paste widget Nothing          = withRef widget ((flip pasteWithSource) 0)
          alloca- `Int' peekIntConv* ,
          alloca- `Int' peekIntConv*
        } -> `()'  #}
+
 {# fun Fl_screen_xywh_with_mxmy as screenXYWYWithMXMY
        {
          alloca- `Int' peekIntConv* ,
@@ -580,6 +642,7 @@ paste widget Nothing          = withRef widget ((flip pasteWithSource) 0)
          `Int',
          `Int'
        } -> `()'  #}
+
 {# fun Fl_screen_xywh_with_n as screenXYWNWithN
        {
          alloca- `Int' peekIntConv* ,
@@ -588,6 +651,7 @@ paste widget Nothing          = withRef widget ((flip pasteWithSource) 0)
          alloca- `Int' peekIntConv* ,
          `Int'
        } -> `()'  #}
+
 {# fun Fl_screen_xywh_with_mxmymwmh as screenXYWHWithNMXMYMWMH
        {
          alloca- `Int' peekIntConv* ,
@@ -711,16 +775,36 @@ toAttribute ptr =
           return $ cToFontAttribute attributeCode
 getFontName :: Font -> IO (T.Text, Maybe FontAttribute)
 getFontName f = getFontNameWithAttributes' f
-{# fun Fl_get_font_sizes as getFontSizes
-       { cFromFont `Font', alloca- `Int' peekIntConv* } -> `Int' #}
-{# fun Fl_set_font_by_string as setFontByString
+{# fun Fl_get_font_sizes as getFontSizes'
+       { cFromFont `Font', id `Ptr (Ptr CInt)' } -> `CInt' #}
+getFontSizes :: Font -> IO [FontSize]
+getFontSizes font = do
+   arrPtr <- (newArray [] :: IO (Ptr (Ptr CInt)))
+   arrLength <- getFontSizes' font arrPtr
+   zeroth <- peekElemOff arrPtr 0
+   if (arrLength == 0) then return []
+   else do
+     (sizes :: [CInt]) <-
+         mapM
+           (
+            \offset -> do
+               size <- peek (advancePtr zeroth offset)
+               return size
+           )
+           [0 .. ((fromIntegral arrLength) - 1)]
+     return (map FontSize sizes)
+
+{# fun Fl_set_font_by_string as setFontToString
        { cFromFont `Font', unsafeToCString `T.Text' } -> `()' supressWarningAboutRes #}
-{# fun Fl_set_font_by_font as setFontByFont
+{# fun Fl_set_font_by_font as setFontToFont
        { cFromFont `Font',cFromFont `Font' } -> `()' supressWarningAboutRes #}
-{# fun Fl_set_fonts as setFonts
-       {  } -> `Font' cToFont #}
-{# fun Fl_set_fonts_with_string as setFontsWithString
-       { unsafeToCString `T.Text' } -> `Font' cToFont #}
+{# fun Fl_set_fonts as setFonts'
+       {  } -> `Int' #}
+{# fun Fl_set_fonts_with_string as setFontsWithString'
+       { id `Ptr CChar' } -> `Int' #}
+setFonts :: Maybe T.Text -> IO Int
+setFonts (Just xstarName) = withText xstarName (\starNamePtr -> setFontsWithString' starNamePtr)
+setFonts Nothing = setFonts'
 
 {# fun Fl_add_fd_with_when as addFdWhen'
        {
@@ -815,10 +899,10 @@ setBoxtype bt (FromBoxtype template) =
       {  } -> `Bool' toBool #}
 release :: IO ()
 release = {#call Fl_release as fl_release #}
-setVisibleFocus :: Int -> IO ()
-setVisibleFocus = {#call Fl_set_visible_focus as fl_set_visible_focus #} . fromIntegral
-visibleFocus :: IO Int
-visibleFocus = {#call Fl_visible_focus as fl_visible_focus #} >>= return . fromIntegral
+setVisibleFocus :: Bool -> IO ()
+setVisibleFocus = {#call Fl_set_visible_focus as fl_set_visible_focus #} . cFromBool
+visibleFocus :: IO Bool
+visibleFocus = {#call Fl_visible_focus as fl_visible_focus #} >>= return . cToBool
 setDndTextOps :: Bool -> IO ()
 setDndTextOps =  {#call Fl_set_dnd_text_ops as fl_set_dnd_text_ops #} . fromBool
 dndTextOps :: IO Option
@@ -836,21 +920,60 @@ releaseWidgetPointer :: (Parent a Widget) => Ref a -> IO ()
 releaseWidgetPointer wp = withRef wp {#call Fl_release_widget_pointer as fl_release_widget_pointer #}
 clearWidgetPointer :: (Parent a Widget) => Ref a -> IO ()
 clearWidgetPointer wp = withRef wp {#call Fl_clear_widget_pointer as fl_Clear_Widget_Pointer #}
-#if FL_API_VERSION == 10304
+#if FLTK_API_VERSION >= 10304
+-- | Only available on FLTK version 1.3.4 and above.
 setBoxColor :: Color -> IO ()
 setBoxColor c = {#call Fl_set_box_color as fl_set_box_color #} (cFromColor c)
+-- | Only available on FLTK version 1.3.4 and above.
 boxColor :: Color -> IO Color
 boxColor c = {#call Fl_box_color as fl_box_color #} (cFromColor c) >>= return . cToColor
+-- | Only available on FLTK version 1.3.4 and above.
 abiVersion :: IO Int
 abiVersion = {#call Fl_abi_version as fl_abi_version #} >>= return . fromIntegral
+-- | Only available on FLTK version 1.3.4 and above.
+abiCheck :: Int -> IO Int
+abiCheck v = {#call Fl_abi_check as fl_abi_check #} (fromIntegral v) >>= return . fromIntegral
+-- | Only available on FLTK version 1.3.4 and above.
 apiVersion :: IO Int
 apiVersion = {#call Fl_abi_version as fl_abi_version #} >>= return . fromIntegral
+-- | Only available on FLTK version 1.3.4 and above.
 localCtrl :: IO T.Text
 localCtrl = {#call Fl_local_ctrl as fl_local_ctrl #} >>= cStringToText
+-- | Only available on FLTK version 1.3.4 and above.
 localAlt :: IO T.Text
 localAlt = {#call Fl_local_alt as fl_local_alt #} >>= cStringToText
+-- | Only available on FLTK version 1.3.4 and above.
 localMeta :: IO T.Text
 localMeta = {#call Fl_local_meta as fl_local_meta #} >>= cStringToText
+-- | Only available on FLTK version 1.3.4 and above.
 localShift :: IO T.Text
 localShift = {#call Fl_local_shift as fl_local_shift #} >>= cStringToText
+#ifdef GLSUPPORT
+-- | Only available on FLTK version 1.3.4 and above if GL is enabled with 'stack build --flag fltkhs:opengl'
+useHighResGL :: IO Bool
+useHighResGL = {#call Fl_use_high_res_GL as fl_use_high_res_GL #} >>= return . cToBool
+-- | Only available on FLTK version 1.3.4 and above if GL is enabled with 'stack build --flag fltkhs:opengl'
+setUseHighResGL :: Bool -> IO ()
+setUseHighResGL use' = {#call Fl_set_use_high_res_GL as fl_set_use_high_res_GL #} (cFromBool use')
 #endif
+#endif
+
+
+-- | Use this function to run a GUI in GHCi.
+replRun :: IO ()
+replRun = do
+  flush
+  w <- firstWindow
+  case w of
+    Just w' ->
+      catch (waitFor 0 >> replRun)
+            (\e -> if (e == UserInterrupt)
+                   then do
+                     allToplevelWindows [] (Just w') >>= mapM_ deleteWidget
+                     flush
+                   else throw e)
+    Nothing -> return ()
+  where
+    allToplevelWindows :: [Ref Window] -> Maybe (Ref Window) -> IO [Ref Window]
+    allToplevelWindows ws (Just w) = nextWindow w >>= allToplevelWindows (w:ws)
+    allToplevelWindows ws Nothing = return ws
