@@ -136,9 +136,10 @@ library
                 base == 4.*,
                 bytestring,
                 text >= 0.2 && < 1.3
-  build-tools: c2hs
-  if !flag(Bundled)
-     build-tools: fltk-config
+  if flag(bundled)
+     build-tools: c2hs
+  else
+     build-tools: c2hs, fltk-config
   hs-source-dirs: src
   other-modules: C2HS
   include-dirs: ./c-src, ./
