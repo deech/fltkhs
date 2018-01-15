@@ -11,30 +11,68 @@ homepage: http://github.com/deech/fltkhs
 bug-reports: https://github.com/deech/fltkhs/issues
 copyright: © 2017 Aditya Siram All Rights Reserved
 category: UI,Graphics,GUI,User Interfaces
+
+----------------------------------------
+
 build-type: Custom
 cabal-version: >=1.24
+  -- for custom-setup 
+
 source-repository head
   type: git
   location: http://github.com/deech/fltkhs
 
-Flag Bundled
+----------------------------------------
+-- by default, 
+-- 
+-- * no OpenGL support
+-- * the system `fltk` package is used (not the bundled tarball)
+--
+
+Flag bundled
    Description: Use the bundled FLTK library.
-   Manual: True
+   Manual:  True
    Default: False
 
-Flag Opengl
+Flag demos
+   Description: Build the demo apps (`fltkhs-buttons` and `fltkhs-example-opengl`).
+   Manual:  True
+   Default: True
+
+Flag opengl
    Description: Enable OpenGL support.
-   Manual : True
+   Manual:  True
    Default: False
+
+----------------------------------------
 
 custom-setup
   setup-depends:
-    base >= 4.5 && < 4.11,
     Cabal >= 1.24.1 && < 1.25,
     filepath,
-    directory >= 1.2.3.0
+    directory >= 1.2.3.0,
+    -- c2hs >=0.28, 
+    base >= 4.5 && < 4.11
+
+----------------------------------------
 
 library
+
+  -- build-tools: autoconf, c2hs
+  --
+  -- extra-libraries: jpeg
+  --     -- from the `libjpeg` system package 
+  --
+  -- if !flag(bundled) 
+  --    -- when `bundled`, we don't need a system `fltk`, since we build it ourself
+  --    extra-libraries: fltk
+  --    build-tools: fltk-config
+  --       -- the `fltk` system package provides the `fltk-config` executable
+  --
+  -- if flag(opengl)
+  --    extra-libraries: GL, GLU
+  --        -- e.g. from the `mesa` and `freeglut` system packages (respectively)
+
   if flag(opengl)
      exposed-modules:
                    Graphics.UI.FLTK.LowLevel.Gl
@@ -132,17 +170,21 @@ library
                    Graphics.UI.FLTK.LowLevel.PNGImage
                    Graphics.UI.FLTK.LowLevel.PNMImage
                    Graphics.UI.FLTK.LowLevel.X
+
+  other-modules: C2HS
+
   build-depends:
                 base == 4.*,
                 bytestring,
                 text >= 0.2 && < 1.3
-  build-tools: c2hs
+
   hs-source-dirs: src
-  other-modules: C2HS
-  include-dirs: ./c-src, ./
+  include-dirs:  ./c-src, ./
+
   default-extensions: GADTs
   default-language: Haskell2010
   ghc-options: -Wall -fno-warn-name-shadowing -fno-warn-orphans -fno-warn-unused-matches -fno-warn-dodgy-exports
+
   if impl(ghc >= 8.0.1)
      cpp-options: -DHASCALLSTACK_AVAILABLE
      cpp-options: -DCUSTOM_TYPE_ERRORS
@@ -151,18 +193,24 @@ library
        cpp-options: -DCALLSTACK_AVAILABLE
   if impl(ghc >= 7.10)
      cpp-options: -DOVERLAPPING_INSTANCES_DEPRECATED
+
   if os(darwin)
      cc-options: -U__BLOCKS__ -D_Nonnull=
 
+----------------------------------------
+
 Executable fltkhs-fluidtohs
-  Main-Is: Main.hs
+
+  Main-Is:        Main.hs
   Hs-Source-Dirs: src/Fluid
+
   Other-modules:
                 Generate
                 Lookup
                 Parser
                 Types
                 Utils
+
   Build-Depends:
     base == 4.*,
     filepath,
@@ -170,8 +218,10 @@ Executable fltkhs-fluidtohs
     parsec >= 3.1.6,
     directory >= 1.2.1.0,
     mtl
+
   default-language: Haskell2010
   ghc-Options: -Wall -threaded
+
   if os(windows) && arch(x86_64)
      cpp-options: -DWIN64
   if os(windows)
@@ -182,18 +232,69 @@ Executable fltkhs-fluidtohs
   if !os(darwin) && !os(windows)
    ghc-Options: -pgml g++ "-optl-Wl,--allow-multiple-definition" "-optl-Wl,--whole-archive" "-optl-Wl,-Bstatic" "-optl-Wl,-lfltkc" "-optl-Wl,-Bdynamic" "-optl-Wl,--no-whole-archive"
 
+----------------------------------------
+-- Demos
+
+-- simple example of different fltk button widgets
 Executable fltkhs-buttons
-  Main-Is: Buttons.hs
+  if !flag(demos)
+     buildable: False 
+
+  Main-Is:        Buttons.hs
   Hs-Source-Dirs: src/TestPrograms
+
   Build-Depends:
     base == 4.*,
     fltkhs
+
   default-language: Haskell2010
   ghc-Options: -Wall -threaded
+
   if os(windows)
     ghc-Options: -optl-mwindows
     ghc-Options: -pgml g++ "-optl-Wl,--allow-multiple-definition" "-optl-Wl,--whole-archive" "-optl-Wl,-Bstatic" "-optl-Wl,-lfltkc" "-optl-Wl,-Bdynamic" "-optl-Wl,--no-whole-archive"
+
   if os(darwin)
     ghc-Options: "-optl-Wl,-lfltkc"
+
   if !os(darwin) && !os(windows)
    ghc-Options: -pgml g++ "-optl-Wl,--allow-multiple-definition" "-optl-Wl,--whole-archive" "-optl-Wl,-Bstatic" "-optl-Wl,-lfltkc" "-optl-Wl,-Bdynamic" "-optl-Wl,--no-whole-archive"
+
+-- example of fltk OpenGL support
+--
+-- requires the `opengl` flag, e.g.:
+-- 
+--     stack build --flag fltkhs:opengl
+--     cabal configure -fopengl && cabal build
+--
+Executable fltkhs-example-opengl
+  if !(flag(demos) && flag(opengl))
+     buildable: False 
+
+  Main-Is:        OpenGL.hs
+  Hs-Source-Dirs: src/TestPrograms
+
+  Build-Depends:
+    base == 4.*,
+    fltkhs,
+    text >= 1.2.2.0,
+    OpenGLRaw >= 3 && < 3.3
+
+  default-language: Haskell2010
+  ghc-Options:
+    -Wall
+    -threaded
+    -debug -dcore-lint
+    -fno-specialise -fmax-simplifier-iterations=0 -fsimplifier-phases=0
+
+  if os(windows)
+    ghc-Options: -optl-mwindows
+    ghc-Options: -pgml g++ "-optl-Wl,--allow-multiple-definition" "-optl-Wl,--whole-archive" "-optl-Wl,-Bstatic" "-optl-Wl,-lfltkc" "-optl-Wl,-Bdynamic" "-optl-Wl,--no-whole-archive"
+
+  if os(darwin)
+    ghc-Options: "-optl-Wl,-lfltkc"
+
+  if !os(darwin) && !os(windows)
+   ghc-Options: -pgml g++ "-optl-Wl,--allow-multiple-definition" "-optl-Wl,--whole-archive" "-optl-Wl,-Bstatic" "-optl-Wl,-lfltkc" "-optl-Wl,-Bdynamic" "-optl-Wl,--no-whole-archive"
+
+----------------------------------------

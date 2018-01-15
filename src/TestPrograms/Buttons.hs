@@ -1,4 +1,14 @@
 {-# LANGUAGE OverloadedStrings #-}
+
+{- | Ported from [buttons.cxx]<https://github.com/IngwiePhoenix/FLTK/blob/master/test/buttons.cxx>,
+which is also included in @fltkhs@ at @c-examples\/buttons.c@. 
+
+@
+cabal configure -fdemos
+cabal run fltkhs-buttons
+@
+
+-}
 module Main where
 
 import Graphics.UI.FLTK.LowLevel.FL as FL
