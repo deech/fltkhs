@@ -30,13 +30,13 @@ import Data.ByteString as B
 {# fun Fl_RGB_Image_New_With_LD as rgbImageNew_WithLD' {id `Ptr CUChar',`Int',`Int', `Int'} -> `Ptr ()' id #};
 {# fun Fl_RGB_Image_New_With_D_LD as rgbImageNew_WithD_LD' {id `Ptr CUChar',`Int',`Int', `Int', `Int'} -> `Ptr ()' id #};
 rgbImageNew :: B.ByteString -> Size -> Maybe Depth  -> Maybe LineSize -> IO (Ref RGBImage)
-rgbImageNew bits' (Size (Width width') (Height height')) depth' linesize' = do
-  asCString <- copyByteStringToCString bits'
-  case (depth', linesize') of
-    (Just (Depth imageDepth) , Nothing) -> rgbImageNew_WithD' (castPtr asCString) width' height' imageDepth >>= toRef
-    (Nothing, Just (LineSize l')) -> rgbImageNew_WithLD' (castPtr asCString) width' height' l' >>= toRef
-    (Just (Depth imageDepth), Just (LineSize l')) -> rgbImageNew_WithD_LD' (castPtr asCString) width' height' imageDepth l' >>= toRef
-    (Nothing, Nothing) -> rgbImageNew' (castPtr asCString) width' height' >>= toRef
+rgbImageNew bits' (Size (Width width') (Height height')) depth' linesize' =
+  useAsCString bits' $ \asCString ->
+    case (depth', linesize') of
+      (Just (Depth imageDepth) , Nothing) -> rgbImageNew_WithD' (castPtr asCString) width' height' imageDepth >>= toRef
+      (Nothing, Just (LineSize l')) -> rgbImageNew_WithLD' (castPtr asCString) width' height' l' >>= toRef
+      (Just (Depth imageDepth), Just (LineSize l')) -> rgbImageNew_WithD_LD' (castPtr asCString) width' height' imageDepth l' >>= toRef
+      (Nothing, Nothing) -> rgbImageNew' (castPtr asCString) width' height' >>= toRef
 
 -- | Check that the given RGBImage (or subclass of RGBImage) has a non-zero width.
 --

@@ -26,9 +26,9 @@ pngImageNew :: T.Text -> IO (Either UnknownError (Ref PNGImage))
 pngImageNew filename' = pngImageNew' filename' >>= toRef >>= checkImage
 
 pngImageNewWithData :: T.Text -> B.ByteString -> IO (Either UnknownError (Ref PNGImage))
-pngImageNewWithData l' data' = do
-  png' <- copyByteStringToCString data'
-  pngImageNewWithData' l' (castPtr png') (B.length data') >>= toRef >>= checkImage
+pngImageNewWithData l' data' =
+  B.useAsCString data' $ \png' ->
+    pngImageNewWithData' l' (castPtr png') (B.length data') >>= toRef >>= checkImage
 
 -- $hierarchy
 -- @
