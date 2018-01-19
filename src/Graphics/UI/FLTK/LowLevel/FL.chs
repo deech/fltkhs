@@ -15,6 +15,10 @@ module Graphics.UI.FLTK.LowLevel.FL
      ready,
      option,
      setOption,
+     lock,
+     unlock,
+     awake,
+     awakeToHandler,
      addAwakeHandler_,
      getAwakeHandler_,
      display,
@@ -256,6 +260,18 @@ option o = {#call Fl_option as fl_option #} (cFromEnum o) >>= \(c::CInt) -> retu
 
 setOption :: Option -> Bool -> IO ()
 setOption o t = {#call Fl_set_option as fl_set_option #} (cFromEnum o) (Graphics.UI.FLTK.LowLevel.Utils.cFromBool t)
+
+lock :: IO Bool
+lock = {#call Fl_lock as fl_lock #} >>= return . cToBool
+
+unlock :: IO ()
+unlock = {#call Fl_unlock as fl_unlock #}
+
+awake :: IO ()
+awake = {#call Fl_awake as fl_awake #}
+
+awakeToHandler :: IO ()
+awakeToHandler = {#call Fl_awake_to_handler as fl_awake_to_handler #}
 
 unsafeToCallbackPrim :: GlobalCallback -> FunPtr CallbackPrim
 unsafeToCallbackPrim = (Unsafe.unsafePerformIO) . toGlobalCallbackPrim

@@ -569,6 +569,10 @@ EXPORT {
   FL_EXPORT_C(void,Fl_awake)(){
     Fl::awake((void*)0);
   }
+  FL_EXPORT_C(void,Fl_awake_to_handler)() {
+    char* c = strdup(" ");
+    Fl::awake((void*)c);
+  }
   FL_EXPORT_C(void,Fl_awake_with_message)(void* message){
     Fl::awake(message);
   }

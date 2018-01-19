@@ -249,6 +249,7 @@ EXPORT {
   FL_EXPORT_C_HEADER(int               ,Fl_lock,());
   FL_EXPORT_C_HEADER(void              ,Fl_unlock,());
   FL_EXPORT_C_HEADER(void              ,Fl_awake,());
+  FL_EXPORT_C_HEADER(void              ,Fl_awake_to_handler,());
   FL_EXPORT_C_HEADER(void              ,Fl_awake_with_message,(void* message));
   FL_EXPORT_C_HEADER(int               ,Fl_awake_with_cb,(fl_Awake_Handler cb));
   FL_EXPORT_C_HEADER(int               ,Fl_awake_with_cb_message,(fl_Awake_Handler cb, void* message));
