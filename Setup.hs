@@ -21,6 +21,7 @@ import Distribution.Simple.Program
 import Distribution.Simple.Program.Db
 import Distribution.Simple.PreProcess
 import Distribution.Simple.Register ( generateRegistrationInfo, registerPackage )
+import qualified Distribution.Simple.Register as Register
 import Distribution.Simple.InstallDirs (fromPathTemplate)
 import System.IO.Unsafe (unsafePerformIO)
 import System.IO.Error
@@ -37,6 +38,29 @@ import qualified Distribution.Simple.PackageIndex as PackageIndex
 import Distribution.PackageDescription as PD
 import Distribution.InstalledPackageInfo (ldOptions, extraGHCiLibraries, showInstalledPackageInfo, libraryDynDirs, libraryDirs)
 import System.Environment (getEnv, setEnv)
+
+----------------------------------------
+-- compatibility between Cabal 1 and Cabal 2
+
+-- "If you have a custom-setup stanza, you should be able to use the MIN_VERSION_Cabal macro in your setup script."
+
+-- cabal >=2.0.0.2
+#if defined(MIN_VERSION_Cabal) && MIN_VERSION_Cabal(2,0,0)
+_FlagName = mkFlagName 
+#else
+_FlagName = FlagName 
+#endif
+
+-- cabal >=2.0.1.1
+#if defined(MIN_VERSION_Cabal) && MIN_VERSION_Cabal(2,0,1)
+_registerPackage verbosity lbi packageDbs installedPkgInfo 
+  = registerPackage verbosity (compiler lbi) (withPrograms lbi) packageDbs installedPkgInfo Register.defaultRegisterOptions 
+#else
+_registerPackage verbosity lbi packageDbs installedPkgInfo
+  = registerPackage verbosity (compiler lbi) (withPrograms lbi) False {- multiinstance -} packageDbs installedPkgInfo
+#endif
+
+----------------------------------------
 
 main :: IO ()
 main = defaultMainWithHooks autoconfUserHooks {
@@ -192,8 +216,8 @@ replaceAllInfixes needle subString haystack =
                            else Just ([head str], tail str))
              haystack)
 
-bundledBuild flags = flagIsSet (FlagName "bundled") flags
-openGLSupport flags = flagIsSet (FlagName "opengl") flags
+bundledBuild flags = flagIsSet (_FlagName "bundled") flags
+openGLSupport flags = flagIsSet (_FlagName "opengl") flags
 
 bundlePrefix flags dir =
   let (Distribution.Simple.Setup.Flag prefixTemplate) = libdir (configInstallDirs flags)
@@ -385,7 +409,7 @@ register pkg@PackageDescription { library = Just lib } lbi regFlags = do
      _ | modeGenerateRegFile   -> writeRegistrationFile installedPkgInfo
        | modeGenerateRegScript -> die "Generate Reg Script not supported"
        | otherwise             ->
-          registerPackage verbosity (compiler lbi) (withPrograms lbi) False {- multiinstance -} packageDbs installedPkgInfo
+          _registerPackage verbosity lbi packageDbs installedPkgInfo
   where
     modeGenerateRegFile = isJust (flagToMaybe (regGenPkgConf regFlags))
     regFile             = fromMaybe (display (packageId pkg) <.> "conf")
