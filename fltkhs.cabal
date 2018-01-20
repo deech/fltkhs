@@ -281,11 +281,7 @@ Executable fltkhs-example-opengl
     OpenGLRaw >= 3 && < 3.3
 
   default-language: Haskell2010
-  ghc-Options:
-    -Wall
-    -threaded
-    -debug -dcore-lint
-    -fno-specialise -fmax-simplifier-iterations=0 -fsimplifier-phases=0
+  ghc-Options: -Wall -threaded
 
   if os(windows)
     ghc-Options: -optl-mwindows
