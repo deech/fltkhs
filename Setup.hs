@@ -103,7 +103,7 @@ buildFltk prefix openGL = do
       in
       case buildOS of
         Windows -> do
-          rawSystemExit normal "sh" ([(fltkDir </> "configure")] ++ fltkFlags ++ ["--build=mingw32"])
+          rawSystemExit normal "sh" ([(fltkDir </> "configure")] ++ fltkFlags)
           make
           updateEnv "PATH" (windowsFriendlyPaths (prefix' </> "bin"))
         _ -> do
