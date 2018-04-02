@@ -219,6 +219,8 @@ module Graphics.UI.FLTK.LowLevel.Hierarchy
          begin,
          End,
          end,
+         Within,
+         within,
          Find,
          find,
          Add,
@@ -1771,6 +1773,7 @@ type GroupFuncs =
   (UpdateChild
   (Begin
   (End
+  (Within
   (Find
   (Add
   (Insert
@@ -1790,7 +1793,7 @@ type GroupFuncs =
   (InsertWithBefore
   (GetArray
   (GetChild
-  ()))))))))))))))))))))))))))
+  ())))))))))))))))))))))))))))
 type instance Functions Group = GroupFuncs
 
 MAKE_METHOD(DrawChild,drawChild)
@@ -1799,6 +1802,7 @@ MAKE_METHOD(DrawOutsideLabel,drawOutsideLabel)
 MAKE_METHOD(UpdateChild,updateChild)
 MAKE_METHOD(Begin,begin)
 MAKE_METHOD(End,end)
+MAKE_METHOD(Within, within)
 MAKE_METHOD(Find,find)
 MAKE_METHOD(Add,add)
 MAKE_METHOD(Insert,insert)
