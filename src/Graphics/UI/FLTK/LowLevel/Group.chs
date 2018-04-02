@@ -27,6 +27,7 @@ import Graphics.UI.FLTK.LowLevel.Fl_Types
 import Graphics.UI.FLTK.LowLevel.Utils
 import Graphics.UI.FLTK.LowLevel.Hierarchy
 import Graphics.UI.FLTK.LowLevel.Widget
+import Control.Exception (finally)
 
 {# fun Fl_Group_set_current as groupSetCurrent' { id `Ptr ()' } -> `()' #}
 {# fun Fl_Group_current as groupCurrent' {} -> `Ptr ()' id #}
@@ -90,8 +91,7 @@ instance (
          ) => Op (Within ()) Group orig impl where
   runOp _ _ group action = do
     () <- begin (castTo group :: Ref orig)
-    action
-    end (castTo group :: Ref orig)
+    finally action ((end (castTo group :: Ref orig)) :: IO ())
 
 {# fun Fl_Group_find as find' { id `Ptr ()',id `Ptr ()' } -> `Int' #}
 instance (Parent a Widget, impl ~ (Ref a ->  IO (Int))) => Op (Find ()) Group orig impl where
