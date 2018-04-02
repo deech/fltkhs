@@ -219,6 +219,7 @@ module Graphics.UI.FLTK.LowLevel.Hierarchy
          begin,
          End,
          end,
+         within,
          Find,
          find,
          Add,
@@ -1818,6 +1819,14 @@ MAKE_METHOD(DdfdesignKludge,ddfdesignKludge)
 MAKE_METHOD(InsertWithBefore,insertWithBefore)
 MAKE_METHOD(GetArray,getArray)
 MAKE_METHOD(GetChild,getChild)
+
+within :: (Match br ~ FindOp window window (Begin ()), Op (Begin ()) br window (IO ()),
+           Match er ~ FindOp window window (End ()), Op (End ()) er window (IO ())) =>
+          Ref window -> IO () -> IO ()
+within ref action = do
+  () <- begin ref
+  action
+  end ref
 
 data CWindow parent
 type Window = CWindow Group
