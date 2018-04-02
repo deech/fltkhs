@@ -219,6 +219,7 @@ module Graphics.UI.FLTK.LowLevel.Hierarchy
          begin,
          End,
          end,
+         Within,
          within,
          Find,
          find,
@@ -1772,6 +1773,7 @@ type GroupFuncs =
   (UpdateChild
   (Begin
   (End
+  (Within
   (Find
   (Add
   (Insert
@@ -1791,7 +1793,7 @@ type GroupFuncs =
   (InsertWithBefore
   (GetArray
   (GetChild
-  ()))))))))))))))))))))))))))
+  ())))))))))))))))))))))))))))
 type instance Functions Group = GroupFuncs
 
 MAKE_METHOD(DrawChild,drawChild)
@@ -1800,6 +1802,7 @@ MAKE_METHOD(DrawOutsideLabel,drawOutsideLabel)
 MAKE_METHOD(UpdateChild,updateChild)
 MAKE_METHOD(Begin,begin)
 MAKE_METHOD(End,end)
+MAKE_METHOD(Within, within)
 MAKE_METHOD(Find,find)
 MAKE_METHOD(Add,add)
 MAKE_METHOD(Insert,insert)
@@ -1819,14 +1822,6 @@ MAKE_METHOD(DdfdesignKludge,ddfdesignKludge)
 MAKE_METHOD(InsertWithBefore,insertWithBefore)
 MAKE_METHOD(GetArray,getArray)
 MAKE_METHOD(GetChild,getChild)
-
-within :: (Match br ~ FindOp window window (Begin ()), Op (Begin ()) br window (IO ()),
-           Match er ~ FindOp window window (End ()), Op (End ()) er window (IO ())) =>
-          Ref window -> IO () -> IO ()
-within ref action = do
-  () <- begin ref
-  action
-  end ref
 
 data CWindow parent
 type Window = CWindow Group

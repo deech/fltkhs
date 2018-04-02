@@ -1,4 +1,4 @@
-{-# LANGUAGE CPP,EmptyDataDecls, TypeSynonymInstances, FlexibleInstances, MultiParamTypeClasses, FlexibleContexts, UndecidableInstances #-}
+{-# LANGUAGE CPP, RankNTypes, UndecidableInstances, GADTs, TypeSynonymInstances, FlexibleInstances, MultiParamTypeClasses, FlexibleContexts, ScopedTypeVariables #-}
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 module Graphics.UI.FLTK.LowLevel.Group
     (
@@ -80,6 +80,18 @@ instance (impl ~ ( IO ())) => Op (Begin ()) Group orig impl where
 {# fun Fl_Group_end as end' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
 instance (impl ~ (IO ())) => Op (End ()) Group orig impl where
   runOp _ _ group = withRef group $ \groupPtr -> end' groupPtr
+
+instance (
+           Match obj ~ FindOp orig orig (Begin ()),
+           Match obj ~ FindOp orig orig (End ()),
+           Op (Begin ()) obj orig (IO ()),
+           Op (End ()) obj orig (IO ()),
+           impl ~ (IO () -> IO ())
+         ) => Op (Within ()) Group orig impl where
+  runOp _ _ group action = withRef group $ \groupPtr -> do
+    () <- begin (castTo group :: Ref orig)
+    action
+    end (castTo group :: Ref orig)
 
 {# fun Fl_Group_find as find' { id `Ptr ()',id `Ptr ()' } -> `Int' #}
 instance (Parent a Widget, impl ~ (Ref a ->  IO (Int))) => Op (Find ()) Group orig impl where
