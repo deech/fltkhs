@@ -88,7 +88,7 @@ instance (
            Op (End ()) obj orig (IO ()),
            impl ~ (IO () -> IO ())
          ) => Op (Within ()) Group orig impl where
-  runOp _ _ group action = withRef group $ \groupPtr -> do
+  runOp _ _ group action = do
     () <- begin (castTo group :: Ref orig)
     action
     end (castTo group :: Ref orig)
