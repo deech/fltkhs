@@ -87,8 +87,10 @@ instance (
            Match obj ~ FindOp orig orig (End ()),
            Op (Begin ()) obj orig (IO ()),
            Op (End ()) obj orig (IO ()),
-           impl ~ (IO () -> IO ())
-         ) => Op (Within ()) Group orig impl where
+           impl ~ (IO a -> IO a)
+         )
+         =>
+         Op (Within ()) Group orig impl where
   runOp _ _ group action = do
     () <- begin (castTo group :: Ref orig)
     finally action ((end (castTo group :: Ref orig)) :: IO ())
@@ -224,6 +226,8 @@ instance (impl ~ (Int ->  IO (Maybe (Ref Widget)))) => Op (GetChild ()) Group or
 -- setResizable:: ('Parent' a 'Widget') => 'Ref' 'Group' -> 'Maybe' ( 'Ref' a ) -> 'IO' ()
 --
 -- updateChild:: ('Parent' a 'Widget') => 'Ref' 'Group' -> 'Ref' a -> 'IO' ()
+--
+-- within:: 'Ref' 'Group' -> 'IO' a -> 'IO' a
 -- @
 
 -- $hierarchy
