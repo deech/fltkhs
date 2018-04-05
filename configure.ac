@@ -16,9 +16,9 @@ AC_CHECK_HEADERS([stddef.h stdint.h stdlib.h string.h unistd.h])
 AC_CHECK_LIB([dl], [main])
 
 AC_SUBST(FLTKCONFIGCOMMAND,"$(fltk-config --ldstaticflags --use-images --use-forms) -lstdc++")
-AC_DEFINE([FLTK_MAJOR_VERSION], [], [Fltk Major Version]),
-AC_DEFINE([FLTK_MINOR_VERSION], [], [Fltk Minor Version]),
-AC_DEFINE([FLTK_PATCH_VERSION], [], [Fltk Patch Version]),
+AC_DEFINE([FLTK_MAJOR_VERSION], [], [Fltk Major Version])
+AC_DEFINE([FLTK_MINOR_VERSION], [], [Fltk Minor Version])
+AC_DEFINE([FLTK_PATCH_VERSION], [], [Fltk Patch Version])
 AC_SUBST([GLSUPPORT],"")
 
 dnl Example of default-disabled feature
@@ -47,9 +47,9 @@ AC_ARG_WITH(fltk-patch-version,
             fltk_patch_version=4
            )
 
-AC_DEFINE_UNQUOTED([FLTK_MAJOR_VERSION], $fltk_major_version, [Fltk Major Version]),
-AC_DEFINE_UNQUOTED([FLTK_MINOR_VERSION], $fltk_minor_version, [Fltk Minor Version]),
-AC_DEFINE_UNQUOTED([FLTK_PATCH_VERSION], $fltk_patch_version, [Fltk Patch Version]),
+AC_DEFINE_UNQUOTED([FLTK_MAJOR_VERSION], $fltk_major_version, [Fltk Major Version])
+AC_DEFINE_UNQUOTED([FLTK_MINOR_VERSION], $fltk_minor_version, [Fltk Minor Version])
+AC_DEFINE_UNQUOTED([FLTK_PATCH_VERSION], $fltk_patch_version, [Fltk Patch Version])
 
 AC_SUBST(FLTK_HOME,`fltk-config --includedir`)
 # Checks for typedefs, structures, and compiler characteristics.

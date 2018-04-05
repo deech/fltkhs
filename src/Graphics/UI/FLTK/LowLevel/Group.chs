@@ -27,6 +27,7 @@ import Graphics.UI.FLTK.LowLevel.Fl_Types
 import Graphics.UI.FLTK.LowLevel.Utils
 import Graphics.UI.FLTK.LowLevel.Hierarchy
 import Graphics.UI.FLTK.LowLevel.Widget
+import Control.Exception (finally)
 
 {# fun Fl_Group_set_current as groupSetCurrent' { id `Ptr ()' } -> `()' #}
 {# fun Fl_Group_current as groupCurrent' {} -> `Ptr ()' id #}
@@ -86,12 +87,13 @@ instance (
            Match obj ~ FindOp orig orig (End ()),
            Op (Begin ()) obj orig (IO ()),
            Op (End ()) obj orig (IO ()),
-           impl ~ (IO () -> IO ())
-         ) => Op (Within ()) Group orig impl where
-  runOp _ _ group action = withRef group $ \groupPtr -> do
+           impl ~ (IO a -> IO a)
+         )
+         =>
+         Op (Within ()) Group orig impl where
+  runOp _ _ group action = do
     () <- begin (castTo group :: Ref orig)
-    action
-    end (castTo group :: Ref orig)
+    finally action ((end (castTo group :: Ref orig)) :: IO ())
 
 {# fun Fl_Group_find as find' { id `Ptr ()',id `Ptr ()' } -> `Int' #}
 instance (Parent a Widget, impl ~ (Ref a ->  IO (Int))) => Op (Find ()) Group orig impl where
@@ -224,6 +226,8 @@ instance (impl ~ (Int ->  IO (Maybe (Ref Widget)))) => Op (GetChild ()) Group or
 -- setResizable:: ('Parent' a 'Widget') => 'Ref' 'Group' -> 'Maybe' ( 'Ref' a ) -> 'IO' ()
 --
 -- updateChild:: ('Parent' a 'Widget') => 'Ref' 'Group' -> 'Ref' a -> 'IO' ()
+--
+-- within:: 'Ref' 'Group' -> 'IO' a -> 'IO' a
 -- @
 
 -- $hierarchy
