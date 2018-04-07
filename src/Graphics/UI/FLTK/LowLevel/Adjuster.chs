@@ -70,10 +70,10 @@ instance (impl ~ (Int ->  IO ())) => Op (SetSoft ()) Adjuster orig impl where
   runOp _ _ adjuster soft = withRef adjuster $ \adjusterPtr -> setSoft' adjusterPtr soft
 
 {# fun Fl_Adjuster_draw as draw'' { id `Ptr ()' } -> `()' #}
-instance (impl ~ (  IO ())) => Op (Draw ()) Adjuster orig impl where
+instance (impl ~ IO ()) => Op (Draw ()) Adjuster orig impl where
   runOp _ _ adjuster = withRef adjuster $ \adjusterPtr -> draw'' adjusterPtr
 {# fun Fl_Adjuster_draw_super as drawSuper' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance (impl ~ ( IO ())) => Op (DrawSuper ()) Adjuster orig impl where
+instance (impl ~ IO ()) => Op (DrawSuper ()) Adjuster orig impl where
   runOp _ _ adjuster = withRef adjuster $ \adjusterPtr -> drawSuper' adjusterPtr
 {#fun Fl_Adjuster_handle as adjusterHandle' { id `Ptr ()', id `CInt' } -> `Int' #}
 instance (impl ~ (Event -> IO (Either UnknownEvent ()))) => Op (Handle ()) Adjuster orig impl where
@@ -92,16 +92,16 @@ instance (impl ~ (Rectangle -> IO ())) => Op (ResizeSuper ()) Adjuster orig impl
     let (x_pos, y_pos, width, height) = fromRectangle rectangle
     in withRef adjuster $ \adjusterPtr -> resizeSuper' adjusterPtr x_pos y_pos width height
 {# fun Fl_Adjuster_hide as hide' { id `Ptr ()' } -> `()' #}
-instance (impl ~ (  IO ())) => Op (Hide ()) Adjuster orig impl where
+instance (impl ~ IO ()) => Op (Hide ()) Adjuster orig impl where
   runOp _ _ adjuster = withRef adjuster $ \adjusterPtr -> hide' adjusterPtr
 {# fun Fl_Adjuster_hide_super as hideSuper' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance (impl ~ ( IO ())) => Op (HideSuper ()) Adjuster orig impl where
+instance (impl ~ IO ()) => Op (HideSuper ()) Adjuster orig impl where
   runOp _ _ adjuster = withRef adjuster $ \adjusterPtr -> hideSuper' adjusterPtr
 {# fun Fl_Adjuster_show as show' { id `Ptr ()' } -> `()' #}
-instance (impl ~ (  IO ())) => Op (ShowWidget ()) Adjuster orig impl where
+instance (impl ~ IO ()) => Op (ShowWidget ()) Adjuster orig impl where
   runOp _ _ adjuster = withRef adjuster $ \adjusterPtr -> show' adjusterPtr
 {# fun Fl_Adjuster_show_super as showSuper' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance (impl ~ ( IO ())) => Op (ShowWidgetSuper ()) Adjuster orig impl where
+instance (impl ~ IO ()) => Op (ShowWidgetSuper ()) Adjuster orig impl where
   runOp _ _ adjuster = withRef adjuster $ \adjusterPtr -> showSuper' adjusterPtr
 
 -- $hierarchy

@@ -30,6 +30,7 @@ import Graphics.UI.FLTK.LowLevel.Utils
 import Graphics.UI.FLTK.LowLevel.Dispatch
 import qualified Data.Text as T
 import Graphics.UI.FLTK.LowLevel.Hierarchy
+import Control.Monad.IO.Class
 
 type RectangleFPrim              = Ptr () -> CInt -> CInt -> CInt -> CInt -> IO ()
 
@@ -122,8 +123,8 @@ widgetMaker :: forall a. (Parent a Widget) =>
                -> Maybe T.Text                                                    -- ^ Title
                -> Maybe (Ref a -> IO ())                                          -- ^ Custom drawing function
                -> Maybe (CustomWidgetFuncs a)                                     -- ^ Custom functions
-               -> (Int -> Int -> Int -> Int -> Ptr () -> IO ( Ptr () ))           -- ^ Foreign constructor to call if only custom functions are given
-               -> (Int -> Int -> Int -> Int -> T.Text -> Ptr () -> IO ( Ptr () )) -- ^ Foreign constructor to call if both title and custom functions are given
+               -> (Int -> Int -> Int -> Int -> Ptr () -> IO (Ptr ()))             -- ^ Foreign constructor to call if only custom functions are given
+               -> (Int -> Int -> Int -> Int -> T.Text -> Ptr () -> IO (Ptr ()))   -- ^ Foreign constructor to call if both title and custom functions are given
                -> IO (Ref a)                                                      -- ^ Reference to the widget
 widgetMaker rectangle _label' draw' customFuncs' newWithCustomFuncs' newWithCustomFuncsLabel' =
   do
@@ -327,121 +328,121 @@ instance (impl ~ (IO ())) => Op (ShowWidget ()) Widget orig impl where
 instance (impl ~ (IO ())) => Op (HideSuper ()) Widget orig impl where
   runOp _ _ widget = withRef widget $ \widgetPtr -> hideSuper' widgetPtr
 {# fun Fl_Widget_hide as hide' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance (impl ~ (IO ())) => Op (Hide ()) Widget orig impl where
-  runOp _ _ widget = withRef widget $ \widgetPtr -> hide' widgetPtr
+instance (impl ~ m (), MonadIO m) => Op (Hide ()) Widget orig impl where
+  runOp _ _ widget = liftIO $ withRef widget $ \widgetPtr -> hide' widgetPtr
 {# fun Fl_Widget_set_visible as setVisible' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance (impl ~ (IO ())) => Op (SetVisible ()) Widget orig impl where
-  runOp _ _ widget = withRef widget $ \widgetPtr -> setVisible' widgetPtr
+instance (impl ~ m (), MonadIO m) => Op (SetVisible ()) Widget orig impl where
+  runOp _ _ widget = liftIO $ withRef widget $ \widgetPtr -> setVisible' widgetPtr
 {# fun Fl_Widget_clear_visible as clearVisible' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance (impl ~ (IO ())) => Op (ClearVisible ()) Widget orig impl where
-  runOp _ _ widget = withRef widget $ \widgetPtr -> clearVisible' widgetPtr
+instance (impl ~ m (), MonadIO m) => Op (ClearVisible ()) Widget orig impl where
+  runOp _ _ widget = liftIO $ withRef widget $ \widgetPtr -> clearVisible' widgetPtr
 {# fun Fl_Widget_active as active' { id `Ptr ()' } -> `Bool' cToBool #}
-instance (impl ~ (IO (Bool))) => Op (Active ()) Widget orig impl where
-  runOp _ _ widget = withRef widget $ \widgetPtr -> active' widgetPtr
+instance (impl ~ m Bool, MonadIO m) => Op (Active ()) Widget orig impl where
+  runOp _ _ widget = liftIO $ withRef widget $ \widgetPtr -> active' widgetPtr
 {# fun Fl_Widget_active_r as activeR' { id `Ptr ()' } -> `Bool' cToBool #}
-instance (impl ~ (IO (Bool))) => Op (ActiveR ()) Widget orig impl where
-  runOp _ _ widget = withRef widget $ \widgetPtr -> activeR' widgetPtr
+instance (impl ~ m Bool, MonadIO m) => Op (ActiveR ()) Widget orig impl where
+  runOp _ _ widget = liftIO $ withRef widget $ \widgetPtr -> activeR' widgetPtr
 {# fun Fl_Widget_activate as activate' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance (impl ~ (IO ())) => Op (Activate ()) Widget orig impl where
-  runOp _ _ widget = withRef widget $ \widgetPtr -> activate' widgetPtr
+instance (impl ~ m (), MonadIO m) => Op (Activate ()) Widget orig impl where
+  runOp _ _ widget = liftIO $ withRef widget $ \widgetPtr -> activate' widgetPtr
 {# fun Fl_Widget_deactivate as deactivate' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance (impl ~ (IO ())) => Op (Deactivate ()) Widget orig impl where
-  runOp _ _ widget = withRef widget $ \widgetPtr -> deactivate' widgetPtr
+instance (impl ~ m (), MonadIO m) => Op (Deactivate ()) Widget orig impl where
+  runOp _ _ widget = liftIO $ withRef widget $ \widgetPtr -> deactivate' widgetPtr
 {# fun Fl_Widget_output as output' { id `Ptr ()' } -> `Int' #}
-instance (impl ~ (IO (Int))) => Op (GetOutput ()) Widget orig impl where
-  runOp _ _ widget = withRef widget $ \widgetPtr -> output' widgetPtr
+instance (impl ~ m Int, MonadIO m) => Op (GetOutput ()) Widget orig impl where
+  runOp _ _ widget = liftIO $ withRef widget $ \widgetPtr -> output' widgetPtr
 {# fun Fl_Widget_set_output as setOutput' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance (impl ~ (IO ())) => Op (SetOutput ()) Widget orig impl where
-  runOp _ _ widget = withRef widget $ \widgetPtr -> setOutput' widgetPtr
+instance (impl ~ m (), MonadIO m) => Op (SetOutput ()) Widget orig impl where
+  runOp _ _ widget = liftIO $ withRef widget $ \widgetPtr -> setOutput' widgetPtr
 {# fun Fl_Widget_clear_output as clearOutput' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance (impl ~ (IO ())) => Op (ClearOutput ()) Widget orig impl where
-  runOp _ _ widget = withRef widget $ \widgetPtr -> clearOutput' widgetPtr
+instance (impl ~ m (), MonadIO m) => Op (ClearOutput ()) Widget orig impl where
+  runOp _ _ widget = liftIO $ withRef widget $ \widgetPtr -> clearOutput' widgetPtr
 {# fun Fl_Widget_takesevents as takesevents' { id `Ptr ()' } -> `Bool' cToBool #}
-instance (impl ~ (IO (Bool))) => Op (Takesevents ()) Widget orig impl where
-  runOp _ _ widget = withRef widget $ \widgetPtr -> takesevents' widgetPtr
+instance (impl ~ m Bool, MonadIO m) => Op (Takesevents ()) Widget orig impl where
+  runOp _ _ widget = liftIO $ withRef widget $ \widgetPtr -> takesevents' widgetPtr
 {# fun Fl_Widget_set_active as setActive' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance (impl ~ (IO ())) => Op (SetActive ()) Widget orig impl where
-  runOp _ _ widget = withRef widget $ \widgetPtr -> setActive' widgetPtr
+instance (impl ~ m (), MonadIO m) => Op (SetActive ()) Widget orig impl where
+  runOp _ _ widget = liftIO $ withRef widget $ \widgetPtr -> setActive' widgetPtr
 {# fun Fl_Widget_clear_active as clearActive' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance (impl ~ (IO ())) => Op (ClearActive ()) Widget orig impl where
-  runOp _ _ widget = withRef widget $ \widgetPtr -> clearActive' widgetPtr
+instance (impl ~ m (), MonadIO m) => Op (ClearActive ()) Widget orig impl where
+  runOp _ _ widget = liftIO $ withRef widget $ \widgetPtr -> clearActive' widgetPtr
 {# fun Fl_Widget_set_changed as setChanged' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance (impl ~ (IO ())) => Op (SetChanged ()) Widget orig impl where
-  runOp _ _ widget = withRef widget $ \widgetPtr -> setChanged' widgetPtr
+instance (impl ~ m (), MonadIO m) => Op (SetChanged ()) Widget orig impl where
+  runOp _ _ widget = liftIO $ withRef widget $ \widgetPtr -> setChanged' widgetPtr
 {# fun Fl_Widget_clear_changed as clearChanged' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance (impl ~ (IO ())) => Op (ClearChanged ()) Widget orig impl where
-  runOp _ _ widget = withRef widget $ \widgetPtr -> clearChanged' widgetPtr
+instance (impl ~ m (), MonadIO m) => Op (ClearChanged ()) Widget orig impl where
+  runOp _ _ widget = liftIO $ withRef widget $ \widgetPtr -> clearChanged' widgetPtr
 {# fun Fl_Widget_changed as changed' { id `Ptr ()' } -> `Bool' cToBool #}
-instance (impl ~ (IO (Bool))) => Op (Changed ()) Widget orig impl where
-  runOp _ _ widget = withRef widget $ \widgetPtr -> changed' widgetPtr
+instance (impl ~ m Bool, MonadIO m) => Op (Changed ()) Widget orig impl where
+  runOp _ _ widget = liftIO $ withRef widget $ \widgetPtr -> changed' widgetPtr
 {# fun Fl_Widget_take_focus as takeFocus' { id `Ptr ()' } -> `Int' #}
-instance (impl ~ (IO (Either NoChange ()))) => Op (TakeFocus ()) Widget orig impl where
-  runOp _ _ widget = withRef widget $ \widgetPtr -> takeFocus' widgetPtr >>= return . successOrNoChange
+instance (impl ~ m (Either NoChange ()), MonadIO m) => Op (TakeFocus ()) Widget orig impl where
+  runOp _ _ widget = liftIO $ withRef widget $ \widgetPtr -> takeFocus' widgetPtr >>= return . successOrNoChange
 {# fun Fl_Widget_set_visible_focus as setVisibleFocus' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance (impl ~ (IO ())) => Op (SetVisibleFocus ()) Widget orig impl where
-  runOp _ _ widget = withRef widget $ \widgetPtr -> setVisibleFocus' widgetPtr
+instance (impl ~ m (), MonadIO m) => Op (SetVisibleFocus ()) Widget orig impl where
+  runOp _ _ widget = liftIO $ withRef widget $ \widgetPtr -> setVisibleFocus' widgetPtr
 {# fun Fl_Widget_clear_visible_focus as clearVisibleFocus' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance (impl ~ (IO ())) => Op (ClearVisibleFocus ()) Widget orig impl where
-  runOp _ _ widget = withRef widget $ \widgetPtr -> clearVisibleFocus' widgetPtr
+instance (impl ~ m (), MonadIO m) => Op (ClearVisibleFocus ()) Widget orig impl where
+  runOp _ _ widget = liftIO $ withRef widget $ \widgetPtr -> clearVisibleFocus' widgetPtr
 {# fun Fl_Widget_modify_visible_focus as modifyVisibleFocus' { id `Ptr ()',`Int' } -> `()' supressWarningAboutRes #}
-instance (impl ~ ( Int ->  IO ())) => Op (ModifyVisibleFocus ()) Widget orig impl where
-  runOp _ _ widget v = withRef widget $ \widgetPtr -> modifyVisibleFocus' widgetPtr v
+instance (impl ~ (Int -> m ()), MonadIO m) => Op (ModifyVisibleFocus ()) Widget orig impl where
+  runOp _ _ widget v = liftIO $ withRef widget $ \widgetPtr -> modifyVisibleFocus' widgetPtr v
 {# fun Fl_Widget_visible_focus as visibleFocus' { id `Ptr ()' } -> `Bool' cToBool #}
-instance (impl ~ (IO (Bool))) => Op (GetVisibleFocus ()) Widget orig impl where
-  runOp _ _ widget = withRef widget $ \widgetPtr -> visibleFocus' widgetPtr
+instance (impl ~ m Bool, MonadIO m) => Op (GetVisibleFocus ()) Widget orig impl where
+  runOp _ _ widget = liftIO $ withRef widget $ \widgetPtr -> visibleFocus' widgetPtr
 {# fun Fl_Widget_contains as contains' { id `Ptr ()',id `Ptr ()' } -> `Int' #}
-instance (Parent a Widget, impl ~  (Ref a ->  IO Bool)) => Op (Contains ()) Widget orig impl where
-  runOp _ _ widget otherWidget = withRef widget $ \widgetPtr -> withRef otherWidget $ \otherWidgetPtr ->
+instance (Parent a Widget, impl ~ (Ref a -> m Bool), MonadIO m) => Op (Contains ()) Widget orig impl where
+  runOp _ _ widget otherWidget = liftIO $ withRef widget $ \widgetPtr -> withRef otherWidget $ \otherWidgetPtr ->
     contains' widgetPtr otherWidgetPtr >>= return . cToBool
 {# fun Fl_Widget_inside as inside' { id `Ptr ()',id `Ptr ()' } -> `Int' #}
-instance (Parent a Widget, impl ~ (Ref a -> IO (Bool))) => Op (Inside ()) Widget orig impl where
-  runOp _ _ widget otherWidget = withRef widget $ \widgetPtr -> withRef otherWidget $ \otherWidgetPtr ->
+instance (Parent a Widget, impl ~ (Ref a -> m Bool), MonadIO m) => Op (Inside ()) Widget orig impl where
+  runOp _ _ widget otherWidget = liftIO $ withRef widget $ \widgetPtr -> withRef otherWidget $ \otherWidgetPtr ->
     inside' widgetPtr otherWidgetPtr >>= return . cToBool
 {# fun Fl_Widget_redraw as redraw' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance (impl ~ (IO ())) => Op (Redraw ()) Widget orig impl where
-  runOp _ _ widget = withRef widget $ \widgetPtr -> redraw' widgetPtr
+instance (impl ~ m (), MonadIO m) => Op (Redraw ()) Widget orig impl where
+  runOp _ _ widget = liftIO $ withRef widget $ \widgetPtr -> redraw' widgetPtr
 {# fun Fl_Widget_redraw_label as redrawLabel' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance (impl ~ (IO ())) => Op (RedrawLabel ()) Widget orig impl where
-  runOp _ _ widget = withRef widget $ \widgetPtr -> redrawLabel' widgetPtr
+instance (impl ~ m (), MonadIO m) => Op (RedrawLabel ()) Widget orig impl where
+  runOp _ _ widget = liftIO $ withRef widget $ \widgetPtr -> redrawLabel' widgetPtr
 {# fun Fl_Widget_damage as damage' { id `Ptr ()' } -> `Word8' #}
-instance (impl ~ (IO ([Damage]))) => Op (GetDamage ()) Widget orig impl where
-  runOp _ _ widget = withRef widget $ \widgetPtr -> do
+instance (impl ~ m [Damage], MonadIO m) => Op (GetDamage ()) Widget orig impl where
+  runOp _ _ widget = liftIO $ withRef widget $ \widgetPtr -> do
     d <- damage' widgetPtr
     return (extract allDamages (fromIntegral d))
 {# fun Fl_Widget_clear_damage_with_bitmask as clearDamageWithBitmask' { id `Ptr ()',`Word8' } -> `()' supressWarningAboutRes #}
-instance (impl ~ ( [Damage] ->  IO ())) => Op (ClearDamageExcept ()) Widget orig impl where
-  runOp _ _ widget damages = withRef widget $ \widgetPtr -> clearDamageWithBitmask' widgetPtr (fromIntegral (combine damages))
+instance (impl ~ ([Damage] -> m ()), MonadIO m) => Op (ClearDamageExcept ()) Widget orig impl where
+  runOp _ _ widget damages = liftIO $ withRef widget $ \widgetPtr -> clearDamageWithBitmask' widgetPtr (fromIntegral (combine damages))
 {# fun Fl_Widget_clear_damage as clearDamage' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance (impl ~ (IO ())) => Op (ClearDamage ()) Widget orig impl where
-  runOp _ _ widget = withRef widget $ \widgetPtr -> clearDamage' widgetPtr
+instance (impl ~ m (), MonadIO m) => Op (ClearDamage ()) Widget orig impl where
+  runOp _ _ widget = liftIO $ withRef widget $ \widgetPtr -> clearDamage' widgetPtr
 {# fun Fl_Widget_damage_with_text as damageWithText' { id `Ptr ()',`Word8' } -> `()' supressWarningAboutRes #}
-instance (impl ~ ( [Damage] ->  IO ())) => Op (SetDamage ()) Widget orig impl where
-  runOp _ _ widget damages = withRef widget $ \widgetPtr -> damageWithText' widgetPtr (fromIntegral (combine damages))
+instance (impl ~ ([Damage] -> m ()), MonadIO m) => Op (SetDamage ()) Widget orig impl where
+  runOp _ _ widget damages = liftIO $ withRef widget $ \widgetPtr -> damageWithText' widgetPtr (fromIntegral (combine damages))
 {# fun Fl_Widget_damage_inside_widget as damageInsideWidget' { id `Ptr ()',`Word8',`Int',`Int',`Int',`Int' } -> `()' supressWarningAboutRes #}
-instance (impl ~ ( [Damage] -> Rectangle ->  IO ())) => Op (SetDamageInside ()) Widget orig impl where
-  runOp _ _ widget damages rectangle = withRef widget $ \widgetPtr -> do
+instance (impl ~ ([Damage] -> Rectangle -> m ()), MonadIO m) => Op (SetDamageInside ()) Widget orig impl where
+  runOp _ _ widget damages rectangle = liftIO $ withRef widget $ \widgetPtr -> do
     let (x_pos,y_pos,w_pos,h_pos) = fromRectangle rectangle
     damageInsideWidget' widgetPtr (fromIntegral (combine damages)) x_pos y_pos w_pos h_pos
 {# fun Fl_Widget_measure_label as measureLabel' {id `Ptr ()',alloca- `Int' peekIntConv*, alloca- `Int' peekIntConv*} -> `()' #}
-instance (impl ~ ( IO (Size))) => Op (MeasureLabel ()) Widget orig impl where
-  runOp _ _ widget = withRef widget $ \widgetPtr -> measureLabel' widgetPtr >>= \(width, height) -> return $ Size (Width width) (Height height)
+instance (impl ~ m Size, MonadIO m) => Op (MeasureLabel ()) Widget orig impl where
+  runOp _ _ widget = liftIO $ withRef widget $ \widgetPtr -> measureLabel' widgetPtr >>= \(width, height) -> return $ Size (Width width) (Height height)
 {# fun Fl_Widget_window as window' { id `Ptr ()' } -> `Ptr ()' id #}
-instance (impl ~ (IO (Maybe (Ref Window)))) => Op (GetWindow ()) Widget orig impl where
-  runOp _ _ widget = withRef widget $ \widgetPtr -> window' widgetPtr >>= toMaybeRef
+instance (impl ~ m (Maybe (Ref Window)), MonadIO m) => Op (GetWindow ()) Widget orig impl where
+  runOp _ _ widget = liftIO $ withRef widget $ \widgetPtr -> window' widgetPtr >>= toMaybeRef
 {# fun Fl_Widget_top_window as topWindow' { id `Ptr ()' } -> `Ptr ()' id #}
-instance (impl ~ (IO (Maybe (Ref Window)))) => Op (GetTopWindow ()) Widget orig impl where
-  runOp _ _ widget = withRef widget $ \widgetPtr -> (topWindow' widgetPtr) >>= toMaybeRef
+instance (impl ~ m (Maybe (Ref Window)), MonadIO m) => Op (GetTopWindow ()) Widget orig impl where
+  runOp _ _ widget = liftIO $ withRef widget $ \widgetPtr -> (topWindow' widgetPtr) >>= toMaybeRef
 {# fun Fl_Widget_top_window_offset as topWindowOffset' { id `Ptr ()',alloca- `Int' peekIntConv*,alloca- `Int' peekIntConv* } -> `()' #}
-instance (impl ~ ( IO (Position))) => Op (GetTopWindowOffset ()) Widget orig impl where
-  runOp _ _ widget = withRef widget $ \widgetPtr -> topWindowOffset' widgetPtr >>= \(x_pos,y_pos) -> return $ Position (X x_pos) (Y y_pos)
+instance (impl ~ m Position, MonadIO m) => Op (GetTopWindowOffset ()) Widget orig impl where
+  runOp _ _ widget = liftIO $ withRef widget $ \widgetPtr -> topWindowOffset' widgetPtr >>= \(x_pos,y_pos) -> return $ Position (X x_pos) (Y y_pos)
 {# fun Fl_Widget_resize_super as resizeSuper' { id `Ptr ()',`Int',`Int',`Int',`Int' } -> `()' supressWarningAboutRes #}
-instance (impl ~ ( Rectangle ->  IO ())) => Op (ResizeSuper ()) Widget orig impl where
-  runOp _ _ widget rectangle = withRef widget $ \widgetPtr -> do
+instance (impl ~ (Rectangle -> m ()), MonadIO m) => Op (ResizeSuper ()) Widget orig impl where
+  runOp _ _ widget rectangle = liftIO $ withRef widget $ \widgetPtr -> do
     let (x_pos,y_pos,w_pos,h_pos) = fromRectangle rectangle
     resizeSuper' widgetPtr x_pos y_pos w_pos h_pos
 {# fun Fl_Widget_resize as resize' { id `Ptr ()',`Int',`Int',`Int',`Int' } -> `()' supressWarningAboutRes #}
-instance (impl ~ ( Rectangle -> IO ())) => Op (Resize ()) Widget orig impl where
-  runOp _ _ widget rectangle = withRef widget $ \widgetPtr -> do
+instance (impl ~ (Rectangle -> m ()), MonadIO m) => Op (Resize ()) Widget orig impl where
+  runOp _ _ widget rectangle = liftIO $ withRef widget $ \widgetPtr -> do
     let (x_pos,y_pos,w_pos,h_pos) = fromRectangle rectangle
     resize' widgetPtr x_pos y_pos w_pos h_pos
 {# fun Fl_Widget_set_callback as setCallback' { id `Ptr ()', id `FunPtr CallbackWithUserDataPrim'} -> `()' supressWarningAboutRes #}
@@ -451,33 +452,33 @@ instance (impl ~ ((Ref orig -> IO ()) -> IO ())) => Op (SetCallback ()) Widget o
     setCallback' widgetPtr (castFunPtr ptr)
 
 {# fun Fl_Widget_has_callback as hasCallback' { id `Ptr ()' } -> `CInt' #}
-instance (impl ~ (IO (Bool))) => Op (HasCallback ()) Widget orig impl where
-  runOp _ _ widget = withRef widget $ \widgetPtr -> do
+instance (impl ~ m Bool, MonadIO m) => Op (HasCallback ()) Widget orig impl where
+  runOp _ _ widget = liftIO $ withRef widget $ \widgetPtr -> do
     res <- hasCallback' widgetPtr
     return $ if (res == 0) then False else True
 {# fun Fl_Widget_draw_box as widgetDrawBox' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
 {# fun Fl_Widget_draw_box_with_tc as widgetDrawBoxWithTC' { id `Ptr ()', cFromEnum `Boxtype', cFromColor`Color' } -> `()' supressWarningAboutRes #}
 {# fun Fl_Widget_draw_box_with_txywhc as widgetDrawBoxWithTXywhC' { id `Ptr ()', cFromEnum `Boxtype', `Int',`Int',`Int',`Int', cFromColor `Color' } -> `()' supressWarningAboutRes #}
-instance (impl ~ ( IO ())) => Op (DrawBox ()) Widget orig impl where
-  runOp _ _ widget = withRef widget $ \widgetPtr -> widgetDrawBox' widgetPtr
-instance (impl ~ ( Boxtype -> Color -> Maybe Rectangle -> IO ())) => Op (DrawBoxWithBoxtype ()) Widget orig impl where
+instance (impl ~ m (), MonadIO m) => Op (DrawBox ()) Widget orig impl where
+  runOp _ _ widget = liftIO $ withRef widget $ \widgetPtr -> widgetDrawBox' widgetPtr
+instance (impl ~ (Boxtype -> Color -> Maybe Rectangle -> m ()), MonadIO m) => Op (DrawBoxWithBoxtype ()) Widget orig impl where
   runOp _ _ widget bx c Nothing =
-    withRef widget $ \widgetPtr -> widgetDrawBoxWithTC' widgetPtr bx c
+    liftIO $ withRef widget $ \widgetPtr -> widgetDrawBoxWithTC' widgetPtr bx c
   runOp _ _ widget bx c (Just r) =
-              withRef widget $ \widgetPtr -> do
+              liftIO $ withRef widget $ \widgetPtr -> do
                 let (x_pos,y_pos,w_pos,h_pos) = fromRectangle r
                 widgetDrawBoxWithTXywhC' widgetPtr bx x_pos y_pos w_pos h_pos c
 {# fun Fl_Widget_draw_backdrop as widgetDrawBackdrop' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance (impl ~ ( IO ())) => Op (DrawBackdrop ()) Widget orig impl where
-  runOp _ _ widget = withRef widget $ \widgetPtr -> widgetDrawBackdrop' widgetPtr
+instance (impl ~ m (), MonadIO m) => Op (DrawBackdrop ()) Widget orig impl where
+  runOp _ _ widget = liftIO $ withRef widget $ \widgetPtr -> widgetDrawBackdrop' widgetPtr
 
 {# fun Fl_Widget_draw_focus as widgetDrawFocus' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
 {# fun Fl_Widget_draw_focus_with_txywh as widgetDrawFocusWithTXywh' { id `Ptr ()', cFromEnum `Boxtype', `Int', `Int', `Int', `Int' } -> `()' supressWarningAboutRes #}
-instance (impl ~ ( Maybe (Boxtype, Rectangle) -> IO ())) => Op (DrawFocus ()) Widget orig impl where
+instance (impl ~ (Maybe (Boxtype, Rectangle) -> m ()), MonadIO m) => Op (DrawFocus ()) Widget orig impl where
   runOp _ _ widget Nothing =
-                withRef widget $ \ widgetPtr -> widgetDrawFocus' widgetPtr
+                liftIO $ withRef widget $ \ widgetPtr -> widgetDrawFocus' widgetPtr
   runOp _ _ widget (Just (bx, r)) =
-                withRef widget $ \widgetPtr -> do
+                liftIO $ withRef widget $ \widgetPtr -> do
                   let (x_pos,y_pos,w_pos,h_pos) = fromRectangle r
                   widgetDrawFocusWithTXywh' widgetPtr bx x_pos y_pos w_pos h_pos
 
@@ -485,11 +486,11 @@ instance (impl ~ ( Maybe (Boxtype, Rectangle) -> IO ())) => Op (DrawFocus ()) Wi
 -- @
 -- activate :: 'Ref' 'Widget' -> 'IO' ()
 --
--- active :: 'Ref' 'Widget' -> 'IO' ('Bool')
+-- active :: 'Ref' 'Widget' -> 'IO' 'Bool'
 --
--- activeR :: 'Ref' 'Widget' -> 'IO' ('Bool')
+-- activeR :: 'Ref' 'Widget' -> 'IO' 'Bool'
 --
--- changed :: 'Ref' 'Widget' -> 'IO' ('Bool')
+-- changed :: 'Ref' 'Widget' -> 'IO' 'Bool'
 --
 -- clearActive :: 'Ref' 'Widget' -> 'IO' ()
 --
@@ -517,13 +518,13 @@ instance (impl ~ ( Maybe (Boxtype, Rectangle) -> IO ())) => Op (DrawFocus ()) Wi
 --
 -- doCallback :: 'Ref' 'Widget' -> 'IO' ()
 --
--- drawBackdrop :: 'Ref' 'Widget' -> 'IO' ()
+-- drawBackdrop :: MonadIO m => 'Ref' 'Widget' -> m ()
 --
--- drawBox :: 'Ref' 'Widget' -> 'IO' ()
+-- drawBox :: MonadIO m => 'Ref' 'Widget' -> m ()
 --
--- drawBoxWithBoxtype :: 'Ref' 'Widget' -> 'Boxtype' -> 'Color' -> 'Maybe' 'Rectangle' -> 'IO' ()
+-- drawBoxWithBoxtype :: MonadIO m => 'Ref' 'Widget' -> 'Boxtype' -> 'Color' -> 'Maybe' 'Rectangle' -> m ()
 --
--- drawFocus :: 'Ref' 'Widget' -> 'Maybe' ('Boxtype', 'Rectangle') -> 'IO' ()
+-- drawFocus :: MonadIO m => 'Ref' 'Widget' -> 'Maybe' ('Boxtype', 'Rectangle') -> m ()
 --
 -- drawLabel :: 'Ref' 'Widget' -> 'Maybe' ('Rectangle,Alignments') -> 'IO' ()
 --

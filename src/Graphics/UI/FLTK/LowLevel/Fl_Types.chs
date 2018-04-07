@@ -12,13 +12,14 @@ import Foreign.C hiding (CClock)
 import Graphics.UI.FLTK.LowLevel.Fl_Enumerations
 import qualified Foreign.ForeignPtr.Unsafe as Unsafe
 import Debug.Trace
-import Control.Exception
 import C2HS hiding (cFromEnum, cFromBool, cToBool,cToEnum)
 import qualified Data.Text as T
 #if defined(CALLSTACK_AVAILABLE) || defined(HASCALLSTACK_AVAILABLE)
 import GHC.Stack
 #endif
 import qualified Data.ByteString as B
+import Control.Monad.IO.Class
+import Control.Monad.Catch
 #c
   enum SliderType {
     VertSliderType = FL_VERT_SLIDER,
@@ -309,6 +310,7 @@ data DPI = DPI Float Float deriving Show
 newtype TextDisplayStyle = TextDisplayStyle CInt deriving Show
 newtype BufferOffset = BufferOffset Int deriving Show
 data BufferRange = BufferRange BufferOffset BufferOffset deriving Show
+
 statusToBufferRange :: (Ptr CInt -> Ptr CInt -> IO Int) -> IO (Maybe BufferRange)
 statusToBufferRange f =
   alloca $ \start' ->
@@ -352,11 +354,11 @@ data UnknownEvent = UnknownEvent deriving Show
 successOrUnknownEvent :: Int -> Either UnknownEvent ()
 successOrUnknownEvent status = if (status == 0) then Left UnknownEvent else Right ()
 data UnknownError = UnknownError deriving Show
-successOrUnknownError :: a -> Bool -> (a -> IO b) -> IO (Either UnknownError b)
+successOrUnknownError :: Monad m => a -> Bool -> (a -> m b) -> m (Either UnknownError b)
 successOrUnknownError a pred' tr = if pred' then return (Left UnknownError) else tr a >>= return . Right
 data NotFound = NotFound deriving Show
 data OutOfRange = OutOfRange deriving Show
-successOrOutOfRange :: a -> Bool -> (a -> IO b) -> IO (Either OutOfRange b)
+successOrOutOfRange :: Monad m => a -> Bool -> (a -> m b) -> m (Either OutOfRange b)
 successOrOutOfRange a pred' tr = if pred' then return (Left OutOfRange) else tr a >>= return . Right
 data NoChange = NoChange deriving Show
 successOrNoChange :: Int -> Either NoChange ()
@@ -392,29 +394,29 @@ toSize (width', height') = Size (Width width') (Height height')
 toPosition :: (Int,Int) -> Position
 toPosition (xPos', yPos') = Position (X xPos') (Y yPos')
 
-throwStackOnError :: IO a -> IO a
+throwStackOnError :: MonadMask m => m a -> m a
 throwStackOnError f =
   f `catch` throwStack
   where
-  throwStack :: SomeException -> IO b
+  throwStack :: SomeException -> m b
   throwStack e = traceStack (show e) $ error ""
 
-withForeignPtrs :: [ForeignPtr a] -> ([Ptr a] -> IO c) -> IO c
+withForeignPtrs :: MonadIO m => [ForeignPtr a] -> ([Ptr a] -> m c) -> m c
 withForeignPtrs fptrs io = do
   let ptrs = map Unsafe.unsafeForeignPtrToPtr fptrs
   r <- io ptrs
-  mapM_ touchForeignPtr fptrs
+  mapM_ (liftIO . touchForeignPtr) fptrs
   return r
 
 #ifdef CALLSTACK_AVAILABLE
-toRefPtr :: (?loc :: CallStack) => Ptr (Ptr a) -> IO (Ptr a)
+toRefPtr :: (?loc :: CallStack, MonadIO m) => Ptr (Ptr a) -> m (Ptr a)
 #elif defined(HASCALLSTACK_AVAILABLE)
-toRefPtr :: HasCallStack => Ptr (Ptr a) -> IO (Ptr a)
+toRefPtr :: (HasCallStack, MonadIO m) => Ptr (Ptr a) -> m (Ptr a)
 #else
-toRefPtr :: Ptr (Ptr a) -> IO (Ptr a)
+toRefPtr :: MonadIO m => Ptr (Ptr a) -> m (Ptr a)
 #endif
 toRefPtr ptrToRefPtr = do
-  refPtr <- peek ptrToRefPtr
+  refPtr <- liftIO $ peek ptrToRefPtr
   if (refPtr == nullPtr)
 #ifdef CALLSTACK_AVAILABLE
    then error $ "Ref does not exist. " ++ (showCallStack ?loc)
@@ -426,34 +428,34 @@ toRefPtr ptrToRefPtr = do
    else return refPtr
 
 #ifdef CALLSTACK_AVAILABLE
-withRef :: (?loc :: CallStack) => Ref a -> (Ptr b -> IO c) -> IO c
+withRef :: (?loc :: CallStack, MonadIO m, MonadMask m) => Ref a -> (Ptr b -> m c) -> m c
 #elif defined(HASCALLSTACK_AVAILABLE)
-withRef :: HasCallStack => Ref a -> (Ptr b -> IO c) -> IO c
+withRef :: (HasCallStack, MonadIO m, MonadMask m) => Ref a -> (Ptr b -> m c) -> m c
 #else
-withRef :: Ref a -> (Ptr b -> IO c) -> IO c
+withRef :: (MonadIO m, MonadMask m) => Ref a -> (Ptr b -> m c) -> m c
 #endif
 withRef (Ref fptr) f =
    throwStackOnError $
-     withForeignPtr fptr
+     withForeignPtrM fptr
        (\ptrToRefPtr -> do
            refPtr <- toRefPtr ptrToRefPtr
            f (castPtr refPtr)
        )
 
-isNull :: Ref a -> IO Bool
+isNull :: MonadIO m => Ref a -> m Bool
 isNull (Ref fptr) =
-  withForeignPtr fptr
+  withForeignPtrM fptr
    (\ptrToRefPtr -> do
-        refPtr <- peek ptrToRefPtr
+        refPtr <- liftIO $ peek ptrToRefPtr
         return (refPtr == nullPtr)
    )
 
 #ifdef CALLSTACK_AVAILABLE
-unsafeRefToPtr :: (?loc :: CallStack) => Ref a -> IO (Ptr ())
+unsafeRefToPtr :: (?loc :: CallStack, MonadIO m, MonadMask m) => Ref a -> m (Ptr ())
 #elif defined(HASCALLSTACK_AVAILABLE)
-unsafeRefToPtr :: HasCallStack => Ref a -> IO (Ptr ())
+unsafeRefToPtr :: (HasCallStack, MonadIO m, MonadMask m) => Ref a -> m (Ptr ())
 #else
-unsafeRefToPtr :: Ref a -> IO (Ptr ())
+unsafeRefToPtr :: (MonadIO m, MonadMask m) => Ref a -> m (Ptr ())
 #endif
 unsafeRefToPtr (Ref fptr) =
     throwStackOnError $ do
@@ -461,11 +463,11 @@ unsafeRefToPtr (Ref fptr) =
       return $ castPtr refPtr
 
 #ifdef CALLSTACK_AVAILABLE
-withRefs :: (?loc :: CallStack) => [Ref a] -> (Ptr (Ptr b) -> IO c) -> IO c
+withRefs :: (?loc :: CallStack, MonadIO m, MonadMask m) => [Ref a] -> (Ptr (Ptr b) -> m c) -> m c
 #elif HASCALLSTACK_AVAILABLE
-withRefs :: HasCallStack => [Ref a] -> (Ptr (Ptr b) -> IO c) -> IO c
+withRefs :: (HasCallStack, MonadIO m, MonadMask m) => [Ref a] -> (Ptr (Ptr b) -> m c) -> m c
 #else
-withRefs :: [Ref a] -> (Ptr (Ptr b) -> IO c) -> IO c
+withRefs :: (MonadIO m, MonadMask m) => [Ref a] -> (Ptr (Ptr b) -> m c) -> m c
 #endif
 withRefs refs f =
   throwStackOnError
@@ -473,18 +475,18 @@ withRefs refs f =
         (map (\(Ref fptr) -> fptr) refs)
         (\ptrToRefPtrs -> do
            refPtrs <- mapM toRefPtr ptrToRefPtrs
-           arrayPtr <- newArray refPtrs
+           arrayPtr <- liftIO $ newArray refPtrs
            f (castPtr arrayPtr)
         )
 
-withMaybeRef :: Maybe (Ref a) -> (Ptr () -> IO c) -> IO c
+withMaybeRef :: (MonadIO m, MonadMask m) => Maybe (Ref a) -> (Ptr () -> m c) -> m c
 withMaybeRef (Just o) f = withRef o f
 withMaybeRef Nothing f = f (castPtr nullPtr)
 
-swapRef :: Ref a -> (Ptr b -> IO (Ptr ())) -> IO ()
+swapRef :: (MonadIO m, MonadMask m) => Ref a -> (Ptr b -> m (Ptr ())) -> m ()
 swapRef ref@(Ref fptr) f = do
    result <- withRef ref f
-   withForeignPtr fptr $ \p -> poke p result
+   withForeignPtrM fptr $ \p -> liftIO $ poke p result
 
 wrapInRef :: ForeignPtr (Ptr ()) -> Ref a
 wrapInRef = Ref . castForeignPtr
@@ -495,9 +497,15 @@ toFunRef fptr = FunRef $ castFunPtr fptr
 fromFunRef :: FunRef -> (FunPtr ())
 fromFunRef (FunRef f) = castFunPtr f
 
-refPtrEquals :: Ref a -> Ref b -> IO Bool
+refPtrEquals :: (MonadIO m, MonadMask m) => Ref a -> Ref b -> m Bool
 refPtrEquals w1 w2 = do
   w1Null <- isNull w1
   w2Null <- isNull w2
   if (w1Null || w2Null) then return False
     else withRef w1 (\w1Ptr -> withRef w2 (\w2Ptr -> return (w1Ptr == w2Ptr)))
+
+withForeignPtrM :: MonadIO m => ForeignPtr a -> (Ptr a -> m b) -> m b
+withForeignPtrM fo io
+  = do r <- io (Unsafe.unsafeForeignPtrToPtr fo)
+       liftIO $ touchForeignPtr fo
+       return r
