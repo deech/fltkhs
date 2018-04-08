@@ -153,64 +153,65 @@ widgetCustom rectangle l' draw' funcs' =
     overriddenWidgetNewWithLabel'
 
 {# fun Fl_Widget_Destroy as widgetDestroy' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance (impl ~  IO ()) => Op (Destroy ()) Widget orig impl where
-  runOp _ _ win = swapRef win $ \winPtr -> do
+instance (impl ~ m (), MonadIO m) => Op (Destroy ()) Widget orig impl where
+  runOp _ _ win = liftIO $ swapRef win $ \winPtr -> do
     widgetDestroy' winPtr
     return nullPtr
 
 {#fun Fl_Widget_handle as widgetHandle' { id `Ptr ()', id `CInt' } -> `Int' #}
-instance (impl ~ (Event -> IO (Either UnknownEvent ()))) => Op (Handle ()) Widget orig impl where
-  runOp _ _ widget event = withRef widget (\p -> widgetHandle' p (fromIntegral . fromEnum $ event)) >>= return  . successOrUnknownEvent
+instance (impl ~ (Event -> m (Either UnknownEvent ())), MonadIO m) => Op (Handle ()) Widget orig impl where
+  runOp _ _ widget event = liftIO $ withRef widget (\p -> widgetHandle' p (fromIntegral . fromEnum $ event)) >>= return  . successOrUnknownEvent
 
 {#fun Fl_Widget_parent as widgetParent' { id `Ptr ()'} -> `Ptr ()' id #}
-instance (impl ~  IO (Maybe (Ref Group))) => Op (GetParent ()) Widget orig impl where
-  runOp _ _ widget = withRef widget widgetParent' >>= toMaybeRef
+instance (impl ~ m (Maybe (Ref Group)), MonadIO m) => Op (GetParent ()) Widget orig impl where
+  runOp _ _ widget = liftIO $ withRef widget widgetParent' >>= toMaybeRef
 
 {#fun Fl_Widget_set_parent as widgetSetParent' { id `Ptr ()', id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance (Parent a Group, impl ~ (Maybe (Ref a) -> IO ())) => Op (SetParent ()) Widget orig impl where
+instance (Parent a Group, impl ~ (Maybe (Ref a) -> m ()), MonadIO m) => Op (SetParent ()) Widget orig impl where
   runOp _ _ widget group =
-      withRef widget
+      liftIO $ withRef widget
       (\widgetPtr ->
         withMaybeRef group (\groupPtr ->
                         widgetSetParent' widgetPtr groupPtr
                       )
       )
 {# fun Fl_Widget_type as type' { id `Ptr ()' } -> `Word8' #}
-instance (impl ~ IO (Word8)) => Op (GetType_ ()) Widget orig impl where
-  runOp _ _ widget = withRef widget $ \widgetPtr -> type' widgetPtr
+instance (impl ~ m Word8, MonadIO m) => Op (GetType_ ()) Widget orig impl where
+  runOp _ _ widget = liftIO $ withRef widget $ \widgetPtr -> type' widgetPtr
 {# fun Fl_Widget_set_type as setType' { id `Ptr ()',`Word8' } -> `()' supressWarningAboutRes #}
-instance (impl ~ (Word8 ->  IO ())) => Op (SetType ()) Widget orig impl where
-  runOp _ _ widget t = withRef widget $ \widgetPtr -> setType' widgetPtr t
+instance (impl ~ (Word8 -> m ()), MonadIO m) => Op (SetType ()) Widget orig impl where
+  runOp _ _ widget t = liftIO $ withRef widget $ \widgetPtr -> setType' widgetPtr t
 {# fun Fl_Widget_draw_label as drawLabel' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
 {# fun Fl_Widget_draw_label_with_xywh_alignment as drawLabelWithXywhAlignment' { id `Ptr ()',`Int',`Int',`Int',`Int', `Int' } -> `()' supressWarningAboutRes #}
-instance (impl ~ (Maybe (Rectangle,Alignments) ->  IO ())) => Op (DrawLabel ()) Widget orig impl where
-  runOp _ _ widget Nothing = withRef widget $ \widgetPtr -> drawLabel' widgetPtr
-  runOp _ _ widget (Just (rectangle,align_)) = withRef widget $ \widgetPtr -> do
+instance (impl ~ (Maybe (Rectangle,Alignments) -> m ()), MonadIO m) => Op (DrawLabel ()) Widget orig impl where
+  runOp _ _ widget Nothing = liftIO $ withRef widget $ \widgetPtr -> drawLabel' widgetPtr
+  runOp _ _ widget (Just (rectangle,align_)) = liftIO $ withRef widget $ \widgetPtr -> do
     let (x_pos,y_pos,w_pos,h_pos) = fromRectangle rectangle
     drawLabelWithXywhAlignment' widgetPtr x_pos y_pos w_pos h_pos (alignmentsToInt align_)
 
 {# fun Fl_Widget_x as x' { id `Ptr ()' } -> `Int' #}
-instance (impl ~ IO (Int)) => Op (GetX ()) Widget orig impl where
-  runOp _ _ widget = withRef widget $ \widgetPtr -> x' widgetPtr
+instance (impl ~ m Int, MonadIO m) => Op (GetX ()) Widget orig impl where
+  runOp _ _ widget = liftIO $ withRef widget $ \widgetPtr -> x' widgetPtr
 {# fun Fl_Widget_y as y' { id `Ptr ()' } -> `Int' #}
-instance (impl ~ IO (Int)) => Op (GetY ()) Widget orig impl where
-  runOp _ _ widget = withRef widget $ \widgetPtr -> y' widgetPtr
+instance (impl ~ m Int, MonadIO m) => Op (GetY ()) Widget orig impl where
+  runOp _ _ widget = liftIO $ withRef widget $ \widgetPtr -> y' widgetPtr
 {# fun Fl_Widget_w as w' { id `Ptr ()' } -> `Int' #}
-instance (impl ~ IO (Int)) => Op (GetW ()) Widget orig impl where
-  runOp _ _ widget = withRef widget $ \widgetPtr -> w' widgetPtr
+instance (impl ~ m Int, MonadIO m) => Op (GetW ()) Widget orig impl where
+  runOp _ _ widget = liftIO $ withRef widget $ \widgetPtr -> w' widgetPtr
 {# fun Fl_Widget_h as h' { id `Ptr ()' } -> `Int' #}
-instance (impl ~ IO (Int)) => Op (GetH ()) Widget orig impl where
-  runOp _ _ widget = withRef widget $ \widgetPtr -> h' widgetPtr
+instance (impl ~ m Int, MonadIO m) => Op (GetH ()) Widget orig impl where
+  runOp _ _ widget = liftIO $ withRef widget $ \widgetPtr -> h' widgetPtr
 instance (
          Match obj ~ FindOp orig orig (GetX ()),
          Match obj ~ FindOp orig orig (GetY ()),
          Match obj ~ FindOp orig orig (GetW ()),
          Match obj ~ FindOp orig orig (GetH ()),
-         Op (GetX ()) obj orig (IO Int),
-         Op (GetY ()) obj orig (IO Int),
-         Op (GetW ()) obj orig (IO Int),
-         Op (GetH ()) obj orig (IO Int),
-         impl ~ IO Rectangle
+         Op (GetX ()) obj orig (m Int),
+         Op (GetY ()) obj orig (m Int),
+         Op (GetW ()) obj orig (m Int),
+         Op (GetH ()) obj orig (m Int),
+         impl ~ m Rectangle,
+         MonadIO m
          )
          =>
          Op (GetRectangle ()) Widget orig impl where
@@ -221,65 +222,65 @@ instance (
      _h <- getH (castTo widget :: Ref orig)
      return (toRectangle (_x,_y,_w,_h))
 {# fun Fl_Widget_set_align as setAlign' { id `Ptr ()', `Int' } -> `()' supressWarningAboutRes #}
-instance (impl ~ (Alignments ->  IO ())) => Op (SetAlign ()) Widget orig impl where
-  runOp _ _ widget _align = withRef widget $ \widgetPtr -> setAlign' widgetPtr (alignmentsToInt _align)
+instance (impl ~ (Alignments -> m ()), MonadIO m) => Op (SetAlign ()) Widget orig impl where
+  runOp _ _ widget _align = liftIO $ withRef widget $ \widgetPtr -> setAlign' widgetPtr (alignmentsToInt _align)
 {# fun Fl_Widget_align as align' { id `Ptr ()' } -> `CUInt' id #}
-instance (impl ~ IO Alignments) => Op (GetAlign ()) Widget orig impl where
-  runOp _ _ widget = withRef widget $ \widgetPtr -> align' widgetPtr >>= return . intToAlignments . fromIntegral
+instance (impl ~ m Alignments, MonadIO m) => Op (GetAlign ()) Widget orig impl where
+  runOp _ _ widget = liftIO $ withRef widget $ \widgetPtr -> align' widgetPtr >>= return . intToAlignments . fromIntegral
 {# fun Fl_Widget_box as box' { id `Ptr ()' } -> `Boxtype' cToEnum #}
-instance (impl ~ IO (Boxtype)) => Op (GetBox ()) Widget orig impl where
-  runOp _ _ widget = withRef widget $ \widgetPtr -> box' widgetPtr
+instance (impl ~ m Boxtype, MonadIO m) => Op (GetBox ()) Widget orig impl where
+  runOp _ _ widget = liftIO $ withRef widget $ \widgetPtr -> box' widgetPtr
 {# fun Fl_Widget_set_box as setBox' { id `Ptr ()',cFromEnum `Boxtype' } -> `()' supressWarningAboutRes #}
-instance (impl ~ (Boxtype ->  IO ())) => Op (SetBox ()) Widget orig impl where
-  runOp _ _ widget new_box = withRef widget $ \widgetPtr -> setBox' widgetPtr new_box
+instance (impl ~ (Boxtype -> m ()), MonadIO m) => Op (SetBox ()) Widget orig impl where
+  runOp _ _ widget new_box = liftIO $ withRef widget $ \widgetPtr -> setBox' widgetPtr new_box
 {# fun Fl_Widget_color as color' { id `Ptr ()' } -> `Color' cToColor #}
-instance (impl ~ IO (Color)) => Op (GetColor ()) Widget orig impl where
-  runOp _ _ widget = withRef widget $ \widgetPtr -> color' widgetPtr
+instance (impl ~ m Color, MonadIO m) => Op (GetColor ()) Widget orig impl where
+  runOp _ _ widget = liftIO $ withRef widget $ \widgetPtr -> color' widgetPtr
 {# fun Fl_Widget_set_color as setColor' { id `Ptr ()',cFromColor `Color' } -> `()' supressWarningAboutRes #}
-instance (impl ~ (Color ->  IO ())) => Op (SetColor ()) Widget orig impl where
-  runOp _ _ widget bg = withRef widget $ \widgetPtr -> setColor' widgetPtr bg
+instance (impl ~ (Color -> m ()), MonadIO m) => Op (SetColor ()) Widget orig impl where
+  runOp _ _ widget bg = liftIO $ withRef widget $ \widgetPtr -> setColor' widgetPtr bg
 {# fun Fl_Widget_set_color_with_bg_sel as setColorWithBgSel' { id `Ptr ()',cFromColor `Color',cFromColor `Color' } -> `()' supressWarningAboutRes #}
-instance (impl ~ (Color -> Color ->  IO ())) => Op (SetColorWithBgSel ()) Widget orig impl where
-  runOp _ _ widget bg a = withRef widget $ \widgetPtr -> setColorWithBgSel' widgetPtr bg a
+instance (impl ~ (Color -> Color -> m ()), MonadIO m) => Op (SetColorWithBgSel ()) Widget orig impl where
+  runOp _ _ widget bg a = liftIO $ withRef widget $ \widgetPtr -> setColorWithBgSel' widgetPtr bg a
 {# fun Fl_Widget_selection_color as selectionColor' { id `Ptr ()' } -> `Color' cToColor #}
-instance (impl ~ IO (Color)) => Op (GetSelectionColor ()) Widget orig impl where
-  runOp _ _ widget = withRef widget $ \widgetPtr -> selectionColor' widgetPtr
+instance (impl ~ m Color, MonadIO m) => Op (GetSelectionColor ()) Widget orig impl where
+  runOp _ _ widget = liftIO $ withRef widget $ \widgetPtr -> selectionColor' widgetPtr
 {# fun Fl_Widget_set_selection_color as setSelectionColor' { id `Ptr ()',cFromColor `Color' } -> `()' supressWarningAboutRes #}
-instance (impl ~ (Color ->  IO ())) => Op (SetSelectionColor ()) Widget orig impl where
-  runOp _ _ widget a = withRef widget $ \widgetPtr -> setSelectionColor' widgetPtr a
+instance (impl ~ (Color -> m ()), MonadIO m) => Op (SetSelectionColor ()) Widget orig impl where
+  runOp _ _ widget a = liftIO $ withRef widget $ \widgetPtr -> setSelectionColor' widgetPtr a
 {# fun Fl_Widget_label as label' { id `Ptr ()' } -> `T.Text' unsafeFromCString #}
-instance (impl ~ IO T.Text) => Op (GetLabel ()) Widget orig impl where
-  runOp _ _ widget = withRef widget $ \widgetPtr -> label' widgetPtr
+instance (impl ~ m T.Text, MonadIO m) => Op (GetLabel ()) Widget orig impl where
+  runOp _ _ widget = liftIO $ withRef widget $ \widgetPtr -> label' widgetPtr
 {# fun Fl_Widget_copy_label as copyLabel' { id `Ptr ()', unsafeToCString `T.Text' } -> `()' supressWarningAboutRes #}
-instance (impl ~ (T.Text ->  IO ())) => Op (CopyLabel ()) Widget orig impl where
-  runOp _ _ widget new_label = withRef widget $ \widgetPtr -> copyLabel' widgetPtr new_label
+instance (impl ~ (T.Text -> m ()), MonadIO m) => Op (CopyLabel ()) Widget orig impl where
+  runOp _ _ widget new_label = liftIO $ withRef widget $ \widgetPtr -> copyLabel' widgetPtr new_label
 {# fun Fl_Widget_set_label as setLabel' { id `Ptr ()', unsafeToCString `T.Text' } -> `()' supressWarningAboutRes #}
-instance (impl ~ ( T.Text -> IO ())) => Op (SetLabel ()) Widget orig impl where
-  runOp _ _ widget text = withRef widget $ \widgetPtr -> setLabel' widgetPtr text
+instance (impl ~ (T.Text -> m ()), MonadIO m) => Op (SetLabel ()) Widget orig impl where
+  runOp _ _ widget text = liftIO $ withRef widget $ \widgetPtr -> setLabel' widgetPtr text
 {# fun Fl_Widget_labeltype as labeltype' { id `Ptr ()' } -> `Labeltype' cToEnum #}
-instance (impl ~ (IO (Labeltype))) => Op (GetLabeltype ()) Widget orig impl where
-  runOp _ _ widget = withRef widget $ \widgetPtr -> labeltype' widgetPtr
+instance (impl ~ m Labeltype, MonadIO m) => Op (GetLabeltype ()) Widget orig impl where
+  runOp _ _ widget = liftIO $ withRef widget $ \widgetPtr -> labeltype' widgetPtr
 {# fun Fl_Widget_set_labeltype as setLabeltype' { id `Ptr ()',cFromEnum `Labeltype' } -> `()' supressWarningAboutRes #}
-instance (impl ~ ( Labeltype ->  IO ())) => Op (SetLabeltype ()) Widget orig impl where
-  runOp _ _ widget a = withRef widget $ \widgetPtr -> setLabeltype' widgetPtr a
+instance (impl ~ (Labeltype -> m ()), MonadIO m) => Op (SetLabeltype ()) Widget orig impl where
+  runOp _ _ widget a = liftIO $ withRef widget $ \widgetPtr -> setLabeltype' widgetPtr a
 {# fun Fl_Widget_labelcolor as labelcolor' { id `Ptr ()' } -> `Color' cToColor #}
-instance (impl ~ (IO (Color))) => Op (GetLabelcolor ()) Widget orig impl where
-  runOp _ _ widget = withRef widget $ \widgetPtr -> labelcolor' widgetPtr
+instance (impl ~ m Color, MonadIO m) => Op (GetLabelcolor ()) Widget orig impl where
+  runOp _ _ widget = liftIO $ withRef widget $ \widgetPtr -> labelcolor' widgetPtr
 {# fun Fl_Widget_set_labelcolor as setLabelcolor' { id `Ptr ()',cFromColor `Color' } -> `()' supressWarningAboutRes #}
-instance (impl ~ ( Color ->  IO ())) => Op (SetLabelcolor ()) Widget orig impl where
-  runOp _ _ widget c = withRef widget $ \widgetPtr -> setLabelcolor' widgetPtr c
+instance (impl ~ (Color -> m ()), MonadIO m) => Op (SetLabelcolor ()) Widget orig impl where
+  runOp _ _ widget c = liftIO $ withRef widget $ \widgetPtr -> setLabelcolor' widgetPtr c
 {# fun Fl_Widget_labelfont as labelfont' { id `Ptr ()' } -> `Font' cToFont #}
-instance (impl ~ (IO (Font))) => Op (GetLabelfont ()) Widget orig impl where
-  runOp _ _ widget = withRef widget $ \widgetPtr -> labelfont' widgetPtr
+instance (impl ~ m Font, MonadIO m) => Op (GetLabelfont ()) Widget orig impl where
+  runOp _ _ widget = liftIO $ withRef widget $ \widgetPtr -> labelfont' widgetPtr
 {# fun Fl_Widget_set_labelfont as setLabelfont' { id `Ptr ()',cFromFont `Font' } -> `()' supressWarningAboutRes #}
-instance (impl ~ ( Font ->  IO ())) => Op (SetLabelfont ()) Widget orig impl where
-  runOp _ _ widget c = withRef widget $ \widgetPtr -> setLabelfont' widgetPtr c
+instance (impl ~ (Font -> m ()), MonadIO m) => Op (SetLabelfont ()) Widget orig impl where
+  runOp _ _ widget c = liftIO $ withRef widget $ \widgetPtr -> setLabelfont' widgetPtr c
 {# fun Fl_Widget_labelsize as labelsize' { id `Ptr ()' } -> `CInt' id #}
-instance (impl ~ (IO (FontSize))) => Op (GetLabelsize ()) Widget orig impl where
-  runOp _ _ widget = withRef widget $ \widgetPtr -> labelsize' widgetPtr >>= return . FontSize
+instance (impl ~ m FontSize, MonadIO m) => Op (GetLabelsize ()) Widget orig impl where
+  runOp _ _ widget = liftIO $ withRef widget $ \widgetPtr -> labelsize' widgetPtr >>= return . FontSize
 {# fun Fl_Widget_set_labelsize as setLabelsize' { id `Ptr ()',id `CInt' } -> `()' supressWarningAboutRes #}
-instance (impl ~ ( FontSize ->  IO ())) => Op (SetLabelsize ()) Widget orig impl where
-  runOp _ _ widget (FontSize pix) = withRef widget $ \widgetPtr -> setLabelsize' widgetPtr pix
+instance (impl ~ (FontSize -> m ()), MonadIO m) => Op (SetLabelsize ()) Widget orig impl where
+  runOp _ _ widget (FontSize pix) = liftIO $ withRef widget $ \widgetPtr -> setLabelsize' widgetPtr pix
 {# fun Fl_Widget_image as image' { id `Ptr ()' } -> `Maybe (Ref Image)' unsafeToMaybeRef #}
 instance (impl ~ m (Maybe (Ref Image)), MonadIO m) => Op (GetImage ()) Widget orig impl where
   runOp _ _ widget = liftIO $ withRef widget $ \widgetPtr -> image' widgetPtr
@@ -293,8 +294,8 @@ instance (impl ~ m (Maybe (Ref Image)), MonadIO m) => Op (GetDeimage ()) Widget 
 instance (Parent a Image, impl ~ (Maybe (Ref a) -> m ()), MonadIO m) => Op (SetDeimage ()) Widget orig impl where
   runOp _ _ widget pix = liftIO $ withRef widget $ \widgetPtr -> withMaybeRef pix $ \pixPtr -> setDeimage' widgetPtr pixPtr
 {# fun Fl_Widget_tooltip as tooltip' { id `Ptr ()' } -> `T.Text' unsafeFromCString #}
-instance (impl ~ (IO T.Text)) => Op (GetTooltip ()) Widget orig impl where
-  runOp _ _ widget = withRef widget $ \widgetPtr -> tooltip' widgetPtr
+instance (impl ~ m T.Text, MonadIO m) => Op (GetTooltip ()) Widget orig impl where
+  runOp _ _ widget = liftIO $ withRef widget $ \widgetPtr -> tooltip' widgetPtr
 {# fun Fl_Widget_copy_tooltip as copyTooltip' { id `Ptr ()', unsafeToCString `T.Text' } -> `()' supressWarningAboutRes #}
 instance (impl ~ (T.Text -> m ()), MonadIO m) => Op (CopyTooltip ()) Widget orig impl where
   runOp _ _ widget text = liftIO $ withRef widget $ \widgetPtr -> copyTooltip' widgetPtr text
@@ -484,39 +485,39 @@ instance (impl ~ (Maybe (Boxtype, Rectangle) -> m ()), MonadIO m) => Op (DrawFoc
 
 -- $widgetfunctions
 -- @
--- activate :: 'Ref' 'Widget' -> 'IO' ()
+-- activate :: MonadIO m => 'Ref' 'Widget' -> m ()
 --
--- active :: 'Ref' 'Widget' -> 'IO' 'Bool'
+-- active :: MonadIO m => 'Ref' 'Widget' -> m 'Bool'
 --
--- activeR :: 'Ref' 'Widget' -> 'IO' 'Bool'
+-- activeR :: MonadIO m => 'Ref' 'Widget' -> m 'Bool'
 --
--- changed :: 'Ref' 'Widget' -> 'IO' 'Bool'
+-- changed :: MonadIO m => 'Ref' 'Widget' -> m 'Bool'
 --
--- clearActive :: 'Ref' 'Widget' -> 'IO' ()
+-- clearActive :: MonadIO m => 'Ref' 'Widget' -> m ()
 --
--- clearChanged :: 'Ref' 'Widget' -> 'IO' ()
+-- clearChanged :: MonadIO m => 'Ref' 'Widget' -> m ()
 --
--- clearDamage :: 'Ref' 'Widget' -> 'IO' ()
+-- clearDamage :: MonadIO m => 'Ref' 'Widget' -> m ()
 --
--- clearDamageExcept :: 'Ref' 'Widget' -> ['Damage'] -> 'IO' ()
+-- clearDamageExcept :: MonadIO m => 'Ref' 'Widget' -> ['Damage'] -> m ()
 --
--- clearOutput :: 'Ref' 'Widget' -> 'IO' ()
+-- clearOutput :: MonadIO m => 'Ref' 'Widget' -> m ()
 --
--- clearVisible :: 'Ref' 'Widget' -> 'IO' ()
+-- clearVisible :: MonadIO m => 'Ref' 'Widget' -> m ()
 --
--- clearVisibleFocus :: 'Ref' 'Widget' -> 'IO' ()
+-- clearVisibleFocus :: MonadIO m => 'Ref' 'Widget' -> m ()
 --
--- contains:: ('Parent' a 'Widget') => 'Ref' 'Widget' -> 'Ref' a -> 'IO' 'Bool'
+-- contains :: ('Parent' a 'Widget', MonadIO m) => 'Ref' 'Widget' -> 'Ref' a -> m 'Bool'
 --
--- copyLabel :: 'Ref' 'Widget' -> 'T.Text' -> 'IO' ()
+-- copyLabel :: MonadIO m => 'Ref' 'Widget' -> 'T.Text' -> m ()
 --
--- copyTooltip :: 'Ref' 'Widget' -> 'T.Text' -> 'IO' ()
+-- copyTooltip :: MonadIO m => 'Ref' 'Widget' -> 'T.Text' -> m ()
 --
--- deactivate :: 'Ref' 'Widget' -> 'IO' ()
+-- deactivate :: MonadiO m => 'Ref' 'Widget' -> m ()
 --
--- destroy :: 'Ref' 'Widget' -> 'IO' ()
+-- destroy :: MonadIO m => 'Ref' 'Widget' -> m ()
 --
--- doCallback :: 'Ref' 'Widget' -> 'IO' ()
+-- doCallback :: MonadIO m => 'Ref' 'Widget' -> m ()
 --
 -- drawBackdrop :: MonadIO m => 'Ref' 'Widget' -> m ()
 --
@@ -528,139 +529,139 @@ instance (impl ~ (Maybe (Boxtype, Rectangle) -> m ()), MonadIO m) => Op (DrawFoc
 --
 -- drawLabel :: 'Ref' 'Widget' -> 'Maybe' ('Rectangle,Alignments') -> 'IO' ()
 --
--- getAlign :: 'Ref' 'Widget' -> 'IO' 'Alignments'
+-- getAlign :: MonadIO m => 'Ref' 'Widget' -> m 'Alignments'
 --
--- getBox :: 'Ref' 'Widget' -> 'IO' ('Boxtype')
+-- getBox :: MonadIO m => 'Ref' 'Widget' -> m 'Boxtype'
 --
--- getColor :: 'Ref' 'Widget' -> 'IO' ('Color')
+-- getColor :: MonadIO m => 'Ref' 'Widget' -> m 'Color'
 --
--- getDamage :: 'Ref' 'Widget' -> 'IO' (['Damage')]
+-- getDamage :: MonadIO m => 'Ref' 'Widget' -> m ['Damage')
 --
--- getDeimage :: 'Ref' 'Widget' -> 'IO' ('Maybe' ('Ref' 'Image'))
+-- getDeimage :: MonadIO m => 'Ref' 'Widget' -> m ('Maybe' ('Ref' 'Image'))
 --
--- getH :: 'Ref' 'Widget' -> 'IO' ('Int')
+-- getH :: MonadIO m => 'Ref' 'Widget' -> m 'Int'
 --
--- getImage :: 'Ref' 'Widget' -> 'IO' ('Maybe' ('Ref' 'Image'))
+-- getImage :: MonadIO m => 'Ref' 'Widget' -> m ('Maybe' ('Ref' 'Image'))
 --
--- getLabel :: 'Ref' 'Widget' -> 'IO' 'T.Text'
+-- getLabel :: MonadIO m => 'Ref' 'Widget' -> m 'T.Text'
 --
--- getLabelcolor :: 'Ref' 'Widget' -> 'IO' ('Color')
+-- getLabelcolor :: MonadIO m => 'Ref' 'Widget' -> m 'Color'
 --
--- getLabelfont :: 'Ref' 'Widget' -> 'IO' ('Font')
+-- getLabelfont :: MonadIO m => 'Ref' 'Widget' -> m 'Font'
 --
--- getLabelsize :: 'Ref' 'Widget' -> 'IO' ('FontSize')
+-- getLabelsize :: MonadIO m => 'Ref' 'Widget' -> m 'FontSize'
 --
--- getLabeltype :: 'Ref' 'Widget' -> 'IO' ('Labeltype')
+-- getLabeltype :: MonadIO m => 'Ref' 'Widget' -> m 'Labeltype'
 --
--- getOutput :: 'Ref' 'Widget' -> 'IO' ('Int')
+-- getOutput :: MonadIO m => 'Ref' 'Widget' -> m 'Int'
 --
--- getParent :: 'Ref' 'Widget' -> 'IO' ('Maybe' ('Ref' 'Group'))
+-- getParent :: MonadIO m => 'Ref' 'Widget' -> m ('Maybe' ('Ref' 'Group'))
 --
--- getRectangle:: ('Match' obj ~ 'FindOp' orig orig ('GetX' ()), 'Match' obj ~ 'FindOp' orig orig ('GetY' ()), 'Match' obj ~ 'FindOp' orig orig ('GetW' ()), 'Match' obj ~ 'FindOp' orig orig ('GetH' ()), 'Op' ('GetX' ()) obj orig ('IO' 'Int',) 'Op' ('GetY' ()) obj orig ('IO' 'Int',) 'Op' ('GetW' ()) obj orig ('IO' 'Int',) 'Op' ('GetH' ()) obj orig ('IO' 'Int',)) => 'Ref' 'Widget' -> 'IO' 'Rectangle'
+-- getRectangle:: ('Match' obj ~ 'FindOp' orig orig ('GetX' ()), 'Match' obj ~ 'FindOp' orig orig ('GetY' ()), 'Match' obj ~ 'FindOp' orig orig ('GetW' ()), 'Match' obj ~ 'FindOp' orig orig ('GetH' ()), 'Op' ('GetX' ()) obj orig (m 'Int'), 'Op' ('GetY' ()) obj orig (m 'Int'), 'Op' ('GetW' ()) obj orig (m 'Int'), 'Op' ('GetH' ()) obj orig (m 'Int'), MonadIO m) => 'Ref' 'Widget' -> m 'Rectangle'
 --
--- getSelectionColor :: 'Ref' 'Widget' -> 'IO' ('Color')
+-- getSelectionColor :: MonadIO m => 'Ref' 'Widget' -> m 'Color'
 --
--- getTooltip :: 'Ref' 'Widget' -> 'IO' 'T.Text'
+-- getTooltip :: MonadIO m => 'Ref' 'Widget' -> m 'T.Text'
 --
--- getTopWindow :: 'Ref' 'Widget' -> 'IO' ('Maybe' ('Ref' 'Window'))
+-- getTopWindow :: MonadIO m => 'Ref' 'Widget' -> m ('Maybe' ('Ref' 'Window'))
 --
--- getTopWindowOffset :: 'Ref' 'Widget' -> 'IO' ('Position')
+-- getTopWindowOffset :: MonadIO m => 'Ref' 'Widget' -> m 'Position'
 --
--- getType_ :: 'Ref' 'Widget' -> 'IO' ('Word8')
+-- getType_ :: MonadIO m => 'Ref' 'Widget' -> m 'Word8'
 --
--- getVisible :: 'Ref' 'Widget' -> 'IO' 'Bool'
+-- getVisible :: MonadIO m => 'Ref' 'Widget' -> m 'Bool'
 --
--- getVisibleFocus :: 'Ref' 'Widget' -> 'IO' ('Bool')
+-- getVisibleFocus :: MonadIO m => 'Ref' 'Widget' -> m 'Bool'
 --
--- getVisibleR :: 'Ref' 'Widget' -> 'IO' 'Bool'
+-- getVisibleR :: MonadIO m => 'Ref' 'Widget' -> m 'Bool'
 --
--- getW :: 'Ref' 'Widget' -> 'IO' ('Int')
+-- getW :: MonadIO m => 'Ref' 'Widget' -> m 'Int'
 --
--- getWhen :: 'Ref' 'Widget' -> 'IO' ['When']
+-- getWhen :: MonadIO m => 'Ref' 'Widget' -> m ['When']
 --
--- getWindow :: 'Ref' 'Widget' -> 'IO' ('Maybe' ('Ref' 'Window'))
+-- getWindow :: MonadIO m => 'Ref' 'Widget' -> m ('Maybe' ('Ref' 'Window'))
 --
--- getX :: 'Ref' 'Widget' -> 'IO' ('Int')
+-- getX :: MonadIO m => 'Ref' 'Widget' -> m 'Int'
 --
--- getY :: 'Ref' 'Widget' -> 'IO' ('Int')
+-- getY :: MonadIO m => 'Ref' 'Widget' -> m 'Int'
 --
 -- handle :: 'Ref' 'Widget' -> 'Event' -> 'IO' ('Either' 'UnknownEvent' ())
 --
--- hasCallback :: 'Ref' 'Widget' -> 'IO' ('Bool')
+-- hasCallback :: MonadIO m => 'Ref' 'Widget' -> m 'Bool'
 --
--- hide :: 'Ref' 'Widget' -> 'IO' ()
+-- hide :: MonadIO m => 'Ref' 'Widget' -> m ()
 --
--- hideSuper :: 'Ref' 'Widget' -> 'IO' ()
+-- hideSuper :: MonadIO m => 'Ref' 'Widget' -> m ()
 --
--- inside:: ('Parent' a 'Widget') => 'Ref' 'Widget' -> 'Ref' a -> 'IO' ('Bool')
+-- inside :: ('Parent' a 'Widget', MonadIO m) => 'Ref' 'Widget' -> 'Ref' a -> m 'Bool'
 --
--- measureLabel :: 'Ref' 'Widget' -> 'IO' ('Size')
+-- measureLabel :: MonadIO m => 'Ref' 'Widget' -> m 'Size'
 --
--- modifyVisibleFocus :: 'Ref' 'Widget' -> 'Int' -> 'IO' ()
+-- modifyVisibleFocus :: MonadIO m => 'Ref' 'Widget' -> 'Int' -> m ()
 --
--- redraw :: 'Ref' 'Widget' -> 'IO' ()
+-- redraw :: MonadIO m => 'Ref' 'Widget' -> m ()
 --
--- redrawLabel :: 'Ref' 'Widget' -> 'IO' ()
+-- redrawLabel :: MonadIO m => 'Ref' 'Widget' -> m ()
 --
--- resize :: 'Ref' 'Widget' -> 'Rectangle' -> 'IO' ()
+-- resize :: MonadIO m => 'Ref' 'Widget' -> 'Rectangle' -> m ()
 --
--- resizeSuper :: 'Ref' 'Widget' -> 'Rectangle' -> 'IO' ()
+-- resizeSuper :: MonadIO m => 'Ref' 'Widget' -> 'Rectangle' -> m ()
 --
--- setActive :: 'Ref' 'Widget' -> 'IO' ()
+-- setActive :: MonadIO m => 'Ref' 'Widget' -> m ()
 --
--- setAlign :: 'Ref' 'Widget' -> 'Alignments' -> 'IO' ()
+-- setAlign :: MonadIO m => 'Ref' 'Widget' -> 'Alignments' -> m ()
 --
--- setBox :: 'Ref' 'Widget' -> 'Boxtype' -> 'IO' ()
+-- setBox :: MonadIO m => 'Ref' 'Widget' -> 'Boxtype' -> m ()
 --
--- setCallback :: 'Ref' 'Widget' -> ('Ref' orig -> 'IO' ()) -> 'IO' ()
+-- setCallback :: 'Ref' 'Widget' -> ('Ref' orig -> IO ()) -> IO ()
 --
--- setChanged :: 'Ref' 'Widget' -> 'IO' ()
+-- setChanged :: MonadIO m => 'Ref' 'Widget' -> m ()
 --
--- setColor :: 'Ref' 'Widget' -> 'Color' -> 'IO' ()
+-- setColor :: MonadIO m => 'Ref' 'Widget' -> 'Color' -> m ()
 --
--- setColorWithBgSel :: 'Ref' 'Widget' -> 'Color' -> 'Color' -> 'IO' ()
+-- setColorWithBgSel :: MonadIO m => 'Ref' 'Widget' -> 'Color' -> 'Color' -> m ()
 --
--- setDamage :: 'Ref' 'Widget' -> ['Damage'] -> 'IO' ()
+-- setDamage :: MonadIO m => 'Ref' 'Widget' -> ['Damage'] -> m ()
 --
--- setDamageInside :: 'Ref' 'Widget' -> ['Damage'] -> 'Rectangle' -> 'IO' ()
+-- setDamageInside :: MonadIO m => 'Ref' 'Widget' -> ['Damage'] -> 'Rectangle' -> m ()
 --
--- setDeimage:: ('Parent' a 'Image') => 'Ref' 'Widget' -> 'Maybe'( 'Ref' a ) -> 'IO' ()
+-- setDeimage :: MonadIO m => ('Parent' a 'Image') => 'Ref' 'Widget' -> 'Maybe'( 'Ref' a ) -> m ()
 --
--- setImage:: ('Parent' a 'Image') => 'Ref' 'Widget' -> 'Maybe'( 'Ref' a ) -> 'IO' ()
+-- setImage :: MonadIO m => ('Parent' a 'Image') => 'Ref' 'Widget' -> 'Maybe'( 'Ref' a ) -> m ()
 --
--- setLabel :: 'Ref' 'Widget' -> 'T.Text' -> 'IO' ()
+-- setLabel :: MonadIO m => 'Ref' 'Widget' -> 'T.Text' -> m ()
 --
--- setLabelcolor :: 'Ref' 'Widget' -> 'Color' -> 'IO' ()
+-- setLabelcolor :: MonadIO m => 'Ref' 'Widget' -> 'Color' -> m ()
 --
--- setLabelfont :: 'Ref' 'Widget' -> 'Font' -> 'IO' ()
+-- setLabelfont :: MonadIO m => 'Ref' 'Widget' -> 'Font' -> m ()
 --
--- setLabelsize :: 'Ref' 'Widget' -> 'FontSize' -> 'IO' ()
+-- setLabelsize :: MonadIO m => 'Ref' 'Widget' -> 'FontSize' -> m ()
 --
--- setLabeltype :: 'Ref' 'Widget' -> 'Labeltype' -> 'IO' ()
+-- setLabeltype :: MonadIO m => 'Ref' 'Widget' -> 'Labeltype' -> m ()
 --
--- setOutput :: 'Ref' 'Widget' -> 'IO' ()
+-- setOutput :: MonadIO m => 'Ref' 'Widget' -> m ()
 --
--- setParent:: ('Parent' a 'Group') => 'Ref' 'Widget' -> 'Maybe' ('Ref' a) -> 'IO' ()
+-- setParent:: MonadIO m => ('Parent' a 'Group') => 'Ref' 'Widget' -> 'Maybe' ('Ref' a) -> m ()
 --
--- setSelectionColor :: 'Ref' 'Widget' -> 'Color' -> 'IO' ()
+-- setSelectionColor :: MonadIO m => 'Ref' 'Widget' -> 'Color' -> m ()
 --
--- setTooltip :: 'Ref' 'Widget' -> 'T.Text' -> 'IO' ()
+-- setTooltip :: MonadIO m => 'Ref' 'Widget' -> 'T.Text' -> m ()
 --
--- setType :: 'Ref' 'Widget' -> 'Word8' -> 'IO' ()
+-- setType :: MonadIO m => 'Ref' 'Widget' -> 'Word8' -> m ()
 --
--- setVisible :: 'Ref' 'Widget' -> 'IO' ()
+-- setVisible :: MonadIO m => 'Ref' 'Widget' -> m ()
 --
--- setVisibleFocus :: 'Ref' 'Widget' -> 'IO' ()
+-- setVisibleFocus :: MonadIO m => 'Ref' 'Widget' -> m ()
 --
--- setWhen :: 'Ref' 'Widget' -> ['When'] -> 'IO' ()
+-- setWhen :: MonadIO m => 'Ref' 'Widget' -> ['When'] -> m ()
 --
--- showWidget :: 'Ref' 'Widget' -> 'IO' ()
+-- showWidget :: MonadIO m => 'Ref' 'Widget' -> m ()
 --
--- showWidgetSuper :: 'Ref' 'Widget' -> 'IO' ()
+-- showWidgetSuper :: MonadIO m => 'Ref' 'Widget' -> m ()
 --
--- takeFocus :: 'Ref' 'Widget' -> 'IO' ('Either' 'NoChange' ())
+-- takeFocus :: MonadIO m => 'Ref' 'Widget' -> m ('Either' 'NoChange' ())
 --
--- takesevents :: 'Ref' 'Widget' -> 'IO' ('Bool')
+-- takesevents :: MonadIO m => 'Ref' 'Widget' -> m 'Bool'
 -- @
 
 
