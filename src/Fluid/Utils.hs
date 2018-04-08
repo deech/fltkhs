@@ -1,7 +1,6 @@
 module Utils (collapseParts, collapseString) where
 import Types
 import Numeric
-import Debug.Trace
 
 collapseParts :: [BracedStringParts] -> String
 collapseParts parts = go parts []
