@@ -4,7 +4,7 @@
 {-# LANGUAGE ImplicitParams #-}
 #endif
 
-module Graphics.UI.FLTK.LowLevel.Fl_Types where
+module Graphics.UI.FLTK.LowLevel.Fl_Types (module Graphics.UI.FLTK.LowLevel.Fl_Types, module Control.Monad.IO.Class, MonadMask) where
 #include "Fl_Types.h"
 #include "Fl_Text_EditorC.h"
 import Foreign
