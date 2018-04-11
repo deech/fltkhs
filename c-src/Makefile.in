@@ -27,7 +27,6 @@ CPPFILES= $(GL_FILES) \
 	Fl_SpinnerC.cpp \
 	UtilsC.cpp \
 	xC.cpp \
-	fl_utf8C.cpp \
 	Fl_CallbackC.cpp \
 	DerivedText_Editor.cpp \
 	DerivedShared_Image.cpp \
@@ -89,8 +88,8 @@ CPPFILES= $(GL_FILES) \
 	Fl_Round_ClockC.cpp \
 	Fl_Secret_InputC.cpp \
 	Fl_Select_BrowserC.cpp \
-  Fl_Shared_ImageC.cpp \
-	fl_show_colormapC.cpp \
+	Fl_Shared_ImageC.cpp \
+	Fl_Show_ColormapC.cpp \
 	Fl_Single_WindowC.cpp \
 	Fl_SliderC.cpp \
 	Fl_Menu_BarC.cpp \

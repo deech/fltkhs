@@ -1,4 +1,4 @@
-{-# LANGUAGE CPP, ExistentialQuantification, TypeSynonymInstances, FlexibleInstances, MultiParamTypeClasses, FlexibleContexts, ScopedTypeVariables #-}
+{-# LANGUAGE CPP, ExistentialQuantification, TypeSynonymInstances, FlexibleInstances, MultiParamTypeClasses, FlexibleContexts, ScopedTypeVariables, UndecidableInstances #-}
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 module Graphics.UI.FLTK.LowLevel.Adjuster
     (
@@ -46,63 +46,63 @@ adjusterCustom rectangle l' draw' funcs' =
 
 {# fun Fl_Adjuster_New as adjusterNew' { `Int',`Int',`Int',`Int' } -> `Ptr ()' id #}
 {# fun Fl_Adjuster_New_WithLabel as adjusterNewWithLabel' { `Int',`Int',`Int',`Int', unsafeToCString `T.Text'} -> `Ptr ()' id #}
-adjusterNew :: Rectangle -> Maybe T.Text -> IO (Ref Adjuster)
-adjusterNew rectangle l'=
+adjusterNew :: MonadIO m => Rectangle -> Maybe T.Text -> m (Ref Adjuster)
+adjusterNew rectangle l' =
     let (x_pos, y_pos, width, height) = fromRectangle rectangle
     in case l' of
-        Nothing -> adjusterNew' x_pos y_pos width height >>=
+        Nothing -> liftIO $ adjusterNew' x_pos y_pos width height >>=
                              toRef
-        Just l -> adjusterNewWithLabel' x_pos y_pos width height l >>=
+        Just l -> liftIO $ adjusterNewWithLabel' x_pos y_pos width height l >>=
                                toRef
 
 {# fun Fl_Adjuster_Destroy as adjusterDestroy' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance (impl ~ (IO ())) => Op (Destroy ()) Adjuster orig impl where
-  runOp _ _ adjuster = swapRef adjuster $ \adjusterPtr -> do
+instance (impl ~ m (), MonadIO m) => Op (Destroy ()) Adjuster orig impl where
+  runOp _ _ adjuster = liftIO $ swapRef adjuster $ \adjusterPtr -> do
     adjusterDestroy' adjusterPtr
     return nullPtr
 
 {# fun Fl_Adjuster_soft as soft' { id `Ptr ()' } -> `Int' #}
-instance (impl ~ ( IO (Int))) => Op (GetSoft ()) Adjuster orig impl where
-  runOp _ _ adjuster = withRef adjuster $ \adjusterPtr -> soft' adjusterPtr
+instance (impl ~ m Int, MonadIO m) => Op (GetSoft ()) Adjuster orig impl where
+  runOp _ _ adjuster = liftIO $ withRef adjuster $ \adjusterPtr -> soft' adjusterPtr
 
 {# fun Fl_Adjuster_set_soft as setSoft' { id `Ptr ()',`Int' } -> `()' #}
-instance (impl ~ (Int ->  IO ())) => Op (SetSoft ()) Adjuster orig impl where
-  runOp _ _ adjuster soft = withRef adjuster $ \adjusterPtr -> setSoft' adjusterPtr soft
+instance (impl ~ (Int -> m ()), MonadIO m) => Op (SetSoft ()) Adjuster orig impl where
+  runOp _ _ adjuster soft = liftIO $ withRef adjuster $ \adjusterPtr -> setSoft' adjusterPtr soft
 
 {# fun Fl_Adjuster_draw as draw'' { id `Ptr ()' } -> `()' #}
-instance (impl ~ (  IO ())) => Op (Draw ()) Adjuster orig impl where
-  runOp _ _ adjuster = withRef adjuster $ \adjusterPtr -> draw'' adjusterPtr
+instance (impl ~ m (), MonadIO m) => Op (Draw ()) Adjuster orig impl where
+  runOp _ _ adjuster = liftIO $ withRef adjuster $ \adjusterPtr -> draw'' adjusterPtr
 {# fun Fl_Adjuster_draw_super as drawSuper' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance (impl ~ ( IO ())) => Op (DrawSuper ()) Adjuster orig impl where
-  runOp _ _ adjuster = withRef adjuster $ \adjusterPtr -> drawSuper' adjusterPtr
+instance (impl ~ m (), MonadIO m) => Op (DrawSuper ()) Adjuster orig impl where
+  runOp _ _ adjuster = liftIO $ withRef adjuster $ \adjusterPtr -> drawSuper' adjusterPtr
 {#fun Fl_Adjuster_handle as adjusterHandle' { id `Ptr ()', id `CInt' } -> `Int' #}
-instance (impl ~ (Event -> IO (Either UnknownEvent ()))) => Op (Handle ()) Adjuster orig impl where
-  runOp _ _ adjuster event = withRef adjuster (\p -> adjusterHandle' p (fromIntegral . fromEnum $ event)) >>= return  . successOrUnknownEvent
+instance (impl ~ (Event -> m (Either UnknownEvent ())), MonadIO m) => Op (Handle ()) Adjuster orig impl where
+  runOp _ _ adjuster event = liftIO $ withRef adjuster (\p -> adjusterHandle' p (fromIntegral . fromEnum $ event)) >>= return  . successOrUnknownEvent
 {# fun Fl_Adjuster_handle_super as handleSuper' { id `Ptr ()',`Int' } -> `Int' #}
-instance (impl ~ (Event ->  IO (Either UnknownEvent ()))) => Op (HandleSuper ()) Adjuster orig impl where
-  runOp _ _ adjuster event = withRef adjuster $ \adjusterPtr -> handleSuper' adjusterPtr (fromIntegral (fromEnum event)) >>= return . successOrUnknownEvent
+instance (impl ~ (Event -> m (Either UnknownEvent ())), MonadIO m) => Op (HandleSuper ()) Adjuster orig impl where
+  runOp _ _ adjuster event = liftIO $ withRef adjuster $ \adjusterPtr -> handleSuper' adjusterPtr (fromIntegral (fromEnum event)) >>= return . successOrUnknownEvent
 {# fun Fl_Adjuster_resize as resize' { id `Ptr ()',`Int',`Int',`Int',`Int' } -> `()' supressWarningAboutRes #}
-instance (impl ~ (Rectangle -> IO ())) => Op (Resize ()) Adjuster orig impl where
-  runOp _ _ adjuster rectangle = withRef adjuster $ \adjusterPtr -> do
+instance (impl ~ (Rectangle -> m ()), MonadIO m) => Op (Resize ()) Adjuster orig impl where
+  runOp _ _ adjuster rectangle = liftIO $ withRef adjuster $ \adjusterPtr -> do
                                  let (x_pos,y_pos,w_pos,h_pos) = fromRectangle rectangle
                                  resize' adjusterPtr x_pos y_pos w_pos h_pos
 {# fun Fl_Adjuster_resize_super as resizeSuper' { id `Ptr ()',`Int',`Int',`Int',`Int' } -> `()' supressWarningAboutRes #}
-instance (impl ~ (Rectangle -> IO ())) => Op (ResizeSuper ()) Adjuster orig impl where
+instance (impl ~ (Rectangle -> m ()), MonadIO m) => Op (ResizeSuper ()) Adjuster orig impl where
   runOp _ _ adjuster rectangle =
     let (x_pos, y_pos, width, height) = fromRectangle rectangle
-    in withRef adjuster $ \adjusterPtr -> resizeSuper' adjusterPtr x_pos y_pos width height
+    in liftIO $ withRef adjuster $ \adjusterPtr -> resizeSuper' adjusterPtr x_pos y_pos width height
 {# fun Fl_Adjuster_hide as hide' { id `Ptr ()' } -> `()' #}
-instance (impl ~ (  IO ())) => Op (Hide ()) Adjuster orig impl where
-  runOp _ _ adjuster = withRef adjuster $ \adjusterPtr -> hide' adjusterPtr
+instance (impl ~ m (), MonadIO m) => Op (Hide ()) Adjuster orig impl where
+  runOp _ _ adjuster = liftIO $ withRef adjuster $ \adjusterPtr -> hide' adjusterPtr
 {# fun Fl_Adjuster_hide_super as hideSuper' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance (impl ~ ( IO ())) => Op (HideSuper ()) Adjuster orig impl where
-  runOp _ _ adjuster = withRef adjuster $ \adjusterPtr -> hideSuper' adjusterPtr
+instance (impl ~ m (), MonadIO m) => Op (HideSuper ()) Adjuster orig impl where
+  runOp _ _ adjuster = liftIO $ withRef adjuster $ \adjusterPtr -> hideSuper' adjusterPtr
 {# fun Fl_Adjuster_show as show' { id `Ptr ()' } -> `()' #}
-instance (impl ~ (  IO ())) => Op (ShowWidget ()) Adjuster orig impl where
-  runOp _ _ adjuster = withRef adjuster $ \adjusterPtr -> show' adjusterPtr
+instance (impl ~ m (), MonadIO m) => Op (ShowWidget ()) Adjuster orig impl where
+  runOp _ _ adjuster = liftIO $ withRef adjuster $ \adjusterPtr -> show' adjusterPtr
 {# fun Fl_Adjuster_show_super as showSuper' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance (impl ~ ( IO ())) => Op (ShowWidgetSuper ()) Adjuster orig impl where
-  runOp _ _ adjuster = withRef adjuster $ \adjusterPtr -> showSuper' adjusterPtr
+instance (impl ~ m (), MonadIO m) => Op (ShowWidgetSuper ()) Adjuster orig impl where
+  runOp _ _ adjuster = liftIO $ withRef adjuster $ \adjusterPtr -> showSuper' adjusterPtr
 
 -- $hierarchy
 -- @
@@ -118,29 +118,29 @@ instance (impl ~ ( IO ())) => Op (ShowWidgetSuper ()) Adjuster orig impl where
 
 -- $functions
 -- @
--- destroy :: 'Ref' 'Adjuster' -> 'IO' ()
+-- destroy :: MonadIO m => 'Ref' 'Adjuster' -> m ()
 --
--- draw :: 'Ref' 'Adjuster' -> 'IO' ()
+-- draw :: MonadIO m => 'Ref' 'Adjuster' -> m ()
 --
--- drawSuper :: 'Ref' 'Adjuster' -> 'IO' ()
+-- drawSuper :: MonadIO m => 'Ref' 'Adjuster' -> m ()
 --
--- getSoft :: 'Ref' 'Adjuster' -> 'IO' ('Int')
+-- getSoft :: MonadIO m => 'Ref' 'Adjuster' -> m ('Int')
 --
--- handle :: 'Ref' 'Adjuster' -> 'Event' -> 'IO' ('Either' 'UnknownEvent' ())
+-- handle :: MonadIO m => 'Ref' 'Adjuster' -> 'Event' -> m ('Either' 'UnknownEvent' ())
 --
--- handleSuper :: 'Ref' 'Adjuster' -> 'Event' -> 'IO' ('Either' 'UnknownEvent' ())
+-- handleSuper :: MonadIO m => 'Ref' 'Adjuster' -> 'Event' -> m ('Either' 'UnknownEvent' ())
 --
--- hide :: 'Ref' 'Adjuster' -> 'IO' ()
+-- hide :: MonadIO m => 'Ref' 'Adjuster' -> m ()
 --
--- hideSuper :: 'Ref' 'Adjuster' -> 'IO' ()
+-- hideSuper :: MonadIO m => 'Ref' 'Adjuster' -> m ()
 --
--- resize :: 'Ref' 'Adjuster' -> 'Rectangle' -> 'IO' ()
+-- resize :: MonadIO m => 'Ref' 'Adjuster' -> 'Rectangle' -> m ()
 --
--- resizeSuper :: 'Ref' 'Adjuster' -> 'Rectangle' -> 'IO' ()
+-- resizeSuper :: MonadIO m => 'Ref' 'Adjuster' -> 'Rectangle' -> m ()
 --
--- setSoft :: 'Ref' 'Adjuster' -> 'Int' -> 'IO' ()
+-- setSoft :: MonadIO m => 'Ref' 'Adjuster' -> 'Int' -> m ()
 --
--- showWidget :: 'Ref' 'Adjuster' -> 'IO' ()
+-- showWidget :: MonadIO m => 'Ref' 'Adjuster' -> m ()
 --
--- showWidgetSuper :: 'Ref' 'Adjuster' -> 'IO' ()
+-- showWidgetSuper :: MonadIO m => 'Ref' 'Adjuster' -> m ()
 -- @

@@ -1,4 +1,4 @@
-#include "fl_show_colormapC.h"
+#include "Fl_Show_ColormapC.h"
 #ifdef __cplusplus
 EXPORT {
 #endif

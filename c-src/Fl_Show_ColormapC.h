@@ -1,5 +1,5 @@
-#ifndef fl_show_colormapC_H
-#define fl_show_colormapC_H
+#ifndef Fl_Show_ColormapC_H
+#define Fl_Show_ColormapC_H
 #ifdef __cplusplus
 // always include the FL/*.H headers before local headers
 // Fl_Widget is included transitively and needed for
