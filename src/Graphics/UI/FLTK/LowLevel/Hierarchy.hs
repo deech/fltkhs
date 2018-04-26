@@ -2054,7 +2054,7 @@ type CheckButtonFuncs =
   (Hide
   (HideSuper
   (Destroy ())))))))))
-type CheckButton = CCheckButton Button
+type CheckButton = CCheckButton LightButton
 
 type instance Functions CheckButton = CheckButtonFuncs
 
@@ -2075,7 +2075,7 @@ type ReturnButtonFuncs =
 type instance Functions ReturnButton = ReturnButtonFuncs
 
 data CRoundButton parent
-type RoundButton = CRoundButton Button
+type RoundButton = CRoundButton LightButton
 type RoundButtonFuncs =
   (Destroy
   (Draw
