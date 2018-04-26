@@ -3,7 +3,6 @@ module Graphics.UI.FLTK.LowLevel.Draw
        (
        LineStyle(..),
        flcSetColor,
-       flcSetColorWithC,
        flcSetColorWithRgb,
        flcColor,
        flcPushClip,
@@ -22,17 +21,17 @@ module Graphics.UI.FLTK.LowLevel.Draw
        flcRectfWithColor,
        flcRectfWithRgb,
        flcLine,
-       flcLineWithX2Y2,
+       flcLineWith2Edges,
        flcLoop,
-       flcLoopWithX3Y3,
+       flcLoopWith4Sides,
        flcPolygon,
-       flcPolygonWithX3Y3,
+       flcPolygonWith4Sides,
        flcXyline,
-       flcXylineWithX2,
-       flcXylineWithY2X3,
-       flcYxlineWithY1,
-       flcYxlineWithY2X2,
-       flcYxlineWithY2X3,
+       flcXylineDownByY,
+       flcXylineDownByYAcrossByX,
+       flcYxline,
+       flcYxlineAcrossByX,
+       flcYxlineAcrossByXDownByY,
        flcArcByWidthHeight,
        flcPie,
        flcPushMatrix,
@@ -69,22 +68,13 @@ module Graphics.UI.FLTK.LowLevel.Draw
        flcSetHeight,
        flcDescent,
        flcWidth,
-       flcWidthWithN,
-       flcWidthWithC,
        flcTextExtents,
-       flcTextExtentsWithN,
        flcLatin1ToLocal,
-       flcLatin1ToLocalWithN,
        flcLocalToLatin1,
-       flcLocalToLatin1WithN,
        flcMacRomanToLocal,
-       flcMacRomanToLocalWithN,
        flcLocalToMacRoman,
-       flcLocalToMacRomanWithN,
        flcDraw,
        flcDrawWithAngle,
-       flcDrawWithN,
-       flcDrawWithNAngle,
        flcRtlDraw,
        flcMeasure,
        flcDrawInBoxWithImageReference,
@@ -151,10 +141,6 @@ enum LineStyle {
 flcSetColor :: Color ->  IO ()
 flcSetColor c = flcSetColor' c
 
-{# fun flc_set_color_with_c as flcSetColorWithC' { `Int' } -> `()' #}
-flcSetColorWithC :: Int ->  IO ()
-flcSetColorWithC c = flcSetColorWithC' c
-
 {# fun flc_set_color_with_rgb as flcSetColorWithRgb' { id `CUChar',id `CUChar',id `CUChar' } -> `()' #}
 flcSetColorWithRgb :: RGB ->  IO ()
 flcSetColorWithRgb (r', g' , b') = flcSetColorWithRgb' r' g' b'
@@ -205,9 +191,9 @@ flcPoint :: Position ->  IO ()
 flcPoint (Position (X x_pos') (Y y_pos')) = flcPoint' x_pos' y_pos'
 
 {# fun flc_line_style_with_width_dashes as flcLineStyleWithWidthDashes' {cFromEnum `LineStyle', `Int', id `Ptr CChar' } -> `()' #}
-flcLineStyle :: LineStyle -> Maybe Int -> Maybe T.Text -> IO ()
+flcLineStyle :: LineStyle -> Maybe Width -> Maybe T.Text -> IO ()
 flcLineStyle style width' dashes' = do
-  let _width = maybe 0 id width'
+  let _width = case width' of { Just (Width w) -> w ; _ -> 0 }
   _dashes <- maybe (return nullPtr) copyTextToCString dashes'
   flcLineStyleWithWidthDashes' style _width _dashes
 
@@ -236,48 +222,53 @@ flcLine :: Position -> Position ->  IO ()
 flcLine (Position (X x_pos') (Y y_pos'))(Position (X x_pos'') (Y y_pos''))  = flcLine' x_pos' y_pos' x_pos'' y_pos''
 
 {# fun flc_line_with_x2_y2 as flcLineWithX2Y2' { `Int',`Int',`Int',`Int',`Int',`Int' } -> `()' #}
-flcLineWithX2Y2 :: Position -> Int -> Int -> Int -> Int ->  IO ()
-flcLineWithX2Y2 (Position (X x_pos') (Y y_pos')) x1 y1 x2 y2 = flcLineWithX2Y2' x_pos' y_pos' x1 y1 x2 y2
+flcLineWith2Edges :: Position -> Position -> Position -> IO ()
+flcLineWith2Edges (Position (X x_pos') (Y y_pos')) (Position (X x1_pos') (Y y1_pos')) (Position (X x2_pos') (Y y2_pos')) =
+  flcLineWithX2Y2' x_pos' y_pos' x1_pos' y1_pos' x2_pos' y2_pos'
 
 {# fun flc_loop as flcLoop' { `Int',`Int',`Int',`Int',`Int',`Int' } -> `()' #}
-flcLoop :: Position -> Int -> Int -> Int -> Int ->  IO ()
-flcLoop (Position (X x_pos') (Y y_pos')) x1 y1 x2 y2 = flcLoop' x_pos' y_pos' x1 y1 x2 y2
+flcLoop :: Position -> Position -> Position ->  IO ()
+flcLoop (Position (X x_pos') (Y y_pos')) (Position (X x1) (Y y1)) (Position (X x2) (Y y2)) =
+   flcLoop' x_pos' y_pos' x1 y1 x2 y2
 
 {# fun flc_loop_with_x3_y3 as flcLoopWithX3Y3' { `Int',`Int',`Int',`Int',`Int',`Int',`Int',`Int' } -> `()' #}
-flcLoopWithX3Y3 :: Position -> Int -> Int -> Int -> Int -> Int -> Int ->  IO ()
-flcLoopWithX3Y3 (Position (X x_pos') (Y y_pos')) x1 y1 x2 y2 x3 y3 = flcLoopWithX3Y3' x_pos' y_pos' x1 y1 x2 y2 x3 y3
+flcLoopWith4Sides :: Position -> Position -> Position -> Position ->  IO ()
+flcLoopWith4Sides (Position (X x_pos') (Y y_pos')) (Position (X x1) (Y y1)) (Position (X x2) (Y y2)) (Position (X x3) (Y y3)) =
+  flcLoopWithX3Y3' x_pos' y_pos' x1 y1 x2 y2 x3 y3
 
 {# fun flc_polygon as flcPolygon' { `Int',`Int',`Int',`Int',`Int',`Int' } -> `()' #}
-flcPolygon :: Position -> Int -> Int -> Int -> Int ->  IO ()
-flcPolygon (Position (X x_pos') (Y y_pos')) x1 y1 x2 y2 = flcPolygon' x_pos' y_pos' x1 y1 x2 y2
+flcPolygon :: Position -> Position -> Position ->  IO ()
+flcPolygon (Position (X x_pos') (Y y_pos')) (Position (X x1) (Y y1)) (Position (X x2) (Y y2)) =
+  flcPolygon' x_pos' y_pos' x1 y1 x2 y2
 
 {# fun flc_polygon_with_x3_y3 as flcPolygonWithX3Y3' { `Int',`Int',`Int',`Int',`Int',`Int',`Int',`Int' } -> `()' #}
-flcPolygonWithX3Y3 :: Position -> Int -> Int -> Int -> Int -> Int -> Int ->  IO ()
-flcPolygonWithX3Y3 (Position (X x_pos') (Y y_pos')) x1 y1 x2 y2 x3 y3 = flcPolygonWithX3Y3' x_pos' y_pos' x1 y1 x2 y2 x3 y3
+flcPolygonWith4Sides :: Position -> Position -> Position -> Position ->  IO ()
+flcPolygonWith4Sides (Position (X x_pos') (Y y_pos')) (Position (X x1) (Y y1)) (Position (X x2) (Y y2)) (Position (X x3) (Y y3)) =
+   flcPolygonWithX3Y3' x_pos' y_pos' x1 y1 x2 y2 x3 y3
 
 {# fun flc_xyline as flcXyline' { `Int',`Int',`Int' } -> `()' #}
-flcXyline :: Position -> Int ->  IO ()
-flcXyline (Position (X x_pos') (Y y_pos')) x1 = flcXyline' x_pos' y_pos' x1
+flcXyline :: Position -> X ->  IO ()
+flcXyline (Position (X x_pos') (Y y_pos')) (X x1) = flcXyline' x_pos' y_pos' x1
 
 {# fun flc_xyline_with_x2 as flcXylineWithX2' { `Int',`Int',`Int',`Int' } -> `()' #}
-flcXylineWithX2 :: Position -> Int -> Int ->  IO ()
-flcXylineWithX2 (Position (X x_pos') (Y y_pos')) x1 y2 = flcXylineWithX2' x_pos' y_pos' x1 y2
+flcXylineDownByY :: Position -> X -> Y ->  IO ()
+flcXylineDownByY (Position (X x_pos') (Y y_pos')) (X x1) (Y y2) = flcXylineWithX2' x_pos' y_pos' x1 y2
 
 {# fun flc_xyline_with_y2_x3 as flcXylineWithY2X3' { `Int',`Int',`Int',`Int',`Int' } -> `()' #}
-flcXylineWithY2X3 :: Position -> Int -> Int -> Int ->  IO ()
-flcXylineWithY2X3 (Position (X x_pos') (Y y_pos')) x1 y2 x3 = flcXylineWithY2X3' x_pos' y_pos' x1 y2 x3
+flcXylineDownByYAcrossByX :: Position -> X -> Y -> X ->  IO ()
+flcXylineDownByYAcrossByX (Position (X x_pos') (Y y_pos')) (X x1) (Y y2) (X x3) = flcXylineWithY2X3' x_pos' y_pos' x1 y2 x3
 
 {# fun flc_yxline_with_y1 as flcYxlineWithY1' { `Int',`Int',`Int' } -> `()' #}
-flcYxlineWithY1 :: Position -> Int ->  IO ()
-flcYxlineWithY1 (Position (X x_pos') (Y y_pos')) y1 = flcYxlineWithY1' x_pos' y_pos' y1
+flcYxline :: Position -> Y ->  IO ()
+flcYxline (Position (X x_pos') (Y y_pos')) (Y y1) = flcYxlineWithY1' x_pos' y_pos' y1
 
 {# fun flc_yxline_with_y2_x2 as flcYxlineWithY2X2' { `Int',`Int',`Int',`Int' } -> `()' #}
-flcYxlineWithY2X2 :: Position -> Int -> Int ->  IO ()
-flcYxlineWithY2X2 (Position (X x_pos') (Y y_pos')) y1 x2 = flcYxlineWithY2X2' x_pos' y_pos' y1 x2
+flcYxlineAcrossByX :: Position -> Y -> X ->  IO ()
+flcYxlineAcrossByX (Position (X x_pos') (Y y_pos')) (Y y1) (X x2) = flcYxlineWithY2X2' x_pos' y_pos' y1 x2
 
 {# fun flc_yxline_with_y2_x3 as flcYxlineWithY2X3' { `Int',`Int',`Int',`Int',`Int' } -> `()' #}
-flcYxlineWithY2X3 :: Position -> Int -> Int -> Int ->  IO ()
-flcYxlineWithY2X3 (Position (X x_pos') (Y y_pos')) y1 x2 y3 = flcYxlineWithY2X3' x_pos' y_pos' y1 x2 y3
+flcYxlineAcrossByXDownByY :: Position -> Y -> X -> Y ->  IO ()
+flcYxlineAcrossByXDownByY (Position (X x_pos') (Y y_pos')) (Y y1) (X x2) (Y y3) = flcYxlineWithY2X3' x_pos' y_pos' y1 x2 y3
 
 {# fun flc_arc_by_width_height as flcArcByWidthHeight' { `Int',`Int',`Int',`Int',`Double',`Double' } -> `()' #}
 flcArcByWidthHeight :: Rectangle -> Double -> Double ->  IO ()
@@ -411,9 +402,9 @@ flcSize  = flcSize' >>= return . FontSize
 flcHeight ::  IO (Int)
 flcHeight  = flcHeight'
 
-{# fun flc_set_height as flcSetHeight' { `Int',`Int' } -> `Int' #}
-flcSetHeight :: Int -> Int ->  IO (Int)
-flcSetHeight font' size' = flcSetHeight' font' size'
+{# fun flc_set_height as flcSetHeight' { `Int',`CInt' } -> `Int' #}
+flcSetHeight :: Font -> FontSize ->  IO (Int)
+flcSetHeight (Font font') (FontSize size') = flcSetHeight' font' size'
 
 {# fun flc_descent as flcDescent' {  } -> `Int' #}
 flcDescent ::  IO (Int)
@@ -423,53 +414,29 @@ flcDescent  = flcDescent'
 flcWidth :: T.Text ->  IO (Double)
 flcWidth txt = flcWidth' txt
 
-{# fun flc_width_with_n as flcWidthWithN' { unsafeToCString `T.Text',`Int' } -> `Double' #}
-flcWidthWithN :: T.Text -> Int ->  IO (Double)
-flcWidthWithN txt n = flcWidthWithN' txt n
-
 {# fun flc_width_with_c as flcWidthWithC' { `Int' } -> `Double' #}
-flcWidthWithC :: Int ->  IO (Double)
-flcWidthWithC c = flcWidthWithC' c
+flcWidthOfChar :: Int ->  IO (Double)
+flcWidthOfChar c = flcWidthWithC' c
 
 {# fun flc_text_extents as flcTextExtents' { unsafeToCString `T.Text',alloca- `Int' peekIntConv*,alloca- `Int' peekIntConv*,alloca- `Int' peekIntConv*,alloca- `Int' peekIntConv* } -> `()' #}
 flcTextExtents :: T.Text -> IO (Rectangle)
 flcTextExtents s  = flcTextExtents' s >>= \(rectangle') -> return $ (toRectangle rectangle')
 
-{# fun flc_text_extents_with_n as flcTextExtentsWithN' { unsafeToCString `T.Text',`Int',alloca- `Int' peekIntConv*,alloca- `Int' peekIntConv*,alloca- `Int' peekIntConv*,alloca- `Int' peekIntConv* } -> `()' #}
-flcTextExtentsWithN :: T.Text -> Int ->  IO (Rectangle)
-flcTextExtentsWithN t n  = flcTextExtentsWithN' t n >>= \(rectangle') -> return $ (toRectangle rectangle')
-
 {# fun flc_latin1_to_local as flcLatin1ToLocal' { unsafeToCString `T.Text' } -> `T.Text' unsafeFromCString #}
 flcLatin1ToLocal :: T.Text ->  IO  T.Text
 flcLatin1ToLocal t = flcLatin1ToLocal' t
-
-{# fun flc_latin1_to_local_with_n as flcLatin1ToLocalWithN' { unsafeToCString `T.Text',`Int' } -> `T.Text' unsafeFromCString #}
-flcLatin1ToLocalWithN :: T.Text -> Int ->  IO  T.Text
-flcLatin1ToLocalWithN t n = flcLatin1ToLocalWithN' t n
 
 {# fun flc_local_to_latin1 as flcLocalToLatin1' { unsafeToCString `T.Text' } -> `T.Text' unsafeFromCString #}
 flcLocalToLatin1 :: T.Text ->  IO  T.Text
 flcLocalToLatin1 t = flcLocalToLatin1' t
 
-{# fun flc_local_to_latin1_with_n as flcLocalToLatin1WithN' { unsafeToCString `T.Text',`Int' } -> `T.Text' unsafeFromCString #}
-flcLocalToLatin1WithN :: T.Text -> Int ->  IO  T.Text
-flcLocalToLatin1WithN t n = flcLocalToLatin1WithN' t n
-
 {# fun flc_mac_roman_to_local as flcMacRomanToLocal' { unsafeToCString `T.Text' } -> `T.Text' unsafeFromCString #}
 flcMacRomanToLocal :: T.Text ->  IO  T.Text
 flcMacRomanToLocal t = flcMacRomanToLocal' t
 
-{# fun flc_mac_roman_to_local_with_n as flcMacRomanToLocalWithN' { unsafeToCString `T.Text',`Int' } -> `T.Text' unsafeFromCString #}
-flcMacRomanToLocalWithN :: T.Text -> Int ->  IO  T.Text
-flcMacRomanToLocalWithN t n = flcMacRomanToLocalWithN' t n
-
 {# fun flc_local_to_mac_roman as flcLocalToMacRoman' { unsafeToCString `T.Text' } -> `T.Text' unsafeFromCString #}
 flcLocalToMacRoman :: T.Text ->  IO  T.Text
 flcLocalToMacRoman t = flcLocalToMacRoman' t
-
-{# fun flc_local_to_mac_roman_with_n as flcLocalToMacRomanWithN' { unsafeToCString `T.Text',`Int' } -> `T.Text' unsafeFromCString #}
-flcLocalToMacRomanWithN :: T.Text -> Int ->  IO  T.Text
-flcLocalToMacRomanWithN t n = flcLocalToMacRomanWithN' t n
 
 {# fun flc_draw as flcDraw' { unsafeToCString `T.Text',`Int',`Int' } -> `()' #}
 flcDraw :: T.Text -> Position ->  IO ()
@@ -478,14 +445,6 @@ flcDraw str (Position (X x_pos') (Y y_pos')) = flcDraw' str x_pos' y_pos'
 {# fun flc_draw_with_angle as flcDrawWithAngle' { `Int',unsafeToCString `T.Text',`Int',`Int' } -> `()' #}
 flcDrawWithAngle :: Int -> T.Text -> Position ->  IO ()
 flcDrawWithAngle angle str (Position (X x_pos') (Y y_pos')) = flcDrawWithAngle' angle str x_pos' y_pos'
-
-{# fun flc_draw_with_n as flcDrawWithN' { unsafeToCString `T.Text',`Int',`Int',`Int' } -> `()' #}
-flcDrawWithN :: T.Text -> Int -> Position ->  IO ()
-flcDrawWithN str n (Position (X x_pos') (Y y_pos')) = flcDrawWithN' str n x_pos' y_pos'
-
-{# fun flc_draw_with_n_angle as flcDrawWithNAngle' { `Int',unsafeToCString `T.Text',`Int',`Int',`Int' } -> `()' #}
-flcDrawWithNAngle :: Int -> T.Text -> Int -> Position ->  IO ()
-flcDrawWithNAngle angle str n (Position (X x_pos') (Y y_pos')) = flcDrawWithNAngle' angle str n x_pos' y_pos'
 
 {# fun flc_rtl_draw as flcRtlDraw' { unsafeToCString `T.Text',`Int',`Int',`Int' } -> `()' #}
 flcRtlDraw :: T.Text -> Int -> Position ->  IO ()
@@ -614,9 +573,10 @@ flcMeasurePixmapWithCdata pixmap  =
                          return (result, toSize (width', height'))
                       )
 
-{# fun flc_shortcut_label as flcShortcutLabel' { `Int' } -> `T.Text' unsafeFromCString #}
-flcShortcutLabel :: Int ->  IO  T.Text
-flcShortcutLabel shortcut = flcShortcutLabel' shortcut
+{# fun flc_shortcut_label as flcShortcutLabel' { `CInt' } -> `T.Text' unsafeFromCString #}
+flcShortcutLabel :: ShortcutKeySequence ->  IO  T.Text
+flcShortcutLabel (ShortcutKeySequence eventstates keytype) =
+   flcShortcutLabel' (keySequenceToCInt eventstates keytype)
 
 {# fun flc_old_shortcut as flcOldShortcut' { unsafeToCString `T.Text' } -> `Int' #}
 flcOldShortcut :: T.Text -> IO (Int)
@@ -650,18 +610,24 @@ flcCursor cursor = flcCursor' cursor
 flcSetStatus :: Rectangle ->  IO ()
 flcSetStatus rectangle = let (x_pos', y_pos', width', height') = fromRectangle rectangle in flcSetStatus' x_pos' y_pos' width' height'
 
-{# fun flc_set_spot_with_win as flcSetSpotWithWin' { `Int',`Int',`Int',`Int',`Int',`Int',id `Ptr ()' } -> `()' #}
-flcSetSpotWithWin :: (Parent a Window) => Int -> Int -> Rectangle -> Ref a -> IO ()
-flcSetSpotWithWin font' size' rectangle win = let (x_pos', y_pos', width', height') = fromRectangle rectangle in withRef win $ \winPtr -> flcSetSpotWithWin' font' size' x_pos' y_pos' width' height' winPtr
+{# fun flc_set_spot_with_win as flcSetSpotWithWin' { `Int',`CInt',`Int',`Int',`Int',`Int',id `Ptr ()' } -> `()' #}
+flcSetSpotWithWin :: (Parent a Window) => Font -> FontSize -> Rectangle -> Ref a -> IO ()
+flcSetSpotWithWin (Font font') (FontSize size') rectangle win = let (x_pos', y_pos', width', height') = fromRectangle rectangle in withRef win $ \winPtr -> flcSetSpotWithWin' font' size' x_pos' y_pos' width' height' winPtr
 
-{# fun flc_set_spot as flcSetSpot' { `Int',`Int',`Int',`Int',`Int',`Int' } -> `()' #}
-flcSetSpot :: Int -> Int -> Rectangle ->  IO ()
-flcSetSpot font' size' rectangle = let (x_pos', y_pos', width', height') = fromRectangle rectangle in flcSetSpot' font' size' x_pos' y_pos' width' height'
+{# fun flc_set_spot as flcSetSpot' { `Int',`CInt',`Int',`Int',`Int',`Int' } -> `()' #}
+flcSetSpot :: Font -> FontSize -> Rectangle ->  IO ()
+flcSetSpot (Font font') (FontSize size') rectangle = let (x_pos', y_pos', width', height') = fromRectangle rectangle in flcSetSpot' font' size' x_pos' y_pos' width' height'
 
 {# fun flc_reset_spot as flcResetSpot' {  } -> `()' #}
 flcResetSpot ::  IO ()
 flcResetSpot  = flcResetSpot'
 
 {# fun flc_draw_symbol as flcDrawSymbol' { unsafeToCString `T.Text',`Int',`Int',`Int',`Int',cFromColor `Color' } -> `Int' #}
-flcDrawSymbol :: T.Text -> Rectangle -> Color ->  IO (Int)
-flcDrawSymbol label rectangle color' = let (x_pos', y_pos', width', height') = fromRectangle rectangle in flcDrawSymbol' label x_pos' y_pos' width' height' color'
+flcDrawSymbol :: T.Text -> Rectangle -> Color ->  IO (Either UnknownError ())
+flcDrawSymbol label rectangle color' =
+  let (x_pos', y_pos', width', height') = fromRectangle rectangle
+  in do
+  res <- flcDrawSymbol' label x_pos' y_pos' width' height' color'
+  if (res == 0)
+  then return (Right ())
+  else return (Left UnknownError)
