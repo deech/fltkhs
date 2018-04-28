@@ -61,12 +61,12 @@ instance (impl ~ (IO ())) => Op (Destroy ()) Adjuster orig impl where
     adjusterDestroy' adjusterPtr
     return nullPtr
 
-{# fun Fl_Adjuster_soft as soft' { id `Ptr ()' } -> `Int' #}
-instance (impl ~ ( IO (Int))) => Op (GetSoft ()) Adjuster orig impl where
+{# fun Fl_Adjuster_soft as soft' { id `Ptr ()' } -> `Bool' cToBool #}
+instance (impl ~ ( IO (Bool))) => Op (GetSoft ()) Adjuster orig impl where
   runOp _ _ adjuster = withRef adjuster $ \adjusterPtr -> soft' adjusterPtr
 
-{# fun Fl_Adjuster_set_soft as setSoft' { id `Ptr ()',`Int' } -> `()' #}
-instance (impl ~ (Int ->  IO ())) => Op (SetSoft ()) Adjuster orig impl where
+{# fun Fl_Adjuster_set_soft as setSoft' { id `Ptr ()',cFromBool `Bool' } -> `()' #}
+instance (impl ~ (Bool->  IO ())) => Op (SetSoft ()) Adjuster orig impl where
   runOp _ _ adjuster soft = withRef adjuster $ \adjusterPtr -> setSoft' adjusterPtr soft
 
 {# fun Fl_Adjuster_draw as draw'' { id `Ptr ()' } -> `()' #}

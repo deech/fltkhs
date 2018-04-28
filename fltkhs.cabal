@@ -220,7 +220,7 @@ Executable fltkhs-fluidtohs
     mtl
 
   default-language: Haskell2010
-  ghc-Options: -Wall -threaded
+  ghc-Options: -Wall -Wdodgy-imports -threaded
 
   if os(windows) && arch(x86_64)
      cpp-options: -DWIN64

@@ -102,8 +102,8 @@ instance (impl ~ ( IO (Maybe T.Text))) => Op (GetFilename ()) NativeFileChooser 
    runOp _ _ chooser = withRef chooser $ \chooserPtr -> filename' chooserPtr >>= \s ->
      if (T.null s) then return Nothing else return (Just s)
 {# fun Fl_Native_File_Chooser_filename_with_i as filenameWithI' { id `Ptr ()',`Int' } -> `T.Text' unsafeFromCString #}
-instance (impl ~ (Int ->  IO (Maybe T.Text))) => Op (GetFilenameAt ()) NativeFileChooser orig impl where
-   runOp _ _ chooser i = withRef chooser $ \chooserPtr -> filenameWithI' chooserPtr i >>= \s ->
+instance (impl ~ (AtIndex ->  IO (Maybe T.Text))) => Op (GetFilenameAt ()) NativeFileChooser orig impl where
+   runOp _ _ chooser (AtIndex i) = withRef chooser $ \chooserPtr -> filenameWithI' chooserPtr i >>= \s ->
      if (T.null s) then return Nothing else return (Just s)
 {# fun Fl_Native_File_Chooser_set_directory as setDirectory' { id `Ptr ()',unsafeToCString `T.Text' } -> `()' #}
 instance (impl ~ (T.Text ->  IO ())) => Op (SetDirectory ()) NativeFileChooser orig impl where
@@ -130,11 +130,11 @@ instance (impl ~ (T.Text ->  IO ())) => Op (SetFilter ()) NativeFileChooser orig
 instance (impl ~ ( IO (Int))) => Op (Filters ()) NativeFileChooser orig impl where
    runOp _ _ chooser = withRef chooser $ \chooserPtr -> filters' chooserPtr
 {# fun Fl_Native_File_Chooser_set_filter_value as setFilterValue' { id `Ptr ()',`Int' } -> `()' #}
-instance (impl ~ (Int ->  IO ())) => Op (SetFilterValue ()) NativeFileChooser orig impl where
-   runOp _ _ chooser i = withRef chooser $ \chooserPtr -> setFilterValue' chooserPtr i
+instance (impl ~ (AtIndex ->  IO ())) => Op (SetFilterValue ()) NativeFileChooser orig impl where
+   runOp _ _ chooser (AtIndex i) = withRef chooser $ \chooserPtr -> setFilterValue' chooserPtr i
 {# fun Fl_Native_File_Chooser_filter_value as filterValue' { id `Ptr ()' } -> `Int' #}
-instance (impl ~ ( IO (Int))) => Op (GetFilterValue ()) NativeFileChooser orig impl where
-   runOp _ _ chooser = withRef chooser $ \chooserPtr -> filterValue' chooserPtr
+instance (impl ~ ( IO (AtIndex))) => Op (GetFilterValue ()) NativeFileChooser orig impl where
+   runOp _ _ chooser = withRef chooser $ \chooserPtr -> filterValue' chooserPtr >>= return . AtIndex
 {# fun Fl_Native_File_Chooser_set_preset_file as setPresetFile' { id `Ptr ()',unsafeToCString `T.Text' } -> `()' #}
 instance (impl ~ (T.Text ->  IO ())) => Op (SetPresetFile ()) NativeFileChooser orig impl where
    runOp _ _ chooser preset' = withRef chooser $ \chooserPtr -> setPresetFile' chooserPtr preset'

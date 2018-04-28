@@ -63,25 +63,25 @@ instance (impl ~ ( IO ())) => Op (Destroy ()) SysMenuBar orig impl where
 instance (impl ~ (Int  ->  IO ())) => Op (Remove ()) SysMenuBar orig impl where
   runOp _ _ menu_ index' = withRef menu_ $ \menu_Ptr -> remove' menu_Ptr index'
 {# fun Fl_Sys_Menu_Bar_replace as replace' { id `Ptr ()',`Int', unsafeToCString `T.Text' } -> `()' #}
-instance (impl ~ (Int -> T.Text ->  IO ())) => Op (Replace ()) SysMenuBar orig impl where
-  runOp _ _ menu_ index' name = withRef menu_ $ \menu_Ptr -> replace' menu_Ptr index' name
+instance (impl ~ (AtIndex -> T.Text ->  IO ())) => Op (Replace ()) SysMenuBar orig impl where
+  runOp _ _ menu_ (AtIndex index') name = withRef menu_ $ \menu_Ptr -> replace' menu_Ptr index' name
 {# fun Fl_Sys_Menu_Bar_clear as clear' { id `Ptr ()' } -> `()' #}
 instance (impl ~ ( IO ())) => Op (Clear ()) SysMenuBar orig impl where
   runOp _ _ menu_ = withRef menu_ $ \menu_Ptr -> clear' menu_Ptr
 {# fun Fl_Sys_Menu_Bar_clear_submenu as clearSubmenu' { id `Ptr ()',`Int' } -> `Int' #}
-instance (impl ~ (Int ->  IO (Either OutOfRangeOrNotSubmenu ()))) => Op (ClearSubmenu ()) SysMenuBar orig impl where
-  runOp _ _ menu_ index' = withRef menu_ $ \menu_Ptr -> clearSubmenu' menu_Ptr index' >>= return . successOrOutOfRangeOrNotSubmenu
+instance (impl ~ (AtIndex ->  IO (Either OutOfRangeOrNotSubmenu ()))) => Op (ClearSubmenu ()) SysMenuBar orig impl where
+  runOp _ _ menu_ (AtIndex index') = withRef menu_ $ \menu_Ptr -> clearSubmenu' menu_Ptr index' >>= return . successOrOutOfRangeOrNotSubmenu
 {# fun Fl_Sys_Menu_Bar_shortcut as shortcut' { id `Ptr ()',`Int',id `CInt' } -> `()' #}
-instance (impl ~ (Int -> ShortcutKeySequence ->  IO ())) => Op (SetShortcut ()) SysMenuBar orig impl where
-  runOp _ _ menu_ index' (ShortcutKeySequence modifiers char) =
+instance (impl ~ (AtIndex -> ShortcutKeySequence ->  IO ())) => Op (SetShortcut ()) SysMenuBar orig impl where
+  runOp _ _ menu_ (AtIndex index') (ShortcutKeySequence modifiers char) =
     withRef menu_ $ \menu_Ptr ->
         shortcut' menu_Ptr index' (keySequenceToCInt modifiers char)
 {# fun Fl_Sys_Menu_Bar_set_mode as setMode' { id `Ptr ()',`Int',`Int' } -> `()' #}
-instance (impl ~ (Int -> MenuItemFlags ->  IO ())) => Op (SetMode ()) SysMenuBar orig impl where
-  runOp _ _ menu_ i fl = withRef menu_ $ \menu_Ptr -> setMode' menu_Ptr i (menuItemFlagsToInt fl)
+instance (impl ~ (AtIndex -> MenuItemFlags ->  IO ())) => Op (SetMode ()) SysMenuBar orig impl where
+  runOp _ _ menu_ (AtIndex i) fl = withRef menu_ $ \menu_Ptr -> setMode' menu_Ptr i (menuItemFlagsToInt fl)
 {# fun Fl_Sys_Menu_Bar_mode as mode' { id `Ptr ()',`Int' } -> `Int' #}
-instance (impl ~ (Int ->  IO (Maybe MenuItemFlags))) => Op (GetMode ()) SysMenuBar orig impl where
-  runOp _ _ menu_ i = withRef menu_ $ \menu_Ptr -> mode' menu_Ptr i >>= return . intToMenuItemFlags
+instance (impl ~ (AtIndex ->  IO (Maybe MenuItemFlags))) => Op (GetMode ()) SysMenuBar orig impl where
+  runOp _ _ menu_ (AtIndex i) = withRef menu_ $ \menu_Ptr -> mode' menu_Ptr i >>= return . intToMenuItemFlags
 {# fun Fl_Sys_Menu_Bar_global as global' { id `Ptr ()' } -> `()' #}
 instance (impl ~ ( IO ())) => Op (Global ()) SysMenuBar orig impl where
   runOp _ _ menu_ = withRef menu_ $ \menu_Ptr -> global' menu_Ptr
@@ -98,14 +98,14 @@ instance (impl ~ (T.Text -> IO ())) => Op (AddName ()) SysMenuBar orig impl wher
 
 {# fun Fl_Sys_Menu_Bar_add_with_flags as addWithFlags' { id `Ptr ()',unsafeToCString `T.Text',id `CInt',id `FunPtr CallbackWithUserDataPrim',`Int' } -> `Int' #}
 {# fun Fl_Sys_Menu_Bar_add_with_shortcutname_flags as addWithShortcutnameFlags' { id `Ptr ()', unsafeToCString `T.Text', unsafeToCString `T.Text',id `FunPtr CallbackWithUserDataPrim',`Int' } -> `Int' #}
-instance (Parent a MenuItem, impl ~ ( T.Text -> Maybe Shortcut -> Maybe (Ref a-> IO ()) -> MenuItemFlags -> IO (MenuItemIndex))) => Op (Add ()) SysMenuBar orig (impl) where
+instance (Parent a MenuItem, impl ~ ( T.Text -> Maybe Shortcut -> Maybe (Ref a-> IO ()) -> MenuItemFlags -> IO (AtIndex))) => Op (Add ()) SysMenuBar orig (impl) where
   runOp _ _ menu_ name shortcut cb flags =
     addMenuItem (Left (safeCast menu_)) name shortcut cb flags addWithFlags' addWithShortcutnameFlags'
 
 {# fun Fl_Sys_Menu_Bar_insert_with_flags as insertWithFlags' { id `Ptr ()',`Int',unsafeToCString `T.Text',id `CInt',id `FunPtr CallbackWithUserDataPrim',`Int'} -> `Int' #}
 {# fun Fl_Sys_Menu_Bar_insert_with_shortcutname_flags as insertWithShortcutnameFlags' { id `Ptr ()',`Int',unsafeToCString `T.Text', unsafeToCString `T.Text',id `FunPtr CallbackWithUserDataPrim',`Int' } -> `Int' #}
-instance (Parent a MenuPrim, impl ~ ( Int -> T.Text -> Maybe Shortcut -> (Ref a -> IO ()) -> MenuItemFlags -> IO (MenuItemIndex))) => Op (Insert ()) SysMenuBar orig impl where
-  runOp _ _ menu_ index' name shortcut cb flags = insertMenuItem (safeCast menu_) index' name shortcut cb flags insertWithFlags' insertWithShortcutnameFlags'
+instance (Parent a MenuPrim, impl ~ ( AtIndex -> T.Text -> Maybe Shortcut -> (Ref a -> IO ()) -> MenuItemFlags -> IO (AtIndex))) => Op (Insert ()) SysMenuBar orig impl where
+  runOp _ _ menu_ (AtIndex index') name shortcut cb flags = insertMenuItem (safeCast menu_) index' name shortcut cb flags insertWithFlags' insertWithShortcutnameFlags'
 {# fun Fl_Sys_Menu_Bar_draw as draw'' { id `Ptr ()' } -> `()' #}
 instance (impl ~ (  IO ())) => Op (Draw ()) SysMenuBar orig impl where
   runOp _ _ sysMenuBar = withRef sysMenuBar $ \sysMenuBarPtr -> draw'' sysMenuBarPtr
@@ -143,13 +143,13 @@ instance (impl ~ ( IO ())) => Op (ShowWidgetSuper ()) SysMenuBar orig impl where
 
 -- $functions
 -- @
--- add:: ('Parent' a 'MenuItem') => 'Ref' 'SysMenuBar' -> 'T.Text' -> 'Maybe' 'Shortcut' -> 'Maybe' ('Ref' a-> 'IO' ()) -> 'MenuItemFlags' -> 'IO' ('MenuItemIndex')
+-- add:: ('Parent' a 'MenuItem') => 'Ref' 'SysMenuBar' -> 'T.Text' -> 'Maybe' 'Shortcut' -> 'Maybe' ('Ref' a-> 'IO' ()) -> 'MenuItemFlags' -> 'IO' ('AtIndex')
 --
 -- addName :: 'Ref' 'SysMenuBar' -> 'T.Text' -> 'IO' ()
 --
 -- clear :: 'Ref' 'SysMenuBar' -> 'IO' ()
 --
--- clearSubmenu :: 'Ref' 'SysMenuBar' -> 'Int' -> 'IO' ('Either' 'OutOfRangeOrNotSubmenu' ())
+-- clearSubmenu :: 'Ref' 'SysMenuBar' -> 'AtIndex' -> 'IO' ('Either' 'OutOfRangeOrNotSubmenu' ())
 --
 -- destroy :: 'Ref' 'SysMenuBar' -> 'IO' ()
 --
@@ -157,7 +157,7 @@ instance (impl ~ ( IO ())) => Op (ShowWidgetSuper ()) SysMenuBar orig impl where
 --
 -- drawSuper :: 'Ref' 'SysMenuBar' -> 'IO' ()
 --
--- getMode :: 'Ref' 'SysMenuBar' -> 'Int' -> 'IO' ('Maybe' 'MenuItemFlags')
+-- getMode :: 'Ref' 'SysMenuBar' -> 'AtIndex' -> 'IO' ('Maybe' 'MenuItemFlags')
 --
 -- global :: 'Ref' 'SysMenuBar' -> 'IO' ()
 --
@@ -169,11 +169,11 @@ instance (impl ~ ( IO ())) => Op (ShowWidgetSuper ()) SysMenuBar orig impl where
 --
 -- hideSuper :: 'Ref' 'SysMenuBar' -> 'IO' ()
 --
--- insert:: ('Parent' a 'MenuPrim') => 'Ref' 'SysMenuBar' -> 'Int' -> 'T.Text' -> 'Maybe' 'Shortcut' -> ('Ref' a -> 'IO' ()) -> 'MenuItemFlags' -> 'IO' ('MenuItemIndex')
+-- insert:: ('Parent' a 'MenuPrim') => 'Ref' 'SysMenuBar' -> 'AtIndex' -> 'T.Text' -> 'Maybe' 'Shortcut' -> ('Ref' a -> 'IO' ()) -> 'MenuItemFlags' -> 'IO' ('AtIndex')
 --
 -- remove :: 'Ref' 'SysMenuBar' -> 'Int' -> 'IO' ()
 --
--- replace :: 'Ref' 'SysMenuBar' -> 'Int' -> 'T.Text' -> 'IO' ()
+-- replace :: 'Ref' 'SysMenuBar' -> 'AtIndex' -> 'T.Text' -> 'IO' ()
 --
 -- resize :: 'Ref' 'SysMenuBar' -> 'Rectangle' -> 'IO' ()
 --
@@ -181,9 +181,9 @@ instance (impl ~ ( IO ())) => Op (ShowWidgetSuper ()) SysMenuBar orig impl where
 --
 -- setMenu :: 'Ref' 'SysMenuBar' -> ['Ref' 'MenuItem'] -> 'IO' ()
 --
--- setMode :: 'Ref' 'SysMenuBar' -> 'Int' -> 'MenuItemFlags' -> 'IO' ()
+-- setMode :: 'Ref' 'SysMenuBar' -> 'AtIndex' -> 'MenuItemFlags' -> 'IO' ()
 --
--- setShortcut :: 'Ref' 'SysMenuBar' -> 'Int' -> 'ShortcutKeySequence' -> 'IO' ()
+-- setShortcut :: 'Ref' 'SysMenuBar' -> 'AtIndex' -> 'ShortcutKeySequence' -> 'IO' ()
 --
 -- showWidget :: 'Ref' 'SysMenuBar' -> 'IO' ()
 --

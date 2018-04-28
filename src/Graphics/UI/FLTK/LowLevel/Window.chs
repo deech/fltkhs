@@ -302,11 +302,11 @@ instance (impl ~ ( IO ())) => Op (FreePosition ()) Window orig impl where
 
 {# fun Fl_Window_size_range as sizeRange' { id `Ptr ()',`Int',`Int' } -> `()' supressWarningAboutRes #}
 {# fun Fl_Window_size_range_with_args as sizeRangeWithArgs' { id `Ptr ()',`Int',`Int', id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance (impl ~ (Int -> Int -> IO ())) => Op (SizeRange ()) Window orig impl where
-  runOp _ _ win minw' minh' =
+instance (impl ~ (Size -> IO ())) => Op (SizeRange ()) Window orig impl where
+  runOp _ _ win (Size (Width minw') (Height minh')) =
     withRef win $ \winPtr -> sizeRange' winPtr minw' minh'
-instance (impl ~ (Int -> Int -> OptionalSizeRangeArgs ->  IO ())) => Op (SizeRangeWithArgs ()) Window orig impl where
-  runOp _ _ win minw' minh' args =
+instance (impl ~ (Size -> OptionalSizeRangeArgs ->  IO ())) => Op (SizeRangeWithArgs ()) Window orig impl where
+  runOp _ _ win (Size (Width minw') (Height minh')) args =
     withRef win $ \winPtr -> do
       structPtr <- optionalSizeRangeArgsToStruct args
       sizeRangeWithArgs' winPtr minw' minh' structPtr

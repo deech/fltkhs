@@ -104,12 +104,12 @@ instance (Parent a Widget, impl ~ (Ref a->  IO ())) => Op (Add ()) Group orig im
   runOp _ _ group w = withRef group $ \groupPtr -> withRef w $ \wPtr -> add' groupPtr wPtr
 
 {# fun Fl_Group_insert as insert' { id `Ptr ()',id `Ptr ()',`Int' } -> `()' supressWarningAboutRes #}
-instance (Parent a Widget, impl ~ (Ref a-> Int ->  IO ())) => Op (Insert ()) Group orig impl where
-  runOp _ _ group w i = withRef group $ \groupPtr -> withRef w $ \wPtr -> insert' groupPtr wPtr i
+instance (Parent a Widget, impl ~ (Ref a-> AtIndex ->  IO ())) => Op (Insert ()) Group orig impl where
+  runOp _ _ group w (AtIndex i) = withRef group $ \groupPtr -> withRef w $ \wPtr -> insert' groupPtr wPtr i
 
 {# fun Fl_Group_remove_index as removeIndex' { id `Ptr ()',`Int' } -> `()' supressWarningAboutRes #}
-instance (impl ~ ( Int ->  IO ())) => Op (RemoveIndex ()) Group orig impl where
-  runOp _ _ group index' = withRef group $ \groupPtr -> removeIndex' groupPtr index'
+instance (impl ~ ( AtIndex ->  IO ())) => Op (RemoveIndex ()) Group orig impl where
+  runOp _ _ group (AtIndex index') = withRef group $ \groupPtr -> removeIndex' groupPtr index'
 
 {# fun Fl_Group_remove_widget as removeWidget' { id `Ptr ()',id `Ptr ()' } -> `()' supressWarningAboutRes #}
 instance (Parent a Widget, impl ~ (Ref a ->  IO ())) => Op (RemoveWidget ()) Group orig impl where
@@ -159,7 +159,7 @@ instance (impl ~ (IO (Maybe (Ref Widget)))) => Op (DdfdesignKludge ()) Group ori
   runOp _ _ group = withRef group $ \groupPtr -> ddfdesignKludge' groupPtr >>= toMaybeRef
 
 {# fun Fl_Group_insert_with_before as insertWithBefore' { id `Ptr ()',id `Ptr ()',id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance (Parent a Widget, impl ~ (Ref a -> Ref b ->  IO ())) => Op (InsertWithBefore ()) Group orig impl where
+instance (Parent a Widget, impl ~ (Ref a -> Ref b ->  IO ())) => Op (InsertBefore ()) Group orig impl where
   runOp _ _ self w before = withRef self $ \selfPtr -> withRef w $ \wPtr -> withRef before $ \beforePtr -> insertWithBefore' selfPtr wPtr beforePtr
 
 {# fun Fl_Group_array as array' { id `Ptr ()' } -> `Ptr (Ptr ())' id#}
@@ -170,8 +170,8 @@ instance (impl ~ (IO [Ref Widget])) => Op (GetArray ()) Group orig impl where
                     arrayToRefs childArrayPtr numChildren
 
 {# fun Fl_Group_child as child' { id `Ptr ()',`Int' } -> `Ptr ()' id #}
-instance (impl ~ (Int ->  IO (Maybe (Ref Widget)))) => Op (GetChild ()) Group orig impl where
-  runOp _ _ self n = withRef self $ \selfPtr -> child' selfPtr n >>= toMaybeRef
+instance (impl ~ (AtIndex ->  IO (Maybe (Ref Widget)))) => Op (GetChild ()) Group orig impl where
+  runOp _ _ self (AtIndex n) = withRef self $ \selfPtr -> child' selfPtr n >>= toMaybeRef
 
 -- $groupfunctions
 -- @
@@ -213,7 +213,7 @@ instance (impl ~ (Int ->  IO (Maybe (Ref Widget)))) => Op (GetChild ()) Group or
 --
 -- insert:: ('Parent' a 'Widget') => 'Ref' 'Group' -> 'Ref' a-> 'Int' -> 'IO' ()
 --
--- insertWithBefore:: ('Parent' a 'Widget') => 'Ref' 'Group' -> 'Ref' a -> 'Ref' b -> 'IO' ()
+-- insertBefore:: ('Parent' a 'Widget') => 'Ref' 'Group' -> 'Ref' a -> 'Ref' b -> 'IO' ()
 --
 -- removeIndex :: 'Ref' 'Group' -> 'Int' -> 'IO' ()
 --
@@ -227,7 +227,10 @@ instance (impl ~ (Int ->  IO (Maybe (Ref Widget)))) => Op (GetChild ()) Group or
 --
 -- updateChild:: ('Parent' a 'Widget') => 'Ref' 'Group' -> 'Ref' a -> 'IO' ()
 --
--- within:: 'Ref' 'Group' -> 'IO' a -> 'IO' a
+-- within:: ('Match' obj ~ 'FindOp' orig orig ('Begin' ()), 'Match' obj ~ 'FindOp' orig orig ('End' ()), 'Op' ('Begin' ()) obj orig ('IO' ()), 'Op' ('End' ()) obj orig ('IO' ()),) => 'Ref' 'Group' -> 'IO' a -> 'IO' a
+-- Available in FLTK 1.3.4 only:
+
+
 -- @
 
 -- $hierarchy

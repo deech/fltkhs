@@ -110,26 +110,21 @@ instance (impl ~ (FlInputType ->  IO ())) => Op (SetType ()) Input orig impl whe
   runOp _ _ widget t = withRef widget $ \widgetPtr -> setType' widgetPtr (fromInteger $ toInteger $ fromEnum t)
 
 {# fun Fl_Input_set_value as setValue' { id `Ptr ()', unsafeToCString `T.Text' } -> `Int' #}
-{# fun Fl_Input_set_value_with_length as setValueWithLength' { id `Ptr ()', unsafeToCString `T.Text',`Int' } -> `Int' #}
-instance (impl ~ (T.Text -> Maybe Int -> IO (Int))) => Op (SetValue ()) Input orig impl where
-  runOp _ _ input text l' =
-    case l' of
-     Nothing -> withRef input $ \inputPtr -> setValue' inputPtr text
-     Just l -> withRef input $ \inputPtr -> setValueWithLength' inputPtr text l
+instance (impl ~ (T.Text -> IO (Either NoChange ()))) => Op (SetValue ()) Input orig impl where
+  runOp _ _ input text = withRef input $ \inputPtr -> setValue' inputPtr text >>= return . successOrNoChange
+
 {# fun Fl_Input_static_value as staticValue' { id `Ptr ()', unsafeToCString `T.Text' } -> `Int' #}
 {# fun Fl_Input_static_value_with_length as staticValueWithLength' { id `Ptr ()', unsafeToCString `T.Text',`Int' } -> `Int' #}
-instance (impl ~ (T.Text -> Maybe Int ->  IO (Either NoChange ()))) => Op (StaticValue ()) Input orig impl where
-  runOp _ _ input text l'= do
-    status' <- case l' of
-      Nothing -> withRef input $ \inputPtr -> staticValue' inputPtr text
-      Just l -> withRef input $ \inputPtr -> staticValueWithLength' inputPtr text l
+instance (impl ~ (T.Text -> IO (Either NoChange ()))) => Op (StaticValue ()) Input orig impl where
+  runOp _ _ input text = do
+    status' <- withRef input $ \inputPtr -> staticValue' inputPtr text
     return $ successOrNoChange status'
 {# fun Fl_Input_value as value' { id `Ptr ()' } -> `T.Text' unsafeFromCString #}
 instance (impl ~ ( IO T.Text)) => Op (GetValue ()) Input orig impl where
   runOp _ _ input = withRef input $ \inputPtr -> value' inputPtr
 {# fun Fl_Input_index as index' { id `Ptr ()',`Int' } -> `Int' #}
-instance (impl ~ (Int ->  IO (Char))) => Op (Index ()) Input orig impl where
-  runOp _ _ input i = withRef input $ \inputPtr -> index' inputPtr i >>= return . toEnum
+instance (impl ~ (AtIndex ->  IO (Char))) => Op (Index ()) Input orig impl where
+  runOp _ _ input (AtIndex i) = withRef input $ \inputPtr -> index' inputPtr i >>= return . toEnum
 {# fun Fl_Input_set_size as setSize' { id `Ptr ()',`Int',`Int' } -> `()' #}
 instance (impl ~ (Size ->  IO ())) => Op (SetSize ()) Input orig impl where
   runOp _ _ input (Size (Width w') (Height h')) = withRef input $ \inputPtr -> setSize' inputPtr w' h'
@@ -160,8 +155,8 @@ instance (impl ~ (Int -> Maybe Int -> IO (Either NoChange ()))) => Op (SetPositi
 instance (impl ~ (Int ->  IO (Either NoChange ()))) => Op (SetMark ()) Input orig impl where
   runOp _ _ input m = withRef input $ \inputPtr -> setMark' inputPtr m >>= return . successOrNoChange
 {# fun Fl_Input_replace as replace' { id `Ptr ()',`Int',`Int', unsafeToCString `T.Text' } -> `Int' #}
-instance (impl ~ (Int -> Int -> T.Text ->  IO (Either NoChange ()))) => Op (Replace ()) Input orig impl where
-  runOp _ _ input b e text = withRef input $ \inputPtr -> replace' inputPtr b e  text >>= return . successOrNoChange
+instance (impl ~ (IndexRange -> T.Text ->  IO (Either NoChange ()))) => Op (Replace ()) Input orig impl where
+  runOp _ _ input (IndexRange (AtIndex b) (AtIndex e)) text = withRef input $ \inputPtr -> replace' inputPtr b e  text >>= return . successOrNoChange
 {# fun Fl_Input_cut as cut' { id `Ptr ()' } -> `Int' #}
 instance (impl ~ ( IO (Either NoChange ()))) => Op (Cut ()) Input orig impl where
   runOp _ _ input = withRef input $ \inputPtr -> cut' inputPtr >>= return . successOrNoChange
@@ -169,8 +164,8 @@ instance (impl ~ ( IO (Either NoChange ()))) => Op (Cut ()) Input orig impl wher
 instance (impl ~ (Int ->  IO (Either NoChange ()))) => Op (CutFromCursor ()) Input orig impl where
   runOp _ _ input n = withRef input $ \inputPtr -> cutBytes' inputPtr n >>= return . successOrNoChange
 {# fun Fl_Input_cut_range as cutRange' { id `Ptr ()',`Int',`Int' } -> `Int' #}
-instance (impl ~ (Int -> Int ->  IO (Either NoChange ()))) => Op (CutRange ()) Input orig impl where
-  runOp _ _ input a b = withRef input $ \inputPtr -> cutRange' inputPtr a b >>= return . successOrNoChange
+instance (impl ~ (IndexRange ->  IO (Either NoChange ()))) => Op (CutRange ()) Input orig impl where
+  runOp _ _ input (IndexRange (AtIndex a) (AtIndex b)) = withRef input $ \inputPtr -> cutRange' inputPtr a b >>= return . successOrNoChange
 {# fun Fl_Input_insert as insert' { id `Ptr ()', unsafeToCString `T.Text' } -> `Int' #}
 instance (impl ~ (T.Text ->  IO (Either NoChange ()))) => Op (Insert ()) Input orig impl where
   runOp _ _ input t = withRef input $ \inputPtr -> insert' inputPtr t >>= return . successOrNoChange
@@ -227,11 +222,11 @@ instance (impl ~ ( IO (FlInputType))) => Op (GetInputType ()) Input orig impl wh
 {# fun Fl_Input_set_input_type as setInputType' { id `Ptr ()',`Int' } -> `()' #}
 instance (impl ~ (FlInputType ->  IO ())) => Op (SetInputType ()) Input orig impl where
   runOp _ _ input t = withRef input $ \inputPtr -> setInputType' inputPtr (fromIntegral (fromEnum t))
-{# fun Fl_Input_readonly as readonly' { id `Ptr ()' } -> `Int' #}
-instance (impl ~ ( IO (Int))) => Op (GetReadonly ()) Input orig impl where
+{# fun Fl_Input_readonly as readonly' { id `Ptr ()' } -> `Bool' cToBool #}
+instance (impl ~ ( IO (Bool))) => Op (GetReadonly ()) Input orig impl where
   runOp _ _ input = withRef input $ \inputPtr -> readonly' inputPtr
-{# fun Fl_Input_set_readonly as setReadonly' { id `Ptr ()',`Int' } -> `()' #}
-instance (impl ~ (Int ->  IO ())) => Op (SetReadonly ()) Input orig impl where
+{# fun Fl_Input_set_readonly as setReadonly' { id `Ptr ()',cFromBool `Bool' } -> `()' #}
+instance (impl ~ (Bool ->  IO ())) => Op (SetReadonly ()) Input orig impl where
   runOp _ _ input b = withRef input $ \inputPtr -> setReadonly' inputPtr b
 {# fun Fl_Input_wrap as wrap' { id `Ptr ()' } -> `Int' #}
 instance (impl ~ ( IO (Bool))) => Op (GetWrap ()) Input orig impl where
@@ -381,6 +376,9 @@ instance (impl ~ ( IO ())) => Op (ShowWidgetSuper ()) Input orig impl where
 -- staticValue :: 'Ref' 'Input' -> 'T.Text' -> 'Maybe' 'Int' -> 'IO' ('Either' 'NoChange' ())
 --
 -- undo :: 'Ref' 'Input' -> 'IO' ('Either' 'NoChange' ())
+-- Available in FLTK 1.3.4 only:
+
+
 -- @
 
 

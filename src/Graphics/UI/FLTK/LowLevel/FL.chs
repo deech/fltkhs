@@ -114,7 +114,7 @@ module Graphics.UI.FLTK.LowLevel.FL
      removeFromColormap,
 #endif
      -- * Box
-     BoxtypeSpec,
+     BoxtypeSpec(..),
      getBoxtype,
      setBoxtype,
      boxDx,
@@ -756,9 +756,9 @@ setColorRgb c r g b = {#call Fl_set_color_rgb as fl_set_color_rgb #}
                         (fromIntegral g)
                         (fromIntegral b)
 {# fun Fl_set_color as setColor
-       { cFromColor `Color',`Int' } -> `()' supressWarningAboutRes #}
+       { cFromColor `Color', cFromColor `Color' } -> `()' supressWarningAboutRes #}
 {# fun Fl_get_color as getColor
-       { cFromColor `Color' } -> `Int' #}
+       { cFromColor `Color' } -> `Color' cToColor #}
 {# fun Fl_get_color_rgb as getColorRgb'
        {
          cFromColor `Color',
@@ -776,8 +776,8 @@ getColorRgb c = do
       { cFromColor `Color' } -> `()' supressWarningAboutRes #}
 {# fun Fl_free_color_with_overlay as freeColorWithOverlay'
        { cFromColor `Color', `Int' } -> `()' supressWarningAboutRes #}
-removeFromColormap :: Maybe Int -> Color -> IO ()
-removeFromColormap (Just overlay) c = freeColorWithOverlay' c overlay
+removeFromColormap :: Maybe Color -> Color -> IO ()
+removeFromColormap (Just (Color overlay)) c = freeColorWithOverlay' c (fromIntegral overlay)
 removeFromColormap Nothing c = freeColor' c
 #endif
 {# fun Fl_get_font as getFont

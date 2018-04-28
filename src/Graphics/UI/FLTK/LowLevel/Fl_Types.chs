@@ -209,19 +209,19 @@ import qualified Data.ByteString as B
     HsvMode = 3
   };
 #endc
-{#enum SliderType {} deriving (Show, Eq) #}
-{#enum ScrollbarType {} deriving (Show, Eq) #}
-{#enum BrowserType {} deriving (Show, Eq) #}
-{#enum SortType {} deriving (Show, Eq) #}
-{#enum FileBrowserType {} deriving (Show, Eq) #}
-{#enum FileIconType {} deriving (Show, Eq) #}
-{#enum FileIconProps {} deriving (Show, Eq) #}
-{#enum FileChooserType {} deriving (Show, Eq) #}
-{#enum ButtonType {} deriving (Show, Eq) #}
-{#enum TreeReasonType {} deriving (Show, Eq) #}
+{#enum SliderType {} deriving (Show, Eq, Ord) #}
+{#enum ScrollbarType {} deriving (Show, Eq, Ord) #}
+{#enum BrowserType {} deriving (Show, Eq, Ord) #}
+{#enum SortType {} deriving (Show, Eq, Ord) #}
+{#enum FileBrowserType {} deriving (Show, Eq, Ord) #}
+{#enum FileIconType {} deriving (Show, Eq, Ord) #}
+{#enum FileIconProps {} deriving (Show, Eq, Ord) #}
+{#enum FileChooserType {} deriving (Show, Eq, Ord) #}
+{#enum ButtonType {} deriving (Show, Eq, Ord) #}
+{#enum TreeReasonType {} deriving (Show, Eq, Ord) #}
 {#enum MenuItemFlag {} deriving (Show, Eq, Ord) #}
 {#enum ColorChooserMode {} deriving (Show, Eq, Ord) #}
-newtype MenuItemFlags = MenuItemFlags [MenuItemFlag] deriving Show
+newtype MenuItemFlags = MenuItemFlags [MenuItemFlag] deriving (Eq, Show, Ord)
 allMenuItemFlags :: [MenuItemFlag]
 allMenuItemFlags =
   [
@@ -235,19 +235,18 @@ allMenuItemFlags =
      MenuItemDivider,
      MenuItemHorizontal
   ]
-{#enum CursorType {} deriving (Show, Eq) #}
-{#enum PositionType {} deriving (Show, Eq) #}
-{#enum DragType {} deriving (Show, Eq) #}
-{#enum WrapTypeFl {} deriving (Show, Eq) #}
-data WrapType = WrapNone | WrapAtColumn ColumnNumber | WrapAtPixel PixelPosition | WrapAtBounds deriving (Eq, Show)
-{#enum PageFormat {} deriving (Show, Eq) #}
-{#enum PageLayout {} deriving (Show, Eq) #}
-{#enum TableRowSelectMode {} deriving (Show, Eq)  #}
-{#enum TableContext {} deriving (Show, Eq) #}
-{#enum LinePosition {} deriving (Show, Eq)  #}
-{#enum ScrollbarMode {} deriving (Show, Eq) #}
-data StyleTableEntry = StyleTableEntry (Maybe Color) (Maybe Font) (Maybe FontSize) deriving Show
-
+{#enum CursorType {} deriving (Show, Eq, Ord) #}
+{#enum PositionType {} deriving (Show, Eq, Ord) #}
+{#enum DragType {} deriving (Show, Eq, Ord) #}
+{#enum WrapTypeFl {} deriving (Show, Eq, Ord) #}
+data WrapType = WrapNone | WrapAtColumn ColumnNumber | WrapAtPixel PixelPosition | WrapAtBounds deriving (Eq, Show, Ord)
+{#enum PageFormat {} deriving (Show, Eq, Ord) #}
+{#enum PageLayout {} deriving (Show, Eq, Ord) #}
+{#enum TableRowSelectMode {} deriving (Show, Eq, Ord)  #}
+{#enum TableContext {} deriving (Show, Eq, Ord) #}
+{#enum LinePosition {} deriving (Show, Eq, Ord)  #}
+{#enum ScrollbarMode {} deriving (Show, Eq, Ord) #}
+data StyleTableEntry = StyleTableEntry (Maybe Color) (Maybe Font) (Maybe FontSize) deriving (Eq, Show, Ord)
 {#enum PackType{} deriving (Show, Eq, Ord) #}
 type FlShortcut      = {#type Fl_Shortcut #}
 type FlColor         = {#type Fl_Color #}
@@ -259,7 +258,7 @@ type FlIntPtr        = {#type fl_intptr_t #}
 type FlUIntPtr       = {#type fl_uintptr_t#}
 type ID              = {#type ID#}
 newtype WindowHandle = WindowHandle (Ptr ())
-data Ref a           = Ref !(ForeignPtr (Ptr ())) deriving (Eq, Show)
+data Ref a           = Ref !(ForeignPtr (Ptr ())) deriving (Eq, Show, Ord)
 data FunRef          = FunRef !(FunPtr ())
 -- * The FLTK widget hierarchy
 data CBase parent
@@ -289,28 +288,27 @@ type FDHandler                   = CInt -> IO ()
 #endif
 type TextModifyCb                = Int -> Int -> Int -> Int -> T.Text -> IO ()
 type TextModifyCbPrim            = CInt -> CInt -> CInt -> CInt -> Ptr CChar -> Ptr () -> IO ()
-type TextPredeleteCb             = BufferOffset -> Int -> IO ()
+type TextPredeleteCb             = AtIndex -> Int -> IO ()
 type TextPredeleteCbPrim         = CInt -> CInt -> Ptr () -> IO ()
-type UnfinishedStyleCb           = BufferOffset -> IO ()
+type UnfinishedStyleCb           = AtIndex -> IO ()
 type UnfinishedStyleCbPrim       = CInt -> Ptr () -> IO ()
 
-newtype Width = Width Int deriving (Eq, Show)
-newtype Height = Height Int deriving (Eq, Show)
-newtype Depth = Depth Int deriving Show
-newtype LineSize = LineSize Int deriving Show
-newtype X = X Int deriving (Eq, Show)
-newtype Y = Y Int deriving (Eq, Show)
-newtype ByX = ByX Double deriving Show
-newtype ByY = ByY Double deriving Show
-newtype Angle = Angle CShort deriving Show
-data Position = Position X Y deriving (Eq,Show)
-data CountDirection = CountUp | CountDown deriving Show
-data DPI = DPI Float Float deriving Show
-newtype TextDisplayStyle = TextDisplayStyle CInt deriving Show
-newtype BufferOffset = BufferOffset Int deriving Show
-data BufferRange = BufferRange BufferOffset BufferOffset deriving Show
-statusToBufferRange :: (Ptr CInt -> Ptr CInt -> IO Int) -> IO (Maybe BufferRange)
-statusToBufferRange f =
+newtype Width = Width Int deriving (Eq, Show, Ord)
+newtype Height = Height Int deriving (Eq, Show, Ord)
+newtype Depth = Depth Int deriving (Eq, Show, Ord)
+newtype LineSize = LineSize Int deriving (Eq, Show, Ord)
+newtype X = X Int deriving (Eq, Show, Ord)
+newtype Y = Y Int deriving (Eq, Show, Ord)
+newtype ByX = ByX Double deriving (Eq, Show, Ord)
+newtype ByY = ByY Double deriving (Eq, Show, Ord)
+newtype Angle = Angle CShort deriving (Eq, Show, Ord)
+data Position = Position X Y deriving (Eq, Show, Ord)
+data CountDirection = CountUp | CountDown deriving (Eq, Show, Ord)
+data DPI = DPI Float Float deriving (Eq, Show, Ord)
+newtype TextDisplayStyle = TextDisplayStyle CInt deriving (Eq, Show, Ord)
+data IndexRange = IndexRange AtIndex AtIndex deriving (Eq, Show, Ord)
+statusToIndexRange :: (Ptr CInt -> Ptr CInt -> IO Int) -> IO (Maybe IndexRange)
+statusToIndexRange f =
   alloca $ \start' ->
   alloca $ \end' ->
   f start' end' >>= \status' ->
@@ -319,46 +317,50 @@ statusToBufferRange f =
     _ -> do
       start'' <- peekIntConv start'
       end'' <- peekIntConv end'
-      return (Just (BufferRange (BufferOffset start'') (BufferOffset end'')))
+      return (Just (IndexRange (AtIndex start'') (AtIndex end'')))
 
-data ColorChooserRGB = Decimals (Between0And1, Between0And1, Between0And1) | Words RGB deriving Show
-data Rectangle = Rectangle Position Size deriving (Eq,Show)
-data ByXY = ByXY ByX ByY deriving Show
-data Intersection = Contained | Partial deriving Show
-data Size = Size Width Height deriving (Eq, Show)
+data ColorChooserRGB = Decimals (Between0And1, Between0And1, Between0And1) | Words RGB deriving (Eq, Show, Ord)
+data Rectangle = Rectangle Position Size deriving (Eq, Show, Ord)
+data ByXY = ByXY ByX ByY deriving (Eq, Show, Ord)
+data Intersection = Contained | Partial deriving (Eq, Show, Ord)
+data Size = Size Width Height deriving (Eq, Show, Ord)
+newtype Lines = Lines Int deriving (Eq,Show,Ord)
 newtype LineNumber = LineNumber Int deriving (Eq,Show,Ord)
 newtype ColumnNumber = ColumnNumber Int deriving (Eq, Show, Ord)
 newtype PixelPosition = PixelPosition Int deriving (Eq,Show,Ord)
-data KeyType = SpecialKeyType SpecialKey | NormalKeyType Char deriving (Show, Eq)
-data ShortcutKeySequence = ShortcutKeySequence [EventState] KeyType deriving Show
-data Shortcut = KeySequence ShortcutKeySequence | KeyFormat T.Text deriving Show
-data KeyBindingKeySequence = KeyBindingKeySequence (Maybe [EventState]) KeyType deriving Show
-newtype Between0And1 = Between0And1 Double deriving Show
-newtype Between0And6 = Between0And6 Double deriving Show
+newtype AtIndex = AtIndex Int deriving (Eq,Show,Ord)
+newtype Rows = Rows Int deriving (Eq,Show,Ord)
+newtype Columns = Columns Int deriving (Eq,Show,Ord)
+data KeyType = SpecialKeyType SpecialKey | NormalKeyType Char deriving (Eq, Show, Ord)
+data ShortcutKeySequence = ShortcutKeySequence [EventState] KeyType deriving (Eq, Show, Ord)
+data Shortcut = KeySequence ShortcutKeySequence | KeyFormat T.Text deriving (Eq, Show, Ord)
+data KeyBindingKeySequence = KeyBindingKeySequence (Maybe [EventState]) KeyType deriving (Eq, Show, Ord)
+newtype Between0And1 = Between0And1 Double deriving (Eq, Show, Ord)
+newtype Between0And6 = Between0And6 Double deriving (Eq, Show, Ord)
 data ScreenLocation = Intersect Rectangle
                     | ScreenNumber Int
-                    | ScreenPosition Position deriving Show
-newtype FontSize = FontSize CInt deriving Show
-newtype PixmapHs = PixmapHs [T.Text] deriving Show
-data BitmapHs = BitmapHs B.ByteString Size deriving Show
-data Clipboard = InternalClipboard | SharedClipboard deriving Show
-data OutOfRangeOrNotSubmenu = OutOfRangeOrNotSubmenu deriving Show
+                    | ScreenPosition Position deriving (Eq, Show, Ord)
+newtype FontSize = FontSize CInt deriving (Eq, Show, Ord)
+newtype PixmapHs = PixmapHs [T.Text] deriving (Eq, Show, Ord)
+data BitmapHs = BitmapHs B.ByteString Size deriving (Eq, Show, Ord)
+data Clipboard = InternalClipboard | SharedClipboard deriving (Eq, Show, Ord)
+data OutOfRangeOrNotSubmenu = OutOfRangeOrNotSubmenu deriving (Eq, Show, Ord)
 successOrOutOfRangeOrNotSubmenu :: Int -> Either OutOfRangeOrNotSubmenu ()
 successOrOutOfRangeOrNotSubmenu status = if (status == (-1)) then Left OutOfRangeOrNotSubmenu else Right ()
-data AwakeRingFull = AwakeRingFull deriving Show
+data AwakeRingFull = AwakeRingFull deriving (Eq, Show, Ord)
 successOrAwakeRingFull :: Int -> Either AwakeRingFull ()
 successOrAwakeRingFull status = if (status == (-1)) then Left AwakeRingFull else Right ()
-data UnknownEvent = UnknownEvent deriving Show
+data UnknownEvent = UnknownEvent deriving (Eq, Show, Ord)
 successOrUnknownEvent :: Int -> Either UnknownEvent ()
 successOrUnknownEvent status = if (status == 0) then Left UnknownEvent else Right ()
-data UnknownError = UnknownError deriving Show
+data UnknownError = UnknownError deriving (Eq, Show, Ord)
 successOrUnknownError :: a -> Bool -> (a -> IO b) -> IO (Either UnknownError b)
 successOrUnknownError a pred' tr = if pred' then return (Left UnknownError) else tr a >>= return . Right
-data NotFound = NotFound deriving Show
-data OutOfRange = OutOfRange deriving Show
+data NotFound = NotFound deriving (Eq, Show, Ord)
+data OutOfRange = OutOfRange deriving (Eq, Show, Ord)
 successOrOutOfRange :: a -> Bool -> (a -> IO b) -> IO (Either OutOfRange b)
 successOrOutOfRange a pred' tr = if pred' then return (Left OutOfRange) else tr a >>= return . Right
-data NoChange = NoChange deriving Show
+data NoChange = NoChange deriving (Eq, Show, Ord)
 successOrNoChange :: Int -> Either NoChange ()
 successOrNoChange status = if (status == 0) then Left NoChange else Right ()
 data DataProcessingError = NoDataProcessedError | PartialDataProcessedError | UnknownDataError Int
@@ -368,6 +370,9 @@ successOrDataProcessingError status = case status of
   1 -> Left NoDataProcessedError
   2 -> Left PartialDataProcessedError
   x -> Left $ UnknownDataError x
+newtype PreferredSize = PreferredSize Int deriving (Eq, Show, Ord)
+newtype GapSize = GapSize Int deriving (Eq, Show, Ord)
+
 toRectangle :: (Int,Int,Int,Int) -> Rectangle
 toRectangle (x_pos, y_pos, width, height) =
     Rectangle (Position

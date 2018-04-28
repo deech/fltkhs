@@ -408,15 +408,15 @@ enum AlignType {
 {#enum Event {} deriving (Show, Eq) #}
 {#enum When {} deriving (Show, Eq, Ord) #}
 {#enum FdWhen {} deriving (Show, Eq, Ord) #}
-{#enum TreeSort {} deriving (Show, Eq) #}
-{#enum TreeConnector {} deriving (Show, Eq) #}
-{#enum TreeSelect {} deriving (Show, Eq) #}
-{#enum SearchDirection {} deriving (Show, Eq) #}
+{#enum TreeSort {} deriving (Show, Eq, Ord) #}
+{#enum TreeConnector {} deriving (Show, Eq, Ord) #}
+{#enum TreeSelect {} deriving (Show, Eq, Ord) #}
+{#enum SearchDirection {} deriving (Show, Eq, Ord) #}
 #if FLTK_ABI_VERSION >= 10302
-{#enum TreeItemReselectMode {} deriving (Show, Eq) #}
-{#enum TreeItemDrawMode {} deriving (Show, Eq) #}
+{#enum TreeItemReselectMode {} deriving (Show, Eq, Ord) #}
+{#enum TreeItemDrawMode {} deriving (Show, Eq, Ord) #}
 #endif
-{#enum SpecialKey {} deriving (Show, Eq) #}
+{#enum SpecialKey {} deriving (Show, Eq, Ord) #}
 
 allShortcutSpecialKeys :: [CInt]
 allShortcutSpecialKeys = [
@@ -565,7 +565,7 @@ allModes =
   ]
 
 {#enum AlignType {} deriving (Show, Eq, Ord) #}
-newtype Alignments = Alignments [AlignType] deriving Show
+newtype Alignments = Alignments [AlignType] deriving (Eq, Show, Ord)
 alignCenter :: Alignments
 alignCenter = Alignments [AlignTypeCenter]
 alignTop :: Alignments
@@ -715,7 +715,7 @@ data Boxtype = NoBox
              | GleamRoundUpBox
              | GleamRoundDownBox
              | FreeBoxtype
-             deriving (Show)
+             deriving (Show, Eq, Ord)
 instance Enum Boxtype where
   fromEnum NoBox = 0
   fromEnum FlatBox = 1
@@ -841,8 +841,8 @@ diamondBox = DiamondDownBox
 
 
 -- Fonts
-newtype Font = Font Int deriving Show
-data FontAttribute = Bold | Italic | BoldItalic deriving (Show, Enum)
+newtype Font = Font Int deriving (Eq, Show, Ord)
+data FontAttribute = Bold | Italic | BoldItalic deriving (Show, Eq, Ord, Enum)
 cFromFont :: Font -> CInt
 cFromFont (Font f) = fromIntegral f
 cToFont :: CInt -> Font
@@ -900,7 +900,7 @@ freeFont = Font 16
 
 -- Colors
 
-newtype Color = Color CUInt deriving Show
+newtype Color = Color CUInt deriving (Eq,Show,Ord)
 foregroundColor :: Color
 foregroundColor = Color 0
 background2Color :: Color
@@ -979,7 +979,7 @@ data Labeltype = NormalLabel
                | ShadowLabel
                | EngravedLabel
                | EmbossedLabel
-               | FreeLabelType deriving Show
+               | FreeLabelType deriving (Eq, Show, Ord)
 
 instance Enum Labeltype where
     fromEnum NormalLabel = 0

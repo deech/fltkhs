@@ -44,8 +44,8 @@ tableRowNew rectangle label' draw' drawCell' customWidgetFuncs' customTableFuncs
 instance (impl ~ (IO ())) => Op (Destroy ()) TableRow orig impl where
   runOp _ _ tableRow = withRef tableRow $ \tableRowPtr -> tableRowDestroy' tableRowPtr
 {# fun Fl_Table_Row_rows as rows' { id `Ptr ()' } -> `Int' #}
-instance (impl ~ ( IO (Int))) => Op (GetRows ()) TableRow orig impl where
-  runOp _ _ tableRow = withRef tableRow $ \tableRowPtr -> rows' tableRowPtr
+instance (impl ~ ( IO (Rows))) => Op (GetRows ()) TableRow orig impl where
+  runOp _ _ tableRow = withRef tableRow $ \tableRowPtr -> rows' tableRowPtr >>= return . Rows
 {# fun Fl_Table_Row_set_type as tableRowSetType' { id `Ptr ()', cFromEnum `TableRowSelectMode'} -> `()' #}
 instance (impl ~ (TableRowSelectMode -> IO ())) => Op (SetType ()) TableRow orig impl where
   runOp _ _ tableRow selectionMode = withRef tableRow $ \tableRowPtr' -> tableRowSetType' tableRowPtr' selectionMode
@@ -53,11 +53,11 @@ instance (impl ~ (TableRowSelectMode -> IO ())) => Op (SetType ()) TableRow orig
 instance (impl ~ (IO TableRowSelectMode)) => Op (GetType_ ()) TableRow orig impl where
   runOp _ _ tableRow = withRef tableRow $ \tableRowPtr' -> tableRowType tableRowPtr'
 {# fun Fl_Table_Row_set_rows as setRows' { id `Ptr ()',`Int' } -> `()' #}
-instance (impl ~ (Int ->  IO ())) => Op (SetRows ()) TableRow orig impl where
-  runOp _ _ table val = withRef table $ \tablePtr -> setRows' tablePtr val
+instance (impl ~ (Rows ->  IO ())) => Op (SetRows ()) TableRow orig impl where
+  runOp _ _ table (Rows val) = withRef table $ \tablePtr -> setRows' tablePtr val
 {# fun Fl_Table_Row_set_cols as setCols' { id `Ptr ()',`Int' } -> `()' #}
-instance (impl ~ (Int ->  IO ())) => Op (SetCols ()) TableRow orig impl where
-  runOp _ _ table val = withRef table $ \tablePtr -> setCols' tablePtr val
+instance (impl ~ (Columns ->  IO ())) => Op (SetCols ()) TableRow orig impl where
+  runOp _ _ table (Columns val) = withRef table $ \tablePtr -> setCols' tablePtr val
 {# fun Fl_Table_Row_clear_super as clearSuper' { id `Ptr ()' } -> `()' #}
 instance (impl ~ ( IO ())) => Op (ClearSuper ()) TableRow orig impl where
   runOp _ _ table = withRef table $ \tablePtr -> clearSuper' tablePtr
@@ -65,11 +65,11 @@ instance (impl ~ ( IO ())) => Op (ClearSuper ()) TableRow orig impl where
 instance (impl ~ ( IO ())) => Op (Clear ()) TableRow orig impl where
   runOp _ _ table = withRef table $ \tablePtr -> clear' tablePtr
 {# fun Fl_Table_Row_set_rows_super as setRowsSuper' { id `Ptr ()',`Int' } -> `()' #}
-instance (impl ~ (Int ->  IO ())) => Op (SetRowsSuper ()) TableRow orig impl where
-  runOp _ _ table val = withRef table $ \tablePtr -> setRowsSuper' tablePtr val
+instance (impl ~ (Rows ->  IO ())) => Op (SetRowsSuper ()) TableRow orig impl where
+  runOp _ _ table (Rows val) = withRef table $ \tablePtr -> setRowsSuper' tablePtr val
 {# fun Fl_Table_Row_set_cols_super as setColsSuper' { id `Ptr ()',`Int' } -> `()' #}
-instance (impl ~ (Int ->  IO ())) => Op (SetColsSuper ()) TableRow orig impl where
-  runOp _ _ table val = withRef table $ \tablePtr -> setColsSuper' tablePtr val
+instance (impl ~ (Columns ->  IO ())) => Op (SetColsSuper ()) TableRow orig impl where
+  runOp _ _ table (Columns val) = withRef table $ \tablePtr -> setColsSuper' tablePtr val
 {# fun Fl_Table_Row_handle_super as handleSuper' { id `Ptr ()', cFromEnum `Event' } -> `Int' #}
 instance (impl ~ (Event ->  IO (Either UnknownEvent ()))) => Op (HandleSuper ()) TableRow orig impl where
    runOp _ _ table event = withRef table $ \tablePtr -> handleSuper' tablePtr event >>= return . successOrUnknownEvent
@@ -83,8 +83,8 @@ instance (impl ~ (Rectangle ->  IO ())) => Op (ResizeSuper ()) TableRow orig imp
 instance (impl ~ (Rectangle ->  IO ())) => Op (Resize ()) TableRow orig impl where
   runOp _ _ table rectangle = let (x_pos', y_pos', width', height') = fromRectangle rectangle in withRef table $ \tablePtr -> resize' tablePtr x_pos' y_pos' width' height'
 {# fun Fl_Table_Row_row_selected as rowSelected' { id `Ptr ()', `Int'} -> `CInt' id #}
-instance (impl ~ ( Int -> IO (Either OutOfRange Bool))) => Op (GetRowSelected ()) TableRow orig impl where
-  runOp _ _ table idx' = withRef table $ \tablePtr -> do
+instance (impl ~ ( Row -> IO (Either OutOfRange Bool))) => Op (GetRowSelected ()) TableRow orig impl where
+  runOp _ _ table (Row idx') = withRef table $ \tablePtr -> do
     ret' <- rowSelected' tablePtr idx'
     if ret' == -1 then (return $ Left OutOfRange) else (return $ Right $ cToBool ret')
 {# fun Fl_Table_Row_select_all_rows_with_flag as selectAllRows' {id `Ptr ()', `Int'} -> `()' #}
@@ -126,9 +126,9 @@ instance (impl ~ ( IO ())) => Op (ShowWidgetSuper ()) TableRow orig impl where
 --
 -- drawSuper :: 'Ref' 'TableRow' -> 'IO' ()
 --
--- getRowSelected :: 'Ref' 'TableRow' -> 'Int' -> 'IO' ('Either' 'OutOfRange' 'Bool')
+-- getRowSelected :: 'Ref' 'TableRow' -> 'Row' -> 'IO' ('Either' 'OutOfRange' 'Bool')
 --
--- getRows :: 'Ref' 'TableRow' -> 'IO' ('Int')
+-- getRows :: 'Ref' 'TableRow' -> 'IO' ('Rows')
 --
 -- getType_ :: 'Ref' 'TableRow' -> 'IO' 'TableRowSelectMode'
 --
@@ -146,19 +146,20 @@ instance (impl ~ ( IO ())) => Op (ShowWidgetSuper ()) TableRow orig impl where
 --
 -- selectAllRows :: 'Ref' 'TableRow' -> 'TableRowSelectFlag' -> 'IO' ()
 --
--- setCols :: 'Ref' 'TableRow' -> 'Int' -> 'IO' ()
+-- setCols :: 'Ref' 'TableRow' -> 'Columns' -> 'IO' ()
 --
--- setColsSuper :: 'Ref' 'TableRow' -> 'Int' -> 'IO' ()
+-- setColsSuper :: 'Ref' 'TableRow' -> 'Columns' -> 'IO' ()
 --
--- setRows :: 'Ref' 'TableRow' -> 'Int' -> 'IO' ()
+-- setRows :: 'Ref' 'TableRow' -> 'Rows' -> 'IO' ()
 --
--- setRowsSuper :: 'Ref' 'TableRow' -> 'Int' -> 'IO' ()
+-- setRowsSuper :: 'Ref' 'TableRow' -> 'Rows' -> 'IO' ()
 --
 -- setType :: 'Ref' 'TableRow' -> 'TableRowSelectMode' -> 'IO' ()
 --
 -- showWidget :: 'Ref' 'TableRow' -> 'IO' ()
 --
 -- showWidgetSuper :: 'Ref' 'TableRow' -> 'IO' ()
+-- Available in FLTK 1.3.4 only:
 --
 -- @
 

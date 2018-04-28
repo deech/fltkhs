@@ -291,7 +291,7 @@ menuItemCode mn menuItemName label flags menuPath restAttrs =
                              (shortcutCode "Nothing")
                              False
                     (_,newFlags) <- get
-                    tell ["(MenuItemIndex idx) <- add " ++
+                    tell ["(AtIndex idx) <- add " ++
                           mn ++ " label " ++
                           "shortcut " ++
                           "callback " ++
@@ -406,7 +406,7 @@ widgetTreeG menuName menuPath widgetTree =
                              (constructorG newFlClassName hsConstructor (Just newName) posSize) ++
                              (map (attributeG newFlClassName newName) restAttrs) ++
                              innerTreeOutput ++
-                             ["setValue " ++ newName ++ " (MenuItemByIndex (MenuItemIndex " ++ (show 0) ++ "))"]
+                             ["setValue " ++ newName ++ " (MenuItemByIndex (AtIndex " ++ (show 0) ++ "))"]
                            _ ->
                              (constructorG newFlClassName hsConstructor (Just newName) posSize) ++
                              (map (attributeG newFlClassName newName) attrsWithoutLabel) ++

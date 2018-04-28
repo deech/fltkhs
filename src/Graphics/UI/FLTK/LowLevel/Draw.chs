@@ -2,6 +2,9 @@
 module Graphics.UI.FLTK.LowLevel.Draw
        (
        LineStyle(..),
+       CapStyle(..),
+       JoinStyle(..),
+       LineDrawStyle(..),
        flcSetColor,
        flcSetColorWithRgb,
        flcColor,
@@ -120,22 +123,28 @@ import Data.ByteString
 
 #c
 enum LineStyle {
-  SolidLineStyle  = FL_SOLID,
-  SolidDash       = FL_DASH,
-  SolidDot        = FL_DOT,
-  SolidDashDot    = FL_DASHDOT,
-  SolidDashDotDot = FL_DASHDOTDOT,
-
-  SolidCapFlat    = FL_CAP_FLAT,
-  SolidCapRound   = FL_CAP_ROUND,
-  SolidCapSquare  = FL_CAP_SQUARE,
-
-  SolidJoinMiter  = FL_JOIN_MITER,
-  SolidJoinRound  = FL_JOIN_ROUND,
-  SolidJoinBevel  = FL_JOIN_BEVEL
+  LineStyleSolid      = FL_SOLID,
+  LineStyleDash       = FL_DASH,
+  LineStyleDot        = FL_DOT,
+  LineStyleDashDot    = FL_DASHDOT,
+  LineStyleDashDotDot = FL_DASHDOTDOT,
+};
+enum CapStyle {
+  CapStyleFlat    = FL_CAP_FLAT,
+  CapStyleRound   = FL_CAP_ROUND,
+  CapStyleSquare  = FL_CAP_SQUARE,
+};
+enum JoinStyle {
+  JoinStyleMiter  = FL_JOIN_MITER,
+  JoinStyleRound  = FL_JOIN_ROUND,
+  JoinStyleBevel  = FL_JOIN_BEVEL
 };
 #endc
-{#enum LineStyle {} deriving (Show) #}
+{#enum LineStyle {} deriving (Show, Eq, Ord) #}
+{#enum CapStyle {} deriving (Show, Eq, Ord)  #}
+{#enum JoinStyle {} deriving (Show, Eq, Ord) #}
+
+data LineDrawStyle = LineDrawStyle (Maybe LineStyle) (Maybe CapStyle) (Maybe JoinStyle)
 
 {# fun flc_set_color as flcSetColor' { cFromColor `Color' } -> `()' #}
 flcSetColor :: Color ->  IO ()
@@ -190,12 +199,17 @@ flcClipRegion  = flcClipRegion' >>= toMaybeRef
 flcPoint :: Position ->  IO ()
 flcPoint (Position (X x_pos') (Y y_pos')) = flcPoint' x_pos' y_pos'
 
-{# fun flc_line_style_with_width_dashes as flcLineStyleWithWidthDashes' {cFromEnum `LineStyle', `Int', id `Ptr CChar' } -> `()' #}
-flcLineStyle :: LineStyle -> Maybe Width -> Maybe T.Text -> IO ()
-flcLineStyle style width' dashes' = do
-  let _width = case width' of { Just (Width w) -> w ; _ -> 0 }
+{# fun flc_line_style_with_width_dashes as flcLineStyleWithWidthDashes' {`Int', `Int', id `Ptr CChar' } -> `()' #}
+flcLineStyle :: LineDrawStyle -> Maybe Width -> Maybe T.Text -> IO ()
+flcLineStyle style width' dashes' =
+  let lineStyleMask = case style of { LineDrawStyle (Just s) _ _ -> fromEnum s; LineDrawStyle Nothing _ _ -> 0}
+      capStyleMask = case style of { LineDrawStyle _ (Just s) _  -> fromEnum s; LineDrawStyle _ Nothing _ -> 0}
+      joinStyleMask = case style of { LineDrawStyle _ _ (Just s) -> fromEnum s; LineDrawStyle _ _ Nothing -> 0}
+      styleMask = lineStyleMask + capStyleMask + joinStyleMask
+      _width = case width' of { Just (Width w) -> w ; _ -> 0 }
+  in do
   _dashes <- maybe (return nullPtr) copyTextToCString dashes'
-  flcLineStyleWithWidthDashes' style _width _dashes
+  flcLineStyleWithWidthDashes' styleMask _width _dashes
 
 {# fun flc_rect as flcRect' { `Int',`Int',`Int',`Int' } -> `()' #}
 flcRect :: Rectangle ->  IO ()

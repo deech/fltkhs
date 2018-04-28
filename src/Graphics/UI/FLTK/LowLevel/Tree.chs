@@ -83,8 +83,8 @@ instance (Parent a TreeItem, impl ~ (T.Text -> Ref a -> IO (Maybe (Ref TreeItem)
 instance (Parent a TreeItem, impl ~ (Ref a -> T.Text ->  IO (Maybe (Ref a)))) => Op (InsertAbove ()) Tree orig impl where
   runOp _ _  tree above name = withRef tree $ \treePtr -> withRef above $ \abovePtr -> insertAbove' treePtr abovePtr name >>= toMaybeRef
 {# fun Fl_Tree_insert as insert' { id `Ptr ()',id `Ptr ()',unsafeToCString `T.Text',`Int' } -> `Ptr ()' id #}
-instance (Parent a TreeItem, impl ~ (Ref a -> T.Text -> Int ->  IO (Maybe (Ref a)))) => Op (Insert ()) Tree orig impl where
-  runOp _ _ tree item name pos = withRef tree $ \treePtr -> withRef item $ \itemPtr -> insert' treePtr itemPtr name pos >>= toMaybeRef
+instance (Parent a TreeItem, impl ~ (Ref a -> T.Text -> AtIndex ->  IO (Maybe (Ref a)))) => Op (Insert ()) Tree orig impl where
+  runOp _ _ tree item name (AtIndex pos) = withRef tree $ \treePtr -> withRef item $ \itemPtr -> insert' treePtr itemPtr name pos >>= toMaybeRef
 {# fun Fl_Tree_remove as remove' { id `Ptr ()',id `Ptr ()' } -> `Int' #}
 instance (impl ~ (Ref TreeItem  ->  IO (Either TreeItemNotFound ())) ) => Op (Remove ()) Tree orig impl where
   runOp _ _ tree item = withRef tree $ \treePtr -> withRef item $ \itemPtr -> do
@@ -408,12 +408,12 @@ instance (impl ~ (Ref TreeItem  ->  IO (Bool)) ) => Op (Displayed ()) Tree orig 
   runOp _ _ tree item = withRef tree $ \treePtr -> withRef item $ \itemPtr -> displayed' treePtr itemPtr
 {# fun Fl_Tree_show_item_with_yoff as showItemWithYoff' { id `Ptr ()',id `Ptr ()',`Int' } -> `()' #}
 {# fun Fl_Tree_show_item as showItem' { id `Ptr ()',id `Ptr ()' } -> `()' #}
-instance (impl ~ (Ref TreeItem  -> Maybe Int ->  IO ()) ) => Op (ShowItemWithYoff ()) Tree orig impl where
+instance (impl ~ (Ref TreeItem  -> Maybe Y ->  IO ()) ) => Op (ShowItemWithYoff ()) Tree orig impl where
   runOp _ _ tree item yoff =
     withRef tree $ \treePtr ->
     withRef item $ \itemPtr ->
     case yoff of
-      Just y' -> showItemWithYoff' treePtr itemPtr y'
+      Just (Y y') -> showItemWithYoff' treePtr itemPtr y'
       Nothing -> showItem' treePtr itemPtr
 {# fun Fl_Tree_show_item_top as showItemTop' { id `Ptr ()',id `Ptr ()' } -> `()' #}
 instance (impl ~ (Ref TreeItem  ->  IO ()) ) => Op (ShowItemTop ()) Tree orig impl where

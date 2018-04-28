@@ -167,7 +167,7 @@ insertMenuItem ::
   MenuItemFlags ->
   (Ptr () -> Int -> T.Text -> CInt -> FunPtr CallbackWithUserDataPrim -> Int -> IO Int) ->
   (Ptr () -> Int -> T.Text -> T.Text -> FunPtr CallbackWithUserDataPrim -> Int -> IO Int) ->
-  IO (MenuItemIndex)
+  IO (AtIndex)
 insertMenuItem menu_ index' name shortcut cb flags insertWithFlags'' insertWithShortcutnameFlags'' =
   withRef menu_ $ \menu_Ptr -> do
     let combinedFlags = menuItemFlagsToInt flags
@@ -200,19 +200,20 @@ insertMenuItem menu_ index' name shortcut cb flags insertWithFlags'' insertWithS
                  0
                  (castFunPtr ptr)
                  combinedFlags
-    return (MenuItemIndex idx')
+    return (AtIndex idx')
 
 {# fun Fl_Menu__insert_with_flags as insertWithFlags' { id `Ptr ()',`Int',unsafeToCString `T.Text',id `CInt',id `FunPtr CallbackWithUserDataPrim',`Int'} -> `Int' #}
 {# fun Fl_Menu__insert_with_shortcutname_flags as insertWithShortcutnameFlags' { id `Ptr ()',`Int',unsafeToCString `T.Text', unsafeToCString `T.Text',id `FunPtr CallbackWithUserDataPrim',`Int' } -> `Int' #}
-instance (Parent a MenuPrim, impl ~ ( Int -> T.Text -> Maybe Shortcut -> (Ref a -> IO ()) -> MenuItemFlags -> IO (MenuItemIndex))) => Op (Insert ()) MenuPrim orig impl where
-  runOp _ _ menu_ index' name shortcut cb flags = insertMenuItem menu_ index' name shortcut cb flags insertWithFlags' insertWithShortcutnameFlags'
+instance (Parent a MenuPrim, impl ~ ( AtIndex -> T.Text -> Maybe Shortcut -> (Ref a -> IO ()) -> MenuItemFlags -> IO (AtIndex))) => Op (Insert ()) MenuPrim orig impl where
+  runOp _ _ menu_ (AtIndex index') name shortcut cb flags =
+    insertMenuItem menu_ index' name shortcut cb flags insertWithFlags' insertWithShortcutnameFlags'
 
 {# fun Fl_Menu__add_with_name as add' { id `Ptr ()',unsafeToCString `T.Text'} -> `()' #}
 instance (impl ~ (T.Text -> IO ())) => Op (AddName ()) MenuPrim orig impl where
   runOp _ _ menu_ name' = withRef menu_ $ \menu_Ptr -> add' menu_Ptr name'
 {# fun Fl_Menu__add_with_flags as addWithFlags' { id `Ptr ()',unsafeToCString `T.Text',id `CInt',id `FunPtr CallbackWithUserDataPrim',`Int' } -> `Int' #}
 {# fun Fl_Menu__add_with_shortcutname_flags as addWithShortcutnameFlags' { id `Ptr ()', unsafeToCString `T.Text', unsafeToCString `T.Text',id `FunPtr CallbackWithUserDataPrim',`Int' } -> `Int' #}
-instance (Parent a MenuItem, impl ~ ( T.Text -> Maybe Shortcut -> Maybe (Ref a-> IO ()) -> MenuItemFlags -> IO (MenuItemIndex))) => Op (Add ()) MenuPrim orig (impl) where
+instance (Parent a MenuItem, impl ~ ( T.Text -> Maybe Shortcut -> Maybe (Ref a-> IO ()) -> MenuItemFlags -> IO (AtIndex))) => Op (Add ()) MenuPrim orig (impl) where
   runOp _ _ menu_ name shortcut cb flags =
     addMenuItem (Left menu_) name shortcut cb flags addWithFlags' addWithShortcutnameFlags'
 
@@ -220,44 +221,44 @@ instance (Parent a MenuItem, impl ~ ( T.Text -> Maybe Shortcut -> Maybe (Ref a->
 instance (impl ~ ( IO (Int))) => Op (GetSize ()) MenuPrim orig impl where
   runOp _ _ menu_ = withRef menu_ $ \menu_Ptr -> size' menu_Ptr
 {# fun Fl_Menu__set_size as setSize' { id `Ptr ()',`Int',`Int' } -> `()' #}
-instance (impl ~ (Int -> Int ->  IO ())) => Op (SetSize ()) MenuPrim orig impl where
-  runOp _ _ menu_ w h = withRef menu_ $ \menu_Ptr -> setSize' menu_Ptr w h
+instance (impl ~ (Size ->  IO ())) => Op (SetSize ()) MenuPrim orig impl where
+  runOp _ _ menu_ (Size (Width w) (Height h)) = withRef menu_ $ \menu_Ptr -> setSize' menu_Ptr w h
 {# fun Fl_Menu__clear as clear' { id `Ptr ()' } -> `()' #}
 instance (impl ~ ( IO ())) => Op (Clear ()) MenuPrim orig impl where
   runOp _ _ menu_ = withRef menu_ $ \menu_Ptr -> clear' menu_Ptr
 {# fun Fl_Menu__clear_submenu as clearSubmenu' { id `Ptr ()',`Int' } -> `Int' #}
-instance (impl ~ (Int ->  IO (Either OutOfRange ()))) => Op (ClearSubmenu ()) MenuPrim orig impl where
-  runOp _ _ menu_ index' = withRef menu_ $ \menu_Ptr -> clearSubmenu' menu_Ptr index' >>= \ret' -> if ret' == -1 then return (Left OutOfRange) else return (Right ())
+instance (impl ~ (AtIndex ->  IO (Either OutOfRange ()))) => Op (ClearSubmenu ()) MenuPrim orig impl where
+  runOp _ _ menu_ (AtIndex index') = withRef menu_ $ \menu_Ptr -> clearSubmenu' menu_Ptr index' >>= \ret' -> if ret' == -1 then return (Left OutOfRange) else return (Right ())
 {# fun Fl_Menu__replace as replace' { id `Ptr ()',`Int', unsafeToCString `T.Text' } -> `()' #}
-instance (impl ~ (Int -> T.Text ->  IO ())) => Op (Replace ()) MenuPrim orig impl where
-  runOp _ _ menu_ index' name = withRef menu_ $ \menu_Ptr -> replace' menu_Ptr index' name
+instance (impl ~ (AtIndex -> T.Text ->  IO ())) => Op (Replace ()) MenuPrim orig impl where
+  runOp _ _ menu_ (AtIndex index') name = withRef menu_ $ \menu_Ptr -> replace' menu_Ptr index' name
 {# fun Fl_Menu__remove as remove' { id `Ptr ()',`Int' } -> `()' #}
-instance (impl ~ (Int  ->  IO ())) => Op (Remove ()) MenuPrim orig impl where
-  runOp _ _ menu_ index' = withRef menu_ $ \menu_Ptr -> remove' menu_Ptr index'
+instance (impl ~ (AtIndex ->  IO ())) => Op (Remove ()) MenuPrim orig impl where
+  runOp _ _ menu_ (AtIndex index') = withRef menu_ $ \menu_Ptr -> remove' menu_Ptr index'
 {# fun Fl_Menu__shortcut as shortcut' { id `Ptr ()',`Int',id `CInt' } -> `()' #}
-instance (impl ~ (Int -> ShortcutKeySequence ->  IO ())) => Op (SetShortcut ()) MenuPrim orig impl where
-  runOp _ _ menu_ index' (ShortcutKeySequence modifiers char) =
+instance (impl ~ (AtIndex -> ShortcutKeySequence ->  IO ())) => Op (SetShortcut ()) MenuPrim orig impl where
+  runOp _ _ menu_ (AtIndex index') (ShortcutKeySequence modifiers char) =
     withRef menu_ $ \menu_Ptr ->
         shortcut' menu_Ptr index' (keySequenceToCInt modifiers char)
 {# fun Fl_Menu__set_mode as setMode' { id `Ptr ()',`Int',`Int' } -> `()' #}
-instance (impl ~ (Int -> MenuItemFlags ->  IO ())) => Op (SetMode ()) MenuPrim orig impl where
-  runOp _ _ menu_ i fl = withRef menu_ $ \menu_Ptr -> setMode' menu_Ptr i (menuItemFlagsToInt fl)
+instance (impl ~ (AtIndex -> MenuItemFlags ->  IO ())) => Op (SetMode ()) MenuPrim orig impl where
+  runOp _ _ menu_ (AtIndex i) fl = withRef menu_ $ \menu_Ptr -> setMode' menu_Ptr i (menuItemFlagsToInt fl)
 {# fun Fl_Menu__mode as mode' { id `Ptr ()',`Int' } -> `Int' #}
-instance (impl ~ (Int ->  IO (Maybe MenuItemFlags))) => Op (GetMode ()) MenuPrim orig impl where
-  runOp _ _ menu_ i = withRef menu_ $ \menu_Ptr -> mode' menu_Ptr i >>= return . intToMenuItemFlags
+instance (impl ~ (AtIndex ->  IO (Maybe MenuItemFlags))) => Op (GetMode ()) MenuPrim orig impl where
+  runOp _ _ menu_ (AtIndex i) = withRef menu_ $ \menu_Ptr -> mode' menu_Ptr i >>= return . intToMenuItemFlags
 {# fun Fl_Menu__mvalue as mvalue' { id `Ptr ()' } -> `Ptr ()' id #}
 instance (impl ~ (IO (Maybe (Ref MenuItem)))) => Op (Mvalue ()) MenuPrim orig impl where
   runOp _ _ menu_ = withRef menu_ $ \menu_Ptr -> mvalue' menu_Ptr >>= toMaybeRef
 {# fun Fl_Menu__value as value' { id `Ptr ()' } -> `Int' #}
-instance (impl ~ ( IO (MenuItemIndex))) => Op (GetValue ()) MenuPrim orig impl where
-  runOp _ _ menu_ = withRef menu_ $ \menu_Ptr -> value' menu_Ptr >>= return . MenuItemIndex
+instance (impl ~ ( IO (AtIndex))) => Op (GetValue ()) MenuPrim orig impl where
+  runOp _ _ menu_ = withRef menu_ $ \menu_Ptr -> value' menu_Ptr >>= return . AtIndex
 {# fun Fl_Menu__value_with_item as valueWithItem' { id `Ptr ()',id `Ptr ()' } -> `Int' #}
 {# fun Fl_Menu__value_with_index as valueWithIndex' { id `Ptr ()',`Int' } -> `Int' #}
 instance (impl ~ (MenuItemReference -> IO (Int))) => Op (SetValue ()) MenuPrim orig impl where
   runOp _ _ menu_ menu_item_reference =
     withRef menu_ $ \menu_Ptr ->
         case menu_item_reference of
-          (MenuItemByIndex (MenuItemIndex index')) -> valueWithIndex' menu_Ptr index'
+          (MenuItemByIndex (AtIndex index')) -> valueWithIndex' menu_Ptr index'
           (MenuItemByPointer (MenuItemPointer menu_item)) ->
               withRef menu_item $ \menu_itemPtr ->
                   valueWithItem' menu_Ptr menu_itemPtr
@@ -265,8 +266,8 @@ instance (impl ~ (MenuItemReference -> IO (Int))) => Op (SetValue ()) MenuPrim o
 instance (impl ~ ( IO T.Text)) => Op (GetText ()) MenuPrim orig impl where
   runOp _ _ menu_ = withRef menu_ $ \menu_Ptr -> text' menu_Ptr
 {# fun Fl_Menu__text_with_index as textWithIndex' { id `Ptr ()',`Int' } -> `T.Text' unsafeFromCString #}
-instance (impl ~ (Int ->  IO T.Text)) => Op (GetTextWithIndex ()) MenuPrim orig impl where
-  runOp _ _ menu_ i = withRef menu_ $ \menu_Ptr -> textWithIndex' menu_Ptr i
+instance (impl ~ (AtIndex ->  IO T.Text)) => Op (GetTextWithIndex ()) MenuPrim orig impl where
+  runOp _ _ menu_ (AtIndex i) = withRef menu_ $ \menu_Ptr -> textWithIndex' menu_Ptr i
 {# fun Fl_Menu__textfont as textfont' { id `Ptr ()' } -> `Font' cToFont #}
 instance (impl ~ ( IO (Font))) => Op (GetTextfont ()) MenuPrim orig impl where
   runOp _ _ menu_ = withRef menu_ $ \menu_Ptr -> textfont' menu_Ptr
@@ -294,9 +295,9 @@ instance (impl ~ (Boxtype ->  IO ())) => Op (SetDownBox ()) MenuPrim orig impl w
 {# fun Fl_Menu__down_color as downColor' { id `Ptr ()' } -> `Color' cToColor #}
 instance (impl ~ ( IO (Color))) => Op (GetDownColor ()) MenuPrim orig impl where
   runOp _ _ menu_ = withRef menu_ $ \menu_Ptr -> downColor' menu_Ptr
-{# fun Fl_Menu__set_down_color as setDownColor' { id `Ptr ()',`Int' } -> `()' #}
-instance (impl ~ (Int ->  IO ())) => Op (SetDownColor ()) MenuPrim orig impl where
-  runOp _ _ menu_ c = withRef menu_ $ \menu_Ptr -> setDownColor' menu_Ptr c
+{# fun Fl_Menu__set_down_color as setDownColor' { id `Ptr ()',`CUInt' } -> `()' #}
+instance (impl ~ (Color ->  IO ())) => Op (SetDownColor ()) MenuPrim orig impl where
+  runOp _ _ menu_ (Color c) = withRef menu_ $ \menu_Ptr -> setDownColor' menu_Ptr c
 #if FL_API_VERSION == 10304
 -- | Only available on FLTK version 1.3.4 and above.
 {# fun Fl_Menu__set_only as setonly' { id `Ptr ()', id `Ptr ()' } -> `()' #}
@@ -308,13 +309,13 @@ instance (Parent a MenuItem, impl ~ (Ref a -> IO ())) => Op (Setonly ()) MenuPri
 -- $functions
 -- @
 --
--- add:: ('Parent' a 'MenuItem') => 'Ref' 'MenuPrim' -> 'T.Text' -> 'Maybe' 'Shortcut' -> 'Maybe' ('Ref' a-> 'IO' ()) -> 'MenuItemFlags' -> 'IO' ('MenuItemIndex')
+-- add:: ('Parent' a 'MenuItem') => 'Ref' 'MenuPrim' -> 'T.Text' -> 'Maybe' 'Shortcut' -> 'Maybe' ('Ref' a-> 'IO' ()) -> 'MenuItemFlags' -> 'IO' ('AtIndex')
 --
 -- addName :: 'Ref' 'MenuPrim' -> 'T.Text' -> 'IO' ()
 --
 -- clear :: 'Ref' 'MenuPrim' -> 'IO' ()
 --
--- clearSubmenu :: 'Ref' 'MenuPrim' -> 'Int' -> 'IO' ('Either' 'OutOfRange' ())
+-- clearSubmenu :: 'Ref' 'MenuPrim' -> 'AtIndex' -> 'IO' ('Either' 'OutOfRange' ())
 --
 -- copy:: ('Parent' a 'MenuItem') => 'Ref' 'MenuPrim' -> 'Ref' a-> 'IO' ()
 --
@@ -328,13 +329,13 @@ instance (Parent a MenuItem, impl ~ (Ref a -> IO ())) => Op (Setonly ()) MenuPri
 --
 -- getMenu :: 'Ref' 'MenuPrim' -> 'IO' [('Maybe' ('Ref' 'MenuItem']))
 --
--- getMode :: 'Ref' 'MenuPrim' -> 'Int' -> 'IO' ('Maybe' 'MenuItemFlags')
+-- getMode :: 'Ref' 'MenuPrim' -> 'AtIndex' -> 'IO' ('Maybe' 'MenuItemFlags')
 --
 -- getSize :: 'Ref' 'MenuPrim' -> 'IO' ('Int')
 --
 -- getText :: 'Ref' 'MenuPrim' -> 'IO' 'T.Text'
 --
--- getTextWithIndex :: 'Ref' 'MenuPrim' -> 'Int' -> 'IO' 'T.Text'
+-- getTextWithIndex :: 'Ref' 'MenuPrim' -> 'AtIndex' -> 'IO' 'T.Text'
 --
 -- getTextcolor :: 'Ref' 'MenuPrim' -> 'IO' ('Color')
 --
@@ -342,7 +343,7 @@ instance (Parent a MenuItem, impl ~ (Ref a -> IO ())) => Op (Setonly ()) MenuPri
 --
 -- getTextsize :: 'Ref' 'MenuPrim' -> 'IO' ('FontSize')
 --
--- getValue :: 'Ref' 'MenuPrim' -> 'IO' ('MenuItemIndex')
+-- getValue :: 'Ref' 'MenuPrim' -> 'IO' ('AtIndex')
 --
 -- global :: 'Ref' 'MenuPrim' -> 'IO' ()
 --
@@ -354,7 +355,7 @@ instance (Parent a MenuItem, impl ~ (Ref a -> IO ())) => Op (Setonly ()) MenuPri
 --
 -- hideSuper :: 'Ref' 'MenuPrim' -> 'IO' ()
 --
--- insert:: ('Parent' a 'MenuPrim') => 'Ref' 'MenuPrim' -> 'Int' -> 'T.Text' -> 'Maybe' 'Shortcut' -> ('Ref' a -> 'IO' ()) -> 'MenuItemFlags' -> 'IO' ('MenuItemIndex')
+-- insert:: ('Parent' a 'MenuPrim') => 'Ref' 'MenuPrim' -> 'AtIndex' -> 'T.Text' -> 'Maybe' 'Shortcut' -> ('Ref' a -> 'IO' ()) -> 'MenuItemFlags' -> 'IO' ('AtIndex')
 --
 -- itemPathname:: ('Parent' a 'MenuItem') => 'Ref' 'MenuPrim' -> 'Ref' a -> 'IO' ('Maybe' 'T.Text')
 --
@@ -364,9 +365,9 @@ instance (Parent a MenuItem, impl ~ (Ref a -> IO ())) => Op (Setonly ()) MenuPri
 --
 -- picked:: ('Parent' a 'MenuItem', 'Parent' b 'MenuItem') => 'Ref' 'MenuPrim' -> 'Ref' a -> 'IO' ('Maybe' ('Ref' b))
 --
--- remove :: 'Ref' 'MenuPrim' -> 'Int' -> 'IO' ()
+-- remove :: 'Ref' 'MenuPrim' -> 'AtIndex' -> 'IO' ()
 --
--- replace :: 'Ref' 'MenuPrim' -> 'Int' -> 'T.Text' -> 'IO' ()
+-- replace :: 'Ref' 'MenuPrim' -> 'AtIndex' -> 'T.Text' -> 'IO' ()
 --
 -- resize :: 'Ref' 'MenuPrim' -> 'Rectangle' -> 'IO' ()
 --
@@ -374,15 +375,15 @@ instance (Parent a MenuItem, impl ~ (Ref a -> IO ())) => Op (Setonly ()) MenuPri
 --
 -- setDownBox :: 'Ref' 'MenuPrim' -> 'Boxtype' -> 'IO' ()
 --
--- setDownColor :: 'Ref' 'MenuPrim' -> 'Int' -> 'IO' ()
+-- setDownColor :: 'Ref' 'MenuPrim' -> 'Color' -> 'IO' ()
 --
 -- setMenu:: ('Parent' a 'MenuItem') => 'Ref' 'MenuPrim' -> ['Ref' a] -> 'IO' ()
 --
--- setMode :: 'Ref' 'MenuPrim' -> 'Int' -> 'MenuItemFlags' -> 'IO' ()
+-- setMode :: 'Ref' 'MenuPrim' -> 'AtIndex' -> 'MenuItemFlags' -> 'IO' ()
 --
--- setShortcut :: 'Ref' 'MenuPrim' -> 'Int' -> 'ShortcutKeySequence' -> 'IO' ()
+-- setShortcut :: 'Ref' 'MenuPrim' -> 'AtIndex' -> 'ShortcutKeySequence' -> 'IO' ()
 --
--- setSize :: 'Ref' 'MenuPrim' -> 'Int' -> 'Int' -> 'IO' ()
+-- setSize :: 'Ref' 'MenuPrim' -> 'Size' -> 'IO' ()
 --
 -- setTextcolor :: 'Ref' 'MenuPrim' -> 'Color' -> 'IO' ()
 --
@@ -397,7 +398,6 @@ instance (Parent a MenuItem, impl ~ (Ref a -> IO ())) => Op (Setonly ()) MenuPri
 -- showWidgetSuper :: 'Ref' 'MenuPrim' -> 'IO' ()
 --
 -- testShortcut:: ('Parent' a 'MenuItem') => 'Ref' 'MenuPrim' -> 'IO' ('Maybe' ('Ref' a))
---
 -- Available in FLTK 1.3.4 only:
 -- setonly:: ('Parent' a 'MenuItem') => 'Ref' 'MenuPrim' -> 'Ref' a -> 'IO' ()
 --

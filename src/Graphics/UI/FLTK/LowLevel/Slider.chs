@@ -61,13 +61,13 @@ instance (impl ~ (IO ())) => Op (Destroy ()) Slider orig impl where
 instance (impl ~ (Double -> Double ->  IO ())) => Op (Bounds ()) Slider orig impl where
   runOp _ _ slider a b = withRef slider $ \sliderPtr -> bounds' sliderPtr a b
 {# fun Fl_Slider_scrollvalue as scrollvalue' { id `Ptr ()',`Int',`Int',`Int',`Int' } -> `Int' #}
-instance (impl ~ (Int -> Int -> Int -> Int ->  IO (Int))) => Op (Scrollvalue ()) Slider orig impl where
-  runOp _ _ slider pos slider_size first total = withRef slider $ \sliderPtr -> scrollvalue' sliderPtr pos slider_size first total
+instance (impl ~ (Y -> Lines -> LineNumber -> Lines ->  IO (Int))) => Op (Scrollvalue ()) Slider orig impl where
+  runOp _ _ slider (Y pos) (Lines slider_size) (LineNumber first) (Lines total) = withRef slider $ \sliderPtr -> scrollvalue' sliderPtr pos slider_size first total
 {# fun Fl_Slider_set_slider_size as setSliderSize' { id `Ptr ()' } -> `Float' #}
-instance (impl ~ ( IO (Float))) => Op (SetSliderSize ()) Slider orig impl where
-  runOp _ _ slider = withRef slider $ \sliderPtr -> setSliderSize' sliderPtr
+instance (impl ~ ( IO (Double))) => Op (GetSliderSize ()) Slider orig impl where
+  runOp _ _ slider = withRef slider $ \sliderPtr -> setSliderSize' sliderPtr >>= return . realToFrac
 {# fun Fl_Slider_slider_size as sliderSize' { id `Ptr ()',`Double' } -> `()' supressWarningAboutRes #}
-instance (impl ~ (Double ->  IO ())) => Op (GetSliderSize ()) Slider orig impl where
+instance (impl ~ (Double ->  IO ())) => Op (SetSliderSize ()) Slider orig impl where
   runOp _ _ slider v = withRef slider $ \sliderPtr -> sliderSize' sliderPtr v
 {# fun Fl_Slider_slider as slider' { id `Ptr ()' } -> `Boxtype' cToEnum #}
 instance (impl ~ ( IO (Boxtype))) => Op (GetSlider ()) Slider orig impl where
@@ -129,7 +129,7 @@ instance (impl ~ ( IO ())) => Op (ShowWidgetSuper ()) Slider orig impl where
 --
 -- getSlider :: 'Ref' 'Slider' -> 'IO' ('Boxtype')
 --
--- getSliderSize :: 'Ref' 'Slider' -> 'Double' -> 'IO' ()
+-- getSliderSize :: 'Ref' 'Slider' -> 'IO' ('Double')
 --
 -- getType_ :: 'Ref' 'Slider' -> 'IO' ('SliderType')
 --
@@ -145,11 +145,11 @@ instance (impl ~ ( IO ())) => Op (ShowWidgetSuper ()) Slider orig impl where
 --
 -- resizeSuper :: 'Ref' 'Slider' -> 'Rectangle' -> 'IO' ()
 --
--- scrollvalue :: 'Ref' 'Slider' -> 'Int' -> 'Int' -> 'Int' -> 'Int' -> 'IO' ('Int')
+-- scrollvalue :: 'Ref' 'Slider' -> 'Y' -> 'Lines' -> 'LineNumber' -> 'Lines' -> 'IO' ('Int')
 --
 -- setSlider :: 'Ref' 'Slider' -> 'Boxtype' -> 'IO' ()
 --
--- setSliderSize :: 'Ref' 'Slider' -> 'IO' ('Float')
+-- setSliderSize :: 'Ref' 'Slider' -> 'Double' -> 'IO' ()
 --
 -- setType :: 'Ref' 'Slider' -> 'SliderType' -> 'IO' ()
 --

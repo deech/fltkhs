@@ -383,8 +383,8 @@ instance (impl ~ (IO ())) => Op (SetVisibleFocus ()) Widget orig impl where
 {# fun Fl_Widget_clear_visible_focus as clearVisibleFocus' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
 instance (impl ~ (IO ())) => Op (ClearVisibleFocus ()) Widget orig impl where
   runOp _ _ widget = withRef widget $ \widgetPtr -> clearVisibleFocus' widgetPtr
-{# fun Fl_Widget_modify_visible_focus as modifyVisibleFocus' { id `Ptr ()',`Int' } -> `()' supressWarningAboutRes #}
-instance (impl ~ ( Int ->  IO ())) => Op (ModifyVisibleFocus ()) Widget orig impl where
+{# fun Fl_Widget_modify_visible_focus as modifyVisibleFocus' { id `Ptr ()',cFromBool `Bool' } -> `()' supressWarningAboutRes #}
+instance (impl ~ ( Bool ->  IO ())) => Op (ModifyVisibleFocus ()) Widget orig impl where
   runOp _ _ widget v = withRef widget $ \widgetPtr -> modifyVisibleFocus' widgetPtr v
 {# fun Fl_Widget_visible_focus as visibleFocus' { id `Ptr ()' } -> `Bool' cToBool #}
 instance (impl ~ (IO (Bool))) => Op (GetVisibleFocus ()) Widget orig impl where

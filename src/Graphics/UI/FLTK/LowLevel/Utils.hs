@@ -180,7 +180,7 @@ toTextPredeleteCbPrim f =
   mkTextPredeleteCb
     (
       \pos' nDeleted' _ ->
-       f (BufferOffset (fromIntegral pos')) (fromIntegral nDeleted')
+       f (AtIndex (fromIntegral pos')) (fromIntegral nDeleted')
     )
 
 toFDHandlerPrim :: FDHandler -> IO (FunPtr FDHandlerPrim)
@@ -190,7 +190,7 @@ toUnfinishedStyleCbPrim :: UnfinishedStyleCb -> IO (FunPtr UnfinishedStyleCbPrim
 toUnfinishedStyleCbPrim f =
     mkUnfinishedStyleCbPrim
      (
-       \pos' _ -> f (BufferOffset (fromIntegral pos'))
+       \pos' _ -> f (AtIndex (fromIntegral pos'))
      )
 
 orNullFunPtr :: (a -> IO (FunPtr b)) -> Maybe a -> IO (FunPtr b)

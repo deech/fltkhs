@@ -253,8 +253,8 @@ module Graphics.UI.FLTK.LowLevel.Hierarchy
          focus,
          DdfdesignKludge,
          ddfdesignKludge,
-         InsertWithBefore,
-         insertWithBefore,
+         InsertBefore,
+         insertBefore,
          GetArray,
          getArray,
          GetChild,
@@ -611,8 +611,6 @@ module Graphics.UI.FLTK.LowLevel.Hierarchy
          setLinesize,
          GetLinesize,
          getLinesize,
-         SetScrollValue,
-         setScrollValue,
          -- * ValueSlider
          ValueSlider,
          -- * HorValueSlider
@@ -1103,8 +1101,8 @@ module Graphics.UI.FLTK.LowLevel.Hierarchy
          isClose,
          OpenToggle,
          openToggle,
-         SelectWithVal,
-         selectWithVal,
+         SelectSet,
+         selectSet,
          SelectToggle,
          selectToggle,
          SelectAll,
@@ -1790,7 +1788,7 @@ type GroupFuncs =
   (ClipChildren
   (Focus
   (DdfdesignKludge
-  (InsertWithBefore
+  (InsertBefore
   (GetArray
   (GetChild
   ())))))))))))))))))))))))))))
@@ -1819,7 +1817,7 @@ MAKE_METHOD(SetClipChildren,setClipChildren)
 MAKE_METHOD(ClipChildren,clipChildren)
 MAKE_METHOD(Focus,focus)
 MAKE_METHOD(DdfdesignKludge,ddfdesignKludge)
-MAKE_METHOD(InsertWithBefore,insertWithBefore)
+MAKE_METHOD(InsertBefore,insertBefore)
 MAKE_METHOD(GetArray,getArray)
 MAKE_METHOD(GetChild,getChild)
 
@@ -2152,6 +2150,7 @@ MAKE_METHOD(SetMinimum,setMinimum)
 MAKE_METHOD(GetMaximum,getMaximum)
 MAKE_METHOD(SetMaximum,setMaximum)
 MAKE_METHOD(Range,range)
+-- MAKE_METHOD(SetRange,setRange)
 MAKE_METHOD(SetStep,setStep)
 MAKE_METHOD(GetStep,getStep)
 MAKE_METHOD(Precision,precision)
@@ -2669,7 +2668,7 @@ data CScrollbar parent
 type Scrollbar = CScrollbar Slider
 type ScrollbarFuncs =
  (Destroy
- (SetScrollValue
+ (Scrollvalue
  (SetLinesize
  (GetLinesize
  (SetType
@@ -2688,7 +2687,6 @@ type instance Functions Scrollbar = ScrollbarFuncs
 
 MAKE_METHOD(SetLinesize,setLinesize)
 MAKE_METHOD(GetLinesize,getLinesize)
-MAKE_METHOD(SetScrollValue,setScrollValue)
 
 data CValueSlider parent
 type ValueSlider = CValueSlider Slider
@@ -3045,7 +3043,7 @@ type TableFuncs =
   (InitSizes
   (Add
   (Insert
-  (InsertWithBefore
+  (InsertBefore
   (Begin
   (End
   (GetArray
@@ -3514,7 +3512,7 @@ type TreeItemFuncs =
   (IsClose
   (OpenToggle
   (Select
-  (SelectWithVal
+  (SelectSet
   (SelectToggle
   (SelectAll
   (Deselect
@@ -3569,7 +3567,7 @@ MAKE_METHOD(Close,close)
 MAKE_METHOD(IsOpen,isOpen)
 MAKE_METHOD(IsClose,isClose)
 MAKE_METHOD(OpenToggle,openToggle)
-MAKE_METHOD(SelectWithVal,selectWithVal)
+MAKE_METHOD(SelectSet,selectSet)
 MAKE_METHOD(SelectToggle,selectToggle)
 MAKE_METHOD(SelectAll,selectAll)
 MAKE_METHOD(DeselectAll,deselectAll)
