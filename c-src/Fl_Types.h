@@ -2,15 +2,8 @@
 #define __FL_TYPES_H
 #include "FL/fl_types.h"
 #include "Fl_EnumerationsC.h"
-
-#if defined(WIN32) && !defined(__CYGWIN__)
-# if defined(_WIN64)
-#  define FL_SOCKET unsigned __int64
-# else
-#  define FL_SOCKET int
-# endif
-#else
-# define FL_SOCKET int
+#if FL_API_VERSION >= 10400
+#include "FL/platform_types.h"
 #endif
 #ifdef _WIN64
 #ifdef __GNUC__
@@ -85,9 +78,7 @@ EXPORT {
     FL_TREE_REASON_NONE=0,
     FL_TREE_REASON_SELECTED,
     FL_TREE_REASON_DESELECTED,
-#if FLTK_ABI_VERSION >= 10302
     FL_TREE_REASON_RESELECTED,
-#endif
     FL_TREE_REASON_OPENED,
     FL_TREE_REASON_CLOSED,
     FL_TREE_REASON_DRAGGED
@@ -356,15 +347,12 @@ EXPORT {
   typedef unsigned int Fl_Char;
 #endif /* INTERNAL_LINKAGE */
   typedef void* ID;
-  typedef void* fl_Window;
-  typedef void* fl_Group;
-  typedef void* fl_Label;
   typedef void* fl_Adjuster;
-  typedef void* fl_Bitmap;
   typedef void* fl_BMP_Image;
+  typedef void* fl_Bitmap;
   typedef void* fl_Box;
-  typedef void* fl_Browser_;
   typedef void* fl_Browser;
+  typedef void* fl_Browser_;
   typedef void* fl_Button;
   typedef void* fl_Cairo;
   typedef void* fl_Cairo_Window;
@@ -376,9 +364,10 @@ EXPORT {
   typedef void* fl_Color_Chooser;
   typedef void* fl_Copy_Surface;
   typedef void* fl_Counter;
-  typedef void* fl_Simple_Counter;
   typedef void* fl_Device;
+  typedef void* fl_Device_Plugin;
   typedef void* fl_Dial;
+  typedef void* fl_Display_Device;
   typedef void* fl_Double_Window;
   typedef void* fl_Export;
   typedef void* fl_File_Browser;
@@ -396,9 +385,7 @@ EXPORT {
   typedef void* fl_Gl_Window;
   typedef void* fl_Glut_Window;
   typedef void* fl_Graphics_Driver;
-  typedef void* fl_Surface_Device;
-  typedef void* fl_Display_Device;
-  typedef void* fl_Device_Plugin;
+  typedef void* fl_Group;
   typedef void* fl_Help_Dialog;
   typedef void* fl_Help_View;
   typedef void* fl_Hold_Browser;
@@ -408,16 +395,18 @@ EXPORT {
   typedef void* fl_Hor_Value_Slider;
   typedef void* fl_Image;
   typedef void* fl_Image_Surface;
-  typedef void* fl_Input_Choice;
-  typedef void* fl_Input_;
   typedef void* fl_Input;
+  typedef void* fl_Input_;
+  typedef void* fl_Input_Choice;
   typedef void* fl_Int_Input;
   typedef void* fl_JPEG_Image;
+  typedef void* fl_Label;
   typedef void* fl_Light_Button;
   typedef void* fl_Line_Dial;
-  typedef void* fl_Menu_Button;
-  typedef void* fl_Menu_;
   typedef void* fl_Menu;
+  typedef void* fl_Menu_;
+  typedef void* fl_Menu_Bar;
+  typedef void* fl_Menu_Button;
   typedef void* fl_Menu_Item;
   typedef void* fl_Menu_Window;
   typedef void* fl_Multi_Browser;
@@ -429,37 +418,40 @@ EXPORT {
   typedef void* fl_Object;
   typedef void* fl_Output;
   typedef void* fl_Overlay_Window;
+  typedef void* fl_PNG_Image;
+  typedef void* fl_PNM_Image;
   typedef void* fl_Pack;
   typedef void* fl_Paged_Device;
   typedef void* fl_Pixmap;
   typedef void* fl_Plugin;
-  typedef void* fl_PNG_Image;
-  typedef void* fl_PNM_Image;
   typedef void* fl_Positioner;
   typedef void* fl_PostScript;
   typedef void* fl_Preferences;
   typedef void* fl_Printer;
   typedef void* fl_Progress;
+  typedef void* fl_RGB_Image;
   typedef void* fl_Radio_Button;
   typedef void* fl_Radio_Light_Button;
   typedef void* fl_Radio_Round_Button;
+  typedef void* fl_Region;
+  typedef void* fl_Region;
   typedef void* fl_Repeat_Button;
   typedef void* fl_Return_Button;
-  typedef void* fl_RGB_Image;
   typedef void* fl_Roller;
   typedef void* fl_Round_Button;
   typedef void* fl_Round_Clock;
-  typedef void* fl_Scrollbar;
   typedef void* fl_Scroll;
+  typedef void* fl_Scrollbar;
   typedef void* fl_Secret_Input;
   typedef void* fl_Select_Browser;
   typedef void* fl_Shared_Image;
-  typedef void* fl_show_input;
   typedef void* fl_Simple_Counter;
+  typedef void* fl_Simple_Terminal;
   typedef void* fl_Single_Window;
   typedef void* fl_Slider;
   typedef void* fl_Spinner;
-  typedef void* fl_Menu_Bar;
+  typedef void* fl_Surface_Device;
+  typedef void* fl_SVG_Image;
   typedef void* fl_Sys_Menu_Bar;
   typedef void* fl_Table;
   typedef void* fl_Table_Row;
@@ -468,32 +460,35 @@ EXPORT {
   typedef void* fl_Text_Display;
   typedef void* fl_Text_Editor;
   typedef void* fl_Text_Selection;
-  typedef void* fl_Tiled_Image;
   typedef void* fl_Tile;
+  typedef void* fl_Tiled_Image;
   typedef void* fl_Timer;
   typedef void* fl_Toggle_Button;
   typedef void* fl_Toggle_Light_Button;
   typedef void* fl_Toggle_Round_Button;
   typedef void* fl_Tooltip;
   typedef void* fl_Tree;
-  typedef void* fl_Tree_Item_Array;
   typedef void* fl_Tree_Item;
+  typedef void* fl_Tree_Item_Array;
   typedef void* fl_Tree_Prefs;
   typedef void* fl_Valuator;
   typedef void* fl_Value_Input;
   typedef void* fl_Value_Output;
   typedef void* fl_Value_Slider;
   typedef void* fl_Widget;
+  typedef void* fl_Window;
+  typedef void* fl_Window_Handle;
+  typedef void* fl_Window_Handle;
   typedef void* fl_Wizard;
   typedef void* fl_XBM_Image;
   typedef void* fl_XPM_Image;
-  typedef void* fl_Region;
-  typedef void* fl_Window_Handle;
+  typedef void* fl_show_input;
   typedef void (fl_Callback )(fl_Widget, void*);
   typedef void (fl_Text_Buffer_Callback)(fl_Text_Buffer);
   typedef void (*Unfinished_Style_Cb)(int, void *);
   typedef void (fl_File_Chooser_Callback)(fl_File_Chooser,void*);
   typedef fl_Image (fl_Shared_Image_Handler)(const char *name, uchar *header,int headerlen);
+  typedef void (fl_Menu_Item_Draw)(fl_Menu_Item i, int x, int y, int w, int h, fl_Menu m, int selected);
   typedef struct Style_Table_Entry {
     Fl_Color    color;
     Fl_Font     font;
@@ -642,6 +637,30 @@ EXPORT {
     /* Fl_Valuator specific */
     int          (*format      )(fl_Valuator valuator, char* format);
   } fl_Valuator_Virtual_Funcs;
+
+  typedef struct {
+    void (*tab_draw) (fl_Tabs tabs);
+    int (*tab_positions)(fl_Tabs tabs, int* tab_pos, int* tab_width);
+    int (*tab_height)(fl_Tabs);
+    fl_Widget (*tab_which)(fl_Tabs tabs, int x, int y);
+    void (*redraw_tabs)(fl_Tabs tabs);
+    void (*tab_client_area)(fl_Tabs, int *rx, int *ry, int *rw, int *rh, int tabh);
+  } fl_Tab_Virtual_Funcs;
+
+  typedef struct {
+    int (*get_mode)(fl_Color_Chooser c);
+    void (*set_mode)(fl_Color_Chooser c,int newMode);
+    double (*hue)(fl_Color_Chooser c);
+    double (*saturation)(fl_Color_Chooser c);
+    double (*value)(fl_Color_Chooser c);
+    double (*r)(fl_Color_Chooser c);
+    double (*g)(fl_Color_Chooser c);
+    double (*b)(fl_Color_Chooser c);
+    int (*hsv)(fl_Color_Chooser c,double H, double S, double V);
+    int (*rgb)(fl_Color_Chooser c,double R, double G, double B);
+  } fl_Color_Chooser_Virtual_Funcs;
+  typedef fl_Color_Chooser_Virtual_Funcs fl_Color_Chooser_Virtual_Funcs;
+  typedef fl_Tab_Virtual_Funcs fl_Tab_Virtual_Funcs;
   typedef fl_Table_Virtual_Funcs fl_Table_Row_Virtual_Funcs;
   typedef fl_Widget_Virtual_Funcs fl_Button_Virtual_Funcs;
   typedef fl_Widget_Virtual_Funcs fl_Int_Input_Virtual_Funcs;

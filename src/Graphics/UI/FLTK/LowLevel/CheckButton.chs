@@ -47,10 +47,13 @@ checkButtonCustom rectangle l' draw' funcs' =
 {# fun Fl_Check_Button_New_WithLabel as widgetNewWithLabel' { `Int',`Int',`Int',`Int',unsafeToCString `T.Text'} -> `Ptr ()' id #}
 checkButtonNew :: Rectangle -> Maybe T.Text -> IO (Ref CheckButton)
 checkButtonNew rectangle l' =
-    let (x_pos, y_pos, width, height) = fromRectangle rectangle
-    in case l' of
-        Nothing -> widgetNew' x_pos y_pos width height >>= toRef
-        Just l -> widgetNewWithLabel' x_pos y_pos width height l >>= toRef
+  widgetMaker
+    rectangle
+    l'
+    Nothing
+    Nothing
+    overriddenWidgetNew'
+    overriddenWidgetNewWithLabel'
 
 {# fun Fl_Check_Button_Destroy as widgetDestroy' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
 instance (impl ~ ( IO ())) => Op (Destroy ()) CheckButton orig impl where

@@ -8,6 +8,13 @@
 #include "FL/Fl_Menu_Item.H"
 #include "Fl_CallbackC.h"
 EXPORT {
+  struct FlDerivedMenu_Item : Fl_Menu_Item {
+    fl_Menu_Item_Draw* drawF;
+    FlDerivedMenu_Item(fl_Menu_Item_Draw* f){
+        drawF = f;
+    };
+    void draw(int x, int y, int w, int h, Fl_Menu_* m, int selected);
+  };
 #endif
   FL_EXPORT_C_HEADER(fl_Menu_Item,Fl_Menu_Item_next_with_step,(fl_Menu_Item menu_item, int step));
   FL_EXPORT_C_HEADER(fl_Menu_Item,Fl_Menu_Item_next,(fl_Menu_Item menu_item));
@@ -80,6 +87,7 @@ EXPORT {
   FL_EXPORT_C_HEADER(int,Fl_Menu_Item_add_with_shortcutname_user_data_flags,(fl_Menu_Item menu_item,   char* name,   char* shortcut, fl_Callback* cb, void* user_data, int flags));
   FL_EXPORT_C_HEADER(int,Fl_Menu_Item_size,(fl_Menu_Item menu_item));
   FL_EXPORT_C_HEADER(fl_Menu_Item,Fl_Menu_Item_New,());
+  FL_EXPORT_C_HEADER(fl_Menu_Item,Fl_Menu_Item_New_With_Draw,(fl_Menu_Item_Draw* f));
   FL_EXPORT_C_HEADER(void,Fl_Menu_Item_Destroy,(fl_Menu_Item menu_item));
 #ifdef __cplusplus
 }

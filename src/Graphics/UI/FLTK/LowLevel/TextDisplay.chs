@@ -3,6 +3,7 @@
 module Graphics.UI.FLTK.LowLevel.TextDisplay
        (
          mkStyleTableEntriesPtr,
+         toStyleTableEntries,
          indexStyleTableEntries,
          textDisplayNew,
          textDisplayCustom
@@ -50,6 +51,30 @@ mkStyleTableEntriesPtr td stes = do
    styleTableEntriesPtr
    finalizerF
 
+toStyleTableEntries :: Int -> Ptr () -> IO (Maybe [StyleTableEntry])
+toStyleTableEntries len ptr = do
+  entries <- mapM toStyleTableEntry [0 .. (len - 1)]
+  return (sequence entries)
+  where
+    toStyleTableEntry :: Int  -> IO (Maybe StyleTableEntry)
+    toStyleTableEntry idx =
+      let entryPtr = ptr `plusPtr` (idx * {#sizeof Style_Table_Entry#}) in
+      if (entryPtr == nullPtr)
+       then return Nothing
+       else do
+       color <- {#get Style_Table_Entry->color #} entryPtr
+       font <- {#get Style_Table_Entry->font #} entryPtr
+       fontSize <- {#get Style_Table_Entry->size #} entryPtr
+       return
+        (Just
+           (
+             StyleTableEntry
+               (if (color == 0) then Nothing else Just (Color (fromIntegral color)))
+               (if (font == 0) then Nothing else Just (Font (fromIntegral font)))
+               (if (fontSize == 0) then Nothing else Just (FontSize (fromIntegral fontSize)))
+           )
+        )
+
 indexStyleTableEntries :: [StyleTableEntry] -> [(Char, StyleTableEntry)]
 indexStyleTableEntries = zip ['A'..]
 
@@ -91,23 +116,23 @@ instance (Parent a TextBuffer, impl ~ (Maybe ( Ref a ) ->  IO ())) => Op (SetBuf
 instance (impl ~ ( IO (Maybe (Ref TextBuffer)))) => Op (GetBuffer ()) TextDisplay orig impl where
    runOp _ _ text_display = withRef text_display $ \text_displayPtr -> buffer' text_displayPtr >>= toMaybeRef
 {# fun Fl_Text_Display_redisplay_range as redisplayRange' { id `Ptr ()',`Int',`Int' } -> `()' #}
-instance (impl ~ (BufferRange -> IO ())) => Op (RedisplayRange ()) TextDisplay orig impl where
-  runOp _ _ text_display (BufferRange (BufferOffset start') (BufferOffset end')) = withRef text_display $ \text_displayPtr -> redisplayRange' text_displayPtr start' end'
+instance (impl ~ (IndexRange -> IO ())) => Op (RedisplayRange ()) TextDisplay orig impl where
+  runOp _ _ text_display (IndexRange (AtIndex start') (AtIndex end')) = withRef text_display $ \text_displayPtr -> redisplayRange' text_displayPtr start' end'
 {# fun Fl_Text_Display_scroll as scroll' { id `Ptr ()',`Int',`Int' } -> `()' #}
-instance (impl ~ (Int -> BufferOffset ->  IO ())) => Op (Scroll ()) TextDisplay orig impl where
-  runOp _ _ text_display toplinenum (BufferOffset  horizoffset) = withRef text_display $ \text_displayPtr -> scroll' text_displayPtr toplinenum horizoffset
+instance (impl ~ (LineNumber -> AtIndex ->  IO ())) => Op (Scroll ()) TextDisplay orig impl where
+  runOp _ _ text_display (LineNumber toplinenum) (AtIndex  horizoffset) = withRef text_display $ \text_displayPtr -> scroll' text_displayPtr toplinenum horizoffset
 {# fun Fl_Text_Display_overstrike as overstrike' { id `Ptr ()',unsafeToCString `T.Text' } -> `()' #}
 instance (impl ~ (T.Text ->  IO ())) => Op (Overstrike ()) TextDisplay orig impl where
    runOp _ _ text_display text = withRef text_display $ \text_displayPtr -> overstrike' text_displayPtr text
 {# fun Fl_Text_Display_set_insert_position as setInsertPosition' { id `Ptr ()',`Int' } -> `()' #}
-instance (impl ~ (BufferOffset ->  IO ())) => Op (SetInsertPosition ()) TextDisplay orig impl where
-  runOp _ _ text_display (BufferOffset newpos) = withRef text_display $ \text_displayPtr -> setInsertPosition' text_displayPtr newpos
+instance (impl ~ (AtIndex ->  IO ())) => Op (SetInsertPosition ()) TextDisplay orig impl where
+  runOp _ _ text_display (AtIndex newpos) = withRef text_display $ \text_displayPtr -> setInsertPosition' text_displayPtr newpos
 {# fun Fl_Text_Display_insert_position as insertPosition' { id `Ptr ()' } -> `Int' #}
-instance (impl ~ ( IO BufferOffset)) => Op (GetInsertPosition ()) TextDisplay orig impl where
-   runOp _ _ text_display = withRef text_display $ \text_displayPtr -> insertPosition' text_displayPtr >>= return . BufferOffset
+instance (impl ~ ( IO AtIndex)) => Op (GetInsertPosition ()) TextDisplay orig impl where
+   runOp _ _ text_display = withRef text_display $ \text_displayPtr -> insertPosition' text_displayPtr >>= return . AtIndex
 {# fun Fl_Text_Display_position_to_xy as positionToXy' { id `Ptr ()',`Int', id `Ptr CInt', id `Ptr CInt'} -> `Int' #}
-instance (impl ~ (BufferOffset ->  IO (Either OutOfRange Position))) => Op (PositionToXy ()) TextDisplay orig impl where
-  runOp _ _ text_display (BufferOffset pos)  =
+instance (impl ~ (AtIndex ->  IO (Either OutOfRange Position))) => Op (PositionToXy ()) TextDisplay orig impl where
+  runOp _ _ text_display (AtIndex pos)  =
      withRef text_display $ \text_displayPtr ->
      alloca $ \xPtr ->
      alloca $ \yPtr -> do
@@ -144,21 +169,21 @@ instance (impl ~ ( IO (Either OutOfRange ()))) => Op (MoveDown ()) TextDisplay o
    runOp _ _ text_display = withRef text_display $ \text_displayPtr ->
      moveDown' text_displayPtr >>= \s -> successOrOutOfRange () (s == 0) return
 {# fun Fl_Text_Display_count_lines as countLines' { id `Ptr ()',`Int',`Int', cFromBool `Bool' } -> `Int' #}
-instance (impl ~ (BufferRange -> Bool ->  IO (Int))) => Op (CountLines ()) TextDisplay orig impl where
-  runOp _ _ text_display (BufferRange (BufferOffset start') (BufferOffset end')) start_pos_is_line_start =
+instance (impl ~ (IndexRange -> Bool ->  IO (Int))) => Op (CountLines ()) TextDisplay orig impl where
+  runOp _ _ text_display (IndexRange (AtIndex start') (AtIndex end')) start_pos_is_line_start =
     withRef text_display $ \text_displayPtr -> countLines' text_displayPtr start' end' start_pos_is_line_start
 {# fun Fl_Text_Display_line_start as lineStart' { id `Ptr ()',`Int' } -> `Int' #}
-instance (impl ~ (BufferOffset ->  IO (BufferOffset))) => Op (LineStart ()) TextDisplay orig impl where
-  runOp _ _ text_display (BufferOffset pos) = withRef text_display $ \text_displayPtr -> lineStart' text_displayPtr pos >>= return . BufferOffset
+instance (impl ~ (AtIndex ->  IO (AtIndex))) => Op (LineStart ()) TextDisplay orig impl where
+  runOp _ _ text_display (AtIndex pos) = withRef text_display $ \text_displayPtr -> lineStart' text_displayPtr pos >>= return . AtIndex
 {# fun Fl_Text_Display_line_end as lineEnd' { id `Ptr ()',`Int', cFromBool `Bool' } -> `Int' #}
-instance (impl ~ (BufferOffset -> Bool ->  IO (BufferOffset))) => Op (LineEnd ()) TextDisplay orig impl where
-  runOp _ _ text_display (BufferOffset startpos) startposislinestart = withRef text_display $ \text_displayPtr -> lineEnd' text_displayPtr startpos startposislinestart >>= return . BufferOffset
+instance (impl ~ (AtIndex -> Bool ->  IO (AtIndex))) => Op (LineEnd ()) TextDisplay orig impl where
+  runOp _ _ text_display (AtIndex startpos) startposislinestart = withRef text_display $ \text_displayPtr -> lineEnd' text_displayPtr startpos startposislinestart >>= return . AtIndex
 {# fun Fl_Text_Display_skip_lines as skipLines' { id `Ptr ()',`Int',`Int', cFromBool `Bool' } -> `Int' #}
-instance (impl ~ (BufferOffset -> Int -> Bool ->  IO (BufferOffset))) => Op (SkipLines ()) TextDisplay orig impl where
-  runOp _ _ text_display (BufferOffset startpos) nlines startposislinestart = withRef text_display $ \text_displayPtr -> skipLines' text_displayPtr startpos nlines startposislinestart >>= return . BufferOffset
+instance (impl ~ (AtIndex -> Int -> Bool ->  IO (AtIndex))) => Op (SkipLines ()) TextDisplay orig impl where
+  runOp _ _ text_display (AtIndex startpos) nlines startposislinestart = withRef text_display $ \text_displayPtr -> skipLines' text_displayPtr startpos nlines startposislinestart >>= return . AtIndex
 {# fun Fl_Text_Display_rewind_lines as rewindLines' { id `Ptr ()',`Int',`Int' } -> `Int' #}
-instance (impl ~ (BufferOffset -> Int ->  IO (BufferOffset))) => Op (RewindLines ()) TextDisplay orig impl where
-  runOp _ _ text_display (BufferOffset startpos) nlines = withRef text_display $ \text_displayPtr -> rewindLines' text_displayPtr startpos nlines >>= return . BufferOffset
+instance (impl ~ (AtIndex -> Int ->  IO (AtIndex))) => Op (RewindLines ()) TextDisplay orig impl where
+  runOp _ _ text_display (AtIndex startpos) nlines = withRef text_display $ \text_displayPtr -> rewindLines' text_displayPtr startpos nlines >>= return . AtIndex
 {# fun Fl_Text_Display_next_word as nextWord' { id `Ptr ()' } -> `()' #}
 instance (impl ~ ( IO ())) => Op (NextWord ()) TextDisplay orig impl where
    runOp _ _ text_display = withRef text_display $ \text_displayPtr -> nextWord' text_displayPtr
@@ -190,11 +215,11 @@ instance (impl ~ ( IO (AlignType))) => Op (GetScrollbarAlign ()) TextDisplay ori
 instance (impl ~ (AlignType ->  IO ())) => Op (SetScrollbarAlign ()) TextDisplay orig impl where
    runOp _ _ text_display a = withRef text_display $ \text_displayPtr -> setScrollbarAlign' text_displayPtr a
 {# fun Fl_Text_Display_word_start as wordStart' { id `Ptr ()',`Int' } -> `Int' #}
-instance (impl ~ (BufferOffset ->  IO (BufferOffset))) => Op (WordStart ()) TextDisplay orig impl where
-   runOp _ _ text_display (BufferOffset pos) = withRef text_display $ \text_displayPtr -> wordStart' text_displayPtr pos >>= return . BufferOffset
+instance (impl ~ (AtIndex ->  IO (AtIndex))) => Op (WordStart ()) TextDisplay orig impl where
+   runOp _ _ text_display (AtIndex pos) = withRef text_display $ \text_displayPtr -> wordStart' text_displayPtr pos >>= return . AtIndex
 {# fun Fl_Text_Display_word_end as wordEnd' { id `Ptr ()',`Int' } -> `Int' #}
-instance (impl ~ (BufferOffset ->  IO (BufferOffset))) => Op (WordEnd ()) TextDisplay orig impl where
-   runOp _ _ text_display (BufferOffset pos) = withRef text_display $ \text_displayPtr -> wordEnd' text_displayPtr pos >>= return . BufferOffset
+instance (impl ~ (AtIndex ->  IO (AtIndex))) => Op (WordEnd ()) TextDisplay orig impl where
+   runOp _ _ text_display (AtIndex pos) = withRef text_display $ \text_displayPtr -> wordEnd' text_displayPtr pos >>= return . AtIndex
 {# fun Fl_Text_Display_highlight_data as highlightData' { id `Ptr ()',id `Ptr ()',id `Ptr ()',`Int', id `CChar',id `FunPtr UnfinishedStyleCbPrim',id `Ptr ()' } -> `()' #}
 instance (Parent a TextBuffer, impl ~ (Ref a -> [(Char, StyleTableEntry)] -> Maybe(Char,UnfinishedStyleCb) -> IO ())) => Op (HighlightData ()) TextDisplay orig impl where
    runOp _ _ text_display style_buffer indexedStyleTable cb =
@@ -208,8 +233,8 @@ instance (Parent a TextBuffer, impl ~ (Ref a -> [(Char, StyleTableEntry)] -> May
          Nothing -> return (0, nullFunPtr)
        highlightData' text_displayPtr style_bufferPtr (castPtr $ Unsafe.unsafeForeignPtrToPtr $ stesPtr) (length indexedStyleTable) (fromIntegral indexChar) fPtr nullPtr
 {# fun Fl_Text_Display_position_style as positionStyle' { id `Ptr ()',`Int',`Int',`Int' } -> `Int' #}
-instance (impl ~ (BufferOffset -> Int -> Int ->  IO TextDisplayStyle)) => Op (PositionStyle ()) TextDisplay orig impl where
-  runOp _ _ text_display (BufferOffset linestartpos) linelen lineindex =
+instance (impl ~ (AtIndex -> Int -> LineNumber ->  IO TextDisplayStyle)) => Op (PositionStyle ()) TextDisplay orig impl where
+  runOp _ _ text_display (AtIndex linestartpos) linelen (LineNumber lineindex) =
     withRef text_display $ \text_displayPtr ->
     positionStyle' text_displayPtr linestartpos linelen lineindex >>= return . TextDisplayStyle . fromIntegral
 {# fun Fl_Text_Display_shortcut as shortcut' { id `Ptr ()' } -> `CInt' #}
@@ -345,7 +370,7 @@ instance (impl ~ ( IO ())) => Op (ShowWidgetSuper ()) TextDisplay orig impl wher
 -- @
 -- colToX :: 'Ref' 'TextDisplay' -> 'Double' -> 'IO' ('Double')
 --
--- countLines :: 'Ref' 'TextDisplay' -> 'BufferRange' -> 'Bool' -> 'IO' ('Int')
+-- countLines :: 'Ref' 'TextDisplay' -> 'IndexRange' -> 'Bool' -> 'IO' ('Int')
 --
 -- destroy :: 'Ref' 'TextDisplay' -> 'IO' ()
 --
@@ -357,7 +382,7 @@ instance (impl ~ ( IO ())) => Op (ShowWidgetSuper ()) TextDisplay orig impl wher
 --
 -- getCursorColor :: 'Ref' 'TextDisplay' -> 'IO' ('Color')
 --
--- getInsertPosition :: 'Ref' 'TextDisplay' -> 'IO' 'BufferOffset'
+-- getInsertPosition :: 'Ref' 'TextDisplay' -> 'IO' 'AtIndex'
 --
 -- getLinenumberAlign :: 'Ref' 'TextDisplay' -> 'IO' ('AlignType')
 --
@@ -397,9 +422,9 @@ instance (impl ~ ( IO ())) => Op (ShowWidgetSuper ()) TextDisplay orig impl wher
 --
 -- inSelection :: 'Ref' 'TextDisplay' -> 'Position' -> 'IO' ('Bool')
 --
--- lineEnd :: 'Ref' 'TextDisplay' -> 'BufferOffset' -> 'Bool' -> 'IO' ('BufferOffset')
+-- lineEnd :: 'Ref' 'TextDisplay' -> 'AtIndex' -> 'Bool' -> 'IO' ('AtIndex')
 --
--- lineStart :: 'Ref' 'TextDisplay' -> 'BufferOffset' -> 'IO' ('BufferOffset')
+-- lineStart :: 'Ref' 'TextDisplay' -> 'AtIndex' -> 'IO' ('AtIndex')
 --
 -- moveDown :: 'Ref' 'TextDisplay' -> 'IO' ('Either' 'OutOfRange' ())
 --
@@ -413,21 +438,21 @@ instance (impl ~ ( IO ())) => Op (ShowWidgetSuper ()) TextDisplay orig impl wher
 --
 -- overstrike :: 'Ref' 'TextDisplay' -> 'T.Text' -> 'IO' ()
 --
--- positionStyle :: 'Ref' 'TextDisplay' -> 'BufferOffset' -> 'Int' -> 'Int' -> 'IO' 'TextDisplayStyle'
+-- positionStyle :: 'Ref' 'TextDisplay' -> 'AtIndex' -> 'Int' -> 'LineNumber' -> 'IO' 'TextDisplayStyle'
 --
--- positionToXy :: 'Ref' 'TextDisplay' -> 'BufferOffset' -> 'IO' ('Either' 'OutOfRange' 'Position')
+-- positionToXy :: 'Ref' 'TextDisplay' -> 'AtIndex' -> 'IO' ('Either' 'OutOfRange' 'Position')
 --
 -- previousWord :: 'Ref' 'TextDisplay' -> 'IO' ()
 --
--- redisplayRange :: 'Ref' 'TextDisplay' -> 'BufferRange' -> 'IO' ()
+-- redisplayRange :: 'Ref' 'TextDisplay' -> 'IndexRange' -> 'IO' ()
 --
 -- resize :: 'Ref' 'TextDisplay' -> 'Rectangle' -> 'IO' ()
 --
 -- resizeSuper :: 'Ref' 'TextDisplay' -> 'Rectangle' -> 'IO' ()
 --
--- rewindLines :: 'Ref' 'TextDisplay' -> 'BufferOffset' -> 'Int' -> 'IO' ('BufferOffset')
+-- rewindLines :: 'Ref' 'TextDisplay' -> 'AtIndex' -> 'Int' -> 'IO' ('AtIndex')
 --
--- scroll :: 'Ref' 'TextDisplay' -> 'Int' -> 'BufferOffset' -> 'IO' ()
+-- scroll :: 'Ref' 'TextDisplay' -> 'LineNumber' -> 'AtIndex' -> 'IO' ()
 --
 -- setBuffer:: ('Parent' a 'TextBuffer') => 'Ref' 'TextDisplay' -> 'Maybe' ( 'Ref' a ) -> 'IO' ()
 --
@@ -435,7 +460,7 @@ instance (impl ~ ( IO ())) => Op (ShowWidgetSuper ()) TextDisplay orig impl wher
 --
 -- setCursorStyle :: 'Ref' 'TextDisplay' -> 'CursorType' -> 'IO' ()
 --
--- setInsertPosition :: 'Ref' 'TextDisplay' -> 'BufferOffset' -> 'IO' ()
+-- setInsertPosition :: 'Ref' 'TextDisplay' -> 'AtIndex' -> 'IO' ()
 --
 -- setLinenumberAlign :: 'Ref' 'TextDisplay' -> 'AlignType' -> 'IO' ()
 --
@@ -471,11 +496,11 @@ instance (impl ~ ( IO ())) => Op (ShowWidgetSuper ()) TextDisplay orig impl wher
 --
 -- showWidgetSuper :: 'Ref' 'TextDisplay' -> 'IO' ()
 --
--- skipLines :: 'Ref' 'TextDisplay' -> 'BufferOffset' -> 'Int' -> 'Bool' -> 'IO' ('BufferOffset')
+-- skipLines :: 'Ref' 'TextDisplay' -> 'AtIndex' -> 'Int' -> 'Bool' -> 'IO' ('AtIndex')
 --
--- wordEnd :: 'Ref' 'TextDisplay' -> 'BufferOffset' -> 'IO' ('BufferOffset')
+-- wordEnd :: 'Ref' 'TextDisplay' -> 'AtIndex' -> 'IO' ('AtIndex')
 --
--- wordStart :: 'Ref' 'TextDisplay' -> 'BufferOffset' -> 'IO' ('BufferOffset')
+-- wordStart :: 'Ref' 'TextDisplay' -> 'AtIndex' -> 'IO' ('AtIndex')
 --
 -- wrapMode :: 'Ref' 'TextDisplay' -> 'WrapType' -> 'IO' ()
 --

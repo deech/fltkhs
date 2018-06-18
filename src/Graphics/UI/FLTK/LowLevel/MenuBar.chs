@@ -47,12 +47,13 @@ menuBarCustom rectangle l' draw' funcs' =
 {# fun Fl_Menu_Bar_New_WithLabel as widgetNewWithLabel' { `Int',`Int',`Int',`Int',unsafeToCString `T.Text'} -> `Ptr ()' id #}
 menuBarNew :: Rectangle -> Maybe T.Text -> IO (Ref MenuBar)
 menuBarNew rectangle l' =
-    let (x_pos, y_pos, width, height) = fromRectangle rectangle
-    in case l' of
-        Nothing -> widgetNew' x_pos y_pos width height >>=
-                             toRef
-        Just l -> widgetNewWithLabel' x_pos y_pos width height l >>=
-                             toRef
+  widgetMaker
+    rectangle
+    l'
+    Nothing
+    Nothing
+    overriddenWidgetNew'
+    overriddenWidgetNewWithLabel'
 
 {# fun Fl_Menu_Bar_Destroy as widgetDestroy' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
 instance (impl ~ (IO ())) => Op (Destroy ()) MenuBar orig impl where
@@ -98,7 +99,6 @@ instance (impl ~ ( IO ())) => Op (ShowWidgetSuper ()) MenuBar orig impl where
 -- $functions
 --
 -- @
---
 -- destroy :: 'Ref' 'MenuBar' -> 'IO' ()
 --
 -- draw :: 'Ref' 'MenuBar' -> 'IO' ()

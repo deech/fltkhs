@@ -17,6 +17,7 @@ import Data.Char
 import Data.List
 import Foreign.C.Types
 import Graphics.UI.FLTK.LowLevel.Utils
+import Graphics.UI.FLTK.LowLevel.Fl_Types(ResolveImageLabelConflict(ResolveImageLabelDoNothing))
 import Lookup
 import Types
 import Parser
@@ -134,7 +135,7 @@ attributeG flClassName name attr =
     Types.Labeltype l ->
       maybe ""
             (\_f ->
-               (apply "setLabeltype" name (Just _f)))
+               (apply "setLabeltype" name (Just (_f ++ " " ++ (show ResolveImageLabelDoNothing)))))
             (lookup (show l) labelType)
     Types.Labelcolor c ->
       apply "setLabelcolor" name (Just $ "(Color " ++ (show c) ++ ")")
@@ -291,7 +292,7 @@ menuItemCode mn menuItemName label flags menuPath restAttrs =
                              (shortcutCode "Nothing")
                              False
                     (_,newFlags) <- get
-                    tell ["(MenuItemIndex idx) <- add " ++
+                    tell ["(AtIndex idx) <- add " ++
                           mn ++ " label " ++
                           "shortcut " ++
                           "callback " ++
@@ -406,7 +407,7 @@ widgetTreeG menuName menuPath widgetTree =
                              (constructorG newFlClassName hsConstructor (Just newName) posSize) ++
                              (map (attributeG newFlClassName newName) restAttrs) ++
                              innerTreeOutput ++
-                             ["setValue " ++ newName ++ " (MenuItemByIndex (MenuItemIndex " ++ (show 0) ++ "))"]
+                             ["setValue " ++ newName ++ " (MenuItemByIndex (AtIndex " ++ (show 0) ++ "))"]
                            _ ->
                              (constructorG newFlClassName hsConstructor (Just newName) posSize) ++
                              (map (attributeG newFlClassName newName) attrsWithoutLabel) ++

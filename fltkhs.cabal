@@ -15,7 +15,7 @@ category: UI,Graphics,GUI,User Interfaces
 ----------------------------------------
 
 build-type: Custom
-cabal-version: >=1.24
+cabal-version: >=2.0
   -- for custom-setup
 
 source-repository head
@@ -48,17 +48,18 @@ Flag opengl
 
 custom-setup
   setup-depends:
-    Cabal >= 1.24.1 && < 3,
+    Cabal >= 2.2.0.1 && < 3,
     filepath,
     directory >= 1.2.3.0,
-    -- c2hs >=0.28,
-    base >= 4.5 && < 4.11
+    base >= 4.5 && < 4.12
 
 ----------------------------------------
 
 library
 
      build-tools: c2hs
+     if !os(darwin) && !os(windows)
+       build-tools: pkg-config
   --
   -- extra-libraries: jpeg
   --     -- from the `libjpeg` system package
@@ -80,106 +81,108 @@ library
                    Graphics.UI.FLTK.LowLevel.GlWindow
      cpp-options: -DGLSUPPORT
   exposed-modules:
-                   Graphics.UI.FLTK.LowLevel.FLTKHS
+                   Graphics.UI.FLTK.LowLevel.Adjuster
                    Graphics.UI.FLTK.LowLevel.Ask
-                   Graphics.UI.FLTK.LowLevel.SingleWindow
-                   Graphics.UI.FLTK.LowLevel.Window
-                   Graphics.UI.FLTK.LowLevel.DoubleWindow
-                   Graphics.UI.FLTK.LowLevel.OverlayWindow
+                   Graphics.UI.FLTK.LowLevel.BMPImage
+                   Graphics.UI.FLTK.LowLevel.Bitmap
+                   Graphics.UI.FLTK.LowLevel.Box
+                   Graphics.UI.FLTK.LowLevel.Browser
                    Graphics.UI.FLTK.LowLevel.Button
-                   Graphics.UI.FLTK.LowLevel.LightButton
-                   Graphics.UI.FLTK.LowLevel.RadioLightButton
                    Graphics.UI.FLTK.LowLevel.CheckButton
-                   Graphics.UI.FLTK.LowLevel.ReturnButton
-                   Graphics.UI.FLTK.LowLevel.RoundButton
-                   Graphics.UI.FLTK.LowLevel.RepeatButton
-                   Graphics.UI.FLTK.LowLevel.ToggleButton
+                   Graphics.UI.FLTK.LowLevel.Choice
+                   Graphics.UI.FLTK.LowLevel.Clock
+                   Graphics.UI.FLTK.LowLevel.ColorChooser
+                   Graphics.UI.FLTK.LowLevel.CopySurface
+                   Graphics.UI.FLTK.LowLevel.Counter
+                   Graphics.UI.FLTK.LowLevel.Dial
+                   Graphics.UI.FLTK.LowLevel.Dispatch
+                   Graphics.UI.FLTK.LowLevel.DoubleWindow
+                   Graphics.UI.FLTK.LowLevel.Draw
+                   Graphics.UI.FLTK.LowLevel.FL
+                   Graphics.UI.FLTK.LowLevel.FLTKHS
+                   Graphics.UI.FLTK.LowLevel.FileBrowser
+                   Graphics.UI.FLTK.LowLevel.FileInput
+                   Graphics.UI.FLTK.LowLevel.FillDial
+                   Graphics.UI.FLTK.LowLevel.FillSlider
                    Graphics.UI.FLTK.LowLevel.Fl_Enumerations
                    Graphics.UI.FLTK.LowLevel.Fl_Types
-                   Graphics.UI.FLTK.LowLevel.Dispatch
-                   Graphics.UI.FLTK.LowLevel.Hierarchy
+                   Graphics.UI.FLTK.LowLevel.GIFImage
                    Graphics.UI.FLTK.LowLevel.Group
-                   Graphics.UI.FLTK.LowLevel.Widget
-                   Graphics.UI.FLTK.LowLevel.Box
-                   Graphics.UI.FLTK.LowLevel.Clock
-                   Graphics.UI.FLTK.LowLevel.Valuator
-                   Graphics.UI.FLTK.LowLevel.Slider
-                   Graphics.UI.FLTK.LowLevel.HorSlider
-                   Graphics.UI.FLTK.LowLevel.FillSlider
+                   Graphics.UI.FLTK.LowLevel.Hierarchy
                    Graphics.UI.FLTK.LowLevel.HorFillSlider
                    Graphics.UI.FLTK.LowLevel.HorNiceSlider
+                   Graphics.UI.FLTK.LowLevel.HorSlider
                    Graphics.UI.FLTK.LowLevel.HorValueSlider
-                   Graphics.UI.FLTK.LowLevel.NiceSlider
+                   Graphics.UI.FLTK.LowLevel.Image
+                   Graphics.UI.FLTK.LowLevel.ImageSurface
+                   Graphics.UI.FLTK.LowLevel.Input
+                   Graphics.UI.FLTK.LowLevel.JPEGImage
+                   Graphics.UI.FLTK.LowLevel.LightButton
+                   Graphics.UI.FLTK.LowLevel.LineDial
+                   Graphics.UI.FLTK.LowLevel.MenuBar
+                   Graphics.UI.FLTK.LowLevel.MenuButton
                    Graphics.UI.FLTK.LowLevel.MenuItem
                    Graphics.UI.FLTK.LowLevel.MenuPrim
-                   Graphics.UI.FLTK.LowLevel.Browser
-                   Graphics.UI.FLTK.LowLevel.SelectBrowser
-                   Graphics.UI.FLTK.LowLevel.SysMenuBar
-                   Graphics.UI.FLTK.LowLevel.MenuBar
-                   Graphics.UI.FLTK.LowLevel.Choice
-                   Graphics.UI.FLTK.LowLevel.MenuButton
-                   Graphics.UI.FLTK.LowLevel.Image
-                   Graphics.UI.FLTK.LowLevel.Bitmap
+                   Graphics.UI.FLTK.LowLevel.MultiLabel
+                   Graphics.UI.FLTK.LowLevel.NativeFileChooser
+                   Graphics.UI.FLTK.LowLevel.NiceSlider
+                   Graphics.UI.FLTK.LowLevel.Output
+                   Graphics.UI.FLTK.LowLevel.OverlayWindow
+                   Graphics.UI.FLTK.LowLevel.PNGImage
+                   Graphics.UI.FLTK.LowLevel.PNMImage
+                   Graphics.UI.FLTK.LowLevel.Pack
                    Graphics.UI.FLTK.LowLevel.Pixmap
-                   Graphics.UI.FLTK.LowLevel.Draw
-                   Graphics.UI.FLTK.LowLevel.CopySurface
-                   Graphics.UI.FLTK.LowLevel.ImageSurface
-                   Graphics.UI.FLTK.LowLevel.Adjuster
-                   Graphics.UI.FLTK.LowLevel.Dial
-                   Graphics.UI.FLTK.LowLevel.FillDial
-                   Graphics.UI.FLTK.LowLevel.LineDial
+                   Graphics.UI.FLTK.LowLevel.Positioner
+                   Graphics.UI.FLTK.LowLevel.Progress
+                   Graphics.UI.FLTK.LowLevel.RGBImage
+                   Graphics.UI.FLTK.LowLevel.RadioLightButton
+                   Graphics.UI.FLTK.LowLevel.RepeatButton
+                   Graphics.UI.FLTK.LowLevel.ReturnButton
                    Graphics.UI.FLTK.LowLevel.Roller
-                   Graphics.UI.FLTK.LowLevel.Counter
-                   Graphics.UI.FLTK.LowLevel.SimpleCounter
+                   Graphics.UI.FLTK.LowLevel.RoundButton
                    Graphics.UI.FLTK.LowLevel.Scrollbar
                    Graphics.UI.FLTK.LowLevel.Scrolled
-                   Graphics.UI.FLTK.LowLevel.ValueSlider
-                   Graphics.UI.FLTK.LowLevel.ValueInput
-                   Graphics.UI.FLTK.LowLevel.ValueOutput
-                   Graphics.UI.FLTK.LowLevel.Progress
-                   Graphics.UI.FLTK.LowLevel.Positioner
-                   Graphics.UI.FLTK.LowLevel.Input
-                   Graphics.UI.FLTK.LowLevel.Output
-                   Graphics.UI.FLTK.LowLevel.IntInput
-                   Graphics.UI.FLTK.LowLevel.FileInput
-                   Graphics.UI.FLTK.LowLevel.Wizard
+                   Graphics.UI.FLTK.LowLevel.SelectBrowser
+                   Graphics.UI.FLTK.LowLevel.SingleWindow
+                   Graphics.UI.FLTK.LowLevel.Slider
+                   Graphics.UI.FLTK.LowLevel.Spinner
+                   Graphics.UI.FLTK.LowLevel.SysMenuBar
                    Graphics.UI.FLTK.LowLevel.Table
                    Graphics.UI.FLTK.LowLevel.TableRow
-                   Graphics.UI.FLTK.LowLevel.TreePrefs
-                   Graphics.UI.FLTK.LowLevel.TreeItem
-                   Graphics.UI.FLTK.LowLevel.Tree
-                   Graphics.UI.FLTK.LowLevel.FL
-                   Graphics.UI.FLTK.LowLevel.TextSelection
+                   Graphics.UI.FLTK.LowLevel.Tabs
                    Graphics.UI.FLTK.LowLevel.TextBuffer
                    Graphics.UI.FLTK.LowLevel.TextDisplay
                    Graphics.UI.FLTK.LowLevel.TextEditor
-                   Graphics.UI.FLTK.LowLevel.NativeFileChooser
-                   Graphics.UI.FLTK.LowLevel.Utils
+                   Graphics.UI.FLTK.LowLevel.TextSelection
                    Graphics.UI.FLTK.LowLevel.Tile
-                   Graphics.UI.FLTK.LowLevel.Pack
-                   Graphics.UI.FLTK.LowLevel.Tabs
-                   Graphics.UI.FLTK.LowLevel.Spinner
-                   Graphics.UI.FLTK.LowLevel.ColorChooser
-                   Graphics.UI.FLTK.LowLevel.FileBrowser
-                   Graphics.UI.FLTK.LowLevel.JPEGImage
-                   Graphics.UI.FLTK.LowLevel.RGBImage
-                   Graphics.UI.FLTK.LowLevel.BMPImage
-                   Graphics.UI.FLTK.LowLevel.GIFImage
+                   Graphics.UI.FLTK.LowLevel.ToggleButton
+                   Graphics.UI.FLTK.LowLevel.Tree
+                   Graphics.UI.FLTK.LowLevel.TreeItem
+                   Graphics.UI.FLTK.LowLevel.TreePrefs
+                   Graphics.UI.FLTK.LowLevel.Utils
+                   Graphics.UI.FLTK.LowLevel.Valuator
+                   Graphics.UI.FLTK.LowLevel.ValueInput
+                   Graphics.UI.FLTK.LowLevel.ValueOutput
+                   Graphics.UI.FLTK.LowLevel.ValueSlider
+                   Graphics.UI.FLTK.LowLevel.Widget
+                   Graphics.UI.FLTK.LowLevel.Window
+                   Graphics.UI.FLTK.LowLevel.Wizard
+                   Graphics.UI.FLTK.LowLevel.X
                    Graphics.UI.FLTK.LowLevel.XBMImage
                    Graphics.UI.FLTK.LowLevel.XPMImage
-                   Graphics.UI.FLTK.LowLevel.PNGImage
-                   Graphics.UI.FLTK.LowLevel.PNMImage
-                   Graphics.UI.FLTK.LowLevel.X
+                   Graphics.UI.FLTK.LowLevel.SVGImage
+                   Graphics.UI.FLTK.LowLevel.SimpleTerminal
+                   Graphics.UI.FLTK.LowLevel.Tooltip
 
   other-modules: C2HS
 
   build-depends:
                 base == 4.*,
                 bytestring,
-                text >= 0.2 && < 1.3
+                text >= 0.2 && < 1.3,
+                vector >= 0.12.0.1
 
   hs-source-dirs: src
-  include-dirs:  ./c-src, ./
 
   default-extensions: GADTs
   default-language: Haskell2010
@@ -220,7 +223,7 @@ Executable fltkhs-fluidtohs
     mtl
 
   default-language: Haskell2010
-  ghc-Options: -Wall -threaded
+  ghc-Options: -Wall -Wdodgy-imports -threaded
 
   if os(windows) && arch(x86_64)
      cpp-options: -DWIN64

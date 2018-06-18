@@ -7,7 +7,8 @@ module Graphics.UI.FLTK.LowLevel.ColorChooser
      colorChooserCustom,
      rgb2Hsv,
      hsv2Rgb,
-     flcColorChooser
+     flcColorChooser,
+     CustomColorChooserFuncs(..)
      -- * Hierarchy
      --
      -- $hierarchy
@@ -30,24 +31,102 @@ import Graphics.UI.FLTK.LowLevel.Dispatch
 import qualified Data.Text as T
 import Data.List
 import Graphics.UI.FLTK.LowLevel.Fl_Enumerations
+import Control.Applicative
 
-{# fun Fl_OverriddenColor_Chooser_New_WithLabel as overriddenWidgetNewWithLabel' { `Int',`Int',`Int',`Int', unsafeToCString `T.Text', id `Ptr ()'} -> `Ptr ()' id #}
-{# fun Fl_OverriddenColor_Chooser_New as overriddenWidgetNew' { `Int',`Int',`Int',`Int', id `Ptr ()'} -> `Ptr ()' id #}
+data CustomColorChooserFuncs a =
+  CustomColorChooserFuncs
+  {
+    getModeCustom :: Ref a -> IO ColorChooserMode
+  , setModeCustom :: Ref a -> ColorChooserMode -> IO ()
+  , hueCustom :: Ref a -> IO Between0And6
+  , saturationCustom :: Ref a -> IO Between0And1
+  , valueCustom :: Ref a -> IO Between0And1
+  , rCustom :: Ref a -> IO Between0And1
+  , gCustom :: Ref a -> IO Between0And1
+  , bCustom :: Ref a -> IO Between0And1
+  , hsvCustom :: Ref a -> (Between0And6,Between0And1,Between0And1) -> IO Int
+  , rgbCustom :: Ref a -> (Between0And1,Between0And1,Between0And1) -> IO Int
+  }
+
+toGetBetween0And6Prim :: (Ref a -> IO Between0And6) -> IO (FunPtr GetDoublePrim)
+toGetBetween0And6Prim f =
+  mkGetDouble (\ptr -> do
+                  pp <- wrapNonNull ptr "Null pointer: toGetBetween0And6Prim"
+                  (Between0And6 res) <- f (castTo (wrapInRef pp))
+                  return (realToFrac res))
+
+toGetBetween0And1Prim :: (Ref a -> IO Between0And1) -> IO (FunPtr GetDoublePrim)
+toGetBetween0And1Prim f =
+  mkGetDouble (\ptr -> do
+                  pp <- wrapNonNull ptr "Null pointer: toGetBetween0And1Prim"
+                  (Between0And1 res) <- f (castTo (wrapInRef pp))
+                  return (realToFrac res))
+
+toGetModePrim :: (Ref a -> IO ColorChooserMode) -> IO (FunPtr GetIntPrim)
+toGetModePrim f =
+  mkGetInt (\ptr -> do
+               pp <- wrapNonNull ptr "Null pointer: toGetModePrim"
+               mode <- f (castTo (wrapInRef pp))
+               return (fromIntegral (fromEnum mode)))
+
+toSetModePrim :: (Ref a -> ColorChooserMode -> IO ()) -> IO (FunPtr SetIntPrim)
+toSetModePrim f =
+  mkSetInt (\ptr m -> do
+               pp <- wrapNonNull ptr "Null pointer: toSetModePrim"
+               f (castTo (wrapInRef pp)) (cToEnum (fromIntegral m)))
+
+toHsvPrim :: (Ref a -> (Between0And6,Between0And1,Between0And1) -> IO Int)-> IO (FunPtr ColorSetPrim)
+toHsvPrim f =
+  mkColorSetPrim (\ptr (CDouble h) (CDouble s) (CDouble v) -> do
+                     pp <- wrapNonNull ptr "Null pointer: toHsvPrim"
+                     ret <- f (castTo (wrapInRef pp)) (Between0And6 h,Between0And1 s,Between0And1 v)
+                     return (fromIntegral ret))
+
+toRgbPrim :: (Ref a -> (Between0And1,Between0And1,Between0And1) -> IO Int) -> IO (FunPtr ColorSetPrim)
+toRgbPrim f =
+  mkColorSetPrim (\ptr (CDouble r) (CDouble g) (CDouble b) -> do
+                     pp <- wrapNonNull ptr "Null pointer: toRgbPrim"
+                     ret <- f (castTo (wrapInRef pp)) (Between0And1 r,Between0And1 g,Between0And1 b)
+                     return (fromIntegral ret))
+
+fillCustomColorChooserFunctionStruct :: forall a. (Parent a ColorChooser) => CustomColorChooserFuncs a -> IO (Ptr ())
+fillCustomColorChooserFunctionStruct funcs = do
+  structPtr <- mallocBytes {#sizeof fl_Color_Chooser_Virtual_Funcs #}
+  toGetModePrim (getModeCustom funcs) >>= {#set fl_Color_Chooser_Virtual_Funcs->get_mode #} structPtr
+  toSetModePrim (setModeCustom funcs) >>= {#set fl_Color_Chooser_Virtual_Funcs->set_mode #} structPtr
+  toGetBetween0And6Prim (hueCustom funcs) >>= {#set fl_Color_Chooser_Virtual_Funcs->hue #} structPtr
+  toGetBetween0And1Prim (saturationCustom funcs) >>= {#set fl_Color_Chooser_Virtual_Funcs->saturation #} structPtr
+  toGetBetween0And1Prim (valueCustom funcs) >>= {#set fl_Color_Chooser_Virtual_Funcs->value #} structPtr
+  toGetBetween0And1Prim (rCustom funcs) >>= {#set fl_Color_Chooser_Virtual_Funcs->r #} structPtr
+  toGetBetween0And1Prim (gCustom funcs) >>= {#set fl_Color_Chooser_Virtual_Funcs->g #} structPtr
+  toGetBetween0And1Prim (bCustom funcs) >>= {#set fl_Color_Chooser_Virtual_Funcs->b #} structPtr
+  toHsvPrim (hsvCustom funcs) >>= {#set fl_Color_Chooser_Virtual_Funcs->hsv #} structPtr
+  toRgbPrim (rgbCustom funcs) >>= {#set fl_Color_Chooser_Virtual_Funcs->rgb #} structPtr
+  return structPtr
+
+{# fun Fl_OverriddenColor_Chooser_New_WithLabel as overriddenWidgetNewWithLabel' { `Int',`Int',`Int',`Int', unsafeToCString `T.Text', id `Ptr ()', id `Ptr ()' } -> `Ptr ()' id #}
+{# fun Fl_OverriddenColor_Chooser_New as overriddenWidgetNew' { `Int',`Int',`Int',`Int', id `Ptr ()', id `Ptr ()' } -> `Ptr ()' id #}
 colorChooserCustom ::
        Rectangle                         -- ^ The bounds of this ColorChooser
     -> Maybe T.Text                      -- ^ The ColorChooser label
     -> Maybe (Ref ColorChooser -> IO ())           -- ^ Optional custom drawing function
+    -> Maybe (CustomColorChooserFuncs ColorChooser)
     -> Maybe (CustomWidgetFuncs ColorChooser)      -- ^ Optional custom widget functions
     -> IO (Ref ColorChooser)
-colorChooserCustom rectangle l' draw' funcs' =
-  widgetMaker
-    rectangle
-    l'
-    draw'
-    funcs'
-    overriddenWidgetNew'
-    overriddenWidgetNewWithLabel'
-
+colorChooserCustom rectangle l' draw' colorChooserFuncs' funcs' =
+    let (x_pos, y_pos, width, height) = fromRectangle rectangle
+    in do
+    widgetFuncsPtr <- customWidgetFunctionStruct draw' (maybe defaultCustomWidgetFuncs id funcs')
+    colorChooserFuncsPtr <- maybe (return nullPtr) fillCustomColorChooserFunctionStruct colorChooserFuncs'
+    colorChooser <-
+      maybe
+        (overriddenWidgetNew' x_pos y_pos width height (castPtr widgetFuncsPtr) (castPtr colorChooserFuncsPtr))
+        (\l -> overriddenWidgetNewWithLabel' x_pos y_pos width height l (castPtr widgetFuncsPtr) (castPtr colorChooserFuncsPtr))
+        l'
+    ref <- toRef colorChooser
+    setFlag ref WidgetFlagCopiedLabel
+    setFlag ref WidgetFlagCopiedTooltip
+    return ref
 
 {# fun Fl_Color_Chooser_New as colorchooserNew' { `Int',`Int',`Int',`Int' } -> `Ptr ()' id #}
 {# fun Fl_Color_Chooser_New_WithLabel as colorchooserNewWithLabel' { `Int',`Int',`Int',`Int', unsafeToCString `T.Text'} -> `Ptr ()' id #}
@@ -55,11 +134,12 @@ colorChooserNew :: Rectangle -> Maybe T.Text -> IO (Ref ColorChooser)
 colorChooserNew rectangle l'=
     let (x_pos, y_pos, width, height) = fromRectangle rectangle
     in case l' of
-        Nothing -> colorchooserNew' x_pos y_pos width height >>=
-                             toRef
-        Just l -> colorchooserNewWithLabel' x_pos y_pos width height l >>=
-                               toRef
-
+        Nothing -> colorchooserNew' x_pos y_pos width height >>= toRef
+        Just l -> do
+          ref <- colorchooserNewWithLabel' x_pos y_pos width height l >>= toRef
+          setFlag ref WidgetFlagCopiedLabel
+          setFlag ref WidgetFlagCopiedTooltip
+          return ref
 {# fun Fl_Color_Chooser_mode as mode' { id `Ptr ()' } -> `Int' #}
 instance (impl ~ ( IO (ColorChooserMode))) => Op (GetMode ()) ColorChooser orig impl where
   runOp _ _ color_chooser = withRef color_chooser $ \color_chooserPtr -> mode' color_chooserPtr >>= return . toEnum
@@ -131,6 +211,28 @@ instance (impl ~ ((Between0And1, Between0And1, Between0And1) ->  IO (Either NoCh
       ret <- rgb' color_chooserPtr r'' g'' b''
       if (ret == 0) then return (Left NoChange) else return (Right ())
 
+instance (impl ~ (IO ( Either OutOfRange (Between0And1, Between0And1, Between0And1)))) => Op (GetRgb()) ColorChooser orig impl where
+  runOp _ _ color_chooser = do
+    _r <- getR color_chooser
+    _g <- getG color_chooser
+    _b <- getB color_chooser
+    return (do
+      r <- _r
+      g <- _g
+      b <- _b
+      return (r,g,b))
+
+instance (impl ~ (IO ( Either OutOfRange (Between0And6, Between0And1, Between0And1)))) => Op (GetHsv()) ColorChooser orig impl where
+  runOp _ _ color_chooser = do
+    _h <- getHue color_chooser
+    _s <- getSaturation color_chooser
+    _v <- getValue color_chooser
+    return (do
+      h <- _h
+      s <- _s
+      v <- _v
+      return (h,s,v))
+
 {# fun Fl_Color_Chooser_draw as draw' { id `Ptr ()' } -> `()' #}
 instance (impl ~ (  IO ())) => Op (Draw ()) ColorChooser orig impl where
   runOp _ _ colorChooser = withRef colorChooser $ \colorChooserPtr -> draw' colorChooserPtr
@@ -174,14 +276,10 @@ hsv2Rgb (Between0And6 h'', Between0And1 s'', Between0And1 v'') =
   alloca $ \gPtr ->
   alloca $ \bPtr -> do
     hsv2rgb' h'' s'' v'' rPtr gPtr bPtr
-    let (nullPtrs, nonNullPtrs) = partition ((==) nullPtr) [rPtr, gPtr, bPtr]
-    if (not (null nullPtrs))
-     then mapM_ free nonNullPtrs >> return Nothing
-     else do
-       r'' <- peek rPtr
-       g'' <- peek gPtr
-       b'' <- peek bPtr
-       return (Just (Between0And1 (realToFrac r''),Between0And1 (realToFrac g''),Between0And1 (realToFrac b'')))
+    r'' <- peek rPtr
+    g'' <- peek gPtr
+    b'' <- peek bPtr
+    return (Just (Between0And1 (realToFrac r''),Between0And1 (realToFrac g''),Between0And1 (realToFrac b'')))
 
 {# fun Fl_Color_Chooser_rgb2hsv as rgb2hsv' {`Double',`Double',`Double', id `Ptr CDouble', id `Ptr CDouble',id `Ptr CDouble' } -> `()' #}
 rgb2Hsv :: (Between0And1, Between0And1, Between0And1) ->  IO (Maybe (Between0And6, Between0And1, Between0And1))

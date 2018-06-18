@@ -48,12 +48,14 @@ treeCustom rectangle l' draw' funcs' =
 {# fun Fl_Tree_New_WithLabel as treeNewWithLabel' { `Int',`Int',`Int',`Int',unsafeToCString `T.Text'} -> `Ptr ()' id #}
 treeNew :: Rectangle -> Maybe T.Text -> IO (Ref Tree)
 treeNew rectangle l' =
-    let (x_pos, y_pos, width, height) = fromRectangle rectangle
-    in case l' of
-        Nothing -> treeNew' x_pos y_pos width height >>=
-                             toRef
-        Just l -> treeNewWithLabel' x_pos y_pos width height l >>=
-                             toRef
+  widgetMaker
+    rectangle
+    l'
+    Nothing
+    Nothing
+    overriddenWidgetNew'
+    overriddenWidgetNewWithLabel'
+
 {# fun Fl_Tree_Destroy as treeDestroy' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
 instance (impl ~ (IO ())) => Op (Destroy ()) Tree orig impl where
   runOp _ _ tree = swapRef tree $ \treePtr -> do
@@ -83,8 +85,8 @@ instance (Parent a TreeItem, impl ~ (T.Text -> Ref a -> IO (Maybe (Ref TreeItem)
 instance (Parent a TreeItem, impl ~ (Ref a -> T.Text ->  IO (Maybe (Ref a)))) => Op (InsertAbove ()) Tree orig impl where
   runOp _ _  tree above name = withRef tree $ \treePtr -> withRef above $ \abovePtr -> insertAbove' treePtr abovePtr name >>= toMaybeRef
 {# fun Fl_Tree_insert as insert' { id `Ptr ()',id `Ptr ()',unsafeToCString `T.Text',`Int' } -> `Ptr ()' id #}
-instance (Parent a TreeItem, impl ~ (Ref a -> T.Text -> Int ->  IO (Maybe (Ref a)))) => Op (Insert ()) Tree orig impl where
-  runOp _ _ tree item name pos = withRef tree $ \treePtr -> withRef item $ \itemPtr -> insert' treePtr itemPtr name pos >>= toMaybeRef
+instance (Parent a TreeItem, impl ~ (Ref a -> T.Text -> AtIndex ->  IO (Maybe (Ref a)))) => Op (Insert ()) Tree orig impl where
+  runOp _ _ tree item name (AtIndex pos) = withRef tree $ \treePtr -> withRef item $ \itemPtr -> insert' treePtr itemPtr name pos >>= toMaybeRef
 {# fun Fl_Tree_remove as remove' { id `Ptr ()',id `Ptr ()' } -> `Int' #}
 instance (impl ~ (Ref TreeItem  ->  IO (Either TreeItemNotFound ())) ) => Op (Remove ()) Tree orig impl where
   runOp _ _ tree item = withRef tree $ \treePtr -> withRef item $ \itemPtr -> do
@@ -408,12 +410,12 @@ instance (impl ~ (Ref TreeItem  ->  IO (Bool)) ) => Op (Displayed ()) Tree orig 
   runOp _ _ tree item = withRef tree $ \treePtr -> withRef item $ \itemPtr -> displayed' treePtr itemPtr
 {# fun Fl_Tree_show_item_with_yoff as showItemWithYoff' { id `Ptr ()',id `Ptr ()',`Int' } -> `()' #}
 {# fun Fl_Tree_show_item as showItem' { id `Ptr ()',id `Ptr ()' } -> `()' #}
-instance (impl ~ (Ref TreeItem  -> Maybe Int ->  IO ()) ) => Op (ShowItemWithYoff ()) Tree orig impl where
+instance (impl ~ (Ref TreeItem  -> Maybe Y ->  IO ()) ) => Op (ShowItemWithYoff ()) Tree orig impl where
   runOp _ _ tree item yoff =
     withRef tree $ \treePtr ->
     withRef item $ \itemPtr ->
     case yoff of
-      Just y' -> showItemWithYoff' treePtr itemPtr y'
+      Just (Y y') -> showItemWithYoff' treePtr itemPtr y'
       Nothing -> showItem' treePtr itemPtr
 {# fun Fl_Tree_show_item_top as showItemTop' { id `Ptr ()',id `Ptr ()' } -> `()' #}
 instance (impl ~ (Ref TreeItem  ->  IO ()) ) => Op (ShowItemTop ()) Tree orig impl where
@@ -491,6 +493,33 @@ instance (impl ~ (  IO ())) => Op (ShowWidget ()) Tree orig impl where
 {# fun Fl_Tree_show_super as showSuper' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
 instance (impl ~ ( IO ())) => Op (ShowWidgetSuper ()) Tree orig impl where
   runOp _ _ tree = withRef tree $ \treePtr -> showSuper' treePtr
+{# fun Fl_Tree_recalc_tree as recalcTree' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
+instance (impl ~ ( IO ())) => Op (RecalcTree ()) Tree orig impl where
+  runOp _ _ tree = withRef tree $ \treePtr -> recalcTree' treePtr
+{# fun Fl_Tree_marginbottom as marginbottom' { id `Ptr ()' } -> `Int' #}
+instance (impl ~ ( IO (Int)) ) => Op (GetMarginbottom ()) Tree orig impl where
+  runOp _ _ tree = withRef tree $ \treePtr -> marginbottom' treePtr
+{# fun Fl_Tree_set_marginbottom as setMarginbottom' { id `Ptr ()',`Int' } -> `()' #}
+instance (impl ~ (Int ->  IO ()) ) => Op (SetMarginbottom ()) Tree orig impl where
+  runOp _ _ tree val = withRef tree $ \treePtr -> setMarginbottom' treePtr val
+{# fun Fl_Tree_widgetmarginleft as widgetmarginleft' { id `Ptr ()' } -> `Int' #}
+instance (impl ~ ( IO (Int)) ) => Op (GetWidgetmarginleft ()) Tree orig impl where
+  runOp _ _ tree = withRef tree $ \treePtr -> widgetmarginleft' treePtr
+{# fun Fl_Tree_set_widgetmarginleft as setWidgetmarginleft' { id `Ptr ()',`Int' } -> `()' #}
+instance (impl ~ (Int ->  IO ()) ) => Op (SetWidgetmarginleft ()) Tree orig impl where
+  runOp _ _ tree val = withRef tree $ \treePtr -> setWidgetmarginleft' treePtr val
+{# fun Fl_Tree_item_reselect_mode as item_reselect_mode' { id `Ptr ()' } -> `TreeItemReselectMode' cToEnum #}
+instance (impl ~ ( IO (TreeItemReselectMode)) ) => Op (GetItemReselectMode ()) Tree orig impl where
+  runOp _ _ tree = withRef tree $ \treePtr -> item_reselect_mode' treePtr
+{# fun Fl_Tree_set_item_reselect_mode as setItem_Reselect_Mode' { id `Ptr ()', cFromEnum `TreeItemReselectMode' } -> `()' #}
+instance (impl ~ (TreeItemReselectMode ->  IO ()) ) => Op (SetItemReselectMode ()) Tree orig impl where
+  runOp _ _ tree val = withRef tree $ \treePtr -> setItem_Reselect_Mode' treePtr val
+{# fun Fl_Tree_item_draw_mode as item_draw_mode' { id `Ptr ()' } -> `CInt'#}
+instance (impl ~ ( IO ([TreeItemDrawMode])) ) => Op (GetItemDrawMode ()) Tree orig impl where
+  runOp _ _ tree = withRef tree $ \treePtr -> item_draw_mode' treePtr >>= return . extract allTreeItemDrawModes
+{# fun Fl_Tree_set_item_draw_mode as setItem_Draw_Mode' { id `Ptr ()', `CInt' } -> `()' #}
+instance (impl ~ ([TreeItemDrawMode] ->  IO ()) ) => Op (SetItemDrawMode ()) Tree orig impl where
+  runOp _ _ tree val = withRef tree $ \treePtr -> setItem_Draw_Mode' treePtr (fromIntegral (combine val))
 
 -- $functions
 -- @
@@ -506,7 +535,7 @@ instance (impl ~ ( IO ())) => Op (ShowWidgetSuper ()) Tree orig impl where
 --
 -- closeAndCallback :: 'Ref' 'Tree' -> 'TreeItemLocator' -> 'Bool' -> 'IO' ()
 --
--- deselect :: 'Ref' 'Tree' -> 'TreeItemLocator' -> 'IO' ('Int')
+-- deselect :: 'Ref' 'Tree' -> 'TreeItemLocator' -> 'IO' ('Either' 'NoChange' ())
 --
 -- deselectAll :: 'Ref' 'Tree' -> 'IO' ()
 --
@@ -544,6 +573,8 @@ instance (impl ~ ( IO ())) => Op (ShowWidgetSuper ()) Tree orig impl where
 --
 -- getFirst :: 'Ref' 'Tree' -> 'IO' ('Maybe' ('Ref' 'TreeItem'))
 --
+-- getItemDrawMode :: 'Ref' 'Tree' -> 'IO' (['TreeItemDrawMode')]
+--
 -- getItemFocus :: 'Ref' 'Tree' -> 'IO' ('Maybe' ('Ref' 'TreeItem'))
 --
 -- getItemLabelbgcolor :: 'Ref' 'Tree' -> 'IO' ('Color')
@@ -554,11 +585,15 @@ instance (impl ~ ( IO ())) => Op (ShowWidgetSuper ()) Tree orig impl where
 --
 -- getItemLabelsize :: 'Ref' 'Tree' -> 'IO' ('FontSize')
 --
+-- getItemReselectMode :: 'Ref' 'Tree' -> 'IO' ('TreeItemReselectMode')
+--
 -- getLabelmarginleft :: 'Ref' 'Tree' -> 'IO' ('Int')
 --
 -- getLast :: 'Ref' 'Tree' -> 'IO' ('Maybe' ('Ref' 'TreeItem'))
 --
 -- getLinespacing :: 'Ref' 'Tree' -> 'IO' ('Int')
+--
+-- getMarginbottom :: 'Ref' 'Tree' -> 'IO' ('Int')
 --
 -- getMarginleft :: 'Ref' 'Tree' -> 'IO' ('Int')
 --
@@ -584,6 +619,8 @@ instance (impl ~ ( IO ())) => Op (ShowWidgetSuper ()) Tree orig impl where
 --
 -- getVposition :: 'Ref' 'Tree' -> 'IO' ('Int')
 --
+-- getWidgetmarginleft :: 'Ref' 'Tree' -> 'IO' ('Int')
+--
 -- handle :: 'Ref' 'Tree' -> 'Event' -> 'IO' ('Either' 'UnknownEvent' ())
 --
 -- handleSuper :: 'Ref' 'Tree' -> 'Event' -> 'IO' ('Either' 'UnknownEvent' ())
@@ -592,7 +629,7 @@ instance (impl ~ ( IO ())) => Op (ShowWidgetSuper ()) Tree orig impl where
 --
 -- hideSuper :: 'Ref' 'Tree' -> 'IO' ()
 --
--- insert:: ('Parent' a 'TreeItem') => 'Ref' 'Tree' -> 'Ref' a -> 'T.Text' -> 'Int' -> 'IO' ('Maybe' ('Ref' a))
+-- insert:: ('Parent' a 'TreeItem') => 'Ref' 'Tree' -> 'Ref' a -> 'T.Text' -> 'AtIndex' -> 'IO' ('Maybe' ('Ref' a))
 --
 -- insertAbove:: ('Parent' a 'TreeItem') => 'Ref' 'Tree' -> 'Ref' a -> 'T.Text' -> 'IO' ('Maybe' ('Ref' a))
 --
@@ -636,6 +673,8 @@ instance (impl ~ ( IO ())) => Op (ShowWidgetSuper ()) Tree orig impl where
 --
 -- prevBeforeItem :: 'Ref' 'Tree' -> 'Ref' 'TreeItem' -> 'IO' ('Maybe' ('Ref' 'TreeItem'))
 --
+-- recalcTree :: 'Ref' 'Tree' -> 'IO' ()
+--
 -- remove :: 'Ref' 'Tree' -> 'Ref' 'TreeItem' -> 'IO' ('Either' 'TreeItemNotFound' ())
 --
 -- resize :: 'Ref' 'Tree' -> 'Rectangle' -> 'IO' ()
@@ -646,7 +685,7 @@ instance (impl ~ ( IO ())) => Op (ShowWidgetSuper ()) Tree orig impl where
 --
 -- rootLabel :: 'Ref' 'Tree' -> 'T.Text' -> 'IO' ()
 --
--- select :: 'Ref' 'Tree' -> 'TreeItemLocator' -> 'IO' ('Int')
+-- select :: 'Ref' 'Tree' -> 'TreeItemLocator' -> 'IO' ('Either' 'NoChange' ())
 --
 -- selectAll :: 'Ref' 'Tree' -> 'IO' ()
 --
@@ -676,6 +715,8 @@ instance (impl ~ ( IO ())) => Op (ShowWidgetSuper ()) Tree orig impl where
 --
 -- setConnectorwidth :: 'Ref' 'Tree' -> 'Int' -> 'IO' ()
 --
+-- setItemDrawMode :: 'Ref' 'Tree' -> ['TreeItemDrawMode'] -> 'IO' ()
+--
 -- setItemFocus :: 'Ref' 'Tree' -> 'Ref' 'TreeItem' -> 'IO' ()
 --
 -- setItemLabelbgcolor :: 'Ref' 'Tree' -> 'Color' -> 'IO' ()
@@ -686,9 +727,13 @@ instance (impl ~ ( IO ())) => Op (ShowWidgetSuper ()) Tree orig impl where
 --
 -- setItemLabelsize :: 'Ref' 'Tree' -> 'FontSize' -> 'IO' ()
 --
+-- setItemReselectMode :: 'Ref' 'Tree' -> 'TreeItemReselectMode' -> 'IO' ()
+--
 -- setLabelmarginleft :: 'Ref' 'Tree' -> 'Int' -> 'IO' ()
 --
 -- setLinespacing :: 'Ref' 'Tree' -> 'Int' -> 'IO' ()
+--
+-- setMarginbottom :: 'Ref' 'Tree' -> 'Int' -> 'IO' ()
 --
 -- setMarginleft :: 'Ref' 'Tree' -> 'Int' -> 'IO' ()
 --
@@ -716,13 +761,15 @@ instance (impl ~ ( IO ())) => Op (ShowWidgetSuper ()) Tree orig impl where
 --
 -- setVposition :: 'Ref' 'Tree' -> 'Int' -> 'IO' ()
 --
+-- setWidgetmarginleft :: 'Ref' 'Tree' -> 'Int' -> 'IO' ()
+--
 -- showItemBottom :: 'Ref' 'Tree' -> 'Ref' 'TreeItem' -> 'IO' ()
 --
 -- showItemMiddle :: 'Ref' 'Tree' -> 'Ref' 'TreeItem' -> 'IO' ()
 --
 -- showItemTop :: 'Ref' 'Tree' -> 'Ref' 'TreeItem' -> 'IO' ()
 --
--- showItemWithYoff :: 'Ref' 'Tree' -> 'Ref' 'TreeItem' -> 'Maybe' 'Int' -> 'IO' ()
+-- showItemWithYoff :: 'Ref' 'Tree' -> 'Ref' 'TreeItem' -> 'Maybe' 'Y' -> 'IO' ()
 --
 -- showSelf :: 'Ref' 'Tree' -> 'IO' ()
 --

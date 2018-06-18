@@ -2,12 +2,6 @@
 #ifdef __cplusplus
 EXPORT {
 #endif
-FL_EXPORT_C(const char*,Fl_Graphics_Driver_class_id)( ){
- return Fl_Graphics_Driver::class_id;
-}
-FL_EXPORT_C(const char*,Fl_Graphics_Driver_class_name)(fl_Graphics_Driver graphics_driver){
- return (static_cast<Fl_Graphics_Driver*>(graphics_driver))->class_name();
-}
 FL_EXPORT_C(void,Fl_Graphics_Driver_set_font)(fl_Graphics_Driver graphics_driver,Fl_Font face,Fl_Fontsize fsize){
  return (static_cast<Fl_Graphics_Driver*>(graphics_driver))->font(face,fsize);
 }
@@ -51,12 +45,6 @@ FL_EXPORT_C(int, fl_Graphics_Driver_draw_scaled)(fl_Graphics_Driver graphics_dri
 #endif
 FL_EXPORT_C(void,Fl_Graphics_Driver_Destroy)(fl_Graphics_Driver graphics_driver){
  delete (static_cast<Fl_Graphics_Driver*>(graphics_driver));
-}
-FL_EXPORT_C(const char*,Fl_Surface_Device_class_id)( ){
- return Fl_Surface_Device::class_id;
-}
-FL_EXPORT_C(const char*,Fl_Surface_Device_class_name)(fl_Surface_Device surface_device){
- return (static_cast<Fl_Surface_Device*>(surface_device))->class_name();
 }
 FL_EXPORT_C(void,Fl_Surface_Device_set_current)(fl_Surface_Device surface_device){
  return (static_cast<Fl_Surface_Device*>(surface_device))->set_current();

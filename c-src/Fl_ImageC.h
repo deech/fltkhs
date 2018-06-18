@@ -62,6 +62,9 @@ EXPORT {
   FL_EXPORT_C_HEADER(void,Fl_Image_draw,(fl_Image image,int X, int Y));
   FL_EXPORT_C_HEADER(void,Fl_Image_uncache,(fl_Image image));
 #if FL_API_VERSION >= 10304
+  FL_EXPORT_C_HEADER(void,Fl_Image_scale,(fl_Image image, int w, int h, int proportional, int can_expand));
+  FL_EXPORT_C_HEADER(int,Fl_Image_data_w,(fl_Image image));
+  FL_EXPORT_C_HEADER(int,Fl_Image_data_h,(fl_Image image));
   FL_EXPORT_C_HEADER(int,Fl_Image_fail,(fl_Image image));
 #endif
 #ifdef __cplusplus

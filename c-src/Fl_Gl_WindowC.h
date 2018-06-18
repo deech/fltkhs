@@ -9,6 +9,7 @@
                           // Fl_Widget is included transitively and needed for
                           // the callback mechanism included below to work.
 #include "Fl_CallbackC.h"
+#include "FL/platform_types.h"
 EXPORT {
 #endif
   /* Inherited from Fl_Widget */
@@ -253,9 +254,9 @@ EXPORT {
   FL_EXPORT_C_HEADER(int,Fl_Gl_Window_can_do,(fl_Gl_Window win));
   FL_EXPORT_C_HEADER(Fl_Mode,Fl_Gl_Window_mode,(fl_Gl_Window win));
   FL_EXPORT_C_HEADER(int,Fl_Gl_Window_set_mode,(fl_Gl_Window win,int a));
-  FL_EXPORT_C_HEADER(void*,Fl_Gl_Window_context,(fl_Gl_Window win));
-  FL_EXPORT_C_HEADER(void,Fl_Gl_Window_set_context,(fl_Gl_Window win,void* context));
-  FL_EXPORT_C_HEADER(void,Fl_Gl_Window_set_context_with_destroy_flag,(fl_Gl_Window win,void* context, int destroy_flag));
+  FL_EXPORT_C_HEADER(GLContext ,Fl_Gl_Window_context,(fl_Gl_Window win));
+  FL_EXPORT_C_HEADER(void,Fl_Gl_Window_set_context,(fl_Gl_Window win,GLContext context));
+  FL_EXPORT_C_HEADER(void,Fl_Gl_Window_set_context_with_destroy_flag,(fl_Gl_Window win,GLContext context, int destroy_flag));
   FL_EXPORT_C_HEADER(void,Fl_Gl_Window_swap_buffers,(fl_Gl_Window win));
   FL_EXPORT_C_HEADER(void,Fl_Gl_Window_ortho,(fl_Gl_Window win));
   FL_EXPORT_C_HEADER(int,Fl_Gl_Window_can_do_overlay,(fl_Gl_Window win));

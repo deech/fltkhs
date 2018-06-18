@@ -75,6 +75,9 @@ EXPORT {
   void Fl_DerivedInput::hide_super(){
     Fl_Input::hide();
   }
+  void Fl_DerivedInput::drawtext(int x, int y, int w, int h){
+    Fl_Input::drawtext(x,y,w,h);
+  }
 #endif
   /* Inherited from Fl_Widget */
   FL_EXPORT_C(fl_Group,Fl_Input_parent)(fl_Input input){
@@ -518,7 +521,9 @@ EXPORT {
     Fl_DerivedInput* w = new Fl_DerivedInput(X,Y,W,H,label,fs);
     return (fl_Input)w;
   }
-
+  FL_EXPORT_C(void, Fl_Input_drawtext)(fl_Input o, int x, int y, int w, int h){
+    (static_cast<Fl_DerivedInput*>(o))->drawtext(x,y,w,h);
+  }
 #ifdef __cplusplus
 }
 #endif

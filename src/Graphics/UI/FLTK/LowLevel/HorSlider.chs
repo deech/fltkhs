@@ -16,6 +16,7 @@ import C2HS hiding (cFromEnum, cFromBool, cToBool,cToEnum)
 import Graphics.UI.FLTK.LowLevel.Fl_Types
 import Graphics.UI.FLTK.LowLevel.Utils
 import Graphics.UI.FLTK.LowLevel.Hierarchy
+import Graphics.UI.FLTK.LowLevel.Widget
 import qualified Data.Text as T
 {# fun Fl_Hor_Slider_New as horSliderNew' { `Int',`Int',`Int',`Int' } -> `Ptr ()' id #}
 {# fun Fl_Hor_Slider_New_WithLabel as horSliderNewWithLabel' { `Int',`Int',`Int',`Int', unsafeToCString `T.Text'} -> `Ptr ()' id #}
@@ -25,9 +26,11 @@ horSliderNew rectangle l' =
     in case l' of
         Nothing -> horSliderNew' x_pos y_pos width height >>=
                              toRef
-        Just l -> horSliderNewWithLabel' x_pos y_pos width height l >>=
-                             toRef
-
+        Just l -> do
+          ref <- horSliderNewWithLabel' x_pos y_pos width height l >>= toRef
+          setFlag ref WidgetFlagCopiedLabel
+          setFlag ref WidgetFlagCopiedTooltip
+          return ref
 -- $hierarchy
 -- @
 -- "Graphics.UI.FLTK.LowLevel.Widget"

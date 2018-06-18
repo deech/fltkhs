@@ -24,6 +24,7 @@ import C2HS hiding (cFromEnum, cFromBool, cToBool,cToEnum)
 import Graphics.UI.FLTK.LowLevel.Dispatch
 import qualified Data.Text as T
 import Graphics.UI.FLTK.LowLevel.Fl_Types
+import Graphics.UI.FLTK.LowLevel.Fl_Enumerations
 import Graphics.UI.FLTK.LowLevel.Utils
 import Graphics.UI.FLTK.LowLevel.Hierarchy
 import Graphics.UI.FLTK.LowLevel.Widget
@@ -42,10 +43,13 @@ groupCurrent = groupCurrent' >>= toMaybeRef
 {# fun Fl_Group_New_WithLabel as groupNewWithLabel' { `Int',`Int',`Int',`Int',unsafeToCString `T.Text'} -> `Ptr ()' id #}
 groupNew :: Rectangle -> Maybe T.Text -> IO (Ref Group)
 groupNew rectangle label' =
-    let (x_pos, y_pos, width, height) = fromRectangle rectangle
-    in case label' of
-        (Just l') -> groupNewWithLabel' x_pos y_pos width height l' >>= toRef
-        Nothing -> groupNew' x_pos y_pos width height >>= toRef
+  widgetMaker
+    rectangle
+    label'
+    Nothing
+    Nothing
+    overriddenGroupNew'
+    overriddenGroupNewWithLabel'
 
 {# fun Fl_OverriddenGroup_New_WithLabel as overriddenGroupNewWithLabel' { `Int',`Int',`Int',`Int',unsafeToCString `T.Text', id `Ptr ()'} -> `Ptr ()' id #}
 {# fun Fl_OverriddenGroup_New as overriddenGroupNew' { `Int',`Int',`Int',`Int', id `Ptr ()'} -> `Ptr ()' id #}
@@ -96,20 +100,20 @@ instance (
     finally action ((end (castTo group :: Ref orig)) :: IO ())
 
 {# fun Fl_Group_find as find' { id `Ptr ()',id `Ptr ()' } -> `Int' #}
-instance (Parent a Widget, impl ~ (Ref a ->  IO (Int))) => Op (Find ()) Group orig impl where
-  runOp _ _ group w = withRef group $ \groupPtr -> withRef w $ \wPtr -> find' groupPtr wPtr
+instance (Parent a Widget, impl ~ (Ref a ->  IO (AtIndex))) => Op (Find ()) Group orig impl where
+  runOp _ _ group w = withRef group $ \groupPtr -> withRef w $ \wPtr -> find' groupPtr wPtr >>= return . AtIndex
 
 {# fun Fl_Group_add as add' { id `Ptr ()',id `Ptr ()' } -> `()' supressWarningAboutRes #}
 instance (Parent a Widget, impl ~ (Ref a->  IO ())) => Op (Add ()) Group orig impl where
   runOp _ _ group w = withRef group $ \groupPtr -> withRef w $ \wPtr -> add' groupPtr wPtr
 
 {# fun Fl_Group_insert as insert' { id `Ptr ()',id `Ptr ()',`Int' } -> `()' supressWarningAboutRes #}
-instance (Parent a Widget, impl ~ (Ref a-> Int ->  IO ())) => Op (Insert ()) Group orig impl where
-  runOp _ _ group w i = withRef group $ \groupPtr -> withRef w $ \wPtr -> insert' groupPtr wPtr i
+instance (Parent a Widget, impl ~ (Ref a-> AtIndex ->  IO ())) => Op (Insert ()) Group orig impl where
+  runOp _ _ group w (AtIndex i) = withRef group $ \groupPtr -> withRef w $ \wPtr -> insert' groupPtr wPtr i
 
 {# fun Fl_Group_remove_index as removeIndex' { id `Ptr ()',`Int' } -> `()' supressWarningAboutRes #}
-instance (impl ~ ( Int ->  IO ())) => Op (RemoveIndex ()) Group orig impl where
-  runOp _ _ group index' = withRef group $ \groupPtr -> removeIndex' groupPtr index'
+instance (impl ~ ( AtIndex ->  IO ())) => Op (RemoveIndex ()) Group orig impl where
+  runOp _ _ group (AtIndex index') = withRef group $ \groupPtr -> removeIndex' groupPtr index'
 
 {# fun Fl_Group_remove_widget as removeWidget' { id `Ptr ()',id `Ptr ()' } -> `()' supressWarningAboutRes #}
 instance (Parent a Widget, impl ~ (Ref a ->  IO ())) => Op (RemoveWidget ()) Group orig impl where
@@ -159,7 +163,7 @@ instance (impl ~ (IO (Maybe (Ref Widget)))) => Op (DdfdesignKludge ()) Group ori
   runOp _ _ group = withRef group $ \groupPtr -> ddfdesignKludge' groupPtr >>= toMaybeRef
 
 {# fun Fl_Group_insert_with_before as insertWithBefore' { id `Ptr ()',id `Ptr ()',id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance (Parent a Widget, impl ~ (Ref a -> Ref b ->  IO ())) => Op (InsertWithBefore ()) Group orig impl where
+instance (Parent a Widget, impl ~ (Ref a -> Ref b ->  IO ())) => Op (InsertBefore ()) Group orig impl where
   runOp _ _ self w before = withRef self $ \selfPtr -> withRef w $ \wPtr -> withRef before $ \beforePtr -> insertWithBefore' selfPtr wPtr beforePtr
 
 {# fun Fl_Group_array as array' { id `Ptr ()' } -> `Ptr (Ptr ())' id#}
@@ -170,8 +174,16 @@ instance (impl ~ (IO [Ref Widget])) => Op (GetArray ()) Group orig impl where
                     arrayToRefs childArrayPtr numChildren
 
 {# fun Fl_Group_child as child' { id `Ptr ()',`Int' } -> `Ptr ()' id #}
-instance (impl ~ (Int ->  IO (Maybe (Ref Widget)))) => Op (GetChild ()) Group orig impl where
-  runOp _ _ self n = withRef self $ \selfPtr -> child' selfPtr n >>= toMaybeRef
+instance (impl ~ (AtIndex ->  IO (Maybe (Ref Widget)))) => Op (GetChild ()) Group orig impl where
+  runOp _ _ self (AtIndex n) = withRef self $ \selfPtr -> child' selfPtr n >>= toMaybeRef
+
+{#fun Fl_Group_handle as groupHandle' { id `Ptr ()', id `CInt' } -> `Int' #}
+instance (impl ~ (Event -> IO (Either UnknownEvent ()))) => Op (Handle ()) Group orig impl where
+  runOp _ _ group event = withRef group (\p -> groupHandle' p (fromIntegral . fromEnum $ event)) >>= return  . successOrUnknownEvent
+
+{# fun Fl_Group_handle_super as handleSuper' { id `Ptr ()',`Int' } -> `Int' #}
+instance (impl ~ (Event ->  IO (Either UnknownEvent ()))) => Op (HandleSuper ()) Group orig impl where
+  runOp _ _ group event = withRef group $ \groupPtr -> handleSuper' groupPtr (fromIntegral (fromEnum event)) >>= return . successOrUnknownEvent
 
 -- $groupfunctions
 -- @
@@ -199,23 +211,27 @@ instance (impl ~ (Int ->  IO (Maybe (Ref Widget)))) => Op (GetChild ()) Group or
 --
 -- end :: 'Ref' 'Group' -> 'IO' ()
 --
--- find:: ('Parent' a 'Widget') => 'Ref' 'Group' -> 'Ref' a -> 'IO' ('Int')
+-- find:: ('Parent' a 'Widget') => 'Ref' 'Group' -> 'Ref' a -> 'IO' ('AtIndex')
 --
 -- focus:: ('Parent' a 'Widget') => 'Ref' 'Group' -> 'Ref' a -> 'IO' ()
 --
 -- getArray :: 'Ref' 'Group' -> 'IO' ['Ref' 'Widget']
 --
--- getChild :: 'Ref' 'Group' -> 'Int' -> 'IO' ('Maybe' ('Ref' 'Widget'))
+-- getChild :: 'Ref' 'Group' -> 'AtIndex' -> 'IO' ('Maybe' ('Ref' 'Widget'))
 --
 -- getResizable :: 'Ref' 'Group' -> 'IO' ('Maybe' ('Ref' 'Widget'))
 --
+-- handle :: 'Ref' 'Group' -> 'Event' -> 'IO' ('Either' 'UnknownEvent' ())
+--
+-- handleSuper :: 'Ref' 'Group' -> 'Event' -> 'IO' ('Either' 'UnknownEvent' ())
+--
 -- initSizes :: 'Ref' 'Group' -> 'IO' ()
 --
--- insert:: ('Parent' a 'Widget') => 'Ref' 'Group' -> 'Ref' a-> 'Int' -> 'IO' ()
+-- insert:: ('Parent' a 'Widget') => 'Ref' 'Group' -> 'Ref' a-> 'AtIndex' -> 'IO' ()
 --
--- insertWithBefore:: ('Parent' a 'Widget') => 'Ref' 'Group' -> 'Ref' a -> 'Ref' b -> 'IO' ()
+-- insertBefore:: ('Parent' a 'Widget') => 'Ref' 'Group' -> 'Ref' a -> 'Ref' b -> 'IO' ()
 --
--- removeIndex :: 'Ref' 'Group' -> 'Int' -> 'IO' ()
+-- removeIndex :: 'Ref' 'Group' -> 'AtIndex' -> 'IO' ()
 --
 -- removeWidget:: ('Parent' a 'Widget') => 'Ref' 'Group' -> 'Ref' a -> 'IO' ()
 --
@@ -227,7 +243,7 @@ instance (impl ~ (Int ->  IO (Maybe (Ref Widget)))) => Op (GetChild ()) Group or
 --
 -- updateChild:: ('Parent' a 'Widget') => 'Ref' 'Group' -> 'Ref' a -> 'IO' ()
 --
--- within:: 'Ref' 'Group' -> 'IO' a -> 'IO' a
+-- within:: ('Match' obj ~ 'FindOp' orig orig ('Begin' ()), 'Match' obj ~ 'FindOp' orig orig ('End' ()), 'Op' ('Begin' ()) obj orig ('IO' ()), 'Op' ('End' ()) obj orig ('IO' ()),) => 'Ref' 'Group' -> 'IO' a -> 'IO' a
 -- @
 
 -- $hierarchy

@@ -26,6 +26,9 @@ void Fl_DerivedBrowser::draw(){
     Fl_Browser::draw();
   }
 }
+void Fl_DerivedBrowser::draw_super(){
+  Fl_Browser::draw();
+}
 void Fl_DerivedBrowser::draw_box(){
   Fl_Browser::draw_box();
 }
@@ -59,6 +62,9 @@ int Fl_DerivedBrowser::handle(int event){
     i = Fl_Browser::handle(event);
   }
   return i;
+}
+int Fl_DerivedBrowser::handle_super(int event){
+  return Fl_Browser::handle(event);
 }
 void Fl_DerivedBrowser::resize_super(int x, int y, int w, int h){
   Fl_Browser::resize(x,y,w,h);
@@ -333,6 +339,12 @@ FL_EXPORT_C(void, Fl_Browser_draw_label)(fl_Browser Browser){
   }
   FL_EXPORT_C(void,Fl_Browser_hide_super)(fl_Browser browser){
     return (static_cast<Fl_Browser*>(browser))->Fl_Browser::hide();
+  }
+  FL_EXPORT_C(void,Fl_Browser_draw_super)(fl_Browser browser){
+    (static_cast<Fl_DerivedBrowser*>(browser))->draw_super();
+  }
+  FL_EXPORT_C(int,Fl_Browser_handle_super)(fl_Browser browser, int e){
+    return (static_cast<Fl_DerivedBrowser*>(browser))->handle_super(e);
   }
   FL_EXPORT_C(void,Fl_Browser_clear_visible)(fl_Browser browser){
     (static_cast<Fl_DerivedBrowser*>(browser))->clear_visible();
@@ -686,6 +698,18 @@ FL_EXPORT_C(void, Fl_Browser_draw_label)(fl_Browser Browser){
   }
   FL_EXPORT_C(void,Fl_Browser_sort_with_flags)(fl_Browser browser,int flags){
     (static_cast<Fl_DerivedBrowser*>(browser))->sort(flags);
+  }
+  FL_EXPORT_C(void, Fl_Browser_set_scrollbar_color)(fl_Browser browser,Fl_Color col){
+    ((static_cast<Fl_DerivedBrowser*>(browser))->hscrollbar).color(col);
+    ((static_cast<Fl_DerivedBrowser*>(browser))->scrollbar).color(col);
+  }
+  FL_EXPORT_C(void, Fl_Browser_set_scrollbar_box)(fl_Browser browser,Fl_Boxtype box){
+    ((static_cast<Fl_DerivedBrowser*>(browser))->hscrollbar).box(box);
+    ((static_cast<Fl_DerivedBrowser*>(browser))->scrollbar).box(box);
+  }
+  FL_EXPORT_C(void, Fl_Browser_set_scrollbar_selection_color)(fl_Browser browser,Fl_Color col){
+    ((static_cast<Fl_DerivedBrowser*>(browser))->hscrollbar).selection_color(col);
+    ((static_cast<Fl_DerivedBrowser*>(browser))->scrollbar).selection_color(col);
   }
 #ifdef __cplusplus
 }

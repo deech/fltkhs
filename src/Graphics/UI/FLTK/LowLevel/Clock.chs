@@ -43,12 +43,12 @@ enum ClockType {
 };
 #endc
 {# enum ClockType {} deriving (Show) #}
-newtype Hour = Hour Int
-newtype Minute = Minute Int
-newtype Second = Second Int
-data ClockByTime = ClockByTime Hour Minute Second
-data ClockSinceEpoch = ClockSinceEpoch Second
-data ClockSetTimeType = ClockSetByTime ClockByTime | ClockSetSinceEpoch ClockSinceEpoch
+newtype Hour = Hour Int deriving Show
+newtype Minute = Minute Int deriving Show
+newtype Second = Second Int deriving Show
+data ClockByTime = ClockByTime Hour Minute Second deriving Show
+data ClockSinceEpoch = ClockSinceEpoch Second deriving Show
+data ClockSetTimeType = ClockSetByTime ClockByTime | ClockSetSinceEpoch ClockSinceEpoch deriving Show
 
 {# fun Fl_OverriddenClock_New_WithLabel as overriddenWidgetNewWithLabel' { `Int',`Int',`Int',`Int', unsafeToCString `T.Text', id `Ptr ()'} -> `Ptr ()' id #}
 {# fun Fl_OverriddenClock_New as overriddenWidgetNew' { `Int',`Int',`Int',`Int', id `Ptr ()'} -> `Ptr ()' id #}
@@ -67,24 +67,27 @@ clockCustom rectangle l' draw' funcs' =
     overriddenWidgetNew'
     overriddenWidgetNewWithLabel'
 
-
-
 {# fun Fl_Clock_New as clockNew' { `Int',`Int',`Int',`Int' } -> `Ptr ()' id #}
 {# fun Fl_Clock_New_WithLabel as clockNewWithLabel' { `Int',`Int',`Int',`Int', unsafeToCString `T.Text'} -> `Ptr ()' id #}
 {# fun Fl_Clock_New_WithClockType as clockNewWithClockType' { id `CUChar', `Int',`Int',`Int',`Int', unsafeToCString `T.Text'} -> `Ptr ()' id #}
 clockNew :: Rectangle -> Maybe T.Text -> IO (Ref Clock)
 clockNew rectangle l' =
-    let (x_pos, y_pos, width, height) = fromRectangle rectangle
-    in case l' of
-        Nothing -> clockNew' x_pos y_pos width height >>=
-                             toRef
-        Just l -> clockNewWithLabel' x_pos y_pos width height l >>=
-                             toRef
+  widgetMaker
+    rectangle
+    l'
+    Nothing
+    Nothing
+    overriddenWidgetNew'
+    overriddenWidgetNewWithLabel'
+
 clockNewWithType :: ClockType -> Rectangle -> T.Text -> IO (Ref Clock)
 clockNewWithType clocktype' rectangle' label' =
     let (x_pos, y_pos, width, height) = fromRectangle rectangle'
-    in
-     clockNewWithClockType' (castCharToCUChar . chr . fromEnum $ clocktype') x_pos y_pos width height label'  >>= toRef
+    in do
+    ref <- clockNewWithClockType' (castCharToCUChar . chr . fromEnum $ clocktype') x_pos y_pos width height label'  >>= toRef
+    setFlag ref WidgetFlagCopiedLabel
+    setFlag ref WidgetFlagCopiedTooltip
+    return ref
 
 {# fun Fl_Clock_set_value_with_hms as setValueWithhms' {id `Ptr ()', `Int', `Int', `Int'} -> `()' #}
 {# fun Fl_Clock_set_value as setValue' {id `Ptr ()', id `CULong'} -> `()' #}
@@ -93,6 +96,7 @@ instance (impl ~ (ClockSetTimeType -> IO ())) => Op (SetValue()) Clock orig impl
     case clockvalue of
      ClockSetByTime (ClockByTime (Hour h)(Minute m) (Second s)) -> setValueWithhms' clockPtr h m s
      ClockSetSinceEpoch (ClockSinceEpoch (Second s)) -> setValue' clockPtr (fromIntegral s)
+
 
 {# fun Fl_Clock_value as getValue' {id `Ptr ()'} -> `CULong' id #}
 instance (impl ~ (IO ClockSinceEpoch)) => Op (GetValueSinceEpoch ()) Clock orig impl where
@@ -150,22 +154,27 @@ instance (impl ~ (  IO ())) => Op (ShowWidget ()) Clock orig impl where
 {# fun Fl_Clock_show_super as showSuper' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
 instance (impl ~ ( IO ())) => Op (ShowWidgetSuper ()) Clock orig impl where
   runOp _ _ clock = withRef clock $ \clockPtr -> showSuper' clockPtr
+{#fun Fl_Clock_get_shadow as getShadow' {id `Ptr ()' } -> `Bool' cToBool #}
+instance (impl ~ (IO Bool)) => Op (GetShadow ()) Clock orig impl where
+  runOp _ _ clock = withRef clock $ \clockPtr -> getShadow' clockPtr
+{#fun Fl_Clock_set_shadow as setShadow' {id `Ptr ()', cFromBool `Bool'} -> `()'#}
+instance (impl ~ (Bool -> IO ())) => Op (SetShadow ()) Clock orig impl where
+  runOp _ _ clock shadow = withRef clock $ \clockPtr -> setShadow' clockPtr shadow
 
 -- $Clockfunctions
 --
 -- @
+-- draw :: 'Ref' 'Clock' -> 'IO' ()
+--
+-- drawSuper :: 'Ref' 'Clock' -> 'IO' ()
+--
+-- getShadow :: 'Ref' 'Clock' -> 'IO' 'Bool'
+--
+-- getType_ :: 'Ref' 'Clock' -> 'IO' ('ClockType')
 --
 -- getValue :: 'Ref' 'Clock' -> 'IO' 'ClockByTime'
 --
 -- getValueSinceEpoch :: 'Ref' 'Clock' -> 'IO' 'ClockSinceEpoch'
---
--- handle :: 'Ref' 'Clock' -> ('Event' -> 'IO' ('Either' 'UnknownEvent' ()))
---
--- setValue :: 'Ref' 'Clock' -> 'ClockSetTimeType' -> 'IO' ()
---
--- draw :: 'Ref' 'Clock' -> 'IO' ()
---
--- drawSuper :: 'Ref' 'Clock' -> 'IO' ()
 --
 -- handle :: 'Ref' 'Clock' -> 'Event' -> 'IO' ('Either' 'UnknownEvent' ())
 --
@@ -178,6 +187,10 @@ instance (impl ~ ( IO ())) => Op (ShowWidgetSuper ()) Clock orig impl where
 -- resize :: 'Ref' 'Clock' -> 'Rectangle' -> 'IO' ()
 --
 -- resizeSuper :: 'Ref' 'Clock' -> 'Rectangle' -> 'IO' ()
+--
+-- setShadow :: 'Ref' 'Clock' -> 'Bool' -> 'IO' ()
+--
+-- setType :: 'Ref' 'Clock' -> 'ClockType' -> 'IO' ()
 --
 -- showWidget :: 'Ref' 'Clock' -> 'IO' ()
 --

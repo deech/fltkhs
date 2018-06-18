@@ -49,12 +49,13 @@ tileCustom rectangle l' draw' funcs' =
 {# fun Fl_Tile_New_WithLabel as tileNewWithLabel' { `Int',`Int',`Int',`Int', unsafeToCString `T.Text'} -> `Ptr ()' id #}
 tileNew :: Rectangle -> Maybe T.Text -> IO (Ref Tile)
 tileNew rectangle l'=
-    let (x_pos, y_pos, width, height) = fromRectangle rectangle
-    in case l' of
-        Nothing -> tileNew' x_pos y_pos width height >>=
-                             toRef
-        Just l -> tileNewWithLabel' x_pos y_pos width height l >>=
-                               toRef
+  widgetMaker
+    rectangle
+    l'
+    Nothing
+    Nothing
+    overriddenWidgetNew'
+    overriddenWidgetNewWithLabel'
 
 {# fun Fl_Tile_position as setPosition' { id `Ptr ()',`Int',`Int',`Int',`Int' } -> `()' #}
 instance (impl ~ (Rectangle ->  IO ())) => Op (SetPosition ()) Tile orig impl where

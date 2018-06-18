@@ -2,9 +2,6 @@
 #ifdef __cplusplus
 EXPORT {
 #endif
-  FL_EXPORT_C(const char*,Fl_Image_Surface_class_name)(fl_Image_Surface image_surface){
-    return (static_cast<Fl_Image_Surface*>(image_surface))->class_name();
-  }
   FL_EXPORT_C(void,Fl_Image_Surface_set_current)(fl_Image_Surface image_surface){
     (static_cast<Fl_Image_Surface*>(image_surface))->set_current();
   }
@@ -21,6 +18,25 @@ EXPORT {
   FL_EXPORT_C(fl_RGB_Image, Fl_Image_Surface_image)(fl_Image_Surface image_surface) {
     return (fl_RGB_Image)(static_cast<Fl_Image_Surface*>(image_surface))->image();
   }
+#if FL_API_VERSION >= 10400
+  FL_EXPORT_C(void ,Fl_Image_Surface_get_origin)(fl_Image_Surface i, int* x, int* y){
+    (static_cast<Fl_Image_Surface*>(i))->origin(*x,*y);
+  }
+  FL_EXPORT_C(void ,Fl_Image_Surface_set_origin)(fl_Image_Surface i, int x, int y){
+    (static_cast<Fl_Image_Surface*>(i))->origin(x,y);
+  }
+  FL_EXPORT_C(int,Fl_Image_Surface_printable_rect)(fl_Image_Surface i, int* w, int* h){
+    return (static_cast<Fl_Image_Surface*>(i))->printable_rect(w, h);
+  }
+  FL_EXPORT_C(Fl_Offscreen,Fl_Image_Surface_offscreen)(fl_Image_Surface i){
+    return (static_cast<Fl_Image_Surface*>(i))->offscreen();
+  }
+  FL_EXPORT_C(void, Fl_Image_Surface_rescale)(fl_Image_Surface i){
+    Fl_Image_Surface* s = static_cast<Fl_Image_Surface*>(i);
+    s->rescale();
+  }
+#endif
+
 #ifdef __cplusplus
 }
 #endif

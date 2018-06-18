@@ -48,12 +48,13 @@ positionerCustom rectangle l' draw' funcs' =
 {# fun Fl_Positioner_New_WithLabel as positionerNewWithLabel' { `Int',`Int',`Int',`Int', unsafeToCString `T.Text'} -> `Ptr ()' id #}
 positionerNew :: Rectangle -> Maybe T.Text -> IO (Ref Positioner)
 positionerNew rectangle l'=
-    let (x_pos, y_pos, width, height) = fromRectangle rectangle
-    in case l' of
-        Nothing -> positionerNew' x_pos y_pos width height >>=
-                             toRef
-        Just l -> positionerNewWithLabel' x_pos y_pos width height l >>=
-                               toRef
+  widgetMaker
+    rectangle
+    l'
+    Nothing
+    Nothing
+    overriddenWidgetNew'
+    overriddenWidgetNewWithLabel'
 
 {# fun Fl_Positioner_Destroy as positionerDestroy' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
 instance (impl ~ (IO ())) => Op (Destroy ()) Positioner orig impl where
@@ -62,47 +63,47 @@ instance (impl ~ (IO ())) => Op (Destroy ()) Positioner orig impl where
     return nullPtr
 
 {# fun Fl_Positioner_set_xvalue as setXvalue' { id `Ptr ()',`Double' } -> `()' #}
-instance (impl ~ (Double ->  IO ())) => Op (SetXvalue ()) Positioner orig impl where
-  runOp _ _ positioner xvalue = withRef positioner $ \positionerPtr -> setXvalue' positionerPtr xvalue
+instance (impl ~ (PreciseX ->  IO ())) => Op (SetXvalue ()) Positioner orig impl where
+  runOp _ _ positioner (PreciseX xvalue) = withRef positioner $ \positionerPtr -> setXvalue' positionerPtr xvalue
 {# fun Fl_Positioner_xvalue as xvalue' { id `Ptr ()' } -> `Double' #}
-instance (impl ~ ( IO (Double))) => Op (GetXvalue ()) Positioner orig impl where
-  runOp _ _ positioner = withRef positioner $ \positionerPtr -> xvalue' positionerPtr
+instance (impl ~ ( IO (PreciseX))) => Op (GetXvalue ()) Positioner orig impl where
+  runOp _ _ positioner = withRef positioner $ \positionerPtr -> xvalue' positionerPtr >>= return . PreciseX
 {# fun Fl_Positioner_set_yvalue as setYvalue' { id `Ptr ()',`Double' } -> `()' #}
-instance (impl ~ (Double ->  IO ())) => Op (SetYvalue ()) Positioner orig impl where
-  runOp _ _ positioner yvalue = withRef positioner $ \positionerPtr -> setYvalue' positionerPtr yvalue
+instance (impl ~ (PreciseY ->  IO ())) => Op (SetYvalue ()) Positioner orig impl where
+  runOp _ _ positioner (PreciseY yvalue) = withRef positioner $ \positionerPtr -> setYvalue' positionerPtr yvalue
 {# fun Fl_Positioner_yvalue as yvalue' { id `Ptr ()' } -> `Double' #}
-instance (impl ~ ( IO (Double))) => Op (GetYvalue ()) Positioner orig impl where
-  runOp _ _ positioner = withRef positioner $ \positionerPtr -> yvalue' positionerPtr
+instance (impl ~ ( IO (PreciseY))) => Op (GetYvalue ()) Positioner orig impl where
+  runOp _ _ positioner = withRef positioner $ \positionerPtr -> yvalue' positionerPtr >>= return . PreciseY
 {# fun Fl_Positioner_set_xminimum as setXminimum' { id `Ptr ()',`Double' } -> `()' #}
-instance (impl ~ (Double ->  IO ())) => Op (SetXminimum ()) Positioner orig impl where
-  runOp _ _ positioner xminimum = withRef positioner $ \positionerPtr -> setXminimum' positionerPtr xminimum
+instance (impl ~ (PreciseX ->  IO ())) => Op (SetXminimum ()) Positioner orig impl where
+  runOp _ _ positioner (PreciseX xminimum) = withRef positioner $ \positionerPtr -> setXminimum' positionerPtr xminimum
 {# fun Fl_Positioner_xminimum as xminimum' { id `Ptr ()' } -> `Double' #}
-instance (impl ~ ( IO (Double))) => Op (GetXminimum ()) Positioner orig impl where
-  runOp _ _ positioner = withRef positioner $ \positionerPtr -> xminimum' positionerPtr
+instance (impl ~ ( IO (PreciseX))) => Op (GetXminimum ()) Positioner orig impl where
+  runOp _ _ positioner = withRef positioner $ \positionerPtr -> xminimum' positionerPtr >>= return . PreciseX
 {# fun Fl_Positioner_set_yminimum as setYminimum' { id `Ptr ()',`Double' } -> `()' #}
-instance (impl ~ (Double ->  IO ())) => Op (SetYminimum ()) Positioner orig impl where
-  runOp _ _ positioner yminimum = withRef positioner $ \positionerPtr -> setYminimum' positionerPtr yminimum
+instance (impl ~ (PreciseY ->  IO ())) => Op (SetYminimum ()) Positioner orig impl where
+  runOp _ _ positioner (PreciseY yminimum) = withRef positioner $ \positionerPtr -> setYminimum' positionerPtr yminimum
 {# fun Fl_Positioner_yminimum as yminimum' { id `Ptr ()' } -> `Double' #}
-instance (impl ~ ( IO (Double))) => Op (GetYminimum ()) Positioner orig impl where
-  runOp _ _ positioner = withRef positioner $ \positionerPtr -> yminimum' positionerPtr
+instance (impl ~ ( IO (PreciseY))) => Op (GetYminimum ()) Positioner orig impl where
+  runOp _ _ positioner = withRef positioner $ \positionerPtr -> yminimum' positionerPtr >>= return . PreciseY
 {# fun Fl_Positioner_set_xmaximum as setXmaximum' { id `Ptr ()',`Double' } -> `()' #}
-instance (impl ~ (Double ->  IO ())) => Op (SetXmaximum ()) Positioner orig impl where
-  runOp _ _ positioner xmaximum = withRef positioner $ \positionerPtr -> setXmaximum' positionerPtr xmaximum
+instance (impl ~ (PreciseX ->  IO ())) => Op (SetXmaximum ()) Positioner orig impl where
+  runOp _ _ positioner (PreciseX xmaximum) = withRef positioner $ \positionerPtr -> setXmaximum' positionerPtr xmaximum
 {# fun Fl_Positioner_xmaximum as xmaximum' { id `Ptr ()' } -> `Double' #}
-instance (impl ~ ( IO (Double))) => Op (GetXmaximum ()) Positioner orig impl where
-  runOp _ _ positioner = withRef positioner $ \positionerPtr -> xmaximum' positionerPtr
+instance (impl ~ ( IO (PreciseX))) => Op (GetXmaximum ()) Positioner orig impl where
+  runOp _ _ positioner = withRef positioner $ \positionerPtr -> xmaximum' positionerPtr >>= return . PreciseX
 {# fun Fl_Positioner_set_ymaximum as setYmaximum' { id `Ptr ()',`Double' } -> `()' #}
-instance (impl ~ (Double ->  IO ())) => Op (SetYmaximum ()) Positioner orig impl where
-  runOp _ _ positioner ymaximum = withRef positioner $ \positionerPtr -> setYmaximum' positionerPtr ymaximum
+instance (impl ~ (PreciseY ->  IO ())) => Op (SetYmaximum ()) Positioner orig impl where
+  runOp _ _ positioner (PreciseY ymaximum) = withRef positioner $ \positionerPtr -> setYmaximum' positionerPtr ymaximum
 {# fun Fl_Positioner_ymaximum as ymaximum' { id `Ptr ()' } -> `Double' #}
-instance (impl ~ ( IO (Double))) => Op (GetYmaximum ()) Positioner orig impl where
-  runOp _ _ positioner = withRef positioner $ \positionerPtr -> ymaximum' positionerPtr
+instance (impl ~ ( IO (PreciseY))) => Op (GetYmaximum ()) Positioner orig impl where
+  runOp _ _ positioner = withRef positioner $ \positionerPtr -> ymaximum' positionerPtr >>= return . PreciseY
 {# fun Fl_Positioner_xbounds as xbounds' { id `Ptr ()',`Double',`Double' } -> `()' #}
-instance (impl ~ (Double -> Double ->  IO ())) => Op (SetXbounds ()) Positioner orig impl where
-  runOp _ _ positioner xstart xend = withRef positioner $ \positionerPtr -> xbounds' positionerPtr xstart xend
+instance (impl ~ (PreciseX -> PreciseX ->  IO ())) => Op (SetXbounds ()) Positioner orig impl where
+  runOp _ _ positioner (PreciseX xstart) (PreciseX xend) = withRef positioner $ \positionerPtr -> xbounds' positionerPtr xstart xend
 {# fun Fl_Positioner_ybounds as ybounds' { id `Ptr ()',`Double',`Double' } -> `()' #}
-instance (impl ~ (Double -> Double ->  IO ())) => Op (SetYbounds ()) Positioner orig impl where
-  runOp _ _ positioner ystart yend = withRef positioner $ \positionerPtr -> ybounds' positionerPtr ystart yend
+instance (impl ~ (PreciseY -> PreciseY ->  IO ())) => Op (SetYbounds ()) Positioner orig impl where
+  runOp _ _ positioner (PreciseY ystart) (PreciseY yend) = withRef positioner $ \positionerPtr -> ybounds' positionerPtr ystart yend
 {# fun Fl_Positioner_xstep as xstep' { id `Ptr ()',`Double' } -> `()' #}
 instance (impl ~ (Double ->  IO ())) => Op (SetXstep ()) Positioner orig impl where
   runOp _ _ positioner xstep = withRef positioner $ \positionerPtr -> xstep' positionerPtr xstep
@@ -152,17 +153,17 @@ instance (impl ~ ( IO ())) => Op (ShowWidgetSuper ()) Positioner orig impl where
 --
 -- drawSuper :: 'Ref' 'Positioner' -> 'IO' ()
 --
--- getXmaximum :: 'Ref' 'Positioner' -> 'IO' ('Double')
+-- getXmaximum :: 'Ref' 'Positioner' -> 'IO' ('PreciseX')
 --
--- getXminimum :: 'Ref' 'Positioner' -> 'IO' ('Double')
+-- getXminimum :: 'Ref' 'Positioner' -> 'IO' ('PreciseX')
 --
--- getXvalue :: 'Ref' 'Positioner' -> 'IO' ('Double')
+-- getXvalue :: 'Ref' 'Positioner' -> 'IO' ('PreciseX')
 --
--- getYmaximum :: 'Ref' 'Positioner' -> 'IO' ('Double')
+-- getYmaximum :: 'Ref' 'Positioner' -> 'IO' ('PreciseY')
 --
--- getYminimum :: 'Ref' 'Positioner' -> 'IO' ('Double')
+-- getYminimum :: 'Ref' 'Positioner' -> 'IO' ('PreciseY')
 --
--- getYvalue :: 'Ref' 'Positioner' -> 'IO' ('Double')
+-- getYvalue :: 'Ref' 'Positioner' -> 'IO' ('PreciseY')
 --
 -- handle :: 'Ref' 'Positioner' -> 'Event' -> 'IO' ('Either' 'UnknownEvent' ())
 --
@@ -176,25 +177,25 @@ instance (impl ~ ( IO ())) => Op (ShowWidgetSuper ()) Positioner orig impl where
 --
 -- resizeSuper :: 'Ref' 'Positioner' -> 'Rectangle' -> 'IO' ()
 --
--- setXbounds :: 'Ref' 'Positioner' -> 'Double' -> 'Double' -> 'IO' ()
+-- setXbounds :: 'Ref' 'Positioner' -> 'PreciseX' -> 'PreciseX' -> 'IO' ()
 --
--- setXmaximum :: 'Ref' 'Positioner' -> 'Double' -> 'IO' ()
+-- setXmaximum :: 'Ref' 'Positioner' -> 'PreciseX' -> 'IO' ()
 --
--- setXminimum :: 'Ref' 'Positioner' -> 'Double' -> 'IO' ()
+-- setXminimum :: 'Ref' 'Positioner' -> 'PreciseX' -> 'IO' ()
 --
 -- setXstep :: 'Ref' 'Positioner' -> 'Double' -> 'IO' ()
 --
--- setXvalue :: 'Ref' 'Positioner' -> 'Double' -> 'IO' ()
+-- setXvalue :: 'Ref' 'Positioner' -> 'PreciseX' -> 'IO' ()
 --
--- setYbounds :: 'Ref' 'Positioner' -> 'Double' -> 'Double' -> 'IO' ()
+-- setYbounds :: 'Ref' 'Positioner' -> 'PreciseY' -> 'PreciseY' -> 'IO' ()
 --
--- setYmaximum :: 'Ref' 'Positioner' -> 'Double' -> 'IO' ()
+-- setYmaximum :: 'Ref' 'Positioner' -> 'PreciseY' -> 'IO' ()
 --
--- setYminimum :: 'Ref' 'Positioner' -> 'Double' -> 'IO' ()
+-- setYminimum :: 'Ref' 'Positioner' -> 'PreciseY' -> 'IO' ()
 --
 -- setYstep :: 'Ref' 'Positioner' -> 'Double' -> 'IO' ()
 --
--- setYvalue :: 'Ref' 'Positioner' -> 'Double' -> 'IO' ()
+-- setYvalue :: 'Ref' 'Positioner' -> 'PreciseY' -> 'IO' ()
 --
 -- showWidget :: 'Ref' 'Positioner' -> 'IO' ()
 --

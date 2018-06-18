@@ -20,6 +20,9 @@ EXPORT {
   FL_EXPORT_C(Fl_Labeltype, fl_define_FL_SHADOW_LABELC)() { return fl_define_FL_SHADOW_LABEL();}
   FL_EXPORT_C(Fl_Labeltype, fl_define_FL_ENGRAVED_LABELC)() { return fl_define_FL_ENGRAVED_LABEL();}
   FL_EXPORT_C(Fl_Labeltype, fl_define_FL_EMBOSSED_LABELC)() { return fl_define_FL_EMBOSSED_LABEL();}
+  FL_EXPORT_C(Fl_Labeltype, fl_define_FL_ICON_LABELC)() { return fl_define_FL_ICON_LABEL();}
+  FL_EXPORT_C(Fl_Labeltype, fl_define_FL_MULTI_LABELC)() { return fl_define_FL_MULTI_LABEL();}
+  FL_EXPORT_C(Fl_Labeltype, fl_define_FL_IMAGE_LABELC)() { return fl_define_FL_IMAGE_LABEL();}
   FL_EXPORT_C(Fl_Align, FL_ALIGN_TOP_LEFTC)(){ return FL_ALIGN_TOP | FL_ALIGN_LEFT;}
   FL_EXPORT_C(Fl_Align, FL_ALIGN_TOP_RIGHTC)(){ return FL_ALIGN_TOP | FL_ALIGN_RIGHT;}
   FL_EXPORT_C(Fl_Align, FL_ALIGN_BOTTOM_LEFTC)(){ return FL_ALIGN_BOTTOM | FL_ALIGN_LEFT;}

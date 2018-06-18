@@ -75,7 +75,6 @@ EXPORT {
     Fl_Counter::hide();
   }
 
-
 #endif
   FL_EXPORT_C(fl_Group,Fl_Counter_parent)(fl_Counter counter){
     return (static_cast<Fl_Counter*>(counter))->parent();

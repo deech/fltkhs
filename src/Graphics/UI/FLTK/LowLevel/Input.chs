@@ -41,7 +41,8 @@ enum FlInputType {
   FlFloatInput = FL_FLOAT_INPUT,
   FlIntInput = FL_INT_INPUT,
   FlMultilineInput = FL_MULTILINE_INPUT,
-  FlSecretInput = FL_SECRET_INPUT
+  FlSecretInput = FL_SECRET_INPUT,
+  FlHiddenInput = FL_HIDDEN_INPUT
 };
 #endc
 {#enum FlInputType {}#}
@@ -50,17 +51,34 @@ enum FlInputType {
 inputCustom ::
        Rectangle                         -- ^ The bounds of this Input
     -> Maybe T.Text                      -- ^ The Input label
-    -> Maybe (Ref Input -> IO ())           -- ^ Optional custom drawing function
-    -> Maybe (CustomWidgetFuncs Input)      -- ^ Optional custom widget functions
+    -> Maybe FlInputType                 -- ^ The input type
+    -> Maybe (Ref Input -> IO ())        -- ^ Optional custom drawing function
+    -> Maybe (CustomWidgetFuncs Input)   -- ^ Optional custom widget functions
     -> IO (Ref Input)
-inputCustom rectangle l' draw' funcs' =
-  widgetMaker
-    rectangle
-    l'
-    draw'
-    funcs'
-    overriddenWidgetNew'
-    overriddenWidgetNewWithLabel'
+inputCustom rectangle l' itMaybe draw' funcs' = do
+  i <- widgetMaker
+         rectangle
+         l'
+         draw'
+         funcs'
+         overriddenWidgetNew'
+         overriddenWidgetNewWithLabel'
+  maybe
+    (return ())
+    (\it -> do
+        setInputType i it
+        case it of
+          FlNormalInput -> return ()
+          FlFloatInput -> clearFlag i WidgetFlagMacUseAccentsMenu
+          FlIntInput -> clearFlag i WidgetFlagMacUseAccentsMenu
+          FlMultilineInput -> return ()
+          FlSecretInput -> clearFlag i WidgetFlagMacUseAccentsMenu
+          FlHiddenInput -> return ()
+        )
+    itMaybe
+  setFlag i WidgetFlagCopiedLabel
+  setFlag i WidgetFlagCopiedTooltip
+  return i
 
 {# fun Fl_Input_New as inputNew' { `Int',`Int',`Int',`Int' } -> `Ptr ()' id #}
 {# fun Fl_Input_New_WithLabel as inputNewWithLabel' { `Int',`Int',`Int',`Int', unsafeToCString `T.Text'} -> `Ptr ()' id #}
@@ -81,9 +99,14 @@ inputNew rectangle l' flInputType =
                        Just FlIntInput -> maybe intInputNew'  (\l -> (\x y w h -> intInputNewWithLabel' x y w h l)) l'
                        Just FlMultilineInput -> maybe multilineInputNew'  (\l -> (\x y w h -> multilineInputNewWithLabel' x y w h l)) l'
                        Just FlSecretInput -> maybe secretInputNew' (\l -> (\x y w h -> secretInputNewWithLabel' x y w h l)) l'
+                       Just FlHiddenInput -> maybe inputNew' (\l -> (\x y w h -> inputNewWithLabel' x y w h l)) l'
                        Nothing -> inputNew'
-    in
-    constructor x_pos y_pos width height >>= toRef
+    in do
+    i <- constructor x_pos y_pos width height >>= toRef
+    case flInputType of { Just FlHiddenInput -> setInputType i FlHiddenInput; _ -> return () }
+    setFlag i WidgetFlagCopiedLabel
+    setFlag i WidgetFlagCopiedTooltip
+    return i
 
 {# fun Fl_Input_Destroy as inputDestroy' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
 instance (impl ~ (IO ())) => Op (Destroy ()) Input orig impl where
@@ -105,31 +128,21 @@ instance (impl ~ (Event -> IO (Either UnknownEvent ()))) => Op (Handle ()) Input
       )
     >>= return . successOrUnknownEvent
 
-{# fun Fl_Widget_set_type as setType' { id `Ptr ()',`Word8' } -> `()' supressWarningAboutRes #}
-instance (impl ~ (FlInputType ->  IO ())) => Op (SetType ()) Input orig impl where
-  runOp _ _ widget t = withRef widget $ \widgetPtr -> setType' widgetPtr (fromInteger $ toInteger $ fromEnum t)
-
 {# fun Fl_Input_set_value as setValue' { id `Ptr ()', unsafeToCString `T.Text' } -> `Int' #}
-{# fun Fl_Input_set_value_with_length as setValueWithLength' { id `Ptr ()', unsafeToCString `T.Text',`Int' } -> `Int' #}
-instance (impl ~ (T.Text -> Maybe Int -> IO (Int))) => Op (SetValue ()) Input orig impl where
-  runOp _ _ input text l' =
-    case l' of
-     Nothing -> withRef input $ \inputPtr -> setValue' inputPtr text
-     Just l -> withRef input $ \inputPtr -> setValueWithLength' inputPtr text l
+instance (impl ~ (T.Text -> IO (Either NoChange ()))) => Op (SetValue ()) Input orig impl where
+  runOp _ _ input text = withRef input $ \inputPtr -> setValue' inputPtr text >>= return . successOrNoChange
+
 {# fun Fl_Input_static_value as staticValue' { id `Ptr ()', unsafeToCString `T.Text' } -> `Int' #}
-{# fun Fl_Input_static_value_with_length as staticValueWithLength' { id `Ptr ()', unsafeToCString `T.Text',`Int' } -> `Int' #}
-instance (impl ~ (T.Text -> Maybe Int ->  IO (Either NoChange ()))) => Op (StaticValue ()) Input orig impl where
-  runOp _ _ input text l'= do
-    status' <- case l' of
-      Nothing -> withRef input $ \inputPtr -> staticValue' inputPtr text
-      Just l -> withRef input $ \inputPtr -> staticValueWithLength' inputPtr text l
+instance (impl ~ (T.Text -> IO (Either NoChange ()))) => Op (StaticValue ()) Input orig impl where
+  runOp _ _ input text = do
+    status' <- withRef input $ \inputPtr -> staticValue' inputPtr text
     return $ successOrNoChange status'
 {# fun Fl_Input_value as value' { id `Ptr ()' } -> `T.Text' unsafeFromCString #}
 instance (impl ~ ( IO T.Text)) => Op (GetValue ()) Input orig impl where
   runOp _ _ input = withRef input $ \inputPtr -> value' inputPtr
 {# fun Fl_Input_index as index' { id `Ptr ()',`Int' } -> `Int' #}
-instance (impl ~ (Int ->  IO (Char))) => Op (Index ()) Input orig impl where
-  runOp _ _ input i = withRef input $ \inputPtr -> index' inputPtr i >>= return . toEnum
+instance (impl ~ (AtIndex ->  IO (Char))) => Op (Index ()) Input orig impl where
+  runOp _ _ input (AtIndex i) = withRef input $ \inputPtr -> index' inputPtr i >>= return . toEnum
 {# fun Fl_Input_set_size as setSize' { id `Ptr ()',`Int',`Int' } -> `()' #}
 instance (impl ~ (Size ->  IO ())) => Op (SetSize ()) Input orig impl where
   runOp _ _ input (Size (Width w') (Height h')) = withRef input $ \inputPtr -> setSize' inputPtr w' h'
@@ -160,8 +173,8 @@ instance (impl ~ (Int -> Maybe Int -> IO (Either NoChange ()))) => Op (SetPositi
 instance (impl ~ (Int ->  IO (Either NoChange ()))) => Op (SetMark ()) Input orig impl where
   runOp _ _ input m = withRef input $ \inputPtr -> setMark' inputPtr m >>= return . successOrNoChange
 {# fun Fl_Input_replace as replace' { id `Ptr ()',`Int',`Int', unsafeToCString `T.Text' } -> `Int' #}
-instance (impl ~ (Int -> Int -> T.Text ->  IO (Either NoChange ()))) => Op (Replace ()) Input orig impl where
-  runOp _ _ input b e text = withRef input $ \inputPtr -> replace' inputPtr b e  text >>= return . successOrNoChange
+instance (impl ~ (IndexRange -> T.Text ->  IO (Either NoChange ()))) => Op (Replace ()) Input orig impl where
+  runOp _ _ input (IndexRange (AtIndex b) (AtIndex e)) text = withRef input $ \inputPtr -> replace' inputPtr b e  text >>= return . successOrNoChange
 {# fun Fl_Input_cut as cut' { id `Ptr ()' } -> `Int' #}
 instance (impl ~ ( IO (Either NoChange ()))) => Op (Cut ()) Input orig impl where
   runOp _ _ input = withRef input $ \inputPtr -> cut' inputPtr >>= return . successOrNoChange
@@ -169,8 +182,8 @@ instance (impl ~ ( IO (Either NoChange ()))) => Op (Cut ()) Input orig impl wher
 instance (impl ~ (Int ->  IO (Either NoChange ()))) => Op (CutFromCursor ()) Input orig impl where
   runOp _ _ input n = withRef input $ \inputPtr -> cutBytes' inputPtr n >>= return . successOrNoChange
 {# fun Fl_Input_cut_range as cutRange' { id `Ptr ()',`Int',`Int' } -> `Int' #}
-instance (impl ~ (Int -> Int ->  IO (Either NoChange ()))) => Op (CutRange ()) Input orig impl where
-  runOp _ _ input a b = withRef input $ \inputPtr -> cutRange' inputPtr a b >>= return . successOrNoChange
+instance (impl ~ (IndexRange ->  IO (Either NoChange ()))) => Op (CutRange ()) Input orig impl where
+  runOp _ _ input (IndexRange (AtIndex a) (AtIndex b)) = withRef input $ \inputPtr -> cutRange' inputPtr a b >>= return . successOrNoChange
 {# fun Fl_Input_insert as insert' { id `Ptr ()', unsafeToCString `T.Text' } -> `Int' #}
 instance (impl ~ (T.Text ->  IO (Either NoChange ()))) => Op (Insert ()) Input orig impl where
   runOp _ _ input t = withRef input $ \inputPtr -> insert' inputPtr t >>= return . successOrNoChange
@@ -227,11 +240,11 @@ instance (impl ~ ( IO (FlInputType))) => Op (GetInputType ()) Input orig impl wh
 {# fun Fl_Input_set_input_type as setInputType' { id `Ptr ()',`Int' } -> `()' #}
 instance (impl ~ (FlInputType ->  IO ())) => Op (SetInputType ()) Input orig impl where
   runOp _ _ input t = withRef input $ \inputPtr -> setInputType' inputPtr (fromIntegral (fromEnum t))
-{# fun Fl_Input_readonly as readonly' { id `Ptr ()' } -> `Int' #}
-instance (impl ~ ( IO (Int))) => Op (GetReadonly ()) Input orig impl where
+{# fun Fl_Input_readonly as readonly' { id `Ptr ()' } -> `Bool' cToBool #}
+instance (impl ~ ( IO (Bool))) => Op (GetReadonly ()) Input orig impl where
   runOp _ _ input = withRef input $ \inputPtr -> readonly' inputPtr
-{# fun Fl_Input_set_readonly as setReadonly' { id `Ptr ()',`Int' } -> `()' #}
-instance (impl ~ (Int ->  IO ())) => Op (SetReadonly ()) Input orig impl where
+{# fun Fl_Input_set_readonly as setReadonly' { id `Ptr ()',cFromBool `Bool' } -> `()' #}
+instance (impl ~ (Bool ->  IO ())) => Op (SetReadonly ()) Input orig impl where
   runOp _ _ input b = withRef input $ \inputPtr -> setReadonly' inputPtr b
 {# fun Fl_Input_wrap as wrap' { id `Ptr ()' } -> `Int' #}
 instance (impl ~ ( IO (Bool))) => Op (GetWrap ()) Input orig impl where
@@ -277,6 +290,11 @@ instance (impl ~ (  IO ())) => Op (ShowWidget ()) Input orig impl where
 instance (impl ~ ( IO ())) => Op (ShowWidgetSuper ()) Input orig impl where
   runOp _ _ input = withRef input $ \inputPtr -> showSuper' inputPtr
 
+{# fun Fl_Input_drawtext as drawtext' { id `Ptr ()', `Int', `Int', `Int', `Int' } -> `()' supressWarningAboutRes #}
+instance (impl ~ (Rectangle -> IO ())) => Op (DrawText ()) Input orig impl where
+  runOp _ _ input rectangle = withRef input (\inputPtr -> do
+                                 let (x_pos,y_pos,w_pos,h_pos) = fromRectangle rectangle
+                                 drawtext' inputPtr x_pos y_pos w_pos h_pos)
 
 -- $Input
 -- @
@@ -288,13 +306,15 @@ instance (impl ~ ( IO ())) => Op (ShowWidgetSuper ()) Input orig impl where
 --
 -- cutFromCursor :: 'Ref' 'Input' -> 'Int' -> 'IO' ('Either' 'NoChange' ())
 --
--- cutRange :: 'Ref' 'Input' -> 'Int' -> 'Int' -> 'IO' ('Either' 'NoChange' ())
+-- cutRange :: 'Ref' 'Input' -> 'IndexRange' -> 'IO' ('Either' 'NoChange' ())
 --
 -- destroy :: 'Ref' 'Input' -> 'IO' ()
 --
 -- draw :: 'Ref' 'Input' -> 'IO' ()
 --
 -- drawSuper :: 'Ref' 'Input' -> 'IO' ()
+--
+-- drawText :: 'Ref' 'Input' -> 'Rectangle' -> 'IO' ()
 --
 -- getCursorColor :: 'Ref' 'Input' -> 'IO' ('Color')
 --
@@ -306,7 +326,7 @@ instance (impl ~ ( IO ())) => Op (ShowWidgetSuper ()) Input orig impl where
 --
 -- getPosition :: 'Ref' 'Input' -> 'IO' ('Int')
 --
--- getReadonly :: 'Ref' 'Input' -> 'IO' ('Int')
+-- getReadonly :: 'Ref' 'Input' -> 'IO' ('Bool')
 --
 -- getShortcut :: 'Ref' 'Input' -> 'IO' ('Maybe' 'ShortcutKeySequence')
 --
@@ -332,13 +352,13 @@ instance (impl ~ ( IO ())) => Op (ShowWidgetSuper ()) Input orig impl where
 --
 -- hideSuper :: 'Ref' 'Input' -> 'IO' ()
 --
--- index :: 'Ref' 'Input' -> 'Int' -> 'IO' ('Char')
+-- index :: 'Ref' 'Input' -> 'AtIndex' -> 'IO' ('Char')
 --
 -- insert :: 'Ref' 'Input' -> 'T.Text' -> 'IO' ('Either' 'NoChange' ())
 --
 -- insertWithLength :: 'Ref' 'Input' -> 'T.Text' -> 'Int' -> 'IO' ('Either' 'NoChange' ())
 --
--- replace :: 'Ref' 'Input' -> 'Int' -> 'Int' -> 'T.Text' -> 'IO' ('Either' 'NoChange' ())
+-- replace :: 'Ref' 'Input' -> 'IndexRange' -> 'T.Text' -> 'IO' ('Either' 'NoChange' ())
 --
 -- resize :: 'Ref' 'Input' -> 'Rectangle' -> 'IO' ()
 --
@@ -354,7 +374,7 @@ instance (impl ~ ( IO ())) => Op (ShowWidgetSuper ()) Input orig impl where
 --
 -- setPosition :: 'Ref' 'Input' -> 'Int' -> 'Maybe' 'Int' -> 'IO' ('Either' 'NoChange' ())
 --
--- setReadonly :: 'Ref' 'Input' -> 'Int' -> 'IO' ()
+-- setReadonly :: 'Ref' 'Input' -> 'Bool' -> 'IO' ()
 --
 -- setShortcut :: 'Ref' 'Input' -> 'ShortcutKeySequence' -> 'IO' ()
 --
@@ -368,9 +388,7 @@ instance (impl ~ ( IO ())) => Op (ShowWidgetSuper ()) Input orig impl where
 --
 -- setTextsize :: 'Ref' 'Input' -> 'FontSize' -> 'IO' ()
 --
--- setType :: 'Ref' 'Input' -> 'FlInputType' -> 'IO' ()
---
--- setValue :: 'Ref' 'Input' -> 'T.Text' -> 'Maybe' 'Int' -> 'IO' ('Int')
+-- setValue :: 'Ref' 'Input' -> 'T.Text' -> 'IO' ('Either' 'NoChange' ())
 --
 -- setWrap :: 'Ref' 'Input' -> 'Bool' -> 'IO' ()
 --
@@ -378,7 +396,7 @@ instance (impl ~ ( IO ())) => Op (ShowWidgetSuper ()) Input orig impl where
 --
 -- showWidgetSuper :: 'Ref' 'Input' -> 'IO' ()
 --
--- staticValue :: 'Ref' 'Input' -> 'T.Text' -> 'Maybe' 'Int' -> 'IO' ('Either' 'NoChange' ())
+-- staticValue :: 'Ref' 'Input' -> 'T.Text' -> 'IO' ('Either' 'NoChange' ())
 --
 -- undo :: 'Ref' 'Input' -> 'IO' ('Either' 'NoChange' ())
 -- @

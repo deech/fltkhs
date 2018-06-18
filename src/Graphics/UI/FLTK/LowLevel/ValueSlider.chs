@@ -48,10 +48,13 @@ valueSliderCustom rectangle l' draw' funcs' =
 {# fun Fl_Value_Slider_New_WithLabel as valueSliderNewWithLabel' { `Int',`Int',`Int',`Int', unsafeToCString `T.Text'} -> `Ptr ()' id #}
 valueSliderNew :: Rectangle -> Maybe T.Text -> IO (Ref ValueSlider)
 valueSliderNew rectangle l'=
-    let (x_pos, y_pos, width, height) = fromRectangle rectangle
-    in case l' of
-        Nothing -> valueSliderNew' x_pos y_pos width height >>= toRef
-        Just l -> valueSliderNewWithLabel' x_pos y_pos width height l >>= toRef
+  widgetMaker
+    rectangle
+    l'
+    Nothing
+    Nothing
+    overriddenWidgetNew'
+    overriddenWidgetNewWithLabel'
 
 -- {# fun Fl_Hor_Value_Slider_New as horValueSliderNew' { `Int',`Int',`Int',`Int' } -> `Ptr ()' id #}
 -- {# fun Fl_Hor_Value_Slider_New_WithLabel as horValueSliderNewWithLabel' { `Int',`Int',`Int',`Int', unsafeToCString `T.Text'} -> `Ptr ()' id #}

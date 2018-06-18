@@ -47,12 +47,13 @@ rollerCustom rectangle l' draw' funcs' =
 {# fun Fl_Roller_New_WithLabel as rollerNewWithLabel' { `Int',`Int',`Int',`Int',unsafeToCString `T.Text'} -> `Ptr ()' id #}
 rollerNew :: Rectangle -> Maybe T.Text -> IO (Ref Roller)
 rollerNew rectangle l'=
-    let (x_pos, y_pos, width, height) = fromRectangle rectangle
-    in case l' of
-        Nothing -> rollerNew' x_pos y_pos width height >>=
-                             toRef
-        Just l -> rollerNewWithLabel' x_pos y_pos width height l >>=
-                               toRef
+  widgetMaker
+    rectangle
+    l'
+    Nothing
+    Nothing
+    overriddenWidgetNew'
+    overriddenWidgetNewWithLabel'
 
 {# fun Fl_Roller_Destroy as rollerDestroy' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
 instance (impl ~ (IO ())) => Op (Destroy ()) Roller orig impl where
@@ -95,10 +96,27 @@ instance (impl ~ ( IO ())) => Op (ShowWidgetSuper ()) Roller orig impl where
   runOp _ _ roller = withRef roller $ \rollerPtr -> showSuper' rollerPtr
 -- $functions
 -- @
---
 -- destroy :: 'Ref' 'Roller' -> 'IO' ()
 --
--- handle :: 'Ref' 'Roller' -> ('Event' -> 'IO' ('Either' 'UnknownEvent' ()))
+-- draw :: 'Ref' 'Roller' -> 'IO' ()
+--
+-- drawSuper :: 'Ref' 'Roller' -> 'IO' ()
+--
+-- handle :: 'Ref' 'Roller' -> 'Event' -> 'IO' ('Either' 'UnknownEvent' ())
+--
+-- handleSuper :: 'Ref' 'Roller' -> 'Event' -> 'IO' ('Either' 'UnknownEvent' ())
+--
+-- hide :: 'Ref' 'Roller' -> 'IO' ()
+--
+-- hideSuper :: 'Ref' 'Roller' -> 'IO' ()
+--
+-- resize :: 'Ref' 'Roller' -> 'Rectangle' -> 'IO' ()
+--
+-- resizeSuper :: 'Ref' 'Roller' -> 'Rectangle' -> 'IO' ()
+--
+-- showWidget :: 'Ref' 'Roller' -> 'IO' ()
+--
+-- showWidgetSuper :: 'Ref' 'Roller' -> 'IO' ()
 -- @
 
 -- $hierarchy

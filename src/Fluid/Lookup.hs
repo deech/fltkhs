@@ -109,11 +109,11 @@ boxType = [
  ]
 
 labelType = [
-  ("NORMAL_LABEL"   ,"NormalLabel"),
-  ("SHADOW_LABEL"   ,"ShadowLabel"),
-  ("ENGRAVED_LABEL" ,"EngravedLabel"),
-  ("EMBOSSED_LABEL" ,"EmbossedLabel"),
-  ("NO_LABEL"       ,"NoLabel")
+  ("NORMAL_LABEL"   ,"NormalLabelType"),
+  ("SHADOW_LABEL"   ,"ShadowLabelType"),
+  ("ENGRAVED_LABEL" ,"EngravedLabelType"),
+  ("EMBOSSED_LABEL" ,"EmbossedLabelType"),
+  ("NO_LABEL"       ,"NoLabelType")
   ]
 alignmentType = [
   ("FL_ALIGN_CENTER"          ,"alignCenter"),

@@ -23,6 +23,7 @@ EXPORT {
     void show_super();
     virtual void hide();
     void hide_super();
+    void drawtext(int,int,int,int);
     Fl_DerivedInput(int X, int Y, int W, int H, const char *l, fl_Widget_Virtual_Funcs* funcs);
     Fl_DerivedInput(int X, int Y, int W, int H, fl_Widget_Virtual_Funcs* funcs);
     ~Fl_DerivedInput();
@@ -175,6 +176,7 @@ EXPORT {
   FL_EXPORT_C_HEADER(void,Fl_Input_show_super,(fl_Input o));
   FL_EXPORT_C_HEADER(void,Fl_Input_hide,(fl_Input o));
   FL_EXPORT_C_HEADER(void,Fl_Input_hide_super,(fl_Input o));
+  FL_EXPORT_C_HEADER(void,Fl_Input_drawtext,(fl_Input o,int x,int y,int w,int h));
 #ifdef __cplusplus
 }
 #endif

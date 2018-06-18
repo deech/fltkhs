@@ -2,18 +2,16 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 module Graphics.UI.FLTK.LowLevel.Image
        (
-#if FLTK_API_VERSION >= 10304
        ImageFail(..),
-#endif
        ImageFuncs(..),
        defaultImageFuncs,
        imageNew,
-       ColorAverageCallback,
-       ImageDrawCallback,
-       ImageCopyCallback,
-       toImageDrawCallbackPrim,
-       toColorAverageCallbackPrim,
-       toImageCopyCallbackPrim
+       CustomColorAverage,
+       CustomImageDraw,
+       CustomImageCopy,
+       toCustomImageDrawPrim,
+       toCustomColorAveragePrim,
+       toCustomImageCopyPrim
        -- * Hierarchy
        --
        -- $hierarchy
@@ -33,7 +31,6 @@ import Graphics.UI.FLTK.LowLevel.Utils
 import Graphics.UI.FLTK.LowLevel.Hierarchy
 import Graphics.UI.FLTK.LowLevel.Dispatch
 
-#if FLTK_API_VERSION >= 10304
 #c
 enum ImageFail {
   ImageErrNoImage = ERR_NO_IMAGE,
@@ -43,14 +40,13 @@ enum ImageFail {
 #endc
 -- | Only available on FLTK version 1.3.4 and above.
 {#enum ImageFail {} deriving (Show, Eq, Ord) #}
-#endif
 
-type ColorAverageCallback        = Ref Image -> Color -> Float -> IO ()
-type ImageDrawCallback           = Ref Image -> Position -> Size -> Maybe X -> Maybe Y -> IO ()
-type ImageCopyCallback           = Ref Image -> Size -> IO (Ref Image)
-toImageDrawCallbackPrim :: ImageDrawCallback -> IO (FunPtr ImageDrawCallbackPrim)
-toImageDrawCallbackPrim f =
-    mkImageDrawCallbackPrimPtr
+type CustomColorAverage        = Ref Image -> Color -> Float -> IO ()
+type CustomImageDraw           = Ref Image -> Position -> Size -> Maybe X -> Maybe Y -> IO ()
+type CustomImageCopy           = Ref Image -> Size -> IO (Ref Image)
+toCustomImageDrawPrim :: CustomImageDraw -> IO (FunPtr CustomImageDrawPrim)
+toCustomImageDrawPrim f =
+    mkCustomImageDrawPrimPtr
     (\ptr x_pos' y_pos' width' height' x_offset' y_offset' ->
        let _x_offset = fmap X $ integralToMaybe x_offset'
            _y_offset = fmap Y $ integralToMaybe y_offset'
@@ -62,19 +58,19 @@ toImageDrawCallbackPrim f =
         toRef ptr >>= \refPtr -> f refPtr position' size' _x_offset _y_offset
     )
 
-toColorAverageCallbackPrim :: ColorAverageCallback -> IO (FunPtr ColorAverageCallbackPrim)
-toColorAverageCallbackPrim f =
-    mkColorAverageCallbackPtr
+toCustomColorAveragePrim :: CustomColorAverage -> IO (FunPtr CustomColorAveragePrim)
+toCustomColorAveragePrim f =
+    mkCustomColorAveragePtr
     (\ptr cint cfloat ->
-         wrapNonNull ptr "Null pointer. toColorAverageCallbackPrim" >>= \pp ->
+         wrapNonNull ptr "Null pointer. toCustomColorAveragePrim" >>= \pp ->
          f (wrapInRef pp) (Color (fromIntegral cint)) (realToFrac cfloat)
     )
 
-toImageCopyCallbackPrim :: ImageCopyCallback -> IO (FunPtr ImageCopyCallbackPrim)
-toImageCopyCallbackPrim f =
-    mkImageCopyCallbackPrimPtr
+toCustomImageCopyPrim :: CustomImageCopy -> IO (FunPtr CustomImageCopyPrim)
+toCustomImageCopyPrim f =
+    mkCustomImageCopyPrimPtr
     (\ptr width' height' -> do
-         pp <- wrapNonNull ptr "Null pointer. toImageCopyCallbackPrim"
+         pp <- wrapNonNull ptr "Null pointer. toCustomImageCopyPrim"
          refPtr <- f (wrapInRef pp) (Size (Width $ fromIntegral width')
                                            (Height $ fromIntegral height'))
          unsafeRefToPtr refPtr
@@ -84,9 +80,9 @@ toImageCopyCallbackPrim f =
 data ImageFuncs a b =
   ImageFuncs
   {
-    imageDrawOverride  :: Maybe (ImageDrawCallback),
-    imageColorAverageOverride :: Maybe (ColorAverageCallback),
-    imageCopyOverride :: Maybe (ImageCopyCallback),
+    imageDrawOverride  :: Maybe (CustomImageDraw),
+    imageColorAverageOverride :: Maybe (CustomColorAverage),
+    imageCopyOverride :: Maybe (CustomImageCopy),
     imageDesaturateOverride :: Maybe (Ref Image -> IO ()),
     imageUncacheOverride :: Maybe (Ref Image -> IO ())
   }
@@ -95,11 +91,11 @@ data ImageFuncs a b =
 imageFunctionStruct :: (ImageFuncs a b) -> IO (Ptr ())
 imageFunctionStruct funcs = do
   p <- virtualFuncs'
-  toImageDrawCallbackPrim `orNullFunPtr` (imageDrawOverride funcs) >>=
+  toCustomImageDrawPrim `orNullFunPtr` (imageDrawOverride funcs) >>=
                             {# set fl_Image_Virtual_Funcs->draw #} p
-  toColorAverageCallbackPrim `orNullFunPtr` (imageColorAverageOverride funcs) >>=
+  toCustomColorAveragePrim `orNullFunPtr` (imageColorAverageOverride funcs) >>=
                             {# set fl_Image_Virtual_Funcs->color_average #} p
-  toImageCopyCallbackPrim `orNullFunPtr` (imageCopyOverride funcs) >>=
+  toCustomImageCopyPrim `orNullFunPtr` (imageCopyOverride funcs) >>=
                             {# set fl_Image_Virtual_Funcs->copy #} p
   toCallbackPrim `orNullFunPtr` (imageDesaturateOverride funcs) >>=
                             {# set fl_Image_Virtual_Funcs->desaturate #} p
@@ -126,11 +122,11 @@ imageNew (Size (Width width') (Height height')) (Depth depth') funcs =
 instance (impl ~ (IO ())) => Op (Destroy ()) Image orig impl where
   runOp _ _ image = withRef image $ \imagePtr -> flImageDestroy' imagePtr
 {# fun Fl_Image_w as w' { id `Ptr ()' } -> `Int' #}
-instance (impl ~ ( IO (Int))) => Op (GetW ()) Image orig impl where
-  runOp _ _ image = withRef image $ \imagePtr -> w' imagePtr
+instance (impl ~ ( IO (Width))) => Op (GetW ()) Image orig impl where
+  runOp _ _ image = withRef image $ \imagePtr -> w' imagePtr >>= return . Width
 {# fun Fl_Image_h as h' { id `Ptr ()' } -> `Int' #}
-instance (impl ~ ( IO (Int))) => Op (GetH ()) Image orig impl where
-  runOp _ _ image = withRef image $ \imagePtr -> h' imagePtr
+instance (impl ~ ( IO (Height))) => Op (GetH ()) Image orig impl where
+  runOp _ _ image = withRef image $ \imagePtr -> h' imagePtr >>= return . Height
 {# fun Fl_Image_d as d' { id `Ptr ()' } -> `Int' #}
 instance (impl ~ ( IO (Int))) => Op (GetD ()) Image orig impl where
   runOp _ _ image = withRef image $ \imagePtr -> d' imagePtr
@@ -185,7 +181,6 @@ instance (impl ~ (Position ->  IO ())) => Op (Draw ()) Image orig impl where
 instance (impl ~ ( IO ())) => Op (Uncache ()) Image orig impl where
   runOp _ _ image = withRef image $ \imagePtr -> uncache' imagePtr
 
-#if FLTK_API_VERSION >= 10304
 {#fun Fl_Image_fail as fail' { id `Ptr ()'} -> `CInt' #}
 -- | Only available on FLTK version 1.3.4 and above.
 instance (impl ~ (IO (Either ImageFail ()))) => Op (Fail ()) Image orig impl where
@@ -194,7 +189,16 @@ instance (impl ~ (IO (Either ImageFail ()))) => Op (Fail ()) Image orig impl whe
     if (res == 0)
       then return (Right ())
       else return (Left (cToEnum res))
-#endif
+{# fun Fl_Image_data_w as dataw' { id `Ptr ()' } -> `Int' #}
+instance (impl ~ ( IO (Width))) => Op (GetDataW ()) Image orig impl where
+  runOp _ _ image = withRef image $ \imagePtr -> dataw' imagePtr >>= return . Width
+{# fun Fl_Image_data_h as datah' { id `Ptr ()' } -> `Int' #}
+instance (impl ~ ( IO (Height))) => Op (GetDataH ()) Image orig impl where
+  runOp _ _ image = withRef image $ \imagePtr -> datah' imagePtr >>= return . Height
+{# fun Fl_Image_scale as scale' { id `Ptr ()' , `Int' , `Int' , cFromBool `Bool' , cFromBool `Bool'} -> `()' #}
+instance (impl ~ (Size -> Maybe Bool -> Maybe Bool -> IO ())) => Op (Scale ()) Image orig impl where
+  runOp _ _ image (Size (Width w') (Height h')) proportional can_expand =
+    withRef image $ \imagePtr -> scale' imagePtr w' h' (maybe True id proportional) (maybe False id can_expand)
 
 -- $functions
 -- @
@@ -210,22 +214,27 @@ instance (impl ~ (IO (Either ImageFail ()))) => Op (Fail ()) Image orig impl whe
 --
 -- drawResize :: 'Ref' 'Image' -> 'Position' -> 'Size' -> 'Maybe' 'X' -> 'Maybe' 'Y' -> 'IO' ()
 --
+-- fail :: 'Ref' 'Image' -> 'IO' ('Either' 'ImageFail' ())
+--
 -- getCount :: 'Ref' 'Image' -> 'IO' ('Int')
 --
 -- getD :: 'Ref' 'Image' -> 'IO' ('Int')
 --
--- getH :: 'Ref' 'Image' -> 'IO' ('Int')
+-- getDataH :: 'Ref' 'Image' -> 'IO' ('Height')
+--
+-- getDataW :: 'Ref' 'Image' -> 'IO' ('Width')
+--
+-- getH :: 'Ref' 'Image' -> 'IO' ('Height')
 --
 -- getLd :: 'Ref' 'Image' -> 'IO' ('Int')
 --
--- getW :: 'Ref' 'Image' -> 'IO' ('Int')
+-- getW :: 'Ref' 'Image' -> 'IO' ('Width')
 --
 -- inactive :: 'Ref' 'Image' -> 'IO' ()
 --
--- uncache :: 'Ref' 'Image' -> 'IO' ()
+-- scale :: 'Ref' 'Image' -> 'Size' -> 'Maybe' 'Bool' -> 'Maybe' 'Bool' -> 'IO' ()
 --
--- Available in FLTK 1.3.4 only:
--- fail :: 'Ref' 'Image' -> 'IO' ('Either' 'ImageFail' ())
+-- uncache :: 'Ref' 'Image' -> 'IO' ()
 -- @
 
 -- $hierarchy

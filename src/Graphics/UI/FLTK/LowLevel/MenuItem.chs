@@ -3,12 +3,13 @@
 module Graphics.UI.FLTK.LowLevel.MenuItem
   (
    menuItemNew,
+   menuItemCustom,
    addMenuItem,
-   MenuItemIndex(..),
    MenuItemName(..),
    MenuItemPointer(..),
    MenuItemReference(..),
-   MenuItemLocator(..)
+   MenuItemLocator(..),
+   toMenuItemDrawF
    -- * Hierarchy
    --
    -- $hierarchy
@@ -30,15 +31,32 @@ import Graphics.UI.FLTK.LowLevel.Hierarchy
 import Graphics.UI.FLTK.LowLevel.Dispatch
 import qualified Data.Text as T
 
-newtype MenuItemIndex = MenuItemIndex Int
 data MenuItemPointer = forall a. (Parent a MenuItem) => MenuItemPointer (Ref a)
 newtype MenuItemName = MenuItemName T.Text
-data MenuItemReference = MenuItemByIndex MenuItemIndex | MenuItemByPointer MenuItemPointer
+data MenuItemReference = MenuItemByIndex AtIndex | MenuItemByPointer MenuItemPointer
 data MenuItemLocator = MenuItemPointerLocator MenuItemPointer | MenuItemNameLocator MenuItemName
 
+toMenuItemDrawF ::
+  (Parent a MenuItem) => (Ref a -> Rectangle -> Maybe (Ref MenuPrim) -> Bool -> IO ()) ->
+  IO (FunPtr MenuItemDrawF)
+toMenuItemDrawF f =
+    mkMenuItemDrawFPtr (\menuItemPtr x' y' w' h' menuPtr selected -> do
+                           pp <- wrapNonNull menuItemPtr "Null pointer : toMenuItemDrawFPrim"
+                           maybeMenu <- toMaybeRef menuPtr
+                           let rectangle = toRectangle (fromIntegral x',fromIntegral y',fromIntegral w',fromIntegral h')
+                           f (castTo (wrapInRef pp)) rectangle maybeMenu (cToBool selected)
+                       )
+  
 {# fun Fl_Menu_Item_New as new' { } -> `Ptr ()' id #}
 menuItemNew :: IO (Ref MenuItem)
 menuItemNew = new' >>= toRef
+
+{# fun Fl_Menu_Item_New_With_Draw as newWithDraw' { id `FunPtr MenuItemDrawF' } -> `Ptr ()' id #}
+menuItemCustom :: (Parent a MenuItem) => (Ref a -> Rectangle -> Maybe (Ref MenuPrim) -> Bool -> IO ()) -> IO (Ref MenuItem)
+menuItemCustom drawF = do
+  fPtr <- toMenuItemDrawF drawF
+  p <- newWithDraw' fPtr
+  toRef p
 
 {# fun Fl_Menu_Item_Destroy as destroy' { id `Ptr ()' } -> `()' id #}
 instance (impl ~ IO ()) => Op (Destroy ()) MenuItem orig impl where
@@ -176,11 +194,11 @@ instance (impl ~  IO (Bool)) => Op (Activevisible ()) MenuItem orig impl where
 instance (Parent a MenuPrim, impl ~ (Ref a ->  IO (Size))) => Op (Measure ()) MenuItem orig impl where
   runOp _ _ menu_item menu' = withRef menu_item $ \menu_itemPtr -> withRef menu' $ \menuPtr -> measure' menu_itemPtr menuPtr >>= \(h', w') -> return (Size (Width w') (Height h'))
 
-{# fun Fl_Menu_Item_draw_with_t as drawWithT' { id `Ptr ()',`Int',`Int',`Int',`Int',id `Ptr ()',`Int' } -> `()' #}
-instance (Parent a MenuPrim, impl ~ (Rectangle -> Ref a -> Int ->  IO ())) => Op (DrawWithT ()) MenuItem orig impl where
-  runOp _ _ menu_item rectangle menu' t =
+{# fun Fl_Menu_Item_draw_with_t as drawWithT' { id `Ptr ()',`Int',`Int',`Int',`Int',id `Ptr ()',cFromBool `Bool' } -> `()' #}
+instance (Parent a MenuPrim, impl ~ (Rectangle -> Ref a -> Bool ->  IO ())) => Op (DrawWithT ()) MenuItem orig impl where
+  runOp _ _ menu_item rectangle menu' selected =
     let (x_pos', y_pos', width', height') = fromRectangle rectangle in
-    withRef menu_item $ \menu_itemPtr -> withRef menu' $ \menuPtr -> drawWithT' menu_itemPtr x_pos' y_pos' width' height' menuPtr t
+    withRef menu_item $ \menu_itemPtr -> withRef menu' $ \menuPtr -> drawWithT' menu_itemPtr x_pos' y_pos' width' height' menuPtr selected
 
 {# fun Fl_Menu_Item_draw as draw' { id `Ptr ()',`Int',`Int',`Int',`Int',id `Ptr ()' } -> `()' #}
 instance (Parent a MenuPrim, impl ~ (Rectangle -> Ref a ->  IO ())) => Op (Draw ()) MenuItem orig impl where
@@ -227,10 +245,10 @@ instance (Parent a MenuItem, impl ~ ( IO (Maybe (Ref a)))) => Op (TestShortcut (
   runOp _ _ menu_item = withRef menu_item $ \menu_itemPtr -> testShortcut' menu_itemPtr >>= toMaybeRef
 
 {# fun Fl_Menu_Item_find_shortcut_with_ip_require_alt as findShortcutWithIpRequireAlt' { id `Ptr ()',id `Ptr CInt',`Bool' } -> `Ptr ()' id #}
-instance (Parent a MenuItem, impl ~ (Maybe Int -> Bool -> IO (Maybe (Ref a)))) => Op (FindShortcut ()) MenuItem orig impl where
+instance (Parent a MenuItem, impl ~ (Maybe AtIndex -> Bool -> IO (Maybe (Ref a)))) => Op (FindShortcut ()) MenuItem orig impl where
   runOp _ _ menu_item index' require_alt =
     withRef menu_item $ \menu_itemPtr ->
-        maybeNew (new . fromIntegral) index' >>= \index_Ptr ->
+        maybeNew (new . fromIntegral) (fmap (\(AtIndex i) -> i) index') >>= \index_Ptr ->
             findShortcutWithIpRequireAlt' menu_itemPtr index_Ptr require_alt >>= toMaybeRef
 
 {# fun Fl_Menu_Item_do_callback as doCallback' { id `Ptr ()',id `Ptr ()' } -> `()' #}
@@ -246,14 +264,14 @@ addMenuItem ::
   MenuItemFlags ->
   (Ptr () -> T.Text -> CInt -> FunPtr CallbackWithUserDataPrim -> Int -> IO Int) ->
   (Ptr () -> T.Text -> T.Text -> FunPtr CallbackWithUserDataPrim -> Int -> IO Int) ->
-  IO (MenuItemIndex)
+  IO (AtIndex)
 addMenuItem refMenuOrMenuItem name shortcut cb flags addWithFlags addWithShortcutnameFlags =
      either
        (\menu -> withRef menu (go "Menu_.add: Shortcut format string cannot be empty" ))
        (\menuItem -> withRef menuItem (go "MenuItem.add: Shortcut format string cannot be empty"))
        refMenuOrMenuItem
     where
-      go :: String -> Ptr () -> IO MenuItemIndex
+      go :: String -> Ptr () -> IO AtIndex
       go errorMsg menu_Ptr = do
         let combinedFlags = menuItemFlagsToInt flags
         ptr <- maybe (return (castPtrToFunPtr nullPtr)) toCallbackPrim cb
@@ -282,17 +300,17 @@ addMenuItem refMenuOrMenuItem name shortcut cb flags addWithFlags addWithShortcu
                       0
                       (castFunPtr ptr)
                       combinedFlags
-        return (MenuItemIndex idx')
+        return (AtIndex idx')
 
 {# fun Fl_Menu_Item_insert_with_flags as insertWithFlags' { id `Ptr ()',`Int', unsafeToCString `T.Text',id `CInt',id `FunPtr CallbackWithUserDataPrim',`Int'} -> `Int' #}
 {# fun Fl_Menu_Item_add_with_flags as addWithFlags' { id `Ptr ()', unsafeToCString `T.Text',id `CInt',id `FunPtr CallbackWithUserDataPrim',`Int'} -> `Int' #}
 {# fun Fl_Menu_Item_add_with_shortcutname_flags as addWithShortcutnameFlags' { id `Ptr ()', unsafeToCString `T.Text', unsafeToCString `T.Text',id `FunPtr CallbackWithUserDataPrim',`Int' } -> `Int' #}
-instance (Parent a MenuItem, impl ~ (T.Text -> Maybe Shortcut -> Maybe (Ref a -> IO ()) -> MenuItemFlags -> IO (MenuItemIndex))) => Op (Add ()) MenuItem orig impl where
+instance (Parent a MenuItem, impl ~ (T.Text -> Maybe Shortcut -> Maybe (Ref a -> IO ()) -> MenuItemFlags -> IO (AtIndex))) => Op (Add ()) MenuItem orig impl where
   runOp _ _ menu_item name shortcut cb flags =
     addMenuItem (Right menu_item) name shortcut cb flags addWithFlags' addWithShortcutnameFlags'
 
-instance (Parent a MenuItem, impl ~ (Int -> T.Text -> Maybe ShortcutKeySequence -> (Ref a -> IO ()) -> MenuItemFlags -> IO (MenuItemIndex))) => Op (Insert ()) MenuItem orig impl where
-  runOp _ _ menu_item index' name ks cb flags =
+instance (Parent a MenuItem, impl ~ (AtIndex -> T.Text -> Maybe ShortcutKeySequence -> (Ref a -> IO ()) -> MenuItemFlags -> IO (AtIndex))) => Op (Insert ()) MenuItem orig impl where
+  runOp _ _ menu_item (AtIndex index') name ks cb flags =
     withRef menu_item $ \menu_itemPtr ->
       let combinedFlags = menuItemFlagsToInt flags
           shortcutCode = maybe 0 (\(ShortcutKeySequence modifiers char) -> keySequenceToCInt modifiers char ) ks
@@ -305,7 +323,7 @@ instance (Parent a MenuItem, impl ~ (Int -> T.Text -> Maybe ShortcutKeySequence 
                  shortcutCode
                  (castFunPtr ptr)
                  combinedFlags
-        return (MenuItemIndex idx')
+        return (AtIndex idx')
 
 {# fun Fl_Menu_Item_size as size' { id `Ptr ()' } -> `Int' #}
 instance (impl ~ ( IO (Int))) => Op (GetSize ()) MenuItem orig impl where
@@ -324,7 +342,7 @@ instance (impl ~ ( IO (Int))) => Op (GetSize ()) MenuItem orig impl where
 --
 -- activevisible :: 'Ref' 'MenuItem' -> 'IO' ('Bool')
 --
--- add:: ('Parent' a 'MenuItem') => 'Ref' 'MenuItem' -> 'T.Text' -> 'Maybe' 'Shortcut' -> 'Maybe' ('Ref' a -> 'IO' ()) -> 'MenuItemFlags' -> 'IO' ('MenuItemIndex')
+-- add:: ('Parent' a 'MenuItem') => 'Ref' 'MenuItem' -> 'T.Text' -> 'Maybe' 'Shortcut' -> 'Maybe' ('Ref' a -> 'IO' ()) -> 'MenuItemFlags' -> 'IO' ('AtIndex')
 --
 -- checkbox :: 'Ref' 'MenuItem' -> 'IO' ('Bool')
 --
@@ -338,9 +356,9 @@ instance (impl ~ ( IO (Int))) => Op (GetSize ()) MenuItem orig impl where
 --
 -- draw:: ('Parent' a 'MenuPrim') => 'Ref' 'MenuItem' -> 'Rectangle' -> 'Ref' a -> 'IO' ()
 --
--- drawWithT:: ('Parent' a 'MenuPrim') => 'Ref' 'MenuItem' -> 'Rectangle' -> 'Ref' a -> 'Int' -> 'IO' ()
+-- drawWithT:: ('Parent' a 'MenuPrim') => 'Ref' 'MenuItem' -> 'Rectangle' -> 'Ref' a -> 'Bool' -> 'IO' ()
 --
--- findShortcut:: ('Parent' a 'MenuItem') => 'Ref' 'MenuItem' -> 'Maybe' 'Int' -> 'Bool' -> 'IO' ('Maybe' ('Ref' a))
+-- findShortcut:: ('Parent' a 'MenuItem') => 'Ref' 'MenuItem' -> 'Maybe' 'AtIndex' -> 'Bool' -> 'IO' ('Maybe' ('Ref' a))
 --
 -- getFirst :: 'Ref' 'MenuItem' -> 'IO' ('Maybe' ('Ref' 'MenuItem'))
 --
@@ -366,7 +384,7 @@ instance (impl ~ ( IO (Int))) => Op (GetSize ()) MenuItem orig impl where
 --
 -- hide :: 'Ref' 'MenuItem' -> 'IO' ()
 --
--- insert:: ('Parent' a 'MenuItem') => 'Ref' 'MenuItem' -> 'Int' -> 'T.Text' -> 'Maybe' 'ShortcutKeySequence' -> ('Ref' a -> 'IO' ()) -> 'MenuItemFlags' -> 'IO' ('MenuItemIndex')
+-- insert:: ('Parent' a 'MenuItem') => 'Ref' 'MenuItem' -> 'AtIndex' -> 'T.Text' -> 'Maybe' 'ShortcutKeySequence' -> ('Ref' a -> 'IO' ()) -> 'MenuItemFlags' -> 'IO' ('AtIndex')
 --
 -- measure:: ('Parent' a 'MenuPrim') => 'Ref' 'MenuItem' -> 'Ref' a -> 'IO' ('Size')
 --
@@ -409,5 +427,4 @@ instance (impl ~ ( IO (Int))) => Op (GetSize ()) MenuItem orig impl where
 -- testShortcut:: ('Parent' a 'MenuItem') => 'Ref' 'MenuItem' -> 'IO' ('Maybe' ('Ref' a))
 --
 -- visible :: 'Ref' 'MenuItem' -> 'IO' ('Bool')
---
 -- @

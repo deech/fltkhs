@@ -601,14 +601,12 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Tree_set_margintop)(fl_Tree tree,int val){
     return (static_cast<Fl_Tree*>(tree))->margintop(val);
   }
-#if FLTK_ABI_VERSION >= 10302
   FL_EXPORT_C(int,Fl_Tree_marginbottom)(fl_Tree tree){
     return (static_cast<Fl_Tree*>(tree))->marginbottom();
   }
   FL_EXPORT_C(void,Fl_Tree_set_marginbottom)(fl_Tree tree,int val){
     (static_cast<Fl_Tree*>(tree))->marginbottom(val);
   }
-#endif /*FLTK_ABI_VERSION*/
   FL_EXPORT_C(int,Fl_Tree_linespacing)(fl_Tree tree){
     return (static_cast<Fl_Tree*>(tree))->linespacing();
   }
@@ -633,14 +631,12 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Tree_set_labelmarginleft)(fl_Tree tree,int val){
     return (static_cast<Fl_Tree*>(tree))->labelmarginleft(val);
   }
-#if FLTK_ABI_VERSION >= 10302
   FL_EXPORT_C(int,Fl_Tree_widgetmarginleft)(fl_Tree tree){
     return (static_cast<Fl_Tree*>(tree))->widgetmarginleft();
   }
   FL_EXPORT_C(void,Fl_Tree_set_widgetmarginleft)(fl_Tree tree,int val){
     return (static_cast<Fl_Tree*>(tree))->widgetmarginleft(val);
   }
-#endif /*FLTK_ABI_VERSION*/
   FL_EXPORT_C(int,Fl_Tree_connectorwidth)(fl_Tree tree){
     return (static_cast<Fl_Tree*>(tree))->connectorwidth();
   }
@@ -701,7 +697,6 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Tree_set_selectmode)(fl_Tree tree,Fl_Tree_Select val){
     (static_cast<Fl_Tree*>(tree))->selectmode(val);
   }
-#if FLTK_ABI_VERSION >= 10302
   FL_EXPORT_C(Fl_Tree_Item_Reselect_Mode,Fl_Tree_item_reselect_mode)(fl_Tree tree){
     return (static_cast<Fl_Tree*>(tree))->item_reselect_mode();
   }
@@ -717,7 +712,6 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Tree_set_item_draw_mode_with_int)(fl_Tree tree,int mode){
     (static_cast<Fl_Tree*>(tree))->item_draw_mode(mode);
   }
-#endif /*FLTK_ABI_VERSION*/
   FL_EXPORT_C(int,Fl_Tree_displayed)(fl_Tree tree,fl_Tree_Item item){
     return (static_cast<Fl_Tree*>(tree))->displayed((static_cast<Fl_Tree_Item*>(item)));
   }
@@ -820,7 +814,9 @@ EXPORT {
   FL_EXPORT_C(void, Fl_Tree_hide_super)(fl_Tree o){
     (static_cast<Fl_DerivedTree*>(o))->hide_super();
   }
-
+  FL_EXPORT_C(void, Fl_Tree_recalc_tree)(fl_Tree o){
+    (static_cast<Fl_DerivedTree*>(o))->recalc_tree();
+  }
 #ifdef __cplusplus
 }
 #endif

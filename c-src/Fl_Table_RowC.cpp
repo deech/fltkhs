@@ -736,14 +736,12 @@ EXPORT {
     }
     (static_cast<Fl_DerivedTable_Row*>(table_row))->do_callback(c, row, col);
   }
-#if FLTK_ABI_VERSION >= 10302
   FL_EXPORT_C(void, Fl_Table_Row_set_tab_cell_nav)(fl_Table_Row table_row, int val){
     (static_cast<Fl_DerivedTable_Row*>(table_row))->tab_cell_nav(val);
   }
   FL_EXPORT_C(int,  Fl_Table_Row_tab_cell_nav)(fl_Table_Row table_row){
     return (static_cast<Fl_DerivedTable_Row*>(table_row))->tab_cell_nav();
   }
-#endif
   FL_EXPORT_C(int,  Fl_Table_Row_find_cell)(fl_Table_Row table_row, TableContextC context, int R, int C, int *X, int *Y, int *W, int *H){
     Fl_Table::TableContext c = (Fl_Table::TableContext)-1;
     switch(context){

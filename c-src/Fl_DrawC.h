@@ -168,6 +168,16 @@ EXPORT {
   FL_EXPORT_C_HEADER(void         ,flc_reset_spot,());
   FL_EXPORT_C_HEADER(int          ,flc_draw_symbol,(const char* label,int x,int y,int w,int h, Fl_Color color));
   FL_EXPORT_C_HEADER(int          ,flc_add_symbol,(const char* name, void (*drawit)(Fl_Color), int scalable));
+  FL_EXPORT_C_HEADER(char         ,flc_get_draw_shortcut,());
+  FL_EXPORT_C_HEADER(void         ,flc_set_draw_shortcut,(char c));
+#if FL_API_VERSION >= 10400
+  FL_EXPORT_C_HEADER(Fl_Offscreen ,flc_create_offscreen,(int w, int h));
+  FL_EXPORT_C_HEADER(void ,flc_begin_offscreen,(Fl_Offscreen ctx));
+  FL_EXPORT_C_HEADER(void ,flc_end_offscreen,());
+  FL_EXPORT_C_HEADER(void ,flc_delete_offscreen,(Fl_Offscreen ctx));
+  FL_EXPORT_C_HEADER(void ,flc_rescale_offscreen,(Fl_Offscreen* ctx));
+  FL_EXPORT_C_HEADER(void ,flc_copy_offscreen,(int x, int y, int w, int h, Fl_Offscreen pixmap, int srcx, int srcy));
+#endif
 #ifdef __cplusplus
 }
 #endif

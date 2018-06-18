@@ -47,12 +47,13 @@ scrolledCustom rectangle l' draw' funcs' =
 {# fun Fl_Scroll_New_WithLabel as scrollNewWithLabel' { `Int',`Int',`Int',`Int', unsafeToCString `T.Text'} -> `Ptr ()' id #}
 scrolledNew :: Rectangle -> Maybe T.Text -> IO (Ref Scrolled)
 scrolledNew rectangle l'=
-    let (x_pos, y_pos, width, height) = fromRectangle rectangle
-    in case l' of
-        Nothing -> scrollNew' x_pos y_pos width height >>=
-                             toRef
-        Just l -> scrollNewWithLabel' x_pos y_pos width height l >>=
-                               toRef
+  widgetMaker
+    rectangle
+    l'
+    Nothing
+    Nothing
+    overriddenWidgetNew'
+    overriddenWidgetNewWithLabel'
 {# fun Fl_Scroll_set_scrollbar_size as setScrollbarSize' { id `Ptr ()',`Int' } -> `()' #}
 instance (impl ~ (Int ->  IO ())) => Op (SetScrollbarSize ()) Scrolled orig impl where
    runOp _ _ widget size = withRef widget $ \widgetPtr -> setScrollbarSize' widgetPtr size
@@ -143,8 +144,6 @@ instance (impl ~ ( IO ())) => Op (ShowWidgetSuper ()) Scrolled orig impl where
 -- hide :: 'Ref' 'Scrolled' -> 'IO' ()
 --
 -- hideSuper :: 'Ref' 'Scrolled' -> 'IO' ()
---
--- resize :: 'Ref' 'Scrolled' -> 'Rectangle' -> 'IO' ()
 --
 -- resize :: 'Ref' 'Scrolled' -> 'Rectangle' -> 'IO' ()
 --

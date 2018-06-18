@@ -30,18 +30,12 @@ EXPORT {
   FL_EXPORT_C_HEADER(void,Fl_Tooltip_set_color,(Fl_Color c));
   FL_EXPORT_C_HEADER(Fl_Color,Fl_Tooltip_textcolor,());
   FL_EXPORT_C_HEADER(void,Fl_Tooltip_set_textcolor,(Fl_Color c));
-#if FLTK_ABI_VERSION >= 10301
   FL_EXPORT_C_HEADER(int,Fl_Tooltip_margin_width,());
   FL_EXPORT_C_HEADER(void,Fl_Tooltip_set_margin_width,(int v));
   FL_EXPORT_C_HEADER(int,Fl_Tooltip_margin_height,());
   FL_EXPORT_C_HEADER(void,Fl_Tooltip_set_margin_height,(int v));
   FL_EXPORT_C_HEADER(int,Fl_Tooltip_wrap_width,());
   FL_EXPORT_C_HEADER(void,Fl_Tooltip_set_wrap_width,(int v));
-#else
-  FL_EXPORT_C_HEADER(int,Fl_Tooltip_margin_width,());
-  FL_EXPORT_C_HEADER(int,Fl_Tooltip_margin_height,());
-  FL_EXPORT_C_HEADER(int,Fl_Tooltip_wrap_width,());
-#endif
 #ifdef __APPLE__
   FL_EXPORT_C_HEADER(fl_Window,Fl_Tooltip_current_window,(void));
 #endif

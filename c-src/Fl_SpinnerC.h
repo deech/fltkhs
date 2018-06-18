@@ -50,6 +50,8 @@ EXPORT {
   FL_EXPORT_C_HEADER(void,Fl_Spinner_range,(fl_Spinner spinner, double a, double b));
   FL_EXPORT_C_HEADER(void,Fl_Spinner_set_step,(fl_Spinner spinner, double a));
   FL_EXPORT_C_HEADER(double,Fl_Spinner_step,(fl_Spinner spinner));
+  FL_EXPORT_C_HEADER(void,Fl_Spinner_set_wrap,(fl_Spinner spinner, int a));
+  FL_EXPORT_C_HEADER(int,Fl_Spinner_wrap,(fl_Spinner spinner));
   FL_EXPORT_C_HEADER(double,Fl_Spinner_value,(fl_Spinner spinner));
   FL_EXPORT_C_HEADER(void,Fl_Spinner_set_value,(fl_Spinner spinner, double v));
   FL_EXPORT_C_HEADER(void,Fl_Spinner_set_format,(fl_Spinner spinner, const char* format));

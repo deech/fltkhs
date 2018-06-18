@@ -12,8 +12,8 @@ EXPORT {
 #define FL_MAJOR_VERSION        FLTK_MAJOR_VERSION
 #define FL_MINOR_VERSION        FLTK_MINOR_VERSION
 #define FL_PATCH_VERSION        FLTK_PATCH_VERSION
-#define FL_VERSION              ((double)FL_MAJOR_VERSION +             \
-                                 (double)FL_MINOR_VERSION * 0.01 +      \
+#define FL_VERSION              ((double)FL_MAJOR_VERSION +         \
+                                 (double)FL_MINOR_VERSION * 0.01 +  \
                                  (double)FL_PATCH_VERSION * 0.0001)
 #define FL_API_VERSION (FL_MAJOR_VERSION*10000 + FL_MINOR_VERSION*100 + FL_PATCH_VERSION)
 #ifndef FL_ABI_VERSION
@@ -46,7 +46,8 @@ EXPORT {
     FL_DND_LEAVE                = 22,
     FL_DND_RELEASE      = 23,
     FL_SCREEN_CONFIGURATION_CHANGED = 24,
-    FL_FULLSCREEN         = 25
+    FL_FULLSCREEN         = 25,
+    FL_ZOOM_GESTURE	= 26
   } Fl_Event;
 
   typedef enum Fl_When {
@@ -75,7 +76,6 @@ EXPORT {
     FL_TREE_SELECT_MULTI=2,
     FL_TREE_SELECT_SINGLE_DRAGGABLE=3
   }Fl_Tree_Select;
-#if FLTK_ABI_VERSION >= 10302
   typedef enum  Fl_Tree_Item_Reselect_Mode{
     FL_TREE_SELECTABLE_ONCE=0,
     FL_TREE_SELECTABLE_ALWAYS,
@@ -85,7 +85,6 @@ EXPORT {
     FL_TREE_ITEM_DRAW_LABEL_AND_WIDGET=1,
     FL_TREE_ITEM_HEIGHT_FROM_WIDGET=2
   }Fl_Tree_Item_Draw_Mode;
-#endif /*FLTK_ABI_VERSION*/
 #define FL_Button         0xfee8
 #define FL_Clear          0xff0b
 #define FL_BackSpace      0xff08
@@ -273,23 +272,25 @@ EXPORT {
 #define FL_FRAME_BOX FL_ENGRAVED_BOX
 #define FL_CIRCLE_BOX FL_ROUND_DOWN_BOX
 #define FL_DIAMOND_BOX FL_DIAMOND_DOWN_BOX
-  typedef enum Fl_Labeltype {
-    FL_NORMAL_LABEL     = 0,
-    FL_NO_LABEL,
-    _FL_SHADOW_LABEL,
-    _FL_ENGRAVED_LABEL,
-    _FL_EMBOSSED_LABEL,
-    _FL_MULTI_LABEL,
-    _FL_ICON_LABEL,
-    _FL_IMAGE_LABEL,
-
-    FL_FREE_LABELTYPE
-  } Fl_Labeltype;
+typedef enum Fl_Labeltype {
+  FL_NORMAL_LABEL     = 0,
+  FL_NO_LABEL,
+  _FL_SHADOW_LABEL,
+  _FL_ENGRAVED_LABEL,
+  _FL_EMBOSSED_LABEL,
+  _FL_MULTI_LABEL,
+  _FL_ICON_LABEL,
+  _FL_IMAGE_LABEL,
+  FL_FREE_LABELTYPE
+} Fl_Labeltype;
 
 #define FL_SYMBOL_LABEL FL_NORMAL_LABEL
 #define FL_SHADOW_LABEL fl_define_FL_SHADOW_LABELC()
 #define FL_ENGRAVED_LABEL fl_define_FL_ENGRAVED_LABELC()
 #define FL_EMBOSSED_LABEL fl_define_FL_EMBOSSED_LABELC()
+#define FL_ICON_LABEL fl_define_FL_ICON_LABELC()
+#define FL_IMAGE_LABEL fl_define_FL_IMAGE_LABELC()
+#define FL_MULTI_LABEL fl_define_FL_MULTI_LABELC()
 
   typedef unsigned Fl_Align;
   Fl_Align FL_ALIGN_CENTER             = (Fl_Align)0;
@@ -457,12 +458,15 @@ EXPORT {
   FL_EXPORT_C_HEADER(Fl_Boxtype,fl_define_FL_PLASTIC_UP_BOXC,());
   FL_EXPORT_C_HEADER(Fl_Boxtype,fl_define_FL_GTK_UP_BOXC,());
   FL_EXPORT_C_HEADER(Fl_Boxtype,fl_define_FL_GLEAM_UP_BOXC,());
-  FL_EXPORT_C_HEADER(Fl_Boxtype,fl_boxC,(Fl_Boxtype b) );
-  FL_EXPORT_C_HEADER(Fl_Boxtype,fl_downC,(Fl_Boxtype b) );
-  FL_EXPORT_C_HEADER(Fl_Boxtype,fl_frameC,(Fl_Boxtype b) );
-  FL_EXPORT_C_HEADER(Fl_Labeltype,fl_define_FL_SHADOW_LABELC,() );
-  FL_EXPORT_C_HEADER(Fl_Labeltype,fl_define_FL_ENGRAVED_LABELC,() );
-  FL_EXPORT_C_HEADER(Fl_Labeltype,fl_define_FL_EMBOSSED_LABELC,() );
+  FL_EXPORT_C_HEADER(Fl_Boxtype,fl_boxC,(Fl_Boxtype b));
+  FL_EXPORT_C_HEADER(Fl_Boxtype,fl_downC,(Fl_Boxtype b));
+  FL_EXPORT_C_HEADER(Fl_Boxtype,fl_frameC,(Fl_Boxtype b));
+  FL_EXPORT_C_HEADER(Fl_Labeltype,fl_define_FL_SHADOW_LABELC,());
+  FL_EXPORT_C_HEADER(Fl_Labeltype,fl_define_FL_ENGRAVED_LABELC,());
+  FL_EXPORT_C_HEADER(Fl_Labeltype,fl_define_FL_EMBOSSED_LABELC,());
+  FL_EXPORT_C_HEADER(Fl_Labeltype,fl_define_FL_ICON_LABELC,());
+  FL_EXPORT_C_HEADER(Fl_Labeltype,fl_define_FL_IMAGE_LABELC,());
+  FL_EXPORT_C_HEADER(Fl_Labeltype,fl_define_FL_MULTI_LABELC,());
   FL_EXPORT_C_HEADER(Fl_Align,FL_ALIGN_TOP_LEFTC,());
   FL_EXPORT_C_HEADER(Fl_Align,FL_ALIGN_TOP_RIGHTC,());
   FL_EXPORT_C_HEADER(Fl_Align,FL_ALIGN_BOTTOM_LEFTC,());

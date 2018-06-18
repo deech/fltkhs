@@ -59,12 +59,13 @@ fileBrowserCustom rectangle l' draw' funcs' =
 {# fun Fl_File_Browser_New_WithLabel as fileBrowserNewWithLabel' { `Int',`Int',`Int',`Int', unsafeToCString `T.Text'} -> `Ptr ()' id #}
 fileBrowserNew :: Rectangle -> Maybe T.Text -> IO (Ref FileBrowser)
 fileBrowserNew rectangle l'=
-    let (x_pos, y_pos, width, height) = fromRectangle rectangle
-    in case l' of
-        Nothing -> fileBrowserNew' x_pos y_pos width height >>=
-                             toRef
-        Just l -> fileBrowserNewWithLabel' x_pos y_pos width height l >>=
-                               toRef
+  widgetMaker
+    rectangle
+    l'
+    Nothing
+    Nothing
+    overriddenWidgetNew'
+    overriddenWidgetNewWithLabel'
 
 {# fun Fl_File_Browser_set_iconsize as setIconsize' { id `Ptr ()', id `CUChar' } -> `()' #}
 instance (impl ~ (CUChar ->  IO ())) => Op (SetIconsize ()) FileBrowser orig impl where

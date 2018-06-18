@@ -12,10 +12,8 @@ module Graphics.UI.FLTK.LowLevel.Fl_Enumerations
      TreeConnector(..),
      TreeSelect(..),
      SearchDirection(..),
-#if FLTK_ABI_VERSION >= 10302
      TreeItemReselectMode(..),
      TreeItemDrawMode(..),
-#endif
      -- * Keyboard and mouse codes
      SpecialKey(..),
      allSpecialKeys,
@@ -36,7 +34,8 @@ module Graphics.UI.FLTK.LowLevel.Fl_Enumerations
      Modes(..),
      single,
      allModes,
-     -- * Alignment
+     allTreeItemDrawModes,
+     -- * Alignmenkt
      Alignments(..),
      AlignType(..),
      alignCenter,
@@ -78,6 +77,7 @@ module Graphics.UI.FLTK.LowLevel.Fl_Enumerations
      defineOvalBox,
      definePlasticUpBox,
      defineGtkUpBox,
+     defineIconLabel,
      -- * Fonts
      Font(..),
      FontAttribute(..),
@@ -113,7 +113,7 @@ module Graphics.UI.FLTK.LowLevel.Fl_Enumerations
      -- ** Various Color Functions
      inactive,
      contrast,
-     color_average,
+     colorAverage,
      lighter,
      darker,
      rgbColorWithRgb,
@@ -162,6 +162,9 @@ module Graphics.UI.FLTK.LowLevel.Fl_Enumerations
      defineShadowLabel,
      defineEngravedLabel,
      defineEmbossedLabel,
+     defineMultiLabel,
+     -- defineIconLabel,
+     defineImageLabel,
      -- * Color
      RGB
     )
@@ -201,7 +204,8 @@ enum Event {
   DndLeave = FL_DND_LEAVE,
   DndRelease = FL_DND_RELEASE,
   ScreenConfigurationChanged = FL_SCREEN_CONFIGURATION_CHANGED,
-  Fullscreen = FL_FULLSCREEN
+  Fullscreen = FL_FULLSCREEN,
+  ZoomGesture = FL_ZOOM_GESTURE
 };
 enum When {
   WhenNever = FL_WHEN_NEVER,
@@ -246,7 +250,6 @@ enum SearchDirection {
   SearchDirectionDown = FL_Down,
   SearchDirectionUp = FL_Up
 };
-#if FLTK_ABI_VERSION >= 10302
 enum  TreeItemReselectMode{
   TreeSelectableOnce = FL_TREE_SELECTABLE_ONCE,
   TreeSelectableAlways = FL_TREE_SELECTABLE_ALWAYS
@@ -256,7 +259,6 @@ enum TreeItemDrawMode{
   TreeItemDrawLabelAndWidget = FL_TREE_ITEM_DRAW_LABEL_AND_WIDGET,
   TreeItemHeightFromWidget = FL_TREE_ITEM_HEIGHT_FROM_WIDGET
 };
-#endif
 enum SpecialKey {
   Button = FL_Button,
   Kb_Clear = FL_Clear,
@@ -381,9 +383,7 @@ enum Mode {
  ModeStereo      = FL_STEREO,
  ModeFakeSingle  = FL_FAKE_SINGLE
 #ifdef GLSUPPORT
-#if FLTK_API_VERSION >= 10304
  , ModeOpenGL3     = FL_OPENGL3
-#endif
 #endif
 };
 enum AlignType {
@@ -412,11 +412,9 @@ enum AlignType {
 {#enum TreeConnector {} deriving (Show, Eq) #}
 {#enum TreeSelect {} deriving (Show, Eq) #}
 {#enum SearchDirection {} deriving (Show, Eq) #}
-#if FLTK_ABI_VERSION >= 10302
 {#enum TreeItemReselectMode {} deriving (Show, Eq) #}
-{#enum TreeItemDrawMode {} deriving (Show, Eq) #}
-#endif
-{#enum SpecialKey {} deriving (Show, Eq) #}
+{#enum TreeItemDrawMode {} deriving (Show, Eq, Ord) #}
+{#enum SpecialKey {} deriving (Show, Eq, Ord) #}
 
 allShortcutSpecialKeys :: [CInt]
 allShortcutSpecialKeys = [
@@ -557,15 +555,13 @@ allModes =
     ModeMultisample,
     ModeStereo,
     ModeFakeSingle
-#if FLTK_API_VERSION >= 10304
 #ifdef GLSUPPORT
     , ModeOpenGL3
-#endif
 #endif
   ]
 
 {#enum AlignType {} deriving (Show, Eq, Ord) #}
-newtype Alignments = Alignments [AlignType] deriving Show
+newtype Alignments = Alignments [AlignType] deriving (Eq, Show, Ord)
 alignCenter :: Alignments
 alignCenter = Alignments [AlignTypeCenter]
 alignTop :: Alignments
@@ -658,6 +654,14 @@ allEventStates = [
     Mouse_Button2State,
     Mouse_Button3State
   ]
+
+allTreeItemDrawModes :: [TreeItemDrawMode]
+allTreeItemDrawModes = [
+    TreeItemDrawDefault,
+    TreeItemDrawLabelAndWidget,
+    TreeItemHeightFromWidget
+  ]
+
 data Boxtype = NoBox
              | FlatBox
              | UpBox
@@ -715,7 +719,7 @@ data Boxtype = NoBox
              | GleamRoundUpBox
              | GleamRoundDownBox
              | FreeBoxtype
-             deriving (Show)
+             deriving (Show, Eq, Ord)
 instance Enum Boxtype where
   fromEnum NoBox = 0
   fromEnum FlatBox = 1
@@ -841,8 +845,8 @@ diamondBox = DiamondDownBox
 
 
 -- Fonts
-newtype Font = Font Int deriving Show
-data FontAttribute = Bold | Italic | BoldItalic deriving (Show, Enum)
+newtype Font = Font Int deriving (Eq, Show, Ord)
+data FontAttribute = Bold | Italic | BoldItalic deriving (Show, Eq, Ord, Enum)
 cFromFont :: Font -> CInt
 cFromFont (Font f) = fromIntegral f
 cToFont :: CInt -> Font
@@ -900,7 +904,7 @@ freeFont = Font 16
 
 -- Colors
 
-newtype Color = Color CUInt deriving Show
+newtype Color = Color CUInt deriving (Eq,Show,Ord)
 foregroundColor :: Color
 foregroundColor = Color 0
 background2Color :: Color
@@ -974,30 +978,40 @@ numBlue = Color 5
 
 -- Fl_LabelType
 
-data Labeltype = NormalLabel
-               | NoLabel
-               | ShadowLabel
-               | EngravedLabel
-               | EmbossedLabel
-               | FreeLabelType deriving Show
+data Labeltype = NormalLabelType
+               | NoLabelType
+               | ShadowLabelType
+               | EngravedLabelType
+               | EmbossedLabelType
+               | IconLabelType
+               | MultiLabelType
+               | ImageLabelType
+               | FreeLabelType deriving (Eq, Show, Ord)
 
 instance Enum Labeltype where
-    fromEnum NormalLabel = 0
-    fromEnum NoLabel = 1
-    fromEnum ShadowLabel = defineShadowLabel_
-    fromEnum EngravedLabel = defineEngravedLabel_
-    fromEnum EmbossedLabel = defineEmbossedLabel_
+    fromEnum NormalLabelType = 0
+    fromEnum NoLabelType = 1
+    fromEnum ShadowLabelType = defineShadowLabel_
+    fromEnum EngravedLabelType = defineEngravedLabel_
+    fromEnum EmbossedLabelType = defineEmbossedLabel_
+    fromEnum MultiLabelType = defineMultiLabel_
+    fromEnum ImageLabelType = defineImageLabel_
+    fromEnum IconLabelType = defineIconLabel_
     fromEnum FreeLabelType = 8
 
-    toEnum 0 = NormalLabel
-    toEnum 1 = NoLabel
-    toEnum x | x == defineShadowLabel_ = ShadowLabel
-             | x == defineEngravedLabel_ = EngravedLabel
-             | x == defineEmbossedLabel_ = EmbossedLabel
+    toEnum 0 = NormalLabelType
+    toEnum 1 = NoLabelType
+    toEnum x | x == defineShadowLabel_ = ShadowLabelType
+             | x == defineEngravedLabel_ = EngravedLabelType
+             | x == defineEmbossedLabel_ = EmbossedLabelType
+             | x == defineMultiLabel_ = MultiLabelType
+             | x == defineIconLabel_ = IconLabelType
+             | x == defineImageLabel_ = ImageLabelType
     toEnum 8 = FreeLabelType
+    toEnum otherwise = error ("LabelType.toEnum: Cannot match " ++ show otherwise)
 
 symbolLabel :: Labeltype
-symbolLabel = NormalLabel
+symbolLabel = NormalLabelType
 
 defineRoundUpBox_ :: (Num a) => a
 defineRoundUpBox_ =
@@ -1081,6 +1095,27 @@ defineEmbossedLabel_ =
 defineEmbossedLabel :: Labeltype
 defineEmbossedLabel = toEnum defineEmbossedLabel_
 
+defineIconLabel_ :: (Num a) => a
+defineIconLabel_ =
+   fromIntegral $ {#call pure unsafe fl_define_FL_ICON_LABELC #}
+
+defineIconLabel :: Labeltype
+defineIconLabel = toEnum defineIconLabel_
+
+defineMultiLabel_ :: (Num a) => a
+defineMultiLabel_ =
+   fromIntegral $ {#call pure unsafe fl_define_FL_MULTI_LABELC #}
+
+defineMultiLabel :: Labeltype
+defineMultiLabel = toEnum defineMultiLabel_
+
+defineImageLabel_ :: (Num a) => a
+defineImageLabel_ =
+   fromIntegral $ {#call pure unsafe fl_define_FL_IMAGE_LABELC #}
+
+defineImageLabel :: Labeltype
+defineImageLabel = toEnum defineImageLabel_
+
 cFromColor :: Color -> CUInt
 cFromColor (Color c) = fromIntegral c
 cToColor :: CUInt-> Color
@@ -1094,7 +1129,7 @@ type RGB = (CUChar, CUChar, CUChar)
                   contrast {cFromColor `Color',cFromColor `Color'}
                   -> `Color' cToColor#}
 {#fun pure fl_color_averageC as
-                  color_average {cFromColor `Color',
+                  colorAverage {cFromColor `Color',
                                  cFromColor `Color',
                                  realToFrac `Double'}
                   -> `Color' cToColor#}

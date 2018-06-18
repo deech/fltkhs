@@ -46,12 +46,13 @@ valueInputCustom rectangle l' draw' funcs' =
 {# fun Fl_Value_Input_New_WithLabel as valueInputNewWithLabel' { `Int',`Int',`Int',`Int',unsafeToCString `T.Text'} -> `Ptr ()' id #}
 valueInputNew :: Rectangle -> Maybe T.Text -> IO (Ref ValueInput)
 valueInputNew rectangle l'=
-    let (x_pos, y_pos, width, height) = fromRectangle rectangle
-    in case l' of
-        Nothing -> valueInputNew' x_pos y_pos width height >>=
-                             toRef
-        Just l -> valueInputNewWithLabel' x_pos y_pos width height l >>=
-                               toRef
+  widgetMaker
+    rectangle
+    l'
+    Nothing
+    Nothing
+    overriddenWidgetNew'
+    overriddenWidgetNewWithLabel'
 
 {# fun Fl_Value_Input_Destroy as valueInputDestroy' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
 instance (impl ~ (IO ())) => Op (Destroy ()) ValueInput orig impl where
@@ -168,10 +169,6 @@ instance (impl ~ ( IO ())) => Op (ShowWidgetSuper ()) ValueInput orig impl where
 -- showWidget :: 'Ref' 'ValueInput' -> 'IO' ()
 --
 -- showWidgetSuper :: 'Ref' 'ValueInput' -> 'IO' ()
-
--- Available in FLTK 1.3.4 only:
-
-
 -- @
 
 -- $hierarchy

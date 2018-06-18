@@ -2,12 +2,6 @@
 #ifdef __cplusplus
 EXPORT {
 #endif
-  FL_EXPORT_C(const char*,Fl_Paged_Device_class_id)( ){
-    return Fl_Surface_Device::class_id;
-  }
-  FL_EXPORT_C(const char*,Fl_Paged_Device_class_name)(fl_Paged_Device paged_device){
-    return (static_cast<Fl_Paged_Device*>(paged_device))->class_name();
-  }
   FL_EXPORT_C(void,Fl_Paged_Device_set_current)(fl_Paged_Device paged_device){
     return (static_cast<Fl_Paged_Device*>(paged_device))->set_current();
   }

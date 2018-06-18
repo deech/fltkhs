@@ -58,7 +58,12 @@ parseInstance = do
   spacesOrNewLines
   char '('
   methodName <- word
-  _ <- go (1 :: Int) ""
+  spacesOrNewLines
+  char '('
+  spacesOrNewLines
+  char ')'
+  spacesOrNewLines
+  char ')'
   spacesOrNewLines
   widgetType <- word
   return (constraints, typeSig, methodName, widgetType)
@@ -171,7 +176,7 @@ main = do
       let (functions, inNewVersionOnly) = parseWidgetFile contents
       let rendered = maybe [] (sort . map (\(c, sig, mName, wType) -> pprint ((c, sig), mName, wType)))
       putStr $ intercalate "\n--\n" (map ((++) "-- ") (rendered functions))
-      putStr "\n"
-      putStr $ "\n-- Available in FLTK 1.3.4 only: \n"
-      putStr $ intercalate "\n--\n" (map ((++) "-- ") (rendered inNewVersionOnly))
-      putStr "\n"
+      -- putStr "\n"
+      -- putStr $ "\n-- Available in FLTK 1.3.4 only: \n"
+      -- putStr $ intercalate "\n--\n" (map ((++) "-- ") (rendered inNewVersionOnly))
+      -- putStr "\n"

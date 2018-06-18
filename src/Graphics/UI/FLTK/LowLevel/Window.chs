@@ -110,11 +110,14 @@ windowMaker (Size (Width w) (Height h))
        p <- virtualFuncs'
        fillCustomWidgetFunctionStruct p draw' customWidgetFuncs'
        fillCustomWindowFunctionStruct p customWindowFuncs'
-       case (position, title) of
-        (Nothing, Nothing) -> custom' w h p >>= toRef
-        (Just (Position (X x) (Y y)), Nothing) -> customXY' x y w h p >>= toRef
-        (Just (Position (X x) (Y y)), (Just l')) -> customXYWithLabel' x y w h l' p >>= toRef
-        (Nothing, (Just l')) -> customWithLabel' w h l' p >>= toRef
+       ref <- case (position, title) of
+                (Nothing, Nothing) -> custom' w h p >>= toRef
+                (Just (Position (X x) (Y y)), Nothing) -> customXY' x y w h p >>= toRef
+                (Just (Position (X x) (Y y)), (Just l')) -> customXYWithLabel' x y w h l' p >>= toRef
+                (Nothing, (Just l')) -> customWithLabel' w h l' p >>= toRef
+       setFlag (safeCast ref :: Ref Window) WidgetFlagCopiedLabel
+       setFlag (safeCast ref :: Ref Window) WidgetFlagCopiedTooltip
+       return ref
 
 {# fun Fl_OverriddenWindow_New as overriddenWindowNew' {`Int',`Int', id `Ptr ()'} -> `Ptr ()' id #}
 {# fun Fl_OverriddenWindow_NewXY as overriddenWindowNewXY' {`Int',`Int', `Int', `Int', id `Ptr ()'} -> `Ptr ()' id #}
@@ -302,11 +305,11 @@ instance (impl ~ ( IO ())) => Op (FreePosition ()) Window orig impl where
 
 {# fun Fl_Window_size_range as sizeRange' { id `Ptr ()',`Int',`Int' } -> `()' supressWarningAboutRes #}
 {# fun Fl_Window_size_range_with_args as sizeRangeWithArgs' { id `Ptr ()',`Int',`Int', id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance (impl ~ (Int -> Int -> IO ())) => Op (SizeRange ()) Window orig impl where
-  runOp _ _ win minw' minh' =
+instance (impl ~ (Size -> IO ())) => Op (SizeRange ()) Window orig impl where
+  runOp _ _ win (Size (Width minw') (Height minh')) =
     withRef win $ \winPtr -> sizeRange' winPtr minw' minh'
-instance (impl ~ (Int -> Int -> OptionalSizeRangeArgs ->  IO ())) => Op (SizeRangeWithArgs ()) Window orig impl where
-  runOp _ _ win minw' minh' args =
+instance (impl ~ (Size -> OptionalSizeRangeArgs ->  IO ())) => Op (SizeRangeWithArgs ()) Window orig impl where
+  runOp _ _ win (Size (Width minw') (Height minh')) args =
     withRef win $ \winPtr -> do
       structPtr <- optionalSizeRangeArgsToStruct args
       sizeRangeWithArgs' winPtr minw' minh' structPtr
@@ -513,9 +516,9 @@ instance (impl ~ IO (WindowType)) => Op (GetType_ ()) Window orig impl where
 --
 -- getYRoot :: 'Ref' 'Window' -> 'IO' ('Int')
 --
--- handle :: 'Ref' 'Window' -> ('Event' -> 'IO' ('Either' 'UnknownEvent' ()))
+-- handle :: 'Ref' 'Window' -> 'Event' -> 'IO' ('Either' 'UnknownEvent' ())
 --
--- handleSuper :: 'Ref' 'Window' -> 'Event' -> 'IO' ('Int')
+-- handleSuper :: 'Ref' 'Window' -> 'Event' -> 'IO' ('Either' 'UnknownEvent' ())
 --
 -- hide :: 'Ref' 'Window' -> 'IO' ()
 --
@@ -575,9 +578,9 @@ instance (impl ~ IO (WindowType)) => Op (GetType_ ()) Window orig impl where
 --
 -- shown :: 'Ref' 'Window' -> 'IO' ('Bool')
 --
--- sizeRange :: 'Ref' 'Window' -> 'Int' -> 'Int' -> 'IO' ()
+-- sizeRange :: 'Ref' 'Window' -> 'Size' -> 'IO' ()
 --
--- sizeRangeWithArgs :: 'Ref' 'Window' -> 'Int' -> 'Int' -> 'OptionalSizeRangeArgs' -> 'IO' ()
+-- sizeRangeWithArgs :: 'Ref' 'Window' -> 'Size' -> 'OptionalSizeRangeArgs' -> 'IO' ()
 --
 -- waitForExpose :: 'Ref' 'Window' -> 'IO' ()
 -- @

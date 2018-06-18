@@ -56,26 +56,32 @@ boxCustomWithBoxtype boxtype' rectangle' l' draw' funcs' =
     in case funcs' of
         Just fs -> do
           ptr <- customWidgetFunctionStruct draw' fs
-          overriddenBoxNewWithBoxtype' boxtype' x_pos y_pos width height l' (castPtr ptr) >>= toRef
+          ref <- overriddenBoxNewWithBoxtype' boxtype' x_pos y_pos width height l' (castPtr ptr) >>= toRef
+          setFlag ref WidgetFlagCopiedLabel
+          setFlag ref WidgetFlagCopiedTooltip
+          return ref
         Nothing ->
           boxNewWithBoxtype' boxtype' x_pos y_pos width height l' >>= toRef
 
 
 boxNew :: Rectangle -> Maybe T.Text -> IO (Ref Box)
 boxNew rectangle l' =
-    let (x_pos, y_pos, width, height) = fromRectangle rectangle
-    in case l' of
-        Nothing -> boxNew' x_pos y_pos width height >>=
-                             toRef
-        Just l -> boxNewWithLabel' x_pos y_pos width height l >>=
-                             toRef
+  widgetMaker
+    rectangle
+    l'
+    Nothing
+    Nothing
+    overriddenBoxNew'
+    overriddenBoxNewWithLabel'
 
 boxNewWithBoxtype :: Boxtype -> Rectangle -> T.Text -> IO (Ref Box)
 boxNewWithBoxtype boxtype' rectangle' l' =
     let (x_pos, y_pos, width, height) = fromRectangle rectangle'
-    in
-    boxNewWithBoxtype' boxtype' x_pos y_pos width height l' >>=
-                             toRef
+    in do
+      ref <- boxNewWithBoxtype' boxtype' x_pos y_pos width height l' >>= toRef
+      setFlag ref WidgetFlagCopiedLabel
+      setFlag ref WidgetFlagCopiedTooltip
+      return ref
 
 {#fun Fl_Box_handle as boxHandle' { id `Ptr ()', id `CInt' } -> `Int' #}
 instance (impl ~ (Event -> IO (Either UnknownEvent ()))) => Op (Handle ()) Box orig impl where

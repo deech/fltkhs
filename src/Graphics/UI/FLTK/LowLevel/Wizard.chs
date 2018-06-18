@@ -46,10 +46,13 @@ wizardCustom rectangle l' draw' funcs' =
 {# fun Fl_Wizard_New_WithLabel as wizardNewWithLabel' { `Int',`Int',`Int',`Int', unsafeToCString `T.Text'} -> `Ptr ()' id #}
 wizardNew :: Rectangle -> Maybe T.Text -> IO (Ref Wizard)
 wizardNew rectangle label' =
-    let (x_pos, y_pos, width, height) = fromRectangle rectangle
-    in case label' of
-        (Just l') -> wizardNewWithLabel' x_pos y_pos width height l' >>= toRef
-        Nothing -> wizardNew' x_pos y_pos width height >>= toRef
+  widgetMaker
+    rectangle
+    label'
+    Nothing
+    Nothing
+    overriddenWidgetNew'
+    overriddenWidgetNewWithLabel'
 
 {# fun Fl_Wizard_Destroy as wizardDestroy' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
 instance (impl ~ (IO ())) => Op (Destroy ()) Wizard orig impl where
@@ -109,7 +112,6 @@ instance (impl ~ ( IO ())) => Op (ShowWidgetSuper ()) Wizard orig impl where
 
 -- $functions
 -- @
---
 -- destroy :: 'Ref' 'Wizard' -> 'IO' ()
 --
 -- draw :: 'Ref' 'Wizard' -> 'IO' ()
