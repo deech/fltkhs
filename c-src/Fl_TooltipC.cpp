@@ -21,7 +21,7 @@ EXPORT {
     Fl_Tooltip::enable(b);
   }
   FL_EXPORT_C(int,Fl_Tooltip_enabled)(){
-    Fl_Tooltip::enabled();
+    return Fl_Tooltip::enabled();
   }
   FL_EXPORT_C(void,Fl_Tooltip_disable)( ){
     Fl_Tooltip::disable();

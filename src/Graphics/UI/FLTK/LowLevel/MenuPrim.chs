@@ -29,6 +29,7 @@ import qualified Data.Text as T
 import Graphics.UI.FLTK.LowLevel.Hierarchy
 import Graphics.UI.FLTK.LowLevel.MenuItem
 import qualified Data.ByteString.Char8 as C
+import Control.Exception
 
 {# fun Fl_Menu__New as widgetNew' { `Int',`Int',`Int',`Int' } -> `Ptr ()' id #}
 {# fun Fl_Menu__New_WithLabel as widgetNewWithLabel' { `Int',`Int',`Int',`Int',unsafeToCString `T.Text'} -> `Ptr ()' id #}
@@ -218,6 +219,15 @@ instance (Parent a MenuItem, impl ~ ( T.Text -> Maybe Shortcut -> Maybe (Ref a->
   runOp _ _ menu_ name shortcut cb flags =
     addMenuItem (Left menu_) name shortcut cb flags addWithFlags' addWithShortcutnameFlags'
 
+instance (Parent a MenuItem, impl ~ ( T.Text -> Maybe Shortcut -> Maybe (Ref a-> IO ()) -> MenuItemFlags -> IO (Ref MenuItem))) => Op (AddAndGetMenuItem ()) MenuPrim orig (impl) where
+  runOp _ _ menu_ name shortcut cb flags = do
+    (AtIndex i) <- add menu_ name shortcut cb flags
+    items <- getMenu menu_
+    let mi = items !! i
+    case mi of
+      Just mi' -> return mi'
+      Nothing -> throwIO (userError ("FLTK claims the menu item " ++ (T.unpack name) ++ " was added successfully at index " ++ (show i) ++ " , but no MenuItem at that index could be retrieved."))
+
 {# fun Fl_Menu__size as size' { id `Ptr ()' } -> `Int' #}
 instance (impl ~ ( IO (Int))) => Op (GetSize ()) MenuPrim orig impl where
   runOp _ _ menu_ = withRef menu_ $ \menu_Ptr -> size' menu_Ptr
@@ -309,6 +319,8 @@ instance (Parent a MenuItem, impl ~ (Ref a -> IO ())) => Op (Setonly ()) MenuPri
 -- $functions
 -- @
 -- add:: ('Parent' a 'MenuItem') => 'Ref' 'MenuPrim' -> 'T.Text' -> 'Maybe' 'Shortcut' -> 'Maybe' ('Ref' a-> 'IO' ()) -> 'MenuItemFlags' -> 'IO' ('AtIndex')
+--
+-- addAndGetMenuItem:: ('Parent' a 'MenuItem') => 'Ref' 'MenuPrim' -> 'T.Text' -> 'Maybe' 'Shortcut' -> 'Maybe' ('Ref' a-> 'IO' ()) -> 'MenuItemFlags' -> 'IO' ('Ref' 'MenuItem')
 --
 -- addName :: 'Ref' 'MenuPrim' -> 'T.Text' -> 'IO' ()
 --

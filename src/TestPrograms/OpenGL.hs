@@ -1,4 +1,4 @@
-{-# LANGUAGE OverloadedStrings, PatternSynonyms #-}
+{-# LANGUAGE OverloadedStrings #-}
 
 {- | Ported from [cube.cxx]<https://github.com/IngwiePhoenix/FLTK/blob/master/test/cube.cxx>.
 
@@ -223,12 +223,12 @@ main = do
                    (Just (drawCubeWindow s2))
                    defaultCustomWidgetFuncs{handleCustom = Just handleCubeWindow}
                    defaultCustomWindowFuncs
-        cube1X <- getX cube1
-        cube1W <- getW cube1
-        cube2X <- getX cube2
-        cube2W <- getW cube2
-        sizeY <- getY size
-        sizeH <- getH size
+        (X cube1X) <- getX cube1
+        (Width cube1W) <- getW cube1
+        (X cube2X) <- getX cube2
+        (Width cube2W) <- getW cube2
+        (Y sizeY) <- getY size
+        (Height sizeH) <- getH size
         b <- boxNew
                (toRectangle (cube1X, sizeY, (cube2X + cube2W) - cube1X, sizeH))
                Nothing

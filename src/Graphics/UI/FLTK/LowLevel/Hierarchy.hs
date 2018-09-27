@@ -537,6 +537,8 @@ module Graphics.UI.FLTK.LowLevel.Hierarchy
          setTextcolor,
          DownBox,
          downBox,
+         AddAndGetMenuItem,
+         addAndGetMenuItem,
          -- * MenuBar
          MenuBar,
          -- * SysMenuBar
@@ -571,6 +573,8 @@ module Graphics.UI.FLTK.LowLevel.Hierarchy
          getDataW,
          GetDataH,
          getDataH,
+         GetDataSize,
+         getDataSize,
          -- * Bitmap
          Bitmap,
          -- * Pixmap
@@ -2438,7 +2442,8 @@ type MenuPrimFuncs =
   (GetDownColor
   (SetDownColor
   (Setonly
-  ()))))))))))))))))))))))))))))))))))))))))))))))
+  (AddAndGetMenuItem
+  ())))))))))))))))))))))))))))))))))))))))))))))))
 
 type instance Functions MenuPrim = MenuPrimFuncs
 
@@ -2467,6 +2472,7 @@ MAKE_METHOD(SetTextsize,setTextsize)
 MAKE_METHOD(GetTextcolor,getTextcolor)
 MAKE_METHOD(SetTextcolor,setTextcolor)
 MAKE_METHOD(DownBox,downBox)
+MAKE_METHOD(AddAndGetMenuItem, addAndGetMenuItem)
 
 data CMenuBar parent
 type MenuBar = CMenuBar MenuPrim
@@ -2568,8 +2574,9 @@ type ImageFuncs =
   (Scale
   (GetDataW
   (GetDataH
+  (GetDataSize
   (Fail
-  ())))))))))))))))))
+  ()))))))))))))))))))
 
 type instance Functions Image = ImageFuncs
 
@@ -2585,6 +2592,7 @@ MAKE_METHOD(Fail,fail)
 MAKE_METHOD(Scale,scale)
 MAKE_METHOD(GetDataW,getDataW)
 MAKE_METHOD(GetDataH,getDataH)
+MAKE_METHOD(GetDataSize,getDataSize)
 
 data CBitmap parent
 type Bitmap = CBitmap Image

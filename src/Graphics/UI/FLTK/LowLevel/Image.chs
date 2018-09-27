@@ -195,6 +195,11 @@ instance (impl ~ ( IO (Width))) => Op (GetDataW ()) Image orig impl where
 {# fun Fl_Image_data_h as datah' { id `Ptr ()' } -> `Int' #}
 instance (impl ~ ( IO (Height))) => Op (GetDataH ()) Image orig impl where
   runOp _ _ image = withRef image $ \imagePtr -> datah' imagePtr >>= return . Height
+instance (impl ~ ( IO (Size))) => Op (GetDataSize ()) Image orig impl where
+  runOp _ _ image = do
+     w' <- getDataW image
+     h' <- getDataH image
+     return (Size w' h')
 {# fun Fl_Image_scale as scale' { id `Ptr ()' , `Int' , `Int' , cFromBool `Bool' , cFromBool `Bool'} -> `()' #}
 instance (impl ~ (Size -> Maybe Bool -> Maybe Bool -> IO ())) => Op (Scale ()) Image orig impl where
   runOp _ _ image (Size (Width w') (Height h')) proportional can_expand =
@@ -221,6 +226,8 @@ instance (impl ~ (Size -> Maybe Bool -> Maybe Bool -> IO ())) => Op (Scale ()) I
 -- getD :: 'Ref' 'Image' -> 'IO' ('Int')
 --
 -- getDataH :: 'Ref' 'Image' -> 'IO' ('Height')
+--
+-- getDataSize :: 'Ref' 'Image' -> 'IO' ('Size')
 --
 -- getDataW :: 'Ref' 'Image' -> 'IO' ('Width')
 --

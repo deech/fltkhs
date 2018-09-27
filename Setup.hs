@@ -32,8 +32,6 @@ import Distribution.Simple.BuildPaths
 import System.Directory(getCurrentDirectory, copyFile, createDirectoryIfMissing, listDirectory, withCurrentDirectory, doesDirectoryExist, makeAbsolute, doesFileExist)
 import System.FilePath ( (</>), (<.>), takeExtension, combine, takeBaseName, takeDirectory)
 import qualified Distribution.Simple.GHC  as GHC
-import qualified Distribution.Simple.JHC  as JHC
-import qualified Distribution.Simple.LHC  as LHC
 import qualified Distribution.Simple.UHC  as UHC
 import qualified Distribution.Simple.PackageIndex as PackageIndex
 import Distribution.PackageDescription as PD
@@ -73,7 +71,7 @@ main = defaultMainWithHooks autoconfUserHooks {
   regHook = registerHook
   }
 
-fltkSource = "fltk-1.4"
+fltkSource = "fltk-master"
 temporaryWorkaround = "temporary-workaround"
 
 runMake :: FilePath -> [String] -> IO ()
@@ -87,9 +85,8 @@ runMake p args =
 
 buildFltk :: IO FilePath -> Bool -> IO ()
 buildFltk prefix openGL = do
-  rawSystemExit normal "bunzip2" ["-k", fltkSource ++ ".tar.bz2"]
-  rawSystemExit normal "tar" ["-xf", fltkSource ++ ".tar"]
-  rawSystemExit normal "rm" ["-f", fltkSource ++ ".tar"]
+  rawSystemExit normal "rm" ["-rf", fltkSource]
+  rawSystemExit normal "unzip" [fltkSource ++ ".zip"]
   projectRoot <- getCurrentDirectory
   prefix' <- prefix
   let fltkDir = projectRoot </>  fltkSource
