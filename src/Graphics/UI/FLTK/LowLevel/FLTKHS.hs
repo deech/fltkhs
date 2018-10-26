@@ -334,7 +334,7 @@ import Graphics.UI.FLTK.LowLevel.XPMImage
 
 -- $LookAndFeel
 -- Now FLTKHS has a [themes
--- package](https://hackage.haskell.org/package/fltkhs/docs/Graphics-UI-FLTK-Theme-Light.html)
+-- package](https://hackage.haskell.org/package/fltkhs-themes/docs/Graphics-UI-FLTK-Theme-Light.html)
 -- which considerably improves look and feel. The documentation for this package
 -- still applies because the theme mostly just re-draws widgets to look a little
 -- nicer so the fundamentals of the API are not touched.
