@@ -138,7 +138,8 @@ EXPORT {
   FL_EXPORT_C_HEADER(void,Fl_Clock_show_super,(fl_Clock o));
   FL_EXPORT_C_HEADER(void,Fl_Clock_hide,(fl_Clock o));
   FL_EXPORT_C_HEADER(void,Fl_Clock_hide_super,(fl_Clock o));
-
+  FL_EXPORT_C_HEADER(void,Fl_Clock_set_shadow,(fl_Clock o, int shadow));
+  FL_EXPORT_C_HEADER(int,Fl_Clock_get_shadow,(fl_Clock o));
 #ifdef __cplusplus
 }
 #endif

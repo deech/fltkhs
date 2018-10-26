@@ -11,6 +11,7 @@
 EXPORT {
   class Fl_DerivedTabs : public Fl_Tabs {
     fl_Widget_Virtual_Funcs* overriddenFuncs;
+    fl_Tab_Virtual_Funcs* fs;
     void* other_data;
   public:
     virtual void draw();
@@ -23,12 +24,18 @@ EXPORT {
     void show_super();
     virtual void hide();
     void hide_super();
-    Fl_DerivedTabs(int X, int Y, int W, int H, const char *l, fl_Widget_Virtual_Funcs* funcs);
-    Fl_DerivedTabs(int X, int Y, int W, int H, fl_Widget_Virtual_Funcs* funcs);
+    int tab_positions();
+    int tab_height();
+    Fl_Widget* which(int,int);
+    void client_area(int &rx, int &ry, int &rw, int &rh, int tabh);
+    void redraw_tabs();
+    Fl_DerivedTabs(int X, int Y, int W, int H, const char *l, fl_Tab_Virtual_Funcs* fs,  fl_Widget_Virtual_Funcs* funcs);
+    Fl_DerivedTabs(int X, int Y, int W, int H, fl_Tab_Virtual_Funcs* fs, fl_Widget_Virtual_Funcs* funcs);
     ~Fl_DerivedTabs();
   };
 
 #endif
+  FL_EXPORT_C_HEADER(fl_Tab_Virtual_Funcs*,Fl_Tab_default_virtual_funcs,());
   /* Inherited from Fl_Widget */
   FL_EXPORT_C_HEADER(int,Fl_Tabs_handle,(fl_Tabs self, int event));
   FL_EXPORT_C_HEADER(fl_Group,Fl_Tabs_parent,(fl_Tabs tabs));
@@ -144,8 +151,8 @@ EXPORT {
   FL_EXPORT_C_HEADER(fl_Widget,Fl_Tabs_which,(fl_Tabs tabs, int event_x, int event_y));
   FL_EXPORT_C_HEADER(void,Fl_Tabs_client_area,(fl_Tabs tabs, int* rx, int* ry, int* rw, int* rh));
   FL_EXPORT_C_HEADER(void,Fl_Tabs_client_area_with_tabh,(fl_Tabs tabs, int* rx, int* ry, int* rw, int* rh, int tabh));
-  FL_EXPORT_C_HEADER(fl_Tabs,Fl_OverriddenTabs_New,(int X, int Y, int W, int H,fl_Widget_Virtual_Funcs* fs));
-  FL_EXPORT_C_HEADER(fl_Tabs,Fl_OverriddenTabs_New_WithLabel,(int X, int Y, int W, int H, const char* label, fl_Widget_Virtual_Funcs* fs));
+  FL_EXPORT_C_HEADER(fl_Tabs,Fl_OverriddenTabs_New,(int X, int Y, int W, int H,fl_Tab_Virtual_Funcs* tfs,fl_Widget_Virtual_Funcs* fs));
+  FL_EXPORT_C_HEADER(fl_Tabs,Fl_OverriddenTabs_New_WithLabel,(int X, int Y, int W, int H, const char* label,fl_Tab_Virtual_Funcs* tfs,fl_Widget_Virtual_Funcs* fs));
   FL_EXPORT_C_HEADER(void,Fl_Tabs_draw,(fl_Tabs o));
   FL_EXPORT_C_HEADER(void,Fl_Tabs_draw_super,(fl_Tabs o));
   FL_EXPORT_C_HEADER(int,Fl_Tabs_handle,(fl_Tabs o, int event));
@@ -156,6 +163,10 @@ EXPORT {
   FL_EXPORT_C_HEADER(void,Fl_Tabs_show_super,(fl_Tabs o));
   FL_EXPORT_C_HEADER(void,Fl_Tabs_hide,(fl_Tabs o));
   FL_EXPORT_C_HEADER(void,Fl_Tabs_hide_super,(fl_Tabs o));
+  FL_EXPORT_C_HEADER(int,Fl_Tabs_tab_positions,(fl_Tabs o));
+  FL_EXPORT_C_HEADER(int,Fl_Tabs_tab_height,(fl_Tabs o));
+  FL_EXPORT_C_HEADER(Fl_Align,Fl_Tabs_get_tab_align,(fl_Tabs o));
+  FL_EXPORT_C_HEADER(void,Fl_Tabs_set_tab_align,(fl_Tabs o, Fl_Align a));
 #ifdef __cplusplus
 }
 #endif

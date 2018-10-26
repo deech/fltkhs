@@ -1,4 +1,4 @@
-{-# LANGUAGE CPP, ExistentialQuantification, TypeSynonymInstances, FlexibleInstances, MultiParamTypeClasses, FlexibleContexts, ScopedTypeVariables, UndecidableInstances #-}
+{-# LANGUAGE ScopedTypeVariables, CPP, ExistentialQuantification, TypeSynonymInstances, FlexibleInstances, MultiParamTypeClasses, FlexibleContexts, ScopedTypeVariables, UndecidableInstances #-}
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 module Graphics.UI.FLTK.LowLevel.RGBImage
        (
@@ -23,20 +23,26 @@ import Graphics.UI.FLTK.LowLevel.Fl_Types
 import Graphics.UI.FLTK.LowLevel.Utils
 import Graphics.UI.FLTK.LowLevel.Hierarchy
 import Graphics.UI.FLTK.LowLevel.Dispatch
-import Data.ByteString as B
+import qualified Data.Vector.Storable as DVS
+import Control.Exception
 
 {# fun Fl_RGB_Image_New as rgbImageNew' { id `Ptr CUChar',`Int',`Int' } -> `Ptr ()' id #}
 {# fun Fl_RGB_Image_New_With_D as rgbImageNew_WithD' {id `Ptr CUChar',`Int',`Int', `Int'} -> `Ptr ()' id #};
 {# fun Fl_RGB_Image_New_With_LD as rgbImageNew_WithLD' {id `Ptr CUChar',`Int',`Int', `Int'} -> `Ptr ()' id #};
 {# fun Fl_RGB_Image_New_With_D_LD as rgbImageNew_WithD_LD' {id `Ptr CUChar',`Int',`Int', `Int', `Int'} -> `Ptr ()' id #};
-rgbImageNew :: B.ByteString -> Size -> Maybe Depth  -> Maybe LineSize -> IO (Ref RGBImage)
-rgbImageNew bits' (Size (Width width') (Height height')) depth' linesize' =
-  useAsCString bits' $ \asCString ->
-    case (depth', linesize') of
-      (Just (Depth imageDepth) , Nothing) -> rgbImageNew_WithD' (castPtr asCString) width' height' imageDepth >>= toRef
-      (Nothing, Just (LineSize l')) -> rgbImageNew_WithLD' (castPtr asCString) width' height' l' >>= toRef
-      (Just (Depth imageDepth), Just (LineSize l')) -> rgbImageNew_WithD_LD' (castPtr asCString) width' height' imageDepth l' >>= toRef
-      (Nothing, Nothing) -> rgbImageNew' (castPtr asCString) width' height' >>= toRef
+rgbImageNew :: DVS.Vector CUChar -> Size -> Maybe Depth  -> Maybe LineSize -> IO (Ref RGBImage)
+rgbImageNew bits' (Size (Width width') (Height height')) depth' linesize' = do
+  DVS.unsafeWith bits' $ \ptr -> do
+    (ref :: Ref RGBImage) <-
+       case (depth', linesize') of
+         (Just (Depth imageDepth) , Nothing) -> rgbImageNew_WithD' ptr width' height' imageDepth >>= toRef
+         (Nothing, Just (LineSize l')) -> rgbImageNew_WithLD' ptr width' height' l' >>= toRef
+         (Just (Depth imageDepth), Just (LineSize l')) -> rgbImageNew_WithD_LD' ptr width' height' imageDepth l' >>= toRef
+         (Nothing, Nothing) -> rgbImageNew' ptr width' height' >>= toRef
+    r <- copy ref Nothing
+    case r of
+      Nothing -> throwIO (userError "rgbImageNew: could not create RGB Image.")
+      Just r -> return r
 
 -- | Check that the given RGBImage (or subclass of RGBImage) has a non-zero width.
 --
@@ -79,7 +85,7 @@ instance (impl ~ ( IO (Int))) => Op (GetCount ()) RGBImage orig impl where
 
 {# fun Fl_RGB_Image_copy_with_w_h as copyWithWH' { id `Ptr ()',`Int',`Int' } -> `Ptr ()' id #}
 {# fun Fl_RGB_Image_copy as copy' { id `Ptr ()' } -> `Ptr ()' id #}
-instance (Parent a RGBImage, impl ~ ( Maybe Size -> IO (Maybe (Ref a)))) => Op (Copy ()) RGBImage orig impl where
+instance (impl ~ ( Maybe Size -> IO (Maybe (Ref orig)))) => Op (Copy ()) RGBImage orig impl where
   runOp _ _ image size' = case size' of
     Just (Size (Width imageWidth) (Height imageHeight)) ->
         withRef image $ \imagePtr -> copyWithWH' imagePtr imageWidth imageHeight >>= toMaybeRef
@@ -132,7 +138,7 @@ instance (impl ~ ( IO ())) => Op (Uncache ()) RGBImage orig impl where
 -- @
 -- colorAverage :: 'Ref' 'RGBImage' -> 'Color' -> 'Float' -> 'IO' ()
 --
--- copy:: ('Parent' a 'RGBImage') => 'Ref' 'RGBImage' -> 'Maybe' 'Size' -> 'IO' ('Maybe' ('Ref' a))
+-- copy :: 'Ref' 'RGBImage' -> 'Maybe' 'Size' -> 'IO' ('Maybe' ('Ref' orig))
 --
 -- desaturate :: 'Ref' 'RGBImage' -> 'IO' ()
 --

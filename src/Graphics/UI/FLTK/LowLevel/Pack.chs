@@ -46,12 +46,13 @@ packCustom rectangle l' draw' funcs' =
 {# fun Fl_Pack_New_WithLabel as packNewWithLabel' { `Int',`Int',`Int',`Int', unsafeToCString `T.Text'} -> `Ptr ()' id #}
 packNew :: Rectangle -> Maybe T.Text -> IO (Ref Pack)
 packNew rectangle l' =
-    let (x_pos, y_pos, width, height) = fromRectangle rectangle
-    in case l' of
-        Nothing -> packNew' x_pos y_pos width height >>=
-                             toRef
-        Just l -> packNewWithLabel' x_pos y_pos width height l >>=
-                             toRef
+  widgetMaker
+    rectangle
+    l'
+    Nothing
+    Nothing
+    overriddenWidgetNew'
+    overriddenWidgetNewWithLabel'
 
 {# fun Fl_Pack_get_spacing as getSpacing' { id `Ptr ()' } -> `Int' #}
 instance (impl ~ (IO (Int))) => Op (GetSpacing ()) Pack orig impl where

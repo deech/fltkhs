@@ -21,6 +21,7 @@ import C2HS hiding (cFromEnum, cFromBool, cToBool,cToEnum)
 import Graphics.UI.FLTK.LowLevel.Fl_Types
 import Graphics.UI.FLTK.LowLevel.Utils
 import Graphics.UI.FLTK.LowLevel.Hierarchy
+import Graphics.UI.FLTK.LowLevel.Widget
 import Graphics.UI.FLTK.LowLevel.Dispatch
 import qualified Data.Text as T
 
@@ -31,7 +32,12 @@ toggleButtonNew rectangle l' =
     let (x_pos, y_pos, width, height) = fromRectangle rectangle
     in case l' of
         Nothing -> widgetNew' x_pos y_pos width height >>= toRef
-        Just l -> widgetNewWithLabel' x_pos y_pos width height l >>= toRef
+        Just l -> do
+           ref <- widgetNewWithLabel' x_pos y_pos width height l >>= toRef
+           setFlag ref WidgetFlagCopiedLabel
+           setFlag ref WidgetFlagCopiedTooltip
+           return ref
+
 
 {# fun Fl_Toggle_Button_Destroy as widgetDestroy' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
 instance (impl ~ (IO ())) => Op (Destroy ()) ToggleButton orig impl where
@@ -42,7 +48,6 @@ instance (impl ~ (IO ())) => Op (Destroy ()) ToggleButton orig impl where
 
 -- $functions
 -- @
---
 -- destroy :: 'Ref' 'ToggleButton' -> 'IO' ()
 -- @
 

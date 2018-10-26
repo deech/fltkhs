@@ -9,7 +9,6 @@
 #include "Fl_CallbackC.h"
 EXPORT {
 #else
-#include <dirent.h>
 #include "FL/filename.H"
 #endif
   FL_EXPORT_C_HEADER(int,flc_filename_list,(const char *d, struct dirent ***l));

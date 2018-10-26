@@ -66,8 +66,11 @@ outputNew rectangle l' flOutputType =
                        Just FlNormalOutput -> maybe outputNew' (\l -> (\x y w h -> outputNewWithLabel' x y w h l)) l'
                        Just FlMultilineOutput -> maybe multilineOutputNew' (\l -> (\x y w h -> multilineOutputNewWithLabel' x y w h l)) l'
                        Nothing -> outputNew'
-    in
-    constructor x_pos y_pos width height >>= toRef
+    in do
+    ref <- constructor x_pos y_pos width height >>= toRef
+    setFlag ref WidgetFlagCopiedLabel
+    setFlag ref WidgetFlagCopiedTooltip
+    return ref
 
 {# fun Fl_Widget_set_type as setType' { id `Ptr ()',`Word8' } -> `()' supressWarningAboutRes #}
 instance (impl ~ (FlOutputType ->  IO ())) => Op (SetType ()) Output orig impl where

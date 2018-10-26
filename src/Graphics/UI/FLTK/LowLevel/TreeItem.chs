@@ -2,7 +2,6 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 module Graphics.UI.FLTK.LowLevel.TreeItem
   (
-    TreeItemIndex(..),
     TreeItemPointer(..),
     TreeItemName(..),
     TreeItemReference(..),
@@ -36,10 +35,9 @@ import Graphics.UI.FLTK.LowLevel.Hierarchy
 import Graphics.UI.FLTK.LowLevel.Dispatch
 import qualified Data.Text as T
 
-newtype TreeItemIndex = TreeItemIndex Int
 data TreeItemPointer = forall a. (Parent a TreeItem) => TreeItemPointer (Ref a)
 newtype TreeItemName = TreeItemName T.Text
-data TreeItemReference = TreeItemByIndex TreeItemIndex | TreeItemByPointer TreeItemPointer
+data TreeItemReference = TreeItemByIndex AtIndex | TreeItemByPointer TreeItemPointer
 data TreeItemLocator = TreeItemPointerLocator TreeItemPointer | TreeItemNameLocator TreeItemName
 data MoveError = NoParent | NoIndexFound | IndexRangeError | CouldNotDeparent | CouldNotReparent
 data MoveType = MoveAbove | MoveBelow | MoveInto SiblingPosition
@@ -127,20 +125,20 @@ instance (impl ~ (IO (Maybe (Ref Widget)))) => Op (GetWidget ()) TreeItem orig i
 instance (impl ~ (IO (Int))) => Op (Children ()) TreeItem orig impl where
   runOp _ _ tree_item = withRef tree_item $ \tree_itemPtr -> children' tree_itemPtr
 {# fun Fl_Tree_Item_child_by_index as childByIndex' { id `Ptr ()',`Int' } -> `Ptr ()' id #}
-instance (impl ~ ( Int ->  IO (Maybe (Ref Widget)))) => Op (Child ()) TreeItem orig impl where
-  runOp _ _ tree_item index' = withRef tree_item $ \tree_itemPtr -> childByIndex' tree_itemPtr index' >>= toMaybeRef
+instance (impl ~ ( AtIndex ->  IO (Maybe (Ref Widget)))) => Op (Child ()) TreeItem orig impl where
+  runOp _ _ tree_item (AtIndex index') = withRef tree_item $ \tree_itemPtr -> childByIndex' tree_itemPtr index' >>= toMaybeRef
 {# fun Fl_Tree_Item_has_children as hasChildren' { id `Ptr ()' } -> `Bool' cToBool #}
 instance (impl ~ (IO (Bool))) => Op (HasChildren ()) TreeItem orig impl where
   runOp _ _ tree_item = withRef tree_item $ \tree_itemPtr -> hasChildren' tree_itemPtr
 
 {# fun Fl_Tree_Item_find_child as findChild' { id `Ptr ()',unsafeToCString `T.Text' } -> `Int' #}
 {# fun Fl_Tree_Item_find_child_by_item as findChildByItem' { id `Ptr ()',id `Ptr ()' } -> `Int' #}
-instance (impl ~ ( TreeItemLocator ->  IO (Maybe TreeItemIndex))) => Op (FindChild ()) TreeItem orig impl where
+instance (impl ~ ( TreeItemLocator ->  IO (Maybe AtIndex))) => Op (FindChild ()) TreeItem orig impl where
   runOp _ _ tree_item locator' = withRef tree_item $ \tree_itemPtr -> do
     idx' <- case locator' of
              (TreeItemPointerLocator (TreeItemPointer item')) -> withRef item' $ \itemPtr-> findChildByItem' tree_itemPtr itemPtr
              (TreeItemNameLocator (TreeItemName name')) -> findChild' tree_itemPtr name'
-    if idx' == -1 then return Nothing else (return $ Just (TreeItemIndex idx'))
+    if idx' == -1 then return Nothing else (return $ Just (AtIndex idx'))
 
 {# fun Fl_Tree_Item_remove_child_by_item as removeChildByItem' { id `Ptr ()',id `Ptr ()' } -> `Int' #}
 {# fun Fl_Tree_Item_remove_child as removeChild' { id `Ptr ()',unsafeToCString `T.Text' } -> `Int' #}
@@ -154,8 +152,8 @@ instance (impl ~ ( TreeItemLocator ->  IO (Either UnknownError ()))) => Op (Remo
 instance (impl ~ (IO ())) => Op (ClearChildren ()) TreeItem orig impl where
   runOp _ _ tree_item = withRef tree_item $ \tree_itemPtr -> clearChildren' tree_itemPtr
 {# fun Fl_Tree_Item_swap_children as swapChildren' { id `Ptr ()',`Int',`Int' } -> `()' #}
-instance (impl ~ ( Int -> Int ->  IO ())) => Op (SwapChildren ()) TreeItem orig impl where
-  runOp _ _ tree_item ax bx = withRef tree_item $ \tree_itemPtr -> swapChildren' tree_itemPtr ax bx
+instance (impl ~ ( AtIndex -> AtIndex ->  IO ())) => Op (SwapChildren ()) TreeItem orig impl where
+  runOp _ _ tree_item (AtIndex ax) (AtIndex bx) = withRef tree_item $ \tree_itemPtr -> swapChildren' tree_itemPtr ax bx
 {# fun Fl_Tree_Item_swap_children_by_tree_item as swapChildrenByTreeItem' { id `Ptr ()',id `Ptr ()',id `Ptr ()' } -> `Int' #}
 instance (Parent a TreeItem, impl ~ (Ref a -> Ref a -> IO (Either TreeItemNotFound ()))) => Op (SwapChildrenByTreeItem ()) TreeItem orig impl where
   runOp _ _ tree_item a b = withRef tree_item $ \tree_itemPtr -> withRef a $ \aPtr -> withRef b $ \bPtr -> do
@@ -188,12 +186,12 @@ instance (Parent a TreeItem, Parent b TreePrefs, impl ~ (Ref b  ->  [T.Text] -> 
         Just i' -> withRef i' $ \i'Ptr -> addWithAt' tree_itemPtr prefsPtr i'Ptr pathPtr >>= toMaybeRef
 {# fun Fl_Tree_Item_insert as insert' { id `Ptr ()',id `Ptr ()',unsafeToCString `T.Text' } -> `Ptr ()' id #}
 {# fun Fl_Tree_Item_insert_with_pos as insertWithPos' { id `Ptr ()',id `Ptr ()',unsafeToCString `T.Text',`Int' } -> `Ptr ()' id #}
-instance (Parent a TreePrefs, impl ~ (Ref a  -> T.Text ->  Maybe Int -> IO (Maybe (Ref TreeItem)))) => Op (Insert ()) TreeItem orig impl where
+instance (Parent a TreePrefs, impl ~ (Ref a  -> T.Text ->  Maybe AtIndex -> IO (Maybe (Ref TreeItem)))) => Op (Insert ()) TreeItem orig impl where
   runOp _ _ tree_item prefs new_label pos' =
     withRef tree_item $ \tree_itemPtr -> withRef prefs $ \prefsPtr ->
       case pos' of
         Nothing -> insert' tree_itemPtr prefsPtr new_label >>= toMaybeRef
-        Just p' -> insertWithPos' tree_itemPtr prefsPtr new_label p' >>= toMaybeRef
+        Just (AtIndex p') -> insertWithPos' tree_itemPtr prefsPtr new_label p' >>= toMaybeRef
 {# fun Fl_Tree_Item_insert_above as insertAbove' { id `Ptr ()',id `Ptr ()', unsafeToCString `T.Text' } -> `Ptr ()' id #}
 instance (Parent a TreePrefs, impl ~ (Ref a -> T.Text ->  IO (Maybe (Ref TreeItem)))) => Op (InsertAbove ()) TreeItem orig impl where
   runOp _ _ tree_item prefs new_label =
@@ -201,19 +199,19 @@ instance (Parent a TreePrefs, impl ~ (Ref a -> T.Text ->  IO (Maybe (Ref TreeIte
     \tree_itemPtr ->
      withRef prefs $ \prefsPtr -> insertAbove' tree_itemPtr prefsPtr new_label >>= toMaybeRef
 {# fun Fl_Tree_Item_deparent as deparent' { id `Ptr ()', `Int'} -> `Ptr ()' id #}
-instance (impl ~ (Int -> IO (Either UnknownError (Ref orig)))) => Op (Deparent ()) TreeItem orig impl where
-  runOp _ _ tree_item pos' = withRef tree_item $ \tree_itemPtr -> do
+instance (impl ~ (AtIndex -> IO (Either UnknownError (Ref orig)))) => Op (Deparent ()) TreeItem orig impl where
+  runOp _ _ tree_item (AtIndex pos') = withRef tree_item $ \tree_itemPtr -> do
     item' <- deparent' tree_itemPtr pos'
     if (item' == nullPtr) then (return $ Left UnknownError) else toRef item' >>= return . Right
 {# fun Fl_Tree_Item_reparent as reparent' { id `Ptr ()', id `Ptr ()', `Int'} -> `Int' #}
-instance (Parent a TreeItem, impl ~ (Ref a -> Int -> IO (Either UnknownError ()))) => Op (Reparent ()) TreeItem orig impl where
-  runOp _ _ tree_item child_item pos' =
+instance (Parent a TreeItem, impl ~ (Ref a -> AtIndex -> IO (Either UnknownError ()))) => Op (Reparent ()) TreeItem orig impl where
+  runOp _ _ tree_item child_item (AtIndex pos') =
     withRef tree_item $ \tree_itemPtr -> withRef child_item $ \child_itemPtr -> do
       status' <- reparent' tree_itemPtr child_itemPtr pos'
       if (status' < 0) then (return $ Left UnknownError) else (return $ Right ())
 {# fun Fl_Tree_Item_move as move' { id `Ptr ()', `Int', `Int'} -> `Int' #}
-instance (impl ~ (Int -> Int -> IO (Either OutOfRange ()))) => Op (Move ()) TreeItem orig impl where
-  runOp _ _ tree_item pos' spos' =
+instance (impl ~ (AtIndex -> AtIndex -> IO (Either OutOfRange ()))) => Op (Move ()) TreeItem orig impl where
+  runOp _ _ tree_item (AtIndex pos') (AtIndex spos') =
     withRef tree_item $ \tree_itemPtr -> do
       status' <- move' tree_itemPtr pos' spos'
       if status' == -1 then (return $ Left OutOfRange) else return (Right ())
@@ -247,8 +245,8 @@ instance (impl ~ (IO (Maybe (Ref TreeItem)))) => Op (NextSibling ()) TreeItem or
 instance (impl ~ (IO (Maybe (Ref TreeItem)))) => Op (PrevSibling ()) TreeItem orig impl where
   runOp _ _ tree_item = withRef tree_item $ \tree_itemPtr -> prevSibling' tree_itemPtr >>= toMaybeRef
 {# fun Fl_Tree_Item_update_prev_next as updatePrevNext' { id `Ptr ()',`Int' } -> `()' #}
-instance (impl ~ ( Int ->  IO ())) => Op (UpdatePrevNext ()) TreeItem orig impl where
-  runOp _ _ tree_item index' = withRef tree_item $ \tree_itemPtr -> updatePrevNext' tree_itemPtr index'
+instance (impl ~ ( AtIndex ->  IO ())) => Op (UpdatePrevNext ()) TreeItem orig impl where
+  runOp _ _ tree_item (AtIndex index') = withRef tree_item $ \tree_itemPtr -> updatePrevNext' tree_itemPtr index'
 {# fun Fl_Tree_Item_next_displayed as nextDisplayed' { id `Ptr ()',id `Ptr ()' } -> `Ptr ()' id #}
 instance (Parent a TreePrefs, impl ~ (Ref a  ->  IO (Maybe (Ref TreeItem)))) => Op (NextDisplayed ()) TreeItem orig impl where
   runOp _ _ tree_item prefs = withRef tree_item $ \tree_itemPtr -> withRef prefs $ \prefsPtr -> nextDisplayed' tree_itemPtr prefsPtr >>= toMaybeRef
@@ -279,8 +277,8 @@ instance (impl ~ (IO ())) => Op (OpenToggle ()) TreeItem orig impl where
 {# fun Fl_Tree_Item_select as select' { id `Ptr ()' } -> `()' #}
 instance (impl ~ (IO ())) => Op (Select ()) TreeItem orig impl where
   runOp _ _ tree_item = withRef tree_item $ \tree_itemPtr -> select' tree_itemPtr
-{# fun Fl_Tree_Item_select_with_val as selectWithVal' { id `Ptr ()',`Int' } -> `()' #}
-instance (impl ~ ( Int ->  IO ())) => Op (SelectWithVal ()) TreeItem orig impl where
+{# fun Fl_Tree_Item_select_with_val as selectWithVal' { id `Ptr ()',cFromBool `Bool' } -> `()' #}
+instance (impl ~ ( Bool ->  IO ())) => Op (SelectSet ()) TreeItem orig impl where
   runOp _ _ tree_item val = withRef tree_item $ \tree_itemPtr -> selectWithVal' tree_itemPtr val
 {# fun Fl_Tree_Item_select_toggle as selectToggle' { id `Ptr ()' } -> `()' #}
 instance (impl ~ (IO ())) => Op (SelectToggle ()) TreeItem orig impl where
@@ -356,7 +354,7 @@ instance (impl ~ (IO (Int))) => Op (LabelH ()) TreeItem orig impl where
 --
 -- addAt:: ('Parent' a 'TreeItem', 'Parent' b 'TreePrefs') => 'Ref' 'TreeItem' -> 'Ref' b -> ['T.Text'] -> 'Maybe' ('Ref' a) -> 'IO' ('Maybe' ('Ref' a))
 --
--- child :: 'Ref' 'TreeItem' -> 'Int' -> 'IO' ('Maybe' ('Ref' 'Widget'))
+-- child :: 'Ref' 'TreeItem' -> 'AtIndex' -> 'IO' ('Maybe' ('Ref' 'Widget'))
 --
 -- children :: 'Ref' 'TreeItem' -> 'IO' ('Int')
 --
@@ -364,7 +362,7 @@ instance (impl ~ (IO (Int))) => Op (LabelH ()) TreeItem orig impl where
 --
 -- close :: 'Ref' 'TreeItem' -> 'IO' ()
 --
--- deparent :: 'Ref' 'TreeItem' -> 'Int' -> 'IO' ('Either' 'UnknownError' ('Ref' orig))
+-- deparent :: 'Ref' 'TreeItem' -> 'AtIndex' -> 'IO' ('Either' 'UnknownError' ('Ref' orig))
 --
 -- deselect :: 'Ref' 'TreeItem' -> 'IO' ()
 --
@@ -376,7 +374,7 @@ instance (impl ~ (IO (Int))) => Op (LabelH ()) TreeItem orig impl where
 --
 -- eventOnLabel:: ('Parent' a 'TreePrefs') => 'Ref' 'TreeItem' -> 'Ref' a -> 'IO' ('Int')
 --
--- findChild :: 'Ref' 'TreeItem' -> 'TreeItemLocator' -> 'IO' ('Maybe' 'TreeItemIndex')
+-- findChild :: 'Ref' 'TreeItem' -> 'TreeItemLocator' -> 'IO' ('Maybe' 'AtIndex')
 --
 -- findClicked:: ('Parent' a 'TreePrefs') => 'Ref' 'TreeItem' -> 'Ref' a -> 'IO' ('Maybe' ('Ref' 'TreeItem'))
 --
@@ -414,7 +412,7 @@ instance (impl ~ (IO (Int))) => Op (LabelH ()) TreeItem orig impl where
 --
 -- hasChildren :: 'Ref' 'TreeItem' -> 'IO' ('Bool')
 --
--- insert:: ('Parent' a 'TreePrefs') => 'Ref' 'TreeItem' -> 'Ref' a -> 'T.Text' -> 'Maybe' 'Int' -> 'IO' ('Maybe' ('Ref' 'TreeItem'))
+-- insert:: ('Parent' a 'TreePrefs') => 'Ref' 'TreeItem' -> 'Ref' a -> 'T.Text' -> 'Maybe' 'AtIndex' -> 'IO' ('Maybe' ('Ref' 'TreeItem'))
 --
 -- insertAbove:: ('Parent' a 'TreePrefs') => 'Ref' 'TreeItem' -> 'Ref' a -> 'T.Text' -> 'IO' ('Maybe' ('Ref' 'TreeItem'))
 --
@@ -438,7 +436,7 @@ instance (impl ~ (IO (Int))) => Op (LabelH ()) TreeItem orig impl where
 --
 -- labelY :: 'Ref' 'TreeItem' -> 'IO' ('Int')
 --
--- move :: 'Ref' 'TreeItem' -> 'Int' -> 'Int' -> 'IO' ('Either' 'OutOfRange' ())
+-- move :: 'Ref' 'TreeItem' -> 'AtIndex' -> 'AtIndex' -> 'IO' ('Either' 'OutOfRange' ())
 --
 -- moveTo:: ('Parent' a 'TreeItem') => 'Ref' 'TreeItem' -> 'Ref' a -> 'MoveType' -> 'IO' ('Either' 'MoveError' ())
 --
@@ -460,15 +458,15 @@ instance (impl ~ (IO (Int))) => Op (LabelH ()) TreeItem orig impl where
 --
 -- removeChild :: 'Ref' 'TreeItem' -> 'TreeItemLocator' -> 'IO' ('Either' 'UnknownError' ())
 --
--- reparent:: ('Parent' a 'TreeItem') => 'Ref' 'TreeItem' -> 'Ref' a -> 'Int' -> 'IO' ('Either' 'UnknownError' ())
+-- reparent:: ('Parent' a 'TreeItem') => 'Ref' 'TreeItem' -> 'Ref' a -> 'AtIndex' -> 'IO' ('Either' 'UnknownError' ())
 --
 -- select :: 'Ref' 'TreeItem' -> 'IO' ()
 --
 -- selectAll :: 'Ref' 'TreeItem' -> 'IO' ('Int')
 --
--- selectToggle :: 'Ref' 'TreeItem' -> 'IO' ()
+-- selectSet :: 'Ref' 'TreeItem' -> 'Bool' -> 'IO' ()
 --
--- selectWithVal :: 'Ref' 'TreeItem' -> 'Int' -> 'IO' ()
+-- selectToggle :: 'Ref' 'TreeItem' -> 'IO' ()
 --
 -- setLabel :: 'Ref' 'TreeItem' -> 'T.Text' -> 'IO' ()
 --
@@ -490,11 +488,11 @@ instance (impl ~ (IO (Int))) => Op (LabelH ()) TreeItem orig impl where
 --
 -- showSelf :: 'Ref' 'TreeItem' -> 'Maybe' 'T.Text' -> 'IO' ()
 --
--- swapChildren :: 'Ref' 'TreeItem' -> 'Int' -> 'Int' -> 'IO' ()
+-- swapChildren :: 'Ref' 'TreeItem' -> 'AtIndex' -> 'AtIndex' -> 'IO' ()
 --
 -- swapChildrenByTreeItem:: ('Parent' a 'TreeItem') => 'Ref' 'TreeItem' -> 'Ref' a -> 'Ref' a -> 'IO' ('Either' 'TreeItemNotFound' ())
 --
--- updatePrevNext :: 'Ref' 'TreeItem' -> 'Int' -> 'IO' ()
+-- updatePrevNext :: 'Ref' 'TreeItem' -> 'AtIndex' -> 'IO' ()
 --
 -- visible :: 'Ref' 'TreeItem' -> 'IO' ('Bool')
 --

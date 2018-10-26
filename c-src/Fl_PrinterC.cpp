@@ -2,12 +2,6 @@
 #ifdef __cplusplus
 EXPORT {
 #endif
-  FL_EXPORT_C(const char*,Fl_Printer_class_id)( ){
-    return Fl_Surface_Device::class_id;
-  }
-  FL_EXPORT_C(const char*,Fl_Printer_class_name)(fl_Printer printer){
-    return (static_cast<Fl_Printer*>(printer))->class_name();
-  }
   FL_EXPORT_C(void,Fl_Printer_set_current)(fl_Printer printer){
     return (static_cast<Fl_Printer*>(printer))->set_current();
   }

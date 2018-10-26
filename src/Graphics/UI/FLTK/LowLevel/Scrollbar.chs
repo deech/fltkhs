@@ -49,12 +49,13 @@ scrollbarCustom rectangle l' draw' funcs' =
 {# fun Fl_Scrollbar_New_WithLabel as scrollbarNewWithLabel' { `Int',`Int',`Int',`Int', unsafeToCString `T.Text'} -> `Ptr ()' id #}
 scrollbarNew :: Rectangle -> Maybe T.Text -> IO (Ref Scrollbar)
 scrollbarNew rectangle l'=
-    let (x_pos, y_pos, width, height) = fromRectangle rectangle
-    in case l' of
-        Nothing -> scrollbarNew' x_pos y_pos width height >>=
-                             toRef
-        Just l -> scrollbarNewWithLabel' x_pos y_pos width height l >>=
-                               toRef
+  widgetMaker
+    rectangle
+    l'
+    Nothing
+    Nothing
+    overriddenWidgetNew'
+    overriddenWidgetNewWithLabel'
 
 {# fun Fl_Scrollbar_Destroy as scrollbarDestroy' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
 instance (impl ~ (IO ())) => Op (Destroy ()) Scrollbar orig impl where
@@ -63,8 +64,8 @@ instance (impl ~ (IO ())) => Op (Destroy ()) Scrollbar orig impl where
     return nullPtr
 
 {# fun Fl_Scrollbar_scrollvalue as scrollvalue' { id `Ptr ()',`Int',`Int',`Int',`Int' } -> `Int' #}
-instance (impl ~ (Int -> Int -> Int -> Int ->  IO (Int))) => Op (SetScrollValue ()) Scrollbar orig impl where
-  runOp _ _ slider pos size first total = withRef slider $ \sliderPtr -> scrollvalue' sliderPtr pos size first total
+instance (impl ~ (Y -> Lines -> LineNumber -> Lines ->  IO (Int))) => Op (Scrollvalue ()) Scrollbar orig impl where
+  runOp _ _ slider (Y pos) (Lines size) (LineNumber first) (Lines total) = withRef slider $ \sliderPtr -> scrollvalue' sliderPtr pos size first total
 
 {# fun Fl_Scrollbar_set_linesize as setLinesize' { id `Ptr ()',`Int' } -> `()' #}
 instance (impl ~ (LineSize ->  IO ())) => Op (SetLinesize ()) Scrollbar orig impl where
@@ -130,8 +131,6 @@ instance (impl ~ ( IO ())) => Op (ShowWidgetSuper ()) Scrollbar orig impl where
 --
 -- handle :: 'Ref' 'Scrollbar' -> 'Event' -> 'IO' ('Either' 'UnknownEvent' ())
 --
--- handle :: 'Ref' 'Scrollbar' -> 'Event' -> 'IO' ('Either' 'UnknownEvent' ())
---
 -- handleSuper :: 'Ref' 'Scrollbar' -> 'Event' -> 'IO' ('Either' 'UnknownEvent' ())
 --
 -- hide :: 'Ref' 'Scrollbar' -> 'IO' ()
@@ -142,9 +141,9 @@ instance (impl ~ ( IO ())) => Op (ShowWidgetSuper ()) Scrollbar orig impl where
 --
 -- resizeSuper :: 'Ref' 'Scrollbar' -> 'Rectangle' -> 'IO' ()
 --
--- setLinesize :: 'Ref' 'Scrollbar' -> 'LineSize' -> 'IO' ()
+-- scrollvalue :: 'Ref' 'Scrollbar' -> 'Y' -> 'Lines' -> 'LineNumber' -> 'Lines' -> 'IO' ('Int')
 --
--- setScrollValue :: 'Ref' 'Scrollbar' -> 'Int' -> 'Int' -> 'Int' -> 'Int' -> 'IO' ('Int')
+-- setLinesize :: 'Ref' 'Scrollbar' -> 'LineSize' -> 'IO' ()
 --
 -- setType :: 'Ref' 'Scrollbar' -> 'ScrollbarType' -> 'IO' ()
 --

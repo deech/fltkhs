@@ -19,6 +19,7 @@ import Graphics.UI.FLTK.LowLevel.Fl_Types
 import Graphics.UI.FLTK.LowLevel.Utils
 import Graphics.UI.FLTK.LowLevel.Hierarchy
 import Graphics.UI.FLTK.LowLevel.Dispatch
+import Graphics.UI.FLTK.LowLevel.Widget
 import qualified Data.Text as T
 
 {# fun Fl_Overlay_Window_New_WithLabel as windowNewWithLabel' { `Int', `Int', unsafeToCString `T.Text', id `FunPtr CallbackPrim' } -> `Ptr ()' id #}
@@ -30,12 +31,14 @@ overlayWindowNew :: forall a. (Parent a OverlayWindow) => Size -> Maybe T.Text -
 overlayWindowNew (Size (Width width') (Height height')) title' position' callback' =
     do
       fptr <- toCallbackPrim callback'
-      case (title', position') of
-        (Just t, Just (Position (X x') (Y y'))) -> windowNewWithXYLabel' width' height' x' y' t fptr >>= toRef
-        (Nothing, Just (Position (X x') (Y y'))) -> windowNewWithXY' width' height' x' y' fptr >>= toRef
-        (Just t, Nothing) -> windowNewWithLabel' width' height' t fptr >>= toRef
-        (Nothing, Nothing) -> windowNew' width' height' fptr >>= toRef
-
+      ref <- case (title', position') of
+              (Just t, Just (Position (X x') (Y y'))) -> windowNewWithXYLabel' width' height' x' y' t fptr >>= toRef
+              (Nothing, Just (Position (X x') (Y y'))) -> windowNewWithXY' width' height' x' y' fptr >>= toRef
+              (Just t, Nothing) -> windowNewWithLabel' width' height' t fptr >>= toRef
+              (Nothing, Nothing) -> windowNew' width' height' fptr >>= toRef
+      setFlag ref WidgetFlagCopiedLabel
+      setFlag ref WidgetFlagCopiedTooltip
+      return ref
 {# fun Fl_Overlay_Window_Destroy as windowDestroy' { id `Ptr ()' } -> `()' #}
 instance (impl ~ (IO ())) => Op (Destroy ()) OverlayWindow orig impl where
   runOp _ _ win = withRef win $ \winPtr -> windowDestroy' winPtr

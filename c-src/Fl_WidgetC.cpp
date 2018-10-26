@@ -118,6 +118,15 @@ Fl_Gl_Window* Fl_DerivedWidget::as_gl_window(){
   }
   return win;
 }
+unsigned int Fl_DerivedWidget::flags() {
+  return Fl_Widget::flags();
+}
+void Fl_DerivedWidget::set_flag(unsigned int f) {
+  Fl_Widget::set_flag(f);
+}
+void Fl_DerivedWidget::clear_flag(unsigned int f) {
+  Fl_Widget::clear_flag(f);
+}
  EXPORT {
 #endif
   FL_EXPORT_C(fl_Widget_Virtual_Funcs*, Fl_Widget_default_virtual_funcs)(){
@@ -480,6 +489,15 @@ FL_EXPORT_C(void, Fl_Widget_draw_label)(fl_Widget Widget){
   FL_EXPORT_C(void, Fl_Widget_Destroy)(fl_Widget widget){
     delete (static_cast<Fl_DerivedWidget*>(widget));
   }
+  FL_EXPORT_C(unsigned int, Fl_Widget_flags)(fl_Widget widget){
+    return (static_cast<Fl_DerivedWidget*>(widget))->flags();
+  };
+  FL_EXPORT_C(void, Fl_Widget_set_flag)(fl_Widget widget, unsigned int flag){
+    (static_cast<Fl_DerivedWidget*>(widget))->set_flag(flag);
+  };
+  FL_EXPORT_C(void, Fl_Widget_clear_flag)(fl_Widget widget, unsigned int flag){
+    (static_cast<Fl_DerivedWidget*>(widget))->clear_flag(flag);
+  };
 #ifdef __cplusplus
  }
 #endif

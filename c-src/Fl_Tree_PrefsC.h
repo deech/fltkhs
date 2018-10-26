@@ -5,6 +5,7 @@
 // Fl_Widget is included transitively and needed for
 // the callback mechanism included below to work.
 #include "FL/Fl.H"
+#include "FL/Fl_Image.H"
 #include "FL/Fl_Tree_Prefs.H"
 #include "Fl_CallbackC.h"
 EXPORT {
@@ -17,13 +18,8 @@ EXPORT {
   FL_EXPORT_C_HEADER(void,Fl_Tree_Prefs_set_item_labelsize,(fl_Tree_Prefs tree_prefs, Fl_Fontsize val));
   FL_EXPORT_C_HEADER(Fl_Color,Fl_Tree_Prefs_item_labelfgcolor,(fl_Tree_Prefs tree_prefs));
   FL_EXPORT_C_HEADER(void,Fl_Tree_Prefs_set_item_labelfgcolor,(fl_Tree_Prefs tree_prefs, Fl_Color val));
-#if FLTK_ABI_VERSION >= 10302
   FL_EXPORT_C_HEADER(Fl_Color,Fl_Tree_Prefs_item_labelbgcolor,(fl_Tree_Prefs tree_prefs));
   FL_EXPORT_C_HEADER(void,Fl_Tree_Prefs_set_item_labelbgcolor,(fl_Tree_Prefs tree_prefs, Fl_Color val));
-#else /*FLTK_ABI_VERSION*/
-  FL_EXPORT_C_HEADER(Fl_Color,Fl_Tree_Prefs_item_labelbgcolor,(fl_Tree_Prefs tree_prefs));
-  FL_EXPORT_C_HEADER(void,Fl_Tree_Prefs_set_item_labelbgcolor,(fl_Tree_Prefs tree_prefs, Fl_Color val));
-#endif /*FLTK_ABI_VERSION*/
   FL_EXPORT_C_HEADER(Fl_Font,Fl_Tree_Prefs_labelfont,(fl_Tree_Prefs tree_prefs));
   FL_EXPORT_C_HEADER(void,Fl_Tree_Prefs_set_labelfont,(fl_Tree_Prefs tree_prefs, Fl_Font val));
   FL_EXPORT_C_HEADER(Fl_Fontsize,Fl_Tree_Prefs_labelsize,(fl_Tree_Prefs tree_prefs));
@@ -36,20 +32,16 @@ EXPORT {
   FL_EXPORT_C_HEADER(void,Fl_Tree_Prefs_set_marginleft,(fl_Tree_Prefs tree_prefs, int val));
   FL_EXPORT_C_HEADER(int,Fl_Tree_Prefs_margintop,(fl_Tree_Prefs tree_prefs));
   FL_EXPORT_C_HEADER(void,Fl_Tree_Prefs_set_margintop,(fl_Tree_Prefs tree_prefs, int val));
-#if FLTK_ABI_VERSION >= 10302
   FL_EXPORT_C_HEADER(int,Fl_Tree_Prefs_marginbottom,(fl_Tree_Prefs tree_prefs));
   FL_EXPORT_C_HEADER(void,Fl_Tree_Prefs_set_marginbottom,(fl_Tree_Prefs tree_prefs, int val));
-#endif /*FLTK_ABI_VERSION*/
   FL_EXPORT_C_HEADER(int,Fl_Tree_Prefs_openchild_marginbottom,(fl_Tree_Prefs tree_prefs));
   FL_EXPORT_C_HEADER(void,Fl_Tree_Prefs_set_openchild_marginbottom,(fl_Tree_Prefs tree_prefs, int val));
   FL_EXPORT_C_HEADER(int,Fl_Tree_Prefs_usericonmarginleft,(fl_Tree_Prefs tree_prefs));
   FL_EXPORT_C_HEADER(void,Fl_Tree_Prefs_set_usericonmarginleft,(fl_Tree_Prefs tree_prefs, int val));
   FL_EXPORT_C_HEADER(int,Fl_Tree_Prefs_labelmarginleft,(fl_Tree_Prefs tree_prefs));
   FL_EXPORT_C_HEADER(void,Fl_Tree_Prefs_set_labelmarginleft,(fl_Tree_Prefs tree_prefs, int val));
-#if FLTK_ABI_VERSION >= 10302
   FL_EXPORT_C_HEADER(int,Fl_Tree_Prefs_widgetmarginleft,(fl_Tree_Prefs tree_prefs));
   FL_EXPORT_C_HEADER(void,Fl_Tree_Prefs_set_widgetmarginleft,(fl_Tree_Prefs tree_prefs, int val));
-#endif /*FLTK_ABI_VERSION*/
   FL_EXPORT_C_HEADER(int,Fl_Tree_Prefs_linespacing,(fl_Tree_Prefs tree_prefs));
   FL_EXPORT_C_HEADER(void,Fl_Tree_Prefs_set_linespacing,(fl_Tree_Prefs tree_prefs, int val));
   FL_EXPORT_C_HEADER(Fl_Color,Fl_Tree_Prefs_connectorcolor,(fl_Tree_Prefs tree_prefs));
@@ -75,12 +67,10 @@ EXPORT {
   FL_EXPORT_C_HEADER(void,Fl_Tree_Prefs_set_showroot,(fl_Tree_Prefs tree_prefs, int val));
   FL_EXPORT_C_HEADER(Fl_Tree_Select,Fl_Tree_Prefs_selectmode,(fl_Tree_Prefs tree_prefs));
   FL_EXPORT_C_HEADER(void,Fl_Tree_Prefs_set_selectmode,(fl_Tree_Prefs tree_prefs, Fl_Tree_Select val));
-#if FLTK_ABI_VERSION >= 10302
   FL_EXPORT_C_HEADER(Fl_Tree_Item_Reselect_Mode,Fl_Tree_Prefs_item_reselect_mode,(fl_Tree_Prefs tree_prefs));
   FL_EXPORT_C_HEADER(void,Fl_Tree_Prefs_set_item_reselect_mode,(fl_Tree_Prefs tree_prefs, Fl_Tree_Item_Reselect_Mode mode));
   FL_EXPORT_C_HEADER(Fl_Tree_Item_Draw_Mode,Fl_Tree_Prefs_item_draw_mode,(fl_Tree_Prefs tree_prefs));
   FL_EXPORT_C_HEADER(void,Fl_Tree_Prefs_set_item_draw_mode,(fl_Tree_Prefs tree_prefs, Fl_Tree_Item_Draw_Mode val));
-#endif /*FLTK_ABI_VERSION*/
 #ifdef __cplusplus
 }
 #endif

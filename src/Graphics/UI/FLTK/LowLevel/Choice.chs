@@ -50,12 +50,13 @@ choiceCustom rectangle l' draw' funcs' =
 {# fun Fl_Choice_New_WithLabel as choiceNewWithLabel' { `Int',`Int',`Int',`Int', unsafeToCString `T.Text'} -> `Ptr ()' id #}
 choiceNew :: Rectangle -> Maybe T.Text -> IO (Ref Choice)
 choiceNew rectangle l'=
-    let (x_pos, y_pos, width, height) = fromRectangle rectangle
-    in case l' of
-        Nothing -> choiceNew' x_pos y_pos width height >>=
-                             toRef
-        Just l -> choiceNewWithLabel' x_pos y_pos width height l >>=
-                               toRef
+  widgetMaker
+    rectangle
+    l'
+    Nothing
+    Nothing
+    overriddenWidgetNew'
+    overriddenWidgetNewWithLabel'
 {# fun Fl_Choice_Destroy as widgetDestroy' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
 instance (impl ~ (IO ())) => Op (Destroy ()) Choice orig impl where
   runOp _ _ menu_ = swapRef menu_ $
@@ -63,18 +64,18 @@ instance (impl ~ (IO ())) => Op (Destroy ()) Choice orig impl where
                              widgetDestroy' menu_Ptr >>
                              return nullPtr
 {# fun Fl_Choice_value as value' { id `Ptr ()' } -> `Int' #}
-instance (impl ~ ( IO (MenuItemIndex))) => Op (GetValue ()) Choice orig impl where
-  runOp _ _ menu_ = withRef menu_ $ \menu_Ptr -> value' menu_Ptr >>= return . MenuItemIndex
+instance (impl ~ ( IO (AtIndex))) => Op (GetValue ()) Choice orig impl where
+  runOp _ _ menu_ = withRef menu_ $ \menu_Ptr -> value' menu_Ptr >>= return . AtIndex
 {# fun Fl_Choice_set_value_with_item as valueWithItem' { id `Ptr ()',id `Ptr ()' } -> `Int' #}
 {# fun Fl_Choice_set_value_with_index as valueWithIndex' { id `Ptr ()',`Int' } -> `Int' #}
-instance (impl ~ (MenuItemReference -> IO (Int))) => Op (SetValue ()) Choice orig impl where
+instance (impl ~ (MenuItemReference -> IO (Either NoChange ()))) => Op (SetValue ()) Choice orig impl where
   runOp _ _ menu_ menu_item_reference =
     withRef menu_ $ \menu_Ptr ->
         case menu_item_reference of
-          (MenuItemByIndex (MenuItemIndex index')) -> valueWithIndex' menu_Ptr index'
+          (MenuItemByIndex (AtIndex index')) -> valueWithIndex' menu_Ptr index' >>= return . successOrNoChange
           (MenuItemByPointer (MenuItemPointer menu_item)) ->
               withRef menu_item $ \menu_itemPtr ->
-                  valueWithItem' menu_Ptr menu_itemPtr
+                  valueWithItem' menu_Ptr menu_itemPtr >>= return . successOrNoChange
 {#fun Fl_Choice_handle as menu_Handle' { id `Ptr ()', id `CInt' } -> `Int' #}
 instance (impl ~ (Event -> IO (Either UnknownEvent ()))) => Op (Handle ()) Choice orig impl where
   runOp _ _ menu_ event = withRef menu_ (\p -> menu_Handle' p (fromIntegral . fromEnum $ event)) >>= return  . successOrUnknownEvent
@@ -119,7 +120,7 @@ instance (impl ~ ( IO ())) => Op (ShowWidgetSuper ()) Choice orig impl where
 --
 -- drawSuper :: 'Ref' 'Choice' -> 'IO' ()
 --
--- getValue :: 'Ref' 'Choice' -> 'IO' ('MenuItemIndex')
+-- getValue :: 'Ref' 'Choice' -> 'IO' ('AtIndex')
 --
 -- handle :: 'Ref' 'Choice' -> 'Event' -> 'IO' ('Either' 'UnknownEvent' ())
 --
@@ -133,7 +134,7 @@ instance (impl ~ ( IO ())) => Op (ShowWidgetSuper ()) Choice orig impl where
 --
 -- resizeSuper :: 'Ref' 'Choice' -> 'Rectangle' -> 'IO' ()
 --
--- setValue :: 'Ref' 'Choice' -> 'MenuItemReference' -> 'IO' ('Int')
+-- setValue :: 'Ref' 'Choice' -> 'MenuItemReference' -> 'IO' ('Either' 'NoChange' ())
 --
 -- showWidget :: 'Ref' 'Choice' -> 'IO' ()
 --

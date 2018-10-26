@@ -23,7 +23,9 @@ EXPORT {
     void draw_label();
     void draw_label(int x,int y,int w,int h,Fl_Align alignment);
     virtual void draw();
+    void draw_super();
     virtual int handle(int event);
+    int handle_super(int event);
     void resize_super(int x, int y, int w, int h);
     virtual void resize(int x, int y, int w, int h);
     virtual void show();
@@ -216,26 +218,31 @@ FL_EXPORT_C_HEADER(void,Fl_Browser_draw_label,(fl_Browser Browser));
   FL_EXPORT_C_HEADER(int,Fl_Browser_select_only_with_docallbacks,(fl_Browser browser,void *item,int docallbacks));
   FL_EXPORT_C_HEADER(int,Fl_Browser_deselect,(fl_Browser browser));
   FL_EXPORT_C_HEADER(int,Fl_Browser_deselect_with_docallbacks,(fl_Browser browser,int docallbacks));
-  FL_EXPORT_C(int, Fl_Browser_position)(fl_Browser browser);
-  FL_EXPORT_C(void, Fl_Browser_set_position)(fl_Browser browser,int pos); // scroll to here
-  FL_EXPORT_C(int, Fl_Browser_hposition)(fl_Browser browser);
-  FL_EXPORT_C(void, Fl_Browser_set_hposition)(fl_Browser browser,int); // pan to here
+  FL_EXPORT_C_HEADER(int, Fl_Browser_position,(fl_Browser browser));
+  FL_EXPORT_C_HEADER(void, Fl_Browser_set_position,(fl_Browser browser,int pos)); // scroll to here
+  FL_EXPORT_C_HEADER(int, Fl_Browser_hposition,(fl_Browser browser));
+  FL_EXPORT_C_HEADER(void, Fl_Browser_set_hposition,(fl_Browser browser,int)); // pan to here
   FL_EXPORT_C_HEADER(uchar,Fl_Browser_has_scrollbar,(fl_Browser browser));
-  FL_EXPORT_C(void, Fl_Browser_set_has_scrollbar)(fl_Browser browser,uchar mode);
-  FL_EXPORT_C(Fl_Font, Fl_Browser_textfont)(fl_Browser browser);
-  FL_EXPORT_C(void, Fl_Browser_set_textfont)(fl_Browser browser,Fl_Font font);
-  FL_EXPORT_C(Fl_Fontsize, Fl_Browser_textsize)(fl_Browser browser);
-  FL_EXPORT_C(void, Fl_Browser_set_textsize)(fl_Browser browser,Fl_Fontsize newSize);
-  FL_EXPORT_C(Fl_Color, Fl_Browser_textcolor)(fl_Browser browser);
-  FL_EXPORT_C(void, Fl_Browser_set_textcolor)(fl_Browser browser,Fl_Color col);
-  FL_EXPORT_C(int, Fl_Browser_scrollbar_size)(fl_Browser browser);
-  FL_EXPORT_C(void, Fl_Browser_set_scrollbar_size)(fl_Browser browser,int newSize);
-  FL_EXPORT_C(int, Fl_Browser_scrollbar_width)(fl_Browser browser);
-  FL_EXPORT_C(void, Fl_Browser_set_scrollbar_width)(fl_Browser browser,int width);
-  FL_EXPORT_C(void, Fl_Browser_scrollbar_right)(fl_Browser browser);
+  FL_EXPORT_C_HEADER(void, Fl_Browser_set_has_scrollbar,(fl_Browser browser,uchar mode));
+  FL_EXPORT_C_HEADER(Fl_Font, Fl_Browser_textfont,(fl_Browser browser));
+  FL_EXPORT_C_HEADER(void, Fl_Browser_set_textfont,(fl_Browser browser,Fl_Font font));
+  FL_EXPORT_C_HEADER(Fl_Fontsize, Fl_Browser_textsize,(fl_Browser browser));
+  FL_EXPORT_C_HEADER(void, Fl_Browser_set_textsize,(fl_Browser browser,Fl_Fontsize newSize));
+  FL_EXPORT_C_HEADER(Fl_Color, Fl_Browser_textcolor,(fl_Browser browser));
+  FL_EXPORT_C_HEADER(void, Fl_Browser_set_textcolor,(fl_Browser browser,Fl_Color col));
+  FL_EXPORT_C_HEADER(int, Fl_Browser_scrollbar_size,(fl_Browser browser));
+  FL_EXPORT_C_HEADER(void, Fl_Browser_set_scrollbar_size,(fl_Browser browser,int newSize));
+  FL_EXPORT_C_HEADER(int, Fl_Browser_scrollbar_width,(fl_Browser browser));
+  FL_EXPORT_C_HEADER(void, Fl_Browser_set_scrollbar_width,(fl_Browser browser,int width));
+  FL_EXPORT_C_HEADER(void, Fl_Browser_set_scrollbar_color,(fl_Browser browser,Fl_Color col));
+  FL_EXPORT_C_HEADER(void, Fl_Browser_set_scrollbar_box,(fl_Browser browser,Fl_Boxtype box));
+  FL_EXPORT_C_HEADER(void, Fl_Browser_set_scrollbar_selection_color,(fl_Browser browser,Fl_Color col));
+  FL_EXPORT_C_HEADER(void, Fl_Browser_scrollbar_right,(fl_Browser browser));
   FL_EXPORT_C_HEADER(void,Fl_Browser_set_scrollbar_left,(fl_Browser browser));
   FL_EXPORT_C_HEADER(void,Fl_Browser_sort,(fl_Browser browser));
   FL_EXPORT_C_HEADER(void,Fl_Browser_sort_with_flags,(fl_Browser browser,int flags));
+  FL_EXPORT_C_HEADER(void,Fl_Browser_draw_super,(fl_Browser browser));
+  FL_EXPORT_C_HEADER(int,Fl_Browser_handle_super,(fl_Browser browser, int e));
 #ifdef __cplusplus
 }
 #endif

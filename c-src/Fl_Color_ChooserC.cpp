@@ -1,12 +1,14 @@
 #include "Fl_Color_ChooserC.h"
 #ifdef __cplusplus
 EXPORT {
-  Fl_DerivedColor_Chooser::Fl_DerivedColor_Chooser(int X, int Y, int W, int H, const char *l, fl_Widget_Virtual_Funcs* funcs) : Fl_Color_Chooser(X,Y,W,H,l){
+  Fl_DerivedColor_Chooser::Fl_DerivedColor_Chooser(int X, int Y, int W, int H, const char *l, fl_Widget_Virtual_Funcs* funcs, fl_Color_Chooser_Virtual_Funcs* cfs) : Fl_Color_Chooser(X,Y,W,H,l){
     overriddenFuncs = funcs;
+    cOverriddenFuncs = cfs;
     other_data = (void*)0;
   }
-  Fl_DerivedColor_Chooser::Fl_DerivedColor_Chooser(int X, int Y, int W, int H, fl_Widget_Virtual_Funcs* funcs):Fl_Color_Chooser(X,Y,W,H){
+  Fl_DerivedColor_Chooser::Fl_DerivedColor_Chooser(int X, int Y, int W, int H, fl_Widget_Virtual_Funcs* funcs, fl_Color_Chooser_Virtual_Funcs* cfs):Fl_Color_Chooser(X,Y,W,H){
     overriddenFuncs = funcs;
+    cOverriddenFuncs = cfs;
     other_data = (void*)0;
   }
   Fl_DerivedColor_Chooser::~Fl_DerivedColor_Chooser(){
@@ -75,6 +77,86 @@ EXPORT {
     Fl_Color_Chooser::hide();
   }
 
+  int Fl_DerivedColor_Chooser::mode() {
+    if (this->cOverriddenFuncs && this->cOverriddenFuncs->get_mode) {
+      return this->cOverriddenFuncs->get_mode((fl_Color_Chooser) this);
+    }
+    else {
+      return Fl_Color_Chooser::mode();
+    }
+  };
+  void Fl_DerivedColor_Chooser::mode(int newMode){
+    if (this->cOverriddenFuncs && this->cOverriddenFuncs->set_mode) {
+      this->cOverriddenFuncs->set_mode((fl_Color_Chooser) this, newMode);
+    }
+    else {
+      Fl_Color_Chooser::mode(newMode);
+    }
+  }
+  double Fl_DerivedColor_Chooser::hue(){
+    if (this->cOverriddenFuncs && this->cOverriddenFuncs->hue) {
+      return this->cOverriddenFuncs->hue((fl_Color_Chooser) this);
+    }
+    else {
+      return Fl_Color_Chooser::hue();
+    }
+  };
+  double Fl_DerivedColor_Chooser::saturation(){
+    if (this->cOverriddenFuncs && this->cOverriddenFuncs->saturation) {
+      return this->cOverriddenFuncs->saturation((fl_Color_Chooser) this);
+    }
+    else {
+      return Fl_Color_Chooser::saturation();
+    }
+  };
+  double Fl_DerivedColor_Chooser::value(){
+    if (this->cOverriddenFuncs && this->cOverriddenFuncs->value) {
+      return this->cOverriddenFuncs->value((fl_Color_Chooser) this);
+    }
+    else {
+      return Fl_Color_Chooser::value();
+    }
+  };
+  double Fl_DerivedColor_Chooser::r(){
+    if (this->cOverriddenFuncs && this->cOverriddenFuncs->r) {
+      return this->cOverriddenFuncs->r((fl_Color_Chooser) this);
+    }
+    else {
+      return Fl_Color_Chooser::r();
+    }
+  }
+  double Fl_DerivedColor_Chooser::g(){
+    if (this->cOverriddenFuncs && this->cOverriddenFuncs->g) {
+      return this->cOverriddenFuncs->g((fl_Color_Chooser) this);
+    }
+    else {
+      return Fl_Color_Chooser::g();
+    }
+  };
+  double Fl_DerivedColor_Chooser::b(){
+    if (this->cOverriddenFuncs && this->cOverriddenFuncs->b) {
+      return this->cOverriddenFuncs->b((fl_Color_Chooser) this);
+    }
+    else {
+      return Fl_Color_Chooser::b();
+    }
+  };
+  int Fl_DerivedColor_Chooser::hsv(double H, double S, double V){
+    if (this->cOverriddenFuncs && this->cOverriddenFuncs->hsv) {
+      return this->cOverriddenFuncs->hsv((fl_Color_Chooser) this, H, S, V);
+    }
+    else {
+      return Fl_Color_Chooser::hsv(H,S,V);
+    }
+  };
+  int Fl_DerivedColor_Chooser::rgb(double R, double G, double B){
+    if (this->cOverriddenFuncs && this->cOverriddenFuncs->rgb) {
+      return this->cOverriddenFuncs->rgb((fl_Color_Chooser) this, R, G, B);
+    }
+    else {
+      return Fl_Color_Chooser::rgb(R,G,B);
+    }
+  };
 
 #endif
   FL_EXPORT_C(int,Fl_Color_Chooser_handle)(fl_Color_Chooser color_chooser, int event){
@@ -402,20 +484,20 @@ EXPORT {
   }
   FL_EXPORT_C(fl_Color_Chooser,    Fl_Color_Chooser_New)(int X, int Y, int W, int H){
     fl_Widget_Virtual_Funcs* fs = Fl_Widget_default_virtual_funcs();
-    Fl_DerivedColor_Chooser* w = new Fl_DerivedColor_Chooser(X,Y,W,H,fs);
+    Fl_DerivedColor_Chooser* w = new Fl_DerivedColor_Chooser(X,Y,W,H,fs,0);
     return (fl_Color_Chooser)w;
   }
   FL_EXPORT_C(fl_Color_Chooser,    Fl_Color_Chooser_New_WithLabel)(int X, int Y, int W, int H, const char* label){
     fl_Widget_Virtual_Funcs* fs = Fl_Widget_default_virtual_funcs();
-    Fl_DerivedColor_Chooser* w = new Fl_DerivedColor_Chooser(X,Y,W,H,label,fs);
+    Fl_DerivedColor_Chooser* w = new Fl_DerivedColor_Chooser(X,Y,W,H,label,fs,0);
     return (fl_Color_Chooser)w;
   }
-  FL_EXPORT_C(fl_Color_Chooser,    Fl_OverriddenColor_Chooser_New)(int X, int Y, int W, int H,fl_Widget_Virtual_Funcs* fs){
-    Fl_DerivedColor_Chooser* w = new Fl_DerivedColor_Chooser(X,Y,W,H,fs);
+  FL_EXPORT_C(fl_Color_Chooser,    Fl_OverriddenColor_Chooser_New)(int X, int Y, int W, int H,fl_Widget_Virtual_Funcs* fs, fl_Color_Chooser_Virtual_Funcs* cfs){
+    Fl_DerivedColor_Chooser* w = new Fl_DerivedColor_Chooser(X,Y,W,H,fs,cfs);
     return (fl_Color_Chooser)w;
   }
-  FL_EXPORT_C(fl_Color_Chooser,    Fl_OverriddenColor_Chooser_New_WithLabel)(int X, int Y, int W, int H, const char* label, fl_Widget_Virtual_Funcs* fs){
-    Fl_DerivedColor_Chooser* w = new Fl_DerivedColor_Chooser(X,Y,W,H,label,fs);
+  FL_EXPORT_C(fl_Color_Chooser,    Fl_OverriddenColor_Chooser_New_WithLabel)(int X, int Y, int W, int H, const char* label, fl_Widget_Virtual_Funcs* fs, fl_Color_Chooser_Virtual_Funcs* cfs){
+    Fl_DerivedColor_Chooser* w = new Fl_DerivedColor_Chooser(X,Y,W,H,label,fs,cfs);
     return (fl_Color_Chooser)w;
   }
 

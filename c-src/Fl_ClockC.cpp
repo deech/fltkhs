@@ -410,6 +410,12 @@ EXPORT {
     Fl_DerivedClock* w = new Fl_DerivedClock(X,Y,W,H,label,fs);
     return (fl_Clock)w;
   }
+  FL_EXPORT_C(void,Fl_Clock_set_shadow)(fl_Clock o, int shadow){
+    (static_cast<Fl_DerivedClock*>(o)->shadow(shadow));
+  }
+  FL_EXPORT_C(int, Fl_Clock_get_shadow)(fl_Clock o) {
+    return (static_cast<Fl_DerivedClock*>(o)->shadow());
+  }
 #ifdef __cplusplus
 }
 #endif

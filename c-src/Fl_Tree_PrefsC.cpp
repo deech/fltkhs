@@ -70,14 +70,12 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Tree_Prefs_set_margintop)(fl_Tree_Prefs tree_prefs,int val){
     (static_cast<Fl_Tree_Prefs*>(tree_prefs))->margintop(val);
   }
-#if FLTK_ABI_VERSION >= 10302
   FL_EXPORT_C(int,Fl_Tree_Prefs_marginbottom)(fl_Tree_Prefs tree_prefs){
     return (static_cast<Fl_Tree_Prefs*>(tree_prefs))->marginbottom();
   }
   FL_EXPORT_C(void,Fl_Tree_Prefs_set_marginbottom)(fl_Tree_Prefs tree_prefs,int val){
     (static_cast<Fl_Tree_Prefs*>(tree_prefs))->marginbottom(val);
   }
-#endif /*FLTK_ABI_VERSION*/
   FL_EXPORT_C(int,Fl_Tree_Prefs_openchild_marginbottom)(fl_Tree_Prefs tree_prefs){
     return (static_cast<Fl_Tree_Prefs*>(tree_prefs))->openchild_marginbottom();
   }
@@ -96,14 +94,12 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Tree_Prefs_set_labelmarginleft)(fl_Tree_Prefs tree_prefs,int val){
     (static_cast<Fl_Tree_Prefs*>(tree_prefs))->labelmarginleft(val);
   }
-#if FLTK_ABI_VERSION >= 10302
   FL_EXPORT_C(int,Fl_Tree_Prefs_widgetmarginleft)(fl_Tree_Prefs tree_prefs){
     return (static_cast<Fl_Tree_Prefs*>(tree_prefs))->widgetmarginleft();
   }
   FL_EXPORT_C(void,Fl_Tree_Prefs_set_widgetmarginleft)(fl_Tree_Prefs tree_prefs,int val){
     (static_cast<Fl_Tree_Prefs*>(tree_prefs))->widgetmarginleft(val);
   }
-#endif
   FL_EXPORT_C(int,Fl_Tree_Prefs_linespacing)(fl_Tree_Prefs tree_prefs){
     return (static_cast<Fl_Tree_Prefs*>(tree_prefs))->linespacing();
   }
@@ -179,7 +175,6 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Tree_Prefs_set_selectmode)(fl_Tree_Prefs tree_prefs,Fl_Tree_Select val){
     (static_cast<Fl_Tree_Prefs*>(tree_prefs))->selectmode(val);
   }
-#if FLTK_ABI_VERSION >= 10302
   FL_EXPORT_C(Fl_Tree_Item_Reselect_Mode,Fl_Tree_Prefs_item_reselect_mode)(fl_Tree_Prefs tree_prefs){
     return (static_cast<Fl_Tree_Prefs*>(tree_prefs))->item_reselect_mode();
   }
@@ -192,7 +187,6 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Tree_Prefs_set_item_draw_mode)(fl_Tree_Prefs tree_prefs,Fl_Tree_Item_Draw_Mode val){
     (static_cast<Fl_Tree_Prefs*>(tree_prefs))->item_draw_mode(val);
   }
-#endif
 #ifdef __cplusplus
 }
 #endif

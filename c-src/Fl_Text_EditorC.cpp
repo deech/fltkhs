@@ -458,17 +458,7 @@ EXPORT {
     return (static_cast<DerivedText_Editor*>(text_editor))->word_end(pos);
   }
   FL_EXPORT_C(void,Fl_Text_Editor_highlight_data)(fl_Text_Editor text_editor,fl_Text_Buffer styleBuffer,Style_Table_Entry *styleTable,int nStyles,char unfinishedStyle,Unfinished_Style_Cb unfinishedHighlightCB,void *cbArg){
-    Fl_Text_Editor::Style_Table_Entry* s = new Fl_Text_Editor::Style_Table_Entry[nStyles]();
-    int i = 0;
-    for (;i<nStyles;i++){
-      Fl_Text_Editor::Style_Table_Entry x =  Fl_Text_Editor::Style_Table_Entry();
-      x.color = styleTable[i].color;
-      x.font = styleTable[i].font;
-      x.size = styleTable[i].size;
-      x.attr = styleTable[i].attr;
-      s[i] = x;
-    }
-    (static_cast<DerivedText_Editor*>(text_editor))->highlight_data((static_cast<Fl_Text_Buffer*>(styleBuffer)),s,nStyles,unfinishedStyle,unfinishedHighlightCB,cbArg);
+    (static_cast<DerivedText_Editor*>(text_editor))->highlight_data((static_cast<Fl_Text_Buffer*>(styleBuffer)),(static_cast<Fl_Text_Display::Style_Table_Entry*>((void*) styleTable)),nStyles,unfinishedStyle,unfinishedHighlightCB,cbArg);
   }
   FL_EXPORT_C(int,Fl_Text_Editor_position_style)(fl_Text_Editor text_editor,int lineStartPos,int lineLen,int lineIndex){
     return (static_cast<DerivedText_Editor*>(text_editor))->position_style(lineStartPos,lineLen,lineIndex);

@@ -114,16 +114,15 @@ instance (impl ~ (Rectangle -> IO ())) => Op (Resize ()) SingleWindow orig impl 
                                  resize' windowPtr x_pos y_pos w_pos h_pos
 -- $functions
 -- @
---
 -- destroy :: 'Ref' 'SingleWindow' -> 'IO' ()
 --
 -- drawSuper :: 'Ref' 'SingleWindow' -> 'IO' ()
 --
 -- flushSuper :: 'Ref' 'SingleWindow' -> 'IO' ()
 --
--- handle :: 'Ref' 'SingleWindow' -> ('Event' -> 'IO' ('Either' 'UnknownEvent' ()))
+-- handle :: 'Ref' 'SingleWindow' -> 'Event' -> 'IO' ('Either' 'UnknownEvent' ())
 --
--- handleSuper :: 'Ref' 'SingleWindow' -> 'Int' -> 'IO' 'Int'
+-- handleSuper :: 'Ref' 'SingleWindow' -> 'Event' -> 'IO' ('Either' 'UnknownEvent' ())
 --
 -- hide :: 'Ref' 'SingleWindow' -> 'IO' ()
 --

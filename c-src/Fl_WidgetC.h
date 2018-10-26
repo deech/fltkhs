@@ -22,6 +22,9 @@ EXPORT {
     void draw_focus(Fl_Boxtype t, int x,int y,int w,int h);
     void draw_label();
     void draw_label(int x,int y,int w,int h,Fl_Align alignment);
+    void set_flag(unsigned int);
+    void clear_flag(unsigned int);
+    unsigned int flags();
     virtual void draw();
     virtual int handle(int event);
     void resize_super(int x, int y, int w, int h);
@@ -36,6 +39,35 @@ EXPORT {
     ~Fl_DerivedWidget();
   };
 #endif
+#ifndef INTERNAL_LINKAGE
+  typedef enum WidgetFlags {
+    INACTIVE        = 1<<0,
+    INVISIBLE       = 1<<1,
+    OUTPUT          = 1<<2,
+    NOBORDER        = 1<<3,
+    FORCE_POSITION  = 1<<4,
+    NON_MODAL       = 1<<5,
+    SHORTCUT_LABEL  = 1<<6,
+    CHANGED         = 1<<7,
+    OVERRIDE        = 1<<8,
+    VISIBLE_FOCUS   = 1<<9,
+    COPIED_LABEL    = 1<<10,
+    CLIP_CHILDREN   = 1<<11,
+    MENU_WINDOW     = 1<<12,
+    TOOLTIP_WINDOW  = 1<<13,
+    MODAL           = 1<<14,
+    NO_OVERLAY      = 1<<15,
+    GROUP_RELATIVE  = 1<<16,
+    COPIED_TOOLTIP  = 1<<17,
+    FULLSCREEN      = 1<<18,
+    MAC_USE_ACCENTS_MENU = 1<<19,
+    NEEDS_KEYBOARD  = 1<<20,
+    USERFLAG3       = 1<<29,
+    USERFLAG2       = 1<<30,
+    USERFLAG1       = 1<<31
+  } WidgetFlags;
+#endif
+
   FL_EXPORT_C_HEADER(int,Fl_Widget_handle,(fl_Widget self, int event));
   FL_EXPORT_C_HEADER(fl_Group,Fl_Widget_parent,(fl_Widget widget));
   FL_EXPORT_C_HEADER(void,Fl_Widget_set_parent,(fl_Widget widget, fl_Group grp));
@@ -143,6 +175,9 @@ EXPORT {
   FL_EXPORT_C_HEADER(fl_Widget,Fl_OverriddenWidget_New,(int X, int Y, int W, int H,fl_Widget_Virtual_Funcs* fs));
   FL_EXPORT_C_HEADER(fl_Widget,Fl_OverriddenWidget_New_WithLabel,(int X, int Y, int W, int H, const char* label, fl_Widget_Virtual_Funcs* fs));
   FL_EXPORT_C_HEADER(void,Fl_Widget_Destroy,(fl_Widget widget));
+  FL_EXPORT_C_HEADER(unsigned int, Fl_Widget_flags,(fl_Widget widget));
+  FL_EXPORT_C_HEADER(void, Fl_Widget_set_flag,(fl_Widget widget, unsigned int flag));
+  FL_EXPORT_C_HEADER(void, Fl_Widget_clear_flag,(fl_Widget widget, unsigned int flag));
 #ifdef __cplusplus
 }
 #endif

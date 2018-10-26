@@ -649,6 +649,29 @@ EXPORT {
   }
 #endif
 
+#if FL_API_VERSION >= 10400
+  FL_EXPORT_C(void, Fl_insertion_point_location)( int x, int y, int height ){
+    Fl::insertion_point_location( x, y, height );
+  }
+  FL_EXPORT_C(void, Fl_reset_marked_text)( ){
+    Fl::reset_marked_text( );
+  }
+  FL_EXPORT_C(void, Fl_run_checks)( ){
+    Fl::run_checks( );
+  }
+  FL_EXPORT_C(void*, Fl_screen_driver)( ){
+    return Fl::screen_driver( );
+  }
+  FL_EXPORT_C(void*, Fl_system_driver)( ){
+    return Fl::system_driver( );
+  }
+  FL_EXPORT_C(void, Fl_set_program_should_quit)(int should_i) {
+    Fl::program_should_quit(should_i);
+  };
+  FL_EXPORT_C(int, Fl_get_program_should_quit)(){
+    return Fl::program_should_quit();
+  };
+#endif
 #ifdef __cplusplus
 }
 #endif

@@ -10,10 +10,6 @@
 EXPORT {
 #endif
   //Fl_Graphics_Driver
-  FL_EXPORT_C_HEADER(const char*,Fl_Graphics_Driver_class_id,());
-  FL_EXPORT_C_HEADER(const char*,Fl_Graphics_Driver_class_name,(fl_Graphics_Driver graphics_driver));
-  FL_EXPORT_C_HEADER(const char*,Fl_Graphics_Driver_class_id,());
-  FL_EXPORT_C_HEADER(const char*,Fl_Graphics_Driver_class_name,(fl_Graphics_Driver graphics_driver));
   FL_EXPORT_C_HEADER(void,Fl_Graphics_Driver_set_font,(fl_Graphics_Driver graphics_driver,Fl_Font face, Fl_Fontsize fsize));
   FL_EXPORT_C_HEADER(Fl_Font,Fl_Graphics_Driver_font,(fl_Graphics_Driver graphics_driver));
   FL_EXPORT_C_HEADER(Fl_Fontsize,Fl_Graphics_Driver_size,(fl_Graphics_Driver graphics_driver));
@@ -31,10 +27,6 @@ EXPORT {
   FL_EXPORT_C_HEADER(void,Fl_Graphics_Driver_Destroy,(fl_Graphics_Driver graphics_driver));
 
   // Fl_Surface_Device
-  FL_EXPORT_C_HEADER(const char*,Fl_Surface_Device_class_id,());
-  FL_EXPORT_C_HEADER(const char*,Fl_Surface_Device_class_name,(fl_Surface_Device surface_device));
-  FL_EXPORT_C_HEADER(const char*,Fl_Surface_Device_class_id,());
-  FL_EXPORT_C_HEADER(const char*,Fl_Surface_Device_class_name,(fl_Surface_Device surface_device));
   FL_EXPORT_C_HEADER(void,Fl_Surface_Device_set_current,(fl_Surface_Device surface_device));
   FL_EXPORT_C_HEADER(void,Fl_Surface_Device_set_driver,(fl_Surface_Device surface_device,fl_Graphics_Driver graphics_driver));
   FL_EXPORT_C_HEADER(fl_Graphics_Driver,Fl_Surface_Device_driver,(fl_Surface_Device surface_device));

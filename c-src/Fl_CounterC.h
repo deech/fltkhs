@@ -16,6 +16,7 @@ EXPORT {
   public:
     virtual void draw();
     void draw_super();
+    uchar get_mouseobj();
     virtual int handle(int event);
     int handle_super(int event);
     virtual void resize(int x, int y, int w, int h);

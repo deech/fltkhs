@@ -16,6 +16,7 @@ import C2HS hiding (cFromEnum, cFromBool, cToBool,cToEnum)
 import Graphics.UI.FLTK.LowLevel.Fl_Types
 import Graphics.UI.FLTK.LowLevel.Utils
 import Graphics.UI.FLTK.LowLevel.Hierarchy
+import Graphics.UI.FLTK.LowLevel.Widget
 import qualified Data.Text as T
 {# fun Fl_Select_Browser_New as selectBrowserNew' { `Int',`Int',`Int',`Int' } -> `Ptr ()' id #}
 {# fun Fl_Select_Browser_New_WithLabel as selectBrowserNewWithLabel' { `Int',`Int',`Int',`Int',unsafeToCString `T.Text'} -> `Ptr ()' id #}
@@ -25,9 +26,11 @@ selectBrowserNew rectangle l' =
     in case l' of
         Nothing -> selectBrowserNew' x_pos y_pos width height >>=
                              toRef
-        Just l -> selectBrowserNewWithLabel' x_pos y_pos width height l >>=
-                             toRef
-
+        Just l -> do
+          ref <- selectBrowserNewWithLabel' x_pos y_pos width height l >>= toRef
+          setFlag ref WidgetFlagCopiedLabel
+          setFlag ref WidgetFlagCopiedTooltip
+          return ref
 -- $hierarchy
 -- @
 -- "Graphics.UI.FLTK.LowLevel.Widget"

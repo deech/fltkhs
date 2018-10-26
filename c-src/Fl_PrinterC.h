@@ -10,8 +10,6 @@
 EXPORT {
 #endif
   // Inherited from Fl_Surface_Driver
-  FL_EXPORT_C_HEADER(const char*,Fl_Printer_class_id,());
-  FL_EXPORT_C_HEADER(const char*,Fl_Printer_class_name,(fl_Printer printer));
   FL_EXPORT_C_HEADER(void,Fl_Printer_set_current,(fl_Printer printer));
   FL_EXPORT_C_HEADER(fl_Graphics_Driver,Fl_Printer_driver,(fl_Printer printer));
   FL_EXPORT_C_HEADER(fl_Surface_Device,Fl_Printer_surface,());

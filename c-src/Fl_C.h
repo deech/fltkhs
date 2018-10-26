@@ -3,8 +3,11 @@
 #include <stdarg.h>
 #include "Fl_ExportMacros.h"
 #include "Fl_Types.h"
-#include "Fl_EnumerationsC.h"
 #include "../config.h"
+#include "Fl_EnumerationsC.h"
+#if FL_API_VERSION >= 10400
+#include "FL/platform_types.h"
+#endif
 #ifdef __cplusplus
 #include "FL/Fl.H"
 #include "Fl_EnumerationsC.h"
@@ -41,17 +44,6 @@ EXPORT {
     OPTION_SHOW_TOOLTIPS,
     OPTION_LAST
   } Fl_Option;
-#ifndef INTERNAL_LINKAGE
-#if defined(WIN32) && !defined(__CYGWIN__)
-# if defined(_WIN64)
-#  define FL_SOCKET unsigned __int64
-# else
-#  define FL_SOCKET int
-# endif
-#else
-# define FL_SOCKET int
-#endif
-#endif
 #if !defined(__APPLE__) && HAVE_GL
   FL_EXPORT_C_HEADER(int,Fl_gl_visual,(int mode));
   FL_EXPORT_C_HEADER(int,Fl_gl_visual_with_alist,(int mode, int *alist));
@@ -275,6 +267,15 @@ EXPORT {
   FL_EXPORT_C_HEADER(const char*       ,Fl_local_shift,());
   FL_EXPORT_C_HEADER(void              ,Fl_set_use_high_res_GL,(int val));
   FL_EXPORT_C_HEADER(int               ,Fl_use_high_res_GL,());
+#endif
+#if FL_API_VERSION >= 10400
+  FL_EXPORT_C_HEADER(void, Fl_insertion_point_location, ( int x, int y, int height ));
+  FL_EXPORT_C_HEADER(void, Fl_reset_marked_text,());
+  FL_EXPORT_C_HEADER(void, Fl_run_checks,());
+  FL_EXPORT_C_HEADER(void*, Fl_screen_driver,());
+  FL_EXPORT_C_HEADER(void*, Fl_system_driver,());
+  FL_EXPORT_C_HEADER(void, Fl_set_program_should_quit, (int should_i));
+  FL_EXPORT_C_HEADER(int, Fl_get_program_should_quit, ());
 #endif
 #ifdef __cplusplus
 }

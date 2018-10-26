@@ -807,13 +807,13 @@ FL_EXPORT_C(fl_Gl_Window, Fl_OverriddenGl_Window_NewXY_WithLabel)(int x, int y, 
   FL_EXPORT_C(int,Fl_Gl_Window_set_mode)(fl_Gl_Window win,int a){
     return (static_cast<Fl_DerivedGl_Window*>(win))->mode(a);
   }
-  FL_EXPORT_C(void*,Fl_Gl_Window_context)(fl_Gl_Window win){
+  FL_EXPORT_C(GLContext,Fl_Gl_Window_context)(fl_Gl_Window win){
     return (static_cast<Fl_DerivedGl_Window*>(win))->context();
   }
-  FL_EXPORT_C(void,Fl_Gl_Window_set_context)(fl_Gl_Window win,void* context){
+  FL_EXPORT_C(void,Fl_Gl_Window_set_context)(fl_Gl_Window win,GLContext context){
     (static_cast<Fl_DerivedGl_Window*>(win))->context(context);
   }
-  FL_EXPORT_C(void,Fl_Gl_Window_set_context_with_destroy_flag)(fl_Gl_Window win,void* context, int flag){
+  FL_EXPORT_C(void,Fl_Gl_Window_set_context_with_destroy_flag)(fl_Gl_Window win,GLContext context, int flag){
     (static_cast<Fl_DerivedGl_Window*>(win))->context(context, flag);
   }
   FL_EXPORT_C(void,Fl_Gl_Window_swap_buffers)(fl_Gl_Window win){

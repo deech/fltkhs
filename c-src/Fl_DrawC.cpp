@@ -27,6 +27,10 @@ EXPORT {
     return fl_not_clipped(x,y,w,h);
   }
   FL_EXPORT_C(int,flc_clip_box)(int x,int y,int w,int h,int* X,int* Y,int* W,int* H){
+    *X = 0;
+    *Y = 0;
+    *W = 0;
+    *H = 0;
     return fl_clip_box(x,y,w,h,*X,*Y,*W,*H);
   }
   FL_EXPORT_C(void,flc_restore_clip)( ){
@@ -219,9 +223,17 @@ EXPORT {
     return fl_width(c);
   }
   FL_EXPORT_C(void,flc_text_extents)(const char* t,int* dx,int* dy,int* w,int* h){
+    *dx = 0;
+    *dy = 0;
+    *w = 0;
+    *h = 0;
     fl_text_extents(t,*dx,*dy,*w,*h);
   }
   FL_EXPORT_C(void,flc_text_extents_with_n)(const char *t,int n,int* dx,int* dy,int* w,int* h){
+    *dx = 0;
+    *dy = 0;
+    *w = 0;
+    *h = 0;
     fl_text_extents(t,n,*dx,*dy,*w,*h);
   }
   FL_EXPORT_C(const char*,flc_latin1_to_local)(const char *t){
@@ -264,9 +276,13 @@ EXPORT {
     fl_rtl_draw(str,n,x,y);
   }
   FL_EXPORT_C(void,flc_measure)(const char* str,int* x,int* y){
+    *x = 0;
+    *y = 0;
     fl_measure(str,*x,*y);
   }
   FL_EXPORT_C(void,flc_measure_with_draw_symbols)(const char* str,int* x,int* y,int draw_symbols){
+    *x = 0;
+    *y = 0;
     fl_measure(str,*x,*y,draw_symbols);
   }
   FL_EXPORT_C(void,flc_draw_with_img_draw_symbols)(const char* str,int x,int y,int w,int h,Fl_Align align,fl_Image img,int draw_symbols){
@@ -360,10 +376,14 @@ EXPORT {
     return fl_draw_pixmap(cdata,x,y);
   }
   FL_EXPORT_C(int,flc_measure_pixmap)(char* const* data,int *w,int *h){
+    *w = 0;
+    *h = 0;
     return fl_measure_pixmap(data,*w,*h);
   }
 
   FL_EXPORT_C(int,flc_measure_pixmap_with_cdata)(const char* const* cdata,int *w,int *h){
+    *w = 0;
+    *h = 0;
     return fl_measure_pixmap(cdata,*w,*h);
   }
   FL_EXPORT_C(void,flc_scroll)(int X, int Y, int W, int H, int dx, int dy, void (*draw_area)(void*, int,int,int,int), void* data){
@@ -397,9 +417,13 @@ EXPORT {
     fl_cursor(cursor);
   }
   FL_EXPORT_C(const char*,flc_expand_text_with_draw_symbols)(const char* from,char* buf,int maxbuf,double maxw,int* n,double *width,int wrap,int draw_symbols){
+    *n = 0;
+    *width = 0;
     return fl_expand_text(from,buf,maxbuf,maxw,*n,*width,wrap,draw_symbols);
   }
   FL_EXPORT_C(const char*,flc_expand_text)(const char* from,char* buf,int maxbuf,double maxw,int* n,double *width,int wrap){
+    *n = 0;
+    *width = 0;
     return fl_expand_text(from,buf,maxbuf,maxw,*n,*width,wrap);
   }
   FL_EXPORT_C(void,flc_set_status)(int X,int Y,int W,int H){
@@ -420,6 +444,32 @@ EXPORT {
   FL_EXPORT_C(int,flc_add_symbol)(const char* name, void (*drawit)(Fl_Color), int scalable){
     return fl_add_symbol(name, drawit, scalable);
   }
+#if FL_API_VERSION >= 10400
+  FL_EXPORT_C(Fl_Offscreen ,flc_create_offscreen)(int w, int h){
+    return fl_create_offscreen(w,h);
+  }
+  FL_EXPORT_C(void ,flc_begin_offscreen)(Fl_Offscreen ctx){
+    fl_begin_offscreen(ctx);
+  }
+  FL_EXPORT_C(void ,flc_end_offscreen)(){
+    fl_end_offscreen();
+  }
+  FL_EXPORT_C(void ,flc_delete_offscreen)(Fl_Offscreen ctx){
+    fl_delete_offscreen(ctx);
+  }
+  FL_EXPORT_C(char,flc_get_draw_shortcut)(){
+    return fl_draw_shortcut;
+  };
+  FL_EXPORT_C(void,flc_set_draw_shortcut)(char c){
+    fl_draw_shortcut = c;
+  };
+  FL_EXPORT_C(void ,flc_rescale_offscreen)(Fl_Offscreen* ctx){
+    fl_rescale_offscreen(*ctx);
+  };
+  FL_EXPORT_C(void ,flc_copy_offscreen)(int x, int y, int w, int h, Fl_Offscreen pixmap, int srcx, int srcy){
+    fl_copy_offscreen(x,y,w,h,pixmap,srcx,srcy);
+  };
+#endif
 #ifdef __cplusplus
 }
 #endif

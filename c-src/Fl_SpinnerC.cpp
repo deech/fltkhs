@@ -114,6 +114,12 @@ EXPORT {
   FL_EXPORT_C(double,Fl_Spinner_step)(fl_Spinner spinner){
     return (static_cast<Fl_Spinner*>(spinner))->step();
   }
+  FL_EXPORT_C(void,Fl_Spinner_set_wrap)(fl_Spinner spinner,int s){
+    (static_cast<Fl_Spinner*>(spinner))->wrap(s);
+  }
+  FL_EXPORT_C(int,Fl_Spinner_wrap)(fl_Spinner spinner){
+    return (static_cast<Fl_Spinner*>(spinner))->wrap();
+  }
   FL_EXPORT_C(double,Fl_Spinner_value)(fl_Spinner spinner){
     return (static_cast<Fl_Spinner*>(spinner))->value();
   }

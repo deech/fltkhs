@@ -151,6 +151,15 @@ EXPORT {
   FL_EXPORT_C(int, Fl_Image_fail)(fl_Image image){
     return (static_cast<Fl_DerivedImage*>(image))->fail();
   }
+  FL_EXPORT_C(void,Fl_Image_scale)(fl_Image image, int w, int h, int proportional, int can_expand){
+    (static_cast<Fl_DerivedImage*>(image))->scale(w,h,proportional,can_expand);
+  };
+  FL_EXPORT_C(int,Fl_Image_data_w)(fl_Image image){
+    return (static_cast<Fl_DerivedImage*>(image))->data_w();
+  };
+  FL_EXPORT_C(int,Fl_Image_data_h)(fl_Image image){
+    return (static_cast<Fl_DerivedImage*>(image))->data_h();
+  };
 #endif
 
 #ifdef __cplusplus

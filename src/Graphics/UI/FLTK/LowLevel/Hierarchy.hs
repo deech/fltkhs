@@ -22,10 +22,6 @@ Method aRef = dispatch (undefined :: Datatype ()) aRef
 
 module Graphics.UI.FLTK.LowLevel.Hierarchy
        (
-         -- * Region
-         Region,
-         -- * GlContext
-         GlContext,
          -- * Widget
          Widget,
          WidgetFuncs,
@@ -173,8 +169,8 @@ module Graphics.UI.FLTK.LowLevel.Hierarchy
          redrawLabel,
          GetDamage,
          getDamage,
-         ClearDamageExcept,
-         clearDamageExcept,
+         ClearDamageThenSet,
+         clearDamageThenSet,
          ClearDamage,
          clearDamage,
          SetDamage,
@@ -205,6 +201,12 @@ module Graphics.UI.FLTK.LowLevel.Hierarchy
          drawBackdrop,
          DrawFocus,
          drawFocus,
+         Flags,
+         flags,
+         SetFlag,
+         setFlag,
+         ClearFlag,
+         clearFlag,
          -- * Group
          Group,
          DrawChild,
@@ -253,8 +255,8 @@ module Graphics.UI.FLTK.LowLevel.Hierarchy
          focus,
          DdfdesignKludge,
          ddfdesignKludge,
-         InsertWithBefore,
-         insertWithBefore,
+         InsertBefore,
+         insertBefore,
          GetArray,
          getArray,
          GetChild,
@@ -411,8 +413,8 @@ module Graphics.UI.FLTK.LowLevel.Hierarchy
          getStep,
          Precision,
          precision,
-         SetFormat,
-         setFormat,
+         Format,
+         format,
          Round,
          round,
          Clamp,
@@ -535,6 +537,8 @@ module Graphics.UI.FLTK.LowLevel.Hierarchy
          setTextcolor,
          DownBox,
          downBox,
+         AddAndGetMenuItem,
+         addAndGetMenuItem,
          -- * MenuBar
          MenuBar,
          -- * SysMenuBar
@@ -563,18 +567,34 @@ module Graphics.UI.FLTK.LowLevel.Hierarchy
          uncache,
          Fail,
          fail,
+         Scale,
+         scale,
+         GetDataW,
+         getDataW,
+         GetDataH,
+         getDataH,
+         GetDataSize,
+         getDataSize,
          -- * Bitmap
          Bitmap,
          -- * Pixmap
          Pixmap,
          -- * CopySurface
          CopySurface,
-         ClassName,
-         className,
          SetCurrent,
          setCurrent,
          -- * ImageSurface
          ImageSurface,
+         GetOrigin,
+         getOrigin,
+         PrintableRect,
+         printableRect,
+         SetOrigin,
+         setOrigin,
+         GetOffscreenBeforeDelete,
+         getOffscreenBeforeDelete,
+         GetOffscreen,
+         getOffscreen,
          -- * Adjuster
          Adjuster,
          SetSoft,
@@ -603,16 +623,12 @@ module Graphics.UI.FLTK.LowLevel.Hierarchy
          Counter,
          SetLstep,
          setLstep,
-         -- * SimpleCounter
-         SimpleCounter,
          -- * Scrollbar
          Scrollbar,
          SetLinesize,
          setLinesize,
          GetLinesize,
          getLinesize,
-         SetScrollValue,
-         setScrollValue,
          -- * ValueSlider
          ValueSlider,
          -- * HorValueSlider
@@ -667,6 +683,8 @@ module Graphics.UI.FLTK.LowLevel.Hierarchy
          getTabNav,
          SetTabNav,
          setTabNav,
+         DrawText,
+         drawText,
          -- * Output
          Output,
          -- * ValueInput
@@ -831,6 +849,10 @@ module Graphics.UI.FLTK.LowLevel.Hierarchy
          setRowsSuper,
          SetColsSuper,
          setColsSuper,
+         SetTabCellNav,
+         setTabCellNav,
+         GetTabCellNav,
+         getTabCellNav,
          -- * TableRow
          TableRow,
          GetRowSelected,
@@ -943,6 +965,10 @@ module Graphics.UI.FLTK.LowLevel.Hierarchy
          getScrollbarWidth,
          SetScrollbarWidth,
          setScrollbarWidth,
+         SetScrollbarColor,
+         setScrollbarColor,
+         SetScrollbarSelectionColor,
+         setScrollbarSelectionColor,
          Sort,
          sort,
          SortWithSortType,
@@ -955,6 +981,10 @@ module Graphics.UI.FLTK.LowLevel.Hierarchy
          Clock,
          GetValueSinceEpoch,
          getValueSinceEpoch,
+         GetShadow,
+         getShadow,
+         SetShadow,
+         setShadow,
          -- * TreePrefs
          TreePrefs,
          GetItemLabelfont,
@@ -1103,8 +1133,8 @@ module Graphics.UI.FLTK.LowLevel.Hierarchy
          isClose,
          OpenToggle,
          openToggle,
-         SelectWithVal,
-         selectWithVal,
+         SelectSet,
+         selectSet,
          SelectToggle,
          selectToggle,
          SelectAll,
@@ -1217,6 +1247,24 @@ module Graphics.UI.FLTK.LowLevel.Hierarchy
          setCallbackReason,
          GetCallbackReason,
          getCallbackReason,
+         RecalcTree,
+         recalcTree,
+         SetMarginbottom,
+         setMarginbottom,
+         GetMarginbottom,
+         getMarginbottom,
+         SetWidgetmarginleft,
+         setWidgetmarginleft,
+         GetWidgetmarginleft,
+         getWidgetmarginleft,
+         SetItemReselectMode,
+         setItemReselectMode,
+         GetItemReselectMode,
+         getItemReselectMode,
+         SetItemDrawMode,
+         setItemDrawMode,
+         GetItemDrawMode,
+         getItemDrawMode,
          -- * TextSelection
          TextSelection,
          Update,
@@ -1492,7 +1540,7 @@ module Graphics.UI.FLTK.LowLevel.Hierarchy
          GetSpacing,
          isHorizontal,
          IsHorizontal,
-         -- Scrolled AKA Scroll
+         -- * Scrolled AKA Scroll
          Scrolled,
          ScrollTo,
          scrollTo,
@@ -1500,7 +1548,7 @@ module Graphics.UI.FLTK.LowLevel.Hierarchy
          xposition,
          Yposition,
          yposition,
-         -- Tabs
+         -- * Tabs
          Tabs,
          GetPush,
          getPush,
@@ -1510,11 +1558,21 @@ module Graphics.UI.FLTK.LowLevel.Hierarchy
          which,
          ClientArea,
          clientArea,
-         -- Spinner
+         TabPositions,
+         tabPositions,
+         TabHeight,
+         tabHeight,
+         GetTabAlign,
+         getTabAlign,
+         SetTabAlign,
+         setTabAlign,
+         -- * Spinner
          Spinner,
          GetFormat,
          getFormat,
-         -- ColorChooser
+         SetFormat,
+         setFormat,
+         -- * ColorChooser
          ColorChooser,
          GetHue,
          getHue,
@@ -1530,7 +1588,11 @@ module Graphics.UI.FLTK.LowLevel.Hierarchy
          setHsv,
          SetRgb,
          setRgb,
-         -- FileBrowser
+         GetRgb,
+         getRgb,
+         GetHsv,
+         getHsv,
+         -- * FileBrowser
          FileBrowser,
          SetIconsize,
          setIconsize,
@@ -1540,28 +1602,68 @@ module Graphics.UI.FLTK.LowLevel.Hierarchy
          setFiletype,
          GetFiletype,
          getFiletype,
-         -- RGBImage
+         -- * RGBImage
          RGBImage,
-         -- JPEGImage
+         -- * JPEGImage
          JPEGImage,
-         -- BMPImage
+         -- * BMPImage
          BMPImage,
-         -- GIFImage
+         -- * GIFImage
          GIFImage,
-         -- XBMImage
+         -- * XBMImage
          XBMImage,
-         -- XPMImage
+         -- * XPMImage
          XPMImage,
-         -- PNGImage
+         -- * PNGImage
          PNGImage,
-         -- PNMImage
+         -- * PNMImage
          PNMImage,
-         -- FileInput
+         -- * FileInput
          FileInput,
          GetErrorColor,
          getErrorColor,
          SetErrorColor,
-         setErrorColor
+         setErrorColor,
+         ScreenDriver,
+         SystemDriver,
+         -- * SVGImage
+         SVGImage,
+         -- * SimpleTerminal
+         SimpleTerminal,
+         SetStayAtBottom,
+         setStayAtBottom,
+         GetStayAtBottom,
+         getStayAtBottom,
+         SetHistoryLines,
+         setHistoryLines,
+         GetHistoryLines,
+         getHistoryLines,
+         SetAnsi,
+         setAnsi,
+         GetAnsi,
+         getAnsi,
+         SetStyleTable,
+         setStyleTable,
+         GetStyleTable,
+         getStyleTable,
+         GetStyleTableSize,
+         getStyleTableSize,
+         SetNormalStyleIndex,
+         setNormalStyleIndex,
+         GetNormalStyleIndex,
+         getNormalStyleIndex,
+         SetCurrentStyleIndex,
+         setCurrentStyleIndex,
+         GetCurrentStyleIndex,
+         getCurrentStyleIndex,
+         RemoveLines,
+         removeLines,
+         -- MultiLabel
+         MultiLabel,
+         WidgetLabel,
+         widgetLabel,
+         MenuItemLabel,
+         menuItemLabel
      )
 where
 import Prelude hiding (round, fail)
@@ -1572,13 +1674,6 @@ import GHC.Stack
 import System.IO.Unsafe
 #endif
 type instance Functions Base = ()
-data CRegion parent
-type Region = CRegion Base
-type instance Functions Region = ()
-
-data CGlContext parent
-type GlContext = CGlContext Base
-type instance Functions GlContext = ()
 
 data CWidget parent
 type Widget = CWidget Base
@@ -1655,7 +1750,7 @@ type WidgetFuncs =
   (Redraw
   (RedrawLabel
   (GetDamage
-  (ClearDamageExcept
+  (ClearDamageThenSet
   (ClearDamage
   (SetDamage
   (SetDamageInside
@@ -1671,7 +1766,10 @@ type WidgetFuncs =
   (DrawBoxWithBoxtype
   (DrawBackdrop
   (DrawFocus
-  ()))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))
+  (Flags
+  (SetFlag
+  (ClearFlag
+  ())))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))
 type instance Functions Widget = WidgetFuncs
 
 MAKE_METHOD(Destroy, destroy)
@@ -1745,7 +1843,7 @@ MAKE_METHOD(Inside,inside)
 MAKE_METHOD(Redraw,redraw)
 MAKE_METHOD(RedrawLabel,redrawLabel)
 MAKE_METHOD(GetDamage,getDamage)
-MAKE_METHOD(ClearDamageExcept,clearDamageExcept)
+MAKE_METHOD(ClearDamageThenSet,clearDamageThenSet)
 MAKE_METHOD(ClearDamage,clearDamage)
 MAKE_METHOD(SetDamage,setDamage)
 MAKE_METHOD(SetDamageInside,setDamageInside)
@@ -1761,6 +1859,9 @@ MAKE_METHOD(DrawBox,drawBox)
 MAKE_METHOD(DrawBoxWithBoxtype,drawBoxWithBoxtype)
 MAKE_METHOD(DrawBackdrop,drawBackdrop)
 MAKE_METHOD(DrawFocus,drawFocus)
+MAKE_METHOD(Flags,flags)
+MAKE_METHOD(SetFlag, setFlag)
+MAKE_METHOD(ClearFlag, clearFlag)
 
 -- * Group
 data CGroup parent
@@ -1772,6 +1873,8 @@ type GroupFuncs =
   (DrawOutsideLabel
   (UpdateChild
   (Begin
+  (Handle
+  (HandleSuper
   (End
   (Within
   (Find
@@ -1790,10 +1893,10 @@ type GroupFuncs =
   (ClipChildren
   (Focus
   (DdfdesignKludge
-  (InsertWithBefore
+  (InsertBefore
   (GetArray
   (GetChild
-  ())))))))))))))))))))))))))))
+  ())))))))))))))))))))))))))))))
 type instance Functions Group = GroupFuncs
 
 MAKE_METHOD(DrawChild,drawChild)
@@ -1819,7 +1922,7 @@ MAKE_METHOD(SetClipChildren,setClipChildren)
 MAKE_METHOD(ClipChildren,clipChildren)
 MAKE_METHOD(Focus,focus)
 MAKE_METHOD(DdfdesignKludge,ddfdesignKludge)
-MAKE_METHOD(InsertWithBefore,insertWithBefore)
+MAKE_METHOD(InsertBefore,insertBefore)
 MAKE_METHOD(GetArray,getArray)
 MAKE_METHOD(GetChild,getChild)
 
@@ -2054,7 +2157,7 @@ type CheckButtonFuncs =
   (Hide
   (HideSuper
   (Destroy ())))))))))
-type CheckButton = CCheckButton Button
+type CheckButton = CCheckButton LightButton
 
 type instance Functions CheckButton = CheckButtonFuncs
 
@@ -2075,7 +2178,7 @@ type ReturnButtonFuncs =
 type instance Functions ReturnButton = ReturnButtonFuncs
 
 data CRoundButton parent
-type RoundButton = CRoundButton Button
+type RoundButton = CRoundButton LightButton
 type RoundButtonFuncs =
   (Destroy
   (Draw
@@ -2136,7 +2239,7 @@ type ValuatorFuncs =
   (Precision
   (GetValue
   (SetValue
-  (SetFormat
+  (Format
   (Round
   (Clamp
   (Increment
@@ -2152,10 +2255,11 @@ MAKE_METHOD(SetMinimum,setMinimum)
 MAKE_METHOD(GetMaximum,getMaximum)
 MAKE_METHOD(SetMaximum,setMaximum)
 MAKE_METHOD(Range,range)
+-- MAKE_METHOD(SetRange,setRange)
 MAKE_METHOD(SetStep,setStep)
 MAKE_METHOD(GetStep,getStep)
 MAKE_METHOD(Precision,precision)
-MAKE_METHOD(SetFormat,setFormat)
+MAKE_METHOD(Format,format)
 MAKE_METHOD(Round,round)
 MAKE_METHOD(Clamp,clamp)
 MAKE_METHOD(Increment,increment)
@@ -2337,13 +2441,9 @@ type MenuPrimFuncs =
   (SetDownBox
   (GetDownColor
   (SetDownColor
-#if FLTK_API_VERSION >= 10304
   (Setonly
-#endif
-  ())))))))))))))))))))))))))))))))))))))))))))))
-#if FLTK_API_VERSION >= 10304
-  )
-#endif
+  (AddAndGetMenuItem
+  ())))))))))))))))))))))))))))))))))))))))))))))))
 
 type instance Functions MenuPrim = MenuPrimFuncs
 
@@ -2372,6 +2472,7 @@ MAKE_METHOD(SetTextsize,setTextsize)
 MAKE_METHOD(GetTextcolor,getTextcolor)
 MAKE_METHOD(SetTextcolor,setTextcolor)
 MAKE_METHOD(DownBox,downBox)
+MAKE_METHOD(AddAndGetMenuItem, addAndGetMenuItem)
 
 data CMenuBar parent
 type MenuBar = CMenuBar MenuPrim
@@ -2470,13 +2571,12 @@ type ImageFuncs =
   (DrawResize
   (Draw
   (Uncache
-#if FLTK_API_VERSION >= 10304
+  (Scale
+  (GetDataW
+  (GetDataH
+  (GetDataSize
   (Fail
-#endif
-  ())))))))))))))
-#if FLTK_API_VERSION >= 10304
-  )
-#endif
+  ()))))))))))))))))))
 
 type instance Functions Image = ImageFuncs
 
@@ -2489,6 +2589,10 @@ MAKE_METHOD(Desaturate,desaturate)
 MAKE_METHOD(DrawResize,drawResize)
 MAKE_METHOD(Uncache,uncache)
 MAKE_METHOD(Fail,fail)
+MAKE_METHOD(Scale,scale)
+MAKE_METHOD(GetDataW,getDataW)
+MAKE_METHOD(GetDataH,getDataH)
+MAKE_METHOD(GetDataSize,getDataSize)
 
 data CBitmap parent
 type Bitmap = CBitmap Image
@@ -2534,27 +2638,34 @@ data CCopySurface parent
 type CopySurface = CCopySurface Base
 type CopySurfaceFuncs =
   (Destroy
-  (ClassName
   (SetCurrent
   (Draw
-  ()))))
+  ())))
 
 type instance Functions CopySurface = CopySurfaceFuncs
 
-MAKE_METHOD(ClassName,className)
 MAKE_METHOD(SetCurrent,setCurrent)
 
 data CImageSurface parent
 type ImageSurface = CImageSurface Base
 type ImageSurfaceFuncs =
   (Destroy
-  (ClassName
   (SetCurrent
   (Draw
-  ()))))
+  (GetOrigin
+  (PrintableRect
+  (SetOrigin
+  (GetOffscreenBeforeDelete
+  (GetOffscreen
+  ()))))))))
 
 type instance Functions ImageSurface = ImageSurfaceFuncs
 
+MAKE_METHOD(GetOrigin, getOrigin)
+MAKE_METHOD(PrintableRect, printableRect)
+MAKE_METHOD(SetOrigin, setOrigin)
+MAKE_METHOD(GetOffscreenBeforeDelete, getOffscreenBeforeDelete)
+MAKE_METHOD(GetOffscreen, getOffscreen)
 
 data CAdjuster parent
 type Adjuster = CAdjuster Valuator
@@ -2660,16 +2771,11 @@ type instance Functions Counter = CounterFuncs
 
 MAKE_METHOD(SetLstep,setLstep)
 
-data CSimpleCounter parent
-type SimpleCounter = CSimpleCounter Counter
-
-type instance Functions SimpleCounter = ()
-
 data CScrollbar parent
 type Scrollbar = CScrollbar Slider
 type ScrollbarFuncs =
  (Destroy
- (SetScrollValue
+ (Scrollvalue
  (SetLinesize
  (GetLinesize
  (SetType
@@ -2688,7 +2794,6 @@ type instance Functions Scrollbar = ScrollbarFuncs
 
 MAKE_METHOD(SetLinesize,setLinesize)
 MAKE_METHOD(GetLinesize,getLinesize)
-MAKE_METHOD(SetScrollValue,setScrollValue)
 
 data CValueSlider parent
 type ValueSlider = CValueSlider Slider
@@ -2769,7 +2874,8 @@ type InputFuncs =
   (ShowWidgetSuper
   (Hide
   (HideSuper
-  ())))))))))))))))))))))))))))))))))))))))))))))))))
+  (DrawText
+  ()))))))))))))))))))))))))))))))))))))))))))))))))))
 
 type instance Functions Input = InputFuncs
 
@@ -2797,6 +2903,7 @@ MAKE_METHOD(GetWrap,getWrap)
 MAKE_METHOD(SetWrap,setWrap)
 MAKE_METHOD(GetTabNav,getTabNav)
 MAKE_METHOD(SetTabNav,setTabNav)
+MAKE_METHOD(DrawText,drawText)
 
 data COutput parent
 type Output = COutput Input
@@ -3045,7 +3152,7 @@ type TableFuncs =
   (InitSizes
   (Add
   (Insert
-  (InsertWithBefore
+  (InsertBefore
   (Begin
   (End
   (GetArray
@@ -3070,7 +3177,9 @@ type TableFuncs =
   (ShowWidgetSuper
   (Hide
   (HideSuper
-  ())))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))
+  (GetTabCellNav
+  (SetTabCellNav
+  ())))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))
 
 type instance Functions Table = TableFuncs
 
@@ -3125,6 +3234,8 @@ MAKE_METHOD(FindCell,findCell)
 MAKE_METHOD(ClearSuper,clearSuper)
 MAKE_METHOD(SetRowsSuper,setRowsSuper)
 MAKE_METHOD(SetColsSuper,setColsSuper)
+MAKE_METHOD(SetTabCellNav, setTabCellNav)
+MAKE_METHOD(GetTabCellNav, getTabCellNav)
 
 data CTableRow parent
 type TableRow = CTableRow Table
@@ -3184,15 +3295,10 @@ type GlWindowFuncs =
   (RedrawOverlay
   (HideOverlay
   (MakeOverlayCurrent
-#if FLTK_API_VERSION >= 10304
   (PixelsPerUnit
   (PixelH
   (PixelW
-#endif
-  ())))))))))))))))))))))))))))))
-#if FLTK_API_VERSION >= 10304
-  )))
-#endif
+  ()))))))))))))))))))))))))))))))))
 
 type instance Functions GlWindow = GlWindowFuncs
 
@@ -3277,11 +3383,15 @@ type BrowserFuncs =
   (SetScrollbarSize
   (GetScrollbarWidth
   (SetScrollbarWidth
+  (SetScrollbarColor
+  (SetScrollbarSelectionColor
   (Sort
   (SortWithSortType
   (SetType
   (GetType_
-  ()))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))
+  (DrawSuper
+  (HandleSuper
+  ()))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))
 
 type instance Functions Browser = BrowserFuncs
 
@@ -3319,6 +3429,8 @@ MAKE_METHOD(GetScrollbarSize,getScrollbarSize)
 MAKE_METHOD(SetScrollbarSize,setScrollbarSize)
 MAKE_METHOD(GetScrollbarWidth,getScrollbarWidth)
 MAKE_METHOD(SetScrollbarWidth,setScrollbarWidth)
+MAKE_METHOD(SetScrollbarColor,setScrollbarColor)
+MAKE_METHOD(SetScrollbarSelectionColor,setScrollbarSelectionColor)
 MAKE_METHOD(SortWithSortType,sortWithSortType)
 MAKE_METHOD(Sort,sort)
 
@@ -3348,11 +3460,15 @@ type ClockFuncs =
   (ShowWidgetSuper
   (Hide
   (HideSuper
-  ())))))))))))))
+  (SetShadow
+  (GetShadow
+  ())))))))))))))))
 
 
 type instance Functions Clock = ClockFuncs
 MAKE_METHOD(GetValueSinceEpoch,getValueSinceEpoch)
+MAKE_METHOD(GetShadow,getShadow)
+MAKE_METHOD(SetShadow,setShadow)
 
 data CTreePrefs parent
 type TreePrefs = CTreePrefs Base
@@ -3406,7 +3522,13 @@ type TreePrefsFuncs =
   (SetShowroot
   (GetSelectmode
   (SetSelectmode
-  ())))))))))))))))))))))))))))))))))))))))))))))))))
+  (GetMarginbottom
+  (SetMarginbottom
+  (GetWidgetmarginleft
+  (SetWidgetmarginleft
+  (GetItemReselectMode
+  (SetItemReselectMode
+  ())))))))))))))))))))))))))))))))))))))))))))))))))))))))
 
 type instance Functions TreePrefs = TreePrefsFuncs
 
@@ -3514,7 +3636,7 @@ type TreeItemFuncs =
   (IsClose
   (OpenToggle
   (Select
-  (SelectWithVal
+  (SelectSet
   (SelectToggle
   (SelectAll
   (Deselect
@@ -3569,7 +3691,7 @@ MAKE_METHOD(Close,close)
 MAKE_METHOD(IsOpen,isOpen)
 MAKE_METHOD(IsClose,isClose)
 MAKE_METHOD(OpenToggle,openToggle)
-MAKE_METHOD(SelectWithVal,selectWithVal)
+MAKE_METHOD(SelectSet,selectSet)
 MAKE_METHOD(SelectToggle,selectToggle)
 MAKE_METHOD(SelectAll,selectAll)
 MAKE_METHOD(DeselectAll,deselectAll)
@@ -3705,7 +3827,14 @@ type TreeFuncs =
   (ShowWidgetSuper
   (Hide
   (HideSuper
-  ()))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))
+  (RecalcTree
+  (GetMarginbottom
+  (SetMarginbottom
+  (GetWidgetmarginleft
+  (SetWidgetmarginleft
+  (GetItemReselectMode
+  (SetItemReselectMode
+  ())))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))
 
 
 type instance Functions Tree = TreeFuncs
@@ -3750,6 +3879,15 @@ MAKE_METHOD(SetCallbackItem,setCallbackItem)
 MAKE_METHOD(GetCallbackItem,getCallbackItem)
 MAKE_METHOD(SetCallbackReason,setCallbackReason)
 MAKE_METHOD(GetCallbackReason,getCallbackReason)
+MAKE_METHOD(RecalcTree, recalcTree)
+MAKE_METHOD(SetMarginbottom,setMarginbottom)
+MAKE_METHOD(GetMarginbottom,getMarginbottom)
+MAKE_METHOD(SetWidgetmarginleft,setWidgetmarginleft)
+MAKE_METHOD(GetWidgetmarginleft,getWidgetmarginleft)
+MAKE_METHOD(SetItemReselectMode,setItemReselectMode)
+MAKE_METHOD(GetItemReselectMode,getItemReselectMode)
+MAKE_METHOD(SetItemDrawMode,setItemDrawMode)
+MAKE_METHOD(GetItemDrawMode,getItemDrawMode)
 
 data CTextSelection parent
 type TextSelection = CTextSelection Base
@@ -4174,6 +4312,8 @@ type TabsFuncs =
   (HandleSuper
   (ShowWidget
   (ShowWidgetSuper
+  (Resize
+  (ResizeSuper
   (Hide
   (HideSuper
   (GetValue
@@ -4181,7 +4321,11 @@ type TabsFuncs =
   (GetPush
   (SetPush
   (Which
-  (ClientArea ()))))))))))))))
+  (ClientArea
+  (TabPositions
+  (TabHeight
+  (GetTabAlign
+  (SetTabAlign ()))))))))))))))))))))
 
 type instance Functions Tabs = TabsFuncs
 
@@ -4189,6 +4333,10 @@ MAKE_METHOD(GetPush,getPush)
 MAKE_METHOD(SetPush,setPush)
 MAKE_METHOD(Which,which)
 MAKE_METHOD(ClientArea,clientArea)
+MAKE_METHOD(TabPositions, tabPositions)
+MAKE_METHOD(TabHeight, tabHeight)
+MAKE_METHOD(GetTabAlign,getTabAlign)
+MAKE_METHOD(SetTabAlign,setTabAlign)
 
 data CSpinner parent
 type Spinner = CSpinner Group
@@ -4221,11 +4369,14 @@ type SpinnerFuncs =
   (ShowWidgetSuper
   (Hide
   (HideSuper
-  ()))))))))))))))))))))))))))))
+  (GetWrap
+  (SetWrap
+  ()))))))))))))))))))))))))))))))
 
 
 type instance Functions Spinner = SpinnerFuncs
 MAKE_METHOD(GetFormat,getFormat)
+MAKE_METHOD(SetFormat,setFormat)
 
 data CColorChooser parent
 type ColorChooser = CColorChooser Group
@@ -4248,7 +4399,9 @@ type ColorChooserFuncs =
   (ShowWidgetSuper
   (Hide
   (HideSuper
-  ()))))))))))))))))))
+  (GetRgb
+  (GetHsv
+  ()))))))))))))))))))))
 
 type instance Functions ColorChooser = ColorChooserFuncs
 
@@ -4259,6 +4412,8 @@ MAKE_METHOD(GetG, getG)
 MAKE_METHOD(GetB, getB)
 MAKE_METHOD(SetHsv, setHsv)
 MAKE_METHOD(SetRgb, setRgb)
+MAKE_METHOD(GetRgb, getRgb)
+MAKE_METHOD(GetHsv, getHsv)
 
 data CFileBrowser parent
 type FileBrowser = CFileBrowser Browser
@@ -4358,3 +4513,78 @@ type FileInputFuncs =
 type instance Functions FileInput = FileInputFuncs
 MAKE_METHOD(SetErrorColor, setErrorColor)
 MAKE_METHOD(GetErrorColor, getErrorColor)
+
+data CScreenDriver parent
+type ScreenDriver = CScreenDriver Base
+type instance Functions ScreenDriver = ()
+
+data CSystemDriver parent
+type SystemDriver = CSystemDriver Base
+type instance Functions SystemDriver = ()
+
+data CSVGImage parent
+type SVGImage = CSVGImage RGBImage
+type SVGImageFuncs =
+  (Destroy
+  (Copy
+  (ColorAverage
+  (Desaturate
+  (DrawResize
+  (Draw
+  (Resize
+  ())))))))
+type instance Functions SVGImage = SVGImageFuncs
+
+data CSimpleTerminal parent
+type SimpleTerminal = CSimpleTerminal TextDisplay
+type SimpleTerminalFuncs =
+    (SetStayAtBottom
+    (GetStayAtBottom
+    (SetHistoryLines
+    (GetHistoryLines
+    (SetAnsi
+    (GetAnsi
+    (SetStyleTable
+    (GetStyleTable
+    (GetStyleTableSize
+    (SetNormalStyleIndex
+    (GetNormalStyleIndex
+    (SetCurrentStyleIndex
+    (GetCurrentStyleIndex
+    (SetText
+    (GetText
+    (Clear
+    (RemoveLines
+    (DrawSuper
+    (ResizeSuper
+    (HandleSuper
+    (HideSuper
+    (ShowWidgetSuper
+    ()))))))))))))))))))))))
+type instance Functions SimpleTerminal = SimpleTerminalFuncs
+
+MAKE_METHOD(SetStayAtBottom,setStayAtBottom)
+MAKE_METHOD(GetStayAtBottom,getStayAtBottom)
+MAKE_METHOD(SetHistoryLines,setHistoryLines)
+MAKE_METHOD(GetHistoryLines,getHistoryLines)
+MAKE_METHOD(SetAnsi,setAnsi)
+MAKE_METHOD(GetAnsi,getAnsi)
+MAKE_METHOD(SetStyleTable,setStyleTable)
+MAKE_METHOD(GetStyleTable,getStyleTable)
+MAKE_METHOD(GetStyleTableSize,getStyleTableSize)
+MAKE_METHOD(SetNormalStyleIndex,setNormalStyleIndex)
+MAKE_METHOD(GetNormalStyleIndex,getNormalStyleIndex)
+MAKE_METHOD(SetCurrentStyleIndex,setCurrentStyleIndex)
+MAKE_METHOD(GetCurrentStyleIndex,getCurrentStyleIndex)
+MAKE_METHOD(RemoveLines,removeLines)
+
+data CMultiLabel parent
+type MultiLabel = CMultiLabel Base
+type MultiLabelFuncs =
+  (WidgetLabel
+  (MenuItemLabel
+  (())))
+type instance Functions MultiLabel = MultiLabelFuncs
+
+MAKE_METHOD(WidgetLabel, widgetLabel)
+MAKE_METHOD(MenuItemLabel, menuItemLabel)

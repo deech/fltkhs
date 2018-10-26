@@ -52,12 +52,13 @@ valuatorCustom rectangle l' draw' funcs' =
 
 valuatorNew :: Rectangle -> Maybe T.Text -> IO (Ref Valuator)
 valuatorNew rectangle l' =
-    let (x_pos, y_pos, width, height) = fromRectangle rectangle
-    in case l' of
-        Nothing -> valuatorNew' x_pos y_pos width height >>=
-                             toRef
-        Just l -> valuatorNewWithLabel' x_pos y_pos width height l >>=
-                             toRef
+  widgetMaker
+    rectangle
+    l'
+    Nothing
+    Nothing
+    overriddenValuatorNew'
+    overriddenValuatorNewWithLabel'
 
 {# fun Fl_Valuator_Destroy as valuatorDestroy' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
 instance (impl ~ (IO ())) => Op (Destroy ()) Valuator orig impl where
@@ -106,7 +107,7 @@ instance (impl ~ (Double -> Double ->  IO ())) => Op (Range ()) Valuator orig im
   runOp _ _ valuator a b = withRef valuator $ \valuatorPtr -> range' valuatorPtr a b
 {# fun Fl_Valuator_set_step_with_a_b as setStepWithAB' { id `Ptr ()', `Double', `Int' } -> `()' supressWarningAboutRes #}
 instance (impl ~ (Rational -> IO ())) => Op (SetStep ()) Valuator orig impl where
-  runOp _ _ valuator r = withRef valuator $ \valuatorPtr -> setStepWithAB' valuatorPtr (fromIntegral (denominator r)) (fromIntegral (numerator r))
+  runOp _ _ valuator r = withRef valuator $ \valuatorPtr -> setStepWithAB' valuatorPtr (fromIntegral (numerator r)) (fromIntegral (denominator r))
 {# fun Fl_Valuator_step as step' { id `Ptr ()' } -> `Double' #}
 instance (impl ~ ( IO (Rational))) => Op (GetStep ()) Valuator orig impl where
   runOp _ _ valuator = withRef valuator $ \valuatorPtr -> step' valuatorPtr >>= \r -> return $ approxRational r 0
@@ -117,11 +118,25 @@ instance (impl ~ (Int ->  IO ())) => Op (Precision ()) Valuator orig impl where
 instance (impl ~ ( IO (Double))) => Op (GetValue ()) Valuator orig impl where
   runOp _ _ valuator = withRef valuator $ \valuatorPtr -> value' valuatorPtr
 {# fun Fl_Valuator_set_value as setValue' { id `Ptr ()',`Double' } -> `Int' #}
-instance (impl ~ (Double ->  IO (Int))) => Op (SetValue ()) Valuator orig impl where
-  runOp _ _ valuator v = withRef valuator $ \valuatorPtr -> setValue' valuatorPtr v
-{# fun Fl_Valuator_format as format' { id `Ptr ()', unsafeToCString `T.Text' } -> `Int' #}
-instance (impl ~ (T.Text ->  IO (Int))) => Op (SetFormat ()) Valuator orig impl where
-  runOp _ _ valuator f = withRef valuator $ \valuatorPtr -> format' valuatorPtr f
+instance (impl ~ (Double ->  IO (Either NoChange ()))) => Op (SetValue ()) Valuator orig impl where
+  runOp _ _ valuator v = withRef valuator $ \valuatorPtr -> do
+    ret <- setValue' valuatorPtr v
+    return (if (ret == 0) then Left NoChange else Right ())
+{# fun Fl_Valuator_format as format' { id `Ptr ()', id `Ptr CChar' } -> `Int' #}
+instance (impl ~ (IO (Either UnknownError T.Text))) => Op (Format ()) Valuator orig impl where
+  runOp _ _ valuator =
+    let bufSize = 128
+    in
+    withRef valuator
+      (\valuatorPtr ->
+          allocaBytes 128
+            (\bufPtr -> do
+               res <- format' valuatorPtr bufPtr
+               if (res < 0 || res > bufSize)
+                 then return (Left UnknownError)
+                 else fmap Right (cStringToText (castPtr bufPtr))
+            )
+      )
 {# fun Fl_Valuator_round as round' { id `Ptr ()',`Double' } -> `Double' #}
 instance (impl ~ (Double ->  IO (Double))) => Op (Round ()) Valuator orig impl where
   runOp _ _ valuator v = withRef valuator $ \valuatorPtr -> round' valuatorPtr v
@@ -146,6 +161,8 @@ instance (impl ~ IO (ValuatorType)) => Op (GetType_ ()) Valuator orig impl where
 --
 -- destroy :: 'Ref' 'Valuator' -> 'IO' ()
 --
+-- format :: 'Ref' 'Valuator' -> 'IO' ('Either' 'UnknownError' 'T.Text')
+--
 -- getMaximum :: 'Ref' 'Valuator' -> 'IO' ('Double')
 --
 -- getMinimum :: 'Ref' 'Valuator' -> 'IO' ('Double')
@@ -156,9 +173,9 @@ instance (impl ~ IO (ValuatorType)) => Op (GetType_ ()) Valuator orig impl where
 --
 -- getValue :: 'Ref' 'Valuator' -> 'IO' ('Double')
 --
--- handle :: 'Ref' 'Valuator' -> ('Event' -> 'IO' ('Either' 'UnknownEvent' ()))
+-- handle :: 'Ref' 'Valuator' -> 'Event' -> 'IO' ('Either' 'UnknownEvent' ())
 --
--- handleSuper :: 'Ref' 'Valuator' -> ('Event' -> 'IO' ('Either' 'UnknownEvent' ()))
+-- handleSuper :: 'Ref' 'Valuator' -> 'Event' -> 'IO' ('Either' 'UnknownEvent' ())
 --
 -- hide :: 'Ref' 'Valuator' -> ( 'IO' ())
 --
@@ -176,8 +193,6 @@ instance (impl ~ IO (ValuatorType)) => Op (GetType_ ()) Valuator orig impl where
 --
 -- round :: 'Ref' 'Valuator' -> 'Double' -> 'IO' ('Double')
 --
--- setFormat :: 'Ref' 'Valuator' -> 'T.Text' -> 'IO' ('Int')
---
 -- setMaximum :: 'Ref' 'Valuator' -> 'Double' -> 'IO' ()
 --
 -- setMinimum :: 'Ref' 'Valuator' -> 'Double' -> 'IO' ()
@@ -186,7 +201,7 @@ instance (impl ~ IO (ValuatorType)) => Op (GetType_ ()) Valuator orig impl where
 --
 -- setType :: 'Ref' 'Valuator' -> 'ValuatorType' -> 'IO' ()
 --
--- setValue :: 'Ref' 'Valuator' -> 'Double' -> 'IO' ('Int')
+-- setValue :: 'Ref' 'Valuator' -> 'Double' -> 'IO' ('Either' 'NoChange' ())
 -- @
 
 -- $hierarchy

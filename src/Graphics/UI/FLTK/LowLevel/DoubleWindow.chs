@@ -121,9 +121,9 @@ instance (impl ~ (Rectangle -> IO ())) => Op (Resize ()) DoubleWindow orig impl 
 --
 -- flushSuper :: 'Ref' 'DoubleWindow' -> 'IO' ()
 --
--- handle :: 'Ref' 'DoubleWindow' -> ('Event' -> 'IO' ('Either' 'UnknownEvent' ()))
+-- handle :: 'Ref' 'DoubleWindow' -> 'Event' -> 'IO' ('Either' 'UnknownEvent' ())
 --
--- handleSuper :: 'Ref' 'DoubleWindow' -> 'Int' -> 'IO' 'Int'
+-- handleSuper :: 'Ref' 'DoubleWindow' -> 'Event' -> 'IO' ('Either' 'UnknownEvent' ())
 --
 -- hide :: 'Ref' 'DoubleWindow' -> 'IO' ()
 --

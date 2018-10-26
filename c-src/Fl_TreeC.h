@@ -210,10 +210,8 @@ EXPORT {
   FL_EXPORT_C_HEADER(void,Fl_Tree_set_marginleft,(fl_Tree tree,int val));
   FL_EXPORT_C_HEADER(int,Fl_Tree_margintop,(fl_Tree tree));
   FL_EXPORT_C_HEADER(void,Fl_Tree_set_margintop,(fl_Tree tree,int val));
-#if FLTK_ABI_VERSION >= 10302
   FL_EXPORT_C_HEADER(int,Fl_Tree_marginbottom,(fl_Tree tree));
   FL_EXPORT_C_HEADER(void,Fl_Tree_set_marginbottom,(fl_Tree tree,int val));
-#endif /*FLTK_ABI_VERSION*/
   FL_EXPORT_C_HEADER(int,Fl_Tree_linespacing,(fl_Tree tree));
   FL_EXPORT_C_HEADER(void,Fl_Tree_set_linespacing,(fl_Tree tree,int val));
   FL_EXPORT_C_HEADER(int,Fl_Tree_openchild_marginbottom,(fl_Tree tree));
@@ -222,10 +220,8 @@ EXPORT {
   FL_EXPORT_C_HEADER(void,Fl_Tree_set_usericonmarginleft,(fl_Tree tree,int val));
   FL_EXPORT_C_HEADER(int,Fl_Tree_labelmarginleft,(fl_Tree tree));
   FL_EXPORT_C_HEADER(void,Fl_Tree_set_labelmarginleft,(fl_Tree tree,int val));
-#if FLTK_ABI_VERSION >= 10302
   FL_EXPORT_C_HEADER(int,Fl_Tree_widgetmarginleft,(fl_Tree tree));
   FL_EXPORT_C_HEADER(void,Fl_Tree_set_widgetmarginleft,(fl_Tree tree,int val));
-#endif /*FLTK_ABI_VERSION*/
   FL_EXPORT_C_HEADER(int,Fl_Tree_connectorwidth,(fl_Tree tree));
   FL_EXPORT_C_HEADER(void,Fl_Tree_set_connectorwidth,(fl_Tree tree,int val));
   FL_EXPORT_C_HEADER(fl_Image,Fl_Tree_usericon,(fl_Tree tree));
@@ -246,13 +242,11 @@ EXPORT {
   FL_EXPORT_C_HEADER(void,Fl_Tree_set_selectbox,(fl_Tree tree,Fl_Boxtype val));
   FL_EXPORT_C_HEADER(Fl_Tree_Select,Fl_Tree_selectmode,(fl_Tree tree));
   FL_EXPORT_C_HEADER(void,Fl_Tree_set_selectmode,(fl_Tree tree,Fl_Tree_Select val));
-#if FLTK_ABI_VERSION >= 10302
   FL_EXPORT_C_HEADER(Fl_Tree_Item_Reselect_Mode,Fl_Tree_item_reselect_mode,(fl_Tree tree));
   FL_EXPORT_C_HEADER(void,Fl_Tree_set_item_reselect_mode,(fl_Tree tree,Fl_Tree_Item_Reselect_Mode mode));
   FL_EXPORT_C_HEADER(Fl_Tree_Item_Draw_Mode,Fl_Tree_item_draw_mode,(fl_Tree tree));
   FL_EXPORT_C_HEADER(void,Fl_Tree_set_item_draw_mode,(fl_Tree tree,Fl_Tree_Item_Draw_Mode mode));
   FL_EXPORT_C_HEADER(void,Fl_Tree_set_item_draw_mode_with_int,(fl_Tree tree,int mode));
-#endif /*FLTK_ABI_VERSION*/
   FL_EXPORT_C_HEADER(int,Fl_Tree_displayed,(fl_Tree tree,fl_Tree_Item item));
   FL_EXPORT_C_HEADER(void,Fl_Tree_show_item_with_yoff,(fl_Tree tree,fl_Tree_Item item, int yoff));
   FL_EXPORT_C_HEADER(void,Fl_Tree_show_item,(fl_Tree tree,fl_Tree_Item item));
@@ -284,6 +278,7 @@ EXPORT {
   FL_EXPORT_C_HEADER(void,Fl_Tree_show_super,(fl_Tree o));
   FL_EXPORT_C_HEADER(void,Fl_Tree_hide,(fl_Tree o));
   FL_EXPORT_C_HEADER(void,Fl_Tree_hide_super,(fl_Tree o));
+  FL_EXPORT_C_HEADER(void,Fl_Tree_recalc_tree, (fl_Tree o));
 #ifdef __cplusplus
 }
 #endif

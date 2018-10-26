@@ -11,8 +11,20 @@
 EXPORT {
   class Fl_DerivedColor_Chooser : public Fl_Color_Chooser {
     fl_Widget_Virtual_Funcs* overriddenFuncs;
+    fl_Color_Chooser_Virtual_Funcs* cOverriddenFuncs;
     void* other_data;
   public:
+    int mode();
+    void mode(int newMode);
+    double hue();
+    double saturation();
+    double value();
+    double r();
+    double g();
+    double b();
+    int hsv(double H, double S, double V);
+    int rgb(double R, double G, double B);
+
     virtual void draw();
     void draw_super();
     virtual int handle(int event);
@@ -23,8 +35,8 @@ EXPORT {
     void show_super();
     virtual void hide();
     void hide_super();
-    Fl_DerivedColor_Chooser(int X, int Y, int W, int H, const char *l, fl_Widget_Virtual_Funcs* funcs);
-    Fl_DerivedColor_Chooser(int X, int Y, int W, int H, fl_Widget_Virtual_Funcs* funcs);
+    Fl_DerivedColor_Chooser(int X, int Y, int W, int H, const char *l, fl_Widget_Virtual_Funcs* funcs, fl_Color_Chooser_Virtual_Funcs* cfs);
+    Fl_DerivedColor_Chooser(int X, int Y, int W, int H, fl_Widget_Virtual_Funcs* funcs, fl_Color_Chooser_Virtual_Funcs* cfs);
     ~Fl_DerivedColor_Chooser();
   };
 #endif
@@ -160,8 +172,8 @@ EXPORT {
   FL_EXPORT_C_HEADER(int,flc_color_chooser,(const char* name, double* r, double* g, double* b));
   FL_EXPORT_C_HEADER(fl_Color_Chooser,Fl_Color_Chooser_New,(int X, int Y, int W, int H));
   FL_EXPORT_C_HEADER(fl_Color_Chooser,Fl_Color_Chooser_New_WithLabel,(int X, int Y, int W, int H, const char* label));
-  FL_EXPORT_C_HEADER(fl_Color_Chooser,Fl_OverriddenColor_Chooser_New,(int X, int Y, int W, int H,fl_Widget_Virtual_Funcs* fs));
-  FL_EXPORT_C_HEADER(fl_Color_Chooser,Fl_OverriddenColor_Chooser_New_WithLabel,(int X, int Y, int W, int H, const char* label, fl_Widget_Virtual_Funcs* fs));
+  FL_EXPORT_C_HEADER(fl_Color_Chooser,Fl_OverriddenColor_Chooser_New,(int X, int Y, int W, int H,fl_Widget_Virtual_Funcs* fs, fl_Color_Chooser_Virtual_Funcs* cfs));
+  FL_EXPORT_C_HEADER(fl_Color_Chooser,Fl_OverriddenColor_Chooser_New_WithLabel,(int X, int Y, int W, int H, const char* label, fl_Widget_Virtual_Funcs* fs, fl_Color_Chooser_Virtual_Funcs* cfs));
 
   FL_EXPORT_C_HEADER(int,flc_color_chooser_with_m,(const char* name, double* r, double* g, double* b, int m));
   FL_EXPORT_C_HEADER(int,flc_color_chooser_with_uchar,(const char* name, uchar* r, uchar* g, uchar* b));

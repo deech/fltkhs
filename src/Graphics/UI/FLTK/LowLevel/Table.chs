@@ -8,7 +8,8 @@ module Graphics.UI.FLTK.LowLevel.Table
      CustomTableFuncs(..),
      mkSetInt,
      mkDrawCell,
-     toSetIntPrim,
+     toSetRowsPrim,
+     toSetColumnsPrim,
      toDrawCellPrim,
      fillCustomTableFunctionStruct,
      defaultCustomTableFuncs,
@@ -39,8 +40,6 @@ data Row = Row Int
 data Column = Column Int
 data TableCoordinate = TableCoordinate Row Column
 foreign import ccall "wrapper"
-        mkSetInt ::  (Ptr () -> CInt -> IO ())-> IO (FunPtr (Ptr () -> CInt -> IO ()))
-foreign import ccall "wrapper"
         mkDrawCell :: (Ptr () ->
                        CInt ->
                        CInt -> CInt ->
@@ -53,13 +52,22 @@ foreign import ccall "wrapper"
                                    CInt -> CInt -> CInt -> CInt ->
                                    IO ()))
 
-toSetIntPrim :: (Ref a -> Int -> IO ()) -> IO (FunPtr (Ptr () -> CInt -> IO ()))
-toSetIntPrim f =
+toSetRowsPrim :: (Ref a -> Rows -> IO ()) -> IO (FunPtr (Ptr () -> CInt -> IO ()))
+toSetRowsPrim f =
     mkSetInt
     (
      \ptr num' -> do
-       pp <- wrapNonNull ptr "Null pointer. toSetIntPrim"
-       f (wrapInRef pp) (fromIntegral num')
+       pp <- wrapNonNull ptr "Null pointer. toSetRowsPrim"
+       f (wrapInRef pp) (Rows (fromIntegral num'))
+    )
+
+toSetColumnsPrim :: (Ref a -> Columns -> IO ()) -> IO (FunPtr (Ptr () -> CInt -> IO ()))
+toSetColumnsPrim f =
+    mkSetInt
+    (
+     \ptr num' -> do
+       pp <- wrapNonNull ptr "Null pointer. toSetColumnsPrim"
+       f (wrapInRef pp) (Columns (fromIntegral num'))
     )
 
 toDrawCellPrim :: (Ref a -> TableContext -> TableCoordinate -> Rectangle -> IO ()) ->
@@ -86,8 +94,8 @@ data CustomTableFuncs a =
     CustomTableFuncs
     {
     clearCustom      :: Maybe (Ref a -> IO ())
-    ,setRowsCustom    :: Maybe (Ref a -> Int -> IO ())
-    ,setColsCustom    :: Maybe (Ref a -> Int -> IO ())
+    ,setRowsCustom    :: Maybe (Ref a -> Rows -> IO ())
+    ,setColsCustom    :: Maybe (Ref a -> Columns -> IO ())
     }
 
 fillCustomTableFunctionStruct :: forall a. (Parent a Table) =>
@@ -98,8 +106,8 @@ fillCustomTableFunctionStruct :: forall a. (Parent a Table) =>
 fillCustomTableFunctionStruct structPtr _drawCell' (CustomTableFuncs _clear' _setRows' _setCols')  = do
    toDrawCellPrim `orNullFunPtr` _drawCell' >>= {#set fl_Table_Virtual_Funcs->draw_cell#} structPtr
    toCallbackPrim `orNullFunPtr` _clear' >>= {#set fl_Table_Virtual_Funcs->clear#} structPtr
-   toSetIntPrim `orNullFunPtr` _setRows' >>= {#set fl_Table_Virtual_Funcs->set_rows#} structPtr
-   toSetIntPrim `orNullFunPtr` _setCols' >>= {#set fl_Table_Virtual_Funcs->set_cols#} structPtr
+   toSetRowsPrim `orNullFunPtr` _setRows' >>= {#set fl_Table_Virtual_Funcs->set_rows#} structPtr
+   toSetColumnsPrim `orNullFunPtr` _setCols' >>= {#set fl_Table_Virtual_Funcs->set_cols#} structPtr
 
 defaultCustomTableFuncs :: forall a. (Parent a Table) => CustomTableFuncs a
 defaultCustomTableFuncs = CustomTableFuncs Nothing Nothing Nothing
@@ -146,17 +154,17 @@ instance (impl ~ ( Boxtype ->  IO ())) => Op (SetTableBox ()) Table orig impl wh
 instance (impl ~ (  IO (Boxtype))) => Op (GetTableBox ()) Table orig impl where
   runOp _ _ table = withRef table $ \tablePtr -> tableBox' tablePtr
 {# fun Fl_Table_set_rows as setRows' { id `Ptr ()',`Int' } -> `()' #}
-instance (impl ~ ( Int ->  IO ())) => Op (SetRows ()) Table orig impl where
-  runOp _ _ table val = withRef table $ \tablePtr -> setRows' tablePtr val
+instance (impl ~ ( Rows ->  IO ())) => Op (SetRows ()) Table orig impl where
+  runOp _ _ table (Rows val) = withRef table $ \tablePtr -> setRows' tablePtr val
 {# fun Fl_Table_rows as rows' { id `Ptr ()' } -> `Int' #}
-instance (impl ~ (  IO (Int))) => Op (GetRows ()) Table orig impl where
-  runOp _ _ table = withRef table $ \tablePtr -> rows' tablePtr
+instance (impl ~ (  IO (Rows))) => Op (GetRows ()) Table orig impl where
+  runOp _ _ table = withRef table $ \tablePtr -> rows' tablePtr >>= return . Rows
 {# fun Fl_Table_set_cols as setCols' { id `Ptr ()',`Int' } -> `()' #}
-instance (impl ~ ( Int ->  IO ())) => Op (SetCols ()) Table orig impl where
-  runOp _ _ table val = withRef table $ \tablePtr -> setCols' tablePtr val
+instance (impl ~ ( Columns ->  IO ())) => Op (SetCols ()) Table orig impl where
+  runOp _ _ table (Columns val) = withRef table $ \tablePtr -> setCols' tablePtr val
 {# fun Fl_Table_cols as cols' { id `Ptr ()' } -> `Int' #}
-instance (impl ~ (  IO (Int))) => Op (GetCols ()) Table orig impl where
-  runOp _ _ table = withRef table $ \tablePtr -> cols' tablePtr
+instance (impl ~ (  IO (Columns))) => Op (GetCols ()) Table orig impl where
+  runOp _ _ table = withRef table $ \tablePtr -> cols' tablePtr >>= return . Columns
 {# fun Fl_Table_visible_cells as visibleCells' { id `Ptr ()',alloca- `Int' peekIntConv*,alloca- `Int' peekIntConv*,alloca- `Int' peekIntConv*,alloca- `Int' peekIntConv*} -> `()' #}
 instance (impl ~ (IO (TableCoordinate,TableCoordinate))) => Op (GetVisibleCells ()) Table orig impl where
   runOp _ _ table =
@@ -272,8 +280,10 @@ instance (impl ~ IO (TableCoordinate, TableCoordinate)) => Op (GetSelection ()) 
         getSelection' tablePtr >>= \(top', left',bottom',right') ->
             return ((TableCoordinate (Row top') (Column left')), (TableCoordinate (Row bottom') (Column right')))
 {# fun Fl_Table_set_selection as setSelection' { id `Ptr ()',`Int',`Int',`Int',`Int' } -> `()' #}
-instance (impl ~ ( Int -> Int -> Int -> Int ->  IO ())) => Op (SetSelection ()) Table orig impl where
-  runOp _ _ table row_top col_left row_bot col_right = withRef table $ \tablePtr -> setSelection' tablePtr row_top col_left row_bot col_right
+instance (impl ~ ( TableCoordinate -> TableCoordinate ->IO ())) => Op (SetSelection ()) Table orig impl where
+  runOp _ _ table (TableCoordinate (Row row_top) (Column col_left))
+                  (TableCoordinate (Row row_bot) (Column col_right)) =
+    withRef table $ \tablePtr -> setSelection' tablePtr row_top col_left row_bot col_right
 {# fun Fl_Table_move_cursor as moveCursor' { id `Ptr ()',`Int',`Int' } -> `Int' #}
 instance (impl ~ ( TableCoordinate ->  IO (Either NoChange ()))) => Op (MoveCursor ()) Table orig impl where
   runOp _ _ table (TableCoordinate (Row r) (Column c)) = withRef table $ \tablePtr -> moveCursor' tablePtr r c >>= return . successOrNoChange
@@ -284,10 +294,10 @@ instance (impl ~ (  IO ())) => Op (InitSizes ()) Table orig impl where
 instance (Parent a Widget, impl ~ (Ref a  ->  IO ())) => Op (Add ()) Table orig impl where
   runOp _ _ table wgt = withRef table $ \tablePtr -> withRef wgt $ \wgtPtr -> add' tablePtr wgtPtr
 {# fun Fl_Table_insert as insert' { id `Ptr ()',id `Ptr ()',`Int' } -> `()' #}
-instance (Parent a Widget, impl ~ (Ref a -> Int ->  IO ())) => Op (Insert ()) Table orig impl where
-  runOp _ _ table wgt n = withRef table $ \tablePtr -> withRef wgt $ \wgtPtr -> insert' tablePtr wgtPtr n
+instance (Parent a Widget, impl ~ (Ref a -> AtIndex ->  IO ())) => Op (Insert ()) Table orig impl where
+  runOp _ _ table wgt (AtIndex n) = withRef table $ \tablePtr -> withRef wgt $ \wgtPtr -> insert' tablePtr wgtPtr n
 {# fun Fl_Table_insert_with_widget as insertWithWidget' { id `Ptr ()',id `Ptr ()',id `Ptr ()' } -> `()' #}
-instance (Parent a Widget, Parent b Widget, impl ~ (Ref a -> Ref b ->  IO ())) => Op (InsertWithBefore ()) Table orig impl where
+instance (Parent a Widget, Parent b Widget, impl ~ (Ref a -> Ref b ->  IO ())) => Op (InsertBefore ()) Table orig impl where
   runOp _ _ self w before = withRef self $ \selfPtr -> withRef w $ \wPtr -> withRef before $ \beforePtr -> insertWithWidget' selfPtr wPtr beforePtr
 {# fun Fl_Table_begin as begin' { id `Ptr ()' } -> `()' #}
 instance (impl ~ (  IO ())) => Op (Begin ()) Table orig impl where
@@ -302,8 +312,8 @@ instance (impl ~ (  IO [Ref Widget])) => Op (GetArray ()) Table orig impl where
                      numChildren <- children table
                      arrayToRefs childArrayPtr numChildren
 {# fun Fl_Table_child as child' { id `Ptr ()',`Int' } -> `Ptr ()' id #}
-instance (impl ~ ( Int ->  IO (Maybe (Ref Widget)))) => Op (GetChild ()) Table orig impl where
-  runOp _ _ table n = withRef table $ \tablePtr -> child' tablePtr n >>= toMaybeRef
+instance (impl ~ ( AtIndex ->  IO (Maybe (Ref Widget)))) => Op (GetChild ()) Table orig impl where
+  runOp _ _ table (AtIndex n) = withRef table $ \tablePtr -> child' tablePtr n >>= toMaybeRef
 {# fun Fl_Table_children as children' { id `Ptr ()' } -> `Int' #}
 instance (impl ~ (  IO (Int))) => Op (Children ()) Table orig impl where
   runOp _ _ table = withRef table $ \tablePtr -> children' tablePtr
@@ -352,11 +362,11 @@ instance (impl ~ (  IO ())) => Op (ClearSuper ()) Table orig impl where
 instance (impl ~ (  IO ())) => Op (Clear ()) Table orig impl where
   runOp _ _ table = withRef table $ \tablePtr -> clear' tablePtr
 {# fun Fl_Table_set_rows_super as setRowsSuper' { id `Ptr ()',`Int' } -> `()' #}
-instance (impl ~ ( Int ->  IO ())) => Op (SetRowsSuper ()) Table orig impl where
-  runOp _ _ table val = withRef table $ \tablePtr -> setRowsSuper' tablePtr val
+instance (impl ~ ( Rows ->  IO ())) => Op (SetRowsSuper ()) Table orig impl where
+  runOp _ _ table (Rows val) = withRef table $ \tablePtr -> setRowsSuper' tablePtr val
 {# fun Fl_Table_set_cols_super as setColsSuper' { id `Ptr ()',`Int' } -> `()' #}
-instance (impl ~ ( Int ->  IO ())) => Op (SetColsSuper ()) Table orig impl where
-  runOp _ _ table val = withRef table $ \tablePtr -> setColsSuper' tablePtr val
+instance (impl ~ ( Columns ->  IO ())) => Op (SetColsSuper ()) Table orig impl where
+  runOp _ _ table (Columns val) = withRef table $ \tablePtr -> setColsSuper' tablePtr val
 {# fun Fl_Table_show_super as showSuper' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
 instance (impl ~ ( IO ())) => Op (ShowWidgetSuper ()) Table orig impl where
   runOp _ _ widget = withRef widget $ \widgetPtr -> showSuper' widgetPtr
@@ -370,9 +380,15 @@ instance (impl ~ ( IO ())) => Op (HideSuper ()) Table orig impl where
 instance (impl ~ ( IO ())) => Op (Hide ()) Table orig impl where
   runOp _ _ widget = withRef widget $ \widgetPtr -> hide' widgetPtr
 
+{# fun Fl_Table_tab_cell_nav as tabCellNav' { id `Ptr ()' } -> `Bool' cToBool #}
+instance (impl ~ (  IO (Bool))) => Op (GetTabCellNav ()) Table orig impl where
+  runOp _ _ table = withRef table $ \tablePtr -> tabCellNav' tablePtr
+{# fun Fl_Table_set_tab_cell_nav as setTabCellNav' { id `Ptr ()',cFromBool `Bool' } -> `()' #}
+instance (impl ~ ( Bool ->  IO ())) => Op (SetTabCellNav ()) Table orig impl where
+  runOp _ _ table val = withRef table $ \tablePtr -> setTabCellNav' tablePtr val
+
 -- $Tablefunctions
 -- @
---
 -- add:: ('Parent' a 'Widget') => 'Ref' 'Table' -> 'Ref' a -> 'IO' ()
 --
 -- begin :: 'Ref' 'Table' -> 'IO' ()
@@ -405,7 +421,7 @@ instance (impl ~ ( IO ())) => Op (Hide ()) Table orig impl where
 --
 -- getArray :: 'Ref' 'Table' -> 'IO' ['Ref' 'Widget']
 --
--- getChild :: 'Ref' 'Table' -> 'Int' -> 'IO' ('Maybe' ('Ref' 'Widget'))
+-- getChild :: 'Ref' 'Table' -> 'AtIndex' -> 'IO' ('Maybe' ('Ref' 'Widget'))
 --
 -- getColHeader :: 'Ref' 'Table' -> 'IO' ('Bool')
 --
@@ -421,7 +437,7 @@ instance (impl ~ ( IO ())) => Op (Hide ()) Table orig impl where
 --
 -- getColWidth :: 'Ref' 'Table' -> 'Column' -> 'IO' ('Int')
 --
--- getCols :: 'Ref' 'Table' -> 'IO' ('Int')
+-- getCols :: 'Ref' 'Table' -> 'IO' ('Columns')
 --
 -- getRowHeader :: 'Ref' 'Table' -> 'IO' 'Bool'
 --
@@ -437,9 +453,11 @@ instance (impl ~ ( IO ())) => Op (Hide ()) Table orig impl where
 --
 -- getRowResizeMin :: 'Ref' 'Table' -> 'IO' ('Int')
 --
--- getRows :: 'Ref' 'Table' -> 'IO' ('Int')
+-- getRows :: 'Ref' 'Table' -> 'IO' ('Rows')
 --
 -- getSelection :: 'Ref' 'Table' -> 'IO' ('TableCoordinate', 'TableCoordinate')
+--
+-- getTabCellNav :: 'Ref' 'Table' -> 'IO' ('Bool')
 --
 -- getTableBox :: 'Ref' 'Table' -> 'IO' ('Boxtype')
 --
@@ -447,7 +465,7 @@ instance (impl ~ ( IO ())) => Op (Hide ()) Table orig impl where
 --
 -- getVisibleCells :: 'Ref' 'Table' -> 'IO' ('TableCoordinate,TableCoordinate')
 --
--- handle :: 'Ref' 'Table' -> 'Event' -> 'IO' ( 'Either' 'UnknownEvent' () )
+-- handle :: 'Ref' 'Table' -> 'Event' -> 'IO'( 'Either' 'UnknownEvent' ())
 --
 -- hide :: 'Ref' 'Table' -> 'IO' ()
 --
@@ -455,9 +473,9 @@ instance (impl ~ ( IO ())) => Op (Hide ()) Table orig impl where
 --
 -- initSizes :: 'Ref' 'Table' -> 'IO' ()
 --
--- insert:: ('Parent' a 'Widget') => 'Ref' 'Table' -> 'Ref' a -> 'Int' -> 'IO' ()
+-- insert:: ('Parent' a 'Widget') => 'Ref' 'Table' -> 'Ref' a -> 'AtIndex' -> 'IO' ()
 --
--- insertWithBefore:: ('Parent' a 'Widget', 'Parent' b 'Widget') => 'Ref' 'Table' -> 'Ref' a -> 'Ref' b -> 'IO' ()
+-- insertBefore:: ('Parent' a 'Widget', 'Parent' b 'Widget') => 'Ref' 'Table' -> 'Ref' a -> 'Ref' b -> 'IO' ()
 --
 -- isInteractiveResize :: 'Ref' 'Table' -> 'IO' ('Bool')
 --
@@ -485,9 +503,9 @@ instance (impl ~ ( IO ())) => Op (Hide ()) Table orig impl where
 --
 -- setColWidthAll :: 'Ref' 'Table' -> 'Int' -> 'IO' ()
 --
--- setCols :: 'Ref' 'Table' -> 'Int' -> 'IO' ()
+-- setCols :: 'Ref' 'Table' -> 'Columns' -> 'IO' ()
 --
--- setColsSuper :: 'Ref' 'Table' -> 'Int' -> 'IO' ()
+-- setColsSuper :: 'Ref' 'Table' -> 'Columns' -> 'IO' ()
 --
 -- setRowHeader :: 'Ref' 'Table' -> 'Bool' -> 'IO' ()
 --
@@ -505,11 +523,13 @@ instance (impl ~ ( IO ())) => Op (Hide ()) Table orig impl where
 --
 -- setRowResizeMin :: 'Ref' 'Table' -> 'Int' -> 'IO' ()
 --
--- setRows :: 'Ref' 'Table' -> 'Int' -> 'IO' ()
+-- setRows :: 'Ref' 'Table' -> 'Rows' -> 'IO' ()
 --
--- setRowsSuper :: 'Ref' 'Table' -> 'Int' -> 'IO' ()
+-- setRowsSuper :: 'Ref' 'Table' -> 'Rows' -> 'IO' ()
 --
--- setSelection :: 'Ref' 'Table' -> 'Int' -> 'Int' -> 'Int' -> 'Int' -> 'IO' ()
+-- setSelection :: 'Ref' 'Table' -> 'TableCoordinate' -> 'TableCoordinate' ->'IO' ()
+--
+-- setTabCellNav :: 'Ref' 'Table' -> 'Bool' -> 'IO' ()
 --
 -- setTableBox :: 'Ref' 'Table' -> 'Boxtype' -> 'IO' ()
 --
@@ -518,7 +538,6 @@ instance (impl ~ ( IO ())) => Op (Hide ()) Table orig impl where
 -- showWidget :: 'Ref' 'Table' -> 'IO' ()
 --
 -- showWidgetSuper :: 'Ref' 'Table' -> 'IO' ()
---
 -- @
 
 

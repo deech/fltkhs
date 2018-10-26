@@ -114,13 +114,16 @@ module Graphics.UI.FLTK.LowLevel.FL
      removeFromColormap,
 #endif
      -- * Box
-     BoxtypeSpec,
+     BoxtypeSpec(..),
      getBoxtype,
+     getBoxtypePrim,
      setBoxtype,
      boxDx,
      boxDy,
      boxDw,
      boxDh,
+     adjustBoundsByBoxtype,
+     boxDifferences,
      drawBoxActive,
      -- * Fonts
      getFontName,
@@ -146,8 +149,10 @@ module Graphics.UI.FLTK.LowLevel.FL
      eventButton3,
      eventX,
      eventY,
+     eventPosition,
      eventXRoot,
      eventYRoot,
+     eventRootPosition,
      eventDx,
      eventDy,
      eventClicks,
@@ -167,7 +172,6 @@ module Graphics.UI.FLTK.LowLevel.FL
      eventText,
      eventLength,
      eventClipboardContents,
-#if FLTK_API_VERSION >= 10304
      setBoxColor,
      boxColor,
      abiVersion,
@@ -181,7 +185,14 @@ module Graphics.UI.FLTK.LowLevel.FL
      , useHighResGL
      , setUseHighResGL
 #endif
-#endif
+     , insertionPointLocation
+     , resetMarkedText
+     , runChecks
+     , screenDriver
+     , systemDriver
+     , screenXYWH
+     , setProgramShouldQuit
+     , getProgramShouldQuit
     )
 where
 #include "Fl_C.h"
@@ -403,14 +414,34 @@ setGrab :: (Parent a Window) => Ref a -> IO ()
 setGrab wp = withRef wp setGrab'
 {# fun Fl_event as event
        {  } -> `Event' cToEnum #}
-{# fun Fl_event_x as eventX
+{# fun Fl_event_x as eventX'
        {  } -> `Int'#}
-{# fun Fl_event_y as eventY
+eventX :: IO X
+eventX = eventX' >>= return . X
+{# fun Fl_event_y as eventY'
        {  } -> `Int'#}
-{# fun Fl_event_x_root as eventXRoot
+eventY :: IO Y
+eventY = eventY' >>= return . Y
+{# fun Fl_event_x_root as eventXRoot'
        {  } -> `Int' #}
-{# fun Fl_event_y_root as eventYRoot
+eventPosition :: IO Position
+eventPosition = do
+  x' <- eventX
+  y' <- eventY
+  return (Position x' y')
+
+eventXRoot :: IO X
+eventXRoot = eventXRoot' >>= return . X
+{# fun Fl_event_y_root as eventYRoot'
        {  } -> `Int' #}
+eventYRoot :: IO Y
+eventYRoot = eventYRoot' >>= return . Y
+
+eventRootPosition :: IO Position
+eventRootPosition = do
+  x' <- eventXRoot
+  y' <- eventYRoot
+  return (Position x' y')
 {# fun Fl_event_dx as eventDx
        {  } -> `Int' #}
 {# fun Fl_event_dy as eventDy
@@ -648,7 +679,6 @@ paste widget PasteSourceClipboardImage =
          alloca- `Int' peekIntConv* ,
          alloca- `Int' peekIntConv*
        } -> `()'  #}
-
 {# fun Fl_screen_xywh_with_mxmy as screenXYWYWithMXMY
        {
          alloca- `Int' peekIntConv* ,
@@ -658,7 +688,6 @@ paste widget PasteSourceClipboardImage =
          `Int',
          `Int'
        } -> `()'  #}
-
 {# fun Fl_screen_xywh_with_n as screenXYWNWithN
        {
          alloca- `Int' peekIntConv* ,
@@ -667,7 +696,6 @@ paste widget PasteSourceClipboardImage =
          alloca- `Int' peekIntConv* ,
          `Int'
        } -> `()'  #}
-
 {# fun Fl_screen_xywh_with_mxmymwmh as screenXYWHWithNMXMYMWMH
        {
          alloca- `Int' peekIntConv* ,
@@ -756,9 +784,9 @@ setColorRgb c r g b = {#call Fl_set_color_rgb as fl_set_color_rgb #}
                         (fromIntegral g)
                         (fromIntegral b)
 {# fun Fl_set_color as setColor
-       { cFromColor `Color',`Int' } -> `()' supressWarningAboutRes #}
+       { cFromColor `Color', cFromColor `Color' } -> `()' supressWarningAboutRes #}
 {# fun Fl_get_color as getColor
-       { cFromColor `Color' } -> `Int' #}
+       { cFromColor `Color' } -> `Color' cToColor #}
 {# fun Fl_get_color_rgb as getColorRgb'
        {
          cFromColor `Color',
@@ -776,8 +804,8 @@ getColorRgb c = do
       { cFromColor `Color' } -> `()' supressWarningAboutRes #}
 {# fun Fl_free_color_with_overlay as freeColorWithOverlay'
        { cFromColor `Color', `Int' } -> `()' supressWarningAboutRes #}
-removeFromColormap :: Maybe Int -> Color -> IO ()
-removeFromColormap (Just overlay) c = freeColorWithOverlay' c overlay
+removeFromColormap :: Maybe Color -> Color -> IO ()
+removeFromColormap (Just (Color overlay)) c = freeColorWithOverlay' c (fromIntegral overlay)
 removeFromColormap Nothing c = freeColor' c
 #endif
 {# fun Fl_get_font as getFont
@@ -854,11 +882,11 @@ removeFdWhen fd fdWhens =
 removeFd :: CInt -> IO ()
 removeFd fd = removeFd' fd
 
-{# fun Fl_get_boxtype as getBoxtype'
+{# fun Fl_get_boxtype as getBoxtypePrim
        { cFromEnum `Boxtype' } -> `FunPtr BoxDrawFPrim' id #}
 getBoxtype :: Boxtype -> IO BoxDrawF
 getBoxtype bt = do
-  wrappedFunPtr <- getBoxtype' bt
+  wrappedFunPtr <- getBoxtypePrim bt
   let boxDrawPrim = unwrapBoxDrawFPrim wrappedFunPtr
   return $ toBoxDrawF boxDrawPrim
 
@@ -879,6 +907,7 @@ getBoxtype bt = do
 
 data BoxtypeSpec = FromSpec BoxDrawF Word8 Word8 Word8 Word8
                  | FromBoxtype Boxtype
+                 | FromFunPtr (FunPtr BoxDrawFPrim) Word8 Word8 Word8 Word8
 setBoxtype :: Boxtype -> BoxtypeSpec -> IO ()
 setBoxtype bt (FromSpec f dx dy dw dh) =
     do
@@ -886,6 +915,8 @@ setBoxtype bt (FromSpec f dx dy dw dh) =
       setBoxtype' bt funPtr dx dy dw dh
 setBoxtype bt (FromBoxtype template) =
     setBoxtypeByBoxtype' bt template
+setBoxtype bt (FromFunPtr funPtr dx dy dw dh) =
+    setBoxtype' bt funPtr dx dy dw dh
 
 {# fun Fl_box_dx as boxDx
        { cFromEnum `Boxtype' } -> `Int' #}
@@ -895,6 +926,23 @@ setBoxtype bt (FromBoxtype template) =
        { cFromEnum `Boxtype' } -> `Int' #}
 {# fun Fl_box_dh as boxDh
        { cFromEnum `Boxtype' } -> `Int' #}
+
+adjustBoundsByBoxtype :: Rectangle -> Boxtype -> IO Rectangle
+adjustBoundsByBoxtype rect bt =
+  let (x',y',w',h') = fromRectangle rect
+  in do
+  dx <- boxDx bt
+  dy <- boxDy bt
+  dw <- boxDw bt
+  dh <- boxDh bt
+  return (toRectangle (x'+dx,y'+dy,w'-dw,h'-dh))
+
+boxDifferences :: Rectangle -> Rectangle -> (Int, Int, Int, Int)
+boxDifferences r1 r2 =
+  let (r1x,r1y,r1w,r1h) = fromRectangle r1
+      (r2x,r2y,r2w,r2h) = fromRectangle r2
+  in (r2x-r1x,r2y-r1y,r1w-r2w,r1h-r2h)
+
 {# fun Fl_draw_box_active as drawBoxActive
        {  } -> `Bool' toBool #}
 {# fun Fl_event_shift as eventShift
@@ -936,7 +984,6 @@ releaseWidgetPointer :: (Parent a Widget) => Ref a -> IO ()
 releaseWidgetPointer wp = withRef wp {#call Fl_release_widget_pointer as fl_release_widget_pointer #}
 clearWidgetPointer :: (Parent a Widget) => Ref a -> IO ()
 clearWidgetPointer wp = withRef wp {#call Fl_clear_widget_pointer as fl_Clear_Widget_Pointer #}
-#if FLTK_API_VERSION >= 10304
 -- | Only available on FLTK version 1.3.4 and above.
 setBoxColor :: Color -> IO ()
 setBoxColor c = {#call Fl_set_box_color as fl_set_box_color #} (cFromColor c)
@@ -972,7 +1019,21 @@ useHighResGL = {#call Fl_use_high_res_GL as fl_use_high_res_GL #} >>= return . c
 setUseHighResGL :: Bool -> IO ()
 setUseHighResGL use' = {#call Fl_set_use_high_res_GL as fl_set_use_high_res_GL #} (cFromBool use')
 #endif
-#endif
+insertionPointLocation :: Position -> Height -> IO ()
+insertionPointLocation (Position (X x') (Y y')) (Height h')
+  = {#call Fl_insertion_point_location as fl_insertion_point_location #} (fromIntegral x') (fromIntegral y') (fromIntegral h')
+resetMarkedText :: IO ()
+resetMarkedText = {#call Fl_reset_marked_text as fl_reset_marked_text #}
+runChecks :: IO ()
+runChecks = {#call Fl_run_checks as fl_run_checks #}
+screenDriver :: IO (Maybe (Ref ScreenDriver))
+screenDriver = {#call Fl_screen_driver as fl_screen_driver #} >>= toMaybeRef
+systemDriver :: IO (Maybe (Ref SystemDriver))
+systemDriver = {#call Fl_system_driver as fl_system_driver #} >>= toMaybeRef
+setProgramShouldQuit :: Bool -> IO ()
+setProgramShouldQuit = {#call Fl_set_program_should_quit as fl_set_program_should_quit #} . cFromBool
+getProgramShouldQuit :: IO Bool
+getProgramShouldQuit = {#call Fl_get_program_should_quit as fl_get_program_should_quit #} >>= return . cToBool
 
 
 -- | Use this function to run a GUI in GHCi.

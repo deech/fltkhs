@@ -131,14 +131,14 @@ instance (impl ~ ( IO (Mode))) => Op (GetMode ()) GlWindow orig impl where
 {# fun Fl_Gl_Window_set_mode as setMode' { id `Ptr ()',`Int' } -> `Int' #}
 instance (impl ~ (Modes ->  IO ())) => Op (SetMode ()) GlWindow orig impl where
   runOp _ _ win a = withRef win $ \winPtr -> setMode' winPtr (modesToInt a) >> return ()
-{# fun Fl_Gl_Window_context as context' { id `Ptr ()' } -> `Ref GlContext' unsafeToRef #}
-instance (impl ~ ( IO (Ref GlContext))) => Op (GetContext ()) GlWindow orig impl where
+{# fun Fl_Gl_Window_context as context' { id `Ptr ()' } -> `Ref FlGlContext' unsafeToRef #}
+instance (impl ~ ( IO (Ref FlGlContext))) => Op (GetContext ()) GlWindow orig impl where
   runOp _ _ win = withRef win $ \winPtr -> context' winPtr
 {# fun Fl_Gl_Window_set_context as setContext' { id `Ptr ()',id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance (impl ~ ( Ref GlContext ->  IO ())) => Op (SetContext ()) GlWindow orig impl where
+instance (impl ~ ( Ref FlGlContext ->  IO ())) => Op (SetContext ()) GlWindow orig impl where
   runOp _ _ win context = withRef win $ \winPtr -> withRef context $ \contextPtr -> setContext' winPtr contextPtr
 {# fun Fl_Gl_Window_set_context_with_destroy_flag as setContextWithDestroyFlag' { id `Ptr ()',id `Ptr ()', fromBool `Bool'} -> `()' supressWarningAboutRes #}
-instance (impl ~ ( Ref GlContext ->  Bool -> IO ())) => Op (SetContextWithDestroyFlag ()) GlWindow orig impl where
+instance (impl ~ ( Ref FlGlContext ->  Bool -> IO ())) => Op (SetContextWithDestroyFlag ()) GlWindow orig impl where
   runOp _ _ win context destroyFlag= withRef win $ \winPtr -> withRef context $ \contextPtr -> setContextWithDestroyFlag' winPtr contextPtr destroyFlag
 {# fun Fl_Gl_Window_swap_buffers as swapBuffers' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
 instance (impl ~ ( IO ())) => Op (SwapBuffers ()) GlWindow orig impl where
@@ -159,7 +159,6 @@ instance (impl ~ ( IO ())) => Op (HideOverlay ()) GlWindow orig impl where
 instance (impl ~ ( IO ())) => Op (MakeOverlayCurrent ()) GlWindow orig impl where
   runOp _ _ win = withRef win $ \winPtr -> makeOverlayCurrent' winPtr
 {# fun Fl_Gl_Window_pixels_per_unit as pixelsPerUnit' { id `Ptr ()'} -> `Float' #}
-#if FLTK_API_VERSION >= 10304
 instance (impl ~ ( IO (Float))) => Op (PixelsPerUnit ()) GlWindow orig impl where
   runOp _ _ win = withRef win $ \winPtr -> pixelsPerUnit' winPtr
 {# fun Fl_Gl_Window_pixel_h as pixelH' { id `Ptr ()'} -> `Int' #}
@@ -168,7 +167,7 @@ instance (impl ~ ( IO (Int))) => Op (PixelH ()) GlWindow orig impl where
 {# fun Fl_Gl_Window_pixel_w as pixelW' { id `Ptr ()'} -> `Int' #}
 instance (impl ~ ( IO (Int))) => Op (PixelW ()) GlWindow orig impl where
   runOp _ _ win = withRef win $ \winPtr -> pixelW' winPtr
-#endif
+
 -- $GlWindowfunctions
 -- @
 -- canDo :: 'Ref' 'GlWindow' -> 'IO' ('Bool')
@@ -183,7 +182,7 @@ instance (impl ~ ( IO (Int))) => Op (PixelW ()) GlWindow orig impl where
 --
 -- flushSuper :: 'Ref' 'GlWindow' -> 'IO' ()
 --
--- getContext :: 'Ref' 'GlWindow' -> 'IO' ('Ref' 'GlContext')
+-- getContext :: 'Ref' 'GlWindow' -> 'IO' ('Ref' 'FlGlContext')
 --
 -- getContextValid :: 'Ref' 'GlWindow' -> 'IO' ('Bool')
 --
@@ -207,17 +206,23 @@ instance (impl ~ ( IO (Int))) => Op (PixelW ()) GlWindow orig impl where
 --
 -- ortho :: 'Ref' 'GlWindow' -> 'IO' ()
 --
+-- pixelH :: 'Ref' 'GlWindow' -> 'IO' ('Int')
+--
+-- pixelW :: 'Ref' 'GlWindow' -> 'IO' ('Int')
+--
+-- pixelsPerUnit :: 'Ref' 'GlWindow' -> 'IO' ('Float')
+--
 -- redrawOverlay :: 'Ref' 'GlWindow' -> 'IO' ()
 --
 -- resize :: 'Ref' 'GlWindow' -> 'Rectangle' -> 'IO' ()
 --
 -- resizeSuper :: 'Ref' 'GlWindow' -> 'Rectangle' -> 'IO' ()
 --
--- setContext :: 'Ref' 'GlWindow' -> 'Ref' 'GlContext' -> 'IO' ()
+-- setContext :: 'Ref' 'GlWindow' -> 'Ref' 'FlGlContext' -> 'IO' ()
 --
 -- setContextValid :: 'Ref' 'GlWindow' -> 'Bool' -> 'IO' ()
 --
--- setContextWithDestroyFlag :: 'Ref' 'GlWindow' -> 'Ref' 'GlContext' -> 'Bool' -> 'IO' ()
+-- setContextWithDestroyFlag :: 'Ref' 'GlWindow' -> 'Ref' 'FlGlContext' -> 'Bool' -> 'IO' ()
 --
 -- setMode :: 'Ref' 'GlWindow' -> 'Modes' -> 'IO' ()
 --
@@ -228,14 +233,6 @@ instance (impl ~ ( IO (Int))) => Op (PixelW ()) GlWindow orig impl where
 -- showWidgetSuper :: 'Ref' 'GlWindow' -> 'IO' ()
 --
 -- swapBuffers :: 'Ref' 'GlWindow' -> 'IO' ()
---
--- Available in FLTK 1.3.4 only:
---
--- pixelH :: 'Ref' 'GlWindow' -> 'IO' ('Int')
---
--- pixelW :: 'Ref' 'GlWindow' -> 'IO' ('Int')
---
--- pixelsPerUnit :: 'Ref' 'GlWindow' -> 'IO' ('Float')
 -- @
 
 -- $hierarchy

@@ -62,12 +62,13 @@ menuButtonCustom rectangle l' draw' funcs' =
 {# fun Fl_Menu_Button_New_WithLabel as menuButtonNewWithLabel' { `Int',`Int',`Int',`Int',unsafeToCString `T.Text'} -> `Ptr ()' id #}
 menuButtonNew :: Rectangle -> Maybe T.Text -> IO (Ref MenuButton)
 menuButtonNew rectangle l'=
-    let (x_pos, y_pos, width, height) = fromRectangle rectangle
-    in case l' of
-        Nothing -> menuButtonNew' x_pos y_pos width height >>=
-                             toRef
-        Just l -> menuButtonNewWithLabel' x_pos y_pos width height l >>=
-                               toRef
+  widgetMaker
+    rectangle
+    l'
+    Nothing
+    Nothing
+    overriddenWidgetNew'
+    overriddenWidgetNewWithLabel'
 
 {# fun Fl_Menu_Button_Destroy as menuButtonDestroy' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
 instance (impl ~ ( IO ())) => Op (Destroy ()) MenuButton orig impl where

@@ -1,0 +1,4 @@
+#!/bin/sh
+# Workaround for bleeding edge distros that have stopped shipping the 'freetype-config' script with 'freetype2'
+# FLTK uses that script to populate C compiler flags so we delegate to 'pkg-config' for now.
+pkg-config $@ freetype2

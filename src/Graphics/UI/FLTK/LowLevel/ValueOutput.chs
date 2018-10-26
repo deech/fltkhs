@@ -47,12 +47,13 @@ valueOutputCustom rectangle l' draw' funcs' =
 {# fun Fl_Value_Output_New_WithLabel as valueOutputNewWithLabel' { `Int',`Int',`Int',`Int',unsafeToCString `T.Text'} -> `Ptr ()' id #}
 valueOutputNew :: Rectangle -> Maybe T.Text -> IO (Ref ValueOutput)
 valueOutputNew rectangle l'=
-    let (x_pos, y_pos, width, height) = fromRectangle rectangle
-    in case l' of
-        Nothing -> valueOutputNew' x_pos y_pos width height >>=
-                             toRef
-        Just l -> valueOutputNewWithLabel' x_pos y_pos width height l >>=
-                               toRef
+  widgetMaker
+    rectangle
+    l'
+    Nothing
+    Nothing
+    overriddenWidgetNew'
+    overriddenWidgetNewWithLabel'
 
 {# fun Fl_Value_Output_Destroy as valueOutputDestroy' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
 instance (impl ~ IO ()) => Op (Destroy ()) ValueOutput orig impl where

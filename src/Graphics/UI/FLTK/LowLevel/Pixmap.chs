@@ -97,15 +97,15 @@ instance (impl ~ ( IO ())) => Op (Uncache ()) Pixmap orig impl where
 --
 -- drawResize :: 'Ref' 'Pixmap' -> 'Position' -> 'Size' -> 'Maybe' 'X' -> 'Maybe' 'Y' -> 'IO' ()
 --
--- getCount :: 'Ref' 'Pixmap' -> 'IO' 'Int'
+-- getCount :: 'Ref' 'Pixmap' -> 'IO' ('Int')
 --
--- getD :: 'Ref' 'Pixmap' -> 'IO' 'Int'
+-- getD :: 'Ref' 'Pixmap' -> 'IO' ('Int')
 --
--- getH :: 'Ref' 'Pixmap' -> 'IO' 'Int'
+-- getH :: 'Ref' 'Pixmap' -> 'IO' ('Int')
 --
--- getLd :: 'Ref' 'Pixmap' -> 'IO' 'Int'
+-- getLd :: 'Ref' 'Pixmap' -> 'IO' ('Int')
 --
--- getW :: 'Ref' 'Pixmap' -> 'IO' 'Int'
+-- getW :: 'Ref' 'Pixmap' -> 'IO' ('Int')
 --
 -- inactive :: 'Ref' 'Pixmap' -> 'IO' ()
 --

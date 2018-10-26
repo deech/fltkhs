@@ -229,10 +229,8 @@ EXPORT {
   FL_EXPORT_C_HEADER(int,Fl_Table_Row_callback_col,(fl_Table_Row table));
   FL_EXPORT_C_HEADER(TableContextC,Fl_Table_Row_callback_context,(fl_Table_Row table));
   FL_EXPORT_C_HEADER(void,Fl_Table_Row_do_callback,(fl_Table_Row table, TableContextC tableContext, int row, int col));
-#if FLTK_ABI_VERSION >= 10302
   FL_EXPORT_C_HEADER(void,Fl_Table_Row_set_tab_cell_nav,(fl_Table_Row table, int val));
   FL_EXPORT_C_HEADER(int,Fl_Table_Row_tab_cell_nav,(fl_Table_Row table));
-#endif
   FL_EXPORT_C_HEADER(int,Fl_Table_Row_find_cell,(fl_Table_Row table, TableContextC context, int R, int C, int *X, int *Y, int *W, int *H));
 
   /* Fl_Table_Row specific */

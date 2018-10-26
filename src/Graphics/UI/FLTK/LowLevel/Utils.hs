@@ -26,15 +26,15 @@ foreign import ccall "wrapper"
 foreign import ccall "wrapper"
         mkCallbackPtr :: CallbackPrim -> IO (FunPtr CallbackPrim)
 foreign import ccall "wrapper"
-        mkColorAverageCallbackPtr :: ColorAverageCallbackPrim -> IO (FunPtr ColorAverageCallbackPrim)
+        mkCustomColorAveragePtr :: CustomColorAveragePrim -> IO (FunPtr CustomColorAveragePrim)
 foreign import ccall "wrapper"
         mkGlobalEventHandlerPtr :: GlobalEventHandlerPrim -> IO (FunPtr GlobalEventHandlerPrim)
 foreign import ccall "wrapper"
         mkDrawCallbackPrimPtr :: DrawCallbackPrim -> IO (FunPtr DrawCallbackPrim)
 foreign import ccall "wrapper"
-        mkImageDrawCallbackPrimPtr :: ImageDrawCallbackPrim -> IO (FunPtr ImageDrawCallbackPrim)
+        mkCustomImageDrawPrimPtr :: CustomImageDrawPrim -> IO (FunPtr CustomImageDrawPrim)
 foreign import ccall "wrapper"
-        mkImageCopyCallbackPrimPtr :: ImageCopyCallbackPrim -> IO (FunPtr ImageCopyCallbackPrim)
+        mkCustomImageCopyPrimPtr :: CustomImageCopyPrim -> IO (FunPtr CustomImageCopyPrim)
 foreign import ccall "wrapper"
         mkUnfinishedStyleCbPrim :: UnfinishedStyleCbPrim -> IO (FunPtr UnfinishedStyleCbPrim)
 foreign import ccall "wrapper"
@@ -55,6 +55,44 @@ foreign import ccall "wrapper"
         mkFDHandlerPrim :: FDHandlerPrim -> IO (FunPtr FDHandlerPrim)
 foreign import ccall "wrapper"
         mkGlobalCallbackPtr:: GlobalCallback -> IO (FunPtr GlobalCallback)
+foreign import ccall "wrapper"
+        mkMenuItemDrawFPtr :: MenuItemDrawF -> IO (FunPtr MenuItemDrawF)
+foreign import ccall "wrapper"
+        mkTabPositionsPrim :: TabPositionsPrim -> IO (FunPtr TabPositionsPrim)
+foreign import ccall "wrapper"
+        mkTabHeightPrim :: TabHeightPrim -> IO (FunPtr TabHeightPrim)
+foreign import ccall "wrapper"
+        mkTabWhichPrim :: TabWhichPrim -> IO (FunPtr TabWhichPrim)
+foreign import ccall "wrapper"
+        mkTabClientAreaPrim :: TabClientAreaPrim -> IO (FunPtr TabClientAreaPrim)
+foreign import ccall "wrapper"
+        mkGetDouble :: GetDoublePrim -> IO (FunPtr GetDoublePrim)
+foreign import ccall "wrapper"
+        mkGetInt :: GetIntPrim -> IO (FunPtr GetIntPrim)
+foreign import ccall "wrapper"
+        mkSetInt :: SetIntPrim -> IO (FunPtr SetIntPrim)
+foreign import ccall "wrapper"
+        mkColorSetPrim :: ColorSetPrim -> IO (FunPtr ColorSetPrim)
+
+toTabPositionsPrim :: (Ref a -> IO (Maybe AtIndex, Int, [(X,Width)])) -> IO (FunPtr TabPositionsPrim)
+toTabPositionsPrim f =
+  mkTabPositionsPrim (\tabPtr posPtr widthPtr -> do
+                          pp <- wrapNonNull tabPtr "Null pointer. toTabPositionsPrim"
+                          (selected, padding, posAndWidths) <- f (castTo (wrapInRef pp))
+                          pokeArray posPtr ([fromIntegral padding] ++ (map (\(X x,_) -> fromIntegral x) posAndWidths))
+                          pokeArray widthPtr (map (\(_,Width w) -> fromIntegral w) posAndWidths)
+                          maybe (return (0 :: CInt)) (\(AtIndex i) -> return (fromIntegral i)) selected
+                      )
+
+toTabHeightPrim ::
+  (Ref a -> IO Height) ->
+  IO (FunPtr TabHeightPrim)
+toTabHeightPrim f =
+  mkTabHeightPrim (\ptr -> do
+                       pp <- wrapNonNull ptr "Null pointer. toTabHeightPrim"
+                       (Height res) <- f (castTo (wrapInRef pp))
+                       return (fromIntegral res)
+                   )
 
 toCallbackPrim :: (Ref a -> IO ()) ->
                   IO (FunPtr (Ptr () -> IO ()))
@@ -115,13 +153,19 @@ cIntToKeySequence i =
          then Just (ShortcutKeySequence evs (NormalKeyType $ toEnum $ fromIntegral masked))
          else Just (ShortcutKeySequence evs (SpecialKeyType $ head special))
 
+#ifdef CALLSTACK_AVAILABLE
+wrapNonNull :: (?loc :: CallStack) => Ptr a -> String -> IO (ForeignPtr (Ptr a))
+#elif defined(HASCALLSTACK_AVAILABLE)
+wrapNonNull :: (HasCallStack) => Ptr a -> String -> IO (ForeignPtr (Ptr a))
+#else
 wrapNonNull :: Ptr a -> String -> IO (ForeignPtr (Ptr a))
+#endif
 wrapNonNull ptr msg = if (ptr == nullPtr)
                       then error msg
                       else do
                         pptr <- malloc
                         poke pptr ptr
-                        FC.newForeignPtr pptr (return ())
+                        FC.newForeignPtr pptr (free pptr)
 
 
 toGlobalEventHandlerPrim :: GlobalEventHandlerF -> IO (FunPtr GlobalEventHandlerPrim)
@@ -168,11 +212,12 @@ toTextModifyCbPrim f =
   mkTextModifyCb
     (
       \pos' nInserted' nDeleted' nRestyled' stringPtr _ ->
-       cStringToText stringPtr >>=
-       f (fromIntegral pos')
-         (fromIntegral nInserted')
-         (fromIntegral nDeleted')
-         (fromIntegral nRestyled')
+       cStringToText stringPtr >>= \deletedText ->
+       f (AtIndex (fromIntegral pos'))
+         (NumInserted (fromIntegral nInserted'))
+         (NumDeleted (fromIntegral nDeleted'))
+         (NumRestyled (fromIntegral nRestyled'))
+         (DeletedText deletedText)
     )
 
 toTextPredeleteCbPrim :: TextPredeleteCb -> IO (FunPtr TextPredeleteCbPrim)
@@ -180,17 +225,17 @@ toTextPredeleteCbPrim f =
   mkTextPredeleteCb
     (
       \pos' nDeleted' _ ->
-       f (BufferOffset (fromIntegral pos')) (fromIntegral nDeleted')
+       f (AtIndex (fromIntegral pos')) (NumDeleted (fromIntegral nDeleted'))
     )
 
 toFDHandlerPrim :: FDHandler -> IO (FunPtr FDHandlerPrim)
-toFDHandlerPrim f = mkFDHandlerPrim (\fd _ -> f fd)
+toFDHandlerPrim f = mkFDHandlerPrim (\fd _ -> f (FlSocket fd))
 
 toUnfinishedStyleCbPrim :: UnfinishedStyleCb -> IO (FunPtr UnfinishedStyleCbPrim)
 toUnfinishedStyleCbPrim f =
     mkUnfinishedStyleCbPrim
      (
-       \pos' _ -> f (BufferOffset (fromIntegral pos'))
+       \pos' _ -> f (AtIndex (fromIntegral pos'))
      )
 
 orNullFunPtr :: (a -> IO (FunPtr b)) -> Maybe a -> IO (FunPtr b)
@@ -325,9 +370,6 @@ modesToInt (Modes ms) = combine ms
 intToModes :: Int -> Modes
 intToModes modeCode = Modes (extract allModes (fromIntegral modeCode))
 
-withByteStrings :: [B.ByteString] -> (Ptr (Ptr CChar) -> IO a) -> IO a
-withByteStrings bs f = B.useAsCString (foldl1 B.append bs) (\ptr -> new ptr >>= f)
-
 withPixmap :: PixmapHs -> ((Ptr (Ptr CChar)) -> IO a) -> IO a
 withPixmap (PixmapHs strings) f = do
   cStrings <- sequence (map copyTextToCString strings)
@@ -362,9 +404,10 @@ withStrings ss f = do
 copyByteStringToCString :: B.ByteString -> IO CString
 copyByteStringToCString bs =
   B.useAsCStringLen bs
-    (\(cstring, len) -> do
-        dest <- mallocArray (len + 1)
-        copyArray dest cstring (len + 1)
+    (\(cstring,len) -> do
+        dest <- mallocArray (len+1)
+        copyArray dest cstring len
+        pokeElemOff dest len (0 :: CChar)
         return dest
     )
 
@@ -376,3 +419,24 @@ copyTextToCString t =
 
 withText :: T.Text -> (CString -> IO a) -> IO a
 withText t f = B.useAsCString (E.encodeUtf8 t) f
+
+#ifdef CALLSTACK_AVAILABLE
+drawShortcutFromC :: (?loc :: CallStack) => CChar -> Maybe DrawShortcut
+#elif defined(HASCALLSTACK_AVAILABLE)
+drawShortcutFromC :: (HasCallStack) => CChar -> Maybe DrawShortcut
+#else
+drawShortcutFromC ::  CChar -> Maybe DrawShortcut
+#endif
+drawShortcutFromC c =
+  case c of
+    0 -> Nothing
+    1 -> Just NormalDrawShortcut
+    2 -> Just ElideAmpersandDrawShortcut
+    _ -> error "fl_draw_shortcut should be 0,1 or 2."
+
+drawShortcutToC :: Maybe DrawShortcut -> CChar
+drawShortcutToC ds =
+  case ds of
+    Nothing -> 0
+    Just NormalDrawShortcut -> 1
+    Just ElideAmpersandDrawShortcut -> 2

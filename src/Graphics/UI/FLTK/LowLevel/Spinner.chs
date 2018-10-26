@@ -56,12 +56,13 @@ spinnerCustom rectangle l' draw' funcs' =
 {# fun Fl_Spinner_New_WithLabel as spinnerNewWithLabel' { `Int',`Int',`Int',`Int', unsafeToCString `T.Text'} -> `Ptr ()' id #}
 spinnerNew :: Rectangle -> Maybe T.Text -> IO (Ref Spinner)
 spinnerNew rectangle l'=
-    let (x_pos, y_pos, width, height) = fromRectangle rectangle
-    in case l' of
-        Nothing -> spinnerNew' x_pos y_pos width height >>=
-                             toRef
-        Just l -> spinnerNewWithLabel' x_pos y_pos width height l >>=
-                               toRef
+  widgetMaker
+    rectangle
+    l'
+    Nothing
+    Nothing
+    overriddenWidgetNew'
+    overriddenWidgetNewWithLabel'
 
 {# fun Fl_Spinner_set_textfont as setTextfont' { id `Ptr ()',cFromFont `Font' } -> `()' #}
 instance (impl ~ (Font ->  IO ())) => Op (SetTextfont ()) Spinner orig impl where
@@ -156,6 +157,13 @@ instance (impl ~ (  IO ())) => Op (ShowWidget ()) Spinner orig impl where
 instance (impl ~ ( IO ())) => Op (ShowWidgetSuper ()) Spinner orig impl where
   runOp _ _ spinner = withRef spinner $ \spinnerPtr -> showSuper' spinnerPtr
 
+{# fun Fl_Spinner_set_wrap as setWrap' { id `Ptr ()', cFromBool `Bool'} -> `()' supressWarningAboutRes #}
+instance (impl ~ (Bool -> IO ())) => Op (SetWrap ()) Spinner orig impl where
+  runOp _ _ spinner r = withRef spinner $ \spinnerPtr -> setWrap' spinnerPtr r
+{# fun Fl_Spinner_wrap as wrap' { id `Ptr ()' } -> `Bool' cToBool #}
+instance (impl ~ ( IO (Bool))) => Op (GetWrap ()) Spinner orig impl where
+  runOp _ _ spinner = withRef spinner $ \spinnerPtr -> wrap' spinnerPtr
+
 -- $hierarchy
 -- @
 --
@@ -193,6 +201,8 @@ instance (impl ~ ( IO ())) => Op (ShowWidgetSuper ()) Spinner orig impl where
 --
 -- getValue :: 'Ref' 'Spinner' -> 'IO' ('Double')
 --
+-- getWrap :: 'Ref' 'Spinner' -> 'IO' ('Bool')
+--
 -- handle :: 'Ref' 'Spinner' -> 'Event' -> 'IO' ('Either' 'UnknownEvent' ())
 --
 -- handleSuper :: 'Ref' 'Spinner' -> 'Event' -> 'IO' ('Either' 'UnknownEvent' ())
@@ -224,6 +234,8 @@ instance (impl ~ ( IO ())) => Op (ShowWidgetSuper ()) Spinner orig impl where
 -- setType :: 'Ref' 'Spinner' -> 'SpinnerType' -> 'IO' ()
 --
 -- setValue :: 'Ref' 'Spinner' -> 'Double' -> 'IO' ()
+--
+-- setWrap :: 'Ref' 'Spinner' -> 'Bool' -> 'IO' ()
 --
 -- showWidget :: 'Ref' 'Spinner' -> 'IO' ()
 --
