@@ -36,12 +36,12 @@ flBeep :: Maybe BeepType -> IO ()
 flBeep Nothing = flBeep'
 flBeep (Just bt) = flBeepType' (fromIntegral (fromEnum bt))
 
-{# fun flc_input as flInput' { unsafeToCString `T.Text' } -> `()' #}
-flInput :: T.Text -> IO ()
+{# fun flc_input as flInput' { unsafeToCString `T.Text' } -> `T.Text' unsafeFromCString #}
+flInput :: T.Text -> IO T.Text
 flInput = flInput'
 
-{# fun flc_password as flPassword' { unsafeToCString `T.Text' } -> `()' #}
-flPassword :: T.Text -> IO ()
+{# fun flc_password as flPassword' { unsafeToCString `T.Text' } -> `T.Text' unsafeFromCString #}
+flPassword :: T.Text -> IO T.Text
 flPassword = flPassword'
 
 {# fun flc_message as flMessage' { unsafeToCString `T.Text' } -> `()' #}
