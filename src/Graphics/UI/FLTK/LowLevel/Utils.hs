@@ -301,21 +301,6 @@ toRef ptr = throwStackOnError $
                     let result = wrapInRef pp
                     return $ result
 
-unsafeToRef :: Ptr () -> (Ref a)
-unsafeToRef = Unsafe.unsafePerformIO . toRef
-
-unsafeToMaybeRef :: Ptr () -> Maybe (Ref a)
-unsafeToMaybeRef = Unsafe.unsafePerformIO . toMaybeRef
-
-unsafeToCString :: T.Text -> CString
-unsafeToCString t = Unsafe.unsafePerformIO (copyTextToCString t)
-
-unsafeFromCString :: CString -> T.Text
-unsafeFromCString cstring = Unsafe.unsafePerformIO (cStringToText cstring)
-
-unsafeFromMaybeCString :: CString -> Maybe T.Text
-unsafeFromMaybeCString cstring = Unsafe.unsafePerformIO (cStringToMaybeText cstring)
-
 #ifdef CALLSTACK_AVAILABLE
 cStringToText :: (?loc :: CallStack) => CString -> IO T.Text
 #elif defined(HASCALLSTACK_AVAILABLE)

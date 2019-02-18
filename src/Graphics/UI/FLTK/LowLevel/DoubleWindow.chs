@@ -28,8 +28,8 @@ import Graphics.UI.FLTK.LowLevel.Window
 
 {# fun Fl_OverriddenDouble_Window_New as overriddenWindowNew' {`Int',`Int', id `Ptr ()'} -> `Ptr ()' id #}
 {# fun Fl_OverriddenDouble_Window_NewXY as overriddenWindowNewXY' {`Int',`Int', `Int', `Int', id `Ptr ()'} -> `Ptr ()' id #}
-{# fun Fl_OverriddenDouble_Window_NewXY_WithLabel as overriddenWindowNewXYWithLabel' { `Int',`Int',`Int',`Int',unsafeToCString `T.Text', id `Ptr ()'} -> `Ptr ()' id #}
-{# fun Fl_OverriddenDouble_Window_New_WithLabel as overriddenWindowNewWithLabel' { `Int',`Int', unsafeToCString `T.Text', id `Ptr ()'} -> `Ptr ()' id #}
+{# fun Fl_OverriddenDouble_Window_NewXY_WithLabel as overriddenWindowNewXYWithLabel' { `Int',`Int',`Int',`Int',`CString', id `Ptr ()'} -> `Ptr ()' id #}
+{# fun Fl_OverriddenDouble_Window_New_WithLabel as overriddenWindowNewWithLabel' { `Int',`Int', `CString', id `Ptr ()'} -> `Ptr ()' id #}
 doubleWindowCustom :: Size                              -- ^ Size of this window
                    -> Maybe Position                    -- ^ Optional position of this window
                    -> Maybe T.Text                      -- ^ Optional label

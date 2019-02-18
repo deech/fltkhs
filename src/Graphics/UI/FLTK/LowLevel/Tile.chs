@@ -27,7 +27,7 @@ import Graphics.UI.FLTK.LowLevel.Hierarchy
 import Graphics.UI.FLTK.LowLevel.Dispatch
 import qualified Data.Text as T
 
-{# fun Fl_OverriddenTile_New_WithLabel as overriddenWidgetNewWithLabel' { `Int',`Int',`Int',`Int', unsafeToCString `T.Text', id `Ptr ()'} -> `Ptr ()' id #}
+{# fun Fl_OverriddenTile_New_WithLabel as overriddenWidgetNewWithLabel' { `Int',`Int',`Int',`Int', `CString', id `Ptr ()'} -> `Ptr ()' id #}
 {# fun Fl_OverriddenTile_New as overriddenWidgetNew' { `Int',`Int',`Int',`Int', id `Ptr ()'} -> `Ptr ()' id #}
 tileCustom ::
        Rectangle                         -- ^ The bounds of this Tile
@@ -46,7 +46,7 @@ tileCustom rectangle l' draw' funcs' =
 
 
 {# fun Fl_Tile_New as tileNew' { `Int',`Int',`Int',`Int' } -> `Ptr ()' id #}
-{# fun Fl_Tile_New_WithLabel as tileNewWithLabel' { `Int',`Int',`Int',`Int', unsafeToCString `T.Text'} -> `Ptr ()' id #}
+{# fun Fl_Tile_New_WithLabel as tileNewWithLabel' { `Int',`Int',`Int',`Int', `CString'} -> `Ptr ()' id #}
 tileNew :: Rectangle -> Maybe T.Text -> IO (Ref Tile)
 tileNew rectangle l'=
   widgetMaker

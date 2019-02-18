@@ -92,9 +92,9 @@ windowMaker :: forall a b. (Parent a Window, Parent b Widget) =>
                CustomWidgetFuncs b ->
                CustomWindowFuncs a ->
                (Int -> Int -> Ptr () -> IO (Ptr ())) ->
-               (Int -> Int -> T.Text -> Ptr () -> IO (Ptr ())) ->
+               (Int -> Int -> CString -> Ptr () -> IO (Ptr ())) ->
                (Int -> Int -> Int -> Int -> Ptr () -> IO (Ptr ())) ->
-               (Int -> Int -> Int -> Int -> T.Text -> Ptr () -> IO (Ptr ())) ->
+               (Int -> Int -> Int -> Int -> CString -> Ptr () -> IO (Ptr ())) ->
                IO (Ref a)
 windowMaker (Size (Width w) (Height h))
             position
@@ -113,16 +113,16 @@ windowMaker (Size (Width w) (Height h))
        ref <- case (position, title) of
                 (Nothing, Nothing) -> custom' w h p >>= toRef
                 (Just (Position (X x) (Y y)), Nothing) -> customXY' x y w h p >>= toRef
-                (Just (Position (X x) (Y y)), (Just l')) -> customXYWithLabel' x y w h l' p >>= toRef
-                (Nothing, (Just l')) -> customWithLabel' w h l' p >>= toRef
+                (Just (Position (X x) (Y y)), (Just l')) -> copyTextToCString l' >>= \l'' -> customXYWithLabel' x y w h l'' p >>= toRef
+                (Nothing, (Just l')) -> copyTextToCString l' >>= \l'' -> customWithLabel' w h l'' p >>= toRef
        setFlag (safeCast ref :: Ref Window) WidgetFlagCopiedLabel
        setFlag (safeCast ref :: Ref Window) WidgetFlagCopiedTooltip
        return ref
 
 {# fun Fl_OverriddenWindow_New as overriddenWindowNew' {`Int',`Int', id `Ptr ()'} -> `Ptr ()' id #}
 {# fun Fl_OverriddenWindow_NewXY as overriddenWindowNewXY' {`Int',`Int', `Int', `Int', id `Ptr ()'} -> `Ptr ()' id #}
-{# fun Fl_OverriddenWindow_NewXY_WithLabel as overriddenWindowNewXYWithLabel' { `Int',`Int',`Int',`Int',unsafeToCString `T.Text', id `Ptr ()'} -> `Ptr ()' id #}
-{# fun Fl_OverriddenWindow_New_WithLabel as overriddenWindowNewWithLabel' { `Int',`Int', unsafeToCString `T.Text', id `Ptr ()'} -> `Ptr ()' id #}
+{# fun Fl_OverriddenWindow_NewXY_WithLabel as overriddenWindowNewXYWithLabel' { `Int',`Int',`Int',`Int',`CString', id `Ptr ()'} -> `Ptr ()' id #}
+{# fun Fl_OverriddenWindow_New_WithLabel as overriddenWindowNewWithLabel' { `Int',`Int', `CString', id `Ptr ()'} -> `Ptr ()' id #}
 windowCustom :: Size                        -- ^ Size of this window
              -> Maybe Position              -- ^ Optional position of this window
              -> Maybe T.Text                -- ^ Optional label
@@ -314,37 +314,40 @@ instance (impl ~ (Size -> OptionalSizeRangeArgs ->  IO ())) => Op (SizeRangeWith
       structPtr <- optionalSizeRangeArgsToStruct args
       sizeRangeWithArgs' winPtr minw' minh' structPtr
 
-{# fun Fl_Window_label as label' { id `Ptr ()' } -> `T.Text' unsafeFromCString #}
+{# fun Fl_Window_label as label' { id `Ptr ()' } -> `CString' #}
 instance (impl ~ ( IO T.Text)) => Op (GetLabel ()) Window orig impl where
-  runOp _ _ win = withRef win $ \winPtr -> label' winPtr
+  runOp _ _ win = withRef win $ \winPtr -> label' winPtr >>= cStringToText
 
-{# fun Fl_Window_iconlabel as iconlabel' { id `Ptr ()' } -> `T.Text' unsafeFromCString #}
+{# fun Fl_Window_iconlabel as iconlabel' { id `Ptr ()' } -> `CString' #}
 instance (impl ~ ( IO T.Text)) => Op (GetIconlabel ()) Window orig impl where
-  runOp _ _ win = withRef win $ \winPtr -> iconlabel' winPtr
+  runOp _ _ win = withRef win $ \winPtr -> iconlabel' winPtr >>= cStringToText
 
-{# fun Fl_Window_set_label as setLabel' { id `Ptr ()',unsafeToCString `T.Text' } -> `()' supressWarningAboutRes #}
+{# fun Fl_Window_set_label as setLabel' { id `Ptr ()',`CString' } -> `()' supressWarningAboutRes #}
 instance (impl ~ (T.Text ->  IO ())) => Op (SetLabel ()) Window orig impl where
-  runOp _ _ win l' = withRef win $ \winPtr -> setLabel' winPtr l'
+  runOp _ _ win l' = withRef win $ \winPtr -> copyTextToCString l' >>= setLabel' winPtr
 
-{# fun Fl_Window_set_iconlabel as setIconlabel' { id `Ptr ()',unsafeToCString `T.Text' } -> `()' supressWarningAboutRes #}
+{# fun Fl_Window_set_iconlabel as setIconlabel' { id `Ptr ()',`CString' } -> `()' supressWarningAboutRes #}
 instance (impl ~ (T.Text ->  IO ())) => Op (SetIconlabel ()) Window orig impl where
-  runOp _ _ win l' = withRef win $ \winPtr -> setIconlabel' winPtr l'
+  runOp _ _ win l' = withRef win $ \winPtr -> copyTextToCString l' >>= setIconlabel' winPtr
 
-{# fun Fl_Window_set_label_with_iconlabel as setLabelWithIconlabel' { id `Ptr ()',unsafeToCString `T.Text',unsafeToCString `T.Text' } -> `()' supressWarningAboutRes #}
+{# fun Fl_Window_set_label_with_iconlabel as setLabelWithIconlabel' { id `Ptr ()',`CString',`CString' } -> `()' supressWarningAboutRes #}
 instance (impl ~ (T.Text -> T.Text ->  IO ())) => Op (SetLabelWithIconlabel ()) Window orig impl where
-  runOp _ _ win label iconlabel = withRef win $ \winPtr -> setLabelWithIconlabel' winPtr label iconlabel
+  runOp _ _ win label iconlabel = withRef win $ \winPtr -> do
+    l' <- copyTextToCString label
+    il' <- copyTextToCString iconlabel
+    setLabelWithIconlabel' winPtr l' il'
 
-{# fun Fl_Window_copy_label as copyLabel' { id `Ptr ()',unsafeToCString `T.Text' } -> `()' supressWarningAboutRes #}
+{# fun Fl_Window_copy_label as copyLabel' { id `Ptr ()',`CString' } -> `()' supressWarningAboutRes #}
 instance (impl ~ (T.Text ->  IO ())) => Op (CopyLabel ()) Window orig impl where
-  runOp _ _ win a = withRef win $ \winPtr -> copyLabel' winPtr a
+  runOp _ _ win a = withRef win $ \winPtr -> withText a (copyLabel' winPtr)
 
-{# fun Fl_Window_xclass as xclass' { id `Ptr ()' } -> `T.Text' unsafeFromCString #}
+{# fun Fl_Window_xclass as xclass' { id `Ptr ()' } -> `CString' #}
 instance (impl ~ ( IO T.Text)) => Op (GetXclass ()) Window orig impl where
-  runOp _ _ win = withRef win $ \winPtr -> xclass' winPtr
+  runOp _ _ win = withRef win $ \winPtr -> xclass' winPtr >>= cStringToText
 
-{# fun Fl_Window_set_xclass as setXclass' { id `Ptr ()',unsafeToCString `T.Text' } -> `()' supressWarningAboutRes #}
+{# fun Fl_Window_set_xclass as setXclass' { id `Ptr ()',`CString' } -> `()' supressWarningAboutRes #}
 instance (impl ~ (T.Text ->  IO ())) => Op (SetXclass ()) Window orig impl where
-  runOp _ _ win c = withRef win $ \winPtr -> setXclass' winPtr c
+  runOp _ _ win c = withRef win $ \winPtr -> copyTextToCString c >>= setXclass' winPtr
 
 {# fun Fl_Window_icon as icon' { id `Ptr ()' } -> `Ptr ()' id #}
 instance (impl ~ ( IO (Maybe (Ref Image)))) => Op (GetIcon ()) Window orig impl where

@@ -26,7 +26,7 @@ import Graphics.UI.FLTK.LowLevel.Hierarchy
 import Graphics.UI.FLTK.LowLevel.Dispatch
 import qualified Data.Text as T
 
-{# fun Fl_OverriddenValue_Slider_New_WithLabel as overriddenWidgetNewWithLabel' { `Int',`Int',`Int',`Int', unsafeToCString `T.Text', id `Ptr ()'} -> `Ptr ()' id #}
+{# fun Fl_OverriddenValue_Slider_New_WithLabel as overriddenWidgetNewWithLabel' { `Int',`Int',`Int',`Int', `CString', id `Ptr ()'} -> `Ptr ()' id #}
 {# fun Fl_OverriddenValue_Slider_New as overriddenWidgetNew' { `Int',`Int',`Int',`Int', id `Ptr ()'} -> `Ptr ()' id #}
 valueSliderCustom ::
        Rectangle                         -- ^ The bounds of this ValueSlider
@@ -45,7 +45,7 @@ valueSliderCustom rectangle l' draw' funcs' =
 
 
 {# fun Fl_Value_Slider_New as valueSliderNew' { `Int',`Int',`Int',`Int' } -> `Ptr ()' id #}
-{# fun Fl_Value_Slider_New_WithLabel as valueSliderNewWithLabel' { `Int',`Int',`Int',`Int', unsafeToCString `T.Text'} -> `Ptr ()' id #}
+{# fun Fl_Value_Slider_New_WithLabel as valueSliderNewWithLabel' { `Int',`Int',`Int',`Int', `CString'} -> `Ptr ()' id #}
 valueSliderNew :: Rectangle -> Maybe T.Text -> IO (Ref ValueSlider)
 valueSliderNew rectangle l'=
   widgetMaker
@@ -55,15 +55,6 @@ valueSliderNew rectangle l'=
     Nothing
     overriddenWidgetNew'
     overriddenWidgetNewWithLabel'
-
--- {# fun Fl_Hor_Value_Slider_New as horValueSliderNew' { `Int',`Int',`Int',`Int' } -> `Ptr ()' id #}
--- {# fun Fl_Hor_Value_Slider_New_WithLabel as horValueSliderNewWithLabel' { `Int',`Int',`Int',`Int', unsafeToCString `T.Text'} -> `Ptr ()' id #}
--- horValueSliderNew :: Rectangle -> Maybe String -> IO (HorValueSlider ())
--- horValueSliderNew rectangle l'=
---     let (x_pos, y_pos, width, height) = fromRectangle rectangle
---     in case l' of
---         Nothing -> horValueSliderNew' x_pos y_pos width height >>= toRef
---         Just l -> horValueSliderNewWithLabel' x_pos y_pos width height l >>= toRef
 
 {# fun Fl_Value_Slider_Destroy as valueSliderDestroy' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
 instance (impl ~ (IO ())) => Op (Destroy ()) ValueSlider orig impl where

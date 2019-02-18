@@ -20,15 +20,15 @@ import Graphics.UI.FLTK.LowLevel.Hierarchy
 import Graphics.UI.FLTK.LowLevel.RGBImage
 import qualified Data.ByteString as B
 import qualified Data.Text as T
-{# fun Fl_PNG_Image_New as pngImageNew' { unsafeToCString `T.Text' } -> `Ptr ()' id #}
-{# fun Fl_PNG_Image_New_WithData as pngImageNewWithData' { unsafeToCString `T.Text', id `Ptr CUChar', `Int' } -> `Ptr ()' id #}
+{# fun Fl_PNG_Image_New as pngImageNew' { `CString' } -> `Ptr ()' id #}
+{# fun Fl_PNG_Image_New_WithData as pngImageNewWithData' { `CString', id `Ptr CUChar', `Int' } -> `Ptr ()' id #}
 pngImageNew :: T.Text -> IO (Either UnknownError (Ref PNGImage))
-pngImageNew filename' = pngImageNew' filename' >>= toRef >>= checkImage
+pngImageNew filename' = withText filename' pngImageNew' >>= toRef >>= checkImage
 
 pngImageNewWithData :: T.Text -> B.ByteString -> IO (Either UnknownError (Ref PNGImage))
 pngImageNewWithData l' data' =
   B.useAsCString data' $ \png' ->
-    pngImageNewWithData' l' (castPtr png') (B.length data') >>= toRef >>= checkImage
+    copyTextToCString l' >>= \label -> pngImageNewWithData' label (castPtr png') (B.length data') >>= toRef >>= checkImage
 
 -- $hierarchy
 -- @

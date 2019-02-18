@@ -18,10 +18,10 @@ import Graphics.UI.FLTK.LowLevel.Utils
 import Graphics.UI.FLTK.LowLevel.Hierarchy
 import Graphics.UI.FLTK.LowLevel.RGBImage
 import qualified Data.Text as T
-{# fun Fl_XBM_Image_New as xbmImageNew' { unsafeToCString `T.Text' } -> `Ptr ()' id #}
+{# fun Fl_XBM_Image_New as xbmImageNew' { `CString' } -> `Ptr ()' id #}
 xbmImageNew :: T.Text -> IO (Either UnknownError (Ref XBMImage))
 xbmImageNew filename' = do
-  ptr <- xbmImageNew' filename'
+  ptr <- withText filename' (\f -> xbmImageNew' f)
   ref' <- (toRef ptr :: IO (Ref XBMImage))
   checkImage ref'
 

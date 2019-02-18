@@ -25,7 +25,7 @@ import qualified Data.Text as T
 import Graphics.UI.FLTK.LowLevel.Fl_Enumerations
 import Graphics.UI.FLTK.LowLevel.Widget
 
-{# fun Fl_OverriddenFile_Input_New_WithLabel as overriddenWidgetNewWithLabel' { `Int',`Int',`Int',`Int', unsafeToCString `T.Text', id `Ptr ()'} -> `Ptr ()' id #}
+{# fun Fl_OverriddenFile_Input_New_WithLabel as overriddenWidgetNewWithLabel' { `Int',`Int',`Int',`Int', `CString', id `Ptr ()'} -> `Ptr ()' id #}
 {# fun Fl_OverriddenFile_Input_New as overriddenWidgetNew' { `Int',`Int',`Int',`Int', id `Ptr ()'} -> `Ptr ()' id #}
 fileInputCustom ::
        Rectangle                         -- ^ The bounds of this FileInput
@@ -44,7 +44,7 @@ fileInputCustom rectangle l' draw' funcs' =
 
 
 {# fun Fl_File_Input_New as fileInputNew' { `Int',`Int',`Int',`Int' } -> `Ptr ()' id #}
-{# fun Fl_File_Input_New_WithLabel as fileInputNewWithLabel' { `Int',`Int',`Int',`Int', unsafeToCString `T.Text'} -> `Ptr ()' id #}
+{# fun Fl_File_Input_New_WithLabel as fileInputNewWithLabel' { `Int',`Int',`Int',`Int', `CString'} -> `Ptr ()' id #}
 fileInputNew :: Rectangle -> Maybe T.Text -> IO (Ref FileInput)
 fileInputNew rectangle l' =
   widgetMaker
@@ -67,12 +67,12 @@ instance (impl ~ ( IO (Color))) => Op (GetErrorColor ()) FileInput orig impl whe
 {# fun Fl_File_Input_set_errorcolor as setErrorColor' { id `Ptr ()',cFromColor `Color' } -> `()' #}
 instance (impl ~ (Color ->  IO ())) => Op (SetErrorColor ()) FileInput orig impl where
   runOp _ _ fileInput b = withRef fileInput $ \fileInputPtr -> setErrorColor' fileInputPtr b
-{# fun Fl_File_Input_set_value as setValue' { id `Ptr ()', unsafeToCString `T.Text'} -> `()' #}
+{# fun Fl_File_Input_set_value as setValue' { id `Ptr ()', `CString'} -> `()' #}
 instance (impl ~ (T.Text -> IO ())) => Op (SetValue ()) FileInput orig impl where
-  runOp _ _ fileInput s = withRef fileInput $ \fileInputPtr -> setValue' fileInputPtr s
-{# fun Fl_File_Input_value as getValue' { id `Ptr ()' } -> `T.Text' unsafeFromCString #}
+  runOp _ _ fileInput s = withRef fileInput $ \fileInputPtr -> copyTextToCString s >>= setValue' fileInputPtr
+{# fun Fl_File_Input_value as getValue' { id `Ptr ()' } -> `CString' #}
 instance (impl ~ (IO T.Text)) => Op (GetValue ()) FileInput orig impl where
-  runOp _ _ fileInput = withRef fileInput $ \fileInputPtr -> getValue' fileInputPtr
+  runOp _ _ fileInput = withRef fileInput $ \fileInputPtr -> getValue' fileInputPtr >>= cStringToText
 {# fun Fl_File_Input_draw as draw'' { id `Ptr ()' } -> `()' #}
 instance (impl ~ (  IO ())) => Op (Draw ()) FileInput orig impl where
   runOp _ _ fileInput = withRef fileInput $ \fileInputPtr -> draw'' fileInputPtr

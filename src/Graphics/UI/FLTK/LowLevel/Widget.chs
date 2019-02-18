@@ -183,21 +183,21 @@ widgetMaker :: forall a. (Parent a Widget) =>
                -> Maybe (Ref a -> IO ())                                          -- ^ Custom drawing function
                -> Maybe (CustomWidgetFuncs a)                                     -- ^ Custom functions
                -> (Int -> Int -> Int -> Int -> Ptr () -> IO ( Ptr () ))           -- ^ Foreign constructor to call if only custom functions are given
-               -> (Int -> Int -> Int -> Int -> T.Text -> Ptr () -> IO ( Ptr () )) -- ^ Foreign constructor to call if both title and custom functions are given
+               -> (Int -> Int -> Int -> Int -> CString -> Ptr () -> IO ( Ptr () )) -- ^ Foreign constructor to call if both title and custom functions are given
                -> IO (Ref a)                                                      -- ^ Reference to the widget
 widgetMaker rectangle _label' draw' customFuncs' newWithCustomFuncs' newWithCustomFuncsLabel' =
   do
     let (x_pos, y_pos, width, height) = fromRectangle rectangle
     ptr <- customWidgetFunctionStruct draw' (maybe defaultCustomWidgetFuncs id customFuncs')
     widget <- maybe (newWithCustomFuncs' x_pos y_pos width height (castPtr ptr))
-                    (\l -> newWithCustomFuncsLabel' x_pos y_pos width height l (castPtr ptr))
+                    (\l -> copyTextToCString l >>= \l' -> newWithCustomFuncsLabel' x_pos y_pos width height l' (castPtr ptr))
                     _label'
     ref <- toRef widget
     setFlag (safeCast ref :: Ref Widget) WidgetFlagCopiedLabel
     setFlag (safeCast ref :: Ref Widget) WidgetFlagCopiedTooltip
     return ref
 
-{# fun Fl_OverriddenWidget_New_WithLabel as overriddenWidgetNewWithLabel' { `Int',`Int',`Int',`Int', unsafeToCString `T.Text', id `Ptr ()'} -> `Ptr ()' id #}
+{# fun Fl_OverriddenWidget_New_WithLabel as overriddenWidgetNewWithLabel' { `Int',`Int',`Int',`Int', `CString', id `Ptr ()'} -> `Ptr ()' id #}
 {# fun Fl_OverriddenWidget_New as overriddenWidgetNew' { `Int',`Int',`Int',`Int', id `Ptr ()'} -> `Ptr ()' id #}
 -- | Widget constructor.
 widgetCustom :: Rectangle                   -- ^ The bounds of this widget
@@ -205,10 +205,10 @@ widgetCustom :: Rectangle                   -- ^ The bounds of this widget
                 -> (Ref Widget -> IO ())    -- ^ Custom drawing function
                 -> CustomWidgetFuncs Widget -- ^ Other custom functions
                 -> IO (Ref Widget)
-widgetCustom rectangle l' draw' funcs' = do
+widgetCustom rectangle label' draw' funcs' = do
   ref <- widgetMaker
            rectangle
-           l'
+           label'
            (Just draw')
            (Just funcs')
            overriddenWidgetNew'
@@ -312,9 +312,9 @@ instance (impl ~ IO (Color)) => Op (GetSelectionColor ()) Widget orig impl where
 {# fun Fl_Widget_set_selection_color as setSelectionColor' { id `Ptr ()',cFromColor `Color' } -> `()' supressWarningAboutRes #}
 instance (impl ~ (Color ->  IO ())) => Op (SetSelectionColor ()) Widget orig impl where
   runOp _ _ widget a = withRef widget $ \widgetPtr -> setSelectionColor' widgetPtr a
-{# fun Fl_Widget_label as label' { id `Ptr ()' } -> `T.Text' unsafeFromCString #}
+{# fun Fl_Widget_label as label' { id `Ptr ()' } -> `CString' #}
 instance (impl ~ IO T.Text) => Op (GetLabel ()) Widget orig impl where
-  runOp _ _ widget = withRef widget $ \widgetPtr -> label' widgetPtr
+  runOp _ _ widget = withRef widget $ \widgetPtr -> label' widgetPtr >>= cStringToText
 {# fun Fl_Widget_copy_label as copyLabel' { id `Ptr ()', `CString' } -> `()' supressWarningAboutRes #}
 instance (impl ~ ( T.Text -> IO ())) => Op (SetLabel ()) Widget orig impl where
   runOp _ _ widget text =
@@ -354,27 +354,27 @@ instance (impl ~ (IO (FontSize))) => Op (GetLabelsize ()) Widget orig impl where
 {# fun Fl_Widget_set_labelsize as setLabelsize' { id `Ptr ()',id `CInt' } -> `()' supressWarningAboutRes #}
 instance (impl ~ ( FontSize ->  IO ())) => Op (SetLabelsize ()) Widget orig impl where
   runOp _ _ widget (FontSize pix) = withRef widget $ \widgetPtr -> setLabelsize' widgetPtr pix
-{# fun Fl_Widget_image as image' { id `Ptr ()' } -> `Maybe (Ref Image)' unsafeToMaybeRef #}
+{# fun Fl_Widget_image as image' { id `Ptr ()' } -> `Ptr ()' #}
 instance (impl ~ (IO (Maybe (Ref Image)))) => Op (GetImage ()) Widget orig impl where
-  runOp _ _ widget = withRef widget $ \widgetPtr -> image' widgetPtr
+  runOp _ _ widget = withRef widget $ \widgetPtr -> image' widgetPtr >>= toMaybeRef
 {# fun Fl_Widget_set_image as setImage' { id `Ptr ()',id `Ptr ()'} -> `()' supressWarningAboutRes #}
 instance (Parent a Image, impl ~ (Maybe( Ref a ) ->  IO ())) => Op (SetImage ()) Widget orig impl where
   runOp _ _ widget pix = withRef widget $ \widgetPtr -> withMaybeRef pix $ \pixPtr -> setImage' widgetPtr pixPtr
-{# fun Fl_Widget_deimage as deimage' { id `Ptr ()' } -> `Maybe (Ref Image)' unsafeToMaybeRef #}
+{# fun Fl_Widget_deimage as deimage' { id `Ptr ()' } -> `Ptr ()' #}
 instance (impl ~ (IO (Maybe (Ref Image)))) => Op (GetDeimage ()) Widget orig impl where
-  runOp _ _ widget = withRef widget $ \widgetPtr -> deimage' widgetPtr
+  runOp _ _ widget = withRef widget $ \widgetPtr -> deimage' widgetPtr >>= toMaybeRef
 {# fun Fl_Widget_set_deimage as setDeimage' { id `Ptr ()',id `Ptr ()'} -> `()' supressWarningAboutRes #}
 instance (Parent a Image, impl ~ (Maybe( Ref a ) ->  IO ())) => Op (SetDeimage ()) Widget orig impl where
   runOp _ _ widget pix = withRef widget $ \widgetPtr -> withMaybeRef pix $ \pixPtr -> setDeimage' widgetPtr pixPtr
-{# fun Fl_Widget_tooltip as tooltip' { id `Ptr ()' } -> `T.Text' unsafeFromCString #}
+{# fun Fl_Widget_tooltip as tooltip' { id `Ptr ()' } -> `CString' #}
 instance (impl ~ (IO T.Text)) => Op (GetTooltip ()) Widget orig impl where
-  runOp _ _ widget = withRef widget $ \widgetPtr -> tooltip' widgetPtr
-{# fun Fl_Widget_copy_tooltip as copyTooltip' { id `Ptr ()', unsafeToCString `T.Text' } -> `()' supressWarningAboutRes #}
+  runOp _ _ widget = withRef widget $ \widgetPtr -> tooltip' widgetPtr >>= cStringToText
+{# fun Fl_Widget_copy_tooltip as copyTooltip' { id `Ptr ()', `CString' } -> `()' supressWarningAboutRes #}
 instance (impl ~ ( T.Text ->  IO ())) => Op (CopyTooltip ()) Widget orig impl where
-  runOp _ _ widget text = withRef widget $ \widgetPtr -> copyTooltip' widgetPtr text
+  runOp _ _ widget text = withRef widget $ \widgetPtr -> withText text (\t -> copyTooltip' widgetPtr t)
 {# fun Fl_Widget_set_tooltip as setTooltip' { id `Ptr ()', `CString' } -> `()' supressWarningAboutRes #}
 instance (impl ~ ( T.Text ->  IO ())) => Op (SetTooltip ()) Widget orig impl where
-  runOp _ _ widget text = withRef widget $ \widgetPtr -> withCString (T.unpack text) (\sPtr -> copyTooltip' widgetPtr text)
+  runOp _ _ widget text = withRef widget $ \widgetPtr -> withText text (copyTooltip' widgetPtr)
 {# fun Fl_Widget_when as when' { id `Ptr ()' } -> `CInt' id #}
 instance (impl ~ IO [When]) => Op (GetWhen ()) Widget orig impl where
   runOp _ _ widget = withRef widget $ \widgetPtr ->

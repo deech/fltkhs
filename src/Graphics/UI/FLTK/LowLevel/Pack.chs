@@ -25,7 +25,7 @@ import Graphics.UI.FLTK.LowLevel.Utils
 import Graphics.UI.FLTK.LowLevel.Hierarchy
 import Graphics.UI.FLTK.LowLevel.Dispatch
 import qualified Data.Text as T
-{# fun Fl_OverriddenPack_New_WithLabel as overriddenWidgetNewWithLabel' { `Int',`Int',`Int',`Int', unsafeToCString `T.Text', id `Ptr ()'} -> `Ptr ()' id #}
+{# fun Fl_OverriddenPack_New_WithLabel as overriddenWidgetNewWithLabel' { `Int',`Int',`Int',`Int', `CString', id `Ptr ()'} -> `Ptr ()' id #}
 {# fun Fl_OverriddenPack_New as overriddenWidgetNew' { `Int',`Int',`Int',`Int', id `Ptr ()'} -> `Ptr ()' id #}
 packCustom ::
        Rectangle                         -- ^ The bounds of this Pack
@@ -43,7 +43,7 @@ packCustom rectangle l' draw' funcs' =
     overriddenWidgetNewWithLabel'
 
 {# fun Fl_Pack_New as packNew' { `Int',`Int',`Int',`Int' } -> `Ptr ()' id #}
-{# fun Fl_Pack_New_WithLabel as packNewWithLabel' { `Int',`Int',`Int',`Int', unsafeToCString `T.Text'} -> `Ptr ()' id #}
+{# fun Fl_Pack_New_WithLabel as packNewWithLabel' { `Int',`Int',`Int',`Int', `CString'} -> `Ptr ()' id #}
 packNew :: Rectangle -> Maybe T.Text -> IO (Ref Pack)
 packNew rectangle l' =
   widgetMaker

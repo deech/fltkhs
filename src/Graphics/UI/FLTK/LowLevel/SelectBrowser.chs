@@ -19,7 +19,7 @@ import Graphics.UI.FLTK.LowLevel.Hierarchy
 import Graphics.UI.FLTK.LowLevel.Widget
 import qualified Data.Text as T
 {# fun Fl_Select_Browser_New as selectBrowserNew' { `Int',`Int',`Int',`Int' } -> `Ptr ()' id #}
-{# fun Fl_Select_Browser_New_WithLabel as selectBrowserNewWithLabel' { `Int',`Int',`Int',`Int',unsafeToCString `T.Text'} -> `Ptr ()' id #}
+{# fun Fl_Select_Browser_New_WithLabel as selectBrowserNewWithLabel' { `Int',`Int',`Int',`Int',`CString'} -> `Ptr ()' id #}
 selectBrowserNew :: Rectangle -> Maybe T.Text -> IO (Ref SelectBrowser)
 selectBrowserNew rectangle l' =
     let (x_pos, y_pos, width, height) = fromRectangle rectangle
@@ -27,7 +27,7 @@ selectBrowserNew rectangle l' =
         Nothing -> selectBrowserNew' x_pos y_pos width height >>=
                              toRef
         Just l -> do
-          ref <- selectBrowserNewWithLabel' x_pos y_pos width height l >>= toRef
+          ref <- copyTextToCString l >>= \l' -> selectBrowserNewWithLabel' x_pos y_pos width height l' >>= toRef
           setFlag ref WidgetFlagCopiedLabel
           setFlag ref WidgetFlagCopiedTooltip
           return ref

@@ -30,14 +30,14 @@ import qualified Data.Text as T
 data TableRowSelectFlag = TableRowSelect | TableRowDeselect | TableRowToggle
 
 {# fun Fl_OverriddenTable_Row_New as tableRowNew' {  `Int',`Int', `Int', `Int', id `Ptr ()'} -> `Ptr ()' id #}
-{# fun Fl_OverriddenTable_Row_New_WithLabel as tableRowNewWithLabel' { `Int',`Int',`Int',`Int', unsafeToCString `T.Text', id `Ptr ()'} -> `Ptr ()' id #}
+{# fun Fl_OverriddenTable_Row_New_WithLabel as tableRowNewWithLabel' { `Int',`Int',`Int',`Int', `CString', id `Ptr ()'} -> `Ptr ()' id #}
 tableRowNew :: Rectangle -> Maybe T.Text -> Maybe (Ref TableRow -> IO ()) -> (Ref TableRow -> TableContext -> TableCoordinate -> Rectangle -> IO ()) -> CustomWidgetFuncs TableRow -> CustomTableFuncs TableRow -> IO (Ref TableRow)
 tableRowNew rectangle label' draw' drawCell' customWidgetFuncs' customTableFuncs' =
     do
       let (x_pos, y_pos, width, height) = fromRectangle rectangle
       ptr <- tableCustomFunctionStruct draw' (Just drawCell') customWidgetFuncs' customTableFuncs'
       case label' of
-        (Just l') -> tableRowNewWithLabel' x_pos y_pos width height l' ptr >>= toRef
+        (Just l') -> copyTextToCString l' >>= \l'' -> tableRowNewWithLabel' x_pos y_pos width height l'' ptr >>= toRef
         Nothing -> do
           ref <- tableRowNew' x_pos y_pos width height ptr >>= toRef
           setFlag ref WidgetFlagCopiedLabel

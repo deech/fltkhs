@@ -43,39 +43,39 @@ instance (impl ~ (IO ())) => Op (Destroy ()) TextBuffer orig impl where
 {# fun Fl_Text_Buffer_input_file_was_transcoded as inputFileWasTranscoded' { id `Ptr ()' } -> `Bool' cToBool #}
 instance ( impl ~ (  IO (Bool))) => Op (InputFileWasTranscoded ()) TextBuffer orig impl where
    runOp _ _ text_buffer = withRef text_buffer $ \text_bufferPtr -> inputFileWasTranscoded' text_bufferPtr
-{# fun Fl_Text_Buffer_file_encoding_warning_message as fileEncodingWarningMessage' { id `Ptr ()' } -> `T.Text' unsafeFromCString #}
+{# fun Fl_Text_Buffer_file_encoding_warning_message as fileEncodingWarningMessage' { id `Ptr ()' } -> `CString' #}
 instance ( impl ~ (  IO T.Text)) => Op (FileEncodingWarningMessage ()) TextBuffer orig impl where
-   runOp _ _ text_buffer = withRef text_buffer $ \text_bufferPtr -> fileEncodingWarningMessage' text_bufferPtr
+   runOp _ _ text_buffer = withRef text_buffer $ \text_bufferPtr -> fileEncodingWarningMessage' text_bufferPtr >>= cStringToText
 {# fun Fl_Text_Buffer_length as length' { id `Ptr ()' } -> `Int' #}
 instance ( impl ~ (  IO (Int))) => Op (GetLength ()) TextBuffer orig impl where
    runOp _ _ text_buffer = withRef text_buffer $ \text_bufferPtr -> length' text_bufferPtr
-{# fun Fl_Text_Buffer_text as text' { id `Ptr ()' } -> `T.Text' unsafeFromCString #}
+{# fun Fl_Text_Buffer_text as text' { id `Ptr ()' } -> `CString' #}
 instance ( impl ~ (  IO T.Text)) => Op (GetText ()) TextBuffer orig impl where
-   runOp _ _ text_buffer = withRef text_buffer $ \text_bufferPtr -> text' text_bufferPtr
-{# fun Fl_Text_Buffer_set_text as setText' { id `Ptr ()', unsafeToCString `T.Text' } -> `()' #}
+   runOp _ _ text_buffer = withRef text_buffer $ \text_bufferPtr -> text' text_bufferPtr >>= cStringToText
+{# fun Fl_Text_Buffer_set_text as setText' { id `Ptr ()', `CString' } -> `()' #}
 instance ( impl ~ ( T.Text ->  IO ())) => Op (SetText ()) TextBuffer orig impl where
-   runOp _ _ text_buffer text = withRef text_buffer $ \text_bufferPtr -> setText' text_bufferPtr text
-{# fun Fl_Text_Buffer_text_range as textRange' { id `Ptr ()',`Int',`Int' } -> `T.Text' unsafeFromCString #}
+   runOp _ _ text_buffer text = withRef text_buffer $ \text_bufferPtr -> copyTextToCString text >>= setText' text_bufferPtr
+{# fun Fl_Text_Buffer_text_range as textRange' { id `Ptr ()',`Int',`Int' } -> `CString' #}
 instance ( impl ~ ( IndexRange ->  IO T.Text)) => Op (TextRange ()) TextBuffer orig impl where
-   runOp _ _ text_buffer (IndexRange (AtIndex start') (AtIndex end')) = withRef text_buffer $ \text_bufferPtr -> textRange' text_bufferPtr start' end'
+   runOp _ _ text_buffer (IndexRange (AtIndex start') (AtIndex end')) = withRef text_buffer $ \text_bufferPtr -> textRange' text_bufferPtr start' end' >>= cStringToText
 {# fun Fl_Text_Buffer_char_at as charAt' { id `Ptr ()',`Int' } -> `Int' #}
 instance ( impl ~ ( AtIndex ->  IO (Char))) => Op (CharAt ()) TextBuffer orig impl where
   runOp _ _ text_buffer (AtIndex pos) = withRef text_buffer $ \text_bufferPtr -> charAt' text_bufferPtr pos >>= return . toEnum
 {# fun Fl_Text_Buffer_byte_at as byteAt' { id `Ptr ()',`Int' } -> `Char' castCCharToChar #}
 instance ( impl ~ ( AtIndex ->  IO Char)) => Op (ByteAt ()) TextBuffer orig impl where
   runOp _ _ text_buffer (AtIndex pos) = withRef text_buffer $ \text_bufferPtr -> byteAt' text_bufferPtr pos
-{# fun Fl_Text_Buffer_insert as insert' { id `Ptr ()',`Int', unsafeToCString `T.Text' } -> `()' #}
+{# fun Fl_Text_Buffer_insert as insert' { id `Ptr ()',`Int', `CString' } -> `()' #}
 instance ( impl ~ ( AtIndex -> T.Text ->  IO ())) => Op (Insert ()) TextBuffer orig impl where
-  runOp _ _ text_buffer (AtIndex pos) text = withRef text_buffer $ \text_bufferPtr -> insert' text_bufferPtr pos text
-{# fun Fl_Text_Buffer_append as append' { id `Ptr ()', unsafeToCString `T.Text' } -> `()' #}
+  runOp _ _ text_buffer (AtIndex pos) text = withRef text_buffer $ \text_bufferPtr -> copyTextToCString text >>= insert' text_bufferPtr pos
+{# fun Fl_Text_Buffer_append as append' { id `Ptr ()', `CString' } -> `()' #}
 instance ( impl ~ ( T.Text ->  IO ())) => Op (AppendToBuffer ()) TextBuffer orig impl where
-   runOp _ _ text_buffer t = withRef text_buffer $ \text_bufferPtr -> append' text_bufferPtr t
+   runOp _ _ text_buffer t = withRef text_buffer $ \text_bufferPtr -> copyTextToCString t >>= append' text_bufferPtr
 {# fun Fl_Text_Buffer_remove as remove' { id `Ptr ()',`Int',`Int' } -> `()' #}
 instance ( impl ~ ( IndexRange ->  IO ())) => Op (Remove ()) TextBuffer orig impl where
    runOp _ _ text_buffer (IndexRange (AtIndex start') (AtIndex end')) = withRef text_buffer $ \text_bufferPtr -> remove' text_bufferPtr start' end'
-{# fun Fl_Text_Buffer_replace as replace' { id `Ptr ()',`Int',`Int', unsafeToCString `T.Text' } -> `()' #}
+{# fun Fl_Text_Buffer_replace as replace' { id `Ptr ()',`Int',`Int', `CString' } -> `()' #}
 instance ( impl ~ ( IndexRange -> T.Text ->  IO ())) => Op (Replace ()) TextBuffer orig impl where
-   runOp _ _ text_buffer (IndexRange (AtIndex start') (AtIndex end')) text = withRef text_buffer $ \text_bufferPtr -> replace' text_bufferPtr start' end' text
+   runOp _ _ text_buffer (IndexRange (AtIndex start') (AtIndex end')) text = withRef text_buffer $ \text_bufferPtr -> copyTextToCString text >>= replace' text_bufferPtr start' end'
 {# fun Fl_Text_Buffer_copy as copy' { id `Ptr ()',id `Ptr ()',`Int',`Int',`Int' } -> `()' #}
 instance ( Parent a TextBuffer, impl ~ ( Ref a -> IndexRange -> AtIndex ->  IO ())) => Op (Copy ()) TextBuffer orig impl where
    runOp _ _ text_buffer frombuf (IndexRange (AtIndex fromstart) (AtIndex fromend)) (AtIndex topos) = withRef text_buffer $ \text_bufferPtr -> withRef frombuf $ \frombufPtr -> copy' text_bufferPtr frombufPtr fromstart fromend topos
@@ -92,57 +92,56 @@ instance ( impl ~ (  IO (Either NoChange AtIndex))) => Op (Undo ()) TextBuffer o
 instance ( impl ~ (Bool ->  IO ())) => Op (CanUndo ()) TextBuffer orig impl where
    runOp _ _ text_buffer flag = withRef text_buffer $ \text_bufferPtr -> canUndoWithFlag' text_bufferPtr flag
 
-{# fun Fl_Text_Buffer_insertfile as insertfile' { id `Ptr ()', unsafeToCString `T.Text',`Int' } -> `Int' #}
+{# fun Fl_Text_Buffer_insertfile as insertfile' { id `Ptr ()', `CString',`Int' } -> `Int' #}
 instance ( impl ~ ( T.Text -> AtIndex -> IO (Either DataProcessingError ()))) => Op (Insertfile ()) TextBuffer orig impl where
    runOp _ _ text_buffer file (AtIndex pos) =
-      withRef text_buffer $ \text_bufferPtr ->
-      insertfile' text_bufferPtr file pos >>= return . successOrDataProcessingError
-
-{# fun Fl_Text_Buffer_insertfile_with_buflen as insertfileWithBuflen' { id `Ptr ()', unsafeToCString `T.Text',`Int',`Int' } -> `Int' #}
+      withRef text_buffer $ \text_bufferPtr -> do
+      withText file (\fs -> insertfile' text_bufferPtr fs pos) >>= return . successOrDataProcessingError
+{# fun Fl_Text_Buffer_insertfile_with_buflen as insertfileWithBuflen' { id `Ptr ()', `CString',`Int',`Int' } -> `Int' #}
 instance ( impl ~ ( T.Text -> AtIndex -> Int -> IO (Either DataProcessingError ()))) => Op (InsertfileWithBuflen ()) TextBuffer orig impl where
    runOp _ _ text_buffer file (AtIndex pos) buflen =
-      withRef text_buffer $ \text_bufferPtr ->
-      insertfileWithBuflen' text_bufferPtr file pos buflen >>= return . successOrDataProcessingError
-{# fun Fl_Text_Buffer_appendfile as appendfile' { id `Ptr ()', unsafeToCString `T.Text' } -> `Int' #}
+      withRef text_buffer $ \text_bufferPtr -> do
+      withText file (\fs -> insertfileWithBuflen' text_bufferPtr fs pos buflen) >>= return . successOrDataProcessingError
+{# fun Fl_Text_Buffer_appendfile as appendfile' { id `Ptr ()', `CString' } -> `Int' #}
 instance ( impl ~ ( T.Text ->  IO (Either DataProcessingError ()))) => Op (Appendfile ()) TextBuffer orig impl where
    runOp _ _ text_buffer file =
-     withRef text_buffer $ \text_bufferPtr ->
-     appendfile' text_bufferPtr file >>= return . successOrDataProcessingError
-{# fun Fl_Text_Buffer_appendfile_with_buflen as appendfileWithBuflen' { id `Ptr ()', unsafeToCString `T.Text',`Int' } -> `Int' #}
+     withRef text_buffer $ \text_bufferPtr -> do
+     withText file (\fs -> appendfile' text_bufferPtr fs) >>= return . successOrDataProcessingError
+{# fun Fl_Text_Buffer_appendfile_with_buflen as appendfileWithBuflen' { id `Ptr ()', `CString',`Int' } -> `Int' #}
 instance ( impl ~ ( T.Text -> Int ->  IO (Either DataProcessingError ()))) => Op (AppendfileWithBuflen ()) TextBuffer orig impl where
    runOp _ _ text_buffer file buflen =
-     withRef text_buffer $ \text_bufferPtr ->
-     appendfileWithBuflen' text_bufferPtr file buflen >>= return . successOrDataProcessingError
-{# fun Fl_Text_Buffer_loadfile as loadfile' { id `Ptr ()', unsafeToCString `T.Text' } -> `Int' #}
+     withRef text_buffer $ \text_bufferPtr -> do
+     withText file (\fs -> appendfileWithBuflen' text_bufferPtr fs buflen) >>= return . successOrDataProcessingError
+{# fun Fl_Text_Buffer_loadfile as loadfile' { id `Ptr ()', `CString' } -> `Int' #}
 instance ( impl ~ ( T.Text ->  IO (Either DataProcessingError ()))) => Op (Loadfile ()) TextBuffer orig impl where
    runOp _ _ text_buffer file =
-     withRef text_buffer $ \text_bufferPtr ->
-     loadfile' text_bufferPtr file >>= return . successOrDataProcessingError
-{# fun Fl_Text_Buffer_loadfile_with_buflen as loadfileWithBuflen' { id `Ptr ()', unsafeToCString `T.Text',`Int' } -> `Int' #}
+     withRef text_buffer $ \text_bufferPtr -> do
+     withText file (\fs -> loadfile' text_bufferPtr fs) >>= return . successOrDataProcessingError
+{# fun Fl_Text_Buffer_loadfile_with_buflen as loadfileWithBuflen' { id `Ptr ()', `CString',`Int' } -> `Int' #}
 instance ( impl ~ ( T.Text -> Int ->  IO (Either DataProcessingError ()))) => Op (LoadfileWithBuflen ()) TextBuffer orig impl where
    runOp _ _ text_buffer file buflen =
-     withRef text_buffer $ \text_bufferPtr ->
-     loadfileWithBuflen' text_bufferPtr file buflen >>= return . successOrDataProcessingError
-{# fun Fl_Text_Buffer_outputfile as outputfile' { id `Ptr ()', unsafeToCString `T.Text',`Int',`Int' } -> `Int' #}
+     withRef text_buffer $ \text_bufferPtr -> do
+     withText file (\fs -> loadfileWithBuflen' text_bufferPtr fs buflen) >>= return . successOrDataProcessingError
+{# fun Fl_Text_Buffer_outputfile as outputfile' { id `Ptr ()', `CString',`Int',`Int' } -> `Int' #}
 instance ( impl ~ ( T.Text -> IndexRange ->  IO (Either DataProcessingError ()))) => Op (Outputfile ()) TextBuffer orig impl where
    runOp _ _ text_buffer file (IndexRange (AtIndex start') (AtIndex end')) =
-     withRef text_buffer $ \text_bufferPtr ->
-     outputfile' text_bufferPtr file start' end' >>= return . successOrDataProcessingError
-{# fun Fl_Text_Buffer_outputfile_with_buflen as outputfileWithBuflen' { id `Ptr ()', unsafeToCString `T.Text',`Int',`Int',`Int' } -> `Int' #}
+     withRef text_buffer $ \text_bufferPtr -> do
+     withText file (\fs -> outputfile' text_bufferPtr fs start' end') >>= return . successOrDataProcessingError
+{# fun Fl_Text_Buffer_outputfile_with_buflen as outputfileWithBuflen' { id `Ptr ()', `CString',`Int',`Int',`Int' } -> `Int' #}
 instance ( impl ~ ( T.Text -> IndexRange -> Int ->  IO (Either DataProcessingError ()))) => Op (OutputfileWithBuflen ()) TextBuffer orig impl where
    runOp _ _ text_buffer file (IndexRange (AtIndex start') (AtIndex end')) buflen =
-     withRef text_buffer $ \text_bufferPtr ->
-     outputfileWithBuflen' text_bufferPtr file start' end' buflen >>= return . successOrDataProcessingError
-{# fun Fl_Text_Buffer_savefile as savefile' { id `Ptr ()', unsafeToCString `T.Text' } -> `Int' #}
+     withRef text_buffer $ \text_bufferPtr -> do
+     withText file (\fs -> outputfileWithBuflen' text_bufferPtr fs start' end' buflen) >>= return . successOrDataProcessingError
+{# fun Fl_Text_Buffer_savefile as savefile' { id `Ptr ()', `CString' } -> `Int' #}
 instance ( impl ~ ( T.Text ->  IO (Either DataProcessingError ()))) => Op (Savefile ()) TextBuffer orig impl where
    runOp _ _ text_buffer file =
-     withRef text_buffer $ \text_bufferPtr ->
-     savefile' text_bufferPtr file >>= return . successOrDataProcessingError
-{# fun Fl_Text_Buffer_savefile_with_buflen as savefileWithBuflen' { id `Ptr ()', unsafeToCString `T.Text',`Int' } -> `Int' #}
+     withRef text_buffer $ \text_bufferPtr -> do
+     withText file (\fs -> savefile' text_bufferPtr fs) >>= return . successOrDataProcessingError
+{# fun Fl_Text_Buffer_savefile_with_buflen as savefileWithBuflen' { id `Ptr ()', `CString',`Int' } -> `Int' #}
 instance ( impl ~ ( T.Text -> Int ->  IO (Either DataProcessingError ()))) => Op (SavefileWithBuflen ()) TextBuffer orig impl where
    runOp _ _ text_buffer file buflen =
-     withRef text_buffer $ \text_bufferPtr ->
-     savefileWithBuflen' text_bufferPtr file buflen >>= return . successOrDataProcessingError
+     withRef text_buffer $ \text_bufferPtr -> do
+     withText file (\fs -> savefileWithBuflen' text_bufferPtr fs buflen) >>= return . successOrDataProcessingError
 {# fun Fl_Text_Buffer_tab_distance as tabDistance' { id `Ptr ()' } -> `Int' #}
 instance ( impl ~ (  IO (Int))) => Op (GetTabDistance ()) TextBuffer orig impl where
    runOp _ _ text_buffer = withRef text_buffer $ \text_bufferPtr -> tabDistance' text_bufferPtr
@@ -164,15 +163,15 @@ instance ( impl ~ IO (IndexRange)) => Op (SelectionPosition ()) TextBuffer orig 
      withRef text_buffer $ \text_bufferPtr ->
      selectionPosition' text_bufferPtr >>= \(start',end') ->
      return (IndexRange (AtIndex start') (AtIndex end'))
-{# fun Fl_Text_Buffer_selection_text as selectionText' { id `Ptr ()' } -> `T.Text' unsafeFromCString #}
+{# fun Fl_Text_Buffer_selection_text as selectionText' { id `Ptr ()' } -> `CString' #}
 instance ( impl ~ (  IO T.Text)) => Op (SelectionText ()) TextBuffer orig impl where
-   runOp _ _ text_buffer = withRef text_buffer $ \text_bufferPtr -> selectionText' text_bufferPtr
+   runOp _ _ text_buffer = withRef text_buffer $ \text_bufferPtr -> selectionText' text_bufferPtr >>= cStringToText
 {# fun Fl_Text_Buffer_remove_selection as removeSelection' { id `Ptr ()' } -> `()' #}
 instance ( impl ~ (  IO ())) => Op (RemoveSelection ()) TextBuffer orig impl where
    runOp _ _ text_buffer = withRef text_buffer $ \text_bufferPtr -> removeSelection' text_bufferPtr
-{# fun Fl_Text_Buffer_replace_selection as replaceSelection' { id `Ptr ()', unsafeToCString `T.Text' } -> `()' #}
+{# fun Fl_Text_Buffer_replace_selection as replaceSelection' { id `Ptr ()', `CString' } -> `()' #}
 instance ( impl ~ ( T.Text ->  IO ())) => Op (ReplaceSelection ()) TextBuffer orig impl where
-   runOp _ _ text_buffer text = withRef text_buffer $ \text_bufferPtr -> replaceSelection' text_bufferPtr text
+   runOp _ _ text_buffer text = withRef text_buffer $ \text_bufferPtr -> copyTextToCString text >>= replaceSelection' text_bufferPtr
 {# fun Fl_Text_Buffer_secondary_select as secondarySelect' { id `Ptr ()',`Int',`Int' } -> `()' #}
 instance ( impl ~ ( IndexRange ->  IO ())) => Op (SecondarySelect ()) TextBuffer orig impl where
    runOp _ _ text_buffer (IndexRange (AtIndex start') (AtIndex end')) = withRef text_buffer $ \text_bufferPtr -> secondarySelect' text_bufferPtr start' end'
@@ -188,15 +187,15 @@ instance ( impl ~ IO IndexRange) => Op (SecondarySelectionPosition ()) TextBuffe
      withRef text_buffer $ \text_bufferPtr ->
      secondarySelectionPosition' text_bufferPtr >>= \(start',end') ->
      return (IndexRange (AtIndex start') (AtIndex end'))
-{# fun Fl_Text_Buffer_secondary_selection_text as secondarySelectionText' { id `Ptr ()' } -> `T.Text' unsafeFromCString #}
+{# fun Fl_Text_Buffer_secondary_selection_text as secondarySelectionText' { id `Ptr ()' } -> `CString' #}
 instance ( impl ~ (  IO T.Text)) => Op (SecondarySelectionText ()) TextBuffer orig impl where
-   runOp _ _ text_buffer = withRef text_buffer $ \text_bufferPtr -> secondarySelectionText' text_bufferPtr
+   runOp _ _ text_buffer = withRef text_buffer $ \text_bufferPtr -> secondarySelectionText' text_bufferPtr >>= cStringToText
 {# fun Fl_Text_Buffer_remove_secondary_selection as removeSecondarySelection' { id `Ptr ()' } -> `()' #}
 instance ( impl ~ (  IO ())) => Op (RemoveSecondarySelection ()) TextBuffer orig impl where
    runOp _ _ text_buffer = withRef text_buffer $ \text_bufferPtr -> removeSecondarySelection' text_bufferPtr
-{# fun Fl_Text_Buffer_replace_secondary_selection as replaceSecondarySelection' { id `Ptr ()', unsafeToCString `T.Text' } -> `()' #}
+{# fun Fl_Text_Buffer_replace_secondary_selection as replaceSecondarySelection' { id `Ptr ()', `CString' } -> `()' #}
 instance ( impl ~ ( T.Text ->  IO ())) => Op (ReplaceSecondarySelection ()) TextBuffer orig impl where
-   runOp _ _ text_buffer text = withRef text_buffer $ \text_bufferPtr -> replaceSecondarySelection' text_bufferPtr text
+   runOp _ _ text_buffer text = withRef text_buffer $ \text_bufferPtr -> copyTextToCString text >>= replaceSecondarySelection' text_bufferPtr
 {# fun Fl_Text_Buffer_set_highlight as setHighlight' { id `Ptr ()',`Int',`Int' } -> `()' #}
 instance ( impl ~ ( IndexRange ->  IO ())) => Op (SetHighlight ()) TextBuffer orig impl where
    runOp _ _ text_buffer (IndexRange (AtIndex start') (AtIndex end')) = withRef text_buffer $ \text_bufferPtr -> setHighlight' text_bufferPtr start' end'
@@ -211,9 +210,9 @@ instance ( impl ~ IO (Maybe IndexRange)) => Op (HighlightPosition ()) TextBuffer
    runOp _ _ text_buffer =
      withRef text_buffer $ \text_bufferPtr ->
      statusToIndexRange (highlightPosition' text_bufferPtr)
-{# fun Fl_Text_Buffer_highlight_text as highlightText' { id `Ptr ()' } -> `T.Text' unsafeFromCString #}
+{# fun Fl_Text_Buffer_highlight_text as highlightText' { id `Ptr ()' } -> `CString' #}
 instance ( impl ~ (  IO T.Text)) => Op (HighlightText ()) TextBuffer orig impl where
-   runOp _ _ text_buffer = withRef text_buffer $ \text_bufferPtr -> highlightText' text_bufferPtr
+   runOp _ _ text_buffer = withRef text_buffer $ \text_bufferPtr -> highlightText' text_bufferPtr >>= cStringToText
 {# fun Fl_Text_Buffer_add_modify_callback as addModifyCallback' { id `Ptr ()',id `FunPtr TextModifyCbPrim',id `Ptr ()' } -> `()' #}
 instance (impl ~ (TextModifyCb -> IO (FunPtr ()))) => Op (AddModifyCallback ()) TextBuffer orig impl where
    runOp _ _ text_buffer bufmodifiedcb =
@@ -306,21 +305,21 @@ instance ( impl ~ (AtIndex -> Char -> IO (Either NotFound AtIndex))) => Op (Find
      if (status' == 0)
        then return (Left NotFound)
        else peekIntConv intPtr >>= return . Right . AtIndex
-{# fun Fl_Text_Buffer_search_forward_with_matchcase as searchForwardWithMatchcase' { id `Ptr ()',`Int', unsafeToCString `T.Text',id `Ptr CInt', cFromBool `Bool' } -> `Int' #}
+{# fun Fl_Text_Buffer_search_forward_with_matchcase as searchForwardWithMatchcase' { id `Ptr ()',`Int', `CString',id `Ptr CInt', cFromBool `Bool' } -> `Int' #}
 instance ( impl ~ (AtIndex -> T.Text -> Bool ->  IO (Either NotFound AtIndex))) => Op (SearchForwardWithMatchcase ()) TextBuffer orig impl where
   runOp _ _ text_buffer (AtIndex startpos) searchstring matchcase =
      withRef text_buffer $ \text_bufferPtr ->
      alloca $ \intPtr -> do
-     status' <- searchForwardWithMatchcase' text_bufferPtr startpos searchstring intPtr matchcase
+     status' <- withText searchstring (\s -> searchForwardWithMatchcase' text_bufferPtr startpos s intPtr matchcase)
      if (status' == 0)
        then return (Left NotFound)
        else peekIntConv intPtr >>= return .  Right . AtIndex
-{# fun Fl_Text_Buffer_search_backward_with_matchcase as searchBackwardWithMatchcase' { id `Ptr ()',`Int', unsafeToCString `T.Text',id `Ptr CInt', cFromBool `Bool' } -> `Int' #}
+{# fun Fl_Text_Buffer_search_backward_with_matchcase as searchBackwardWithMatchcase' { id `Ptr ()',`Int', `CString',id `Ptr CInt', cFromBool `Bool' } -> `Int' #}
 instance ( impl ~ (AtIndex -> T.Text -> Bool ->  IO (Either NotFound AtIndex))) => Op (SearchBackwardWithMatchcase ()) TextBuffer orig impl where
   runOp _ _ text_buffer (AtIndex startpos) searchstring matchcase =
      withRef text_buffer $ \text_bufferPtr ->
      alloca $ \intPtr -> do
-     status' <- searchBackwardWithMatchcase' text_bufferPtr startpos searchstring intPtr matchcase
+     status' <- withText searchstring (\s -> searchBackwardWithMatchcase' text_bufferPtr startpos s intPtr matchcase)
      if (status' == 0)
        then return (Left NotFound)
        else peekIntConv intPtr >>= return .  Right . AtIndex

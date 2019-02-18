@@ -18,10 +18,10 @@ import Graphics.UI.FLTK.LowLevel.Utils
 import Graphics.UI.FLTK.LowLevel.Hierarchy
 import Graphics.UI.FLTK.LowLevel.RGBImage
 import qualified Data.Text as T
-{# fun Fl_GIF_Image_New as gifImageNew' { unsafeToCString `T.Text' } -> `Ptr ()' id #}
+{# fun Fl_GIF_Image_New as gifImageNew' { `CString' } -> `Ptr ()' id #}
 gifImageNew :: T.Text -> IO (Either UnknownError (Ref GIFImage))
 gifImageNew filename' = do
-  ptr <- gifImageNew' filename'
+  ptr <- withText filename' gifImageNew'
   ref' <- (toRef ptr :: IO (Ref GIFImage))
   checkImage ref'
 

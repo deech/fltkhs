@@ -35,7 +35,7 @@ enum SpinnerType {
 };
 #endc
 {#enum SpinnerType {} deriving (Show, Eq) #}
-{# fun Fl_OverriddenSpinner_New_WithLabel as overriddenWidgetNewWithLabel' { `Int',`Int',`Int',`Int', unsafeToCString `T.Text', id `Ptr ()'} -> `Ptr ()' id #}
+{# fun Fl_OverriddenSpinner_New_WithLabel as overriddenWidgetNewWithLabel' { `Int',`Int',`Int',`Int', `CString', id `Ptr ()'} -> `Ptr ()' id #}
 {# fun Fl_OverriddenSpinner_New as overriddenWidgetNew' { `Int',`Int',`Int',`Int', id `Ptr ()'} -> `Ptr ()' id #}
 spinnerCustom ::
        Rectangle                         -- ^ The bounds of this Spinner
@@ -53,7 +53,7 @@ spinnerCustom rectangle l' draw' funcs' =
     overriddenWidgetNewWithLabel'
 
 {# fun Fl_Spinner_New as spinnerNew' { `Int',`Int',`Int',`Int' } -> `Ptr ()' id #}
-{# fun Fl_Spinner_New_WithLabel as spinnerNewWithLabel' { `Int',`Int',`Int',`Int', unsafeToCString `T.Text'} -> `Ptr ()' id #}
+{# fun Fl_Spinner_New_WithLabel as spinnerNewWithLabel' { `Int',`Int',`Int',`Int', `CString'} -> `Ptr ()' id #}
 spinnerNew :: Rectangle -> Maybe T.Text -> IO (Ref Spinner)
 spinnerNew rectangle l'=
   widgetMaker
@@ -88,12 +88,12 @@ instance (impl ~ (SpinnerType ->  IO ())) => Op (SetType ()) Spinner orig impl w
 {# fun Fl_Spinner_type as type' { id `Ptr ()' } -> `Word8' #}
 instance (impl ~ IO (SpinnerType)) => Op (GetType_ ()) Spinner orig impl where
   runOp _ _ widget = withRef widget $ \widgetPtr -> type' widgetPtr >>= return . toEnum . fromInteger . toInteger
-{# fun Fl_Spinner_set_format as set_format' { id `Ptr ()', unsafeToCString `T.Text' } -> `()' supressWarningAboutRes #}
+{# fun Fl_Spinner_set_format as set_format' { id `Ptr ()', `CString' } -> `()' supressWarningAboutRes #}
 instance (impl ~ (T.Text ->  IO ())) => Op (SetFormat ()) Spinner orig impl where
-  runOp _ _ spinner f = withRef spinner $ \spinnerPtr -> set_format' spinnerPtr f
-{# fun Fl_Spinner_format as format' { id `Ptr ()' } -> `T.Text' unsafeFromCString #}
+  runOp _ _ spinner f = withRef spinner $ \spinnerPtr -> copyTextToCString f >>= set_format' spinnerPtr
+{# fun Fl_Spinner_format as format' { id `Ptr ()' } -> `CString' #}
 instance (impl ~ ( IO (Maybe T.Text))) => Op (GetFormat ()) Spinner orig impl where
-   runOp _ _ spinner = withRef spinner $ \spinnerPtr -> format' spinnerPtr >>= \s ->
+   runOp _ _ spinner = withRef spinner $ \spinnerPtr -> format' spinnerPtr >>= \s -> cStringToText s >>= \s ->
      if (T.null s) then return Nothing else return (Just s)
 {# fun Fl_Spinner_value as value' { id `Ptr ()' } -> `Double' #}
 instance (impl ~ ( IO (Double))) => Op (GetValue ()) Spinner orig impl where

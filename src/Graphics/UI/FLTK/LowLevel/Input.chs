@@ -46,7 +46,7 @@ enum FlInputType {
 };
 #endc
 {#enum FlInputType {}#}
-{# fun Fl_OverriddenInput_New_WithLabel as overriddenWidgetNewWithLabel' { `Int',`Int',`Int',`Int', unsafeToCString `T.Text', id `Ptr ()'} -> `Ptr ()' id #}
+{# fun Fl_OverriddenInput_New_WithLabel as overriddenWidgetNewWithLabel' { `Int',`Int',`Int',`Int', `CString', id `Ptr ()'} -> `Ptr ()' id #}
 {# fun Fl_OverriddenInput_New as overriddenWidgetNew' { `Int',`Int',`Int',`Int', id `Ptr ()'} -> `Ptr ()' id #}
 inputCustom ::
        Rectangle                         -- ^ The bounds of this Input
@@ -81,25 +81,25 @@ inputCustom rectangle l' itMaybe draw' funcs' = do
   return i
 
 {# fun Fl_Input_New as inputNew' { `Int',`Int',`Int',`Int' } -> `Ptr ()' id #}
-{# fun Fl_Input_New_WithLabel as inputNewWithLabel' { `Int',`Int',`Int',`Int', unsafeToCString `T.Text'} -> `Ptr ()' id #}
+{# fun Fl_Input_New_WithLabel as inputNewWithLabel' { `Int',`Int',`Int',`Int', `CString'} -> `Ptr ()' id #}
 {# fun Fl_Multiline_Input_New as multilineInputNew' { `Int',`Int',`Int',`Int' } -> `Ptr ()' id #}
-{# fun Fl_Multiline_Input_New_WithLabel as multilineInputNewWithLabel' { `Int',`Int',`Int',`Int', unsafeToCString `T.Text'} -> `Ptr ()' id #}
+{# fun Fl_Multiline_Input_New_WithLabel as multilineInputNewWithLabel' { `Int',`Int',`Int',`Int', `CString'} -> `Ptr ()' id #}
 {# fun Fl_Float_Input_New as floatInputNew' { `Int',`Int',`Int',`Int' } -> `Ptr ()' id #}
-{# fun Fl_Float_Input_New_WithLabel as floatInputNewWithLabel' { `Int',`Int',`Int',`Int', unsafeToCString `T.Text'} -> `Ptr ()' id #}
+{# fun Fl_Float_Input_New_WithLabel as floatInputNewWithLabel' { `Int',`Int',`Int',`Int', `CString'} -> `Ptr ()' id #}
 {# fun Fl_Int_Input_New as intInputNew' { `Int',`Int',`Int',`Int' } -> `Ptr ()' id #}
-{# fun Fl_Int_Input_New_WithLabel as intInputNewWithLabel' { `Int',`Int',`Int',`Int', unsafeToCString `T.Text'} -> `Ptr ()' id #}
+{# fun Fl_Int_Input_New_WithLabel as intInputNewWithLabel' { `Int',`Int',`Int',`Int', `CString'} -> `Ptr ()' id #}
 {# fun Fl_Secret_Input_New as secretInputNew' { `Int',`Int',`Int',`Int' } -> `Ptr ()' id #}
-{# fun Fl_Secret_Input_New_WithLabel as secretInputNewWithLabel' { `Int',`Int',`Int',`Int', unsafeToCString `T.Text'} -> `Ptr ()' id #}
+{# fun Fl_Secret_Input_New_WithLabel as secretInputNewWithLabel' { `Int',`Int',`Int',`Int', `CString'} -> `Ptr ()' id #}
 inputNew :: Rectangle -> Maybe T.Text -> Maybe FlInputType -> IO (Ref Input)
 inputNew rectangle l' flInputType =
     let (x_pos, y_pos, width, height) = fromRectangle rectangle
         constructor = case flInputType of
-                       Just FlNormalInput -> maybe inputNew' (\l -> (\x y w h -> inputNewWithLabel' x y w h l)) l'
-                       Just FlFloatInput -> maybe floatInputNew' (\l -> (\x y w h -> floatInputNewWithLabel' x y w h l)) l'
-                       Just FlIntInput -> maybe intInputNew'  (\l -> (\x y w h -> intInputNewWithLabel' x y w h l)) l'
-                       Just FlMultilineInput -> maybe multilineInputNew'  (\l -> (\x y w h -> multilineInputNewWithLabel' x y w h l)) l'
-                       Just FlSecretInput -> maybe secretInputNew' (\l -> (\x y w h -> secretInputNewWithLabel' x y w h l)) l'
-                       Just FlHiddenInput -> maybe inputNew' (\l -> (\x y w h -> inputNewWithLabel' x y w h l)) l'
+                       Just FlNormalInput -> maybe inputNew' (\l -> (\x y w h -> copyTextToCString l >>= \l' -> inputNewWithLabel' x y w h l')) l'
+                       Just FlFloatInput -> maybe floatInputNew' (\l -> (\x y w h -> copyTextToCString l >>= \l' -> floatInputNewWithLabel' x y w h l')) l'
+                       Just FlIntInput -> maybe intInputNew'  (\l -> (\x y w h -> copyTextToCString l >>= \l' -> intInputNewWithLabel' x y w h l')) l'
+                       Just FlMultilineInput -> maybe multilineInputNew'  (\l -> (\x y w h -> copyTextToCString l >>= \l' -> multilineInputNewWithLabel' x y w h l')) l'
+                       Just FlSecretInput -> maybe secretInputNew' (\l -> (\x y w h -> copyTextToCString l >>= \l' -> secretInputNewWithLabel' x y w h l')) l'
+                       Just FlHiddenInput -> maybe inputNew' (\l -> (\x y w h -> copyTextToCString l >>= \l' -> inputNewWithLabel' x y w h l')) l'
                        Nothing -> inputNew'
     in do
     i <- constructor x_pos y_pos width height >>= toRef
@@ -128,18 +128,18 @@ instance (impl ~ (Event -> IO (Either UnknownEvent ()))) => Op (Handle ()) Input
       )
     >>= return . successOrUnknownEvent
 
-{# fun Fl_Input_set_value as setValue' { id `Ptr ()', unsafeToCString `T.Text' } -> `Int' #}
+{# fun Fl_Input_set_value as setValue' { id `Ptr ()', `CString' } -> `Int' #}
 instance (impl ~ (T.Text -> IO (Either NoChange ()))) => Op (SetValue ()) Input orig impl where
-  runOp _ _ input text = withRef input $ \inputPtr -> setValue' inputPtr text >>= return . successOrNoChange
+  runOp _ _ input text = withRef input $ \inputPtr -> copyTextToCString text >>= \t -> setValue' inputPtr t >>= return . successOrNoChange
 
-{# fun Fl_Input_static_value as staticValue' { id `Ptr ()', unsafeToCString `T.Text' } -> `Int' #}
+{# fun Fl_Input_static_value as staticValue' { id `Ptr ()', `CString' } -> `Int' #}
 instance (impl ~ (T.Text -> IO (Either NoChange ()))) => Op (StaticValue ()) Input orig impl where
   runOp _ _ input text = do
-    status' <- withRef input $ \inputPtr -> staticValue' inputPtr text
+    status' <- withRef input $ \inputPtr -> copyTextToCString text >>= staticValue' inputPtr
     return $ successOrNoChange status'
-{# fun Fl_Input_value as value' { id `Ptr ()' } -> `T.Text' unsafeFromCString #}
+{# fun Fl_Input_value as value' { id `Ptr ()' } -> `CString' #}
 instance (impl ~ ( IO T.Text)) => Op (GetValue ()) Input orig impl where
-  runOp _ _ input = withRef input $ \inputPtr -> value' inputPtr
+  runOp _ _ input = withRef input $ \inputPtr -> value' inputPtr >>= cStringToText
 {# fun Fl_Input_index as index' { id `Ptr ()',`Int' } -> `Int' #}
 instance (impl ~ (AtIndex ->  IO (Char))) => Op (Index ()) Input orig impl where
   runOp _ _ input (AtIndex i) = withRef input $ \inputPtr -> index' inputPtr i >>= return . toEnum
@@ -172,9 +172,9 @@ instance (impl ~ (Int -> Maybe Int -> IO (Either NoChange ()))) => Op (SetPositi
 {# fun Fl_Input_set_mark as setMark' { id `Ptr ()',`Int' } -> `Int' #}
 instance (impl ~ (Int ->  IO (Either NoChange ()))) => Op (SetMark ()) Input orig impl where
   runOp _ _ input m = withRef input $ \inputPtr -> setMark' inputPtr m >>= return . successOrNoChange
-{# fun Fl_Input_replace as replace' { id `Ptr ()',`Int',`Int', unsafeToCString `T.Text' } -> `Int' #}
+{# fun Fl_Input_replace as replace' { id `Ptr ()',`Int',`Int', `CString' } -> `Int' #}
 instance (impl ~ (IndexRange -> T.Text ->  IO (Either NoChange ()))) => Op (Replace ()) Input orig impl where
-  runOp _ _ input (IndexRange (AtIndex b) (AtIndex e)) text = withRef input $ \inputPtr -> replace' inputPtr b e  text >>= return . successOrNoChange
+  runOp _ _ input (IndexRange (AtIndex b) (AtIndex e)) text = withRef input $ \inputPtr -> copyTextToCString text >>= \t -> replace' inputPtr b e t >>= return . successOrNoChange
 {# fun Fl_Input_cut as cut' { id `Ptr ()' } -> `Int' #}
 instance (impl ~ ( IO (Either NoChange ()))) => Op (Cut ()) Input orig impl where
   runOp _ _ input = withRef input $ \inputPtr -> cut' inputPtr >>= return . successOrNoChange
@@ -184,12 +184,12 @@ instance (impl ~ (Int ->  IO (Either NoChange ()))) => Op (CutFromCursor ()) Inp
 {# fun Fl_Input_cut_range as cutRange' { id `Ptr ()',`Int',`Int' } -> `Int' #}
 instance (impl ~ (IndexRange ->  IO (Either NoChange ()))) => Op (CutRange ()) Input orig impl where
   runOp _ _ input (IndexRange (AtIndex a) (AtIndex b)) = withRef input $ \inputPtr -> cutRange' inputPtr a b >>= return . successOrNoChange
-{# fun Fl_Input_insert as insert' { id `Ptr ()', unsafeToCString `T.Text' } -> `Int' #}
+{# fun Fl_Input_insert as insert' { id `Ptr ()', `CString' } -> `Int' #}
 instance (impl ~ (T.Text ->  IO (Either NoChange ()))) => Op (Insert ()) Input orig impl where
-  runOp _ _ input t = withRef input $ \inputPtr -> insert' inputPtr t >>= return . successOrNoChange
-{# fun Fl_Input_insert_with_length as insertWithLength' { id `Ptr ()', unsafeToCString `T.Text',`Int' } -> `Int' #}
+  runOp _ _ input t = withRef input $ \inputPtr -> copyTextToCString t >>= \t' -> insert' inputPtr t' >>= return . successOrNoChange
+{# fun Fl_Input_insert_with_length as insertWithLength' { id `Ptr ()', `CString',`Int' } -> `Int' #}
 instance (impl ~ (T.Text -> Int ->  IO (Either NoChange ()))) => Op (InsertWithLength ()) Input orig impl where
-  runOp _ _ input t l = withRef input $ \inputPtr -> insertWithLength' inputPtr t l >>= return . successOrNoChange
+  runOp _ _ input t l = withRef input $ \inputPtr -> copyTextToCString t >>= \t' -> insertWithLength' inputPtr t' l >>= return . successOrNoChange
 {# fun Fl_Input_copy as copy' { id `Ptr ()',`Int' } -> `Int' #}
 instance (impl ~ (Clipboard ->  IO (Either NoChange ()))) => Op (Copy ()) Input orig impl where
   runOp _ _ input clipboard = do

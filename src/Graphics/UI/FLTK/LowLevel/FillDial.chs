@@ -16,12 +16,12 @@ import Graphics.UI.FLTK.LowLevel.Utils
 import Graphics.UI.FLTK.LowLevel.Hierarchy
 import qualified Data.Text as T
 import Graphics.UI.FLTK.LowLevel.Widget
-{# fun Fl_Fill_Dial_New as fillDialNew' { `Int',`Int',`Int',`Int', unsafeToCString `T.Text' } -> `Ptr ()' id #}
+{# fun Fl_Fill_Dial_New as fillDialNew' { `Int',`Int',`Int',`Int', `CString' } -> `Ptr ()' id #}
 fillDialNew :: Rectangle -> T.Text -> IO (Ref FillDial)
 fillDialNew rectangle l'=
     let (x_pos, y_pos, width, height) = fromRectangle rectangle
     in do
-    ref <- fillDialNew' x_pos y_pos width height l' >>= toRef
+    ref <- copyTextToCString l' >>= \l'' -> fillDialNew' x_pos y_pos width height l'' >>= toRef
     setFlag ref WidgetFlagCopiedLabel
     setFlag ref WidgetFlagCopiedTooltip
     return ref

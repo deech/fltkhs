@@ -37,7 +37,7 @@ enum DialType {
 #endc
 {#enum DialType {} deriving (Show, Eq) #}
 
-{# fun Fl_OverriddenDial_New_WithLabel as overriddenWidgetNewWithLabel' { `Int',`Int',`Int',`Int', unsafeToCString `T.Text', id `Ptr ()'} -> `Ptr ()' id #}
+{# fun Fl_OverriddenDial_New_WithLabel as overriddenWidgetNewWithLabel' { `Int',`Int',`Int',`Int', `CString', id `Ptr ()'} -> `Ptr ()' id #}
 {# fun Fl_OverriddenDial_New as overriddenWidgetNew' { `Int',`Int',`Int',`Int', id `Ptr ()'} -> `Ptr ()' id #}
 dialCustom ::
        Rectangle                         -- ^ The bounds of this Dial
@@ -55,7 +55,7 @@ dialCustom rectangle l' draw' funcs' =
     overriddenWidgetNewWithLabel'
 
 {# fun Fl_Dial_New as dialNew' { `Int',`Int',`Int',`Int' } -> `Ptr ()' id #}
-{# fun Fl_Dial_New_WithLabel as dialNewWithLabel' { `Int',`Int',`Int',`Int',unsafeToCString `T.Text'} -> `Ptr ()' id #}
+{# fun Fl_Dial_New_WithLabel as dialNewWithLabel' { `Int',`Int',`Int',`Int',`CString'} -> `Ptr ()' id #}
 dialNew :: Rectangle -> Maybe T.Text -> IO (Ref Dial)
 dialNew rectangle l'=
   widgetMaker

@@ -4,7 +4,6 @@ module Graphics.UI.FLTK.LowLevel.FL
     (
      Option(..),
      ClipboardContents(..),
-     PasteSource(..),
      scrollbarSize,
      setScrollbarSize,
      selectionOwner,
@@ -45,7 +44,6 @@ module Graphics.UI.FLTK.LowLevel.FL
      setPushed,
      setFocus,
      setHandler,
-     paste,
      toRectangle,
      fromRectangle,
      screenBounds,
@@ -98,9 +96,14 @@ module Graphics.UI.FLTK.LowLevel.FL
      disableIm,
      pushed,
      focus,
-     copy,
-     copyWithDestination,
-     pasteWithSource,
+     copyToClipboard,
+     copyToSelectionBuffer,
+     copyLengthToClipboard,
+     copyLengthToSelectionBuffer,
+     pasteImageFromSelectionBuffer,
+     pasteFromSelectionBuffer,
+     pasteImageFromClipboard,
+     pasteFromClipboard,
      dnd,
      x,
      y,
@@ -242,11 +245,6 @@ data ClipboardContents =
   ClipboardContentsImage (Maybe (Ref Image))
   | ClipboardContentsPlainText (Maybe T.Text)
 
-data PasteSource =
-  PasteSourceSelectionBuffer
-  | PasteSourceClipboardPlainText
-  | PasteSourceClipboardImage
-
 type EventDispatchPrim = (CInt ->
                           Ptr () ->
                           IO CInt)
@@ -308,8 +306,9 @@ getAwakeHandler_ =
 
 {# fun Fl_version as version
   {} -> `Double' #}
-{# fun Fl_help as help
-  {} -> `T.Text' unsafeFromCString #}
+{# fun Fl_help as help' {} -> `CString' #}
+help :: IO T.Text
+help = help' >>= cStringToText
 
 display :: T.Text -> IO ()
 display text = TF.withCStringLen text $ \(str,_) -> {#call Fl_display as fl_display #} str
@@ -345,8 +344,11 @@ background2 (r,g,b) = {#call Fl_background2 as fl_background2 #}
                     (fromIntegral r)
                     (fromIntegral g)
                     (fromIntegral b)
-{# fun pure Fl_scheme as getScheme
-  {} -> `T.Text' unsafeFromCString #}
+
+{# fun pure Fl_scheme as getScheme' {} -> `CString' #}
+getScheme :: IO T.Text
+getScheme = cStringToText getScheme'
+
 setScheme :: T.Text -> IO Int
 setScheme sch = TF.withCStringLen sch $ \(str,_) -> {#call Fl_set_scheme as fl_set_scheme #} str >>= return . fromIntegral
 {# fun pure Fl_reload_scheme as reloadScheme {} -> `Int' #}
@@ -364,8 +366,9 @@ setWait = waitFor
 {# fun Fl_set_scrollbar_size as setScrollbarSize
        { `Int' } -> `()' #}
 
-{# fun Fl_readqueue as readqueue
-       {  } -> `Maybe (Ref Widget)' unsafeToMaybeRef #}
+{# fun Fl_readqueue as readqueue' {  } -> `Ptr ()' #}
+readqueue :: IO (Maybe (Ref Widget))
+readqueue = readqueue' >>= toMaybeRef
 {# fun Fl_add_timeout as addTimeout
        { `Double', unsafeToCallbackPrim `GlobalCallback' } -> `()' supressWarningAboutRes #}
 {# fun Fl_repeat_timeout as repeatTimeout
@@ -392,22 +395,27 @@ setWait = waitFor
        {  } -> `()' supressWarningAboutRes #}
 {# fun Fl_flush as flush
        {  } -> `()' supressWarningAboutRes #}
-{# fun Fl_first_window as firstWindow
-       {  } -> `Maybe (Ref Window)' unsafeToMaybeRef #}
+{# fun Fl_first_window as firstWindow' {  } -> `Ptr ()' #}
+firstWindow :: IO (Maybe (Ref Window))
+firstWindow = firstWindow' >>= toMaybeRef
+
 {# fun Fl_set_first_window as setFirstWindow'
        { id `Ptr ()' } -> `()' supressWarningAboutRes #}
 setFirstWindow :: (Parent a Window) => Ref a -> IO ()
 setFirstWindow wp =
     withRef wp setFirstWindow'
-{# fun Fl_next_window as nextWindow'
-       { id `Ptr ()' } -> `Maybe (Ref Window)' unsafeToMaybeRef #}
-nextWindow :: (Parent a Window) => Ref a -> IO (Maybe (Ref Window))
-nextWindow currWindow =
-    withRef currWindow nextWindow'
-{# fun Fl_modal as modal
-       {  } -> `Maybe (Ref Window)' unsafeToMaybeRef #}
-{# fun Fl_grab as grab
-       {  } -> `Maybe (Ref Window)' unsafeToMaybeRef #}
+{# fun Fl_next_window as nextWindow' { id `Ptr ()' } -> `Ptr ()' #}
+nextWindow :: Ref a -> IO (Maybe (Ref Window))
+nextWindow currWindow = withRef currWindow (\ptr -> nextWindow' ptr >>= toMaybeRef)
+
+{# fun Fl_modal as modal' {  } -> `Ptr ()' #}
+modal  :: IO (Maybe (Ref Widget))
+modal = modal' >>= toMaybeRef
+
+{# fun Fl_grab as grab' {  } -> `Ptr ()' #}
+grab  :: IO (Maybe (Ref Widget))
+grab = grab' >>= toMaybeRef
+
 {# fun Fl_set_grab as setGrab'
        { id `Ptr ()' } -> `()' supressWarningAboutRes #}
 setGrab :: (Parent a Window) => Ref a -> IO ()
@@ -503,16 +511,17 @@ extractEventStates = extract eventStates
        {cFromKeyType `KeyType' } -> `Bool' toBool #}
 {# fun Fl_get_key as getKey
        {cFromKeyType `KeyType' } -> `Bool' toBool #}
-{# fun Fl_event_text as eventText
-       {  } -> `T.Text' unsafeFromCString #}
+{# fun Fl_event_text as eventText' {  } -> `CString' #}
+eventText :: IO T.Text
+eventText = eventText' >>= cStringToText
 {# fun Fl_event_length as eventLength
        {  } -> `Int' #}
 
 {# fun Fl_event_clipboard as flEventClipboard' { } -> `Ptr ()' #}
-{# fun Fl_event_clipboard_type as flEventClipboardType' { } -> `T.Text' unsafeFromCString #}
+{# fun Fl_event_clipboard_type as flEventClipboardType' { } -> `CString' #}
 eventClipboardContents :: IO (Maybe ClipboardContents)
 eventClipboardContents = do
-  typeString <- flEventClipboardType'
+  typeString <- flEventClipboardType' >>= cStringToText
   if (T.length typeString == 0)
   then return Nothing
   else case typeString of
@@ -566,8 +575,9 @@ handle e wp =
 handle_ :: (Parent a Window) =>  Event -> Ref a -> IO (Either UnknownEvent ())
 handle_ e wp =
     withRef wp (handle_' (cFromEnum e)) >>= return . successOrUnknownEvent
-{# fun Fl_belowmouse as belowmouse
-       {  } -> `Maybe (Ref Widget)' unsafeToMaybeRef #}
+{# fun Fl_belowmouse as belowmouse' {  } -> `Ptr ()' #}
+belowmouse  :: IO (Maybe (Ref Widget))
+belowmouse = belowmouse' >>= toMaybeRef
 {# fun Fl_set_belowmouse as setBelowmouse'
        { id `Ptr ()' } -> `()' supressWarningAboutRes #}
 setBelowmouse :: (Parent a Widget) => Ref a -> IO ()
@@ -580,14 +590,16 @@ pushed = pushed' >>= toMaybeRef
        { id `Ptr ()' } -> `()' supressWarningAboutRes #}
 setPushed :: (Parent a Widget) => Ref a -> IO ()
 setPushed wp = withRef wp setPushed'
-{# fun Fl_focus as focus
-       {  } -> `Maybe (Ref Widget)' unsafeToMaybeRef #}
+{# fun Fl_focus as focus' {  } -> `Ptr ()' #}
+focus :: IO (Maybe (Ref Widget))
+focus = focus' >>= toMaybeRef
 {# fun Fl_set_focus as setFocus'
        { id `Ptr ()' } -> `()' supressWarningAboutRes #}
 setFocus :: (Parent a Widget) => Ref a -> IO ()
 setFocus wp = withRef wp setFocus'
-{# fun Fl_selection_owner as selectionOwner
-       {  } -> `Maybe (Ref Widget)' unsafeToMaybeRef #}
+{# fun Fl_selection_owner as selectionOwner' {  } -> `Ptr ()' #}
+selectionOwner :: IO (Maybe (Ref Widget))
+selectionOwner = selectionOwner' >>= toMaybeRef
 {# fun Fl_set_selection_owner as setSelection_Owner'
        { id `Ptr ()' } -> `()' supressWarningAboutRes #}
 setSelectionOwner :: (Parent a Widget) => Ref a -> IO ()
@@ -644,20 +656,35 @@ setEventDispatch ed = do
       ptrToCallbackPtr <- new callbackPtr
       poke ptrToCallbackPtr callbackPtr
       setEventDispatch' ptrToCallbackPtr
-{# fun Fl_copy as copy
-       { unsafeToCString `T.Text',`Int' } -> `()' supressWarningAboutRes #}
-{# fun Fl_copy_with_destination as copyWithDestination
-       { unsafeToCString `T.Text',`Int',`Int' } -> `()' supressWarningAboutRes #}
-{# fun Fl_paste_with_source as pasteWithSource
-       { id `Ptr ()',`Int' } -> `()' supressWarningAboutRes #}
-{# fun Fl_paste_with_source_type as pasteWithSourceType
-       { id `Ptr ()',`Int', unsafeToCString `T.Text' } -> `()' supressWarningAboutRes #}
-paste :: (Parent a Widget) => Ref a -> PasteSource -> IO ()
-paste widget PasteSourceSelectionBuffer = withRef widget (\widgetPtr -> pasteWithSource widgetPtr 0)
-paste widget PasteSourceClipboardPlainText =
-  withRef widget (\widgetPtr -> pasteWithSourceType widgetPtr 1 (T.pack "Fl::clipboard_plain_text"))
-paste widget PasteSourceClipboardImage =
-  withRef widget (\widgetPtr -> pasteWithSourceType widgetPtr 1 (T.pack "Fl::clipboard_image"))
+
+{# fun Fl_copy as copy' { `CString',`Int' } -> `()' supressWarningAboutRes #}
+copyToClipboard :: T.Text -> IO ()
+copyToClipboard t = withText t (\s' -> copy' s' 0)
+
+copyToSelectionBuffer :: T.Text -> IO ()
+copyToSelectionBuffer t = withText t (\s' -> copy' s' 1)
+
+{# fun Fl_copy_with_destination as copyWithDestination { `CString',`Int',`Int' } -> `()' supressWarningAboutRes #}
+
+copyLengthToClipboard :: T.Text -> Int -> IO ()
+copyLengthToClipboard t l = withText t (\s' -> copyWithDestination s' l 0)
+
+copyLengthToSelectionBuffer :: T.Text -> Int -> IO ()
+copyLengthToSelectionBuffer t l = withText t (\s' -> copyWithDestination s' l 1)
+
+{# fun Fl_paste_with_source_type as pasteWithSourceType { id `Ptr ()',`Int', `CString' } -> `()' supressWarningAboutRes #}
+
+pasteImageFromSelectionBuffer :: (Parent a Widget) => Ref a -> IO ()
+pasteImageFromSelectionBuffer widget = withRef widget (\widgetPtr -> withText (T.pack "Fl::clipboard_image") (\t -> pasteWithSourceType widgetPtr 0 t))
+
+pasteFromSelectionBuffer :: (Parent a Widget) => Ref a -> IO ()
+pasteFromSelectionBuffer widget = withRef widget (\widgetPtr -> withText (T.pack "Fl::clipboard_plain_text") (\t -> pasteWithSourceType widgetPtr 0 t))
+
+pasteImageFromClipboard :: (Parent a Widget) => Ref a -> IO ()
+pasteImageFromClipboard widget = withRef widget (\widgetPtr -> withText (T.pack "Fl::clipboard_image") (\t -> pasteWithSourceType widgetPtr 1 t))
+
+pasteFromClipboard :: (Parent a Widget) => Ref a -> IO ()
+pasteFromClipboard widget = withRef widget (\widgetPtr -> withText (T.pack "Fl::clipboard_plain_text") (\t -> pasteWithSourceType widgetPtr 1 t))
 
 {# fun Fl_dnd as dnd
        {  } -> `Int' #}
@@ -808,17 +835,22 @@ removeFromColormap :: Maybe Color -> Color -> IO ()
 removeFromColormap (Just (Color overlay)) c = freeColorWithOverlay' c (fromIntegral overlay)
 removeFromColormap Nothing c = freeColor' c
 #endif
-{# fun Fl_get_font as getFont
-       { cFromFont `Font' } -> `T.Text' unsafeFromCString #}
-{# fun Fl_get_font_name_with_attributes as getFontNameWithAttributes'
-       { cFromFont `Font', alloca- `Maybe FontAttribute' toAttribute* } -> `T.Text' unsafeFromCString #}
+{# fun Fl_get_font as getFont' { cFromFont `Font' } -> `CString' #}
+getFont :: Font -> IO T.Text
+getFont f = getFont' f >>= cStringToText
+
+{# fun Fl_get_font_name_with_attributes as getFontNameWithAttributes' { cFromFont `Font', alloca- `Maybe FontAttribute' toAttribute* } -> `CString' #}
+getFontName :: Font -> IO (T.Text, Maybe FontAttribute)
+getFontName f = do
+  (str, fa) <- getFontNameWithAttributes' f
+  t <- cStringToText str
+  return (t, fa)
+
 toAttribute :: Ptr CInt -> IO (Maybe FontAttribute)
 toAttribute ptr =
         do
           attributeCode <- peekIntConv ptr
           return $ cToFontAttribute attributeCode
-getFontName :: Font -> IO (T.Text, Maybe FontAttribute)
-getFontName f = getFontNameWithAttributes' f
 {# fun Fl_get_font_sizes as getFontSizes'
        { cFromFont `Font', id `Ptr (Ptr CInt)' } -> `CInt' #}
 getFontSizes :: Font -> IO [FontSize]
@@ -838,8 +870,10 @@ getFontSizes font = do
            [0 .. ((fromIntegral arrLength) - 1)]
      return (map FontSize sizes)
 
-{# fun Fl_set_font_by_string as setFontToString
-       { cFromFont `Font', unsafeToCString `T.Text' } -> `()' supressWarningAboutRes #}
+{# fun Fl_set_font_by_string as setFontToString'
+       { cFromFont `Font', `CString' } -> `()' supressWarningAboutRes #}
+setFontToString :: Font -> T.Text -> IO ()
+setFontToString f t = withText t (\t' -> setFontToString' f t')
 {# fun Fl_set_font_by_font as setFontToFont
        { cFromFont `Font',cFromFont `Font' } -> `()' supressWarningAboutRes #}
 {# fun Fl_set_fonts as setFonts'

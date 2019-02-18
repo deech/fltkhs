@@ -18,7 +18,7 @@ import Graphics.UI.FLTK.LowLevel.Hierarchy
 import Graphics.UI.FLTK.LowLevel.Widget
 import qualified Data.Text as T
 {# fun Fl_Nice_Slider_New as niceSliderNew' { `Int',`Int',`Int',`Int' } -> `Ptr ()' id #}
-{# fun Fl_Nice_Slider_New_WithLabel as niceSliderNewWithLabel' { `Int',`Int',`Int',`Int', unsafeToCString `T.Text'} -> `Ptr ()' id #}
+{# fun Fl_Nice_Slider_New_WithLabel as niceSliderNewWithLabel' { `Int',`Int',`Int',`Int', `CString'} -> `Ptr ()' id #}
 niceSliderNew :: Rectangle -> Maybe T.Text -> IO (Ref NiceSlider)
 niceSliderNew rectangle l' =
     let (x_pos, y_pos, width, height) = fromRectangle rectangle
@@ -26,7 +26,7 @@ niceSliderNew rectangle l' =
         Nothing -> niceSliderNew' x_pos y_pos width height >>=
                              toRef
         Just l -> do
-          ref <- niceSliderNewWithLabel' x_pos y_pos width height l >>= toRef
+          ref <- copyTextToCString l >>= \l' -> niceSliderNewWithLabel' x_pos y_pos width height l' >>= toRef
           setFlag ref WidgetFlagCopiedLabel
           setFlag ref WidgetFlagCopiedTooltip
           return ref

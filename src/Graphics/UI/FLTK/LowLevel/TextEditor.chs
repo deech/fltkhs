@@ -105,7 +105,7 @@ arrayToKeyBindings p =
       let currKb = KeyBinding (KeyBindingKeySequence evs keyType) (toFunRef function')
       go (accum ++ [currKb]) next'
 
-{# fun Fl_OverriddenText_Editor_New_WithLabel as overriddenWidgetNewWithLabel' { `Int',`Int',`Int',`Int', unsafeToCString `T.Text', id `Ptr ()'} -> `Ptr ()' id #}
+{# fun Fl_OverriddenText_Editor_New_WithLabel as overriddenWidgetNewWithLabel' { `Int',`Int',`Int',`Int', `CString', id `Ptr ()'} -> `Ptr ()' id #}
 {# fun Fl_OverriddenText_Editor_New as overriddenWidgetNew' { `Int',`Int',`Int',`Int', id `Ptr ()'} -> `Ptr ()' id #}
 textEditorCustom ::
        Rectangle                         -- ^ The bounds of this TextEditor
@@ -123,7 +123,7 @@ textEditorCustom rectangle l' draw' funcs' =
     overriddenWidgetNewWithLabel'
 
 {# fun Fl_Text_Editor_New as textEditorNew' { `Int',`Int',`Int',`Int' } -> `Ptr ()' id #}
-{# fun Fl_Text_Editor_New_WithLabel as textEditorNewWithLabel' { `Int',`Int',`Int',`Int', unsafeToCString `T.Text'} -> `Ptr ()' id #}
+{# fun Fl_Text_Editor_New_WithLabel as textEditorNewWithLabel' { `Int',`Int',`Int',`Int', `CString'} -> `Ptr ()' id #}
 textEditorNew :: Rectangle -> Maybe T.Text -> IO (Ref TextEditor)
 textEditorNew rectangle l' =
   widgetMaker

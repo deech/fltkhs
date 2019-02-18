@@ -50,7 +50,7 @@ data ClockByTime = ClockByTime Hour Minute Second deriving Show
 data ClockSinceEpoch = ClockSinceEpoch Second deriving Show
 data ClockSetTimeType = ClockSetByTime ClockByTime | ClockSetSinceEpoch ClockSinceEpoch deriving Show
 
-{# fun Fl_OverriddenClock_New_WithLabel as overriddenWidgetNewWithLabel' { `Int',`Int',`Int',`Int', unsafeToCString `T.Text', id `Ptr ()'} -> `Ptr ()' id #}
+{# fun Fl_OverriddenClock_New_WithLabel as overriddenWidgetNewWithLabel' { `Int',`Int',`Int',`Int', `CString', id `Ptr ()'} -> `Ptr ()' id #}
 {# fun Fl_OverriddenClock_New as overriddenWidgetNew' { `Int',`Int',`Int',`Int', id `Ptr ()'} -> `Ptr ()' id #}
 clockCustom ::
        Rectangle                         -- ^ The bounds of this Clock
@@ -68,8 +68,8 @@ clockCustom rectangle l' draw' funcs' =
     overriddenWidgetNewWithLabel'
 
 {# fun Fl_Clock_New as clockNew' { `Int',`Int',`Int',`Int' } -> `Ptr ()' id #}
-{# fun Fl_Clock_New_WithLabel as clockNewWithLabel' { `Int',`Int',`Int',`Int', unsafeToCString `T.Text'} -> `Ptr ()' id #}
-{# fun Fl_Clock_New_WithClockType as clockNewWithClockType' { id `CUChar', `Int',`Int',`Int',`Int', unsafeToCString `T.Text'} -> `Ptr ()' id #}
+{# fun Fl_Clock_New_WithLabel as clockNewWithLabel' { `Int',`Int',`Int',`Int', `CString'} -> `Ptr ()' id #}
+{# fun Fl_Clock_New_WithClockType as clockNewWithClockType' { id `CUChar', `Int',`Int',`Int',`Int', `CString'} -> `Ptr ()' id #}
 clockNew :: Rectangle -> Maybe T.Text -> IO (Ref Clock)
 clockNew rectangle l' =
   widgetMaker
@@ -84,7 +84,7 @@ clockNewWithType :: ClockType -> Rectangle -> T.Text -> IO (Ref Clock)
 clockNewWithType clocktype' rectangle' label' =
     let (x_pos, y_pos, width, height) = fromRectangle rectangle'
     in do
-    ref <- clockNewWithClockType' (castCharToCUChar . chr . fromEnum $ clocktype') x_pos y_pos width height label'  >>= toRef
+    ref <- copyTextToCString label' >>= \l' -> clockNewWithClockType' (castCharToCUChar . chr . fromEnum $ clocktype') x_pos y_pos width height l'  >>= toRef
     setFlag ref WidgetFlagCopiedLabel
     setFlag ref WidgetFlagCopiedTooltip
     return ref

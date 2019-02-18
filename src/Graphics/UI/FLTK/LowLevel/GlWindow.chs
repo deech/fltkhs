@@ -29,8 +29,8 @@ import qualified Data.Text as T
 
 {# fun Fl_OverriddenGl_Window_New as overriddenWindowNew' {`Int',`Int', id `Ptr ()'} -> `Ptr ()' id #}
 {# fun Fl_OverriddenGl_Window_NewXY as overriddenWindowNewXY' {`Int',`Int', `Int', `Int', id `Ptr ()'} -> `Ptr ()' id #}
-{# fun Fl_OverriddenGl_Window_NewXY_WithLabel as overriddenWindowNewXYWithLabel' { `Int',`Int',`Int',`Int',unsafeToCString `T.Text', id `Ptr ()'} -> `Ptr ()' id #}
-{# fun Fl_OverriddenGl_Window_New_WithLabel as overriddenWindowNewWithLabel' { `Int',`Int', unsafeToCString `T.Text', id `Ptr ()'} -> `Ptr ()' id #}
+{# fun Fl_OverriddenGl_Window_NewXY_WithLabel as overriddenWindowNewXYWithLabel' { `Int',`Int',`Int',`Int',`CString', id `Ptr ()'} -> `Ptr ()' id #}
+{# fun Fl_OverriddenGl_Window_New_WithLabel as overriddenWindowNewWithLabel' { `Int',`Int', `CString', id `Ptr ()'} -> `Ptr ()' id #}
 glWindowCustom :: Size                           -- ^ The size of this window
                -> Maybe Position                 -- ^ The position of this window
                -> Maybe T.Text                   -- ^ The window label
@@ -131,9 +131,9 @@ instance (impl ~ ( IO (Mode))) => Op (GetMode ()) GlWindow orig impl where
 {# fun Fl_Gl_Window_set_mode as setMode' { id `Ptr ()',`Int' } -> `Int' #}
 instance (impl ~ (Modes ->  IO ())) => Op (SetMode ()) GlWindow orig impl where
   runOp _ _ win a = withRef win $ \winPtr -> setMode' winPtr (modesToInt a) >> return ()
-{# fun Fl_Gl_Window_context as context' { id `Ptr ()' } -> `Ref FlGlContext' unsafeToRef #}
+{# fun Fl_Gl_Window_context as context' { id `Ptr ()' } -> `Ptr ()' unsafeToRef #}
 instance (impl ~ ( IO (Ref FlGlContext))) => Op (GetContext ()) GlWindow orig impl where
-  runOp _ _ win = withRef win $ \winPtr -> context' winPtr
+  runOp _ _ win = withRef win $ \winPtr -> context' winPtr >>= toRef
 {# fun Fl_Gl_Window_set_context as setContext' { id `Ptr ()',id `Ptr ()' } -> `()' supressWarningAboutRes #}
 instance (impl ~ ( Ref FlGlContext ->  IO ())) => Op (SetContext ()) GlWindow orig impl where
   runOp _ _ win context = withRef win $ \winPtr -> withRef context $ \contextPtr -> setContext' winPtr contextPtr

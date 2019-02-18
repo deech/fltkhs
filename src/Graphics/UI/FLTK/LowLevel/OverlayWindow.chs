@@ -14,7 +14,7 @@ module Graphics.UI.FLTK.LowLevel.OverlayWindow
 where
 #include "Fl_C.h"
 #include "Fl_Overlay_WindowC.h"
-import Foreign
+import C2HS hiding (cFromEnum, cFromBool, cToBool,cToEnum)
 import Graphics.UI.FLTK.LowLevel.Fl_Types
 import Graphics.UI.FLTK.LowLevel.Utils
 import Graphics.UI.FLTK.LowLevel.Hierarchy
@@ -22,9 +22,9 @@ import Graphics.UI.FLTK.LowLevel.Dispatch
 import Graphics.UI.FLTK.LowLevel.Widget
 import qualified Data.Text as T
 
-{# fun Fl_Overlay_Window_New_WithLabel as windowNewWithLabel' { `Int', `Int', unsafeToCString `T.Text', id `FunPtr CallbackPrim' } -> `Ptr ()' id #}
+{# fun Fl_Overlay_Window_New_WithLabel as windowNewWithLabel' { `Int', `Int', `CString', id `FunPtr CallbackPrim' } -> `Ptr ()' id #}
 {# fun Fl_Overlay_Window_New as windowNew' { `Int', `Int', id `FunPtr CallbackPrim' } -> `Ptr ()' id #}
-{# fun Fl_Overlay_Window_NewXY_WithLabel as windowNewWithXYLabel' { `Int', `Int', `Int', `Int', unsafeToCString `T.Text', id `FunPtr CallbackPrim' } -> `Ptr ()' id #}
+{# fun Fl_Overlay_Window_NewXY_WithLabel as windowNewWithXYLabel' { `Int', `Int', `Int', `Int', `CString', id `FunPtr CallbackPrim' } -> `Ptr ()' id #}
 {# fun Fl_Overlay_Window_NewXY as windowNewWithXY' { `Int', `Int', `Int', `Int', id `FunPtr CallbackPrim' } -> `Ptr ()' id #}
 
 overlayWindowNew :: forall a. (Parent a OverlayWindow) => Size -> Maybe T.Text -> Maybe Position -> (Ref a -> IO ()) -> IO (Ref OverlayWindow)
@@ -32,9 +32,9 @@ overlayWindowNew (Size (Width width') (Height height')) title' position' callbac
     do
       fptr <- toCallbackPrim callback'
       ref <- case (title', position') of
-              (Just t, Just (Position (X x') (Y y'))) -> windowNewWithXYLabel' width' height' x' y' t fptr >>= toRef
+              (Just t, Just (Position (X x') (Y y'))) -> copyTextToCString t >>= \t' -> windowNewWithXYLabel' width' height' x' y' t' fptr >>= toRef
               (Nothing, Just (Position (X x') (Y y'))) -> windowNewWithXY' width' height' x' y' fptr >>= toRef
-              (Just t, Nothing) -> windowNewWithLabel' width' height' t fptr >>= toRef
+              (Just t, Nothing) -> copyTextToCString t >>= \t' -> windowNewWithLabel' width' height' t' fptr >>= toRef
               (Nothing, Nothing) -> windowNew' width' height' fptr >>= toRef
       setFlag ref WidgetFlagCopiedLabel
       setFlag ref WidgetFlagCopiedTooltip
