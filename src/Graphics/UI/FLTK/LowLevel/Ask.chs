@@ -36,13 +36,23 @@ flBeep :: Maybe BeepType -> IO ()
 flBeep Nothing = flBeep'
 flBeep (Just bt) = flBeepType' (fromIntegral (fromEnum bt))
 
-{# fun flc_input as flInput' { unsafeToCString `T.Text' } -> `()' #}
-flInput :: T.Text -> IO ()
-flInput = flInput'
+{# fun flc_input as flInput' { unsafeToCString `T.Text' } -> `Maybe T.Text' unsafeFromMaybeCString #}
+flInput :: T.Text -> IO (Maybe T.Text)
+flInput msg = do
+  r <- flInput' msg
 
-{# fun flc_password as flPassword' { unsafeToCString `T.Text' } -> `()' #}
-flPassword :: T.Text -> IO ()
-flPassword = flPassword'
+  -- force the result, otherwise multiple calls to 'flInput' may appear to have
+  -- the same result even if the user typed different things
+  r `seq` return r
+
+{# fun flc_password as flPassword' { unsafeToCString `T.Text' } -> `Maybe T.Text' unsafeFromMaybeCString #}
+flPassword :: T.Text -> IO (Maybe T.Text)
+flPassword msg = do
+  r <- flPassword' msg
+
+  -- force the result, otherwise multiple calls to 'flPassword' may appear to have
+  -- the same result even if the user typed different things
+  r `seq` return r
 
 {# fun flc_message as flMessage' { unsafeToCString `T.Text' } -> `()' #}
 flMessage :: T.Text -> IO ()

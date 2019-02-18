@@ -9,6 +9,7 @@ import Graphics.UI.FLTK.LowLevel.Fl_Enumerations
 import Graphics.UI.FLTK.LowLevel.Dispatch
 import qualified Data.Text as T
 import Data.List
+import Data.Maybe
 import qualified Data.Text.Foreign as TF
 import qualified Data.Text.Encoding as E
 import Foreign
@@ -312,6 +313,9 @@ unsafeToCString t = Unsafe.unsafePerformIO (copyTextToCString t)
 unsafeFromCString :: CString -> T.Text
 unsafeFromCString cstring = Unsafe.unsafePerformIO (cStringToText cstring)
 
+unsafeFromMaybeCString :: CString -> Maybe T.Text
+unsafeFromMaybeCString cstring = Unsafe.unsafePerformIO (cStringToMaybeText cstring)
+
 #ifdef CALLSTACK_AVAILABLE
 cStringToText :: (?loc :: CallStack) => CString -> IO T.Text
 #elif defined(HASCALLSTACK_AVAILABLE)
@@ -319,12 +323,21 @@ cStringToText :: (HasCallStack) => CString -> IO T.Text
 #else
 cStringToText :: CString -> IO T.Text
 #endif
-cStringToText cstring =
-    if (cstring == nullPtr) then return ""
+cStringToText = fmap (fromMaybe "") . cStringToMaybeText
+
+#ifdef CALLSTACK_AVAILABLE
+cStringToMaybeText :: (?loc :: CallStack) => CString -> IO (Maybe T.Text)
+#elif defined(HASCALLSTACK_AVAILABLE)
+cStringToMaybeText :: (HasCallStack) => CString -> IO (Maybe T.Text)
+#else
+cStringToMaybeText :: CString -> IO (Maybe T.Text)
+#endif
+cStringToMaybeText cstring =
+    if (cstring == nullPtr) then return Nothing
     else do
       byteString <- B.packCString cstring
       either (\e -> traceStack (show e) (error ""))
-             return
+             (return . Just)
              (E.decodeUtf8' byteString)
 
 toMaybeRef :: Ptr () -> IO (Maybe (Ref a))
