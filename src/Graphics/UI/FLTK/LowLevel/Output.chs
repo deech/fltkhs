@@ -36,7 +36,7 @@ enum FlOutputType {
   FlMultilineOutput = FL_MULTILINE_OUTPUT
 };
 #endc
-{# fun Fl_OverriddenOutput_New_WithLabel as overriddenWidgetNewWithLabel' { `Int',`Int',`Int',`Int', unsafeToCString `T.Text', id `Ptr ()'} -> `Ptr ()' id #}
+{# fun Fl_OverriddenOutput_New_WithLabel as overriddenWidgetNewWithLabel' { `Int',`Int',`Int',`Int', `CString', id `Ptr ()'} -> `Ptr ()' id #}
 {# fun Fl_OverriddenOutput_New as overriddenWidgetNew' { `Int',`Int',`Int',`Int', id `Ptr ()'} -> `Ptr ()' id #}
 outputCustom ::
        Rectangle                         -- ^ The bounds of this Output
@@ -56,15 +56,15 @@ outputCustom rectangle l' draw' funcs' =
 
 {#enum FlOutputType {}#}
 {# fun Fl_Output_New as outputNew' { `Int',`Int',`Int',`Int' } -> `Ptr ()' id #}
-{# fun Fl_Output_New_WithLabel as outputNewWithLabel' { `Int',`Int',`Int',`Int', unsafeToCString `T.Text'} -> `Ptr ()' id #}
+{# fun Fl_Output_New_WithLabel as outputNewWithLabel' { `Int',`Int',`Int',`Int', `CString'} -> `Ptr ()' id #}
 {# fun Fl_Multiline_Output_New as multilineOutputNew' { `Int',`Int',`Int',`Int' } -> `Ptr ()' id #}
-{# fun Fl_Multiline_Output_New_WithLabel as multilineOutputNewWithLabel' { `Int',`Int',`Int',`Int', unsafeToCString `T.Text'} -> `Ptr ()' id #}
+{# fun Fl_Multiline_Output_New_WithLabel as multilineOutputNewWithLabel' { `Int',`Int',`Int',`Int', `CString'} -> `Ptr ()' id #}
 outputNew :: Rectangle -> Maybe T.Text -> Maybe FlOutputType -> IO (Ref Output)
 outputNew rectangle l' flOutputType =
     let (x_pos, y_pos, width, height) = fromRectangle rectangle
         constructor = case flOutputType of
-                       Just FlNormalOutput -> maybe outputNew' (\l -> (\x y w h -> outputNewWithLabel' x y w h l)) l'
-                       Just FlMultilineOutput -> maybe multilineOutputNew' (\l -> (\x y w h -> multilineOutputNewWithLabel' x y w h l)) l'
+                       Just FlNormalOutput -> maybe outputNew' (\l -> (\x y w h -> copyTextToCString l >>= \l' -> outputNewWithLabel' x y w h l')) l'
+                       Just FlMultilineOutput -> maybe multilineOutputNew' (\l -> (\x y w h -> copyTextToCString l >>= \l' -> multilineOutputNewWithLabel' x y w h l')) l'
                        Nothing -> outputNew'
     in do
     ref <- constructor x_pos y_pos width height >>= toRef

@@ -20,15 +20,16 @@ import Graphics.UI.FLTK.LowLevel.Hierarchy
 import Graphics.UI.FLTK.LowLevel.RGBImage
 import qualified Data.ByteString as B
 import qualified Data.Text as T
-{# fun Fl_JPEG_Image_New as jpegImageNew' { unsafeToCString `T.Text' } -> `Ptr ()' id #}
-{# fun Fl_JPEG_Image_New_WithData as jpegImageNewWithData' { unsafeToCString `T.Text', id `Ptr CUChar' } -> `Ptr ()' id #}
+{# fun Fl_JPEG_Image_New as jpegImageNew' { `CString' } -> `Ptr ()' id #}
+{# fun Fl_JPEG_Image_New_WithData as jpegImageNewWithData' { `CString', id `Ptr CUChar' } -> `Ptr ()' id #}
 jpegImageNew :: T.Text -> IO (Either UnknownError (Ref JPEGImage))
-jpegImageNew filename' = jpegImageNew' filename' >>= toRef >>= checkImage
+jpegImageNew filename' = withText filename' jpegImageNew' >>= toRef >>= checkImage
 
 jpegImageNewWithData :: T.Text -> B.ByteString -> IO (Either UnknownError (Ref JPEGImage))
 jpegImageNewWithData l' data' = do
   jpeg' <- copyByteStringToCString data'
-  jpegImageNewWithData' l' (castPtr jpeg') >>= toRef >>= checkImage
+  labelString <- copyTextToCString l'
+  jpegImageNewWithData' labelString (castPtr jpeg') >>= toRef >>= checkImage
 
 -- $hierarchy
 -- @

@@ -40,7 +40,7 @@ groupCurrent :: IO (Maybe (Ref Group))
 groupCurrent = groupCurrent' >>= toMaybeRef
 
 {# fun Fl_Group_New as groupNew' {  `Int',`Int', `Int', `Int'} -> `Ptr ()' id #}
-{# fun Fl_Group_New_WithLabel as groupNewWithLabel' { `Int',`Int',`Int',`Int',unsafeToCString `T.Text'} -> `Ptr ()' id #}
+{# fun Fl_Group_New_WithLabel as groupNewWithLabel' { `Int',`Int',`Int',`Int',`CString'} -> `Ptr ()' id #}
 groupNew :: Rectangle -> Maybe T.Text -> IO (Ref Group)
 groupNew rectangle label' =
   widgetMaker
@@ -51,7 +51,7 @@ groupNew rectangle label' =
     overriddenGroupNew'
     overriddenGroupNewWithLabel'
 
-{# fun Fl_OverriddenGroup_New_WithLabel as overriddenGroupNewWithLabel' { `Int',`Int',`Int',`Int',unsafeToCString `T.Text', id `Ptr ()'} -> `Ptr ()' id #}
+{# fun Fl_OverriddenGroup_New_WithLabel as overriddenGroupNewWithLabel' { `Int',`Int',`Int',`Int',`CString', id `Ptr ()'} -> `Ptr ()' id #}
 {# fun Fl_OverriddenGroup_New as overriddenGroupNew' { `Int',`Int',`Int',`Int', id `Ptr ()'} -> `Ptr ()' id #}
 groupCustom :: Rectangle -> Maybe T.Text -> Maybe (Ref Group -> IO ()) -> CustomWidgetFuncs Group -> IO (Ref Group)
 groupCustom rectangle l' draw' funcs' =

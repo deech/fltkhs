@@ -78,7 +78,7 @@ toStyleTableEntries len ptr = do
 indexStyleTableEntries :: [StyleTableEntry] -> [(Char, StyleTableEntry)]
 indexStyleTableEntries = zip ['A'..]
 
-{# fun Fl_OverriddenText_Display_New_WithLabel as overriddenWidgetNewWithLabel' { `Int',`Int',`Int',`Int', unsafeToCString `T.Text', id `Ptr ()'} -> `Ptr ()' id #}
+{# fun Fl_OverriddenText_Display_New_WithLabel as overriddenWidgetNewWithLabel' { `Int',`Int',`Int',`Int', `CString', id `Ptr ()'} -> `Ptr ()' id #}
 {# fun Fl_OverriddenText_Display_New as overriddenWidgetNew' { `Int',`Int',`Int',`Int', id `Ptr ()'} -> `Ptr ()' id #}
 textDisplayCustom ::
        Rectangle                         -- ^ The bounds of this TextDisplay
@@ -96,15 +96,13 @@ textDisplayCustom rectangle l' draw' funcs' =
     overriddenWidgetNewWithLabel'
 
 {# fun Fl_Text_Display_New as textDisplayNew' { `Int',`Int',`Int',`Int' } -> `Ptr ()' id #}
-{# fun Fl_Text_Display_New_WithLabel as textDisplayNewWithLabel' { `Int',`Int',`Int',`Int',unsafeToCString `T.Text'} -> `Ptr ()' id #}
+{# fun Fl_Text_Display_New_WithLabel as textDisplayNewWithLabel' { `Int',`Int',`Int',`Int',`CString'} -> `Ptr ()' id #}
 textDisplayNew :: Rectangle -> Maybe T.Text -> IO (Ref TextDisplay)
 textDisplayNew rectangle l' =
     let (x_pos, y_pos, width, height) = fromRectangle rectangle
     in case l' of
-        Nothing -> textDisplayNew' x_pos y_pos width height >>=
-                             toRef
-        Just l -> textDisplayNewWithLabel' x_pos y_pos width height l >>=
-                             toRef
+        Nothing -> textDisplayNew' x_pos y_pos width height >>= toRef
+        Just l -> copyTextToCString l >>= \l' -> textDisplayNewWithLabel' x_pos y_pos width height l' >>= toRef
 
 {# fun Fl_Text_Display_Destroy as textDisplayDestroy' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
 instance (impl ~ (IO ())) => Op (Destroy ()) TextDisplay orig impl where
@@ -121,9 +119,9 @@ instance (impl ~ (IndexRange -> IO ())) => Op (RedisplayRange ()) TextDisplay or
 {# fun Fl_Text_Display_scroll as scroll' { id `Ptr ()',`Int',`Int' } -> `()' #}
 instance (impl ~ (LineNumber -> AtIndex ->  IO ())) => Op (Scroll ()) TextDisplay orig impl where
   runOp _ _ text_display (LineNumber toplinenum) (AtIndex  horizoffset) = withRef text_display $ \text_displayPtr -> scroll' text_displayPtr toplinenum horizoffset
-{# fun Fl_Text_Display_overstrike as overstrike' { id `Ptr ()',unsafeToCString `T.Text' } -> `()' #}
+{# fun Fl_Text_Display_overstrike as overstrike' { id `Ptr ()',`CString' } -> `()' #}
 instance (impl ~ (T.Text ->  IO ())) => Op (Overstrike ()) TextDisplay orig impl where
-   runOp _ _ text_display text = withRef text_display $ \text_displayPtr -> overstrike' text_displayPtr text
+   runOp _ _ text_display text = withRef text_display $ \text_displayPtr -> copyTextToCString text >>= overstrike' text_displayPtr
 {# fun Fl_Text_Display_set_insert_position as setInsertPosition' { id `Ptr ()',`Int' } -> `()' #}
 instance (impl ~ (AtIndex ->  IO ())) => Op (SetInsertPosition ()) TextDisplay orig impl where
   runOp _ _ text_display (AtIndex newpos) = withRef text_display $ \text_displayPtr -> setInsertPosition' text_displayPtr newpos
@@ -304,12 +302,12 @@ instance (impl ~ (AlignType ->  IO ())) => Op (SetLinenumberAlign ()) TextDispla
 {# fun linenumber_align as linenumberAlign' { id `Ptr ()' } -> `AlignType' cToEnum #}
 instance (impl ~ ( IO (AlignType))) => Op (GetLinenumberAlign ()) TextDisplay orig impl where
    runOp _ _ text_display = withRef text_display $ \text_displayPtr -> linenumberAlign' text_displayPtr
-{# fun set_linenumber_format as setLinenumberFormat' { id `Ptr ()',unsafeToCString `T.Text' } -> `()' #}
+{# fun set_linenumber_format as setLinenumberFormat' { id `Ptr ()',`CString' } -> `()' #}
 instance (impl ~ (T.Text ->  IO ())) => Op (SetLinenumberFormat ()) TextDisplay orig impl where
-   runOp _ _ text_display val = withRef text_display $ \text_displayPtr -> setLinenumberFormat' text_displayPtr val
-{# fun linenumber_format as linenumberFormat' { id `Ptr ()' } -> `T.Text' unsafeFromCString #}
+   runOp _ _ text_display val = withRef text_display $ \text_displayPtr -> copyTextToCString val >>= setLinenumberFormat' text_displayPtr
+{# fun linenumber_format as linenumberFormat' { id `Ptr ()' } -> `CString' #}
 instance (impl ~ ( IO T.Text)) => Op (GetLinenumberFormat ()) TextDisplay orig impl where
-   runOp _ _ text_display = withRef text_display $ \text_displayPtr -> linenumberFormat' text_displayPtr
+   runOp _ _ text_display = withRef text_display $ \text_displayPtr -> linenumberFormat' text_displayPtr >>= cStringToText
 {# fun Fl_Text_Display_wrap_mode as wrapMode' { id `Ptr ()', `CInt', `CInt'} -> `()' #}
 instance (impl ~ (WrapType -> IO ())) => Op (WrapMode ()) TextDisplay orig impl where
   runOp _ _ textDisplay wt =

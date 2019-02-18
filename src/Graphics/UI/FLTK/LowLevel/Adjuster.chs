@@ -26,7 +26,7 @@ import qualified Data.Text as T
 import Graphics.UI.FLTK.LowLevel.Fl_Enumerations
 import Graphics.UI.FLTK.LowLevel.Widget
 
-{# fun Fl_OverriddenAdjuster_New_WithLabel as overriddenWidgetNewWithLabel' { `Int',`Int',`Int',`Int', unsafeToCString `T.Text', id `Ptr ()'} -> `Ptr ()' id #}
+{# fun Fl_OverriddenAdjuster_New_WithLabel as overriddenWidgetNewWithLabel' { `Int',`Int',`Int',`Int', `CString', id `Ptr ()'} -> `Ptr ()' id #}
 {# fun Fl_OverriddenAdjuster_New as overriddenWidgetNew' { `Int',`Int',`Int',`Int', id `Ptr ()'} -> `Ptr ()' id #}
 adjusterCustom ::
        Rectangle                         -- ^ The bounds of this Adjuster
@@ -45,15 +45,13 @@ adjusterCustom rectangle l' draw' funcs' =
 
 
 {# fun Fl_Adjuster_New as adjusterNew' { `Int',`Int',`Int',`Int' } -> `Ptr ()' id #}
-{# fun Fl_Adjuster_New_WithLabel as adjusterNewWithLabel' { `Int',`Int',`Int',`Int', unsafeToCString `T.Text'} -> `Ptr ()' id #}
+{# fun Fl_Adjuster_New_WithLabel as adjusterNewWithLabel' { `Int',`Int',`Int',`Int', `CString'} -> `Ptr ()' id #}
 adjusterNew :: Rectangle -> Maybe T.Text -> IO (Ref Adjuster)
 adjusterNew rectangle l'=
     let (x_pos, y_pos, width, height) = fromRectangle rectangle
     in case l' of
-        Nothing -> adjusterNew' x_pos y_pos width height >>=
-                             toRef
-        Just l -> adjusterNewWithLabel' x_pos y_pos width height l >>=
-                               toRef
+        Nothing -> adjusterNew' x_pos y_pos width height >>= toRef
+        Just l -> copyTextToCString l >>= \l' -> adjusterNewWithLabel' x_pos y_pos width height l' >>= toRef
 
 {# fun Fl_Adjuster_Destroy as adjusterDestroy' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
 instance (impl ~ (IO ())) => Op (Destroy ()) Adjuster orig impl where

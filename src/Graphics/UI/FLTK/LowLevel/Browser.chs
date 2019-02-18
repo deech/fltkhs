@@ -29,8 +29,8 @@ import qualified Data.Text as T
 import Graphics.UI.FLTK.LowLevel.Widget
 
 {# fun Fl_Browser_New as browserNew' { `Int',`Int',`Int',`Int' } -> `Ptr ()' id #}
-{# fun Fl_Browser_New_WithLabel as browserNewWithLabel' { `Int',`Int',`Int',`Int',unsafeToCString `T.Text'} -> `Ptr ()' id #}
-{# fun Fl_OverriddenBrowser_New_WithLabel as overriddenBrowserNewWithLabel' { `Int',`Int',`Int',`Int',unsafeToCString `T.Text', id `Ptr ()'} -> `Ptr ()' id #}
+{# fun Fl_Browser_New_WithLabel as browserNewWithLabel' { `Int',`Int',`Int',`Int',`CString'} -> `Ptr ()' id #}
+{# fun Fl_OverriddenBrowser_New_WithLabel as overriddenBrowserNewWithLabel' { `Int',`Int',`Int',`Int',`CString', id `Ptr ()'} -> `Ptr ()' id #}
 {# fun Fl_OverriddenBrowser_New as overriddenBrowserNew' { `Int',`Int',`Int',`Int', id `Ptr ()'} -> `Ptr ()' id #}
 browserCustom :: Rectangle -> Maybe T.Text -> Maybe (Ref Browser -> IO ()) -> Maybe (CustomWidgetFuncs Browser) -> IO (Ref Browser)
 browserCustom rectangle l' draw' funcs' =
@@ -64,19 +64,19 @@ instance (impl ~ (IO ())) => Op (Destroy ()) Browser orig impl where
 {# fun Fl_Browser_remove as remove' { id `Ptr ()',`Int' } -> `()' #}
 instance (impl ~ (LineNumber ->  IO ())) => Op (Remove ()) Browser orig impl where
   runOp _ _ browser (LineNumber line) = withRef browser $ \browserPtr -> remove' browserPtr line
-{# fun Fl_Browser_add as add' { id `Ptr ()',unsafeToCString `T.Text' } -> `()' #}
+{# fun Fl_Browser_add as add' { id `Ptr ()',`CString' } -> `()' #}
 instance (impl ~ (T.Text ->  IO ())) => Op (Add ()) Browser orig impl where
-  runOp _ _ browser newtext = withRef browser $ \browserPtr -> add' browserPtr newtext
-{# fun Fl_Browser_insert as insert' { id `Ptr ()',`Int',unsafeToCString `T.Text' } -> `()' #}
+  runOp _ _ browser newtext = withRef browser $ \browserPtr -> copyTextToCString newtext >>= add' browserPtr
+{# fun Fl_Browser_insert as insert' { id `Ptr ()',`Int',`CString' } -> `()' #}
 instance (impl ~ (LineNumber -> T.Text ->  IO ())) => Op (Insert ()) Browser orig impl where
-  runOp _ _ browser (LineNumber line) newtext = withRef browser $ \browserPtr -> insert' browserPtr line newtext
+  runOp _ _ browser (LineNumber line) newtext = withRef browser $ \browserPtr -> copyTextToCString newtext >>= insert' browserPtr line
 {# fun Fl_Browser_move as move' { id `Ptr ()',`Int',`Int' } -> `()' #}
 instance (impl ~ (LineNumber -> LineNumber ->  IO ())) => Op (Move ()) Browser orig impl where
   runOp _ _ browser (LineNumber to) (LineNumber from) = withRef browser $ \browserPtr -> move' browserPtr to from
-{# fun Fl_Browser_load as load' { id `Ptr ()',unsafeToCString `T.Text' } -> `Int' #}
+{# fun Fl_Browser_load as load' { id `Ptr ()',`CString' } -> `Int' #}
 instance (impl ~ (T.Text ->  IO (Either UnknownError ()))) => Op (Load ()) Browser orig impl where
   runOp _ _ browser filename = do
-    res <- withRef browser $ \browserPtr -> load' browserPtr filename
+    res <- withRef browser $ \browserPtr -> withText filename (\f -> load' browserPtr f)
     if (res == 0) then return (Left UnknownError) else return (Right ())
 {# fun Fl_Browser_swap as swap' { id `Ptr ()',`Int',`Int' } -> `()' #}
 instance (impl ~ (LineNumber -> LineNumber ->  IO ())) => Op (Swap ()) Browser orig impl where
@@ -132,12 +132,12 @@ instance (impl ~ ( IO (LineNumber))) => Op (GetValue ()) Browser orig impl where
 {# fun Fl_Browser_set_value as setValue' { id `Ptr ()',`Int' } -> `()' #}
 instance (impl ~ (LineNumber ->  IO ())) => Op (SetValue ()) Browser orig impl where
   runOp _ _ browser (LineNumber line) = withRef browser $ \browserPtr -> setValue' browserPtr line
-{# fun Fl_Browser_text as text' { id `Ptr ()',`Int' } -> `T.Text' unsafeFromCString #}
+{# fun Fl_Browser_text as text' { id `Ptr ()',`Int' } -> `CString' #}
 instance (impl ~ (LineNumber ->  IO T.Text)) => Op (GetText ()) Browser orig impl where
-  runOp _ _ browser (LineNumber line) = withRef browser $ \browserPtr -> text' browserPtr line
-{# fun Fl_Browser_set_text as setText' { id `Ptr ()',`Int', unsafeToCString `T.Text' } -> `()' #}
+  runOp _ _ browser (LineNumber line) = withRef browser $ \browserPtr -> text' browserPtr line >>= cStringToText
+{# fun Fl_Browser_set_text as setText' { id `Ptr ()',`Int', `CString' } -> `()' #}
 instance (impl ~ (LineNumber -> T.Text ->  IO ())) => Op (SetText ()) Browser orig impl where
-  runOp _ _ browser (LineNumber line) newtext = withRef browser $ \browserPtr -> setText' browserPtr line newtext
+  runOp _ _ browser (LineNumber line) newtext = withRef browser $ \browserPtr -> copyTextToCString newtext >>= setText' browserPtr line
 {# fun Fl_Browser_format_char as formatChar' { id `Ptr ()' } -> `CChar' id #}
 instance (impl ~ ( IO (Char))) => Op (GetFormatChar ()) Browser orig impl where
   runOp _ _ browser = withRef browser $ \browserPtr -> formatChar' browserPtr >>= return . castCCharToChar

@@ -28,7 +28,7 @@ import Graphics.UI.FLTK.LowLevel.Hierarchy
 import Graphics.UI.FLTK.LowLevel.MenuItem
 import Graphics.UI.FLTK.LowLevel.MenuPrim
 
-{# fun Fl_OverriddenSys_Menu_Bar_New_WithLabel as overriddenWidgetNewWithLabel' { `Int',`Int',`Int',`Int', unsafeToCString `T.Text', id `Ptr ()'} -> `Ptr ()' id #}
+{# fun Fl_OverriddenSys_Menu_Bar_New_WithLabel as overriddenWidgetNewWithLabel' { `Int',`Int',`Int',`Int', `CString', id `Ptr ()'} -> `Ptr ()' id #}
 {# fun Fl_OverriddenSys_Menu_Bar_New as overriddenWidgetNew' { `Int',`Int',`Int',`Int', id `Ptr ()'} -> `Ptr ()' id #}
 sysMenuBarCustom ::
        Rectangle                         -- ^ The bounds of this SysMenuBar
@@ -45,7 +45,7 @@ sysMenuBarCustom rectangle l' draw' funcs' =
     overriddenWidgetNew'
     overriddenWidgetNewWithLabel'
 {# fun Fl_Sys_Menu_Bar_New as sysMenuBarNew' { `Int',`Int',`Int',`Int' } -> `Ptr ()' id #}
-{# fun Fl_Sys_Menu_Bar_New_WithLabel as sysMenuBarNewWithLabel' { `Int',`Int',`Int',`Int', unsafeToCString `T.Text'} -> `Ptr ()' id #}
+{# fun Fl_Sys_Menu_Bar_New_WithLabel as sysMenuBarNewWithLabel' { `Int',`Int',`Int',`Int', `CString'} -> `Ptr ()' id #}
 sysMenuBarNew :: Rectangle -> Maybe T.Text -> IO (Ref SysMenuBar)
 sysMenuBarNew rectangle l'=
   widgetMaker
@@ -63,9 +63,9 @@ instance (impl ~ ( IO ())) => Op (Destroy ()) SysMenuBar orig impl where
 {# fun Fl_Sys_Menu_Bar_remove as remove' { id `Ptr ()',`Int' } -> `()' #}
 instance (impl ~ (Int  ->  IO ())) => Op (Remove ()) SysMenuBar orig impl where
   runOp _ _ menu_ index' = withRef menu_ $ \menu_Ptr -> remove' menu_Ptr index'
-{# fun Fl_Sys_Menu_Bar_replace as replace' { id `Ptr ()',`Int', unsafeToCString `T.Text' } -> `()' #}
+{# fun Fl_Sys_Menu_Bar_replace as replace' { id `Ptr ()',`Int', `CString' } -> `()' #}
 instance (impl ~ (AtIndex -> T.Text ->  IO ())) => Op (Replace ()) SysMenuBar orig impl where
-  runOp _ _ menu_ (AtIndex index') name = withRef menu_ $ \menu_Ptr -> replace' menu_Ptr index' name
+  runOp _ _ menu_ (AtIndex index') name = withRef menu_ $ \menu_Ptr -> copyTextToCString name >>= replace' menu_Ptr index'
 {# fun Fl_Sys_Menu_Bar_clear as clear' { id `Ptr ()' } -> `()' #}
 instance (impl ~ ( IO ())) => Op (Clear ()) SysMenuBar orig impl where
   runOp _ _ menu_ = withRef menu_ $ \menu_Ptr -> clear' menu_Ptr
@@ -93,18 +93,18 @@ instance (impl ~ ([Ref MenuItem] -> IO ())) => Op (SetMenu ()) SysMenuBar orig i
         withRefs items $ \menu_itemsPtr ->
             menuWithM' menu_Ptr menu_itemsPtr (length items)
 
-{# fun Fl_Sys_Menu_Bar_add_with_name as add' { id `Ptr ()',unsafeToCString `T.Text'} -> `()' #}
+{# fun Fl_Sys_Menu_Bar_add_with_name as add' { id `Ptr ()',`CString'} -> `()' #}
 instance (impl ~ (T.Text -> IO ())) => Op (AddName ()) SysMenuBar orig impl where
-  runOp _ _ menu_ name' = withRef menu_ $ \menu_Ptr -> add' menu_Ptr name'
+  runOp _ _ menu_ name' = withRef menu_ $ \menu_Ptr -> copyTextToCString name' >>= add' menu_Ptr
 
-{# fun Fl_Sys_Menu_Bar_add_with_flags as addWithFlags' { id `Ptr ()',unsafeToCString `T.Text',id `CInt',id `FunPtr CallbackWithUserDataPrim',`Int' } -> `Int' #}
-{# fun Fl_Sys_Menu_Bar_add_with_shortcutname_flags as addWithShortcutnameFlags' { id `Ptr ()', unsafeToCString `T.Text', unsafeToCString `T.Text',id `FunPtr CallbackWithUserDataPrim',`Int' } -> `Int' #}
+{# fun Fl_Sys_Menu_Bar_add_with_flags as addWithFlags' { id `Ptr ()',`CString',id `CInt',id `FunPtr CallbackWithUserDataPrim',`Int' } -> `Int' #}
+{# fun Fl_Sys_Menu_Bar_add_with_shortcutname_flags as addWithShortcutnameFlags' { id `Ptr ()', `CString', `CString',id `FunPtr CallbackWithUserDataPrim',`Int' } -> `Int' #}
 instance (Parent a MenuItem, impl ~ ( T.Text -> Maybe Shortcut -> Maybe (Ref a-> IO ()) -> MenuItemFlags -> IO (AtIndex))) => Op (Add ()) SysMenuBar orig (impl) where
   runOp _ _ menu_ name shortcut cb flags =
     addMenuItem (Left (safeCast menu_)) name shortcut cb flags addWithFlags' addWithShortcutnameFlags'
 
-{# fun Fl_Sys_Menu_Bar_insert_with_flags as insertWithFlags' { id `Ptr ()',`Int',unsafeToCString `T.Text',id `CInt',id `FunPtr CallbackWithUserDataPrim',`Int'} -> `Int' #}
-{# fun Fl_Sys_Menu_Bar_insert_with_shortcutname_flags as insertWithShortcutnameFlags' { id `Ptr ()',`Int',unsafeToCString `T.Text', unsafeToCString `T.Text',id `FunPtr CallbackWithUserDataPrim',`Int' } -> `Int' #}
+{# fun Fl_Sys_Menu_Bar_insert_with_flags as insertWithFlags' { id `Ptr ()',`Int',`CString',id `CInt',id `FunPtr CallbackWithUserDataPrim',`Int'} -> `Int' #}
+{# fun Fl_Sys_Menu_Bar_insert_with_shortcutname_flags as insertWithShortcutnameFlags' { id `Ptr ()',`Int',`CString', `CString',id `FunPtr CallbackWithUserDataPrim',`Int' } -> `Int' #}
 instance (Parent a MenuPrim, impl ~ ( AtIndex -> T.Text -> Maybe Shortcut -> (Ref a -> IO ()) -> MenuItemFlags -> IO (AtIndex))) => Op (Insert ()) SysMenuBar orig impl where
   runOp _ _ menu_ (AtIndex index') name shortcut cb flags = insertMenuItem (safeCast menu_) index' name shortcut cb flags insertWithFlags' insertWithShortcutnameFlags'
 {# fun Fl_Sys_Menu_Bar_draw as draw'' { id `Ptr ()' } -> `()' #}

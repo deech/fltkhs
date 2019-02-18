@@ -74,17 +74,19 @@ instance (impl ~ IO Int) => Op (GetW ()) TreeItem orig impl where
 {# fun Fl_Tree_Item_h as h' { id `Ptr ()' } -> `Int' #}
 instance (impl ~ IO Int) => Op (GetH ()) TreeItem orig impl where
   runOp _ _ tree_item = withRef tree_item $ \tree_itemPtr -> h' tree_itemPtr
-{# fun Fl_Tree_Item_show_self_with_indent as showSelfWithIndent' { id `Ptr ()',unsafeToCString `T.Text' } -> `()' #}
+{# fun Fl_Tree_Item_show_self_with_indent as showSelfWithIndent' { id `Ptr ()',`CString' } -> `()' #}
 instance (impl ~ (Maybe T.Text -> IO ())) => Op (ShowSelf ()) TreeItem orig impl where
   runOp _ _ tree_item indent = case indent of
-    Just s' -> withRef tree_item $ \tree_itemPtr -> showSelfWithIndent' tree_itemPtr s'
-    Nothing -> withRef tree_item $ \tree_itemPtr -> showSelfWithIndent' tree_itemPtr ""
+    Just s' -> withRef tree_item $ \tree_itemPtr ->
+      copyTextToCString s' >>= showSelfWithIndent' tree_itemPtr
+    Nothing -> withRef tree_item $ \tree_itemPtr ->
+      copyTextToCString "" >>= showSelfWithIndent' tree_itemPtr
 {# fun Fl_Tree_Item_set_label as setLabel' { id `Ptr ()',id `Ptr CChar ' } -> `()' #}
 instance (impl ~ ( T.Text ->  IO ())) => Op (SetLabel ()) TreeItem orig impl where
   runOp _ _ tree_item val = withRef tree_item $ \tree_itemPtr -> withText val (\valPtr -> setLabel' tree_itemPtr valPtr)
-{# fun Fl_Tree_Item_label as label' { id `Ptr ()' } -> `T.Text' unsafeFromCString #}
+{# fun Fl_Tree_Item_label as label' { id `Ptr ()' } -> `CString' #}
 instance (impl ~ (IO T.Text)) => Op (GetLabel ()) TreeItem orig impl where
-  runOp _ _ tree_item = withRef tree_item $ \tree_itemPtr -> label' tree_itemPtr
+  runOp _ _ tree_item = withRef tree_item $ \tree_itemPtr -> label' tree_itemPtr >>= cStringToText
 {# fun Fl_Tree_Item_set_labelfont as setLabelfont' { id `Ptr ()',cFromFont `Font' } -> `()' #}
 instance (impl ~ ( Font ->  IO ())) => Op (SetLabelfont ()) TreeItem orig impl where
   runOp _ _ tree_item val = withRef tree_item $ \tree_itemPtr -> setLabelfont' tree_itemPtr val
@@ -131,22 +133,22 @@ instance (impl ~ ( AtIndex ->  IO (Maybe (Ref Widget)))) => Op (Child ()) TreeIt
 instance (impl ~ (IO (Bool))) => Op (HasChildren ()) TreeItem orig impl where
   runOp _ _ tree_item = withRef tree_item $ \tree_itemPtr -> hasChildren' tree_itemPtr
 
-{# fun Fl_Tree_Item_find_child as findChild' { id `Ptr ()',unsafeToCString `T.Text' } -> `Int' #}
+{# fun Fl_Tree_Item_find_child as findChild' { id `Ptr ()',`CString' } -> `Int' #}
 {# fun Fl_Tree_Item_find_child_by_item as findChildByItem' { id `Ptr ()',id `Ptr ()' } -> `Int' #}
 instance (impl ~ ( TreeItemLocator ->  IO (Maybe AtIndex))) => Op (FindChild ()) TreeItem orig impl where
   runOp _ _ tree_item locator' = withRef tree_item $ \tree_itemPtr -> do
     idx' <- case locator' of
              (TreeItemPointerLocator (TreeItemPointer item')) -> withRef item' $ \itemPtr-> findChildByItem' tree_itemPtr itemPtr
-             (TreeItemNameLocator (TreeItemName name')) -> findChild' tree_itemPtr name'
+             (TreeItemNameLocator (TreeItemName name')) -> copyTextToCString name' >>= findChild' tree_itemPtr
     if idx' == -1 then return Nothing else (return $ Just (AtIndex idx'))
 
 {# fun Fl_Tree_Item_remove_child_by_item as removeChildByItem' { id `Ptr ()',id `Ptr ()' } -> `Int' #}
-{# fun Fl_Tree_Item_remove_child as removeChild' { id `Ptr ()',unsafeToCString `T.Text' } -> `Int' #}
+{# fun Fl_Tree_Item_remove_child as removeChild' { id `Ptr ()',`CString' } -> `Int' #}
 instance (impl ~ ( TreeItemLocator ->  IO (Either UnknownError ()))) => Op (RemoveChild ()) TreeItem orig impl where
   runOp _ _ tree_item locator' = withRef tree_item $ \tree_itemPtr -> do
      status' <- case locator' of
        (TreeItemPointerLocator (TreeItemPointer item')) -> withRef item' $ \itemPtr-> removeChildByItem' tree_itemPtr itemPtr
-       (TreeItemNameLocator (TreeItemName name')) -> removeChild' tree_itemPtr name'
+       (TreeItemNameLocator (TreeItemName name')) -> copyTextToCString name' >>= removeChild' tree_itemPtr
      if (status' < 0) then (return $ Left UnknownError) else (return $ Right ())
 {# fun Fl_Tree_Item_clear_children as clearChildren' { id `Ptr ()' } -> `()' #}
 instance (impl ~ (IO ())) => Op (ClearChildren ()) TreeItem orig impl where
@@ -169,13 +171,13 @@ instance (impl ~ ( [T.Text] ->  IO (Maybe (Ref TreeItem)))) => Op (FindItem ()) 
       withStrings path (\pathPtr -> findItem' tree_itemPtr (castPtr pathPtr) >>= toMaybeRef)
 {# fun Fl_Tree_Item_add_with as addWith' {id `Ptr ()', id `Ptr ()', id `Ptr CChar', id `Ptr ()'} -> `Ptr ()' id #}
 {# fun Fl_Tree_Item_add_with_at as addWithAt' {id `Ptr ()', id `Ptr ()', id `Ptr ()' , id `Ptr (Ptr CChar)'} -> `Ptr ()' id #}
-{# fun Fl_Tree_Item_add as add' {id `Ptr ()', id `Ptr ()', unsafeToCString `T.Text'} -> `Ptr ()' id #}
+{# fun Fl_Tree_Item_add as add' {id `Ptr ()', id `Ptr ()', `CString'} -> `Ptr ()' id #}
 {# fun Fl_Tree_Item_add_at as addAt' {id `Ptr ()', id `Ptr ()', id `Ptr (Ptr CChar)' } -> `Ptr ()' id #}
 instance (Parent a TreeItem, Parent b TreePrefs, impl ~ (Ref b  -> TreeItemLocator ->  IO (Maybe (Ref a)))) => Op (Add ()) TreeItem orig impl where
   runOp _ _ tree_item prefs arr =
     withRef tree_item $ \tree_itemPtr -> withRef prefs $ \prefsPtr ->
       case arr of
-        TreeItemNameLocator (TreeItemName n') -> add' tree_itemPtr prefsPtr n' >>= toMaybeRef
+        TreeItemNameLocator (TreeItemName n') -> copyTextToCString n' >>= \nText -> add' tree_itemPtr prefsPtr nText >>= toMaybeRef
         TreeItemPointerLocator (TreeItemPointer p') -> withRef p' $ \p'Ptr -> addWith' tree_itemPtr prefsPtr (castPtr nullPtr) p'Ptr >>= toMaybeRef
 instance (Parent a TreeItem, Parent b TreePrefs, impl ~ (Ref b  ->  [T.Text] -> Maybe (Ref a) -> IO (Maybe (Ref a)))) => Op (AddAt ()) TreeItem orig impl where
   runOp _ _ tree_item prefs path item' =
@@ -184,20 +186,26 @@ instance (Parent a TreeItem, Parent b TreePrefs, impl ~ (Ref b  ->  [T.Text] -> 
       case item' of
         Nothing -> addAt' tree_itemPtr prefsPtr (castPtr pathPtr) >>= toMaybeRef
         Just i' -> withRef i' $ \i'Ptr -> addWithAt' tree_itemPtr prefsPtr i'Ptr pathPtr >>= toMaybeRef
-{# fun Fl_Tree_Item_insert as insert' { id `Ptr ()',id `Ptr ()',unsafeToCString `T.Text' } -> `Ptr ()' id #}
-{# fun Fl_Tree_Item_insert_with_pos as insertWithPos' { id `Ptr ()',id `Ptr ()',unsafeToCString `T.Text',`Int' } -> `Ptr ()' id #}
+{# fun Fl_Tree_Item_insert as insert' { id `Ptr ()',id `Ptr ()',`CString' } -> `Ptr ()' id #}
+{# fun Fl_Tree_Item_insert_with_pos as insertWithPos' { id `Ptr ()',id `Ptr ()',`CString',`Int' } -> `Ptr ()' id #}
 instance (Parent a TreePrefs, impl ~ (Ref a  -> T.Text ->  Maybe AtIndex -> IO (Maybe (Ref TreeItem)))) => Op (Insert ()) TreeItem orig impl where
   runOp _ _ tree_item prefs new_label pos' =
     withRef tree_item $ \tree_itemPtr -> withRef prefs $ \prefsPtr ->
       case pos' of
-        Nothing -> insert' tree_itemPtr prefsPtr new_label >>= toMaybeRef
-        Just (AtIndex p') -> insertWithPos' tree_itemPtr prefsPtr new_label p' >>= toMaybeRef
-{# fun Fl_Tree_Item_insert_above as insertAbove' { id `Ptr ()',id `Ptr ()', unsafeToCString `T.Text' } -> `Ptr ()' id #}
+        Nothing -> do
+          t <- copyTextToCString new_label
+          insert' tree_itemPtr prefsPtr t >>= toMaybeRef
+        Just (AtIndex p') -> do
+          t <- copyTextToCString new_label
+          insertWithPos' tree_itemPtr prefsPtr t p' >>= toMaybeRef
+{# fun Fl_Tree_Item_insert_above as insertAbove' { id `Ptr ()',id `Ptr ()', `CString' } -> `Ptr ()' id #}
 instance (Parent a TreePrefs, impl ~ (Ref a -> T.Text ->  IO (Maybe (Ref TreeItem)))) => Op (InsertAbove ()) TreeItem orig impl where
   runOp _ _ tree_item prefs new_label =
     withRef tree_item $
     \tree_itemPtr ->
-     withRef prefs $ \prefsPtr -> insertAbove' tree_itemPtr prefsPtr new_label >>= toMaybeRef
+     withRef prefs $ \prefsPtr -> do
+       t <- copyTextToCString new_label
+       insertAbove' tree_itemPtr prefsPtr t >>= toMaybeRef
 {# fun Fl_Tree_Item_deparent as deparent' { id `Ptr ()', `Int'} -> `Ptr ()' id #}
 instance (impl ~ (AtIndex -> IO (Either UnknownError (Ref orig)))) => Op (Deparent ()) TreeItem orig impl where
   runOp _ _ tree_item (AtIndex pos') = withRef tree_item $ \tree_itemPtr -> do

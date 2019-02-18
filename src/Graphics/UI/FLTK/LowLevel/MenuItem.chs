@@ -75,17 +75,17 @@ instance (impl ~  IO (Maybe (Ref MenuItem))) => Op (Next ()) MenuItem orig impl 
 instance (impl ~  IO (Maybe (Ref MenuItem))) => Op (GetFirst ()) MenuItem orig impl where
   runOp _ _ menu_item = withRef menu_item $ \menu_itemPtr -> first' menu_itemPtr >>=toMaybeRef
 
-{# fun Fl_Menu_Item_label as label' { id `Ptr ()' } -> `T.Text' unsafeFromCString #}
+{# fun Fl_Menu_Item_label as label' { id `Ptr ()' } -> `CString' #}
 instance (impl ~  IO T.Text) => Op (GetLabel ()) MenuItem orig impl where
-  runOp _ _ menu_item = withRef menu_item $ \menu_itemPtr -> label' menu_itemPtr
+  runOp _ _ menu_item = withRef menu_item $ \menu_itemPtr -> label' menu_itemPtr >>= cStringToText
 
-{# fun Fl_Menu_Item_set_label as setLabel' { id `Ptr ()', unsafeToCString `T.Text' } -> `()' #}
+{# fun Fl_Menu_Item_set_label as setLabel' { id `Ptr ()', `CString' } -> `()' #}
 instance (impl ~ (T.Text ->  IO ())) => Op (SetLabel ()) MenuItem orig impl where
-  runOp _ _ menu_item a = withRef menu_item $ \menu_itemPtr -> setLabel' menu_itemPtr a
+  runOp _ _ menu_item a = withRef menu_item $ \menu_itemPtr -> copyTextToCString a >>= setLabel' menu_itemPtr
 
-{# fun Fl_Menu_Item_set_label_with_labeltype as setLabelWithLabeltype' { id `Ptr ()',cFromEnum `Labeltype', unsafeToCString `T.Text' } -> `()' #}
+{# fun Fl_Menu_Item_set_label_with_labeltype as setLabelWithLabeltype' { id `Ptr ()',cFromEnum `Labeltype', `CString' } -> `()' #}
 instance (impl ~ (Labeltype -> T.Text ->  IO ())) => Op (SetLabelWithLabeltype ()) MenuItem orig impl where
-  runOp _ _ menu_item labeltype b = withRef menu_item $ \menu_itemPtr -> setLabelWithLabeltype' menu_itemPtr labeltype b
+  runOp _ _ menu_item labeltype b = withRef menu_item $ \menu_itemPtr -> copyTextToCString b >>= setLabelWithLabeltype' menu_itemPtr labeltype
 
 {# fun Fl_Menu_Item_labeltype as labeltype' { id `Ptr ()' } -> `Labeltype' cToEnum #}
 instance (impl ~  IO (Labeltype)) => Op (GetLabeltype ()) MenuItem orig impl where
@@ -215,9 +215,9 @@ instance (impl ~  IO (Maybe MenuItemFlags)) => Op (GetFlags ()) MenuItem orig im
 instance (impl ~ (MenuItemFlags ->  IO ())) => Op (SetFlags ()) MenuItem orig impl where
   runOp _ _ menu_item flags = withRef menu_item $ \menu_itemPtr -> setFlags' menu_itemPtr (menuItemFlagsToInt flags)
 
-{# fun Fl_Menu_Item_text as text' { id `Ptr ()' } -> `T.Text' unsafeFromCString #}
+{# fun Fl_Menu_Item_text as text' { id `Ptr ()' } -> `CString' #}
 instance (impl ~ ( IO T.Text)) => Op (GetText ()) MenuItem orig impl where
-  runOp _ _ menu_item = withRef menu_item $ \menu_itemPtr -> text' menu_itemPtr
+  runOp _ _ menu_item = withRef menu_item $ \menu_itemPtr -> text' menu_itemPtr >>= cStringToText
 
 {# fun Fl_Menu_Item_pulldown_with_args as pulldownWithArgs' { id `Ptr ()',`Int',`Int',`Int',`Int',id `Ptr ()', id `Ptr ()', id `Ptr ()', fromBool `Bool'} -> `Ptr ()' id #}
 instance (Parent a MenuPrim, Parent b MenuItem, Parent c MenuItem, impl ~ (Rectangle -> Maybe (Ref a) -> Maybe (Ref b) -> Maybe (Ref c) -> Maybe Bool -> IO (Maybe (Ref MenuItem)))) => Op (Pulldown ()) MenuItem orig impl where
@@ -262,8 +262,8 @@ addMenuItem ::
   Maybe Shortcut ->
   Maybe (Ref menuItem -> IO ()) ->
   MenuItemFlags ->
-  (Ptr () -> T.Text -> CInt -> FunPtr CallbackWithUserDataPrim -> Int -> IO Int) ->
-  (Ptr () -> T.Text -> T.Text -> FunPtr CallbackWithUserDataPrim -> Int -> IO Int) ->
+  (Ptr () -> CString -> CInt -> FunPtr CallbackWithUserDataPrim -> Int -> IO Int) ->
+  (Ptr () -> CString -> CString -> FunPtr CallbackWithUserDataPrim -> Int -> IO Int) ->
   IO (AtIndex)
 addMenuItem refMenuOrMenuItem name shortcut cb flags addWithFlags addWithShortcutnameFlags =
      either
@@ -277,34 +277,38 @@ addMenuItem refMenuOrMenuItem name shortcut cb flags addWithFlags addWithShortcu
         ptr <- maybe (return (castPtrToFunPtr nullPtr)) toCallbackPrim cb
         idx' <- case shortcut of
                  Just s' -> case s' of
-                   KeySequence (ShortcutKeySequence modifiers char) ->
+                   KeySequence (ShortcutKeySequence modifiers char) -> do
+                     nameString <- copyTextToCString name
                      addWithFlags
                       menu_Ptr
-                      name
+                      nameString
                       (keySequenceToCInt modifiers char)
                       (castFunPtr ptr)
                       combinedFlags
                    KeyFormat format' ->
-                     if (not $ T.null format') then
+                     if (not $ T.null format') then do
+                       nameString <- copyTextToCString name
+                       formatString <- copyTextToCString format'
                        addWithShortcutnameFlags
-                       menu_Ptr
-                       name
-                       format'
-                       (castFunPtr ptr)
-                       combinedFlags
+                         menu_Ptr
+                         nameString
+                         formatString
+                         (castFunPtr ptr)
+                         combinedFlags
                      else error errorMsg
-                 Nothing ->
+                 Nothing -> do
+                     nameString <- copyTextToCString name
                      addWithFlags
                       menu_Ptr
-                      name
+                      nameString
                       0
                       (castFunPtr ptr)
                       combinedFlags
         return (AtIndex idx')
 
-{# fun Fl_Menu_Item_insert_with_flags as insertWithFlags' { id `Ptr ()',`Int', unsafeToCString `T.Text',id `CInt',id `FunPtr CallbackWithUserDataPrim',`Int'} -> `Int' #}
-{# fun Fl_Menu_Item_add_with_flags as addWithFlags' { id `Ptr ()', unsafeToCString `T.Text',id `CInt',id `FunPtr CallbackWithUserDataPrim',`Int'} -> `Int' #}
-{# fun Fl_Menu_Item_add_with_shortcutname_flags as addWithShortcutnameFlags' { id `Ptr ()', unsafeToCString `T.Text', unsafeToCString `T.Text',id `FunPtr CallbackWithUserDataPrim',`Int' } -> `Int' #}
+{# fun Fl_Menu_Item_insert_with_flags as insertWithFlags' { id `Ptr ()',`Int', `CString',id `CInt',id `FunPtr CallbackWithUserDataPrim',`Int'} -> `Int' #}
+{# fun Fl_Menu_Item_add_with_flags as addWithFlags' { id `Ptr ()', `CString',id `CInt',id `FunPtr CallbackWithUserDataPrim',`Int'} -> `Int' #}
+{# fun Fl_Menu_Item_add_with_shortcutname_flags as addWithShortcutnameFlags' { id `Ptr ()', `CString', `CString',id `FunPtr CallbackWithUserDataPrim',`Int' } -> `Int' #}
 instance (Parent a MenuItem, impl ~ (T.Text -> Maybe Shortcut -> Maybe (Ref a -> IO ()) -> MenuItemFlags -> IO (AtIndex))) => Op (Add ()) MenuItem orig impl where
   runOp _ _ menu_item name shortcut cb flags =
     addMenuItem (Right menu_item) name shortcut cb flags addWithFlags' addWithShortcutnameFlags'
@@ -316,10 +320,11 @@ instance (Parent a MenuItem, impl ~ (AtIndex -> T.Text -> Maybe ShortcutKeySeque
           shortcutCode = maybe 0 (\(ShortcutKeySequence modifiers char) -> keySequenceToCInt modifiers char ) ks
       in do
         ptr <- toCallbackPrim cb
+        nameString <- copyTextToCString name
         idx' <- insertWithFlags'
                  menu_itemPtr
                  index'
-                 name
+                 nameString
                  shortcutCode
                  (castFunPtr ptr)
                  combinedFlags

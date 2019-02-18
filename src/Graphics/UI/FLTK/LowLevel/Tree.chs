@@ -26,7 +26,7 @@ import Graphics.UI.FLTK.LowLevel.Dispatch
 import qualified Data.Text as T
 import Graphics.UI.FLTK.LowLevel.Widget
 
-{# fun Fl_OverriddenTree_New_WithLabel as overriddenWidgetNewWithLabel' { `Int',`Int',`Int',`Int', unsafeToCString `T.Text', id `Ptr ()'} -> `Ptr ()' id #}
+{# fun Fl_OverriddenTree_New_WithLabel as overriddenWidgetNewWithLabel' { `Int',`Int',`Int',`Int', `CString', id `Ptr ()'} -> `Ptr ()' id #}
 {# fun Fl_OverriddenTree_New as overriddenWidgetNew' { `Int',`Int',`Int',`Int', id `Ptr ()'} -> `Ptr ()' id #}
 treeCustom ::
        Rectangle                         -- ^ The bounds of this Tree
@@ -45,7 +45,7 @@ treeCustom rectangle l' draw' funcs' =
 
 
 {# fun Fl_Tree_New as treeNew' { `Int',`Int',`Int',`Int' } -> `Ptr ()' id #}
-{# fun Fl_Tree_New_WithLabel as treeNewWithLabel' { `Int',`Int',`Int',`Int',unsafeToCString `T.Text'} -> `Ptr ()' id #}
+{# fun Fl_Tree_New_WithLabel as treeNewWithLabel' { `Int',`Int',`Int',`Int',`CString'} -> `Ptr ()' id #}
 treeNew :: Rectangle -> Maybe T.Text -> IO (Ref Tree)
 treeNew rectangle l' =
   widgetMaker
@@ -81,12 +81,12 @@ instance (Parent a TreeItem, impl ~ (T.Text -> Ref a -> IO (Maybe (Ref TreeItem)
     withRef item' $ \itemPtr ->
     withText path' $ \pathPtr ->
     addWithItemName' treePtr itemPtr pathPtr >>= toMaybeRef
-{# fun Fl_Tree_insert_above as insertAbove' { id `Ptr ()',id `Ptr ()',unsafeToCString `T.Text' } -> `Ptr ()' id #}
+{# fun Fl_Tree_insert_above as insertAbove' { id `Ptr ()',id `Ptr ()',`CString' } -> `Ptr ()' id #}
 instance (Parent a TreeItem, impl ~ (Ref a -> T.Text ->  IO (Maybe (Ref a)))) => Op (InsertAbove ()) Tree orig impl where
-  runOp _ _  tree above name = withRef tree $ \treePtr -> withRef above $ \abovePtr -> insertAbove' treePtr abovePtr name >>= toMaybeRef
-{# fun Fl_Tree_insert as insert' { id `Ptr ()',id `Ptr ()',unsafeToCString `T.Text',`Int' } -> `Ptr ()' id #}
+  runOp _ _  tree above name = withRef tree $ \treePtr -> withRef above $ \abovePtr -> copyTextToCString name >>= \n -> insertAbove' treePtr abovePtr n >>= toMaybeRef
+{# fun Fl_Tree_insert as insert' { id `Ptr ()',id `Ptr ()',`CString',`Int' } -> `Ptr ()' id #}
 instance (Parent a TreeItem, impl ~ (Ref a -> T.Text -> AtIndex ->  IO (Maybe (Ref a)))) => Op (Insert ()) Tree orig impl where
-  runOp _ _ tree item name (AtIndex pos) = withRef tree $ \treePtr -> withRef item $ \itemPtr -> insert' treePtr itemPtr name pos >>= toMaybeRef
+  runOp _ _ tree item name (AtIndex pos) = withRef tree $ \treePtr -> withRef item $ \itemPtr -> copyTextToCString name >>= \n -> insert' treePtr itemPtr n pos >>= toMaybeRef
 {# fun Fl_Tree_remove as remove' { id `Ptr ()',id `Ptr ()' } -> `Int' #}
 instance (impl ~ (Ref TreeItem  ->  IO (Either TreeItemNotFound ())) ) => Op (Remove ()) Tree orig impl where
   runOp _ _ tree item = withRef tree $ \treePtr -> withRef item $ \itemPtr -> do
@@ -98,9 +98,9 @@ instance (impl ~ ( IO ()) ) => Op (Clear ()) Tree orig impl where
 {# fun Fl_Tree_clear_children as clearChildren' { id `Ptr ()',id `Ptr ()' } -> `()' #}
 instance (Parent a TreeItem, impl ~ (Ref a ->  IO ()) ) => Op (ClearChildren ()) Tree orig impl where
   runOp _ _ tree item = withRef tree $ \treePtr -> withRef item $ \itemPtr -> clearChildren' treePtr itemPtr
-{# fun Fl_Tree_find_item as findItem' { id `Ptr ()',unsafeToCString `T.Text' } -> `Ptr ()' id #}
+{# fun Fl_Tree_find_item as findItem' { id `Ptr ()',`CString' } -> `Ptr ()' id #}
 instance (impl ~ (T.Text ->  IO (Maybe (Ref TreeItem))) ) => Op (FindItem ()) Tree orig impl where
-  runOp _ _ tree path = withRef tree $ \treePtr -> findItem' treePtr path >>= toMaybeRef
+  runOp _ _ tree path = withRef tree $ \treePtr -> withText path (\p -> findItem' treePtr p >>= toMaybeRef)
 {# fun Fl_Tree_item_pathname as itemPathname' { id `Ptr ()', id `Ptr CChar', `Int', id `Ptr ()'} -> `Int' #}
 instance (Parent a TreeItem, impl ~ (Ref a ->  IO (Maybe T.Text)) ) => Op (ItemPathname ()) Tree orig impl where
   runOp _ _ tree item =
@@ -159,20 +159,20 @@ instance (impl ~ (Ref TreeItem  ->  Maybe SearchDirection -> IO (Maybe (Ref Tree
   runOp _ _ tree item dir = withRef tree $ \treePtr -> withRef item $ \itemPtr -> nextSelectedItemWithItemDirection' treePtr itemPtr (maybe 0 (fromIntegral . fromEnum) dir) >>= toMaybeRef
 {# fun Fl_Tree_open_with_item as openWithItem' { id `Ptr ()',id `Ptr ()' } -> `Int' #}
 {# fun Fl_Tree_open_with_item_docallback as openWithItemDocallback' { id `Ptr ()',id `Ptr ()', cFromBool `Bool' } -> `Int' #}
-{# fun Fl_Tree_open_with_path as openWithPath' { id `Ptr ()',unsafeToCString `T.Text' } -> `Int' #}
-{# fun Fl_Tree_open_with_path_docallback as openWithPathDocallback' { id `Ptr ()', unsafeToCString `T.Text', cFromBool `Bool' } -> `Int' #}
+{# fun Fl_Tree_open_with_path as openWithPath' { id `Ptr ()',`CString' } -> `Int' #}
+{# fun Fl_Tree_open_with_path_docallback as openWithPathDocallback' { id `Ptr ()', `CString', cFromBool `Bool' } -> `Int' #}
 instance (impl ~ (TreeItemLocator -> IO ()) ) => Op (Open ()) Tree orig impl where
   runOp _ _ tree_item locator' =
     withRef tree_item $ \tree_itemPtr ->
     case locator' of
       TreeItemPointerLocator (TreeItemPointer itemRef) -> withRef itemRef $ \itemRefPtr -> openWithItem' tree_itemPtr itemRefPtr >> return ()
-      TreeItemNameLocator (TreeItemName n') -> openWithPath' tree_itemPtr n' >> return ()
+      TreeItemNameLocator (TreeItemName n') -> withText n' (\n'' -> openWithPath' tree_itemPtr n'' >> return ())
 instance  (impl ~ (TreeItemLocator -> Bool -> IO ())) => Op (OpenAndCallback ()) Tree orig impl where
   runOp _ _ tree_item locator' docallback' =
     withRef tree_item $ \tree_itemPtr ->
     case locator' of
       TreeItemPointerLocator (TreeItemPointer itemRef) -> withRef itemRef $ \itemRefPtr -> openWithItemDocallback' tree_itemPtr itemRefPtr docallback' >> return ()
-      TreeItemNameLocator (TreeItemName n') -> openWithPathDocallback' tree_itemPtr n' docallback' >> return ()
+      TreeItemNameLocator (TreeItemName n') -> withText n' (\n'' -> openWithPathDocallback' tree_itemPtr n'' docallback' >> return ())
 {# fun Fl_Tree_open_toggle as openToggle' { id `Ptr ()',id `Ptr ()' } -> `()' #}
 {# fun Fl_Tree_open_toggle_with_docallback as openToggleWithDocallback' { id `Ptr ()',id `Ptr ()', cFromBool `Bool' } -> `()' #}
 instance (impl ~ (Ref TreeItem  ->  IO ()) ) => Op (OpenToggle ()) Tree orig impl where
@@ -181,51 +181,50 @@ instance (impl ~ (Ref TreeItem  -> Bool ->  IO ()) ) => Op (OpenToggleAndCallbac
   runOp _ _ tree item docallback = withRef tree $ \treePtr -> withRef item $ \itemPtr -> openToggleWithDocallback' treePtr itemPtr docallback
 {# fun Fl_Tree_close_with_item as closeWithItem' { id `Ptr ()',id `Ptr ()' } -> `Int' #}
 {# fun Fl_Tree_close_with_item_docallback as closeWithItemDocallback' { id `Ptr ()',id `Ptr ()', cFromBool `Bool' } -> `Int' #}
-{# fun Fl_Tree_close_with_path as closeWithPath' { id `Ptr ()',unsafeToCString `T.Text' } -> `Int' #}
-{# fun Fl_Tree_close_with_path_docallback as closeWithPathDocallback' { id `Ptr ()',unsafeToCString `T.Text', cFromBool `Bool' } -> `Int' #}
+{# fun Fl_Tree_close_with_path as closeWithPath' { id `Ptr ()',`CString' } -> `Int' #}
+{# fun Fl_Tree_close_with_path_docallback as closeWithPathDocallback' { id `Ptr ()',`CString', cFromBool `Bool' } -> `Int' #}
 instance (impl ~ (TreeItemLocator -> IO ()) ) => Op (Close ()) Tree orig impl where
   runOp _ _ tree_item locator' =
     withRef tree_item $ \tree_itemPtr ->
     case locator' of
       TreeItemPointerLocator (TreeItemPointer itemRef) -> withRef itemRef $ \itemRefPtr -> closeWithItem' tree_itemPtr itemRefPtr >> return ()
-      TreeItemNameLocator (TreeItemName n') -> closeWithPath' tree_itemPtr n' >> return ()
+      TreeItemNameLocator (TreeItemName n') -> withText n' (\n'' -> closeWithPath' tree_itemPtr n'' >> return ())
 instance  (impl ~ (TreeItemLocator -> Bool -> IO ())) => Op (CloseAndCallback ()) Tree orig impl where
   runOp _ _ tree_item locator' docallback' =
     withRef tree_item $ \tree_itemPtr ->
     case locator' of
       TreeItemPointerLocator (TreeItemPointer itemRef) -> withRef itemRef $ \itemRefPtr -> closeWithItemDocallback' tree_itemPtr itemRefPtr docallback' >> return ()
-      TreeItemNameLocator (TreeItemName n') -> closeWithPathDocallback' tree_itemPtr n' docallback' >> return ()
+      TreeItemNameLocator (TreeItemName n') -> withText n' (\n'' -> closeWithPathDocallback' tree_itemPtr n'' docallback' >> return ())
 {# fun Fl_Tree_is_open_with_item as isOpenWithItem' { id `Ptr ()',id `Ptr ()' } -> `Bool' cToBool #}
-{# fun Fl_Tree_is_open_with_path as isOpenWithPath' { id `Ptr ()',unsafeToCString `T.Text' } -> `Bool' cToBool  #}
+{# fun Fl_Tree_is_open_with_path as isOpenWithPath' { id `Ptr ()',`CString' } -> `Bool' cToBool  #}
 instance (impl ~ (TreeItemLocator ->  IO (Bool)) ) => Op (IsOpen ()) Tree orig impl where
   runOp _ _ tree locator' = withRef tree $ \treePtr ->
     case locator' of
       TreeItemPointerLocator (TreeItemPointer r') -> withRef r' $ \r'Ptr -> isOpenWithItem' treePtr r'Ptr
-      TreeItemNameLocator (TreeItemName n') ->
-        isOpenWithPath' treePtr n'
+      TreeItemNameLocator (TreeItemName n') -> withText n' (\n'' -> isOpenWithPath' treePtr n'')
 {# fun Fl_Tree_is_close_with_item as isCloseWithItem' { id `Ptr ()',id `Ptr ()' } -> `Bool' cToBool #}
-{# fun Fl_Tree_is_close_with_path as isCloseWithPath' { id `Ptr ()',unsafeToCString `T.Text' } -> `Bool' cToBool  #}
+{# fun Fl_Tree_is_close_with_path as isCloseWithPath' { id `Ptr ()',`CString' } -> `Bool' cToBool  #}
 instance (impl ~ (TreeItemLocator ->  IO (Bool)) ) => Op (IsClose ()) Tree orig impl where
   runOp _ _ tree locator' = withRef tree $ \treePtr ->
     case locator' of
       TreeItemPointerLocator (TreeItemPointer r') -> withRef r' $ \r'Ptr -> isCloseWithItem' treePtr r'Ptr
-      TreeItemNameLocator (TreeItemName n') -> isCloseWithPath' treePtr n'
+      TreeItemNameLocator (TreeItemName n') -> withText n' (\n'' -> isCloseWithPath' treePtr n'')
 {# fun Fl_Tree_select_with_item as selectWithItem' { id `Ptr ()',id `Ptr ()' } -> `Int' #}
 {# fun Fl_Tree_select_with_item_docallback as selectWithItemDocallback' { id `Ptr ()',id `Ptr ()',cFromBool `Bool' } -> `Int' #}
-{# fun Fl_Tree_select_with_path as selectWithPath' { id `Ptr ()',unsafeToCString `T.Text' } -> `Int' #}
-{# fun Fl_Tree_select_with_path_docallback as selectWithPathDocallback' { id `Ptr ()',unsafeToCString `T.Text',cFromBool `Bool' } -> `Int' #}
+{# fun Fl_Tree_select_with_path as selectWithPath' { id `Ptr ()',`CString' } -> `Int' #}
+{# fun Fl_Tree_select_with_path_docallback as selectWithPathDocallback' { id `Ptr ()',`CString',cFromBool `Bool' } -> `Int' #}
 instance (impl ~ (TreeItemLocator  ->  IO (Either NoChange ())) ) => Op (Select ()) Tree orig impl where
   runOp _ _ tree locator' =
     withRef tree $ \treePtr ->
     case locator' of
       TreeItemPointerLocator (TreeItemPointer r') -> withRef r' $ \r'Ptr -> selectWithItem' treePtr r'Ptr >>= return . successOrNoChange
-      TreeItemNameLocator (TreeItemName n') -> selectWithPath' treePtr n' >>= return . successOrNoChange
+      TreeItemNameLocator (TreeItemName n') -> withText n' (\n'' -> selectWithPath' treePtr n'' >>= return . successOrNoChange)
 instance  (impl ~ (TreeItemLocator -> Bool -> IO ())) => Op (SelectAndCallback ()) Tree orig impl where
   runOp _ _ tree_item locator' docallback' =
     withRef tree_item $ \tree_itemPtr ->
     case locator' of
       TreeItemPointerLocator (TreeItemPointer itemRef) -> withRef itemRef $ \itemRefPtr -> selectWithItemDocallback' tree_itemPtr itemRefPtr docallback' >> return ()
-      TreeItemNameLocator (TreeItemName n') -> selectWithPathDocallback' tree_itemPtr n' docallback' >> return ()
+      TreeItemNameLocator (TreeItemName n') -> withText n' (\n'' -> selectWithPathDocallback' tree_itemPtr n'' docallback' >> return ())
 {# fun Fl_Tree_select_toggle as selectToggle' { id `Ptr ()',id `Ptr ()' } -> `()' #}
 {# fun Fl_Tree_select_toggle_with_docallback as selectToggleWithDocallback' { id `Ptr ()',id `Ptr ()',cFromBool `Bool' } -> `()' #}
 instance (impl ~ (Ref TreeItem  ->  IO ()) ) => Op (SelectToggle ()) Tree orig impl where
@@ -234,20 +233,20 @@ instance (impl ~ (Ref TreeItem  -> Bool ->  IO ()) ) => Op (SelectToggleAndCallb
   runOp _ _ tree item docallback = withRef tree $ \treePtr -> withRef item $ \itemPtr -> selectToggleWithDocallback' treePtr itemPtr docallback
 {# fun Fl_Tree_deselect_with_item as deselectWithItem' { id `Ptr ()',id `Ptr ()' } -> `Int' #}
 {# fun Fl_Tree_deselect_with_item_docallback as deselectWithItemDocallback' { id `Ptr ()',id `Ptr ()',cFromBool `Bool' } -> `Int' #}
-{# fun Fl_Tree_deselect_with_path as deselectWithPath' { id `Ptr ()', unsafeToCString `T.Text'} -> `Int' #}
-{# fun Fl_Tree_deselect_with_path_docallback as deselectWithPathDocallback' { id `Ptr ()',unsafeToCString `T.Text',cFromBool `Bool' } -> `Int' #}
+{# fun Fl_Tree_deselect_with_path as deselectWithPath' { id `Ptr ()', `CString'} -> `Int' #}
+{# fun Fl_Tree_deselect_with_path_docallback as deselectWithPathDocallback' { id `Ptr ()',`CString',cFromBool `Bool' } -> `Int' #}
 instance (impl ~ (TreeItemLocator  ->  IO (Either NoChange ())) ) => Op (Deselect ()) Tree orig impl where
   runOp _ _ tree locator' =
     withRef tree $ \treePtr ->
     case locator' of
       TreeItemPointerLocator (TreeItemPointer r') -> withRef r' $ \r'Ptr -> deselectWithItem' treePtr r'Ptr >>= return . successOrNoChange
-      TreeItemNameLocator (TreeItemName n') -> deselectWithPath' treePtr n' >>= return . successOrNoChange
+      TreeItemNameLocator (TreeItemName n') -> withText n' (\n'' -> deselectWithPath' treePtr n'' >>= return . successOrNoChange)
 instance  (impl ~ (TreeItemLocator -> Bool -> IO ())) => Op (DeselectAndCallback ()) Tree orig impl where
   runOp _ _ tree_item locator' docallback' =
     withRef tree_item $ \tree_itemPtr ->
     case locator' of
       TreeItemPointerLocator (TreeItemPointer itemRef) -> withRef itemRef $ \itemRefPtr -> deselectWithItemDocallback' tree_itemPtr itemRefPtr docallback' >> return ()
-      TreeItemNameLocator (TreeItemName n') -> deselectWithPathDocallback' tree_itemPtr n' docallback' >> return ()
+      TreeItemNameLocator (TreeItemName n') -> withText n' (\n'' -> deselectWithPathDocallback' tree_itemPtr n'' docallback' >> return ())
 {# fun Fl_Tree_select_only as selectOnly' { id `Ptr ()',id `Ptr ()' } -> `()' #}
 {# fun Fl_Tree_select_only_with_docallback as selectOnlyWithDocallback' { id `Ptr ()',id `Ptr ()', cFromBool `Bool' } -> `()' #}
 instance (impl ~ (Ref TreeItem  ->  IO ()) ) => Op (SelectOnly ()) Tree orig impl where
@@ -273,12 +272,12 @@ instance (impl ~ (Ref TreeItem  ->  IO ()) ) => Op (SetItemFocus ()) Tree orig i
 instance (impl ~ ( IO (Maybe (Ref TreeItem))) ) => Op (GetItemFocus ()) Tree orig impl where
   runOp _ _ tree = withRef tree $ \treePtr -> getItemFocus' treePtr >>= toMaybeRef
 {# fun Fl_Tree_is_selected_with_item as isSelectedWithItem' { id `Ptr ()',id `Ptr ()' } -> `Bool' cToBool #}
-{# fun Fl_Tree_is_selected_with_path as isSelectedWithPath' { id `Ptr ()',unsafeToCString `T.Text' } -> `Bool' cToBool #}
+{# fun Fl_Tree_is_selected_with_path as isSelectedWithPath' { id `Ptr ()',`CString' } -> `Bool' cToBool #}
 instance (impl ~ (TreeItemLocator ->  IO (Bool)) ) => Op (IsSelected ()) Tree orig impl where
   runOp _ _ tree locator' = withRef tree $ \treePtr ->
     case locator' of
       TreeItemPointerLocator (TreeItemPointer item) -> withRef item $ \itemPtr -> isSelectedWithItem' treePtr itemPtr
-      TreeItemNameLocator (TreeItemName path) -> isSelectedWithPath' treePtr path
+      TreeItemNameLocator (TreeItemName path) -> withText path (\p -> isSelectedWithPath' treePtr p)
 {# fun Fl_Tree_item_labelfont as itemLabelfont' { id `Ptr ()' } -> `Font' cToFont #}
 instance (impl ~ ( IO (Font)) ) => Op (GetItemLabelfont ()) Tree orig impl where
   runOp _ _ tree = withRef tree $ \treePtr -> itemLabelfont' treePtr

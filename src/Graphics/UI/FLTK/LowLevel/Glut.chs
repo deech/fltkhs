@@ -403,7 +403,9 @@ glutInitWindowPosition (Position (X x) (Y y)) = glutInitWindowPosition' (fromInt
 glutInitWindowSize :: Size -> IO ()
 glutInitWindowSize (Size (Width w) (Height h)) = glutInitWindowSize' (fromIntegral w) (fromIntegral h)
 {# fun flc_glutMainLoop as glutMainLoop { } -> `()' #}
-{# fun flc_glutCreateWindow as glutCreateWindow {unsafeToCString `T.Text'} -> `GlutWindow' GlutWindow #}
+{# fun flc_glutCreateWindow as glutCreateWindow' {`CString'} -> `GlutWindow' GlutWindow #}
+glutCreateWindow :: T.Text -> IO ()
+glutCreateWindow t = copyTextToCString t >>= glutCreateWindow'
 {# fun flc_glutCreateSubWindow as glutCreateSubWindow' {windowNumber `GlutWindow',`Int',`Int',`Int',`Int'} -> `GlutWindow' GlutWindow #}
 glutCreateSubWindow :: GlutWindow -> Rectangle -> IO GlutWindow
 glutCreateSubWindow glutWindow (Rectangle (Position (X x) (Y y)) (Size (Width w) (Height h))) =
@@ -414,8 +416,12 @@ glutCreateSubWindow glutWindow (Rectangle (Position (X x) (Y y)) (Size (Width w)
 {# fun flc_glutSwapBuffers as glutSwapBuffers { } -> `()' #}
 {# fun flc_glutGetWindow as glutGetWindow { } -> `GlutWindow' GlutWindow #}
 {# fun flc_glutSetWindow as glutSetWindow {windowNumber `GlutWindow' } -> `()' #}
-{# fun flc_glutSetWindowTitle as glutSetWindowTitle {unsafeToCString `T.Text' } -> `()' #}
-{# fun flc_glutSetIconTitle as glutSetIconTitle {unsafeToCString `T.Text' } -> `()' #}
+{# fun flc_glutSetWindowTitle as glutSetWindowTitle' {`CString' } -> `()' #}
+glutSetWindowTitle :: T.Text -> IO ()
+glutSetWindowTitle t = copyTextToCString t >>= glutSetWindowTitle'
+{# fun flc_glutSetIconTitle as glutSetIconTitle' {`CString' } -> `()' #}
+glutSetIconTitle :: T.Text -> IO ()
+glutSetIconTitle t = copyTextToCString t >>= glutSetIconTitle'
 {# fun flc_glutPositionWindow as glutPositionWindow' {`Int', `Int' } -> `()' #}
 glutPositionWindow :: Position -> IO ()
 glutPositionWindow (Position (X x) (Y y)) = glutPositionWindow' x y
@@ -444,14 +450,20 @@ glutCreateMenu f = (toGlutCreateMenuPrim f) >>= glutCreateMenu'
 {# fun flc_glutDestroyMenu as glutDestroyMenu {menuNumber `GlutMenu'} -> `()' #}
 {# fun flc_glutGetMenu as glutGetMenu { } -> `GlutMenu' GlutMenu #}
 {# fun flc_glutSetMenu as glutSetMenu {menuNumber `GlutMenu'} -> `()' #}
-{# fun flc_glutAddMenuEntry as glutAddMenuEntry' {unsafeToCString `T.Text', `Int' } -> `()' #}
+{# fun flc_glutAddMenuEntry as glutAddMenuEntry' {`CString', `Int' } -> `()' #}
 glutAddMenuEntry :: T.Text -> IO ()
-glutAddMenuEntry l = glutAddMenuEntry' l 0
-{# fun flc_glutAddSubMenu as glutAddSubMenu {unsafeToCString `T.Text', menuNumber `GlutMenu' } -> `()' #}
-{# fun flc_glutChangeToMenuEntry as glutChangeToMenuEntry' {`Int', unsafeToCString `T.Text', `Int'} -> `()' #}
+glutAddMenuEntry l = copyTextToCString l >>= \l' -> glutAddMenuEntry' l' 0
+{# fun flc_glutAddSubMenu as glutAddSubMenu' {`CString', menuNumber `GlutMenu' } -> `()' #}
+glutAddSubMenu :: T.Text -> GlutMenu -> IO ()
+glutAddSubMenu t mn = copyTextToCString t >>= \t' -> glutAddSubMenu' t' mn
+{# fun flc_glutChangeToMenuEntry as glutChangeToMenuEntry'' {`Int', `CString', `Int'} -> `()' #}
+glutChangeToMenuEntry :: Int -> T.Text -> Int -> IO ()
+glutChangeToMenuEntry i t v = copyTextToCString t >>= \t' -> glutChangeToMenuEntry' i t' v
 glutChangeToMenuEntry :: Int -> T.Text -> IO ()
 glutChangeToMenuEntry index label = glutChangeToMenuEntry' index label 0
-{# fun flc_glutChangeToSubMenu as glutChangeToSubMenu {`Int', unsafeToCString `T.Text', menuNumber `GlutMenu' } -> `()' #}
+{# fun flc_glutChangeToSubMenu as glutChangeToSubMenu' {`Int', `CString', menuNumber `GlutMenu' } -> `()' #}
+glutChangeToSubMenu :: T.Text -> GlutMenu -> IO ()
+glutChangeToSubMenu t m = copyTextToCString t >>= \t' -> glutChangeToSubMenu' t' m
 {# fun flc_glutRemoveMenuItem as glutRemoveMenuItem {`Int' } -> `()' #}
 {# fun flc_glutAttachMenu as glutAttachMenu {menuNumber `GlutMenu'} -> `()' #}
 {# fun flc_glutDetachMenu as glutDetachMenu {menuNumber `GlutMenu'} -> `()' #}

@@ -19,7 +19,7 @@ import Graphics.UI.FLTK.LowLevel.Hierarchy
 import Graphics.UI.FLTK.LowLevel.Widget
 import qualified Data.Text as T
 {# fun Fl_Hor_Slider_New as horSliderNew' { `Int',`Int',`Int',`Int' } -> `Ptr ()' id #}
-{# fun Fl_Hor_Slider_New_WithLabel as horSliderNewWithLabel' { `Int',`Int',`Int',`Int', unsafeToCString `T.Text'} -> `Ptr ()' id #}
+{# fun Fl_Hor_Slider_New_WithLabel as horSliderNewWithLabel' { `Int',`Int',`Int',`Int', `CString'} -> `Ptr ()' id #}
 horSliderNew :: Rectangle -> Maybe T.Text -> IO (Ref HorSlider)
 horSliderNew rectangle l' =
     let (x_pos, y_pos, width, height) = fromRectangle rectangle
@@ -27,7 +27,7 @@ horSliderNew rectangle l' =
         Nothing -> horSliderNew' x_pos y_pos width height >>=
                              toRef
         Just l -> do
-          ref <- horSliderNewWithLabel' x_pos y_pos width height l >>= toRef
+          ref <- copyTextToCString l >>= \l' -> horSliderNewWithLabel' x_pos y_pos width height l' >>= toRef
           setFlag ref WidgetFlagCopiedLabel
           setFlag ref WidgetFlagCopiedTooltip
           return ref

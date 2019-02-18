@@ -20,14 +20,14 @@ import Graphics.UI.FLTK.LowLevel.Hierarchy
 import Graphics.UI.FLTK.LowLevel.Widget
 import qualified Data.Text as T
 {# fun Fl_Radio_Light_Button_New as widgetNew' { `Int',`Int',`Int',`Int' } -> `Ptr ()' id #}
-{# fun Fl_Radio_Light_Button_New_WithLabel as widgetNewWithLabel' { `Int',`Int',`Int',`Int', unsafeToCString `T.Text'} -> `Ptr ()' id #}
+{# fun Fl_Radio_Light_Button_New_WithLabel as widgetNewWithLabel' { `Int',`Int',`Int',`Int', `CString'} -> `Ptr ()' id #}
 radioLightButtonNew :: Rectangle -> Maybe T.Text -> IO (Ref RadioLightButton)
 radioLightButtonNew rectangle l' =
     let (x_pos, y_pos, width, height) = fromRectangle rectangle
     in case l' of
         Nothing -> widgetNew' x_pos y_pos width height >>= toRef
         Just l -> do
-          ref <- widgetNewWithLabel' x_pos y_pos width height l >>= toRef
+          ref <- copyTextToCString l >>= \l' -> widgetNewWithLabel' x_pos y_pos width height l' >>= toRef
           setFlag ref WidgetFlagCopiedLabel
           setFlag ref WidgetFlagCopiedTooltip
           return ref

@@ -128,7 +128,7 @@ tableCustomFunctionStruct draw'' drawCell' customWidgetFuncs' customTableFuncs' 
    return ptr
 
 {# fun Fl_Table_New as tableNew' {  `Int',`Int', `Int', `Int', id `Ptr ()'} -> `Ptr ()' id #}
-{# fun Fl_Table_New_WithLabel as tableNewWithLabel' { `Int',`Int',`Int',`Int',unsafeToCString `T.Text', id `Ptr ()'} -> `Ptr ()' id #}
+{# fun Fl_Table_New_WithLabel as tableNewWithLabel' { `Int',`Int',`Int',`Int',`CString', id `Ptr ()'} -> `Ptr ()' id #}
 tableCustom :: Rectangle                                                            -- ^ Bounds of this table
             -> Maybe T.Text                                                         -- ^ Optional label
             -> Maybe (Ref Table -> IO ())                                           -- ^ Optional custom table drawing function
@@ -141,7 +141,7 @@ tableCustom rectangle label' draw'' drawCell' customWidgetFuncs' customTableFunc
       let (x_pos, y_pos, width, height) = fromRectangle rectangle
       ptr <- tableCustomFunctionStruct draw'' (Just drawCell') customWidgetFuncs' customTableFuncs'
       case label' of
-        (Just l') -> tableNewWithLabel' x_pos y_pos width height l' ptr >>= toRef
+        (Just l') -> copyTextToCString l' >>= \l'' -> tableNewWithLabel' x_pos y_pos width height l'' ptr >>= toRef
         Nothing -> tableNew' x_pos y_pos width height ptr >>= toRef
 
 {# fun Fl_Table_Destroy as tableDestroy' { id `Ptr ()' } -> `()' supressWarningAboutRes #}

@@ -40,7 +40,7 @@ enum MenuButtonType {
 };
 #endc
 {#enum MenuButtonType {} deriving (Show, Eq) #}
-{# fun Fl_OverriddenMenu_Button_New_WithLabel as overriddenWidgetNewWithLabel' { `Int',`Int',`Int',`Int', unsafeToCString `T.Text', id `Ptr ()'} -> `Ptr ()' id #}
+{# fun Fl_OverriddenMenu_Button_New_WithLabel as overriddenWidgetNewWithLabel' { `Int',`Int',`Int',`Int', `CString', id `Ptr ()'} -> `Ptr ()' id #}
 {# fun Fl_OverriddenMenu_Button_New as overriddenWidgetNew' { `Int',`Int',`Int',`Int', id `Ptr ()'} -> `Ptr ()' id #}
 menuButtonCustom ::
        Rectangle                         -- ^ The bounds of this MenuButton
@@ -59,7 +59,7 @@ menuButtonCustom rectangle l' draw' funcs' =
 
 
 {# fun Fl_Menu_Button_New as menuButtonNew' { `Int',`Int',`Int',`Int' } -> `Ptr ()' id #}
-{# fun Fl_Menu_Button_New_WithLabel as menuButtonNewWithLabel' { `Int',`Int',`Int',`Int',unsafeToCString `T.Text'} -> `Ptr ()' id #}
+{# fun Fl_Menu_Button_New_WithLabel as menuButtonNewWithLabel' { `Int',`Int',`Int',`Int',`CString'} -> `Ptr ()' id #}
 menuButtonNew :: Rectangle -> Maybe T.Text -> IO (Ref MenuButton)
 menuButtonNew rectangle l'=
   widgetMaker

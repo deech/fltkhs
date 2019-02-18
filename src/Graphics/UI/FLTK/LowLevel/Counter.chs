@@ -37,7 +37,7 @@ enum CounterType {
 #endc
 {#enum CounterType {} deriving (Show, Eq) #}
 
-{# fun Fl_OverriddenCounter_New_WithLabel as overriddenWidgetNewWithLabel' { `Int',`Int',`Int',`Int', unsafeToCString `T.Text', id `Ptr ()'} -> `Ptr ()' id #}
+{# fun Fl_OverriddenCounter_New_WithLabel as overriddenWidgetNewWithLabel' { `Int',`Int',`Int',`Int', `CString', id `Ptr ()'} -> `Ptr ()' id #}
 {# fun Fl_OverriddenCounter_New as overriddenWidgetNew' { `Int',`Int',`Int',`Int', id `Ptr ()'} -> `Ptr ()' id #}
 counterCustom ::
        Rectangle                         -- ^ The bounds of this Counter
@@ -56,7 +56,7 @@ counterCustom rectangle l' draw' funcs' =
 
 
 {# fun Fl_Counter_New as counterNew' { `Int',`Int',`Int',`Int' } -> `Ptr ()' id #}
-{# fun Fl_Counter_New_WithLabel as counterNewWithLabel' { `Int',`Int',`Int',`Int', unsafeToCString `T.Text'} -> `Ptr ()' id #}
+{# fun Fl_Counter_New_WithLabel as counterNewWithLabel' { `Int',`Int',`Int',`Int', `CString'} -> `Ptr ()' id #}
 counterNew :: Rectangle -> Maybe T.Text -> IO (Ref Counter)
 counterNew rectangle l'=
   widgetMaker

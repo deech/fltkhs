@@ -30,11 +30,11 @@ import qualified Data.Text as T
 import Graphics.UI.FLTK.LowLevel.Widget
 
 {# fun Fl_Box_New as boxNew' { `Int',`Int',`Int',`Int' } -> `Ptr ()' id #}
-{# fun Fl_Box_New_WithLabel as boxNewWithLabel' { `Int',`Int',`Int',`Int',unsafeToCString `T.Text'} -> `Ptr ()' id #}
-{# fun Fl_OverriddenBox_New_WithLabel as overriddenBoxNewWithLabel' { `Int',`Int',`Int',`Int',unsafeToCString `T.Text', id `Ptr ()'} -> `Ptr ()' id #}
+{# fun Fl_Box_New_WithLabel as boxNewWithLabel' { `Int',`Int',`Int',`Int',`CString'} -> `Ptr ()' id #}
+{# fun Fl_OverriddenBox_New_WithLabel as overriddenBoxNewWithLabel' { `Int',`Int',`Int',`Int',`CString', id `Ptr ()'} -> `Ptr ()' id #}
 {# fun Fl_OverriddenBox_New as overriddenBoxNew' { `Int',`Int',`Int',`Int', id `Ptr ()'} -> `Ptr ()' id #}
-{# fun Fl_Box_New_WithBoxtype as boxNewWithBoxtype' {cFromEnum `Boxtype',  `Int',`Int',`Int',`Int',unsafeToCString `T.Text'} -> `Ptr ()' id #}
-{# fun Fl_OverriddenBox_New_WithBoxtype as overriddenBoxNewWithBoxtype' {cFromEnum `Boxtype',  `Int',`Int',`Int',`Int',unsafeToCString `T.Text', id `Ptr ()'} -> `Ptr ()' id #}
+{# fun Fl_Box_New_WithBoxtype as boxNewWithBoxtype' {cFromEnum `Boxtype',  `Int',`Int',`Int',`Int',`CString'} -> `Ptr ()' id #}
+{# fun Fl_OverriddenBox_New_WithBoxtype as overriddenBoxNewWithBoxtype' {cFromEnum `Boxtype',  `Int',`Int',`Int',`Int',`CString', id `Ptr ()'} -> `Ptr ()' id #}
 
 boxCustom :: Rectangle                     -- ^ The bounds of this box
           -> Maybe T.Text                  -- ^ Optional label
@@ -56,12 +56,12 @@ boxCustomWithBoxtype boxtype' rectangle' l' draw' funcs' =
     in case funcs' of
         Just fs -> do
           ptr <- customWidgetFunctionStruct draw' fs
-          ref <- overriddenBoxNewWithBoxtype' boxtype' x_pos y_pos width height l' (castPtr ptr) >>= toRef
+          ref <- copyTextToCString l' >>= \l'' -> overriddenBoxNewWithBoxtype' boxtype' x_pos y_pos width height l'' (castPtr ptr) >>= toRef
           setFlag ref WidgetFlagCopiedLabel
           setFlag ref WidgetFlagCopiedTooltip
           return ref
         Nothing ->
-          boxNewWithBoxtype' boxtype' x_pos y_pos width height l' >>= toRef
+          copyTextToCString l' >>= \l'' -> boxNewWithBoxtype' boxtype' x_pos y_pos width height l'' >>= toRef
 
 
 boxNew :: Rectangle -> Maybe T.Text -> IO (Ref Box)
@@ -78,7 +78,7 @@ boxNewWithBoxtype :: Boxtype -> Rectangle -> T.Text -> IO (Ref Box)
 boxNewWithBoxtype boxtype' rectangle' l' =
     let (x_pos, y_pos, width, height) = fromRectangle rectangle'
     in do
-      ref <- boxNewWithBoxtype' boxtype' x_pos y_pos width height l' >>= toRef
+      ref <- copyTextToCString l' >>= \l'' -> boxNewWithBoxtype' boxtype' x_pos y_pos width height l'' >>= toRef
       setFlag ref WidgetFlagCopiedLabel
       setFlag ref WidgetFlagCopiedTooltip
       return ref

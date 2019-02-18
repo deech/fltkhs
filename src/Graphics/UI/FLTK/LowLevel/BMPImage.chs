@@ -18,10 +18,10 @@ import Graphics.UI.FLTK.LowLevel.Utils
 import Graphics.UI.FLTK.LowLevel.Hierarchy
 import Graphics.UI.FLTK.LowLevel.RGBImage
 import qualified Data.Text as T
-{# fun Fl_BMP_Image_New as bmpImageNew' { unsafeToCString `T.Text' } -> `Ptr ()' id #}
+{# fun Fl_BMP_Image_New as bmpImageNew' { `CString' } -> `Ptr ()' id #}
 bmpImageNew :: T.Text -> IO (Either UnknownError (Ref BMPImage))
 bmpImageNew filename' = do
-  ptr <- bmpImageNew' filename'
+  ptr <- withText filename' bmpImageNew'
   ref' <- (toRef ptr :: IO (Ref BMPImage))
   checkImage ref'
 

@@ -104,7 +104,7 @@ fillCustomColorChooserFunctionStruct funcs = do
   toRgbPrim (rgbCustom funcs) >>= {#set fl_Color_Chooser_Virtual_Funcs->rgb #} structPtr
   return structPtr
 
-{# fun Fl_OverriddenColor_Chooser_New_WithLabel as overriddenWidgetNewWithLabel' { `Int',`Int',`Int',`Int', unsafeToCString `T.Text', id `Ptr ()', id `Ptr ()' } -> `Ptr ()' id #}
+{# fun Fl_OverriddenColor_Chooser_New_WithLabel as overriddenWidgetNewWithLabel' { `Int',`Int',`Int',`Int', `CString', id `Ptr ()', id `Ptr ()' } -> `Ptr ()' id #}
 {# fun Fl_OverriddenColor_Chooser_New as overriddenWidgetNew' { `Int',`Int',`Int',`Int', id `Ptr ()', id `Ptr ()' } -> `Ptr ()' id #}
 colorChooserCustom ::
        Rectangle                         -- ^ The bounds of this ColorChooser
@@ -121,7 +121,7 @@ colorChooserCustom rectangle l' draw' colorChooserFuncs' funcs' =
     colorChooser <-
       maybe
         (overriddenWidgetNew' x_pos y_pos width height (castPtr widgetFuncsPtr) (castPtr colorChooserFuncsPtr))
-        (\l -> overriddenWidgetNewWithLabel' x_pos y_pos width height l (castPtr widgetFuncsPtr) (castPtr colorChooserFuncsPtr))
+        (\l -> copyTextToCString l >>= \l' -> overriddenWidgetNewWithLabel' x_pos y_pos width height l' (castPtr widgetFuncsPtr) (castPtr colorChooserFuncsPtr))
         l'
     ref <- toRef colorChooser
     setFlag ref WidgetFlagCopiedLabel
@@ -129,14 +129,15 @@ colorChooserCustom rectangle l' draw' colorChooserFuncs' funcs' =
     return ref
 
 {# fun Fl_Color_Chooser_New as colorchooserNew' { `Int',`Int',`Int',`Int' } -> `Ptr ()' id #}
-{# fun Fl_Color_Chooser_New_WithLabel as colorchooserNewWithLabel' { `Int',`Int',`Int',`Int', unsafeToCString `T.Text'} -> `Ptr ()' id #}
+{# fun Fl_Color_Chooser_New_WithLabel as colorchooserNewWithLabel' { `Int',`Int',`Int',`Int', `CString'} -> `Ptr ()' id #}
 colorChooserNew :: Rectangle -> Maybe T.Text -> IO (Ref ColorChooser)
 colorChooserNew rectangle l'=
     let (x_pos, y_pos, width, height) = fromRectangle rectangle
     in case l' of
         Nothing -> colorchooserNew' x_pos y_pos width height >>= toRef
         Just l -> do
-          ref <- colorchooserNewWithLabel' x_pos y_pos width height l >>= toRef
+          l' <- copyTextToCString l
+          ref <- colorchooserNewWithLabel' x_pos y_pos width height l' >>= toRef
           setFlag ref WidgetFlagCopiedLabel
           setFlag ref WidgetFlagCopiedTooltip
           return ref
@@ -297,8 +298,8 @@ rgb2Hsv (Between0And1 h'', Between0And1 s'', Between0And1 v'') =
        v''' <- peek vPtr
        return (Just (Between0And6 (realToFrac h'''),Between0And1 (realToFrac s'''),Between0And1 (realToFrac v''')))
 
-{# fun flc_color_chooser_with_m as flc_color_chooser_with_m' {unsafeToCString `T.Text' , id `Ptr CDouble', id `Ptr CDouble', id `Ptr CDouble', `Int' } -> `Int' #}
-{# fun flc_color_chooser_with_uchar_m as flc_color_chooser_with_uchar_m' {unsafeToCString `T.Text' , id `Ptr CUChar', id `Ptr CUChar', id `Ptr CUChar', `Int' } -> `Int' #}
+{# fun flc_color_chooser_with_m as flc_color_chooser_with_m' {`CString' , id `Ptr CDouble', id `Ptr CDouble', id `Ptr CDouble', `Int' } -> `Int' #}
+{# fun flc_color_chooser_with_uchar_m as flc_color_chooser_with_uchar_m' {`CString' , id `Ptr CUChar', id `Ptr CUChar', id `Ptr CUChar', `Int' } -> `Int' #}
 flcColorChooser :: T.Text ->
                    ColorChooserRGB ->
                    Maybe ColorChooserMode ->
@@ -310,7 +311,7 @@ flcColorChooser name (Decimals (Between0And1 r'', Between0And1 g'', Between0And1
     poke r''Ptr $ realToFrac r''
     poke g''Ptr $ realToFrac g''
     poke b''Ptr $ realToFrac b''
-    ret <- flc_color_chooser_with_m' name r''Ptr g''Ptr b''Ptr (maybe (-1) fromEnum mode)
+    ret <- copyTextToCString name >>= \n' -> flc_color_chooser_with_m' n' r''Ptr g''Ptr b''Ptr (maybe (-1) fromEnum mode)
     if (ret == 0)
      then return Nothing
      else do
@@ -328,7 +329,7 @@ flcColorChooser name (Words (r,g,b)) mode =
     poke r''Ptr (fromIntegral r)
     poke g''Ptr (fromIntegral g)
     poke b''Ptr (fromIntegral b)
-    ret <- flc_color_chooser_with_uchar_m' name r''Ptr g''Ptr b''Ptr (maybe (-1) fromEnum mode)
+    ret <- copyTextToCString name >>= \n' -> flc_color_chooser_with_uchar_m' n' r''Ptr g''Ptr b''Ptr (maybe (-1) fromEnum mode)
     if (ret == 0)
      then return Nothing
      else do

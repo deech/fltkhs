@@ -97,35 +97,35 @@ instance (impl ~ ( IO ([NativeFileChooserOption]))) => Op (GetOptions ()) Native
 {# fun Fl_Native_File_Chooser_count as count' { id `Ptr ()' } -> `Int' #}
 instance (impl ~ ( IO (Int))) => Op (GetCount ()) NativeFileChooser orig impl where
    runOp _ _ chooser = withRef chooser $ \chooserPtr -> count' chooserPtr
-{# fun Fl_Native_File_Chooser_filename as filename' { id `Ptr ()' } -> `T.Text' unsafeFromCString #}
+{# fun Fl_Native_File_Chooser_filename as filename' { id `Ptr ()' } -> `CString' #}
 instance (impl ~ ( IO (Maybe T.Text))) => Op (GetFilename ()) NativeFileChooser orig impl where
-   runOp _ _ chooser = withRef chooser $ \chooserPtr -> filename' chooserPtr >>= \s ->
+   runOp _ _ chooser = withRef chooser $ \chooserPtr -> filename' chooserPtr >>= \s -> cStringToText s >>= \s ->
      if (T.null s) then return Nothing else return (Just s)
-{# fun Fl_Native_File_Chooser_filename_with_i as filenameWithI' { id `Ptr ()',`Int' } -> `T.Text' unsafeFromCString #}
+{# fun Fl_Native_File_Chooser_filename_with_i as filenameWithI' { id `Ptr ()',`Int' } -> `CString' #}
 instance (impl ~ (AtIndex ->  IO (Maybe T.Text))) => Op (GetFilenameAt ()) NativeFileChooser orig impl where
-   runOp _ _ chooser (AtIndex i) = withRef chooser $ \chooserPtr -> filenameWithI' chooserPtr i >>= \s ->
+   runOp _ _ chooser (AtIndex i) = withRef chooser $ \chooserPtr -> filenameWithI' chooserPtr i >>= \s -> cStringToText s >>= \s ->
      if (T.null s) then return Nothing else return (Just s)
-{# fun Fl_Native_File_Chooser_set_directory as setDirectory' { id `Ptr ()',unsafeToCString `T.Text' } -> `()' #}
+{# fun Fl_Native_File_Chooser_set_directory as setDirectory' { id `Ptr ()',`CString' } -> `()' #}
 instance (impl ~ (T.Text ->  IO ())) => Op (SetDirectory ()) NativeFileChooser orig impl where
-   runOp _ _ chooser val = withRef chooser $ \chooserPtr -> setDirectory' chooserPtr val
-{# fun Fl_Native_File_Chooser_directory as directory' { id `Ptr ()' } -> `T.Text' unsafeFromCString #}
+   runOp _ _ chooser val = withRef chooser $ \chooserPtr -> copyTextToCString val >>= setDirectory' chooserPtr
+{# fun Fl_Native_File_Chooser_directory as directory' { id `Ptr ()' } -> `CString' #}
 instance (impl ~ ( IO (Maybe T.Text))) => Op (GetDirectory ()) NativeFileChooser orig impl where
-   runOp _ _ chooser = withRef chooser $ \chooserPtr -> directory' chooserPtr >>= \s ->
+   runOp _ _ chooser = withRef chooser $ \chooserPtr -> directory' chooserPtr >>= \s -> cStringToText s >>= \s ->
      if (T.null s) then return Nothing else return (Just s)
-{# fun Fl_Native_File_Chooser_set_title as setTitle' { id `Ptr ()',unsafeToCString `T.Text' } -> `()' #}
+{# fun Fl_Native_File_Chooser_set_title as setTitle' { id `Ptr ()',`CString' } -> `()' #}
 instance (impl ~ (T.Text ->  IO ())) => Op (SetTitle ()) NativeFileChooser orig impl where
-   runOp _ _ chooser title'' = withRef chooser $ \chooserPtr -> setTitle' chooserPtr title''
-{# fun Fl_Native_File_Chooser_title as title' { id `Ptr ()' } -> `T.Text' unsafeFromCString #}
+   runOp _ _ chooser title'' = withRef chooser $ \chooserPtr -> copyTextToCString title'' >>= setTitle' chooserPtr
+{# fun Fl_Native_File_Chooser_title as title' { id `Ptr ()' } -> `CString' #}
 instance (impl ~ ( IO (Maybe T.Text))) => Op (GetTitle ()) NativeFileChooser orig impl where
-   runOp _ _ chooser = withRef chooser $ \chooserPtr -> title' chooserPtr >>= \s ->
+   runOp _ _ chooser = withRef chooser $ \chooserPtr -> title' chooserPtr >>= \s -> cStringToText s >>= \s ->
      if (T.null s) then return Nothing else return (Just s)
-{# fun Fl_Native_File_Chooser_filter as filter' { id `Ptr ()' } -> `T.Text' unsafeFromCString #}
+{# fun Fl_Native_File_Chooser_filter as filter' { id `Ptr ()' } -> `CString' #}
 instance (impl ~ ( IO (Maybe T.Text))) => Op (GetFilter ()) NativeFileChooser orig impl where
-   runOp _ _ chooser = withRef chooser $ \chooserPtr -> filter' chooserPtr >>= \s ->
+   runOp _ _ chooser = withRef chooser $ \chooserPtr -> filter' chooserPtr >>= \s -> cStringToText s >>= \s ->
      if (T.null s) then return Nothing else return (Just s)
-{# fun Fl_Native_File_Chooser_set_filter as setFilter' { id `Ptr ()', unsafeToCString `T.Text' } -> `()' #}
+{# fun Fl_Native_File_Chooser_set_filter as setFilter' { id `Ptr ()', `CString' } -> `()' #}
 instance (impl ~ (T.Text ->  IO ())) => Op (SetFilter ()) NativeFileChooser orig impl where
-   runOp _ _ chooser filter'' = withRef chooser $ \chooserPtr -> setFilter' chooserPtr filter''
+   runOp _ _ chooser filter'' = withRef chooser $ \chooserPtr -> copyTextToCString filter'' >>= setFilter' chooserPtr
 {# fun Fl_Native_File_Chooser_filters as filters' { id `Ptr ()' } -> `Int' #}
 instance (impl ~ ( IO (Int))) => Op (Filters ()) NativeFileChooser orig impl where
    runOp _ _ chooser = withRef chooser $ \chooserPtr -> filters' chooserPtr
@@ -135,16 +135,16 @@ instance (impl ~ (AtIndex ->  IO ())) => Op (SetFilterValue ()) NativeFileChoose
 {# fun Fl_Native_File_Chooser_filter_value as filterValue' { id `Ptr ()' } -> `Int' #}
 instance (impl ~ ( IO (AtIndex))) => Op (GetFilterValue ()) NativeFileChooser orig impl where
    runOp _ _ chooser = withRef chooser $ \chooserPtr -> filterValue' chooserPtr >>= return . AtIndex
-{# fun Fl_Native_File_Chooser_set_preset_file as setPresetFile' { id `Ptr ()',unsafeToCString `T.Text' } -> `()' #}
+{# fun Fl_Native_File_Chooser_set_preset_file as setPresetFile' { id `Ptr ()',`CString' } -> `()' #}
 instance (impl ~ (T.Text ->  IO ())) => Op (SetPresetFile ()) NativeFileChooser orig impl where
-   runOp _ _ chooser preset' = withRef chooser $ \chooserPtr -> setPresetFile' chooserPtr preset'
-{# fun Fl_Native_File_Chooser_preset_file as presetFile' { id `Ptr ()' } -> `T.Text' unsafeFromCString #}
+   runOp _ _ chooser preset' = withRef chooser $ \chooserPtr -> copyTextToCString preset' >>= setPresetFile' chooserPtr
+{# fun Fl_Native_File_Chooser_preset_file as presetFile' { id `Ptr ()' } -> `CString' #}
 instance (impl ~ ( IO (Maybe T.Text))) => Op (GetPresetFile ()) NativeFileChooser orig impl where
-   runOp _ _ chooser = withRef chooser $ \chooserPtr -> presetFile' chooserPtr >>= \s ->
+   runOp _ _ chooser = withRef chooser $ \chooserPtr -> presetFile' chooserPtr >>= \s -> cStringToText s >>= \s ->
      if (T.null s) then return Nothing else return (Just s)
-{# fun Fl_Native_File_Chooser_errmsg as errmsg' { id `Ptr ()' } -> `T.Text' unsafeFromCString #}
+{# fun Fl_Native_File_Chooser_errmsg as errmsg' { id `Ptr ()' } -> `CString' #}
 instance (impl ~ ( IO (Maybe T.Text))) => Op (GetErrmsg ()) NativeFileChooser orig impl where
-   runOp _ _ chooser = withRef chooser $ \chooserPtr -> errmsg' chooserPtr >>= \s ->
+   runOp _ _ chooser = withRef chooser $ \chooserPtr -> errmsg' chooserPtr >>= \s -> cStringToText s >>= \s ->
      if (T.null s) then return Nothing else return (Just s)
 {# fun Fl_Native_File_Chooser_show as show' { id `Ptr ()' } -> `Int' #}
 instance (impl ~ ( IO (NativeFileChooserUserAction))) => Op (ShowWidget ()) NativeFileChooser orig impl where

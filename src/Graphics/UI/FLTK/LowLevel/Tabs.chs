@@ -99,7 +99,7 @@ customTabFunctionStruct tabDrawCustom' tabPositionsCustom' tabHeightCustom' tabW
   toTabClientAreaPrim tabClientArea' >>= {#set fl_Tab_Virtual_Funcs->tab_client_area #} structPtr
   return structPtr
 
-{# fun Fl_OverriddenTabs_New_WithLabel as overriddenWidgetNewWithLabel' { `Int',`Int',`Int',`Int', unsafeToCString `T.Text', id `Ptr ()', id `Ptr ()'} -> `Ptr ()' id #}
+{# fun Fl_OverriddenTabs_New_WithLabel as overriddenWidgetNewWithLabel' { `Int',`Int',`Int',`Int', `CString', id `Ptr ()', id `Ptr ()'} -> `Ptr ()' id #}
 tabsCustom ::
      Rectangle                      -- ^ The bounds of this Tabs
   -> Maybe T.Text                   -- ^ The Tabs label
@@ -119,17 +119,18 @@ tabsCustom rectangle l' tabFuncs' widgetFuncs' =
                               (tabClientArea tfs))
                    tabFuncs'
    widgetFuncsPtr <- customWidgetFunctionStruct (fmap tabDrawCustom tabFuncs') (maybe defaultCustomWidgetFuncs id widgetFuncs')
-   overriddenWidgetNewWithLabel' x_pos y_pos width height (maybe "" id l') tabFuncsPtr widgetFuncsPtr >>= toRef
+   label' <- maybe (return nullPtr) copyTextToCString l'
+   overriddenWidgetNewWithLabel' x_pos y_pos width height label' tabFuncsPtr widgetFuncsPtr >>= toRef
 
 {# fun Fl_Tabs_New as tabsNew' { `Int',`Int',`Int',`Int' } -> `Ptr ()' id #}
-{# fun Fl_Tabs_New_WithLabel as tabsNewWithLabel' { `Int',`Int',`Int',`Int',unsafeToCString `T.Text'} -> `Ptr ()' id #}
+{# fun Fl_Tabs_New_WithLabel as tabsNewWithLabel' { `Int',`Int',`Int',`Int',`CString'} -> `Ptr ()' id #}
 tabsNew :: Rectangle -> Maybe T.Text -> IO (Ref Tabs)
 tabsNew rectangle l' =
     let (x_pos, y_pos, width, height) = fromRectangle rectangle
     in case l' of
         Nothing -> tabsNew' x_pos y_pos width height >>= toRef
         Just l -> do
-           ref <- tabsNewWithLabel' x_pos y_pos width height l >>= toRef
+           ref <- copyTextToCString l >>= \l' -> tabsNewWithLabel' x_pos y_pos width height l' >>= toRef
            setFlag ref WidgetFlagCopiedLabel
            setFlag ref WidgetFlagCopiedTooltip
            return ref

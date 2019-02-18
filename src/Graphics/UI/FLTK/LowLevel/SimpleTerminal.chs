@@ -27,7 +27,7 @@ import qualified Data.Text as T
 import qualified Foreign.ForeignPtr.Unsafe as Unsafe
 
 {# fun Fl_Simple_Terminal_New as simpleTerminalNew' { `Int',`Int',`Int',`Int' } -> `Ptr ()' id #}
-{# fun Fl_Simple_Terminal_New_WithLabel as simpleTerminalNewWithLabel' { `Int',`Int',`Int',`Int',unsafeToCString `T.Text'} -> `Ptr ()' id #}
+{# fun Fl_Simple_Terminal_New_WithLabel as simpleTerminalNewWithLabel' { `Int',`Int',`Int',`Int',`CString'} -> `Ptr ()' id #}
 simpleTerminalNew :: Rectangle -> Maybe T.Text -> IO (Ref SimpleTerminal)
 simpleTerminalNew rectangle l' =
   widgetMaker
@@ -38,7 +38,7 @@ simpleTerminalNew rectangle l' =
     overriddenWidgetNew'
     overriddenWidgetNewWithLabel'
 
-{# fun Fl_OverriddenSimple_Terminal_New_WithLabel as overriddenWidgetNewWithLabel' { `Int',`Int',`Int',`Int', unsafeToCString `T.Text', id `Ptr ()'} -> `Ptr ()' id #}
+{# fun Fl_OverriddenSimple_Terminal_New_WithLabel as overriddenWidgetNewWithLabel' { `Int',`Int',`Int',`Int', `CString', id `Ptr ()'} -> `Ptr ()' id #}
 {# fun Fl_OverriddenSimple_Terminal_New as overriddenWidgetNew' { `Int',`Int',`Int',`Int', id `Ptr ()'} -> `Ptr ()' id #}
 simpleTerminalCustom ::
        Rectangle                           -- ^ The bounds of this SimpleTerminal
@@ -84,12 +84,12 @@ instance (impl ~ (AtIndex ->  IO ())) => Op (SetCurrentStyleIndex ()) SimpleTerm
 {# fun Fl_Simple_Terminal_get_current_style_index as getCurrentStyleIndex' { id `Ptr ()'} -> `Int' #}
 instance (impl ~ (IO AtIndex)) => Op (GetCurrentStyleIndex ()) SimpleTerminal orig impl where
    runOp _ _ simple_terminal = withRef simple_terminal $ \simple_terminalPtr -> getCurrentStyleIndex' simple_terminalPtr >>= return . AtIndex
-{# fun Fl_Simple_Terminal_set_text as setText' { id `Ptr ()',unsafeToCString `T.Text' } -> `()' #}
+{# fun Fl_Simple_Terminal_set_text as setText' { id `Ptr ()',`CString' } -> `()' #}
 instance (impl ~ (T.Text ->  IO ())) => Op (SetText ()) SimpleTerminal orig impl where
-   runOp _ _ simple_terminal val = withRef simple_terminal $ \simple_terminalPtr -> setText' simple_terminalPtr val
-{# fun Fl_Simple_Terminal_get_text as getText' { id `Ptr ()' } -> `T.Text' unsafeFromCString #}
+   runOp _ _ simple_terminal val = withRef simple_terminal $ \simple_terminalPtr -> copyTextToCString val >>= setText' simple_terminalPtr
+{# fun Fl_Simple_Terminal_get_text as getText' { id `Ptr ()' } -> `CString' #}
 instance (impl ~ ( IO T.Text)) => Op (GetText ()) SimpleTerminal orig impl where
-   runOp _ _ simple_terminal = withRef simple_terminal $ \simple_terminalPtr -> getText' simple_terminalPtr
+   runOp _ _ simple_terminal = withRef simple_terminal $ \simple_terminalPtr -> getText' simple_terminalPtr >>= cStringToText
 {# fun Fl_Simple_Terminal_clear as clear'' { id `Ptr ()' } -> `()' #}
 instance (impl ~ (  IO ())) => Op (Clear ()) SimpleTerminal orig impl where
   runOp _ _ simpleTerminal = withRef simpleTerminal $ \simpleTerminalPtr -> clear'' simpleTerminalPtr
