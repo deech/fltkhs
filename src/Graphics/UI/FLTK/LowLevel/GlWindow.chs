@@ -17,6 +17,7 @@ where
 #include "Fl_C.h"
 #include "Fl_Double_WindowC.h"
 #include "Fl_Gl_WindowC.h"
+import C2HS hiding (cFromEnum, cFromBool, cToBool,cToEnum)
 import Foreign
 import Graphics.UI.FLTK.LowLevel.Fl_Types
 import Graphics.UI.FLTK.LowLevel.Fl_Enumerations
@@ -131,7 +132,7 @@ instance (impl ~ ( IO (Mode))) => Op (GetMode ()) GlWindow orig impl where
 {# fun Fl_Gl_Window_set_mode as setMode' { id `Ptr ()',`Int' } -> `Int' #}
 instance (impl ~ (Modes ->  IO ())) => Op (SetMode ()) GlWindow orig impl where
   runOp _ _ win a = withRef win $ \winPtr -> setMode' winPtr (modesToInt a) >> return ()
-{# fun Fl_Gl_Window_context as context' { id `Ptr ()' } -> `Ptr ()' unsafeToRef #}
+{# fun Fl_Gl_Window_context as context' { id `Ptr ()' } -> `Ptr ()'  #}
 instance (impl ~ ( IO (Ref FlGlContext))) => Op (GetContext ()) GlWindow orig impl where
   runOp _ _ win = withRef win $ \winPtr -> context' winPtr >>= toRef
 {# fun Fl_Gl_Window_set_context as setContext' { id `Ptr ()',id `Ptr ()' } -> `()' supressWarningAboutRes #}

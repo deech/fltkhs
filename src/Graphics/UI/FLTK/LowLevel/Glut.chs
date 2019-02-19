@@ -404,7 +404,7 @@ glutInitWindowSize :: Size -> IO ()
 glutInitWindowSize (Size (Width w) (Height h)) = glutInitWindowSize' (fromIntegral w) (fromIntegral h)
 {# fun flc_glutMainLoop as glutMainLoop { } -> `()' #}
 {# fun flc_glutCreateWindow as glutCreateWindow' {`CString'} -> `GlutWindow' GlutWindow #}
-glutCreateWindow :: T.Text -> IO ()
+glutCreateWindow :: T.Text -> IO GlutWindow
 glutCreateWindow t = copyTextToCString t >>= glutCreateWindow'
 {# fun flc_glutCreateSubWindow as glutCreateSubWindow' {windowNumber `GlutWindow',`Int',`Int',`Int',`Int'} -> `GlutWindow' GlutWindow #}
 glutCreateSubWindow :: GlutWindow -> Rectangle -> IO GlutWindow
@@ -456,14 +456,12 @@ glutAddMenuEntry l = copyTextToCString l >>= \l' -> glutAddMenuEntry' l' 0
 {# fun flc_glutAddSubMenu as glutAddSubMenu' {`CString', menuNumber `GlutMenu' } -> `()' #}
 glutAddSubMenu :: T.Text -> GlutMenu -> IO ()
 glutAddSubMenu t mn = copyTextToCString t >>= \t' -> glutAddSubMenu' t' mn
-{# fun flc_glutChangeToMenuEntry as glutChangeToMenuEntry'' {`Int', `CString', `Int'} -> `()' #}
-glutChangeToMenuEntry :: Int -> T.Text -> Int -> IO ()
-glutChangeToMenuEntry i t v = copyTextToCString t >>= \t' -> glutChangeToMenuEntry' i t' v
+{# fun flc_glutChangeToMenuEntry as glutChangeToMenuEntry' {`Int', `CString', `Int'} -> `()' #}
 glutChangeToMenuEntry :: Int -> T.Text -> IO ()
-glutChangeToMenuEntry index label = glutChangeToMenuEntry' index label 0
+glutChangeToMenuEntry index label = copyTextToCString label >>= \l -> glutChangeToMenuEntry' index l 0
 {# fun flc_glutChangeToSubMenu as glutChangeToSubMenu' {`Int', `CString', menuNumber `GlutMenu' } -> `()' #}
-glutChangeToSubMenu :: T.Text -> GlutMenu -> IO ()
-glutChangeToSubMenu t m = copyTextToCString t >>= \t' -> glutChangeToSubMenu' t' m
+glutChangeToSubMenu :: Int -> T.Text -> GlutMenu -> IO ()
+glutChangeToSubMenu i t m = copyTextToCString t >>= \t' -> glutChangeToSubMenu' i t' m
 {# fun flc_glutRemoveMenuItem as glutRemoveMenuItem {`Int' } -> `()' #}
 {# fun flc_glutAttachMenu as glutAttachMenu {menuNumber `GlutMenu'} -> `()' #}
 {# fun flc_glutDetachMenu as glutDetachMenu {menuNumber `GlutMenu'} -> `()' #}
