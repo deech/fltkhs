@@ -32,11 +32,12 @@ svgImageNewFromFile path' = do
   checkImage ref'
 
 svgImageNew :: B.ByteString -> IO (Either UnknownError (Ref SVGImage))
-svgImageNew svgData' = do
-  dataPtr <- copyByteStringToCString svgData'
-  ptr <- svgImageNewWithData' (castPtr nullPtr) dataPtr
-  ref' <- (toRef ptr :: IO (Ref SVGImage))
-  checkImage ref'
+svgImageNew svgData' =
+  B.useAsCString svgData' (\dataPtr -> do
+    ptr <- svgImageNewWithData' (castPtr nullPtr) dataPtr
+    ref' <- (toRef ptr :: IO (Ref SVGImage))
+    checkImage ref'
+  )
 
 {# fun Fl_SVG_Image_Destroy as flImageDestroy' { id `Ptr ()' } -> `()' id #}
 instance (impl ~ (IO ())) => Op (Destroy ()) SVGImage orig impl where
