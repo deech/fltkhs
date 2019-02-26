@@ -12,6 +12,24 @@ import Control.Monad
 import Debug.Trace
 import System.Process
 import Data.Maybe
+import Control.Arrow
+
+parseFunc = do
+  char '('
+  spaces
+  f <- manyTill anyChar (try newline)
+  spacesOrNewLines
+  return f
+
+parseFuncs = do
+  spacesOrNewLines
+  fs <- many parseFunc
+  return (filter (\f -> not (all ((==) ')') f)) fs)
+
+parseFuncsLine o = do
+  let searchString = "type" ++ " " ++ o ++ "Funcs" ++ " " ++ "="
+  manyTill anyChar (try (string searchString))
+  parseFuncs
 
 spacesOrNewLines =
   skipMany $ (char ' ') <|> (char '\n') <|> crlf
@@ -131,7 +149,7 @@ pprint r = case r of
 word = manyTill anyChar (try (string " "))
 
 isWidget w ((_,_),_,w') = w == w'
-data Command = Functions String | Hierarchy String
+data Command = Functions String | Hierarchy String | Sync
 
 traceHierarchy :: String -> [String] -> [(String,String)] -> [String]
 traceHierarchy w accum dict = case (lookup w dict) of
@@ -144,23 +162,36 @@ main = do
         case args of
           ("functions":w':[]) -> Just (Functions w')
           ("hierarchy":w':[]) -> Just (Hierarchy w')
+          ("sync":[])         -> Just Sync
           _                   -> Nothing
-
-  objs <- readFile "../src/Graphics/UI/FLTK/LowLevel/Hierarchy.hs" >>=
-          return .
-          filter (not . isInfixOf "Funcs") .
-          filter (isPrefixOf "type") .
-          lines
+  hierarchyContents <- readFile "../src/Graphics/UI/FLTK/LowLevel/Hierarchy.hs"
+  let objs = (
+               filter (not . isInfixOf "Funcs") .
+               filter (isPrefixOf "type") .
+               lines
+             ) hierarchyContents
   let readWidgetFile w = readFile ("../src/Graphics/UI/FLTK/LowLevel/" ++ w ++ ".chs")
   let parseWidgetFile contents =
         case (parse parseInstances "" contents) of
           Left err        -> error (show err)
           Right (functions, newVersionOnly) -> (Just functions, Just newVersionOnly)
-  let hier' = map
-                (\o -> case (parse runHierarchyParser "" o) of
-                   Left err -> Nothing
-                   Right r  -> Just r)
-                objs
+  let hier' = catMaybes
+                (
+                  map
+                    (\o -> case (parse runHierarchyParser "" o) of
+                       Left err -> Nothing
+                       Right r  -> Just r)
+                    objs
+                )
+      funcs =
+        catMaybes
+          (map
+            (\(o,_) ->
+               case (parse (parseFuncsLine o) "" hierarchyContents) of
+                 Left err -> Nothing
+                 Right r  -> Just (o,r)
+            )
+            hier')
   case command of
     Nothing -> error ""
     (Just (Hierarchy w)) -> do
@@ -168,7 +199,7 @@ main = do
             map (\w -> "-- " ++ w) $
               map (\w -> "\"" ++ w ++ "\"") $
                 map (\w -> "Graphics.UI.FLTK.LowLevel." ++ w) $
-                  traceHierarchy w [] (catMaybes hier')
+                  traceHierarchy w [] hier'
       putStr $ concat $ intersperse "\n--  |\n--  v\n" trace'
       putStr "\n"
     (Just (Functions w)) -> do
@@ -176,6 +207,31 @@ main = do
       let (functions, inNewVersionOnly) = parseWidgetFile contents
       let rendered = maybe [] (sort . map (\(c, sig, mName, wType) -> pprint ((c, sig), mName, wType)))
       putStr $ intercalate "\n--\n" (map ((++) "-- ") (rendered functions))
+    (Just Sync) ->
+      mapM
+        (\(w,hierarchyFs) -> do
+            contents <- readWidgetFile w
+            let (fs, _) = parseWidgetFile contents
+            let omitted =
+                  case fs of
+                    Nothing -> ([],[])
+                    Just _fs ->
+                      let namesOnly = map (\(_,_,nName,_) -> nName) _fs
+                      in
+                      (
+                        filter
+                          (\f ->
+                               not (elem f namesOnly)
+                          )
+                          hierarchyFs
+                      , filter
+                          (\n -> not (elem n hierarchyFs))
+                          namesOnly
+                      )
+            return (w,omitted)
+        )
+        funcs
+       >>= print
       -- putStr "\n"
       -- putStr $ "\n-- Available in FLTK 1.3.4 only: \n"
       -- putStr $ intercalate "\n--\n" (map ((++) "-- ") (rendered inNewVersionOnly))

@@ -212,7 +212,7 @@ instance (impl ~ ((Between0And1, Between0And1, Between0And1) ->  IO (Either NoCh
       ret <- rgb' color_chooserPtr r'' g'' b''
       if (ret == 0) then return (Left NoChange) else return (Right ())
 
-instance (impl ~ (IO ( Either OutOfRange (Between0And1, Between0And1, Between0And1)))) => Op (GetRgb()) ColorChooser orig impl where
+instance (impl ~ (IO ( Either OutOfRange (Between0And1, Between0And1, Between0And1)))) => Op (GetRgb ()) ColorChooser orig impl where
   runOp _ _ color_chooser = do
     _r <- getR color_chooser
     _g <- getG color_chooser
@@ -223,7 +223,7 @@ instance (impl ~ (IO ( Either OutOfRange (Between0And1, Between0And1, Between0An
       b <- _b
       return (r,g,b))
 
-instance (impl ~ (IO ( Either OutOfRange (Between0And6, Between0And1, Between0And1)))) => Op (GetHsv()) ColorChooser orig impl where
+instance (impl ~ (IO ( Either OutOfRange (Between0And6, Between0And1, Between0And1)))) => Op (GetHsv ()) ColorChooser orig impl where
   runOp _ _ color_chooser = do
     _h <- getHue color_chooser
     _s <- getSaturation color_chooser
@@ -359,11 +359,15 @@ flcColorChooser name (Words (r,g,b)) mode =
 --
 -- getG :: 'Ref' 'ColorChooser' -> 'IO' ('Either' 'OutOfRange' 'Between0And1')
 --
+-- getHsv :: 'Ref' 'ColorChooser' -> 'IO' ( 'Either' 'OutOfRange' ('Between0And6', 'Between0And1', 'Between0And1'))
+--
 -- getHue :: 'Ref' 'ColorChooser' -> 'IO' ('Either' 'OutOfRange' 'Between0And6')
 --
 -- getMode :: 'Ref' 'ColorChooser' -> 'IO' ('ColorChooserMode')
 --
 -- getR :: 'Ref' 'ColorChooser' -> 'IO' ('Either' 'OutOfRange' 'Between0And1')
+--
+-- getRgb :: 'Ref' 'ColorChooser' -> 'IO' ( 'Either' 'OutOfRange' ('Between0And1', 'Between0And1', 'Between0And1'))
 --
 -- getSaturation :: 'Ref' 'ColorChooser' -> 'IO' ('Either' 'OutOfRange' 'Between0And1')
 --

@@ -185,6 +185,22 @@ instance (impl ~ (Event -> IO (Either UnknownEvent ()))) => Op (Handle ()) Group
 instance (impl ~ (Event ->  IO (Either UnknownEvent ()))) => Op (HandleSuper ()) Group orig impl where
   runOp _ _ group event = withRef group $ \groupPtr -> handleSuper' groupPtr (fromIntegral (fromEnum event)) >>= return . successOrUnknownEvent
 
+{# fun Fl_Group_resize as resize' { id `Ptr ()',`Int',`Int',`Int',`Int' } -> `()' supressWarningAboutRes #}
+instance (impl ~ (Rectangle -> IO ())) => Op (Resize ()) TextDisplay orig impl where
+  runOp _ _ group rectangle = withRef group $ \groupPtr -> do
+                                 let (x_pos,y_pos,w_pos,h_pos) = fromRectangle rectangle
+                                 resize' groupPtr x_pos y_pos w_pos h_pos
+
+{# fun Fl_Group_resize_super as resizeSuper' { id `Ptr ()',`Int',`Int',`Int',`Int' } -> `()' supressWarningAboutRes #}
+instance (impl ~ (Rectangle -> IO ())) => Op (ResizeSuper ()) Group orig impl where
+  runOp _ _ group rectangle =
+    let (x_pos, y_pos, width, height) = fromRectangle rectangle
+    in withRef group $ \groupPtr -> resizeSuper' groupPtr x_pos y_pos width height
+
+{# fun Fl_Group_draw_super as drawSuper' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
+instance (impl ~ ( IO ())) => Op (DrawSuper ()) Group orig impl where
+  runOp _ _ group = withRef group $ \groupPtr -> drawSuper' groupPtr
+
 -- $groupfunctions
 -- @
 -- add:: ('Parent' a 'Widget') => 'Ref' 'Group' -> 'Ref' a-> 'IO' ()
@@ -208,6 +224,8 @@ instance (impl ~ (Event ->  IO (Either UnknownEvent ()))) => Op (HandleSuper ())
 -- drawChildren :: 'Ref' 'Group' -> 'IO' ()
 --
 -- drawOutsideLabel:: ('Parent' a 'Widget') => 'Ref' 'Group' -> 'Ref' a -> 'IO' ()
+--
+-- drawSuper :: 'Ref' 'Group' -> 'IO' ()
 --
 -- end :: 'Ref' 'Group' -> 'IO' ()
 --
@@ -234,6 +252,10 @@ instance (impl ~ (Event ->  IO (Either UnknownEvent ()))) => Op (HandleSuper ())
 -- removeIndex :: 'Ref' 'Group' -> 'AtIndex' -> 'IO' ()
 --
 -- removeWidget:: ('Parent' a 'Widget') => 'Ref' 'Group' -> 'Ref' a -> 'IO' ()
+--
+-- resize :: 'Ref' 'TextDisplay' -> 'Rectangle' -> 'IO' ()
+--
+-- resizeSuper :: 'Ref' 'Group' -> 'Rectangle' -> 'IO' ()
 --
 -- setClipChildren :: 'Ref' 'Group' -> 'Bool' -> 'IO' ()
 --

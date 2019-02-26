@@ -97,7 +97,7 @@ instance (impl ~ (  IO ())) => Op (Clear ()) SimpleTerminal orig impl where
 instance (impl ~ (LineNumber -> LineNumber -> IO ())) => Op (RemoveLines ()) SimpleTerminal orig impl where
    runOp _ _ simple_terminal (LineNumber start) (LineNumber count) = withRef simple_terminal $ \simple_terminalPtr -> removeLines' simple_terminalPtr start count
 {# fun Fl_Simple_Terminal_set_style_table as setStyleTable' { id `Ptr ()',id `Ptr ()',`Int',  `Int'} -> `()' #}
-instance (impl ~ ([StyleTableEntry] -> Maybe Int -> IO ())) => Op (SetStyleTable()) SimpleTerminal orig impl where
+instance (impl ~ ([StyleTableEntry] -> Maybe Int -> IO ())) => Op (SetStyleTable ()) SimpleTerminal orig impl where
    runOp _ _ simple_terminal styleTable normal_style_index =
      withRef simple_terminal $ \simple_terminalPtr -> do
        stesPtr <- mkStyleTableEntriesPtr simple_terminal styleTable
@@ -188,6 +188,8 @@ instance (impl ~ ( IO ())) => Op (ShowWidgetSuper ()) SimpleTerminal orig impl w
 -- setNormalStyleIndex :: 'Ref' 'SimpleTerminal' -> 'AtIndex' -> 'IO' ()
 --
 -- setStayAtBottom :: 'Ref' 'SimpleTerminal' -> 'Bool' -> 'IO' ()
+--
+-- setStyleTable :: 'Ref' 'SimpleTerminal' -> ['StyleTableEntry'] -> 'Maybe' 'Int' -> 'IO' ()
 --
 -- setText :: 'Ref' 'SimpleTerminal' -> 'T.Text' -> 'IO' ()
 --

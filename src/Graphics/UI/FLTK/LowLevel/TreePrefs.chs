@@ -29,6 +29,9 @@ treePrefsNew = treePrefsNew' >>= toRef
 {# fun Fl_Tree_Prefs_item_labelfont as itemLabelfont' { id `Ptr ()' } -> `Font' cToFont #}
 instance (impl ~ (IO (Font))) => Op (GetItemLabelfont ()) TreePrefs orig impl where
   runOp _ _ tree_prefs = withRef tree_prefs $ \tree_prefsPtr -> itemLabelfont' tree_prefsPtr
+{# fun Fl_Tree_Prefs_set_item_labelfont as setItemLabelfont' { id `Ptr ()',cFromFont `Font' } -> `()' #}
+instance (impl ~ (Font ->  IO ())) => Op (SetItemLabelfont ()) TreePrefs orig impl where
+  runOp _ _ tree_prefs val = withRef tree_prefs $ \tree_prefsPtr -> setItemLabelfont' tree_prefsPtr val
 {# fun Fl_Tree_Prefs_item_labelsize as itemLabelsize' { id `Ptr ()' } -> `CInt' id #}
 instance (impl ~ (IO (FontSize))) => Op (GetItemLabelsize ()) TreePrefs orig impl where
   runOp _ _ tree_prefs = withRef tree_prefs $ \tree_prefsPtr -> itemLabelsize' tree_prefsPtr >>= return . FontSize
@@ -266,6 +269,8 @@ instance (impl ~ ([TreeItemDrawMode] ->  IO ()) ) => Op (SetItemDrawMode ()) Tre
 -- setItemLabelbgcolor :: 'Ref' 'TreePrefs' -> 'Color' -> 'IO' ()
 --
 -- setItemLabelfgcolor :: 'Ref' 'TreePrefs' -> 'Color' -> 'IO' ()
+--
+-- setItemLabelfont :: 'Ref' 'TreePrefs' -> 'Font' -> 'IO' ()
 --
 -- setItemLabelsize :: 'Ref' 'TreePrefs' -> 'FontSize' -> 'IO' ()
 --
