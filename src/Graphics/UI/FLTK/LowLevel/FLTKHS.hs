@@ -293,7 +293,7 @@ import Graphics.UI.FLTK.LowLevel.XPMImage
 -- These are all great projects and produce really nice UIs, but they all fail
 -- at least one of criterion listed under the __Goals__ section below.
 --
--- To my knowledge, as of the last quarter of 2018, no other package
+-- To my knowledge, as of the first quarter of 2019, no other package
 -- in the Haskell ecosystem meets all those constraints.
 --
 
@@ -1113,22 +1113,15 @@ import Graphics.UI.FLTK.LowLevel.XPMImage
 -- elements that derive from the C++ base class
 -- <http://www.fltk.org/doc-1.4/classFl__Widget.html Fl_Widget> and the Haskell
 -- analog
--- <https://hackage.haskell.org/package/fltkhs/docs/Graphics-UI-FLTK-LowLevel-Widget.html
--- Widget> now allow Haskell
--- <https://hackage.haskell.org/package/fltkhs/docs/Graphics-UI-FLTK-LowLevel-Widget.html#g:2
--- functions> to be passed at widget construction time that give Haskell
+-- <https://hackage.haskell.org/package/fltkhs/docs/Graphics-UI-FLTK-LowLevel-Widget.html Widget> now allow Haskell
+-- <https://hackage.haskell.org/package/fltkhs/docs/Graphics-UI-FLTK-LowLevel-Widget.html#g:2 functions> to be passed at widget construction time that give Haskell
 -- complete control on
--- <https://hackage.haskell.org/package/fltkhs/docs/Graphics-UI-FLTK-LowLevel-Widget.html#v:widgetCustom
--- drawing>,
--- <https://hackage.haskell.org/package/fltkhs/docs/Graphics-UI-FLTK-LowLevel-Widget.html#t:CustomWidgetFuncs
--- handling, resizing and other key functions>. This means that the Haskell user
+-- <https://hackage.haskell.org/package/fltkhs/docs/Graphics-UI-FLTK-LowLevel-Widget.html#v:widgetCustom drawing>,
+-- <https://hackage.haskell.org/package/fltkhs/docs/Graphics-UI-FLTK-LowLevel-Widget.html#t:CustomWidgetFuncs handling, resizing and other key functions>. This means that the Haskell user
 -- has complete control of the look and feel as well as the event loop. The
--- <https://github.com/deech/fltkhs-demos/blob/master/src/Examples/table-as-container.hs#L105
--- table> demos are an example of drawing in Haskell. An example of taking over
--- the event loop is an FLTKHS <https://github.com/deech/fltkhs-reflex-host
--- proof-of-concept> that
--- <https://github.com/deech/fltkhs-reflex-host/blob/master/src/reflex-host.hs#L33
--- overrides> the FLTKHS event loop with the
+-- <https://github.com/deech/fltkhs-demos/blob/master/src/Examples/table-as-container.hs#L105 table> demos are an example of drawing in Haskell. An example of taking over
+-- the event loop is an FLTKHS <https://github.com/deech/fltkhs-reflex-host proof-of-concept> that
+-- <https://github.com/deech/fltkhs-reflex-host/blob/master/src/reflex-host.hs#L33 overrides> the FLTKHS event loop with the
 -- <https://hackage.haskell.org/package/reflex Reflex FRP> allowing native
 -- functional reactive programming. The sky is the limit!
 --

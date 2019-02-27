@@ -100,9 +100,13 @@ textDisplayCustom rectangle l' draw' funcs' =
 textDisplayNew :: Rectangle -> Maybe T.Text -> IO (Ref TextDisplay)
 textDisplayNew rectangle l' =
     let (x_pos, y_pos, width, height) = fromRectangle rectangle
-    in case l' of
-        Nothing -> textDisplayNew' x_pos y_pos width height >>= toRef
-        Just l -> copyTextToCString l >>= \l' -> textDisplayNewWithLabel' x_pos y_pos width height l' >>= toRef
+    in do
+     r <- case l' of
+           Nothing -> textDisplayNew' x_pos y_pos width height >>= toRef
+           Just l -> copyTextToCString l >>= \l' -> textDisplayNewWithLabel' x_pos y_pos width height l' >>= toRef
+     setFlag r WidgetFlagCopiedLabel
+     setFlag r WidgetFlagCopiedTooltip
+     return r
 
 {# fun Fl_Text_Display_Destroy as textDisplayDestroy' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
 instance (impl ~ (IO ())) => Op (Destroy ()) TextDisplay orig impl where

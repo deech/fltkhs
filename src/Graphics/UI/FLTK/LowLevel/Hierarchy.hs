@@ -4634,7 +4634,7 @@ type MultiLabel = CMultiLabel Base
 type MultiLabelFuncs =
   (WidgetLabel
   (MenuItemLabel
-  (())))
+  ()))
 type instance Functions MultiLabel = MultiLabelFuncs
 
 MAKE_METHOD(WidgetLabel, widgetLabel)
