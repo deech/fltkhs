@@ -174,28 +174,28 @@ instance (impl ~ (IO (TreeSelect))) => Op (GetSelectmode ()) TreePrefs orig impl
 instance (impl ~ (TreeSelect ->  IO ())) => Op (SetSelectmode ()) TreePrefs orig impl where
   runOp _ _ tree_prefs val = withRef tree_prefs $ \tree_prefsPtr -> setSelectmode' tree_prefsPtr val
 {# fun Fl_Tree_Prefs_marginbottom as marginbottom' { id `Ptr ()' } -> `Int' #}
-instance (impl ~ ( IO (Int)) ) => Op (GetMarginbottom ()) Tree orig impl where
+instance (impl ~ ( IO (Int)) ) => Op (GetMarginbottom ()) TreePrefs orig impl where
   runOp _ _ tree = withRef tree $ \treePtr -> marginbottom' treePtr
 {# fun Fl_Tree_Prefs_set_marginbottom as setMarginbottom' { id `Ptr ()',`Int' } -> `()' #}
-instance (impl ~ (Int ->  IO ()) ) => Op (SetMarginbottom ()) Tree orig impl where
+instance (impl ~ (Int ->  IO ()) ) => Op (SetMarginbottom ()) TreePrefs orig impl where
   runOp _ _ tree val = withRef tree $ \treePtr -> setMarginbottom' treePtr val
 {# fun Fl_Tree_Prefs_widgetmarginleft as widgetmarginleft' { id `Ptr ()' } -> `Int' #}
-instance (impl ~ ( IO (Int)) ) => Op (GetWidgetmarginleft ()) Tree orig impl where
+instance (impl ~ ( IO (Int)) ) => Op (GetWidgetmarginleft ()) TreePrefs orig impl where
   runOp _ _ tree = withRef tree $ \treePtr -> widgetmarginleft' treePtr
 {# fun Fl_Tree_Prefs_set_widgetmarginleft as setWidgetmarginleft' { id `Ptr ()',`Int' } -> `()' #}
-instance (impl ~ (Int ->  IO ()) ) => Op (SetWidgetmarginleft ()) Tree orig impl where
+instance (impl ~ (Int ->  IO ()) ) => Op (SetWidgetmarginleft ()) TreePrefs orig impl where
   runOp _ _ tree val = withRef tree $ \treePtr -> setWidgetmarginleft' treePtr val
 {# fun Fl_Tree_Prefs_item_reselect_mode as item_reselect_mode' { id `Ptr ()' } -> `TreeItemReselectMode' cToEnum #}
-instance (impl ~ ( IO (TreeItemReselectMode)) ) => Op (GetItemReselectMode ()) Tree orig impl where
+instance (impl ~ ( IO (TreeItemReselectMode)) ) => Op (GetItemReselectMode ()) TreePrefs orig impl where
   runOp _ _ tree = withRef tree $ \treePtr -> item_reselect_mode' treePtr
 {# fun Fl_Tree_Prefs_set_item_reselect_mode as setItem_Reselect_Mode' { id `Ptr ()', cFromEnum `TreeItemReselectMode' } -> `()' #}
-instance (impl ~ (TreeItemReselectMode ->  IO ()) ) => Op (SetItemReselectMode ()) Tree orig impl where
+instance (impl ~ (TreeItemReselectMode ->  IO ()) ) => Op (SetItemReselectMode ()) TreePrefs orig impl where
   runOp _ _ tree val = withRef tree $ \treePtr -> setItem_Reselect_Mode' treePtr val
 {# fun Fl_Tree_Prefs_item_draw_mode as item_draw_mode' { id `Ptr ()' } -> `CInt'#}
-instance (impl ~ ( IO ([TreeItemDrawMode])) ) => Op (GetItemDrawMode ()) Tree orig impl where
+instance (impl ~ ( IO ([TreeItemDrawMode])) ) => Op (GetItemDrawMode ()) TreePrefs orig impl where
   runOp _ _ tree = withRef tree $ \treePtr -> item_draw_mode' treePtr >>= return . extract allTreeItemDrawModes
 {# fun Fl_Tree_Prefs_set_item_draw_mode as setItem_Draw_Mode' { id `Ptr ()', `CInt' } -> `()' #}
-instance (impl ~ ([TreeItemDrawMode] ->  IO ()) ) => Op (SetItemDrawMode ()) Tree orig impl where
+instance (impl ~ ([TreeItemDrawMode] ->  IO ()) ) => Op (SetItemDrawMode ()) TreePrefs orig impl where
   runOp _ _ tree val = withRef tree $ \treePtr -> setItem_Draw_Mode' treePtr (fromIntegral (combine val))
 
 -- $functions
@@ -208,7 +208,7 @@ instance (impl ~ ([TreeItemDrawMode] ->  IO ()) ) => Op (SetItemDrawMode ()) Tre
 --
 -- getConnectorwidth :: 'Ref' 'TreePrefs' -> 'IO' ('Int')
 --
--- getItemDrawMode :: 'Ref' 'Tree' -> 'IO' (['TreeItemDrawMode')]
+-- getItemDrawMode :: 'Ref' 'TreePrefs' -> 'IO' (['TreeItemDrawMode')]
 --
 -- getItemLabelbgcolor :: 'Ref' 'TreePrefs' -> 'IO' ('Color')
 --
@@ -216,7 +216,7 @@ instance (impl ~ ([TreeItemDrawMode] ->  IO ()) ) => Op (SetItemDrawMode ()) Tre
 --
 -- getItemLabelsize :: 'Ref' 'TreePrefs' -> 'IO' ('FontSize')
 --
--- getItemReselectMode :: 'Ref' 'Tree' -> 'IO' ('TreeItemReselectMode')
+-- getItemReselectMode :: 'Ref' 'TreePrefs' -> 'IO' ('TreeItemReselectMode')
 --
 -- getLabelbgcolor :: 'Ref' 'TreePrefs' -> 'IO' ('Color')
 --
@@ -230,7 +230,7 @@ instance (impl ~ ([TreeItemDrawMode] ->  IO ()) ) => Op (SetItemDrawMode ()) Tre
 --
 -- getLinespacing :: 'Ref' 'TreePrefs' -> 'IO' ('Int')
 --
--- getMarginbottom :: 'Ref' 'Tree' -> 'IO' ('Int')
+-- getMarginbottom :: 'Ref' 'TreePrefs' -> 'IO' ('Int')
 --
 -- getMarginleft :: 'Ref' 'TreePrefs' -> 'IO' ('Int')
 --
@@ -254,7 +254,7 @@ instance (impl ~ ([TreeItemDrawMode] ->  IO ()) ) => Op (SetItemDrawMode ()) Tre
 --
 -- getUsericonmarginleft :: 'Ref' 'TreePrefs' -> 'IO' ('Int')
 --
--- getWidgetmarginleft :: 'Ref' 'Tree' -> 'IO' ('Int')
+-- getWidgetmarginleft :: 'Ref' 'TreePrefs' -> 'IO' ('Int')
 --
 -- setCloseicon:: ('Parent' a 'Image') => 'Ref' 'TreePrefs' -> 'Maybe' ( 'Ref' a ) -> 'IO' ()
 --
@@ -264,7 +264,7 @@ instance (impl ~ ([TreeItemDrawMode] ->  IO ()) ) => Op (SetItemDrawMode ()) Tre
 --
 -- setConnectorwidth :: 'Ref' 'TreePrefs' -> 'Int' -> 'IO' ()
 --
--- setItemDrawMode :: 'Ref' 'Tree' -> ['TreeItemDrawMode'] -> 'IO' ()
+-- setItemDrawMode :: 'Ref' 'TreePrefs' -> ['TreeItemDrawMode'] -> 'IO' ()
 --
 -- setItemLabelbgcolor :: 'Ref' 'TreePrefs' -> 'Color' -> 'IO' ()
 --
@@ -274,7 +274,7 @@ instance (impl ~ ([TreeItemDrawMode] ->  IO ()) ) => Op (SetItemDrawMode ()) Tre
 --
 -- setItemLabelsize :: 'Ref' 'TreePrefs' -> 'FontSize' -> 'IO' ()
 --
--- setItemReselectMode :: 'Ref' 'Tree' -> 'TreeItemReselectMode' -> 'IO' ()
+-- setItemReselectMode :: 'Ref' 'TreePrefs' -> 'TreeItemReselectMode' -> 'IO' ()
 --
 -- setLabelbgcolor :: 'Ref' 'TreePrefs' -> 'Color' -> 'IO' ()
 --
@@ -288,7 +288,7 @@ instance (impl ~ ([TreeItemDrawMode] ->  IO ()) ) => Op (SetItemDrawMode ()) Tre
 --
 -- setLinespacing :: 'Ref' 'TreePrefs' -> 'Int' -> 'IO' ()
 --
--- setMarginbottom :: 'Ref' 'Tree' -> 'Int' -> 'IO' ()
+-- setMarginbottom :: 'Ref' 'TreePrefs' -> 'Int' -> 'IO' ()
 --
 -- setMarginleft :: 'Ref' 'TreePrefs' -> 'Int' -> 'IO' ()
 --
@@ -312,7 +312,7 @@ instance (impl ~ ([TreeItemDrawMode] ->  IO ()) ) => Op (SetItemDrawMode ()) Tre
 --
 -- setUsericonmarginleft :: 'Ref' 'TreePrefs' -> 'Int' -> 'IO' ()
 --
--- setWidgetmarginleft :: 'Ref' 'Tree' -> 'Int' -> 'IO' ()
+-- setWidgetmarginleft :: 'Ref' 'TreePrefs' -> 'Int' -> 'IO' ()
 -- @
 
 -- $hierarchy

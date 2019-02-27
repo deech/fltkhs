@@ -186,7 +186,7 @@ instance (impl ~ (Event ->  IO (Either UnknownEvent ()))) => Op (HandleSuper ())
   runOp _ _ group event = withRef group $ \groupPtr -> handleSuper' groupPtr (fromIntegral (fromEnum event)) >>= return . successOrUnknownEvent
 
 {# fun Fl_Group_resize as resize' { id `Ptr ()',`Int',`Int',`Int',`Int' } -> `()' supressWarningAboutRes #}
-instance (impl ~ (Rectangle -> IO ())) => Op (Resize ()) TextDisplay orig impl where
+instance (impl ~ (Rectangle -> IO ())) => Op (Resize ()) Group orig impl where
   runOp _ _ group rectangle = withRef group $ \groupPtr -> do
                                  let (x_pos,y_pos,w_pos,h_pos) = fromRectangle rectangle
                                  resize' groupPtr x_pos y_pos w_pos h_pos
@@ -253,7 +253,7 @@ instance (impl ~ ( IO ())) => Op (DrawSuper ()) Group orig impl where
 --
 -- removeWidget:: ('Parent' a 'Widget') => 'Ref' 'Group' -> 'Ref' a -> 'IO' ()
 --
--- resize :: 'Ref' 'TextDisplay' -> 'Rectangle' -> 'IO' ()
+-- resize :: 'Ref' 'Group' -> 'Rectangle' -> 'IO' ()
 --
 -- resizeSuper :: 'Ref' 'Group' -> 'Rectangle' -> 'IO' ()
 --

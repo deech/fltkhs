@@ -218,16 +218,19 @@ main = do
                     Just _fs ->
                       let namesOnly = map (\(_,_,nName,_) -> nName) _fs
                       in
-                      (
-                        filter
-                          (\f ->
-                               not (elem f namesOnly)
-                          )
-                          hierarchyFs
-                      , filter
-                          (\n -> not (elem n hierarchyFs))
-                          namesOnly
-                      )
+                      if (not $ all (\(_,_,_,w') -> w' == w) _fs)
+                      then error (show w)
+                      else
+                        (
+                          filter
+                            (\f ->
+                                 not (elem f namesOnly)
+                            )
+                            hierarchyFs
+                        , filter
+                            (\n -> not (elem n hierarchyFs))
+                            namesOnly
+                        )
             return (w,omitted)
         )
         funcs
