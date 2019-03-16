@@ -12,9 +12,20 @@ EXPORT {
     this->fs = fs;
   }
   Fl_DerivedTabs::~Fl_DerivedTabs(){
+    this->destroy_data();
     free(overriddenFuncs);
     free(fs);
   }
+void Fl_DerivedTabs::destroy_data(){
+  if (this->overriddenFuncs->destroy_data != NULL){
+    fl_DoNotCall* fps = NULL;
+    int num_fps = C_to_Fl_Callback::function_pointers_to_free(this->overriddenFuncs,fps);
+    Function_Pointers_To_Free* res = C_to_Fl_Callback::gather_function_pointers(num_fps+1,num_fps,fps,(fl_DoNotCall)(this->callback()));
+    this->overriddenFuncs->destroy_data((fl_Tabs)this,res);
+    if (fps) { free(fps); }
+    free(res);
+  }
+}
   void Fl_DerivedTabs::draw(){
     if (this->overriddenFuncs->draw != NULL) {
       this->overriddenFuncs->draw((fl_Tabs) this);

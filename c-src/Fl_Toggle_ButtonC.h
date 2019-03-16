@@ -8,6 +8,13 @@
 #include "FL/Fl_Toggle_Button.H"
 #include "Fl_CallbackC.h"
 EXPORT {
+  class Fl_DerivedToggle_Button : public Fl_Toggle_Button {
+    Destroy_Function_Pointers destroy;
+  public:
+    void destroy_data();
+    Fl_DerivedToggle_Button(int x, int y, int w, int h, const char* label, Destroy_Function_Pointers destroy);
+    ~Fl_DerivedToggle_Button();
+  };
 #endif
   /* Inherited from Fl_Widget */
   FL_EXPORT_C_HEADER(int,Fl_Toggle_Button_handle,(fl_Toggle_Button self, int event));
@@ -94,8 +101,8 @@ EXPORT {
   FL_EXPORT_C_HEADER(fl_Group,Fl_Toggle_Button_as_group,(fl_Toggle_Button toggle_button));
   FL_EXPORT_C_HEADER(fl_Gl_Window,Fl_Toggle_Button_as_gl_window,(fl_Toggle_Button toggle_button));
   /* Fl_Toggle_Button specific functions */
-  FL_EXPORT_C_HEADER(fl_Toggle_Button,Fl_Toggle_Button_New_WithLabel,(int x, int y, int w, int h, const char* label));
-  FL_EXPORT_C_HEADER(fl_Toggle_Button,Fl_Toggle_Button_New,(int x, int y, int w, int h));
+  FL_EXPORT_C_HEADER(fl_Toggle_Button,Fl_Toggle_Button_New_WithLabel,(int x, int y, int w, int h, const char* label, Destroy_Function_Pointers dfps));
+  FL_EXPORT_C_HEADER(fl_Toggle_Button,Fl_Toggle_Button_New,(int x, int y, int w, int h, Destroy_Function_Pointers dfps));
   FL_EXPORT_C_HEADER(void,Fl_Toggle_Button_Destroy,(fl_Toggle_Button button));
 
   FL_EXPORT_C_HEADER(char        ,Fl_Toggle_Button_value,(fl_Toggle_Button b));

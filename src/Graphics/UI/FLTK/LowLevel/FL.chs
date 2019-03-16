@@ -282,9 +282,6 @@ awake = {#call Fl_awake as fl_awake #}
 awakeToHandler :: IO ()
 awakeToHandler = {#call Fl_awake_to_handler as fl_awake_to_handler #}
 
-unsafeToCallbackPrim :: GlobalCallback -> FunPtr CallbackPrim
-unsafeToCallbackPrim = (Unsafe.unsafePerformIO) . toGlobalCallbackPrim
-
 {# fun Fl_add_awake_handler_ as addAwakeHandler'
   {id `FunPtr CallbackPrim', id `(Ptr ())'} -> `Int' #}
 addAwakeHandler_ :: GlobalCallback -> IO (Either AwakeRingFull ())
@@ -369,26 +366,60 @@ setWait = waitFor
 {# fun Fl_readqueue as readqueue' {  } -> `Ptr ()' #}
 readqueue :: IO (Maybe (Ref Widget))
 readqueue = readqueue' >>= toMaybeRef
-{# fun Fl_add_timeout as addTimeout
-       { `Double', unsafeToCallbackPrim `GlobalCallback' } -> `()' supressWarningAboutRes #}
-{# fun Fl_repeat_timeout as repeatTimeout
-      { `Double',unsafeToCallbackPrim `GlobalCallback' } -> `()' supressWarningAboutRes #}
+{# fun Fl_add_timeout as addTimeout'
+       { `Double', id `FunPtr CallbackPrim' } -> `()' supressWarningAboutRes #}
+
+-- | Returns a function pointer so it can be freed with `freeHaskellFunPtr`, please don't invoke it.
+addTimeout :: Double -> GlobalCallback -> IO (FunPtr ())
+addTimeout t cb = do
+  fp <- toGlobalCallbackPrim cb
+  addTimeout' t fp
+  return (castFunPtr fp)
+
+{# fun Fl_repeat_timeout as repeatTimeout'
+      { `Double',id `FunPtr CallbackPrim' } -> `()' supressWarningAboutRes #}
+-- | Returns a function pointer so it can be freed with `freeHaskellFunPtr`, please don't invoke it.
+repeatTimeout :: Double -> GlobalCallback -> IO (FunPtr CallbackPrim)
+repeatTimeout t cb = do
+  fp <- toGlobalCallbackPrim cb
+  repeatTimeout' t fp
+  return fp
+
 {# fun Fl_has_timeout as hasTimeout
-       { unsafeToCallbackPrim `GlobalCallback' } -> `Int' #}
+       { id `FunPtr CallbackPrim' } -> `Bool' toBool #}
+
 {# fun Fl_remove_timeout as removeTimeout
-       { unsafeToCallbackPrim `GlobalCallback' } -> `()' supressWarningAboutRes #}
-{# fun Fl_add_check as addCheck
-       { unsafeToCallbackPrim `GlobalCallback' } -> `()' supressWarningAboutRes #}
+       { id `FunPtr CallbackPrim' } -> `()' supressWarningAboutRes #}
+
+{# fun Fl_add_check as addCheck'
+       { id `FunPtr CallbackPrim' } -> `()' supressWarningAboutRes #}
+-- | Returns a function pointer so it can be freed with `freeHaskellFunPtr`, please don't invoke it.
+addCheck :: GlobalCallback -> IO (FunPtr CallbackPrim)
+addCheck cb = do
+  fp <- toGlobalCallbackPrim cb
+  addCheck' fp
+  return fp
+
 {# fun Fl_has_check as hasCheck
-       { unsafeToCallbackPrim `GlobalCallback' } -> `Int' #}
+       { id `FunPtr CallbackPrim' } -> `Bool' toBool #}
 {# fun Fl_remove_check as removeCheck
-       { unsafeToCallbackPrim `GlobalCallback' } -> `()' supressWarningAboutRes #}
-{# fun Fl_add_idle as addIdle
-       { unsafeToCallbackPrim `GlobalCallback' } -> `()' supressWarningAboutRes #}
+       { id `FunPtr CallbackPrim' } -> `()' supressWarningAboutRes #}
+
+{# fun Fl_add_idle as addIdle'
+       { id `FunPtr CallbackPrim' } -> `()' supressWarningAboutRes #}
+-- | Returns a function pointer so it can be freed with `freeHaskellFunPtr`, please don't invoke it.
+addIdle :: GlobalCallback -> IO (FunPtr CallbackPrim)
+addIdle cb = do
+  fp <- toGlobalCallbackPrim cb
+  addIdle' fp
+  return fp
+
 {# fun Fl_has_idle as hasIdle
-       { unsafeToCallbackPrim `GlobalCallback' } -> `Int' #}
+       { id `FunPtr CallbackPrim' } -> `Bool' toBool #}
+
 {# fun Fl_remove_idle as removeIdle
-       { unsafeToCallbackPrim `GlobalCallback' } -> `()' supressWarningAboutRes #}
+       { id `FunPtr CallbackPrim' } -> `()' supressWarningAboutRes #}
+
 {# fun Fl_damage as damage
        {  } -> `Int' #}
 {# fun Fl_redraw as redraw
@@ -615,6 +646,7 @@ setHandler eh = do
     old <- readIORef ptrToGlobalEventHandler
     writeIORef ptrToGlobalEventHandler newGlobalEventHandler
     return old
+  freeHaskellFunPtr curr
   removeHandler' curr
   addHandler' newGlobalEventHandler
 

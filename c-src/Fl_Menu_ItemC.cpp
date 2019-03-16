@@ -10,6 +10,15 @@ void FlDerivedMenu_Item::draw(int x, int y, int w, int h, Fl_Menu_* m, int selec
         Fl_Menu_Item::draw(x,y,w,h,m,selected);
     }
 }
+ FlDerivedMenu_Item::~FlDerivedMenu_Item() {
+   if (this->dfps != NULL){
+     fl_DoNotCall* fps = NULL;
+     Function_Pointers_To_Free* res = C_to_Fl_Callback::gather_function_pointers(2,0,fps,(fl_DoNotCall)(this->callback()), (fl_DoNotCall)(this->drawF));
+     this->dfps((fl_Image)this,res);
+     if (fps) { free(fps); }
+     free(res);
+   }
+ }
 #endif
   FL_EXPORT_C(fl_Menu_Item,Fl_Menu_Item_next_with_step)(fl_Menu_Item menu_item,int step){
     return (fl_Menu_Item)(static_cast<FlDerivedMenu_Item*>(menu_item))->next(step);
@@ -238,12 +247,12 @@ void FlDerivedMenu_Item::draw(int x, int y, int w, int h, Fl_Menu_* m, int selec
   FL_EXPORT_C(int, Fl_Menu_Item_size)(fl_Menu_Item menu_item){
     return (static_cast<FlDerivedMenu_Item*>(menu_item))->size();
   }
-  FL_EXPORT_C(fl_Menu_Item, Fl_Menu_Item_New)(){
-    FlDerivedMenu_Item* i = new FlDerivedMenu_Item(NULL);
+  FL_EXPORT_C(fl_Menu_Item, Fl_Menu_Item_New)(Destroy_Function_Pointers dfps){
+    FlDerivedMenu_Item* i = new FlDerivedMenu_Item(NULL, dfps);
     return (fl_Menu_Item)i;
   }
-  FL_EXPORT_C(fl_Menu_Item, Fl_Menu_Item_New_With_Draw)(fl_Menu_Item_Draw* f){
-    FlDerivedMenu_Item* i = new FlDerivedMenu_Item(f);
+  FL_EXPORT_C(fl_Menu_Item, Fl_Menu_Item_New_With_Draw)(fl_Menu_Item_Draw* f, Destroy_Function_Pointers dfps){
+    FlDerivedMenu_Item* i = new FlDerivedMenu_Item(f,dfps);
     return (fl_Menu_Item)i;
   }
   FL_EXPORT_C(void, Fl_Menu_Item_Destroy)(fl_Menu_Item menu_item){

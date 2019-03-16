@@ -116,6 +116,7 @@ FL_EXPORT_C_HEADER(void,Fl_Int_Input_draw_label,(fl_Int_Input Int_Input));
     void draw_focus(Fl_Boxtype t, int x,int y,int w,int h);
     void draw_label();
     void draw_label(int x,int y,int w,int h,Fl_Align alignment);
+    void destroy_data();
     virtual void draw();
     virtual int handle(int event);
     virtual void resize(int x, int y, int w, int h);
@@ -142,8 +143,8 @@ FL_EXPORT_C_HEADER(void,Fl_Int_Input_draw_label,(fl_Int_Input Int_Input));
   FL_EXPORT_C_HEADER(fl_Gl_Window,Fl_Int_Input_as_gl_window,(fl_Int_Input int_input));
   FL_EXPORT_C_HEADER(void*,Fl_Int_Input_other_data,(fl_Int_Input int_input));
   FL_EXPORT_C_HEADER(void,Fl_Int_Input_set_other_data,(fl_Int_Input int_input, void* v));
-  FL_EXPORT_C_HEADER(fl_Float_Input,Fl_Int_Input_New_WithLabel,(int x, int y, int w, int h, const char* label));
-  FL_EXPORT_C_HEADER(fl_Float_Input,Fl_Int_Input_New,(int x, int y, int w, int h));
+  FL_EXPORT_C_HEADER(fl_Float_Input,Fl_Int_Input_New_WithLabel,(int x, int y, int w, int h, const char* label, Destroy_Function_Pointers dfps));
+  FL_EXPORT_C_HEADER(fl_Float_Input,Fl_Int_Input_New,(int x, int y, int w, int h, Destroy_Function_Pointers dfps));
   FL_EXPORT_C_HEADER(void,Fl_Int_Input_Destroy,(fl_Int_Input int_input));
 
   FL_EXPORT_C_HEADER(void,Fl_Int_Input_resize,(fl_Int_Input int_input, int X, int Y, int W, int H));

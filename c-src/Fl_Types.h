@@ -483,12 +483,19 @@ EXPORT {
   typedef void* fl_XBM_Image;
   typedef void* fl_XPM_Image;
   typedef void* fl_show_input;
-  typedef void (fl_Callback )(fl_Widget, void*);
+  typedef void (fl_Callback)(fl_Widget, void*);
   typedef void (fl_Text_Buffer_Callback)(fl_Text_Buffer);
   typedef void (*Unfinished_Style_Cb)(int, void *);
   typedef void (fl_File_Chooser_Callback)(fl_File_Chooser,void*);
   typedef fl_Image (fl_Shared_Image_Handler)(const char *name, uchar *header,int headerlen);
   typedef void (fl_Menu_Item_Draw)(fl_Menu_Item i, int x, int y, int w, int h, fl_Menu m, int selected);
+  // A function pointer to return so it can be freed on the Haskell side
+  typedef void (*fl_DoNotCall) ();
+  typedef void (*fl_Before_Destroy) (fl_DoNotCall* fps);
+  typedef struct Function_Pointers_To_Free {
+    int length;
+    fl_DoNotCall* function_pointer_array;
+  } Function_Pointers_To_Free;
   typedef struct Style_Table_Entry {
     Fl_Color    color;
     Fl_Font     font;
@@ -551,7 +558,7 @@ EXPORT {
     void         (*set_rows    )(fl_Table table, int val);
     void         (*set_cols    )(fl_Table table, int val);
     /* Clean up */
-    void         (*destroy_data)(fl_Table table);
+    void         (*destroy_data)(fl_Table table, Function_Pointers_To_Free* fps);
   } fl_Table_Virtual_Funcs;
   typedef struct {
     void 	 (*draw        )(fl_Widget widget);
@@ -563,7 +570,7 @@ EXPORT {
     fl_Gl_Window (*as_gl_window)(fl_Widget widget);
     fl_Group     (*as_group    )(fl_Widget widget);
     /* Clean up */
-    void         (*destroy_data)(fl_Widget widget);
+    void         (*destroy_data)(fl_Widget widget,Function_Pointers_To_Free* fps);
   } fl_Widget_Virtual_Funcs;
 
   typedef struct {
@@ -578,7 +585,7 @@ EXPORT {
     /* From Fl_Group */
     fl_Group     (*as_group    )(fl_Group group);
     /* Clean up */
-    void         (*destroy_data)(fl_Group group);
+    void         (*destroy_data)(fl_Group group,Function_Pointers_To_Free* fps);
   } fl_Group_Virtual_Funcs;
   typedef struct {
     /* From Fl_Widget */
@@ -594,7 +601,7 @@ EXPORT {
     /* Fl_Browser Specific */
     void         (*flush       )(fl_Window window);
     /* Clean up */
-    void         (*destroy_data)(fl_Window window);
+    void         (*destroy_data)(fl_Window window,Function_Pointers_To_Free* fps);
   } fl_Window_Virtual_Funcs;
 
   typedef struct {
@@ -612,7 +619,7 @@ EXPORT {
     void         (*hide          )(fl_Browser browser);
     void         (*hide_with_line)(fl_Browser browser, int line);
     /* Clean up */
-    void         (*destroy_data)(fl_Browser browser);
+    void         (*destroy_data)(fl_Browser browser,Function_Pointers_To_Free* fps);
   } fl_Browser_Virtual_Funcs;
 
   typedef struct {
@@ -621,7 +628,7 @@ EXPORT {
     void      (*desaturate   )(fl_Image image);
     void      (*draw         )(fl_Image image, int X, int Y, int W, int H, int cx, int cy);
     void      (*uncache      )(fl_Image image);
-    void      (*destroy_data )(fl_Image image);
+    void      (*destroy_data )(fl_Image image,Function_Pointers_To_Free* fps);
   } fl_Image_Virtual_Funcs;
   typedef struct {
     void 	 (*draw        )(fl_Valuator valuator);
@@ -633,7 +640,7 @@ EXPORT {
     fl_Gl_Window (*as_gl_window)(fl_Valuator valuator);
     fl_Group     (*as_group    )(fl_Valuator valuator);
     /* Clean up */
-    void         (*destroy_data)(fl_Valuator valuator);
+    void         (*destroy_data)(fl_Valuator valuator,Function_Pointers_To_Free* fps);
     /* Fl_Valuator specific */
     int          (*format      )(fl_Valuator valuator, char* format);
   } fl_Valuator_Virtual_Funcs;
@@ -645,7 +652,10 @@ EXPORT {
     fl_Widget (*tab_which)(fl_Tabs tabs, int x, int y);
     void (*redraw_tabs)(fl_Tabs tabs);
     void (*tab_client_area)(fl_Tabs, int *rx, int *ry, int *rw, int *rh, int tabh);
+    void(*destroy_data)(fl_Tabs valuator,Function_Pointers_To_Free* fps);
   } fl_Tab_Virtual_Funcs;
+
+  typedef void (*Destroy_Function_Pointers) (fl_Widget w,Function_Pointers_To_Free*fps);
 
   typedef struct {
     int (*get_mode)(fl_Color_Chooser c);
@@ -658,6 +668,7 @@ EXPORT {
     double (*b)(fl_Color_Chooser c);
     int (*hsv)(fl_Color_Chooser c,double H, double S, double V);
     int (*rgb)(fl_Color_Chooser c,double R, double G, double B);
+    void(*destroy_data)(fl_Color_Chooser c,Function_Pointers_To_Free* fps);
   } fl_Color_Chooser_Virtual_Funcs;
   typedef fl_Color_Chooser_Virtual_Funcs fl_Color_Chooser_Virtual_Funcs;
   typedef fl_Tab_Virtual_Funcs fl_Tab_Virtual_Funcs;

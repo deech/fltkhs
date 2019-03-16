@@ -14,11 +14,16 @@ void* Fl_DerivedImage::get_other_data(){
 void Fl_DerivedImage::set_other_data(void* data){
   this->other_data = data;
 }
-void Fl_DerivedImage::destroy_data(){
-  if (this->overriddenFuncs->destroy_data != NULL){
-    this->overriddenFuncs->destroy_data((fl_Image) this);
+  void Fl_DerivedImage::destroy_data(){
+    if (this->overriddenFuncs->destroy_data != NULL){
+      fl_DoNotCall* fps = NULL;
+      int num_fps = C_to_Fl_Callback::function_pointers_to_free(this->overriddenFuncs,fps);
+      Function_Pointers_To_Free* res = C_to_Fl_Callback::gather_function_pointers(num_fps,num_fps,fps);
+      this->overriddenFuncs->destroy_data((fl_Image)this,res);
+      if (fps) { free(fps); }
+      free(res);
+    }
   }
-}
 void Fl_DerivedImage::color_average(Fl_Color c, float i){
   if (overriddenFuncs->color_average){
     this->overriddenFuncs->color_average((fl_Image) this,c, i );

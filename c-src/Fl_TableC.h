@@ -164,6 +164,7 @@ FL_EXPORT_C_HEADER(void,Fl_Table_draw_label,(fl_Table Table));
     virtual void clear();
     virtual void rows(int val);
     virtual void cols(int val);
+    void destroy_data();
     Fl_DerivedTable(int X, int Y, int W, int H, const char *l, fl_Table_Virtual_Funcs* funcs);
     Fl_DerivedTable(int X, int Y, int W, int H, fl_Table_Virtual_Funcs* funcs);
     ~Fl_DerivedTable();

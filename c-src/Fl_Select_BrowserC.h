@@ -8,6 +8,13 @@
 #include "FL/Fl_Select_Browser.H"
 #include "Fl_CallbackC.h"
 EXPORT {
+  class Fl_DerivedSelect_Browser : public Fl_Select_Browser {
+    Destroy_Function_Pointers destroy;
+  public:
+    void destroy_data();
+    Fl_DerivedSelect_Browser(int x, int y, int w, int h, const char* label, Destroy_Function_Pointers destroy);
+    ~Fl_DerivedSelect_Browser();
+  };
 #endif
 
   /* Inherited from Fl_Widget */
@@ -127,8 +134,8 @@ EXPORT {
   FL_EXPORT_C_HEADER(void,Fl_Select_Browser_forms_end,(fl_Select_Browser self));
 
   /* Fl_Select_Browser specific functions */
-  FL_EXPORT_C(fl_Select_Browser, Fl_Select_Browser_New_WithLabel)(int x, int y, int w, int h, const char* label);
-  FL_EXPORT_C(fl_Select_Browser, Fl_Select_Browser_New)(int x, int y, int w, int h);
+  FL_EXPORT_C(fl_Select_Browser, Fl_Select_Browser_New_WithLabel)(int x, int y, int w, int h, const char* label,Destroy_Function_Pointers dfps);
+  FL_EXPORT_C(fl_Select_Browser, Fl_Select_Browser_New)(int x, int y, int w, int h,Destroy_Function_Pointers dfps);
   FL_EXPORT_C_HEADER(void,Fl_Select_Browser_Destroy,(fl_Select_Browser select_browser));
   FL_EXPORT_C_HEADER(void,Fl_Select_Browser_remove,(fl_Select_Browser select_browser, int line));
   FL_EXPORT_C_HEADER(void,Fl_Select_Browser_add,(fl_Select_Browser select_browser, const char* newtext));

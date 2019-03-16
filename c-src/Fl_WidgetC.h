@@ -178,6 +178,7 @@ EXPORT {
   FL_EXPORT_C_HEADER(unsigned int, Fl_Widget_flags,(fl_Widget widget));
   FL_EXPORT_C_HEADER(void, Fl_Widget_set_flag,(fl_Widget widget, unsigned int flag));
   FL_EXPORT_C_HEADER(void, Fl_Widget_clear_flag,(fl_Widget widget, unsigned int flag));
+  FL_EXPORT_C_HEADER(fl_DoNotCall, Fl_Widget_callback,(fl_Widget w));
 #ifdef __cplusplus
 }
 #endif

@@ -27,6 +27,7 @@ EXPORT {
     virtual int handle(int event);
     int handle_super(int event);
     void resize_super(int x, int y, int w, int h);
+    void destroy_data();
     virtual void resize(int x, int y, int w, int h);
     virtual void show();
     virtual void show(int val);

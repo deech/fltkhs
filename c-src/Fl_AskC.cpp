@@ -28,10 +28,10 @@ EXPORT {
     return fl_choice(q,b0,b1,b2,arg1,arg2,arg3,arg4,arg5,arg6,arg7,arg8,arg9,arg10);
   }
   FL_EXPORT_C(const char*,flc_input)(const char *label){
-    return fl_input("s",0,label);
+    return fl_input("%s",0,label);
   }
   FL_EXPORT_C(const char*,flc_input_with_deflt)(const char *label,const char* deflt){
-    return fl_input("s",deflt, label);
+    return fl_input("%s",deflt, label);
   }
   FL_EXPORT_C(const char*,flc_input_with_args)(const char *label,const char* arg1,const char* arg2,const char* arg3,const char* arg4,const char* arg5,const char* arg6,const char* arg7,const char* arg8,const char* arg9,const char* arg10){
     return fl_input(label,0,arg1,arg2,arg3,arg4,arg5,arg6,arg7,arg8,arg9,arg10);

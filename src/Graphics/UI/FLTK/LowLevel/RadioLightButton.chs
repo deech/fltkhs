@@ -19,18 +19,19 @@ import Graphics.UI.FLTK.LowLevel.Utils
 import Graphics.UI.FLTK.LowLevel.Hierarchy
 import Graphics.UI.FLTK.LowLevel.Widget
 import qualified Data.Text as T
-{# fun Fl_Radio_Light_Button_New as widgetNew' { `Int',`Int',`Int',`Int' } -> `Ptr ()' id #}
-{# fun Fl_Radio_Light_Button_New_WithLabel as widgetNewWithLabel' { `Int',`Int',`Int',`Int', `CString'} -> `Ptr ()' id #}
+{# fun Fl_Radio_Light_Button_New as widgetNew' { `Int',`Int',`Int',`Int',id `FunPtr DestroyCallbacksPrim' } -> `Ptr ()' id #}
+{# fun Fl_Radio_Light_Button_New_WithLabel as widgetNewWithLabel' { `Int',`Int',`Int',`Int', `CString',id `FunPtr DestroyCallbacksPrim' } -> `Ptr ()' id #}
 radioLightButtonNew :: Rectangle -> Maybe T.Text -> IO (Ref RadioLightButton)
 radioLightButtonNew rectangle l' =
     let (x_pos, y_pos, width, height) = fromRectangle rectangle
-    in case l' of
-        Nothing -> widgetNew' x_pos y_pos width height >>= toRef
-        Just l -> do
-          ref <- copyTextToCString l >>= \l' -> widgetNewWithLabel' x_pos y_pos width height l' >>= toRef
-          setFlag ref WidgetFlagCopiedLabel
-          setFlag ref WidgetFlagCopiedTooltip
-          return ref
+    in do
+    destroyFptr <- toDestroyCallbacksPrim defaultDestroyCallbacks
+    ref <- case l' of
+        Nothing -> widgetNew' x_pos y_pos width height destroyFptr >>= toRef
+        Just l -> copyTextToCString l >>= \l' -> widgetNewWithLabel' x_pos y_pos width height l' destroyFptr >>= toRef
+    setFlag ref WidgetFlagCopiedLabel
+    setFlag ref WidgetFlagCopiedTooltip
+    return ref
 
 -- $hierarchy
 -- @

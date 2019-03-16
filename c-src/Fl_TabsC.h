@@ -26,6 +26,7 @@ EXPORT {
     void hide_super();
     int tab_positions();
     int tab_height();
+    void destroy_data();
     Fl_Widget* which(int,int);
     void client_area(int &rx, int &ry, int &rw, int &rh, int tabh);
     void redraw_tabs();

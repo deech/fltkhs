@@ -29,7 +29,12 @@ void Fl_DerivedGl_Window::set_other_data(void* data){
 }
 void Fl_DerivedGl_Window::destroy_data(){
   if (this->overriddenFuncs->destroy_data != NULL){
-    this->overriddenFuncs->destroy_data((fl_Gl_Window) this);
+    fl_DoNotCall* fps = NULL;
+    int num_fps = C_to_Fl_Callback::function_pointers_to_free(this->overriddenFuncs,fps);
+    Function_Pointers_To_Free* res = C_to_Fl_Callback::gather_function_pointers(num_fps+1,num_fps,fps,(fl_DoNotCall)(this->callback()));
+    this->overriddenFuncs->destroy_data((fl_Gl_Window)this,res);
+    if (fps) { free(fps); }
+    free(res);
   }
 }
 void Fl_DerivedGl_Window::draw_box(){

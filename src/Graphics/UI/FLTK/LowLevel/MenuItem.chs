@@ -24,6 +24,7 @@ where
 #include "Fl_Types.h"
 #include "Fl_Menu_ItemC.h"
 import C2HS hiding (cFromEnum, cFromBool, cToBool,cToEnum)
+import Graphics.UI.FLTK.LowLevel.Widget(defaultDestroyCallbacks)
 import Graphics.UI.FLTK.LowLevel.Fl_Enumerations
 import Graphics.UI.FLTK.LowLevel.Fl_Types
 import Graphics.UI.FLTK.LowLevel.Utils
@@ -47,15 +48,18 @@ toMenuItemDrawF f =
                            f (castTo (wrapInRef pp)) rectangle maybeMenu (cToBool selected)
                        )
   
-{# fun Fl_Menu_Item_New as new' { } -> `Ptr ()' id #}
+{# fun Fl_Menu_Item_New as new' { id `FunPtr DestroyCallbacksPrim'} -> `Ptr ()' id #}
 menuItemNew :: IO (Ref MenuItem)
-menuItemNew = new' >>= toRef
+menuItemNew = do
+  fptr <- toDestroyCallbacksPrim defaultDestroyCallbacks
+  new' fptr >>= toRef
 
-{# fun Fl_Menu_Item_New_With_Draw as newWithDraw' { id `FunPtr MenuItemDrawF' } -> `Ptr ()' id #}
+{# fun Fl_Menu_Item_New_With_Draw as newWithDraw' { id `FunPtr MenuItemDrawF', id `FunPtr DestroyCallbacksPrim' } -> `Ptr ()' id #}
 menuItemCustom :: (Parent a MenuItem) => (Ref a -> Rectangle -> Maybe (Ref MenuPrim) -> Bool -> IO ()) -> IO (Ref MenuItem)
 menuItemCustom drawF = do
   fPtr <- toMenuItemDrawF drawF
-  p <- newWithDraw' fPtr
+  destroyFptr <- toDestroyCallbacksPrim defaultDestroyCallbacks
+  p <- newWithDraw' fPtr destroyFptr
   toRef p
 
 {# fun Fl_Menu_Item_Destroy as destroy' { id `Ptr ()' } -> `()' id #}
