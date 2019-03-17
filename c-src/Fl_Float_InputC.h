@@ -8,6 +8,13 @@
 #include "FL/Fl_Float_Input.H"
 #include "Fl_CallbackC.h"
 EXPORT {
+  class Fl_DerivedFloat_Input : public Fl_Float_Input {
+    Destroy_Function_Pointers destroy;
+  public:
+    void destroy_data();
+    Fl_DerivedFloat_Input(int x, int y, int w, int h, const char* label, Destroy_Function_Pointers destroy);
+    ~Fl_DerivedFloat_Input();
+  };
 #endif
   /* Inherited from Fl_Widget */
   FL_EXPORT_C_HEADER(int,Fl_Float_Input_handle,(fl_Float_Input self, int event));
@@ -95,8 +102,8 @@ EXPORT {
   FL_EXPORT_C_HEADER(fl_Gl_Window,Fl_Float_Input_as_gl_window,(fl_Float_Input float_input));
   /* Fl_Float_Input specific functions */
   FL_EXPORT_C_HEADER(int,Fl_Float_Input_handle,(fl_Float_Input float_input, int event));
-  FL_EXPORT_C(fl_Float_Input, Fl_Float_Input_New_WithLabel)(int x, int y, int w, int h, const char* label);
-  FL_EXPORT_C(fl_Float_Input, Fl_Float_Input_New)(int x, int y, int w, int h);
+  FL_EXPORT_C(fl_Float_Input, Fl_Float_Input_New_WithLabel)(int x, int y, int w, int h, const char* label, Destroy_Function_Pointers dfps);
+  FL_EXPORT_C(fl_Float_Input, Fl_Float_Input_New)(int x, int y, int w, int h, Destroy_Function_Pointers dfps);
   FL_EXPORT_C_HEADER(void,Fl_Float_Input_Destroy,(fl_Float_Input float_input));
 
   FL_EXPORT_C_HEADER(void,Fl_Float_Input_resize,(fl_Float_Input float_input, int X, int Y, int W, int H));

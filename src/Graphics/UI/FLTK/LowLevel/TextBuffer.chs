@@ -19,21 +19,23 @@ import C2HS hiding (cFromEnum, cFromBool, cToBool,cToEnum)
 
 import Graphics.UI.FLTK.LowLevel.Fl_Types
 import Graphics.UI.FLTK.LowLevel.Utils
+import Graphics.UI.FLTK.LowLevel.Widget(defaultDestroyCallbacks)
 import Graphics.UI.FLTK.LowLevel.Hierarchy
 import Graphics.UI.FLTK.LowLevel.Dispatch
 import qualified Data.Text as T
-{# fun Fl_Text_Buffer_New as new' {} -> `Ptr ()' id #}
-{# fun Fl_Text_Buffer_New_With_RequestedSize as newRequestedSize' {`Int'}-> `Ptr ()' id #}
-{# fun Fl_Text_Buffer_New_With_PreferredGapSize as newPreferredGapSize' {`Int'} -> `Ptr ()' id #}
-{# fun Fl_Text_Buffer_New_With_RequestedSize_PreferredGapSize as newRequestedSizePreferredGapSize' {`Int', `Int'}-> `Ptr ()' id #}
+{# fun Fl_Text_Buffer_New as new' {id `FunPtr DestroyCallbacksPrim'} -> `Ptr ()' id #}
+{# fun Fl_Text_Buffer_New_With_RequestedSize as newRequestedSize' {`Int',id `FunPtr DestroyCallbacksPrim'}-> `Ptr ()' id #}
+{# fun Fl_Text_Buffer_New_With_PreferredGapSize as newPreferredGapSize' {`Int',id `FunPtr DestroyCallbacksPrim'} -> `Ptr ()' id #}
+{# fun Fl_Text_Buffer_New_With_RequestedSize_PreferredGapSize as newRequestedSizePreferredGapSize' {`Int', `Int',id `FunPtr DestroyCallbacksPrim'}-> `Ptr ()' id #}
 
 textBufferNew :: Maybe PreferredSize -> Maybe GapSize -> IO (Ref TextBuffer)
-textBufferNew req' pref' =
+textBufferNew req' pref' = do
+  destroyFptr <- toDestroyCallbacksPrim (defaultDestroyCallbacks :: (Ref TextBuffer -> [Maybe (FunPtr (IO ()))] -> IO ()))
   case (req',pref') of
-    (Just (PreferredSize r'), Just (GapSize p')) -> newRequestedSizePreferredGapSize' r' p' >>= toRef
-    (Just (PreferredSize r'), Nothing) -> newRequestedSize' r' >>= toRef
-    (Nothing, Just (GapSize p')) -> newPreferredGapSize' p' >>= toRef
-    (Nothing, Nothing) -> new' >>= toRef
+    (Just (PreferredSize r'), Just (GapSize p')) -> newRequestedSizePreferredGapSize' r' p' destroyFptr >>= toRef
+    (Just (PreferredSize r'), Nothing) -> newRequestedSize' r' destroyFptr >>= toRef
+    (Nothing, Just (GapSize p')) -> newPreferredGapSize' p' destroyFptr >>= toRef
+    (Nothing, Nothing) -> new' destroyFptr >>= toRef
 
 {# fun Fl_Text_Buffer_Destroy as textbufferDestroy' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
 instance (impl ~ (IO ())) => Op (Destroy ()) TextBuffer orig impl where

@@ -8,6 +8,13 @@
 #include "FL/Fl_Multiline_Input.H"
 #include "Fl_CallbackC.h"
 EXPORT {
+  class Fl_DerivedMultiline_Input : public Fl_Multiline_Input {
+    Destroy_Function_Pointers destroy;
+  public:
+    void destroy_data();
+    Fl_DerivedMultiline_Input(int x, int y, int w, int h, const char* label, Destroy_Function_Pointers destroy);
+    ~Fl_DerivedMultiline_Input();
+  };
 #endif
   /* Inherited from Fl_Widget */
   FL_EXPORT_C_HEADER(int,Fl_Multiline_Input_handle,(fl_Multiline_Input self, int event));
@@ -96,8 +103,8 @@ EXPORT {
   FL_EXPORT_C_HEADER(fl_Gl_Window,Fl_Multiline_Input_as_gl_window,(fl_Multiline_Input multiline_input));
   /* Fl_Multiline_Input specific functions */
   FL_EXPORT_C_HEADER(int,Fl_Multiline_Input_handle,(fl_Multiline_Input multiline_input, int event));
-  FL_EXPORT_C_HEADER(fl_Float_Input,Fl_Multiline_Input_New_WithLabel,(int x, int y, int w, int h, const char* label));
-  FL_EXPORT_C_HEADER(fl_Float_Input,Fl_Multiline_Input_New,(int x, int y, int w, int h));
+  FL_EXPORT_C_HEADER(fl_Float_Input,Fl_Multiline_Input_New_WithLabel,(int x, int y, int w, int h, const char* label, Destroy_Function_Pointers dfps));
+  FL_EXPORT_C_HEADER(fl_Float_Input,Fl_Multiline_Input_New,(int x, int y, int w, int h, Destroy_Function_Pointers dfps));
   FL_EXPORT_C_HEADER(void,Fl_Multiline_Input_Destroy,(fl_Multiline_Input multiline_input));
 
   FL_EXPORT_C_HEADER(void,Fl_Multiline_Input_resize,(fl_Multiline_Input multiline_input, int X, int Y, int W, int H));

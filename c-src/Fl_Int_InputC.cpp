@@ -10,8 +10,19 @@ Fl_DerivedInt_Input::Fl_DerivedInt_Input(int X, int Y, int W, int H, fl_Int_Inpu
     other_data = 0;
   }
 Fl_DerivedInt_Input::~Fl_DerivedInt_Input(){
+  this->destroy_data();
   free(overriddenFuncs);
   free(other_data);
+}
+void Fl_DerivedInt_Input::destroy_data(){
+  if (this->overriddenFuncs->destroy_data != NULL){
+    fl_DoNotCall* fps = NULL;
+    int num_fps = C_to_Fl_Callback::function_pointers_to_free(this->overriddenFuncs,fps);
+    Function_Pointers_To_Free* res = C_to_Fl_Callback::gather_function_pointers(num_fps+1,num_fps,fps,(fl_DoNotCall)(this->callback()));
+    this->overriddenFuncs->destroy_data((fl_Int_Input)this,res);
+    if (fps) { free(fps); }
+    free(res);
+  }
 }
 void* Fl_DerivedInt_Input::get_other_data(){
   return this->other_data;
@@ -428,13 +439,15 @@ FL_EXPORT_C(void, Fl_Int_Input_draw_label)(fl_Int_Input Int_Input){
   FL_EXPORT_C(void, Fl_Int_Input_set_other_data)(fl_Int_Input int_input, void* v){
     (static_cast<Fl_DerivedInt_Input*>(int_input))->set_other_data(v);
   }
-  FL_EXPORT_C(fl_Int_Input, Fl_Int_Input_New_WithLabel)(int x, int y, int w, int h, const char* label) {
+  FL_EXPORT_C(fl_Int_Input, Fl_Int_Input_New_WithLabel)(int x, int y, int w, int h, const char* label, Destroy_Function_Pointers dfps) {
     fl_Int_Input_Virtual_Funcs* funcs = Fl_Int_Input_default_virtual_funcs();
+    funcs->destroy_data = dfps;
     Fl_DerivedInt_Input* int_input = new Fl_DerivedInt_Input(x,y,w,h,label,funcs);
     return (static_cast<fl_Int_Input>(int_input));
   }
-  FL_EXPORT_C(fl_Int_Input, Fl_Int_Input_New)(int x, int y, int w, int h) {
+  FL_EXPORT_C(fl_Int_Input, Fl_Int_Input_New)(int x, int y, int w, int h, Destroy_Function_Pointers dfps) {
     fl_Int_Input_Virtual_Funcs* funcs = Fl_Int_Input_default_virtual_funcs();
+    funcs->destroy_data = dfps;
     Fl_DerivedInt_Input* int_input = new Fl_DerivedInt_Input(x,y,w,h,0,funcs);
     return (static_cast<fl_Int_Input>(int_input));
   }

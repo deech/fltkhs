@@ -22,6 +22,7 @@ EXPORT {
     void show_super();
     virtual void hide();
     void hide_super();
+    void destroy_data();
     Fl_DerivedFile_Browser(int X, int Y, int W, int H, const char *l, fl_Widget_Virtual_Funcs* funcs);
     Fl_DerivedFile_Browser(int X, int Y, int W, int H, fl_Widget_Virtual_Funcs* funcs);
     ~Fl_DerivedFile_Browser();

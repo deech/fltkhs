@@ -8,6 +8,13 @@
 #include "FL/Fl_Radio_Light_Button.H"
 #include "Fl_CallbackC.h"
 EXPORT {
+  class Fl_DerivedRadio_Light_Button : public Fl_Radio_Light_Button {
+    Destroy_Function_Pointers destroy;
+  public:
+    void destroy_data();
+    Fl_DerivedRadio_Light_Button(int x, int y, int w, int h, const char* label, Destroy_Function_Pointers destroy);
+    ~Fl_DerivedRadio_Light_Button();
+  };
 #endif
   /* Inherited from Fl_Widget */
   FL_EXPORT_C_HEADER(int,Fl_Radio_Light_Button_handle,(fl_Radio_Light_Button self, int event));
@@ -95,8 +102,8 @@ EXPORT {
   FL_EXPORT_C_HEADER(fl_Group,Fl_Radio_Light_Button_as_group,(fl_Radio_Light_Button radio_light_button));
   FL_EXPORT_C_HEADER(fl_Gl_Window,Fl_Radio_Light_Button_as_gl_window,(fl_Radio_Light_Button radio_light_button));
   /* Fl_Radio_Light_Button specific functions */
-  FL_EXPORT_C_HEADER(fl_Radio_Light_Button,Fl_Radio_Light_Button_New_WithLabel,(int x, int y, int w, int h, const char* label));
-  FL_EXPORT_C_HEADER(fl_Radio_Light_Button,Fl_Radio_Light_Button_New,(int x, int y, int w, int h));
+  FL_EXPORT_C_HEADER(fl_Radio_Light_Button,Fl_Radio_Light_Button_New_WithLabel,(int x, int y, int w, int h, const char* label, Destroy_Function_Pointers dfps));
+  FL_EXPORT_C_HEADER(fl_Radio_Light_Button,Fl_Radio_Light_Button_New,(int x, int y, int w, int h, Destroy_Function_Pointers dfps));
   FL_EXPORT_C_HEADER(void,Fl_Radio_Light_Button_Destroy,(fl_Radio_Light_Button button));
   FL_EXPORT_C_HEADER(char        ,Fl_Radio_Light_Button_value,(fl_Radio_Light_Button b));
   FL_EXPORT_C_HEADER(int         ,Fl_Radio_Light_Button_set_value,(fl_Radio_Light_Button b, int v));

@@ -8,6 +8,13 @@
 #include "FL/Fl_Round_Clock.H"
 #include "Fl_CallbackC.h"
 EXPORT {
+  class Fl_DerivedRound_Clock : public Fl_Round_Clock {
+    Destroy_Function_Pointers destroy;
+  public:
+    void destroy_data();
+    Fl_DerivedRound_Clock(int x, int y, int w, int h, const char* label, Destroy_Function_Pointers destroy);
+    ~Fl_DerivedRound_Clock();
+  };
 #endif
   /* Inherited from Fl_Widget */
   FL_EXPORT_C_HEADER(int,Fl_Round_Clock_handle,(fl_Round_Clock self, int event));
@@ -95,8 +102,8 @@ EXPORT {
   FL_EXPORT_C_HEADER(fl_Group,Fl_Round_Clock_as_group,(fl_Round_Clock round_clock));
   FL_EXPORT_C_HEADER(fl_Gl_Window,Fl_Round_Clock_as_gl_window,(fl_Round_Clock round_clock));
   /* Fl_Round_Clock specific functions */
-  FL_EXPORT_C_HEADER(fl_Round_Clock,Fl_Round_Clock_New_WithLabel,(int x, int y, int w, int h, const char* label));
-  FL_EXPORT_C_HEADER(fl_Round_Clock,Fl_Round_Clock_New,(int x, int y, int w, int h));
+  FL_EXPORT_C_HEADER(fl_Round_Clock,Fl_Round_Clock_New_WithLabel,(int x, int y, int w, int h, const char* label, Destroy_Function_Pointers dfps));
+  FL_EXPORT_C_HEADER(fl_Round_Clock,Fl_Round_Clock_New,(int x, int y, int w, int h, Destroy_Function_Pointers dfps));
   FL_EXPORT_C_HEADER(void,Fl_Round_Clock_set_value,(fl_Round_Clock round_clock, ulong v));
   FL_EXPORT_C_HEADER(void,Fl_Round_Clock_set_value_with_hms,(fl_Round_Clock round_clock, int H, int m, int s));
   FL_EXPORT_C_HEADER(ulong,Fl_Round_Clock_value,(fl_Round_Clock round_clock));

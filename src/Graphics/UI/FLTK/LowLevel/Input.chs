@@ -80,29 +80,34 @@ inputCustom rectangle l' itMaybe draw' funcs' = do
   setFlag i WidgetFlagCopiedTooltip
   return i
 
-{# fun Fl_Input_New as inputNew' { `Int',`Int',`Int',`Int' } -> `Ptr ()' id #}
-{# fun Fl_Input_New_WithLabel as inputNewWithLabel' { `Int',`Int',`Int',`Int', `CString'} -> `Ptr ()' id #}
-{# fun Fl_Multiline_Input_New as multilineInputNew' { `Int',`Int',`Int',`Int' } -> `Ptr ()' id #}
-{# fun Fl_Multiline_Input_New_WithLabel as multilineInputNewWithLabel' { `Int',`Int',`Int',`Int', `CString'} -> `Ptr ()' id #}
-{# fun Fl_Float_Input_New as floatInputNew' { `Int',`Int',`Int',`Int' } -> `Ptr ()' id #}
-{# fun Fl_Float_Input_New_WithLabel as floatInputNewWithLabel' { `Int',`Int',`Int',`Int', `CString'} -> `Ptr ()' id #}
-{# fun Fl_Int_Input_New as intInputNew' { `Int',`Int',`Int',`Int' } -> `Ptr ()' id #}
-{# fun Fl_Int_Input_New_WithLabel as intInputNewWithLabel' { `Int',`Int',`Int',`Int', `CString'} -> `Ptr ()' id #}
-{# fun Fl_Secret_Input_New as secretInputNew' { `Int',`Int',`Int',`Int' } -> `Ptr ()' id #}
-{# fun Fl_Secret_Input_New_WithLabel as secretInputNewWithLabel' { `Int',`Int',`Int',`Int', `CString'} -> `Ptr ()' id #}
+{# fun Fl_Multiline_Input_New as multilineInputNew' { `Int',`Int',`Int',`Int' , id `FunPtr DestroyCallbacksPrim' } -> `Ptr ()' id #}
+{# fun Fl_Multiline_Input_New_WithLabel as multilineInputNewWithLabel' { `Int',`Int',`Int',`Int', `CString', id `FunPtr DestroyCallbacksPrim' } -> `Ptr ()' id #}
+{# fun Fl_Float_Input_New as floatInputNew' { `Int',`Int',`Int',`Int' , id `FunPtr DestroyCallbacksPrim' } -> `Ptr ()' id #}
+{# fun Fl_Float_Input_New_WithLabel as floatInputNewWithLabel' { `Int',`Int',`Int',`Int', `CString', id `FunPtr DestroyCallbacksPrim' } -> `Ptr ()' id #}
+{# fun Fl_Int_Input_New as intInputNew' { `Int',`Int',`Int',`Int' , id `FunPtr DestroyCallbacksPrim' } -> `Ptr ()' id #}
+{# fun Fl_Int_Input_New_WithLabel as intInputNewWithLabel' { `Int',`Int',`Int',`Int', `CString', id `FunPtr DestroyCallbacksPrim' } -> `Ptr ()' id #}
+{# fun Fl_Secret_Input_New as secretInputNew' { `Int',`Int',`Int',`Int' , id `FunPtr DestroyCallbacksPrim' } -> `Ptr ()' id #}
+{# fun Fl_Secret_Input_New_WithLabel as secretInputNewWithLabel' { `Int',`Int',`Int',`Int', `CString', id `FunPtr DestroyCallbacksPrim' } -> `Ptr ()' id #}
 inputNew :: Rectangle -> Maybe T.Text -> Maybe FlInputType -> IO (Ref Input)
 inputNew rectangle l' flInputType =
     let (x_pos, y_pos, width, height) = fromRectangle rectangle
-        constructor = case flInputType of
-                       Just FlNormalInput -> maybe inputNew' (\l -> (\x y w h -> copyTextToCString l >>= \l' -> inputNewWithLabel' x y w h l')) l'
-                       Just FlFloatInput -> maybe floatInputNew' (\l -> (\x y w h -> copyTextToCString l >>= \l' -> floatInputNewWithLabel' x y w h l')) l'
-                       Just FlIntInput -> maybe intInputNew'  (\l -> (\x y w h -> copyTextToCString l >>= \l' -> intInputNewWithLabel' x y w h l')) l'
-                       Just FlMultilineInput -> maybe multilineInputNew'  (\l -> (\x y w h -> copyTextToCString l >>= \l' -> multilineInputNewWithLabel' x y w h l')) l'
-                       Just FlSecretInput -> maybe secretInputNew' (\l -> (\x y w h -> copyTextToCString l >>= \l' -> secretInputNewWithLabel' x y w h l')) l'
-                       Just FlHiddenInput -> maybe inputNew' (\l -> (\x y w h -> copyTextToCString l >>= \l' -> inputNewWithLabel' x y w h l')) l'
-                       Nothing -> inputNew'
+        construct =
+          let normalInput = inputCustom rectangle l' (Just FlNormalInput) Nothing Nothing
+              specialInput f = do
+                lPtr <- maybe (return nullPtr) copyTextToCString l'
+                destroyCallbacksFptr <- toDestroyCallbacksPrim defaultDestroyCallbacks
+                f x_pos y_pos width height lPtr destroyCallbacksFptr >>= toRef
+          in
+          case flInputType of
+            Just FlNormalInput -> normalInput
+            Just FlHiddenInput -> normalInput
+            Just FlFloatInput -> specialInput floatInputNewWithLabel'
+            Just FlIntInput -> specialInput intInputNewWithLabel'
+            Just FlMultilineInput -> specialInput multilineInputNewWithLabel'
+            Just FlSecretInput -> specialInput secretInputNewWithLabel'
+            Nothing -> inputCustom rectangle l' Nothing Nothing Nothing
     in do
-    i <- constructor x_pos y_pos width height >>= toRef
+    i <- construct
     case flInputType of { Just FlHiddenInput -> setInputType i FlHiddenInput; _ -> return () }
     setFlag i WidgetFlagCopiedLabel
     setFlag i WidgetFlagCopiedTooltip

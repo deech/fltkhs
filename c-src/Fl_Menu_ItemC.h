@@ -10,9 +10,12 @@
 EXPORT {
   struct FlDerivedMenu_Item : Fl_Menu_Item {
     fl_Menu_Item_Draw* drawF;
-    FlDerivedMenu_Item(fl_Menu_Item_Draw* f){
+    Destroy_Function_Pointers dfps;
+    FlDerivedMenu_Item(fl_Menu_Item_Draw* f, Destroy_Function_Pointers dfps){
         drawF = f;
+        dfps = dfps;
     };
+    ~FlDerivedMenu_Item();
     void draw(int x, int y, int w, int h, Fl_Menu_* m, int selected);
   };
 #endif
@@ -86,8 +89,8 @@ EXPORT {
   FL_EXPORT_C_HEADER(int,Fl_Menu_Item_add_with_shortcutname_flags,(fl_Menu_Item menu_item,   char* name,   char* shortcut, fl_Callback* cb, int flags));
   FL_EXPORT_C_HEADER(int,Fl_Menu_Item_add_with_shortcutname_user_data_flags,(fl_Menu_Item menu_item,   char* name,   char* shortcut, fl_Callback* cb, void* user_data, int flags));
   FL_EXPORT_C_HEADER(int,Fl_Menu_Item_size,(fl_Menu_Item menu_item));
-  FL_EXPORT_C_HEADER(fl_Menu_Item,Fl_Menu_Item_New,());
-  FL_EXPORT_C_HEADER(fl_Menu_Item,Fl_Menu_Item_New_With_Draw,(fl_Menu_Item_Draw* f));
+  FL_EXPORT_C_HEADER(fl_Menu_Item,Fl_Menu_Item_New,(Destroy_Function_Pointers dpfs));
+  FL_EXPORT_C_HEADER(fl_Menu_Item,Fl_Menu_Item_New_With_Draw,(fl_Menu_Item_Draw* f, Destroy_Function_Pointers dfps));
   FL_EXPORT_C_HEADER(void,Fl_Menu_Item_Destroy,(fl_Menu_Item menu_item));
 #ifdef __cplusplus
 }

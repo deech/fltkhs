@@ -14,7 +14,6 @@ EXPORT {
   public:
     void* get_other_data();
     void set_other_data(void*);
-    void destroy_data();
     void draw_box();
     void draw_box(Fl_Boxtype t, Fl_Color c);
     void draw_box(Fl_Boxtype t, int x,int y,int w,int h, Fl_Color c);
@@ -32,6 +31,7 @@ EXPORT {
     virtual Fl_Window* as_window();
     virtual Fl_Gl_Window* as_gl_window();
     virtual int format(char* format);
+    void destroy_data();
     Fl_DerivedValuator(int X, int Y, int W, int H, const char *l, fl_Valuator_Virtual_Funcs* funcs);
     Fl_DerivedValuator(int X, int Y, int W, int H, fl_Valuator_Virtual_Funcs* funcs);
     ~Fl_DerivedValuator();

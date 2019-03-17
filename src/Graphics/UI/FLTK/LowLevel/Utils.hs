@@ -74,6 +74,8 @@ foreign import ccall "wrapper"
         mkSetInt :: SetIntPrim -> IO (FunPtr SetIntPrim)
 foreign import ccall "wrapper"
         mkColorSetPrim :: ColorSetPrim -> IO (FunPtr ColorSetPrim)
+foreign import ccall "wrapper"
+        mkDestroyCallbacksPtr :: DestroyCallbacksPrim -> IO (FunPtr DestroyCallbacksPrim)
 
 toTabPositionsPrim :: (Ref a -> IO (Maybe AtIndex, Int, [(X,Width)])) -> IO (FunPtr TabPositionsPrim)
 toTabPositionsPrim f =
@@ -106,6 +108,28 @@ toCallbackPrimWithUserData :: (Ref a -> IO ()) ->
 toCallbackPrimWithUserData f = mkWidgetCallbackPtr $ \ptr _ -> do
   pp <- wrapNonNull ptr "Null pointer: toWidgetCallbackPrim"
   f (castTo (wrapInRef pp))
+
+toDestroyCallbacksPrim ::
+  (Ref a -> [Maybe (FunPtr (IO ()))] -> IO ()) ->
+  IO (FunPtr DestroyCallbacksPrim)
+toDestroyCallbacksPrim f =
+  let marshalFps :: Ptr (FunPtr (IO ())) -> CInt -> [Maybe (FunPtr (IO ()))] -> IO [Maybe (FunPtr (IO ()))]
+      marshalFps arrayPtr numLeft accum =
+        if (numLeft == 0) then return accum
+        else do
+          fp <- peek arrayPtr
+          marshalFps
+            (arrayPtr `plusPtr` (sizeOf (undefined :: FunPtr (IO ()))))
+            (numLeft - 1)
+            (if (fp == nullFunPtr)
+             then  (accum ++ [Nothing])
+             else (accum ++ [Just fp]))
+  in
+  mkDestroyCallbacksPtr $ \ptr fpts -> do
+    pp <- wrapNonNull ptr "Null pointer. toDestroyCallbacksPrim"
+    (numFps, fpArray) <- unpackFunctionPointerToFreeStruct ptr
+    cbs <- marshalFps fpArray numFps []
+    f (castTo (wrapInRef pp)) cbs
 
 cFromEnum :: (Enum a, Integral b) => a -> b
 cFromEnum = fromIntegral . fromEnum

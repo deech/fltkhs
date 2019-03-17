@@ -2,21 +2,38 @@
 #include "Fl_Overlay_WindowC.h"
 
 #ifdef __cplusplus
-Fl_DerivedOverlay_Window::Fl_DerivedOverlay_Window(int X, int Y, int W, int H, const char *l, void (*draw_overlay_fp)(fl_Overlay_Window)):Fl_Overlay_Window(X,Y,W,H,l){
+Fl_DerivedOverlay_Window::Fl_DerivedOverlay_Window(int X, int Y, int W, int H, const char *l, void (*draw_overlay_fp)(fl_Overlay_Window), Destroy_Function_Pointers dfps):Fl_Overlay_Window(X,Y,W,H,l){
   this->draw_overlay_fp = draw_overlay_fp;
+  this->dfps = dfps;
 }
-Fl_DerivedOverlay_Window::Fl_DerivedOverlay_Window(int X, int Y, int W, int H, void (*draw_overlay_fp)(fl_Overlay_Window)):Fl_Overlay_Window(X,Y,W,H,0){
+Fl_DerivedOverlay_Window::Fl_DerivedOverlay_Window(int X, int Y, int W, int H, void (*draw_overlay_fp)(fl_Overlay_Window), Destroy_Function_Pointers dfps):Fl_Overlay_Window(X,Y,W,H,0){
   this->draw_overlay_fp = draw_overlay_fp;
+  this->dfps = dfps;
 }
-Fl_DerivedOverlay_Window::Fl_DerivedOverlay_Window(int W, int H, const char *l, void (*draw_overlay_fp)(fl_Overlay_Window)):Fl_Overlay_Window(W,H,l){
+Fl_DerivedOverlay_Window::Fl_DerivedOverlay_Window(int W, int H, const char *l, void (*draw_overlay_fp)(fl_Overlay_Window), Destroy_Function_Pointers dfps):Fl_Overlay_Window(W,H,l){
   this->draw_overlay_fp = draw_overlay_fp;
+  this->dfps = dfps;
 }
-Fl_DerivedOverlay_Window::Fl_DerivedOverlay_Window(int W, int H, void (*draw_overlay_fp)(fl_Overlay_Window)):Fl_Overlay_Window(W,H,0) {
+Fl_DerivedOverlay_Window::Fl_DerivedOverlay_Window(int W, int H, void (*draw_overlay_fp)(fl_Overlay_Window), Destroy_Function_Pointers dfps):Fl_Overlay_Window(W,H,0) {
   this->draw_overlay_fp = draw_overlay_fp;
+  this->dfps = dfps;
 }
 void Fl_DerivedOverlay_Window::draw_overlay() {
   (*draw_overlay_fp)((fl_Overlay_Window) this);
 }
+Fl_DerivedOverlay_Window::~Fl_DerivedOverlay_Window() {
+  this->destroy_data();
+}
+void Fl_DerivedOverlay_Window::destroy_data() {
+  if (this->dfps != NULL) {
+     fl_DoNotCall* fps = NULL;
+     Function_Pointers_To_Free* res = C_to_Fl_Callback::gather_function_pointers(2,0,fps,(fl_DoNotCall)(this->callback()), (fl_DoNotCall)(this->draw_overlay_fp));
+     this->dfps((fl_Overlay_Window)this,res);
+     if (fps) { free(fps); }
+     free(res);
+  }
+}
+
 EXPORT {
 #endif
   FL_EXPORT_C(int,Fl_Overlay_Window_handle)(fl_Overlay_Window self, int event){
@@ -524,20 +541,20 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Overlay_Window_redraw_overlay)(fl_Overlay_Window win){
     (static_cast<Fl_DerivedOverlay_Window*>(win))->redraw_overlay();
   }
-  FL_EXPORT_C(fl_Overlay_Window, Fl_Overlay_Window_New_WithLabel)(int w, int h, const char* title,void (*draw_overlay_fp)(fl_Overlay_Window)) {
-  Fl_DerivedOverlay_Window* window = new Fl_DerivedOverlay_Window(w,h,title, draw_overlay_fp);
-  return (static_cast<fl_Overlay_Window>(window));
-}
-  FL_EXPORT_C(fl_Overlay_Window, Fl_Overlay_Window_New)(int w, int h,void (*draw_overlay_fp)(fl_Overlay_Window)) {
-  Fl_DerivedOverlay_Window* window = new Fl_DerivedOverlay_Window(w,h,0,draw_overlay_fp);
+  FL_EXPORT_C(fl_Overlay_Window, Fl_Overlay_Window_New_WithLabel)(int w, int h, const char* title,void (*draw_overlay_fp)(fl_Overlay_Window), Destroy_Function_Pointers dfps) {
+    Fl_DerivedOverlay_Window* window = new Fl_DerivedOverlay_Window(w,h,title, draw_overlay_fp, dfps);
+    return (static_cast<fl_Overlay_Window>(window));
+  }
+  FL_EXPORT_C(fl_Overlay_Window, Fl_Overlay_Window_New)(int w, int h,void (*draw_overlay_fp)(fl_Overlay_Window), Destroy_Function_Pointers dfps) {
+    Fl_DerivedOverlay_Window* window = new Fl_DerivedOverlay_Window(w,h,0,draw_overlay_fp, dfps);
   return (fl_Overlay_Window)window;
   }
-  FL_EXPORT_C(fl_Overlay_Window, Fl_Overlay_Window_NewXY_WithLabel)(int x, int y, int w, int h, const char* title,void (*draw_overlay_fp)(fl_Overlay_Window)) {
-  Fl_DerivedOverlay_Window* window = new Fl_DerivedOverlay_Window(x,y,w,h,title,draw_overlay_fp);
+  FL_EXPORT_C(fl_Overlay_Window, Fl_Overlay_Window_NewXY_WithLabel)(int x, int y, int w, int h, const char* title,void (*draw_overlay_fp)(fl_Overlay_Window), Destroy_Function_Pointers dfps) {
+    Fl_DerivedOverlay_Window* window = new Fl_DerivedOverlay_Window(x,y,w,h,title,draw_overlay_fp, dfps);
     return (fl_Overlay_Window)window;
   }
-  FL_EXPORT_C(fl_Overlay_Window, Fl_Overlay_Window_NewXY)(int x, int y, int w, int h,void (*draw_overlay_fp)(fl_Overlay_Window)) {
-  Fl_DerivedOverlay_Window* window = new Fl_DerivedOverlay_Window(x,y,w,h,0,draw_overlay_fp);
+  FL_EXPORT_C(fl_Overlay_Window, Fl_Overlay_Window_NewXY)(int x, int y, int w, int h,void (*draw_overlay_fp)(fl_Overlay_Window), Destroy_Function_Pointers dfps) {
+    Fl_DerivedOverlay_Window* window = new Fl_DerivedOverlay_Window(x,y,w,h,0,draw_overlay_fp, dfps);
   return (fl_Overlay_Window)window;
 }
 #ifdef __cplusplus

@@ -303,6 +303,7 @@ type GetDoublePrim               = Ptr () -> IO (CDouble)
 type GetIntPrim                  = Ptr () -> IO CInt
 type SetIntPrim                  = Ptr () -> CInt -> IO ()
 type ColorSetPrim                = Ptr () -> CDouble -> CDouble -> CDouble -> IO CInt
+type DestroyCallbacksPrim        = Ptr () -> Ptr () -> IO ()
 
 newtype Width = Width Int deriving (Eq, Show, Ord)
 newtype Height = Height Int deriving (Eq, Show, Ord)
@@ -548,3 +549,9 @@ refPtrEquals w1 w2 = do
   w2Null <- isNull w2
   if (w1Null || w2Null) then return False
     else withRef w1 (\w1Ptr -> withRef w2 (\w2Ptr -> return (w1Ptr == w2Ptr)))
+
+unpackFunctionPointerToFreeStruct :: Ptr () -> IO (CInt, Ptr (FunPtr (IO ())))
+unpackFunctionPointerToFreeStruct fpts = do
+  numFps <- {#get Function_Pointers_To_Free->length #} fpts
+  fpArray <- {#get Function_Pointers_To_Free->function_pointer_array #} fpts
+  return (numFps, fpArray)

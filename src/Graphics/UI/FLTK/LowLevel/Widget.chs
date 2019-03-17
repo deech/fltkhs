@@ -10,7 +10,8 @@ module Graphics.UI.FLTK.LowLevel.Widget
      defaultCustomWidgetFuncs,
      fillCustomWidgetFunctionStruct,
      customWidgetFunctionStruct,
-     WidgetFlag(..)
+     WidgetFlag(..),
+     defaultDestroyCallbacks
      -- * Hierarchy
      --
      -- $hierarchy
@@ -30,8 +31,8 @@ import Graphics.UI.FLTK.LowLevel.Fl_Types
 import Graphics.UI.FLTK.LowLevel.Utils
 import Graphics.UI.FLTK.LowLevel.Dispatch
 import qualified Data.Text as T
-import qualified Data.Text.Foreign as TF
 import Graphics.UI.FLTK.LowLevel.Hierarchy
+import Data.Maybe
 
 #c
 enum WidgetFlag {
@@ -132,6 +133,8 @@ data CustomWidgetFuncs a =
     ,showCustom   :: Maybe (Ref a -> IO ())
      -- | See <http://www.fltk.org/doc-1.3/classFl__Widget.html#a1fe8405b86da29d147dc3b5841cf181c Fl_Widget::hide>
     ,hideCustom   :: Maybe (Ref a -> IO ())
+     -- | Free callbacks created on the Haskell side before a widget is destroyed.
+    ,destroyCallbacksCustom :: Maybe (Ref a -> [Maybe (FunPtr (IO ()))] -> IO ())
     }
 
 -- | Fill up a struct with pointers to functions on the Haskell side that will get called instead of the default ones.
@@ -144,12 +147,13 @@ fillCustomWidgetFunctionStruct :: forall a. (Parent a Widget) =>
                                   Maybe (Ref a -> IO ()) ->
                                   CustomWidgetFuncs a ->
                                   IO ()
-fillCustomWidgetFunctionStruct structPtr _draw' (CustomWidgetFuncs _handle' _resize' _show' _hide') = do
+fillCustomWidgetFunctionStruct structPtr _draw' (CustomWidgetFuncs _handle' _resize' _show' _hide' _destroyCallbacks') = do
       toCallbackPrim `orNullFunPtr` _draw'       >>= {#set fl_Widget_Virtual_Funcs->draw#} structPtr
       toEventHandlerPrim `orNullFunPtr` _handle' >>= {#set fl_Widget_Virtual_Funcs->handle#} structPtr
       toRectangleFPrim `orNullFunPtr` _resize'   >>= {#set fl_Widget_Virtual_Funcs->resize#} structPtr
       toCallbackPrim `orNullFunPtr` _show'       >>= {#set fl_Widget_Virtual_Funcs->show#} structPtr
       toCallbackPrim `orNullFunPtr` _hide'       >>= {#set fl_Widget_Virtual_Funcs->hide#} structPtr
+      toDestroyCallbacksPrim `orNullFunPtr` _destroyCallbacks' >>= {#set fl_Widget_Virtual_Funcs->destroy_data#} structPtr
 
 {# fun Fl_Widget_default_virtual_funcs as virtualFuncs' {} -> `Ptr ()' id #}
 
@@ -165,6 +169,12 @@ customWidgetFunctionStruct draw' customWidgetFuncs' = do
   fillCustomWidgetFunctionStruct p draw' customWidgetFuncs'
   return p
 
+defaultDestroyCallbacks :: Ref a -> [Maybe (FunPtr (IO ()))] -> IO ()
+defaultDestroyCallbacks _ fps = mapM_ freeHaskellFunPtr (catMaybes fps)
+
+defaultDestroyWidgetCallbacks :: (Parent a Widget) => Ref a -> [Maybe (FunPtr (IO ()))] -> IO ()
+defaultDestroyWidgetCallbacks = defaultDestroyCallbacks
+
 -- | An empty set of functions to pass to 'widgetCustom'.
 defaultCustomWidgetFuncs :: forall a. (Parent a Widget) => CustomWidgetFuncs a
 defaultCustomWidgetFuncs =
@@ -173,6 +183,8 @@ defaultCustomWidgetFuncs =
     Nothing
     Nothing
     Nothing
+    (Just defaultDestroyWidgetCallbacks)
+
 
 -- | Lots of 'Widget' subclasses have the same constructor parameters. This function consolidates them.
 --

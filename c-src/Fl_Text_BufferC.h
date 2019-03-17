@@ -8,11 +8,20 @@
 #include "FL/Fl_Text_Buffer.H"
 #include "Fl_CallbackC.h"
 EXPORT {
+  class Fl_DerivedText_Buffer : public Fl_Text_Buffer {
+    Destroy_Function_Pointers destroy;
+  public:
+    void destroy_data();
+    Fl_DerivedText_Buffer(Destroy_Function_Pointers destroy);
+    Fl_DerivedText_Buffer(int requestedSize, int preferredGapSize, Destroy_Function_Pointers dfps);
+    Fl_DerivedText_Buffer(int requestedSize, Destroy_Function_Pointers dfps);
+    ~Fl_DerivedText_Buffer();
+  };
 #endif
-  FL_EXPORT_C_HEADER(fl_Text_Buffer,Fl_Text_Buffer_New,());
-  FL_EXPORT_C_HEADER(fl_Text_Buffer,Fl_Text_Buffer_New_With_RequestedSize,(int requestedSize));
-  FL_EXPORT_C_HEADER(fl_Text_Buffer,Fl_Text_Buffer_New_With_PreferredGapSize,(int preferredGapSize));
-  FL_EXPORT_C_HEADER(fl_Text_Buffer,Fl_Text_Buffer_New_With_RequestedSize_PreferredGapSize,(int requestedSize, int preferredGapSize));
+  FL_EXPORT_C_HEADER(fl_Text_Buffer,Fl_Text_Buffer_New,(Destroy_Function_Pointers dfps));
+  FL_EXPORT_C_HEADER(fl_Text_Buffer,Fl_Text_Buffer_New_With_RequestedSize,(int requestedSize, Destroy_Function_Pointers dfps));
+  FL_EXPORT_C_HEADER(fl_Text_Buffer,Fl_Text_Buffer_New_With_PreferredGapSize,(int preferredGapSize, Destroy_Function_Pointers dfps));
+  FL_EXPORT_C_HEADER(fl_Text_Buffer,Fl_Text_Buffer_New_With_RequestedSize_PreferredGapSize,(int requestedSize, int preferredGapSize, Destroy_Function_Pointers dfps));
   FL_EXPORT_C_HEADER(void,Fl_Text_Buffer_Destroy,(fl_Text_Buffer text_buffer));
 #ifndef INTERNAL_LINKAGE
   typedef void (*Fl_Text_Modify_Cb)(int pos, int nInserted, int nDeleted,

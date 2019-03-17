@@ -13,9 +13,12 @@ DerivedText_Editor::DerivedText_Editor(int X, int Y, int W, int H, fl_Widget_Vir
   overriddenFuncs = funcs;
   other_data = (void*)0;
 }
+
 DerivedText_Editor::~DerivedText_Editor(){
+  this->remove_all_key_bindings();
   free(overriddenFuncs);
 }
+
 DerivedText_Editor::DerivedText_Editor(int x,int y,int w,int h,const char* t) : Fl_Text_Editor(x,y,w,h,t){
   key_bindings = 0;
   key_bindings = get_default_keybindings();
@@ -92,6 +95,27 @@ C_to_Fl_Callback* DerivedText_Editor::bound_key_function(int key, int state, Key
 void DerivedText_Editor::remove_all_key_bindings(Key_Binding_With_Callback** list){
   Key_Binding_With_Callback* curr = *list;
   Key_Binding_With_Callback* next;
+  if (this->overriddenFuncs->destroy_data != NULL) {
+    int i = 0;
+    for (;curr;curr = next){
+      next = curr->next;
+      i++;
+    }
+    fl_DoNotCall* fps = (fl_DoNotCall*)malloc(sizeof(fl_DoNotCall) * i);
+
+    i = 0;
+    for (;curr;curr = next){
+      next = curr->next;
+      fps[i] = (fl_DoNotCall)curr->callback;
+      i++;
+    }
+    Function_Pointers_To_Free* fpStruct = (Function_Pointers_To_Free*)malloc(sizeof(Function_Pointers_To_Free));
+    fpStruct->length = i;
+    fpStruct->function_pointer_array = fps;
+    this->overriddenFuncs->destroy_data((fl_Text_Editor)this, fpStruct);
+    free(fps);
+    free(fpStruct);
+  }
   for (;curr;curr = next){
     next = curr->next;
     delete curr;
@@ -110,6 +134,8 @@ void DerivedText_Editor::remove_key_binding(int key, int state, Key_Binding_With
   if (!curr) return;
   if (last) last->next = curr->next;
   else *list = curr->next;
+  curr->next = NULL;
+  this->remove_all_key_bindings(&curr);
   delete curr;
 }
 

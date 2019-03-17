@@ -22,6 +22,7 @@ EXPORT {
     virtual void show();
     void show_super();
     virtual void hide();
+    void destroy_data();
     void hide_super();
     Fl_DerivedPositioner(int X, int Y, int W, int H, const char *l, fl_Widget_Virtual_Funcs* funcs);
     Fl_DerivedPositioner(int X, int Y, int W, int H, fl_Widget_Virtual_Funcs* funcs);

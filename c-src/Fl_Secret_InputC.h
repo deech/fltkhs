@@ -8,6 +8,13 @@
 #include "FL/Fl_Secret_Input.H"
 #include "Fl_CallbackC.h"
 EXPORT {
+  class Fl_DerivedSecret_Input : public Fl_Secret_Input {
+    Destroy_Function_Pointers destroy;
+  public:
+    void destroy_data();
+    Fl_DerivedSecret_Input(int x, int y, int w, int h, const char* label, Destroy_Function_Pointers destroy);
+    ~Fl_DerivedSecret_Input();
+  };
 #endif
   /* Inherited from Fl_Widget */
   FL_EXPORT_C_HEADER(int,Fl_Secret_Input_handle,(fl_Secret_Input self, int event));
@@ -96,8 +103,8 @@ EXPORT {
   FL_EXPORT_C_HEADER(fl_Gl_Window,Fl_Secret_Input_as_gl_window,(fl_Secret_Input secret_input));
   /* Fl_Secret_Input specific functions */
   FL_EXPORT_C_HEADER(int,Fl_Secret_Input_handle,(fl_Secret_Input secret_input, int event));
-  FL_EXPORT_C(fl_Float_Input, Fl_Secret_Input_New_WithLabel)(int x, int y, int w, int h, const char* label);
-  FL_EXPORT_C(fl_Float_Input, Fl_Secret_Input_New)(int x, int y, int w, int h);
+  FL_EXPORT_C(fl_Float_Input, Fl_Secret_Input_New_WithLabel)(int x, int y, int w, int h, const char* label, Destroy_Function_Pointers dfps);
+  FL_EXPORT_C(fl_Float_Input, Fl_Secret_Input_New)(int x, int y, int w, int h, Destroy_Function_Pointers dfps);
   FL_EXPORT_C_HEADER(void,Fl_Secret_Input_Destroy,(fl_Secret_Input secret_input));
 
   FL_EXPORT_C_HEADER(void,Fl_Secret_Input_resize,(fl_Secret_Input secret_input, int X, int Y, int W, int H));

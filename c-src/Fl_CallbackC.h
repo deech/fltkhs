@@ -47,6 +47,15 @@ class C_to_Fl_Callback {
     return context->runCallback(key,editor);
   };
   static int intercept(int key, fl_Text_Editor editor);
+  static int function_pointers_to_free(fl_Widget_Virtual_Funcs* fs, fl_DoNotCall* res);
+  static int function_pointers_to_free(fl_Table_Virtual_Funcs* fs, fl_DoNotCall* res);
+  static int function_pointers_to_free(fl_Window_Virtual_Funcs* fs, fl_DoNotCall* res);
+  static int function_pointers_to_free(fl_Browser_Virtual_Funcs* fs, fl_DoNotCall* res);
+  static int function_pointers_to_free(fl_Image_Virtual_Funcs* fs, fl_DoNotCall* res);
+  static int function_pointers_to_free(fl_Valuator_Virtual_Funcs* fs, fl_DoNotCall* res);
+  static int function_pointers_to_free(fl_Tab_Virtual_Funcs* fs, fl_DoNotCall* res);
+  static int function_pointers_to_free(fl_Color_Chooser_Virtual_Funcs* fs, fl_DoNotCall* res);
+  static Function_Pointers_To_Free* gather_function_pointers(int total_fps, int num_fps, fl_DoNotCall* fps, ...);
   C_to_Fl_Callback(Fl_Widget* invoker, fl_Callback* callback, void* user_data);
   C_to_Fl_Callback(Fl_Widget* invoker, fl_Callback* callback);
   C_to_Fl_Callback(fl_Callback* callback);
