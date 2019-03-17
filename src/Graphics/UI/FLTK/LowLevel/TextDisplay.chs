@@ -514,4 +514,6 @@ instance (impl ~ ( IO ())) => Op (ShowWidgetSuper ()) TextDisplay orig impl wher
 -- wrapMode :: 'Ref' 'TextDisplay' -> 'WrapType' -> 'IO' ()
 --
 -- xToCol :: 'Ref' 'TextDisplay' -> 'Double' -> 'IO' ('Double')
+--
+-- xyToPosition :: 'Ref' 'TextDisplay' -> 'Position' -> 'Maybe' 'PositionType' -> 'IO' 'AtIndex'
 -- @
