@@ -132,6 +132,13 @@ instance (impl ~ (AtIndex ->  IO ())) => Op (SetInsertPosition ()) TextDisplay o
 {# fun Fl_Text_Display_insert_position as insertPosition' { id `Ptr ()' } -> `Int' #}
 instance (impl ~ ( IO AtIndex)) => Op (GetInsertPosition ()) TextDisplay orig impl where
    runOp _ _ text_display = withRef text_display $ \text_displayPtr -> insertPosition' text_displayPtr >>= return . AtIndex
+{# fun Fl_Text_Display_xy_to_position as xyToPosition' { id `Ptr ()',`Int',`Int',`Int'} -> `Int' #}
+instance (impl ~ (Position -> Maybe PositionType -> IO AtIndex)) => Op (XyToPosition ()) TextDisplay orig impl where
+  runOp _ _ text_display (Position (X x) (Y y)) mPosType =
+    withRef text_display $ \text_displayPtr ->
+    xyToPosition' text_displayPtr x y ((fromIntegral . fromEnum) posType) >>= return . AtIndex
+      where
+        posType = maybe CharacterPos id mPosType
 {# fun Fl_Text_Display_position_to_xy as positionToXy' { id `Ptr ()',`Int', id `Ptr CInt', id `Ptr CInt'} -> `Int' #}
 instance (impl ~ (AtIndex ->  IO (Either OutOfRange Position))) => Op (PositionToXy ()) TextDisplay orig impl where
   runOp _ _ text_display (AtIndex pos)  =

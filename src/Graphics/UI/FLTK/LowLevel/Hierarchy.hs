@@ -1409,6 +1409,8 @@ module Graphics.UI.FLTK.LowLevel.Hierarchy
          setInsertPosition,
          GetInsertPosition,
          getInsertPosition,
+         XyToPosition,
+         xyToPosition,
          PositionToXy,
          positionToXy,
          InSelection,
@@ -4099,6 +4101,7 @@ type TextDisplayFuncs =
   (Overstrike
   (SetInsertPosition
   (GetInsertPosition
+  (XyToPosition
   (PositionToXy
   (InSelection
   (ShowInsertPosition
@@ -4153,7 +4156,7 @@ type TextDisplayFuncs =
   (Draw
   (ShowWidget
   (ShowWidgetSuper
-  ())))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))
+  ()))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))
 
 type instance Functions TextDisplay = TextDisplayFuncs
 
@@ -4164,6 +4167,7 @@ MAKE_METHOD(Scroll,scroll)
 MAKE_METHOD(Overstrike,overstrike)
 MAKE_METHOD(SetInsertPosition,setInsertPosition)
 MAKE_METHOD(GetInsertPosition,getInsertPosition)
+MAKE_METHOD(XyToPosition,xyToPosition)
 MAKE_METHOD(PositionToXy,positionToXy)
 MAKE_METHOD(InSelection,inSelection)
 MAKE_METHOD(ShowInsertPosition,showInsertPosition)

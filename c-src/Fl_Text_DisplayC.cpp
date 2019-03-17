@@ -74,6 +74,9 @@ EXPORT {
   void Fl_DerivedText_Display::hide_super(){
     Fl_Text_Display::hide();
   }
+  int Fl_DerivedText_Display::xy_to_position(int x,int y,int posType){
+      return Fl_Text_Display::xy_to_position(x,y,posType);
+  }
 
 
 #endif
@@ -636,6 +639,9 @@ EXPORT {
   }
   FL_EXPORT_C(void, Fl_Text_Display_hide_super)(fl_Text_Display o){
     (static_cast<Fl_DerivedText_Display*>(o))->hide_super();
+  }
+  FL_EXPORT_C(int,Fl_Text_Display_xy_to_position)(fl_Text_Display o,int x,int y,int posType){
+    return (static_cast<Fl_DerivedText_Display*>(o))->xy_to_position(x,y,posType);
   }
 
 #ifdef __cplusplus
