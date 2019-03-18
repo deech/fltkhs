@@ -16,8 +16,9 @@ Fl_DerivedBrowser::~Fl_DerivedBrowser(){
 void Fl_DerivedBrowser::destroy_data(){
   if (this->overriddenFuncs->destroy_data != NULL){
     fl_DoNotCall* fps = NULL;
-    int num_fps = C_to_Fl_Callback::function_pointers_to_free(this->overriddenFuncs,fps);
-    Function_Pointers_To_Free* res = C_to_Fl_Callback::gather_function_pointers(num_fps+1,num_fps,fps,(fl_DoNotCall)(this->callback()));
+    int num_fps = C_to_Fl_Callback::function_pointers_to_free(this->overriddenFuncs,&fps);
+    fl_Callback* cb = C_to_Fl_Callback::get_callback(this);
+    Function_Pointers_To_Free* res = C_to_Fl_Callback::gather_function_pointers(num_fps+1,num_fps,fps,(fl_DoNotCall)cb);
     this->overriddenFuncs->destroy_data((fl_Browser)this,res);
     if (fps) { free(fps); }
     free(res);

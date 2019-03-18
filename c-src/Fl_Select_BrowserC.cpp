@@ -9,7 +9,8 @@ Fl_DerivedSelect_Browser::~Fl_DerivedSelect_Browser() {
 void Fl_DerivedSelect_Browser::destroy_data(){
   if (this->destroy != NULL){
     fl_DoNotCall* fps = NULL;
-    Function_Pointers_To_Free* res = C_to_Fl_Callback::gather_function_pointers(1,0,fps,(fl_DoNotCall)(this->callback()));
+    fl_Callback* cb = C_to_Fl_Callback::get_callback(this);
+    Function_Pointers_To_Free* res = C_to_Fl_Callback::gather_function_pointers(1,0,fps,(fl_DoNotCall)cb);
     this->destroy((fl_Select_Browser)this,res);
     if (fps) { free(fps); }
     free(res);

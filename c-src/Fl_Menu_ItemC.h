@@ -8,14 +8,14 @@
 #include "FL/Fl_Menu_Item.H"
 #include "Fl_CallbackC.h"
 EXPORT {
-  struct FlDerivedMenu_Item : Fl_Menu_Item {
+  struct Fl_DerivedMenu_Item : Fl_Menu_Item {
     fl_Menu_Item_Draw* drawF;
     Destroy_Function_Pointers dfps;
-    FlDerivedMenu_Item(fl_Menu_Item_Draw* f, Destroy_Function_Pointers dfps){
+    Fl_DerivedMenu_Item(fl_Menu_Item_Draw* f, Destroy_Function_Pointers dfps){
         drawF = f;
         dfps = dfps;
     };
-    ~FlDerivedMenu_Item();
+    ~Fl_DerivedMenu_Item();
     void draw(int x, int y, int w, int h, Fl_Menu_* m, int selected);
   };
 #endif
@@ -35,7 +35,8 @@ EXPORT {
   FL_EXPORT_C_HEADER(void,Fl_Menu_Item_set_labelsize,(fl_Menu_Item menu_item, Fl_Fontsize a));
   //  fl_Callback* callback(); commented until I figure out how to do this
   FL_EXPORT_C_HEADER(void,Fl_Menu_Item_set_callback_with_user_data,(fl_Menu_Item menu_item, fl_Callback* c, void* user_data));
-  FL_EXPORT_C_HEADER(void,Fl_Menu_Item_set_callback,(fl_Menu_Item menu_item, fl_Callback* c));
+  FL_EXPORT_C_HEADER(fl_Callback*, Fl_Menu_Item_callback, (fl_Menu_Item menu_item));
+  FL_EXPORT_C_HEADER(fl_Callback*,Fl_Menu_Item_set_callback,(fl_Menu_Item menu_item, fl_Callback* c));
   FL_EXPORT_C_HEADER(int,Fl_Menu_Item_has_callback,(fl_Menu_Item menu_item));
   FL_EXPORT_C_HEADER(void*,Fl_Menu_Item_user_data,(fl_Menu_Item menu_item));
   FL_EXPORT_C_HEADER(void,Fl_Menu_Item_set_user_data,(fl_Menu_Item menu_item, void* v));

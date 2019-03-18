@@ -370,11 +370,11 @@ readqueue = readqueue' >>= toMaybeRef
        { `Double', id `FunPtr CallbackPrim' } -> `()' supressWarningAboutRes #}
 
 -- | Returns a function pointer so it can be freed with `freeHaskellFunPtr`, please don't invoke it.
-addTimeout :: Double -> GlobalCallback -> IO (FunPtr ())
+addTimeout :: Double -> GlobalCallback -> IO (FunPtr CallbackPrim)
 addTimeout t cb = do
   fp <- toGlobalCallbackPrim cb
   addTimeout' t fp
-  return (castFunPtr fp)
+  return fp
 
 {# fun Fl_repeat_timeout as repeatTimeout'
       { `Double',id `FunPtr CallbackPrim' } -> `()' supressWarningAboutRes #}

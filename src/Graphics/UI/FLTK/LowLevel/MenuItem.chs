@@ -123,11 +123,19 @@ instance (impl ~  IO (FontSize)) => Op (GetLabelsize ()) MenuItem orig impl wher
 instance (impl ~ (FontSize ->  IO ())) => Op (SetLabelsize ()) MenuItem  orig impl where
   runOp _ _ menu_item (FontSize pix) = withRef menu_item $ \menu_itemPtr -> setLabelsize' menu_itemPtr pix
 
-{# fun Fl_Menu_Item_set_callback as setCallback' { id `Ptr ()', id `FunPtr CallbackWithUserDataPrim'} -> `()' #}
+{# fun Fl_Menu_Item_set_callback as setCallback' { id `Ptr ()', id `FunPtr CallbackWithUserDataPrim'} -> `FunPtr CallbackWithUserDataPrim' id #}
 instance (impl ~ ((Ref orig -> IO ()) -> IO ()) ) => Op (SetCallback ()) MenuItem orig impl where
-  runOp _ _ menu_item c = withRef menu_item $ \menu_itemPtr -> do
-                                    ptr <- toCallbackPrim c
-                                    setCallback' menu_itemPtr (castFunPtr ptr)
+  runOp _ _ menu_item c =
+     withRef menu_item $ \menu_itemPtr -> do
+      ptr <- toCallbackPrim c
+      oldCb <- setCallback' menu_itemPtr (castFunPtr ptr)
+      if (oldCb == nullFunPtr)
+      then return ()
+      else freeHaskellFunPtr oldCb
+
+{# fun Fl_Menu_Item_callback as getCallback' { id `Ptr ()' } -> `FunPtr CallbackWithUserDataPrim' id #}
+instance (impl ~ (IO (FunPtr CallbackWithUserDataPrim))) => Op (GetCallback ()) MenuItem orig impl where
+  runOp _ _ menuItem = withRef menuItem $ \menuItemPtr -> getCallback' menuItemPtr
 
 {# fun Fl_Menu_Item_shortcut as shortcut' { id `Ptr ()' } -> `CInt' #}
 instance (impl ~  IO (Maybe ShortcutKeySequence)) => Op (GetShortcut ()) MenuItem orig impl where
@@ -271,8 +279,10 @@ addMenuItem ::
   IO (AtIndex)
 addMenuItem refMenuOrMenuItem name shortcut cb flags addWithFlags addWithShortcutnameFlags =
      either
-       (\menu -> withRef menu (go "Menu_.add: Shortcut format string cannot be empty" ))
-       (\menuItem -> withRef menuItem (go "MenuItem.add: Shortcut format string cannot be empty"))
+       (\menu -> withRef menu $ \menuPtr ->
+           go "Menu_.add: Shortcut format string cannot be empty" menuPtr)
+       (\menuItem -> withRef menuItem $ \menuItemPtr ->
+           go "MenuItem.add: Shortcut format string cannot be empty" menuItemPtr)
        refMenuOrMenuItem
     where
       go :: String -> Ptr () -> IO AtIndex

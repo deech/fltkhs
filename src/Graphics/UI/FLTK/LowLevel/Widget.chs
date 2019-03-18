@@ -170,7 +170,7 @@ customWidgetFunctionStruct draw' customWidgetFuncs' = do
   return p
 
 defaultDestroyCallbacks :: Ref a -> [Maybe (FunPtr (IO ()))] -> IO ()
-defaultDestroyCallbacks _ fps = mapM_ freeHaskellFunPtr (catMaybes fps)
+defaultDestroyCallbacks _ = mapM_ freeHaskellFunPtr . catMaybes
 
 defaultDestroyWidgetCallbacks :: (Parent a Widget) => Ref a -> [Maybe (FunPtr (IO ()))] -> IO ()
 defaultDestroyWidgetCallbacks = defaultDestroyCallbacks
@@ -541,11 +541,19 @@ instance (impl ~ ( Rectangle -> IO ())) => Op (Resize ()) Widget orig impl where
   runOp _ _ widget rectangle = withRef widget $ \widgetPtr -> do
     let (x_pos,y_pos,w_pos,h_pos) = fromRectangle rectangle
     resize' widgetPtr x_pos y_pos w_pos h_pos
-{# fun Fl_Widget_set_callback as setCallback' { id `Ptr ()', id `FunPtr CallbackWithUserDataPrim'} -> `()' supressWarningAboutRes #}
+
+{# fun Fl_Widget_callback as getCallback' { id `Ptr ()' } -> `FunPtr CallbackWithUserDataPrim' id #}
+instance (impl ~ (IO (FunPtr CallbackWithUserDataPrim))) => Op (GetCallback ()) Widget orig impl where
+  runOp _ _ widget = withRef widget $ \widgetPtr -> getCallback' widgetPtr
+
+{# fun Fl_Widget_set_callback as setCallback' { id `Ptr ()', id `FunPtr CallbackWithUserDataPrim'} -> `FunPtr CallbackWithUserDataPrim' id #}
 instance (impl ~ ((Ref orig -> IO ()) -> IO ())) => Op (SetCallback ()) Widget orig impl where
   runOp _ _ widget callback = withRef widget $ \widgetPtr -> do
     ptr <- toCallbackPrimWithUserData callback
-    setCallback' widgetPtr (castFunPtr ptr)
+    oldCb <- setCallback' widgetPtr ptr
+    if (oldCb == nullFunPtr)
+    then return ()
+    else freeHaskellFunPtr oldCb
 
 {# fun Fl_Widget_has_callback as hasCallback' { id `Ptr ()' } -> `CInt' #}
 instance (impl ~ (IO (Bool))) => Op (HasCallback ()) Widget orig impl where

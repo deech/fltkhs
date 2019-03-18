@@ -182,122 +182,161 @@ int C_to_Fl_Callback::intercept(int key, fl_Text_Editor editor){
   return context->runCallback(key,e);
 }
 
-int C_to_Fl_Callback::function_pointers_to_free(fl_Widget_Virtual_Funcs* fs, fl_DoNotCall* res){
+fl_Callback* C_to_Fl_Callback::get_callback(Fl_Widget* w) {
+  fl_Callback* cb = NULL;
+  if (w->callback()) {
+    if (w->label()) { puts(w->label()); }
+    puts("getting user data");
+    C_to_Fl_Callback* wrappedCb = (C_to_Fl_Callback*)w->user_data();
+    puts("got user data");
+    if (wrappedCb) { cb = wrappedCb->inner_callback(); }
+    puts("got callback");
+  }
+  return cb;
+}
+
+fl_Callback* C_to_Fl_Callback::get_callback(Fl_Menu_Item* m) {
+  fl_Callback* cb = NULL;
+  if (m->callback()) {
+    C_to_Fl_Callback* wrappedCb = (C_to_Fl_Callback*)m->user_data();
+    if (wrappedCb) { cb = wrappedCb->inner_callback(); }
+  }
+  return cb;
+}
+
+int C_to_Fl_Callback::function_pointers_to_free(fl_Widget_Virtual_Funcs* fs, fl_DoNotCall** res){
+  int fsSize = 8;
+  *res = (fl_DoNotCall*)malloc(fsSize * sizeof(fl_DoNotCall));
+  (*res)[0] = (fl_DoNotCall)(fs->draw);
+  (*res)[1] = (fl_DoNotCall)(fs->handle);
+  (*res)[2] = (fl_DoNotCall)(fs->resize);
+  (*res)[3] = (fl_DoNotCall)(fs->show );
+  (*res)[4] = (fl_DoNotCall)(fs->hide);
+  (*res)[5] = (fl_DoNotCall)(fs->as_window);
+  (*res)[6] = (fl_DoNotCall)(fs->as_gl_window);
+  (*res)[7] = (fl_DoNotCall)(fs->as_group);
+  return fsSize;
+}
+
+int C_to_Fl_Callback::function_pointers_to_free(fl_Table_Virtual_Funcs* fs, fl_DoNotCall** res){
+  int fsSize = 12;
+  *res = (fl_DoNotCall*)malloc(fsSize * sizeof(fl_DoNotCall));
+  (*res)[0] = (fl_DoNotCall)(fs->draw);
+  (*res)[1] = (fl_DoNotCall)(fs->handle);
+  (*res)[2] = (fl_DoNotCall)(fs->resize);
+  (*res)[3] = (fl_DoNotCall)(fs->show);
+  (*res)[4] = (fl_DoNotCall)(fs->hide);
+  (*res)[5] = (fl_DoNotCall)(fs->as_window);
+  (*res)[6] = (fl_DoNotCall)(fs->as_gl_window);
+  (*res)[7] = (fl_DoNotCall)(fs->as_group);
+  (*res)[8] = (fl_DoNotCall)(fs->draw_cell);
+  (*res)[9] = (fl_DoNotCall)(fs->clear);
+  (*res)[11] = (fl_DoNotCall)(fs->set_cols);
+  return fsSize;
+}
+
+int C_to_Fl_Callback::function_pointers_to_free(fl_Window_Virtual_Funcs* fs, fl_DoNotCall** res){
   int fsSize = 9;
-  res = (fl_DoNotCall*)malloc(fsSize * sizeof(fl_DoNotCall));
-  res[0] = (fl_DoNotCall)(fs->draw);
-  res[1] = (fl_DoNotCall)(fs->handle);
-  res[2] = (fl_DoNotCall)(fs->resize);
-  res[3] = (fl_DoNotCall)(fs->show );
-  res[4] = (fl_DoNotCall)(fs->hide);
-  res[5] = (fl_DoNotCall)(fs->as_window);
-  res[6] = (fl_DoNotCall)(fs->as_gl_window);
-  res[7] = (fl_DoNotCall)(fs->as_group);
-  res[8] = (fl_DoNotCall)(fs->destroy_data);
+  *res = (fl_DoNotCall*)malloc(fsSize * sizeof(fl_DoNotCall));
+  (*res)[0] = (fl_DoNotCall)(fs->draw);
+  (*res)[1] = (fl_DoNotCall)(fs->handle);
+  (*res)[2] = (fl_DoNotCall)(fs->resize);
+  (*res)[3] = (fl_DoNotCall)(fs->show);
+  (*res)[4] = (fl_DoNotCall)(fs->hide);
+  (*res)[5] = (fl_DoNotCall)(fs->as_window);
+  (*res)[6] = (fl_DoNotCall)(fs->as_gl_window);
+  (*res)[7] = (fl_DoNotCall)(fs->as_group);
+  (*res)[8] = (fl_DoNotCall)(fs->flush);
   return fsSize;
 }
 
-int C_to_Fl_Callback::function_pointers_to_free(fl_Table_Virtual_Funcs* fs, fl_DoNotCall* res){
-  int fsSize = 13;
-  res = (fl_DoNotCall*)malloc(fsSize * sizeof(fl_DoNotCall));
-  res[0] = (fl_DoNotCall)(fs->draw);
-  res[1] = (fl_DoNotCall)(fs->handle);
-  res[2] = (fl_DoNotCall)(fs->resize);
-  res[3] = (fl_DoNotCall)(fs->show);
-  res[4] = (fl_DoNotCall)(fs->hide);
-  res[5] = (fl_DoNotCall)(fs->as_window);
-  res[6] = (fl_DoNotCall)(fs->as_gl_window);
-  res[7] = (fl_DoNotCall)(fs->as_group);
-  res[8] = (fl_DoNotCall)(fs->draw_cell);
-  res[9] = (fl_DoNotCall)(fs->clear);
-  res[11] = (fl_DoNotCall)(fs->set_cols);
-  res[12] = (fl_DoNotCall)(fs->destroy_data);
-  return fsSize;
-}
-
-int C_to_Fl_Callback::function_pointers_to_free(fl_Window_Virtual_Funcs* fs, fl_DoNotCall* res){
-  int fsSize = 9;
-  res = (fl_DoNotCall*)malloc(fsSize * sizeof(fl_DoNotCall));
-  res[0] = (fl_DoNotCall)(fs->draw);
-  res[1] = (fl_DoNotCall)(fs->handle);
-  res[2] = (fl_DoNotCall)(fs->resize);
-  res[3] = (fl_DoNotCall)(fs->show);
-  res[4] = (fl_DoNotCall)(fs->hide);
-  res[5] = (fl_DoNotCall)(fs->as_window);
-  res[6] = (fl_DoNotCall)(fs->as_gl_window);
-  res[7] = (fl_DoNotCall)(fs->as_group);
-  res[8] = (fl_DoNotCall)(fs->flush);
-  return fsSize;
-}
-
-int C_to_Fl_Callback::function_pointers_to_free(fl_Browser_Virtual_Funcs* fs, fl_DoNotCall* res){
+int C_to_Fl_Callback::function_pointers_to_free(fl_Browser_Virtual_Funcs* fs, fl_DoNotCall** res){
   int fsSize = 10;
-  res = (fl_DoNotCall*)malloc(fsSize * sizeof(fl_DoNotCall));
-  res[0] = (fl_DoNotCall)(fs->draw);
-  res[1] = (fl_DoNotCall)(fs->handle);
-  res[2] = (fl_DoNotCall)(fs->resize);
-  res[3] = (fl_DoNotCall)(fs->as_window);
-  res[4] = (fl_DoNotCall)(fs->as_gl_window);
-  res[5] = (fl_DoNotCall)(fs->as_group);
-  res[6] = (fl_DoNotCall)(fs->show);
-  res[7] = (fl_DoNotCall)(fs->show_with_line);
-  res[8] = (fl_DoNotCall)(fs->hide);
-  res[9] = (fl_DoNotCall)(fs->hide_with_line);
+  *res = (fl_DoNotCall*)malloc(fsSize * sizeof(fl_DoNotCall));
+  (*res)[0] = (fl_DoNotCall)(fs->draw);
+  (*res)[1] = (fl_DoNotCall)(fs->handle);
+  (*res)[2] = (fl_DoNotCall)(fs->resize);
+  (*res)[3] = (fl_DoNotCall)(fs->as_window);
+  (*res)[4] = (fl_DoNotCall)(fs->as_gl_window);
+  (*res)[5] = (fl_DoNotCall)(fs->as_group);
+  (*res)[6] = (fl_DoNotCall)(fs->show);
+  (*res)[7] = (fl_DoNotCall)(fs->show_with_line);
+  (*res)[8] = (fl_DoNotCall)(fs->hide);
+  (*res)[9] = (fl_DoNotCall)(fs->hide_with_line);
   return fsSize;
 }
 
-int C_to_Fl_Callback::function_pointers_to_free(fl_Image_Virtual_Funcs* fs, fl_DoNotCall* res){
+int C_to_Fl_Callback::function_pointers_to_free(fl_Image_Virtual_Funcs* fs, fl_DoNotCall** res){
   int fsSize = 5;
-  res = (fl_DoNotCall*)malloc(fsSize * sizeof(fl_DoNotCall));
-  res[0] = (fl_DoNotCall)(fs->color_average);
-  res[1] = (fl_DoNotCall)(fs->copy);
-  res[2] = (fl_DoNotCall)(fs->desaturate);
-  res[3] = (fl_DoNotCall)(fs->draw);
-  res[4] = (fl_DoNotCall)(fs->uncache);
+  *res = (fl_DoNotCall*)malloc(fsSize * sizeof(fl_DoNotCall));
+  (*res)[0] = (fl_DoNotCall)(fs->color_average);
+  (*res)[1] = (fl_DoNotCall)(fs->copy);
+  (*res)[2] = (fl_DoNotCall)(fs->desaturate);
+  (*res)[3] = (fl_DoNotCall)(fs->draw);
+  (*res)[4] = (fl_DoNotCall)(fs->uncache);
   return fsSize;
 }
 
-int C_to_Fl_Callback::function_pointers_to_free(fl_Valuator_Virtual_Funcs* fs, fl_DoNotCall* res){
+int C_to_Fl_Callback::function_pointers_to_free(fl_Valuator_Virtual_Funcs* fs, fl_DoNotCall** res){
   int fsSize = 9;
-  res = (fl_DoNotCall*)malloc(fsSize * sizeof(fl_DoNotCall));
-  res[0] = (fl_DoNotCall)(fs->draw);
-  res[1] = (fl_DoNotCall)(fs->handle);
-  res[2] = (fl_DoNotCall)(fs->resize);
-  res[3] = (fl_DoNotCall)(fs->show);
-  res[4] = (fl_DoNotCall)(fs->hide);
-  res[5] = (fl_DoNotCall)(fs->as_window);
-  res[6] = (fl_DoNotCall)(fs->as_gl_window);
-  res[7] = (fl_DoNotCall)(fs->as_group);
-  res[8] = (fl_DoNotCall)(fs->format);
+  *res = (fl_DoNotCall*)malloc(fsSize * sizeof(fl_DoNotCall));
+  (*res)[0] = (fl_DoNotCall)(fs->draw);
+  (*res)[1] = (fl_DoNotCall)(fs->handle);
+  (*res)[2] = (fl_DoNotCall)(fs->resize);
+  (*res)[3] = (fl_DoNotCall)(fs->show);
+  (*res)[4] = (fl_DoNotCall)(fs->hide);
+  (*res)[5] = (fl_DoNotCall)(fs->as_window);
+  (*res)[6] = (fl_DoNotCall)(fs->as_gl_window);
+  (*res)[7] = (fl_DoNotCall)(fs->as_group);
+  (*res)[8] = (fl_DoNotCall)(fs->format);
   return fsSize;
 }
 
-int C_to_Fl_Callback::function_pointers_to_free(fl_Tab_Virtual_Funcs* fs, fl_DoNotCall* res){
-  int fsSize = 6;
-  res = (fl_DoNotCall*)malloc(fsSize * sizeof(fl_DoNotCall));
-  res[0] = (fl_DoNotCall)(fs->tab_draw);
-  res[1] = (fl_DoNotCall)(fs->tab_positions);
-  res[2] = (fl_DoNotCall)(fs->tab_height);
-  res[3] = (fl_DoNotCall)(fs->tab_which);
-  res[4] = (fl_DoNotCall)(fs->redraw_tabs);
-  res[5] = (fl_DoNotCall)(fs->tab_client_area);
+int C_to_Fl_Callback::function_pointers_to_free(fl_Widget_Virtual_Funcs* wfs, fl_Tab_Virtual_Funcs* tfs, fl_DoNotCall** res){
+  int fsSize = 14;
+  *res = (fl_DoNotCall*)malloc(fsSize * sizeof(fl_DoNotCall));
+  (*res)[0] = (fl_DoNotCall)(wfs->draw);
+  (*res)[1] = (fl_DoNotCall)(wfs->handle);
+  (*res)[2] = (fl_DoNotCall)(wfs->resize);
+  (*res)[3] = (fl_DoNotCall)(wfs->show );
+  (*res)[4] = (fl_DoNotCall)(wfs->hide);
+  (*res)[5] = (fl_DoNotCall)(wfs->as_window);
+  (*res)[6] = (fl_DoNotCall)(wfs->as_gl_window);
+  (*res)[7] = (fl_DoNotCall)(wfs->as_group);
+
+  (*res)[8] = (fl_DoNotCall)(tfs->tab_draw);
+  (*res)[9] = (fl_DoNotCall)(tfs->tab_positions);
+  (*res)[10] = (fl_DoNotCall)(tfs->tab_height);
+  (*res)[11] = (fl_DoNotCall)(tfs->tab_which);
+  (*res)[12] = (fl_DoNotCall)(tfs->redraw_tabs);
+  (*res)[13] = (fl_DoNotCall)(tfs->tab_client_area);
   return fsSize;
 }
 
 
-int C_to_Fl_Callback::function_pointers_to_free(fl_Color_Chooser_Virtual_Funcs* fs, fl_DoNotCall* res){
-  int fsSize = 10;
-  res = (fl_DoNotCall*)malloc(fsSize * sizeof(fl_DoNotCall));
-  res[0] = (fl_DoNotCall)(fs->get_mode);
-  res[1] = (fl_DoNotCall)(fs->set_mode);
-  res[2] = (fl_DoNotCall)(fs->hue);
-  res[3] = (fl_DoNotCall)(fs->saturation);
-  res[4] = (fl_DoNotCall)(fs->value);
-  res[5] = (fl_DoNotCall)(fs->r);
-  res[6] = (fl_DoNotCall)(fs->g);
-  res[7] = (fl_DoNotCall)(fs->b);
-  res[8] = (fl_DoNotCall)(fs->hsv);
-  res[9] = (fl_DoNotCall)(fs->rgb);
+int C_to_Fl_Callback::function_pointers_to_free(fl_Widget_Virtual_Funcs* wfs, fl_Color_Chooser_Virtual_Funcs* cfs, fl_DoNotCall** res){
+  int fsSize = 18;
+  *res = (fl_DoNotCall*)malloc(fsSize * sizeof(fl_DoNotCall));
+
+  (*res)[0] = (fl_DoNotCall)(wfs->draw);
+  (*res)[1] = (fl_DoNotCall)(wfs->handle);
+  (*res)[2] = (fl_DoNotCall)(wfs->resize);
+  (*res)[3] = (fl_DoNotCall)(wfs->show );
+  (*res)[4] = (fl_DoNotCall)(wfs->hide);
+  (*res)[5] = (fl_DoNotCall)(wfs->as_window);
+  (*res)[6] = (fl_DoNotCall)(wfs->as_gl_window);
+  (*res)[7] = (fl_DoNotCall)(wfs->as_group);
+
+  (*res)[8] = (fl_DoNotCall)(cfs->get_mode);
+  (*res)[9] = (fl_DoNotCall)(cfs->set_mode);
+  (*res)[10] = (fl_DoNotCall)(cfs->hue);
+  (*res)[11] = (fl_DoNotCall)(cfs->saturation);
+  (*res)[12] = (fl_DoNotCall)(cfs->value);
+  (*res)[13] = (fl_DoNotCall)(cfs->r);
+  (*res)[14] = (fl_DoNotCall)(cfs->g);
+  (*res)[15] = (fl_DoNotCall)(cfs->b);
+  (*res)[16] = (fl_DoNotCall)(cfs->hsv);
+  (*res)[17] = (fl_DoNotCall)(cfs->rgb);
   return fsSize;
 }
 

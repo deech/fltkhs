@@ -30,8 +30,9 @@ void Fl_DerivedWindow::set_other_data(void* data){
 void Fl_DerivedWindow::destroy_data(){
   if (this->overriddenFuncs->destroy_data != NULL){
     fl_DoNotCall* fps = NULL;
-    int num_fps = C_to_Fl_Callback::function_pointers_to_free(this->overriddenFuncs,fps);
-    Function_Pointers_To_Free* res = C_to_Fl_Callback::gather_function_pointers(num_fps+1,num_fps,fps,(fl_DoNotCall)(this->callback()));
+    int num_fps = C_to_Fl_Callback::function_pointers_to_free(this->overriddenFuncs,&fps);
+    fl_Callback* cb = C_to_Fl_Callback::get_callback(this);
+    Function_Pointers_To_Free* res = C_to_Fl_Callback::gather_function_pointers(num_fps+1,num_fps,fps,(fl_DoNotCall)cb);
     this->overriddenFuncs->destroy_data((fl_Window)this,res);
     if (fps) { free(fps); }
     free(res);
@@ -319,9 +320,11 @@ FL_EXPORT_C(void, Fl_Window_draw_label)(fl_Window Window){
     Fl_DerivedWindow* castedWindow = (static_cast<Fl_DerivedWindow*>(win));
     new C_to_Fl_Callback(castedWindow, cb, p);
   }
-  FL_EXPORT_C(void,Fl_Window_set_callback)(fl_Window win,fl_Callback* cb){
-    Fl_DerivedWindow* castedWindow = (static_cast<Fl_DerivedWindow*>(win));
+  FL_EXPORT_C(fl_Callback*,Fl_Window_set_callback)(fl_Window win,fl_Callback* cb){
+    Fl_Window* castedWindow = (static_cast<Fl_Window*>(win));
+    fl_Callback* old_cb = C_to_Fl_Callback::get_callback(castedWindow);
     new C_to_Fl_Callback(castedWindow, cb);
+    return old_cb;
   }
   FL_EXPORT_C(void*,Fl_Window_user_data)(fl_Window win){
     C_to_Fl_Callback* stored_cb = (static_cast<C_to_Fl_Callback*>((static_cast<Fl_DerivedWindow*>(win))->user_data()));

@@ -98,6 +98,7 @@ void DerivedText_Editor::remove_all_key_bindings(Key_Binding_With_Callback** lis
   if (this->overriddenFuncs->destroy_data != NULL) {
     int i = 0;
     for (;curr;curr = next){
+      if (curr->callback_context->c_key_func) { i++; }
       next = curr->next;
       i++;
     }
@@ -106,8 +107,10 @@ void DerivedText_Editor::remove_all_key_bindings(Key_Binding_With_Callback** lis
     i = 0;
     for (;curr;curr = next){
       next = curr->next;
-      fps[i] = (fl_DoNotCall)curr->callback;
-      i++;
+      if (curr->callback_context->c_key_func) {
+        fps[i] = (fl_DoNotCall)curr->callback_context->c_key_func;
+        i++;
+      }
     }
     Function_Pointers_To_Free* fpStruct = (Function_Pointers_To_Free*)malloc(sizeof(Function_Pointers_To_Free));
     fpStruct->length = i;
@@ -118,6 +121,7 @@ void DerivedText_Editor::remove_all_key_bindings(Key_Binding_With_Callback** lis
   }
   for (;curr;curr = next){
     next = curr->next;
+    if (curr->callback_context) { delete curr->callback_context; }
     delete curr;
   }
   *list = 0;

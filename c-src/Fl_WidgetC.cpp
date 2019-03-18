@@ -22,8 +22,9 @@ void Fl_DerivedWidget::set_other_data(void* data){
 void Fl_DerivedWidget::destroy_data(){
   if (this->overriddenFuncs->destroy_data != NULL){
     fl_DoNotCall* fps = NULL;
-    int num_fps = C_to_Fl_Callback::function_pointers_to_free(this->overriddenFuncs,fps);
-    Function_Pointers_To_Free* res = C_to_Fl_Callback::gather_function_pointers(num_fps+1,num_fps,fps,(fl_DoNotCall)(this->callback()));
+    int num_fps = C_to_Fl_Callback::function_pointers_to_free(this->overriddenFuncs,&fps);
+    fl_Callback* cb = C_to_Fl_Callback::get_callback(this);
+    Function_Pointers_To_Free* res = C_to_Fl_Callback::gather_function_pointers(num_fps+1,num_fps,fps,(fl_DoNotCall)cb);
     this->overriddenFuncs->destroy_data((fl_Widget)this,res);
     if (fps) { free(fps); }
     free(res);
@@ -276,8 +277,10 @@ FL_EXPORT_C(void, Fl_Widget_draw_label)(fl_Widget Widget){
   FL_EXPORT_C(void,Fl_Widget_copy_tooltip)(fl_Widget widget,const char* text){
     (static_cast<Fl_DerivedWidget*>(widget))->copy_tooltip(text);
   }
-  FL_EXPORT_C(fl_DoNotCall, Fl_Widget_callback)(fl_Widget widget) {
-    return (fl_DoNotCall)(static_cast<Fl_DerivedWidget*>(widget))->callback();
+  FL_EXPORT_C(fl_Callback*, Fl_Widget_callback)(fl_Widget widget) {
+    Fl_Widget* castedWidget = static_cast<Fl_Widget*>(widget);
+    fl_Callback* old_cb = C_to_Fl_Callback::get_callback(castedWidget);
+    return old_cb;
   }
   FL_EXPORT_C(void,Fl_Widget_set_tooltip)(fl_Widget widget,const char* text){
     (static_cast<Fl_DerivedWidget*>(widget))->tooltip(text);
@@ -289,9 +292,11 @@ FL_EXPORT_C(void, Fl_Widget_draw_label)(fl_Widget Widget){
   FL_EXPORT_C(void,Fl_Widget_do_callback)(fl_Widget widget){
     (static_cast<Fl_DerivedWidget*>(widget))->do_callback();
   }
-  FL_EXPORT_C(void,Fl_Widget_set_callback)(fl_Widget widget,fl_Callback* cb){
-    Fl_DerivedWidget* castedWidget = (static_cast<Fl_DerivedWidget*>(widget));
+  FL_EXPORT_C(fl_Callback*,Fl_Widget_set_callback)(fl_Widget widget,fl_Callback* cb){
+    Fl_Widget* castedWidget = static_cast<Fl_Widget*>(widget);
+    fl_Callback* old_cb = C_to_Fl_Callback::get_callback(castedWidget);
     new C_to_Fl_Callback(castedWidget, cb);
+    return old_cb;
   }
   FL_EXPORT_C(int, Fl_Widget_has_callback)(fl_Widget widget){
     void* p = 0;

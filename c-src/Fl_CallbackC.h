@@ -23,8 +23,6 @@ class C_to_Fl_Callback {
  private:
   fl_Callback* callback;
   fl_Text_Buffer_Callback* text_buffer_callback;
-  fl_Key_Func* c_key_func;
-  Fl_Text_Editor::Key_Func* cpp_key_func;
   void* user_data;
   void runCallback(Fl_Widget* w);
   void runCallback();
@@ -41,20 +39,22 @@ class C_to_Fl_Callback {
   }
   // implementation needs DerivedText_Editor so it is separated
  public:
+  fl_Key_Func* c_key_func;
+  Fl_Text_Editor::Key_Func* cpp_key_func;
   static int intercept(int key, DerivedText_Editor* editor){
     C_to_Fl_Callback* context = editor->get_curr_callback_context();
     if (!context) context = editor->get_default_callback_context();
     return context->runCallback(key,editor);
   };
   static int intercept(int key, fl_Text_Editor editor);
-  static int function_pointers_to_free(fl_Widget_Virtual_Funcs* fs, fl_DoNotCall* res);
-  static int function_pointers_to_free(fl_Table_Virtual_Funcs* fs, fl_DoNotCall* res);
-  static int function_pointers_to_free(fl_Window_Virtual_Funcs* fs, fl_DoNotCall* res);
-  static int function_pointers_to_free(fl_Browser_Virtual_Funcs* fs, fl_DoNotCall* res);
-  static int function_pointers_to_free(fl_Image_Virtual_Funcs* fs, fl_DoNotCall* res);
-  static int function_pointers_to_free(fl_Valuator_Virtual_Funcs* fs, fl_DoNotCall* res);
-  static int function_pointers_to_free(fl_Tab_Virtual_Funcs* fs, fl_DoNotCall* res);
-  static int function_pointers_to_free(fl_Color_Chooser_Virtual_Funcs* fs, fl_DoNotCall* res);
+  static int function_pointers_to_free(fl_Widget_Virtual_Funcs* fs, fl_DoNotCall** res);
+  static int function_pointers_to_free(fl_Table_Virtual_Funcs* fs, fl_DoNotCall** res);
+  static int function_pointers_to_free(fl_Window_Virtual_Funcs* fs, fl_DoNotCall** res);
+  static int function_pointers_to_free(fl_Browser_Virtual_Funcs* fs, fl_DoNotCall** res);
+  static int function_pointers_to_free(fl_Image_Virtual_Funcs* fs, fl_DoNotCall** res);
+  static int function_pointers_to_free(fl_Valuator_Virtual_Funcs* fs, fl_DoNotCall** res);
+  static int function_pointers_to_free(fl_Widget_Virtual_Funcs* wfs,fl_Tab_Virtual_Funcs* fs, fl_DoNotCall** res);
+  static int function_pointers_to_free(fl_Widget_Virtual_Funcs* wfs, fl_Color_Chooser_Virtual_Funcs* cfs, fl_DoNotCall** res);
   static Function_Pointers_To_Free* gather_function_pointers(int total_fps, int num_fps, fl_DoNotCall* fps, ...);
   C_to_Fl_Callback(Fl_Widget* invoker, fl_Callback* callback, void* user_data);
   C_to_Fl_Callback(Fl_Widget* invoker, fl_Callback* callback);
@@ -70,6 +70,9 @@ class C_to_Fl_Callback {
   void set_callback(Fl_Text_Buffer* b);
   void set_user_data(void* user_data);
   void set_callback(Fl_File_Chooser* b);
+  fl_Callback* inner_callback() { return this->callback; }
+  static fl_Callback* get_callback(Fl_Menu_Item* m);
+  static fl_Callback* get_callback(Fl_Widget* w);
   int menu_insert(Fl_Menu_Item* item, int index, char* name, int shortcut, int flags = 0);
   int menu_insert(Fl_Menu_* menu_, int index, char* name, int shortcut, int flags = 0);
   int menu_insert(Fl_Menu_* menu_, int index, char* name, char* shortcut, int flags = 0);

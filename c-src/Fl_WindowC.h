@@ -7,9 +7,9 @@
                           // the callback mechanism included below to work.
 #include "Fl_CallbackC.h"
 class Fl_DerivedWindow : public Fl_Window {
-  fl_Window_Virtual_Funcs* overriddenFuncs;
   void* other_data;
 public:
+  fl_Window_Virtual_Funcs* overriddenFuncs;
   void* get_other_data();
   void set_other_data(void*);
   void destroy_data();
@@ -97,7 +97,7 @@ EXPORT {
   FL_EXPORT_C_HEADER(void,Fl_Window_copy_tooltip,(fl_Window win, const char* text));
   FL_EXPORT_C_HEADER(void,Fl_Window_set_tooltip,(fl_Window win, const char* text));
   FL_EXPORT_C_HEADER(void,Fl_Window_set_callback_with_user_data,(fl_Window win, fl_Callback* cb, void* p));
-  FL_EXPORT_C_HEADER(void,Fl_Window_set_callback,(fl_Window win, fl_Callback* cb));
+  FL_EXPORT_C_HEADER(fl_Callback*,Fl_Window_set_callback,(fl_Window win, fl_Callback* cb));
   FL_EXPORT_C_HEADER(void*,Fl_Window_user_data,(fl_Window win));
   FL_EXPORT_C_HEADER(void,Fl_Window_set_user_data,(fl_Window win, void* v));
   FL_EXPORT_C_HEADER(long,Fl_Window_argument,(fl_Window win));
