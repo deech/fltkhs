@@ -189,6 +189,8 @@ module Graphics.UI.FLTK.LowLevel.Hierarchy
          resizeSuper,
          Resize,
          resize,
+         GetCallback,
+         getCallback,
          SetCallback,
          setCallback,
          HasCallback,
@@ -1747,6 +1749,7 @@ type WidgetFuncs =
   (GetTopWindowOffset
   (ResizeSuper
   (Resize
+  (GetCallback
   (SetCallback
   (HasCallback
   (DrawBox
@@ -1757,7 +1760,7 @@ type WidgetFuncs =
   (SetFlag
   (ClearFlag
   (ClearOutput
-  ())))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))
+  ()))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))
 type instance Functions Widget = WidgetFuncs
 
 MAKE_METHOD(Destroy, destroy)
@@ -1841,6 +1844,7 @@ MAKE_METHOD(GetTopWindow,getTopWindow)
 MAKE_METHOD(GetTopWindowOffset,getTopWindowOffset)
 MAKE_METHOD(ResizeSuper,resizeSuper)
 MAKE_METHOD(Resize,resize)
+MAKE_METHOD(GetCallback, getCallback)
 MAKE_METHOD(SetCallback, setCallback)
 MAKE_METHOD(HasCallback,hasCallback)
 MAKE_METHOD(DrawBox,drawBox)
@@ -2385,7 +2389,8 @@ type MenuItemFuncs =
   (Add
   (Insert
   (GetSize
-  ()))))))))))))))))))))))))))))))))))))))))))))))
+  (GetCallback
+  ())))))))))))))))))))))))))))))))))))))))))))))))
 
 type instance Functions MenuItem = MenuItemFuncs
 

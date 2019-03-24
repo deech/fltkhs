@@ -175,37 +175,37 @@ insertMenuItem menu_ index' name shortcut cb flags insertWithFlags'' insertWithS
     let combinedFlags = menuItemFlagsToInt flags
     ptr <- toCallbackPrim cb
     idx' <- case shortcut of
-             Just s' -> case s' of
-               KeySequence (ShortcutKeySequence modifiers char) -> do
-                 n <- copyTextToCString name
-                 insertWithFlags''
+              Just s' -> case s' of
+                KeySequence (ShortcutKeySequence modifiers char) -> do
+                  n <- copyTextToCString name
+                  insertWithFlags''
+                    menu_Ptr
+                    index'
+                    n
+                    (keySequenceToCInt modifiers char)
+                    (castFunPtr ptr)
+                    combinedFlags
+                KeyFormat format' -> do
+                  f <- copyTextToCString format'
+                  n <- copyTextToCString name
+                  if (not $ T.null format') then
+                    insertWithShortcutnameFlags''
+                      menu_Ptr
+                      index'
+                      n
+                      f
+                      (castFunPtr ptr)
+                      combinedFlags
+                  else error "Fl_Menu_.menu_insert: shortcut format string cannot be empty"
+              Nothing -> do
+                n <- copyTextToCString name
+                insertWithFlags''
                   menu_Ptr
                   index'
                   n
-                  (keySequenceToCInt modifiers char)
+                  0
                   (castFunPtr ptr)
                   combinedFlags
-               KeyFormat format' -> do
-                 f <- copyTextToCString format'
-                 n <- copyTextToCString name
-                 if (not $ T.null format') then
-                   insertWithShortcutnameFlags''
-                     menu_Ptr
-                     index'
-                     n
-                     f
-                     (castFunPtr ptr)
-                     combinedFlags
-                 else error "Fl_Menu_.menu_insert: shortcut format string cannot be empty"
-             Nothing -> do
-               n <- copyTextToCString name
-               insertWithFlags''
-                 menu_Ptr
-                 index'
-                 n
-                 0
-                 (castFunPtr ptr)
-                 combinedFlags
     return (AtIndex idx')
 
 {# fun Fl_Menu__insert_with_flags as insertWithFlags' { id `Ptr ()',`Int',`CString',id `CInt',id `FunPtr CallbackWithUserDataPrim',`Int'} -> `Int' #}

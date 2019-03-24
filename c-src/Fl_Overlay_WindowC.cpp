@@ -27,7 +27,8 @@ Fl_DerivedOverlay_Window::~Fl_DerivedOverlay_Window() {
 void Fl_DerivedOverlay_Window::destroy_data() {
   if (this->dfps != NULL) {
      fl_DoNotCall* fps = NULL;
-     Function_Pointers_To_Free* res = C_to_Fl_Callback::gather_function_pointers(2,0,fps,(fl_DoNotCall)(this->callback()), (fl_DoNotCall)(this->draw_overlay_fp));
+    fl_Callback* cb = C_to_Fl_Callback::get_callback(this);
+     Function_Pointers_To_Free* res = C_to_Fl_Callback::gather_function_pointers(2,0,fps,(fl_DoNotCall)cb, (fl_DoNotCall)(this->draw_overlay_fp));
      this->dfps((fl_Overlay_Window)this,res);
      if (fps) { free(fps); }
      free(res);

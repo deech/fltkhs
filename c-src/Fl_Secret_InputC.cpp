@@ -10,7 +10,8 @@ Fl_DerivedSecret_Input::~Fl_DerivedSecret_Input() {
 void Fl_DerivedSecret_Input::destroy_data(){
   if (this->destroy != NULL){
     fl_DoNotCall* fps = NULL;
-    Function_Pointers_To_Free* res = C_to_Fl_Callback::gather_function_pointers(1,0,fps,(fl_DoNotCall)(this->callback()));
+    fl_Callback* cb = C_to_Fl_Callback::get_callback(this);
+    Function_Pointers_To_Free* res = C_to_Fl_Callback::gather_function_pointers(1,0,fps,(fl_DoNotCall)cb);
     this->destroy((fl_Secret_Input)this,res);
     if (fps) { free(fps); }
     free(res);

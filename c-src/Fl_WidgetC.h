@@ -8,9 +8,9 @@
 #include "Fl_CallbackC.h"
 EXPORT {
   class Fl_DerivedWidget : public Fl_Widget {
-    fl_Widget_Virtual_Funcs* overriddenFuncs;
     void* other_data;
   public:
+    fl_Widget_Virtual_Funcs* overriddenFuncs;
     void* get_other_data();
     void set_other_data(void*);
     void destroy_data();
@@ -113,7 +113,7 @@ EXPORT {
   FL_EXPORT_C_HEADER(void,Fl_Widget_set_tooltip,(fl_Widget widget, const char* text));
   FL_EXPORT_C_HEADER(void,Fl_Widget_do_callback,(fl_Widget widget));
   FL_EXPORT_C_HEADER(void,Fl_Widget_set_callback_with_user_data,(fl_Widget widget, fl_Callback* cb, void* p));
-  FL_EXPORT_C_HEADER(void,Fl_Widget_set_callback,(fl_Widget widget, fl_Callback* cb));
+  FL_EXPORT_C_HEADER(fl_Callback*,Fl_Widget_set_callback,(fl_Widget widget, fl_Callback* cb));
   FL_EXPORT_C_HEADER(int,Fl_Widget_has_callback,(fl_Widget widget));
   FL_EXPORT_C_HEADER(void*,Fl_Widget_other_data,(fl_Widget widget));
   FL_EXPORT_C_HEADER(void,Fl_Widget_set_other_data,(fl_Widget widget, void* v));
@@ -178,7 +178,7 @@ EXPORT {
   FL_EXPORT_C_HEADER(unsigned int, Fl_Widget_flags,(fl_Widget widget));
   FL_EXPORT_C_HEADER(void, Fl_Widget_set_flag,(fl_Widget widget, unsigned int flag));
   FL_EXPORT_C_HEADER(void, Fl_Widget_clear_flag,(fl_Widget widget, unsigned int flag));
-  FL_EXPORT_C_HEADER(fl_DoNotCall, Fl_Widget_callback,(fl_Widget w));
+  FL_EXPORT_C_HEADER(fl_Callback*, Fl_Widget_callback,(fl_Widget w));
 #ifdef __cplusplus
 }
 #endif

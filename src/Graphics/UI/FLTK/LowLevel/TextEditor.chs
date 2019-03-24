@@ -7,7 +7,6 @@ module Graphics.UI.FLTK.LowLevel.TextEditor
          KeyBinding(..),
          KeyFunc(..),
          KeyFuncPrim,
-         keyFuncToFunRef,
          toKeyFuncPrim,
          keyBindingsToArray,
          arrayToKeyBindings
@@ -33,7 +32,7 @@ import qualified Data.Text as T
 import Graphics.UI.FLTK.LowLevel.Utils
 import Data.List
 
-data KeyBinding  = KeyBinding KeyBindingKeySequence FunRef
+data KeyBinding  = KeyBinding KeyBindingKeySequence (FunPtr KeyFuncPrim)
 data KeyFunc     = forall a. (Parent a TextEditor) => KeyFunc (Ref a -> Char -> IO ())
 type KeyFuncPrim = CInt -> Ptr () -> IO ()
 
@@ -48,9 +47,6 @@ toKeyFuncPrim (KeyFunc f) =
          ref <- toRef ptr
          f ref (castCCharToChar $ fromIntegral char')
      )
-
-keyFuncToFunRef :: KeyFunc -> IO FunRef
-keyFuncToFunRef f = toKeyFuncPrim f >>= return . toFunRef
 
 keyBindingsToArray :: [KeyBinding] -> IO (Ptr ())
 keyBindingsToArray kbs =
@@ -79,7 +75,7 @@ keyBindingsToArray kbs =
        p <- mallocBytes {#sizeof Key_BindingC #}
        {#set Key_BindingC->key #} p kn
        {#set Key_BindingC->state #} p sc
-       {#set Key_BindingC->function #} p (castFunPtr  (fromFunRef fr))
+       {#set Key_BindingC->function #} p (castFunPtr  fr)
        {#set Key_BindingC->next #} p nullPtr
        return p
 
@@ -102,7 +98,7 @@ arrayToKeyBindings p =
       let evs = if (state' == 0)
                 then Nothing
                 else Just $ extract allEventStates state'
-      let currKb = KeyBinding (KeyBindingKeySequence evs keyType) (toFunRef function')
+      let currKb = KeyBinding (KeyBindingKeySequence evs keyType) (castFunPtr function')
       go (accum ++ [currKb]) next'
 
 {# fun Fl_OverriddenText_Editor_New_WithLabel as overriddenWidgetNewWithLabel' { `Int',`Int',`Int',`Int', `CString', id `Ptr ()'} -> `Ptr ()' id #}

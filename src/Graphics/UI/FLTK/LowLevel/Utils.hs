@@ -127,7 +127,7 @@ toDestroyCallbacksPrim f =
   in
   mkDestroyCallbacksPtr $ \ptr fpts -> do
     pp <- wrapNonNull ptr "Null pointer. toDestroyCallbacksPrim"
-    (numFps, fpArray) <- unpackFunctionPointerToFreeStruct ptr
+    (numFps, fpArray) <- unpackFunctionPointerToFreeStruct fpts
     cbs <- marshalFps fpArray numFps []
     f (castTo (wrapInRef pp)) cbs
 

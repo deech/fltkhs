@@ -201,12 +201,15 @@ instance (impl ~ (Rectangle -> IO ())) => Op (Resize ()) Window orig impl where
                                  let (x_pos,y_pos,w_pos,h_pos) = fromRectangle rectangle
                                  resize' windowPtr x_pos y_pos w_pos h_pos
 
-{# fun Fl_Window_set_callback as windowSetCallback' {id `Ptr ()' , id `FunPtr CallbackWithUserDataPrim'} -> `()' supressWarningAboutRes #}
+{# fun Fl_Window_set_callback as windowSetCallback' {id `Ptr ()' , id `FunPtr CallbackWithUserDataPrim'} -> `FunPtr CallbackWithUserDataPrim' id #}
 instance (impl ~ ((Ref orig -> IO ()) -> IO ())) => Op (SetCallback ()) Window orig impl where
   runOp _ _ window callback =
    withRef window $ (\p -> do
-                           callbackPtr <- toCallbackPrimWithUserData callback
-                           windowSetCallback' (castPtr p) callbackPtr)
+     callbackPtr <- toCallbackPrimWithUserData callback
+     oldCb <- windowSetCallback' (castPtr p) callbackPtr
+     if (oldCb == nullFunPtr)
+     then return ()
+     else freeHaskellFunPtr oldCb)
 
 {# fun Fl_Window_hide as hide' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
 instance (impl ~ ( IO ())) => Op (Hide ()) Window orig impl where
