@@ -185,12 +185,8 @@ int C_to_Fl_Callback::intercept(int key, fl_Text_Editor editor){
 fl_Callback* C_to_Fl_Callback::get_callback(Fl_Widget* w) {
   fl_Callback* cb = NULL;
   if (w->callback()) {
-    if (w->label()) { puts(w->label()); }
-    puts("getting user data");
     C_to_Fl_Callback* wrappedCb = (C_to_Fl_Callback*)w->user_data();
-    puts("got user data");
     if (wrappedCb) { cb = wrappedCb->inner_callback(); }
-    puts("got callback");
   }
   return cb;
 }

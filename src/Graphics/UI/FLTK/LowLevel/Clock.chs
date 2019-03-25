@@ -91,12 +91,12 @@ clockNewWithType clocktype' rectangle' label' =
 
 {# fun Fl_Clock_set_value_with_hms as setValueWithhms' {id `Ptr ()', `Int', `Int', `Int'} -> `()' #}
 {# fun Fl_Clock_set_value as setValue' {id `Ptr ()', id `CULong'} -> `()' #}
-instance (impl ~ (ClockSetTimeType -> IO ())) => Op (SetValue()) Clock orig impl where
+
+instance (impl ~ ( ClockSetTimeType -> IO ())) => Op (SetValue ()) Clock orig impl where
   runOp _ _ clock' clockvalue = withRef clock' $ \clockPtr ->
     case clockvalue of
      ClockSetByTime (ClockByTime (Hour h)(Minute m) (Second s)) -> setValueWithhms' clockPtr h m s
      ClockSetSinceEpoch (ClockSinceEpoch (Second s)) -> setValue' clockPtr (fromIntegral s)
-
 
 {# fun Fl_Clock_value as getValue' {id `Ptr ()'} -> `CULong' id #}
 instance (impl ~ (IO ClockSinceEpoch)) => Op (GetValueSinceEpoch ()) Clock orig impl where
@@ -191,6 +191,8 @@ instance (impl ~ (Bool -> IO ())) => Op (SetShadow ()) Clock orig impl where
 -- setShadow :: 'Ref' 'Clock' -> 'Bool' -> 'IO' ()
 --
 -- setType :: 'Ref' 'Clock' -> 'ClockType' -> 'IO' ()
+--
+-- setValue :: 'Ref' 'Clock' -> 'ClockSetTimeType' -> 'IO' ()
 --
 -- showWidget :: 'Ref' 'Clock' -> 'IO' ()
 --
