@@ -121,7 +121,7 @@ attributeG flClassName name attr =
     Types.Resizable ->
       (apply "groupCurrent" "" Nothing) ++
       " >>= " ++
-      " maybe (error \"setResizable: Could not determine containing group for " ++ name ++ "\") (\\g -> setResizable g " ++ ("((Just (safeCast " ++ name  ++ ")) :: Maybe (Ref Widget))") ++ ")"
+      " maybe (error \"setResizable: Could not determine containing group for " ++ name ++ "\") (\\g -> setResizable g " ++ ("((Just (safeCast " ++ name  ++ ")) :: Maybe (Ref WidgetBase))") ++ ")"
     Types.Visible ->
       apply "setVisible" name Nothing
     Types.Align a ->

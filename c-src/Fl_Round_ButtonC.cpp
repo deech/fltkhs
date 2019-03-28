@@ -401,32 +401,47 @@ void Fl_DerivedRound_Button::destroy_data(){
     Fl_DerivedRound_Button* w = new Fl_DerivedRound_Button(X,Y,W,H,label,fs);
     return (fl_Round_Button)w;
   }
-  FL_EXPORT_C(void, Fl_Round_Button_draw)(fl_Round_Button o){
+  FL_EXPORT_C(void, Fl_DerivedRound_Button_draw)(fl_Round_Button o){
     (static_cast<Fl_DerivedRound_Button*>(o))->draw();
+  }
+  FL_EXPORT_C(void, Fl_Round_Button_draw)(fl_Round_Button o){
+    (static_cast<Fl_DerivedRound_Button*>(o))->draw_super();
   }
   FL_EXPORT_C(void, Fl_Round_Button_draw_super)(fl_Round_Button o){
     (static_cast<Fl_DerivedRound_Button*>(o))->draw_super();
   }
-  FL_EXPORT_C(int, Fl_Round_Button_handle)(fl_Round_Button o, int event){
+  FL_EXPORT_C(int, Fl_DerivedRound_Button_handle)(fl_Round_Button o, int event){
     return (static_cast<Fl_DerivedRound_Button*>(o))->handle(event);
+  }
+  FL_EXPORT_C(int, Fl_Round_Button_handle)(fl_Round_Button o, int event){
+    return (static_cast<Fl_DerivedRound_Button*>(o))->Fl_Round_Button::handle(event);
   }
   FL_EXPORT_C(int, Fl_Round_Button_handle_super)(fl_Round_Button o, int event){
     return (static_cast<Fl_DerivedRound_Button*>(o))->handle_super(event);
   }
-  FL_EXPORT_C(void, Fl_Round_Button_resize)(fl_Round_Button o, int x, int y, int w, int h){
+  FL_EXPORT_C(void, Fl_DerivedRound_Button_resize)(fl_Round_Button o, int x, int y, int w, int h){
     (static_cast<Fl_DerivedRound_Button*>(o))->resize(x,y,w,h);
+  }
+  FL_EXPORT_C(void, Fl_Round_Button_resize)(fl_Round_Button o, int x, int y, int w, int h){
+    (static_cast<Fl_DerivedRound_Button*>(o))->Fl_Round_Button::resize(x,y,w,h);
   }
   FL_EXPORT_C(void, Fl_Round_Button_resize_super)(fl_Round_Button o, int x, int y, int w, int h){
     (static_cast<Fl_DerivedRound_Button*>(o))->resize_super(x,y,w,h);
   }
-  FL_EXPORT_C(void, Fl_Round_Button_show)(fl_Round_Button o){
+  FL_EXPORT_C(void, Fl_DerivedRound_Button_show)(fl_Round_Button o){
     (static_cast<Fl_DerivedRound_Button*>(o))->show();
+  }
+  FL_EXPORT_C(void, Fl_Round_Button_show)(fl_Round_Button o){
+    (static_cast<Fl_DerivedRound_Button*>(o))->Fl_Round_Button::show();
   }
   FL_EXPORT_C(void, Fl_Round_Button_show_super)(fl_Round_Button o){
     (static_cast<Fl_DerivedRound_Button*>(o))->show_super();
   }
-  FL_EXPORT_C(void, Fl_Round_Button_hide)(fl_Round_Button o){
+  FL_EXPORT_C(void, Fl_DerivedRound_Button_hide)(fl_Round_Button o){
     (static_cast<Fl_DerivedRound_Button*>(o))->hide();
+  }
+  FL_EXPORT_C(void, Fl_Round_Button_hide)(fl_Round_Button o){
+    (static_cast<Fl_DerivedRound_Button*>(o))->Fl_Round_Button::hide();
   }
   FL_EXPORT_C(void, Fl_Round_Button_hide_super)(fl_Round_Button o){
     (static_cast<Fl_DerivedRound_Button*>(o))->hide_super();

@@ -26,10 +26,13 @@ EXPORT {
     void clear_flag(unsigned int);
     unsigned int flags();
     virtual void draw();
+    int handle_super(int event);
     virtual int handle(int event);
     void resize_super(int x, int y, int w, int h);
     virtual void resize(int x, int y, int w, int h);
+    void show_super();
     virtual void show();
+    void hide_super();
     virtual void hide();
     virtual Fl_Group* as_group();
     virtual Fl_Window* as_window();
@@ -68,7 +71,8 @@ EXPORT {
   } WidgetFlags;
 #endif
 
-  FL_EXPORT_C_HEADER(int,Fl_Widget_handle,(fl_Widget self, int event));
+  FL_EXPORT_C_HEADER(int,Fl_Widget_handle_super,(fl_Widget self, int event));
+  FL_EXPORT_C_HEADER(int,Fl_DerivedWidget_handle,(fl_Widget self, int event));
   FL_EXPORT_C_HEADER(fl_Group,Fl_Widget_parent,(fl_Widget widget));
   FL_EXPORT_C_HEADER(void,Fl_Widget_set_parent,(fl_Widget widget, fl_Group grp));
   FL_EXPORT_C_HEADER(uchar,Fl_Widget_type,(fl_Widget widget));
@@ -126,9 +130,9 @@ EXPORT {
   FL_EXPORT_C_HEADER(unsigned int,Fl_Widget_visible,(fl_Widget widget));
   FL_EXPORT_C_HEADER(int,Fl_Widget_visible_r,(fl_Widget widget));
   FL_EXPORT_C_HEADER(void,Fl_Widget_show_super,(fl_Widget widget));
-  FL_EXPORT_C_HEADER(void,Fl_Widget_show,(fl_Widget widget));
+  FL_EXPORT_C_HEADER(void,Fl_DerivedWidget_show,(fl_Widget widget));
   FL_EXPORT_C_HEADER(void,Fl_Widget_hide_super,(fl_Widget widget));
-  FL_EXPORT_C_HEADER(void,Fl_Widget_hide,(fl_Widget widget));
+  FL_EXPORT_C_HEADER(void,Fl_DerivedWidget_hide,(fl_Widget widget));
   FL_EXPORT_C_HEADER(void,Fl_Widget_set_visible,(fl_Widget widget));
   FL_EXPORT_C_HEADER(void,Fl_Widget_clear_visible,(fl_Widget widget));
   FL_EXPORT_C_HEADER(unsigned int,Fl_Widget_active,(fl_Widget widget));
@@ -165,20 +169,26 @@ EXPORT {
   FL_EXPORT_C_HEADER(fl_Window ,Fl_Widget_top_window_offset,(fl_Widget widget, int* xoff, int* yoff));
   FL_EXPORT_C_HEADER(fl_Group,Fl_Widget_as_group_super,(fl_Widget widget));
   FL_EXPORT_C_HEADER(fl_Group,Fl_Widget_as_group,(fl_Widget widget));
+  FL_EXPORT_C_HEADER(fl_Group,Fl_DerivedWidget_as_group,(fl_Widget widget));
   FL_EXPORT_C_HEADER(fl_Gl_Window,Fl_Widget_as_gl_window_super,(fl_Widget widget));
   FL_EXPORT_C_HEADER(fl_Gl_Window,Fl_Widget_as_gl_window,(fl_Widget widget));
+  FL_EXPORT_C_HEADER(fl_Gl_Window,Fl_DerivedWidget_as_gl_window,(fl_Widget widget));
+  FL_EXPORT_C_HEADER(fl_Gl_Window,Fl_Widget_as_window,(fl_Widget widget));
+  FL_EXPORT_C_HEADER(fl_Gl_Window,Fl_DerivedWidget_as_window,(fl_Widget widget));
   FL_EXPORT_C_HEADER(void,Fl_Widget_resize_super,(fl_Widget widget,int X, int Y, int W, int H));
-  FL_EXPORT_C_HEADER(void,Fl_Widget_resize,(fl_Widget widget,int X, int Y, int W, int H));
+  FL_EXPORT_C_HEADER(void,Fl_DerivedWidget_resize,(fl_Widget widget,int X, int Y, int W, int H));
   FL_EXPORT_C_HEADER(fl_Widget_Virtual_Funcs*,Fl_Widget_default_virtual_funcs,());
   FL_EXPORT_C_HEADER(fl_Widget,Fl_Widget_New,(int X, int Y, int W, int H));
   FL_EXPORT_C_HEADER(fl_Widget,Fl_Widget_New_WithLabel,(int X, int Y, int W, int H, const char* label));
   FL_EXPORT_C_HEADER(fl_Widget,Fl_OverriddenWidget_New,(int X, int Y, int W, int H,fl_Widget_Virtual_Funcs* fs));
   FL_EXPORT_C_HEADER(fl_Widget,Fl_OverriddenWidget_New_WithLabel,(int X, int Y, int W, int H, const char* label, fl_Widget_Virtual_Funcs* fs));
   FL_EXPORT_C_HEADER(void,Fl_Widget_Destroy,(fl_Widget widget));
+  FL_EXPORT_C_HEADER(void,Fl_DerivedWidget_Destroy,(fl_Widget widget));
   FL_EXPORT_C_HEADER(unsigned int, Fl_Widget_flags,(fl_Widget widget));
   FL_EXPORT_C_HEADER(void, Fl_Widget_set_flag,(fl_Widget widget, unsigned int flag));
   FL_EXPORT_C_HEADER(void, Fl_Widget_clear_flag,(fl_Widget widget, unsigned int flag));
   FL_EXPORT_C_HEADER(fl_Callback*, Fl_Widget_callback,(fl_Widget w));
+  FL_EXPORT_C_HEADER(void, Fl_DerivedWidget_draw,(fl_Widget widget));
 #ifdef __cplusplus
 }
 #endif

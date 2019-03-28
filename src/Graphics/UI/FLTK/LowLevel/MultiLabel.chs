@@ -120,20 +120,26 @@ setMultiLabelContents ml mlcs = do
       setLabela' mlPtr ptr
       labelb' mlPtr >>= return . castPtr
 
-instance (Parent a Widget, impl ~ (Ref a -> IO ())) => Op (WidgetLabel ()) MultiLabel orig impl where
+instance (Parent a WidgetBase, impl ~ (Ref a -> IO ())) => Op (WidgetLabel ()) MultiLabel orig impl where
   runOp _ _ widget widget' =
     withRef widget $ \widgetPtr ->
     withRef widget' $ \widget'Ptr ->
       setWidgetLabel' widgetPtr widget'Ptr
-instance (Parent a MenuItem, impl ~ (Ref a -> IO ())) => Op (MenuItemLabel ()) MultiLabel orig impl where
+instance (Parent a MenuItemBase, impl ~ (Ref a -> IO ())) => Op (MenuItemLabel ()) MultiLabel orig impl where
   runOp _ _ widget widget' =
     withRef widget $ \widgetPtr ->
     withRef widget' $ \widget'Ptr ->
       setMenuItemLabel' widgetPtr widget'Ptr
 
+
+-- $hierarchy
+-- @
+-- "Graphics.UI.FLTK.LowLevel.MultiLabel"
+-- @
+
 -- $functions
 -- @
--- menuItemLabel:: ('Parent' a 'MenuItem') => 'Ref' 'MultiLabel' -> 'Ref' a -> 'IO' ()
+-- menuItemLabel:: ('Parent' a 'MenuItemBase') => 'Ref' 'MultiLabel' -> 'Ref' a -> 'IO' ()
 --
--- widgetLabel:: ('Parent' a 'Widget') => 'Ref' 'MultiLabel' -> 'Ref' a -> 'IO' ()
+-- widgetLabel:: ('Parent' a 'WidgetBase') => 'Ref' 'MultiLabel' -> 'Ref' a -> 'IO' ()
 -- @

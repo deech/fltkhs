@@ -168,6 +168,19 @@ EXPORT {
     ptr->destroy_data = NULL;
     return ptr;
   }
+
+  FL_EXPORT_C(void, Fl_Browser_resize_super)(fl_Browser self, int x, int y, int w, int h) {
+    (static_cast<Fl_DerivedBrowser*>(self))->resize_super(x,y,w,h);
+  }
+
+  FL_EXPORT_C(void, Fl_Browser_resize)(fl_Browser self, int x, int y, int w, int h) {
+    (static_cast<Fl_DerivedBrowser*>(self))->resize(x,y,w,h);
+  }
+
+  FL_EXPORT_C(void, Fl_Browser_draw)(fl_Browser self) {
+    (static_cast<Fl_DerivedBrowser*>(self))->draw();
+  }
+
   FL_EXPORT_C(int,Fl_Browser_handle)(fl_Browser self, int event){
     return (static_cast<Fl_DerivedBrowser*>(self))->handle(event);
   }

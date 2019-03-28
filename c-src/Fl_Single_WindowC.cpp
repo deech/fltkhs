@@ -211,8 +211,11 @@ return (fl_Window)(static_cast<Fl_DerivedSingle_Window*>(self))->as_window();
 FL_EXPORT_C(fl_Window,Fl_Single_Window_as_window_super)(fl_Single_Window self){
 return (fl_Window)(static_cast<Fl_DerivedSingle_Window*>(self))->as_window_super();
   }
-  FL_EXPORT_C(int,Fl_Single_Window_handle)(fl_Single_Window self, int event){
+  FL_EXPORT_C(int,Fl_DerivedSingle_Window_handle)(fl_Single_Window self, int event){
     return (static_cast<Fl_DerivedSingle_Window*>(self))->handle(event);
+  }
+  FL_EXPORT_C(int,Fl_Single_Window_handle)(fl_Single_Window self, int event){
+    return (static_cast<Fl_Single_Window*>(self))->Fl_Single_Window::handle(event);
   }
   FL_EXPORT_C(int,Fl_Single_Window_handle_super)(fl_Single_Window self, int event){
     return (static_cast<Fl_DerivedSingle_Window*>(self))->handle_super(event);
@@ -614,14 +617,20 @@ return (fl_Window)(static_cast<Fl_DerivedSingle_Window*>(self))->as_window_super
   FL_EXPORT_C(void,Fl_Single_Window_fullscreen_off_with_resize)(fl_Single_Window win,int X,int Y,int W,int H){
     (static_cast<Fl_DerivedSingle_Window*>(win))->fullscreen_off(X,Y,W,H);
   }
-  FL_EXPORT_C(void,Fl_Single_Window_hide)(fl_Single_Window win){
+  FL_EXPORT_C(void,Fl_DerivedSingle_Window_hide)(fl_Single_Window win){
     (static_cast<Fl_DerivedSingle_Window*>(win))->hide();
+  }
+  FL_EXPORT_C(void,Fl_Single_Window_hide)(fl_Single_Window win){
+    (static_cast<Fl_Single_Window*>(win))->Fl_Single_Window::hide();
   }
   FL_EXPORT_C(void,Fl_Single_Window_hide_super)(fl_Single_Window win){
     (static_cast<Fl_DerivedSingle_Window*>(win))->hide_super();
   }
-  FL_EXPORT_C(void,Fl_Single_Window_show)(fl_Single_Window win){
+  FL_EXPORT_C(void,Fl_DerivedSingle_Window_show)(fl_Single_Window win){
     (static_cast<Fl_DerivedSingle_Window*>(win))->show();
+  }
+  FL_EXPORT_C(void,Fl_Single_Window_show)(fl_Single_Window win){
+    (static_cast<Fl_Single_Window*>(win))->Fl_Single_Window::show();
   }
   FL_EXPORT_C(void,Fl_Single_Window_show_super)(fl_Single_Window win){
     (static_cast<Fl_DerivedSingle_Window*>(win))->show_super();
@@ -629,20 +638,23 @@ return (fl_Window)(static_cast<Fl_DerivedSingle_Window*>(self))->as_window_super
   FL_EXPORT_C(void,Fl_Single_Window_show_with_args)(fl_Single_Window win,int argc,char** argv){
     (static_cast<Fl_DerivedSingle_Window*>(win))->show(argc,argv);
   }
-  FL_EXPORT_C(void,Fl_Single_Window_Destroy)(fl_Single_Window win){
+  FL_EXPORT_C(void,Fl_DerivedSingle_Window_Destroy)(fl_Single_Window win){
     delete (static_cast<Fl_DerivedSingle_Window*>(win));
   }
-  FL_EXPORT_C(void,Fl_Single_Window_resize)(fl_Single_Window win,int X,int Y,int W,int H){
+  FL_EXPORT_C(void,Fl_Single_Window_Destroy)(fl_Single_Window win){
+    delete (static_cast<Fl_Single_Window*>(win));
+  }
+  FL_EXPORT_C(void,Fl_DerivedSingle_Window_resize)(fl_Single_Window win,int X,int Y,int W,int H){
     (static_cast<Fl_DerivedSingle_Window*>(win))->resize(X,Y,W,H);
+  }
+  FL_EXPORT_C(void,Fl_Single_Window_resize)(fl_Single_Window win,int X,int Y,int W,int H){
+    (static_cast<Fl_Single_Window*>(win))->Fl_Single_Window::resize(X,Y,W,H);
   }
   FL_EXPORT_C(void,Fl_Single_Window_resize_super)(fl_Single_Window win,int X,int Y,int W,int H){
     (static_cast<Fl_DerivedSingle_Window*>(win))->resize_super(X,Y,W,H);
   }
   FL_EXPORT_C(void,Fl_Single_Window_iconize)(fl_Single_Window win){
     (static_cast<Fl_DerivedSingle_Window*>(win))->iconize();
-  }
-  FL_EXPORT_C(void,Fl_Single_Window_flush)(fl_Single_Window win){
-    (static_cast<Fl_DerivedSingle_Window*>(win))->flush();
   }
   FL_EXPORT_C(void,Fl_Single_Window_flush_super)(fl_Single_Window win){
     (static_cast<Fl_DerivedSingle_Window*>(win))->flush_super();

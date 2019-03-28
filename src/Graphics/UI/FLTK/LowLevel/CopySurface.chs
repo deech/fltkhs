@@ -9,7 +9,7 @@ module Graphics.UI.FLTK.LowLevel.CopySurface
 
          -- * CopySurface
          --
-         -- $CopySurfacefunctions
+         -- $functions
        )
 where
 #include "Fl_ExportMacros.h"
@@ -34,10 +34,10 @@ instance (impl ~ ( IO ())) => Op (SetCurrent ()) CopySurface orig impl where
   runOp _ _ copy_surface = withRef copy_surface $ \copy_surfacePtr -> setCurrent' copy_surfacePtr
 
 {# fun Fl_Copy_Surface_draw as draw' { id `Ptr ()',id `Ptr ()',`Int',`Int' } -> `()' #}
-instance (Parent a Widget, impl ~ ( Ref a  -> Position -> IO ())) => Op (Draw ()) CopySurface orig impl where
+instance (Parent a WidgetBase, impl ~ ( Ref a  -> Position -> IO ())) => Op (Draw ()) CopySurface orig impl where
   runOp _ _ copy_surface widget (Position (X delta_x) (Y delta_y)) = withRef copy_surface $ \copy_surfacePtr -> withRef widget $ \widgetPtr -> draw' copy_surfacePtr widgetPtr delta_x delta_y
 
--- $CopySurfacefunctions
+-- $functions
 --
 -- @
 -- destroy :: 'Ref' 'CopySurface' -> 'IO' ()

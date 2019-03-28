@@ -486,32 +486,47 @@ void Fl_DerivedSlider::destroy_data(){
     Fl_DerivedSlider* w = new Fl_DerivedSlider(X,Y,W,H,label,fs);
     return (fl_Slider)w;
   }
-  FL_EXPORT_C(void, Fl_Slider_draw)(fl_Slider o){
+  FL_EXPORT_C(void, Fl_DerivedSlider_draw)(fl_Slider o){
     (static_cast<Fl_DerivedSlider*>(o))->draw();
+  }
+  FL_EXPORT_C(void, Fl_Slider_draw)(fl_Slider o){
+    (static_cast<Fl_DerivedSlider*>(o))->draw_super();
   }
   FL_EXPORT_C(void, Fl_Slider_draw_super)(fl_Slider o){
     (static_cast<Fl_DerivedSlider*>(o))->draw_super();
   }
-  FL_EXPORT_C(int, Fl_Slider_handle)(fl_Slider o, int event){
+  FL_EXPORT_C(int, Fl_DerivedSlider_handle)(fl_Slider o, int event){
     return (static_cast<Fl_DerivedSlider*>(o))->handle(event);
+  }
+  FL_EXPORT_C(int, Fl_Slider_handle)(fl_Slider o, int event){
+    return (static_cast<Fl_DerivedSlider*>(o))->Fl_Slider::handle(event);
   }
   FL_EXPORT_C(int, Fl_Slider_handle_super)(fl_Slider o, int event){
     return (static_cast<Fl_DerivedSlider*>(o))->handle_super(event);
   }
-  FL_EXPORT_C(void, Fl_Slider_resize)(fl_Slider o, int x, int y, int w, int h){
+  FL_EXPORT_C(void, Fl_DerivedSlider_resize)(fl_Slider o, int x, int y, int w, int h){
     (static_cast<Fl_DerivedSlider*>(o))->resize(x,y,w,h);
+  }
+  FL_EXPORT_C(void, Fl_Slider_resize)(fl_Slider o, int x, int y, int w, int h){
+    (static_cast<Fl_DerivedSlider*>(o))->Fl_Slider::resize(x,y,w,h);
   }
   FL_EXPORT_C(void, Fl_Slider_resize_super)(fl_Slider o, int x, int y, int w, int h){
     (static_cast<Fl_DerivedSlider*>(o))->resize_super(x,y,w,h);
   }
-  FL_EXPORT_C(void, Fl_Slider_show)(fl_Slider o){
+  FL_EXPORT_C(void, Fl_DerivedSlider_show)(fl_Slider o){
     (static_cast<Fl_DerivedSlider*>(o))->show();
+  }
+  FL_EXPORT_C(void, Fl_Slider_show)(fl_Slider o){
+    (static_cast<Fl_DerivedSlider*>(o))->Fl_Slider::show();
   }
   FL_EXPORT_C(void, Fl_Slider_show_super)(fl_Slider o){
     (static_cast<Fl_DerivedSlider*>(o))->show_super();
   }
-  FL_EXPORT_C(void, Fl_Slider_hide)(fl_Slider o){
+  FL_EXPORT_C(void, Fl_DerivedSlider_hide)(fl_Slider o){
     (static_cast<Fl_DerivedSlider*>(o))->hide();
+  }
+  FL_EXPORT_C(void, Fl_Slider_hide)(fl_Slider o){
+    (static_cast<Fl_DerivedSlider*>(o))->Fl_Slider::hide();
   }
   FL_EXPORT_C(void, Fl_Slider_hide_super)(fl_Slider o){
     (static_cast<Fl_DerivedSlider*>(o))->hide_super();

@@ -42,6 +42,7 @@ EXPORT {
   /* Inherited from Fl_Widget */
   FL_EXPORT_C_HEADER(int,Fl_Menu__handle_super,(fl_Group self, int event));
   FL_EXPORT_C_HEADER(int,Fl_Menu__handle,(fl_Group self, int event));
+  FL_EXPORT_C_HEADER(int,Fl_DerivedMenu__handle,(fl_Group self, int event));
   FL_EXPORT_C_HEADER(fl_Group,Fl_Menu__parent,(fl_Menu_ menu_));
   FL_EXPORT_C_HEADER(void,Fl_Menu__set_parent,(fl_Menu_ menu_, fl_Group grp));
   FL_EXPORT_C_HEADER(uchar,Fl_Menu__type,(fl_Menu_ menu_));
@@ -99,8 +100,10 @@ EXPORT {
   FL_EXPORT_C_HEADER(int,Fl_Menu__visible_r,(fl_Menu_ menu_));
   FL_EXPORT_C_HEADER(void,Fl_Menu__show_super,(fl_Menu_ menu_));
   FL_EXPORT_C_HEADER(void,Fl_Menu__show,(fl_Menu_ menu_));
+  FL_EXPORT_C_HEADER(void,Fl_DerivedMenu__show,(fl_Menu_ menu_));
   FL_EXPORT_C_HEADER(void,Fl_Menu__hide_super,(fl_Menu_ menu_));
   FL_EXPORT_C_HEADER(void,Fl_Menu__hide,(fl_Menu_ menu_));
+  FL_EXPORT_C_HEADER(void,Fl_DerivedMenu__hide,(fl_Menu_ menu_));
   FL_EXPORT_C_HEADER(fl_Window,Fl_Menu__as_window_super,(fl_Menu_ menu_));
   FL_EXPORT_C_HEADER(fl_Window,Fl_Menu__as_window ,(fl_Menu_ menu_));
   FL_EXPORT_C_HEADER(void,Fl_Menu__set_visible,(fl_Menu_ menu_));
@@ -143,6 +146,7 @@ EXPORT {
   FL_EXPORT_C_HEADER(fl_Gl_Window,Fl_Menu__as_gl_window,(fl_Menu_ menu_));
   FL_EXPORT_C_HEADER(void,Fl_Menu__resize_super,(fl_Menu_ menu_,int X, int Y, int W, int H));
   FL_EXPORT_C_HEADER(void,Fl_Menu__resize,(fl_Menu_ menu_,int X, int Y, int W, int H));
+  FL_EXPORT_C_HEADER(void,Fl_DerivedMenu__resize,(fl_Menu_ menu_,int X, int Y, int W, int H));
 
   /* Fl_Menu_ specific */
   FL_EXPORT_C_HEADER(void*,Fl_Menu__other_data,(fl_Menu_ menu_));

@@ -19,7 +19,7 @@ import C2HS hiding (cFromEnum, cFromBool, cToBool,cToEnum)
 
 import Graphics.UI.FLTK.LowLevel.Fl_Types
 import Graphics.UI.FLTK.LowLevel.Utils
-import Graphics.UI.FLTK.LowLevel.Widget(defaultDestroyCallbacks)
+import Graphics.UI.FLTK.LowLevel.Base.Widget(defaultDestroyCallbacks)
 import Graphics.UI.FLTK.LowLevel.Hierarchy
 import Graphics.UI.FLTK.LowLevel.Dispatch
 import qualified Data.Text as T
@@ -358,6 +358,7 @@ instance ( impl ~ (AtIndex ->  IO (Either OutOfRange AtIndex))) => Op (Utf8Align
      withRef text_buffer $ \text_bufferPtr -> do
      p' <- utf8Align' text_bufferPtr align
      successOrOutOfRange p' (p' == 0) (return . AtIndex)
+
 
 -- $hierarchy
 -- @

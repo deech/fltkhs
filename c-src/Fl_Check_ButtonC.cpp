@@ -386,32 +386,47 @@ EXPORT {
     Fl_DerivedCheck_Button* w = new Fl_DerivedCheck_Button(X,Y,W,H,label,fs);
     return (fl_Check_Button)w;
   }
-  FL_EXPORT_C(void, Fl_Check_Button_draw)(fl_Check_Button o){
+  FL_EXPORT_C(void, Fl_DerivedCheck_Button_draw)(fl_Check_Button o){
     (static_cast<Fl_DerivedCheck_Button*>(o))->draw();
+  }
+  FL_EXPORT_C(void, Fl_Check_Button_draw)(fl_Check_Button o){
+    (static_cast<Fl_DerivedCheck_Button*>(o))->draw_super();
   }
   FL_EXPORT_C(void, Fl_Check_Button_draw_super)(fl_Check_Button o){
     (static_cast<Fl_DerivedCheck_Button*>(o))->draw_super();
   }
-  FL_EXPORT_C(int, Fl_Check_Button_handle)(fl_Check_Button o, int event){
+  FL_EXPORT_C(int, Fl_DerivedCheck_Button_handle)(fl_Check_Button o, int event){
     return (static_cast<Fl_DerivedCheck_Button*>(o))->handle(event);
+  }
+  FL_EXPORT_C(int, Fl_Check_Button_handle)(fl_Check_Button o, int event){
+    return (static_cast<Fl_DerivedCheck_Button*>(o))->Fl_Check_Button::handle(event);
   }
   FL_EXPORT_C(int, Fl_Check_Button_handle_super)(fl_Check_Button o, int event){
     return (static_cast<Fl_DerivedCheck_Button*>(o))->handle_super(event);
   }
-  FL_EXPORT_C(void, Fl_Check_Button_resize)(fl_Check_Button o, int x, int y, int w, int h){
+  FL_EXPORT_C(void, Fl_DerivedCheck_Button_resize)(fl_Check_Button o, int x, int y, int w, int h){
     (static_cast<Fl_DerivedCheck_Button*>(o))->resize(x,y,w,h);
+  }
+  FL_EXPORT_C(void, Fl_Check_Button_resize)(fl_Check_Button o, int x, int y, int w, int h){
+    (static_cast<Fl_DerivedCheck_Button*>(o))->Fl_Check_Button::resize(x,y,w,h);
   }
   FL_EXPORT_C(void, Fl_Check_Button_resize_super)(fl_Check_Button o, int x, int y, int w, int h){
     (static_cast<Fl_DerivedCheck_Button*>(o))->resize_super(x,y,w,h);
   }
-  FL_EXPORT_C(void, Fl_Check_Button_show)(fl_Check_Button o){
+  FL_EXPORT_C(void, Fl_DerivedCheck_Button_show)(fl_Check_Button o){
     (static_cast<Fl_DerivedCheck_Button*>(o))->show();
+  }
+  FL_EXPORT_C(void, Fl_Check_Button_show)(fl_Check_Button o){
+    (static_cast<Fl_DerivedCheck_Button*>(o))->Fl_Check_Button::show();
   }
   FL_EXPORT_C(void, Fl_Check_Button_show_super)(fl_Check_Button o){
     (static_cast<Fl_DerivedCheck_Button*>(o))->show_super();
   }
-  FL_EXPORT_C(void, Fl_Check_Button_hide)(fl_Check_Button o){
+  FL_EXPORT_C(void, Fl_DerivedCheck_Button_hide)(fl_Check_Button o){
     (static_cast<Fl_DerivedCheck_Button*>(o))->hide();
+  }
+  FL_EXPORT_C(void, Fl_Check_Button_hide)(fl_Check_Button o){
+    (static_cast<Fl_DerivedCheck_Button*>(o))->Fl_Check_Button::hide();
   }
   FL_EXPORT_C(void, Fl_Check_Button_hide_super)(fl_Check_Button o){
     (static_cast<Fl_DerivedCheck_Button*>(o))->hide_super();

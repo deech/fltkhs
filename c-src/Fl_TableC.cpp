@@ -75,6 +75,9 @@ int Fl_DerivedTable::handle(int event){
   }
   return i;
 }
+int Fl_DerivedTable::handle_super(int event){
+  return Fl_Table::handle(event);
+}
 void Fl_DerivedTable::resize_super(int x, int y, int w, int h){
   Fl_Table::resize(x,y,w,h);
 }
@@ -191,6 +194,9 @@ EXPORT {
   }
   FL_EXPORT_C(int,Fl_Table_handle)(fl_Table self, int event){
     return (static_cast<Fl_DerivedTable*>(self))->handle(event);
+  }
+  FL_EXPORT_C(int,Fl_Table_handle_super)(fl_Table self, int event){
+    return (static_cast<Fl_DerivedTable*>(self))->handle_super(event);
   }
   FL_EXPORT_C(fl_Group,Fl_Table_parent)(fl_Table table){
     return (fl_Group) (static_cast<Fl_DerivedTable*>(table))->parent();

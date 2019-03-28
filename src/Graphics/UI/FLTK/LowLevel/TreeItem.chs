@@ -118,16 +118,16 @@ instance (impl ~ ( Color ->  IO ())) => Op (SetLabelbgcolor ()) TreeItem orig im
 instance (impl ~ (IO (Color))) => Op (GetLabelbgcolor ()) TreeItem orig impl where
   runOp _ _ tree_item = withRef tree_item $ \tree_itemPtr -> labelbgcolor' tree_itemPtr
 {# fun Fl_Tree_Item_set_widget as setWidget' { id `Ptr ()',id `Ptr ()' } -> `()' #}
-instance (Parent a Widget, impl ~ (Maybe ( Ref a )  ->  IO ())) => Op (SetWidget ()) TreeItem orig impl where
+instance (Parent a WidgetBase, impl ~ (Maybe ( Ref a )  ->  IO ())) => Op (SetWidget ()) TreeItem orig impl where
   runOp _ _ tree_item val = withRef tree_item $ \tree_itemPtr -> withMaybeRef val $ \valPtr -> setWidget' tree_itemPtr valPtr
 {# fun Fl_Tree_Item_widget as widget' { id `Ptr ()' } -> `Ptr ()' id #}
-instance (impl ~ (IO (Maybe (Ref Widget)))) => Op (GetWidget ()) TreeItem orig impl where
+instance (impl ~ (IO (Maybe (Ref WidgetBase)))) => Op (GetWidget ()) TreeItem orig impl where
   runOp _ _ tree_item = withRef tree_item $ \tree_itemPtr -> widget' tree_itemPtr >>= toMaybeRef
 {# fun Fl_Tree_Item_children as children' { id `Ptr ()' } -> `Int' #}
 instance (impl ~ (IO (Int))) => Op (Children ()) TreeItem orig impl where
   runOp _ _ tree_item = withRef tree_item $ \tree_itemPtr -> children' tree_itemPtr
 {# fun Fl_Tree_Item_child_by_index as childByIndex' { id `Ptr ()',`Int' } -> `Ptr ()' id #}
-instance (impl ~ ( AtIndex ->  IO (Maybe (Ref Widget)))) => Op (Child ()) TreeItem orig impl where
+instance (impl ~ ( AtIndex ->  IO (Maybe (Ref WidgetBase)))) => Op (Child ()) TreeItem orig impl where
   runOp _ _ tree_item (AtIndex index') = withRef tree_item $ \tree_itemPtr -> childByIndex' tree_itemPtr index' >>= toMaybeRef
 {# fun Fl_Tree_Item_has_children as hasChildren' { id `Ptr ()' } -> `Bool' cToBool #}
 instance (impl ~ (IO (Bool))) => Op (HasChildren ()) TreeItem orig impl where
@@ -352,6 +352,12 @@ instance (impl ~ (IO (Int))) => Op (LabelW ()) TreeItem orig impl where
 instance (impl ~ (IO (Int))) => Op (LabelH ()) TreeItem orig impl where
   runOp _ _ tree_item = withRef tree_item $ \tree_itemPtr -> labelH' tree_itemPtr
 
+
+-- $hierarchy
+-- @
+-- "Graphics.UI.FLTK.LowLevel.TreeItem"
+-- @
+
 -- $functions
 -- @
 -- activate :: 'Ref' 'TreeItem' -> 'IO' ()
@@ -362,7 +368,7 @@ instance (impl ~ (IO (Int))) => Op (LabelH ()) TreeItem orig impl where
 --
 -- addAt:: ('Parent' a 'TreeItem', 'Parent' b 'TreePrefs') => 'Ref' 'TreeItem' -> 'Ref' b -> ['T.Text'] -> 'Maybe' ('Ref' a) -> 'IO' ('Maybe' ('Ref' a))
 --
--- child :: 'Ref' 'TreeItem' -> 'AtIndex' -> 'IO' ('Maybe' ('Ref' 'Widget'))
+-- child :: 'Ref' 'TreeItem' -> 'AtIndex' -> 'IO' ('Maybe' ('Ref' 'WidgetBase'))
 --
 -- children :: 'Ref' 'TreeItem' -> 'IO' ('Int')
 --
@@ -412,7 +418,7 @@ instance (impl ~ (IO (Int))) => Op (LabelH ()) TreeItem orig impl where
 --
 -- getW :: 'Ref' 'TreeItem' -> 'IO' 'Int'
 --
--- getWidget :: 'Ref' 'TreeItem' -> 'IO' ('Maybe' ('Ref' 'Widget'))
+-- getWidget :: 'Ref' 'TreeItem' -> 'IO' ('Maybe' ('Ref' 'WidgetBase'))
 --
 -- getX :: 'Ref' 'TreeItem' -> 'IO' 'Int'
 --
@@ -492,7 +498,7 @@ instance (impl ~ (IO (Int))) => Op (LabelH ()) TreeItem orig impl where
 --
 -- setUsericon:: ('Parent' a 'Image') => 'Ref' 'TreeItem' -> 'Maybe' ('Ref' a) -> 'IO' ()
 --
--- setWidget:: ('Parent' a 'Widget') => 'Ref' 'TreeItem' -> 'Maybe' ( 'Ref' a ) -> 'IO' ()
+-- setWidget:: ('Parent' a 'WidgetBase') => 'Ref' 'TreeItem' -> 'Maybe' ( 'Ref' a ) -> 'IO' ()
 --
 -- showSelf :: 'Ref' 'TreeItem' -> 'Maybe' 'T.Text' -> 'IO' ()
 --
@@ -505,10 +511,4 @@ instance (impl ~ (IO (Int))) => Op (LabelH ()) TreeItem orig impl where
 -- visible :: 'Ref' 'TreeItem' -> 'IO' ('Bool')
 --
 -- visibleR :: 'Ref' 'TreeItem' -> 'IO' ('Bool')
--- @
-
-
--- $hierarchy
--- @
--- "Graphics.UI.FLTK.LowLevel.TreeItem"
 -- @

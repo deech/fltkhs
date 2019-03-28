@@ -15,6 +15,7 @@ EXPORT {
   /* Inherited from Fl_Widget */
   FL_EXPORT_C_HEADER(fl_Gl_Window_Virtual_Funcs*,Fl_Gl_Window_default_virtual_funcs,());
   FL_EXPORT_C_HEADER(int,Fl_Gl_Window_handle,(fl_Gl_Window self, int event));
+  FL_EXPORT_C_HEADER(int,Fl_DerivedGl_Window_handle,(fl_Gl_Window self, int event));
   FL_EXPORT_C_HEADER(int,Fl_Gl_Window_handle_super,(fl_Gl_Window self, int event));
   FL_EXPORT_C_HEADER(void,Fl_Gl_Window_draw_super,(fl_Gl_Window self));
   FL_EXPORT_C_HEADER(fl_Group,Fl_Gl_Window_parent,(fl_Gl_Window win));
@@ -188,10 +189,14 @@ EXPORT {
   FL_EXPORT_C_HEADER(fl_Gl_Window,Fl_Gl_Window_NewXY,(int x, int y, int w, int h));
   FL_EXPORT_C_HEADER(fl_Gl_Window,Fl_OverriddenGl_Window_NewXY,(int x, int y, int w, int h,fl_Gl_Window_Virtual_Funcs* funcs));
   FL_EXPORT_C_HEADER(void,Fl_Gl_Window_hide,(fl_Gl_Window win));
+  FL_EXPORT_C_HEADER(void,Fl_DerivedGl_Window_hide,(fl_Gl_Window win));
   FL_EXPORT_C_HEADER(void,Fl_Gl_Window_show,(fl_Gl_Window win));
+  FL_EXPORT_C_HEADER(void,Fl_DerivedGl_Window_show,(fl_Gl_Window win));
   FL_EXPORT_C_HEADER(void,Fl_Gl_Window_show_with_args,(fl_Gl_Window win, int argc, char** argv));
   FL_EXPORT_C_HEADER(void,Fl_Gl_Window_Destroy,(fl_Gl_Window win));
+  FL_EXPORT_C_HEADER(void,Fl_DerivedGl_Window_Destroy,(fl_Gl_Window win));
   FL_EXPORT_C_HEADER(void,Fl_Gl_Window_resize,(fl_Gl_Window win, int X, int Y, int W, int H));
+  FL_EXPORT_C_HEADER(void,Fl_DerivedGl_Window_resize,(fl_Gl_Window win, int X, int Y, int W, int H));
   FL_EXPORT_C_HEADER(void,Fl_Gl_Window_iconize,(fl_Gl_Window win));
   FL_EXPORT_C_HEADER(int ,Fl_Gl_Window_handle,(fl_Gl_Window win, int event));
   FL_EXPORT_C_HEADER(void ,Fl_Gl_Window_set_border,(fl_Gl_Window win, int b));
@@ -277,6 +282,7 @@ EXPORT {
   FL_EXPORT_C_HEADER(void,Fl_Gl_Window_hide_super,(fl_Gl_Window win));
   FL_EXPORT_C_HEADER(void,Fl_Gl_Window_flush_super,(fl_Gl_Window win));
   FL_EXPORT_C_HEADER(void,Fl_Gl_Window_flush,(fl_Gl_Window win));
+  FL_EXPORT_C_HEADER(void,Fl_DerivedGl_Window_flush,(fl_Gl_Window win));
   FL_EXPORT_C_HEADER(void,Fl_Gl_Window_show_super,(fl_Gl_Window win));
   FL_EXPORT_C_HEADER(void,Fl_Gl_Window_resize_super,(fl_Gl_Window win,int X,int Y,int W,int H));
 

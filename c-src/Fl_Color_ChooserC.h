@@ -15,15 +15,25 @@ EXPORT {
     void* other_data;
   public:
     int mode();
+    int mode_super();
     void mode(int newMode);
+    void mode_super(int newMode);
     double hue();
+    double hue_super();
     double saturation();
+    double saturation_super();
     double value();
+    double value_super();
     double r();
+    double r_super();
     double g();
+    double g_super();
     double b();
+    double b_super();
     int hsv(double H, double S, double V);
+    int hsv_super(double H, double S, double V);
     int rgb(double R, double G, double B);
+    int rgb_super(double R, double G, double B);
 
     virtual void draw();
     void draw_super();
@@ -157,15 +167,25 @@ EXPORT {
   FL_EXPORT_C_HEADER(fl_Widget,Fl_Color_Chooser_child,(fl_Color_Chooser color_chooser, int n));
 
   FL_EXPORT_C_HEADER(int,Fl_Color_Chooser_mode,(fl_Color_Chooser color_chooser));
+  FL_EXPORT_C_HEADER(int,Fl_Color_Chooser_mode_super,(fl_Color_Chooser color_chooser));
   FL_EXPORT_C_HEADER(void,Fl_Color_Chooser_set_mode,(fl_Color_Chooser color_chooser,int newMode));
+  FL_EXPORT_C_HEADER(void,Fl_Color_Chooser_set_mode_super,(fl_Color_Chooser color_chooser,int newMode));
   FL_EXPORT_C_HEADER(double,Fl_Color_Chooser_hue,(fl_Color_Chooser color_chooser));
+  FL_EXPORT_C_HEADER(double,Fl_Color_Chooser_hue_super,(fl_Color_Chooser color_chooser));
   FL_EXPORT_C_HEADER(double,Fl_Color_Chooser_saturation,(fl_Color_Chooser color_chooser));
+  FL_EXPORT_C_HEADER(double,Fl_Color_Chooser_saturation_super,(fl_Color_Chooser color_chooser));
   FL_EXPORT_C_HEADER(double,Fl_Color_Chooser_value,(fl_Color_Chooser color_chooser));
+  FL_EXPORT_C_HEADER(double,Fl_Color_Chooser_value_super,(fl_Color_Chooser color_chooser));
   FL_EXPORT_C_HEADER(double,Fl_Color_Chooser_r,(fl_Color_Chooser color_chooser));
+  FL_EXPORT_C_HEADER(double,Fl_Color_Chooser_r_super,(fl_Color_Chooser color_chooser));
   FL_EXPORT_C_HEADER(double,Fl_Color_Chooser_g,(fl_Color_Chooser color_chooser));
+  FL_EXPORT_C_HEADER(double,Fl_Color_Chooser_g_super,(fl_Color_Chooser color_chooser));
   FL_EXPORT_C_HEADER(double,Fl_Color_Chooser_b,(fl_Color_Chooser color_chooser));
+  FL_EXPORT_C_HEADER(double,Fl_Color_Chooser_b_super,(fl_Color_Chooser color_chooser));
   FL_EXPORT_C_HEADER(int,Fl_Color_Chooser_hsv,(fl_Color_Chooser color_chooser,double H, double S, double V));
+  FL_EXPORT_C_HEADER(int,Fl_Color_Chooser_hsv_super,(fl_Color_Chooser color_chooser,double H, double S, double V));
   FL_EXPORT_C_HEADER(int,Fl_Color_Chooser_rgb,(fl_Color_Chooser color_chooser,double R, double G, double B));
+  FL_EXPORT_C_HEADER(int,Fl_Color_Chooser_rgb_super,(fl_Color_Chooser color_chooser,double R, double G, double B));
   FL_EXPORT_C_HEADER(void,Fl_Color_Chooser_hsv2rgb,(double H, double S, double V, double* R, double* G, double* B));
   FL_EXPORT_C_HEADER(void,Fl_Color_Chooser_rgb2hsv,(double R, double G, double B, double* H, double* S, double* V));
   FL_EXPORT_C_HEADER(fl_Color_Chooser,Fl_Color_Chooser_New,(int x, int y, int w, int h));

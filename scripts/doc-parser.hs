@@ -170,7 +170,11 @@ main = do
                filter (isPrefixOf "type") .
                lines
              ) hierarchyContents
-  let readWidgetFile w = readFile ("../src/Graphics/UI/FLTK/LowLevel/" ++ w ++ ".chs")
+  let readWidgetFile w =
+        readFile $
+          if (isSuffixOf "Base" w)
+          then "../src/Graphics/UI/FLTK/LowLevel/Base/" ++ (reverse . drop 4 . reverse $ w) ++ ".chs"
+          else "../src/Graphics/UI/FLTK/LowLevel/" ++ w ++ ".chs"
   let parseWidgetFile contents =
         case (parse parseInstances "" contents) of
           Left err        -> error (show err)
@@ -198,10 +202,12 @@ main = do
       let trace' = reverse $
             map (\w -> "-- " ++ w) $
               map (\w -> "\"" ++ w ++ "\"") $
-                map (\w -> "Graphics.UI.FLTK.LowLevel." ++ w) $
+                map (\w -> "Graphics.UI.FLTK.LowLevel." ++
+                      (if (isSuffixOf "Base" w)
+                       then "Base." ++ (reverse . drop 4 . reverse $ w)
+                       else w)) $
                   traceHierarchy w [] hier'
       putStr $ concat $ intersperse "\n--  |\n--  v\n" trace'
-      putStr "\n"
     (Just (Functions w)) -> do
       contents <- readWidgetFile w
       let (functions, inNewVersionOnly) = parseWidgetFile contents
@@ -219,7 +225,7 @@ main = do
                       let namesOnly = map (\(_,_,nName,_) -> nName) _fs
                       in
                       if (not $ all (\(_,_,_,w') -> w' == w) _fs)
-                      then error (show w)
+                      then error (show (w, (map (\(_,_,_,w') -> w') _fs)))
                       else
                         (
                           filter

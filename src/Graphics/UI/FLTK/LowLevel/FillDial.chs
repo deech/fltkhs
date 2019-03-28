@@ -15,7 +15,7 @@ import Graphics.UI.FLTK.LowLevel.Fl_Types
 import Graphics.UI.FLTK.LowLevel.Utils
 import Graphics.UI.FLTK.LowLevel.Hierarchy
 import qualified Data.Text as T
-import Graphics.UI.FLTK.LowLevel.Widget
+import Graphics.UI.FLTK.LowLevel.Base.Widget
 {# fun Fl_Fill_Dial_New as fillDialNew' { `Int',`Int',`Int',`Int', `CString' } -> `Ptr ()' id #}
 fillDialNew :: Rectangle -> T.Text -> IO (Ref FillDial)
 fillDialNew rectangle l'=
@@ -29,13 +29,13 @@ fillDialNew rectangle l'=
 
 -- $hierarchy
 -- @
--- "Graphics.UI.FLTK.LowLevel.Widget"
+-- "Graphics.UI.FLTK.LowLevel.Base.Widget"
 --  |
 --  v
--- "Graphics.UI.FLTK.LowLevel.Valuator"
+-- "Graphics.UI.FLTK.LowLevel.Base.Valuator"
 --  |
 --  v
--- "Graphics.UI.FLTK.LowLevel.Dial"
+-- "Graphics.UI.FLTK.LowLevel.Base.Dial"
 --  |
 --  v
 -- "Graphics.UI.FLTK.LowLevel.FillDial"

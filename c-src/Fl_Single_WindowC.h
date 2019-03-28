@@ -246,6 +246,7 @@ EXPORT {
 #endif
   FL_EXPORT_C_HEADER(fl_Single_Window_Virtual_Funcs*,Fl_Single_Window_default_virtual_funcs,());
   FL_EXPORT_C_HEADER(int ,		Fl_Single_Window_handle,(fl_Single_Window win, int event));
+  FL_EXPORT_C_HEADER(int ,		Fl_DerivedSingle_Window_handle,(fl_Single_Window win, int event));
   FL_EXPORT_C_HEADER(int ,		Fl_Single_Window_handle_super,(fl_Single_Window win, int event));
   FL_EXPORT_C_HEADER(void,		Fl_Single_Window_draw_super,(fl_Single_Window win));
   FL_EXPORT_C_HEADER(fl_Group,		Fl_Single_Window_as_group,(fl_Single_Window window));
@@ -256,14 +257,17 @@ EXPORT {
   FL_EXPORT_C_HEADER(fl_Gl_Window,	Fl_Single_Window_as_gl_window_super,(fl_Single_Window window));
   FL_EXPORT_C_HEADER(void,		Fl_Single_Window_show_super,(fl_Single_Window win));
   FL_EXPORT_C_HEADER(void,		Fl_Single_Window_show,(fl_Single_Window win));
+  FL_EXPORT_C_HEADER(void,		Fl_DerivedSingle_Window_show,(fl_Single_Window win));
   FL_EXPORT_C_HEADER(void,		Fl_Single_Window_show_with_args,(fl_Single_Window win, int argc, char** argv));
   FL_EXPORT_C_HEADER(void,		Fl_Single_Window_Destroy,(fl_Single_Window win));
+  FL_EXPORT_C_HEADER(void,		Fl_DerivedSingle_Window_Destroy,(fl_Single_Window win));
   FL_EXPORT_C_HEADER(void,		Fl_Single_Window_flush_super,(fl_Single_Window win));
-  FL_EXPORT_C_HEADER(void,		Fl_Single_Window_flush,(fl_Single_Window win));
   FL_EXPORT_C_HEADER(void,		Fl_Single_Window_resize_super,(fl_Single_Window win, int X, int Y, int W, int H));
   FL_EXPORT_C_HEADER(void,		Fl_Single_Window_resize,(fl_Single_Window win, int X, int Y, int W, int H));
+  FL_EXPORT_C_HEADER(void,		Fl_DerivedSingle_Window_resize,(fl_Single_Window win, int X, int Y, int W, int H));
   FL_EXPORT_C_HEADER(void,		Fl_Single_Window_hide_super,(fl_Single_Window win));
   FL_EXPORT_C_HEADER(void,Fl_Single_Window_hide,(fl_Single_Window win));
+  FL_EXPORT_C_HEADER(void,Fl_DerivedSingle_Window_hide,(fl_Single_Window win));
 
 #ifdef __cplusplus
 }

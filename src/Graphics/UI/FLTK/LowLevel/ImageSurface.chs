@@ -41,7 +41,7 @@ instance (impl ~ ( IO ())) => Op (SetCurrent ()) ImageSurface orig impl where
   runOp _ _ image_surface = withRef image_surface $ \image_surfacePtr -> setCurrent' image_surfacePtr
 
 {# fun Fl_Image_Surface_draw as draw' { id `Ptr ()',id `Ptr ()',`Int',`Int' } -> `()' #}
-instance (Parent a Widget, impl ~ ( Ref a  -> Position -> IO ())) => Op (Draw ()) ImageSurface orig impl where
+instance (Parent a WidgetBase, impl ~ ( Ref a  -> Position -> IO ())) => Op (Draw ()) ImageSurface orig impl where
   runOp _ _ image_surface widget (Position (X delta_x) (Y delta_y)) = withRef image_surface $ \image_surfacePtr -> withRef widget $ \widgetPtr -> draw' image_surfacePtr widgetPtr delta_x delta_y
 
 {# fun Fl_Image_Surface_get_origin as getOrigin' {id `Ptr()', alloca- `CInt' peekIntConv*, alloca- `CInt' peekIntConv*} -> `()' #}

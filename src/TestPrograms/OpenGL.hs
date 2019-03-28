@@ -13,6 +13,7 @@ module Main where
 import Graphics.UI.FLTK.LowLevel.Fl_Types
 import Graphics.UI.FLTK.LowLevel.FLTKHS
 import qualified Graphics.UI.FLTK.LowLevel.FL              as FL
+import qualified Graphics.UI.FLTK.LowLevel.Base.GlWindow   as FL
 import qualified Graphics.UI.FLTK.LowLevel.GlWindow        as FL
 import qualified Graphics.UI.FLTK.LowLevel.Gl              as FL
 import qualified Graphics.UI.FLTK.LowLevel.Fl_Enumerations as FL
@@ -90,9 +91,9 @@ drawCube wire = do
 handleCubeWindow :: Ref GlWindow -> FL.Event -> IO (Either UnknownEvent ())
 handleCubeWindow window event =
   case event of
-    FL.Enter -> setCursor window FL.CursorCross >> handleSuper window event
-    FL.Leave -> setCursor window FL.CursorDefault >> handleSuper window event
-    _ -> handleSuper window event
+    FL.Enter -> setCursor window FL.CursorCross >> FL.handleGlWindowBase (safeCast window) event
+    FL.Leave -> setCursor window FL.CursorDefault >> FL.handleGlWindowBase (safeCast window) event
+    _ -> FL.handleGlWindowBase (safeCast window) event
 
 drawCubeWindow :: IORef CubeState -> Ref GlWindow -> IO()
 drawCubeWindow stateRef window = do

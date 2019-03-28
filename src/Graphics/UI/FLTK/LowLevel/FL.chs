@@ -119,7 +119,6 @@ module Graphics.UI.FLTK.LowLevel.FL
      -- * Box
      BoxtypeSpec(..),
      getBoxtype,
-     getBoxtypePrim,
      setBoxtype,
      boxDx,
      boxDy,
@@ -432,7 +431,7 @@ firstWindow = firstWindow' >>= toMaybeRef
 
 {# fun Fl_set_first_window as setFirstWindow'
        { id `Ptr ()' } -> `()' supressWarningAboutRes #}
-setFirstWindow :: (Parent a Window) => Ref a -> IO ()
+setFirstWindow :: (Parent a WindowBase) => Ref a -> IO ()
 setFirstWindow wp =
     withRef wp setFirstWindow'
 {# fun Fl_next_window as nextWindow' { id `Ptr ()' } -> `Ptr ()' #}
@@ -449,7 +448,7 @@ grab = grab' >>= toMaybeRef
 
 {# fun Fl_set_grab as setGrab'
        { id `Ptr ()' } -> `()' supressWarningAboutRes #}
-setGrab :: (Parent a Window) => Ref a -> IO ()
+setGrab :: (Parent a WindowBase) => Ref a -> IO ()
 setGrab wp = withRef wp setGrab'
 {# fun Fl_event as event
        {  } -> `Event' cToEnum #}
@@ -585,7 +584,7 @@ eventInsideRegion (Rectangle
       return $ toEnum eventNum
 {# fun Fl_event_inside_widget as eventInsideWidget'
        { id `Ptr ()' } -> `Int' #}
-eventInsideWidget :: (Parent a Widget) => Ref a -> IO Event
+eventInsideWidget :: (Parent a WidgetBase) => Ref a -> IO Event
 eventInsideWidget wp =
     withRef wp  (\ptr -> do
                       eventNum <- eventInsideWidget' (castPtr ptr)
@@ -598,12 +597,12 @@ eventInsideWidget wp =
        {} -> `()' supressWarningAboutRes #}
 {# fun Fl_handle as handle'
        { `Int',id `Ptr ()' } -> `Int' #}
-handle :: (Parent a Window) =>  Event -> Ref a -> IO (Either UnknownEvent ())
+handle :: (Parent a WindowBase) =>  Event -> Ref a -> IO (Either UnknownEvent ())
 handle e wp =
     withRef wp (handle' (cFromEnum e)) >>= return . successOrUnknownEvent
 {# fun Fl_handle_ as handle_'
        { `Int',id `Ptr ()' } -> `Int' #}
-handle_ :: (Parent a Window) =>  Event -> Ref a -> IO (Either UnknownEvent ())
+handle_ :: (Parent a WindowBase) =>  Event -> Ref a -> IO (Either UnknownEvent ())
 handle_ e wp =
     withRef wp (handle_' (cFromEnum e)) >>= return . successOrUnknownEvent
 {# fun Fl_belowmouse as belowmouse' {  } -> `Ptr ()' #}
@@ -611,7 +610,7 @@ belowmouse  :: IO (Maybe (Ref Widget))
 belowmouse = belowmouse' >>= toMaybeRef
 {# fun Fl_set_belowmouse as setBelowmouse'
        { id `Ptr ()' } -> `()' supressWarningAboutRes #}
-setBelowmouse :: (Parent a Widget) => Ref a -> IO ()
+setBelowmouse :: (Parent a WidgetBase) => Ref a -> IO ()
 setBelowmouse wp = withRef wp setBelowmouse'
 {# fun Fl_pushed as pushed'
        {  } -> `Ptr ()' #}
@@ -619,21 +618,21 @@ pushed :: IO (Maybe (Ref Widget))
 pushed = pushed' >>= toMaybeRef
 {# fun Fl_set_pushed as setPushed'
        { id `Ptr ()' } -> `()' supressWarningAboutRes #}
-setPushed :: (Parent a Widget) => Ref a -> IO ()
+setPushed :: (Parent a WidgetBase) => Ref a -> IO ()
 setPushed wp = withRef wp setPushed'
 {# fun Fl_focus as focus' {  } -> `Ptr ()' #}
 focus :: IO (Maybe (Ref Widget))
 focus = focus' >>= toMaybeRef
 {# fun Fl_set_focus as setFocus'
        { id `Ptr ()' } -> `()' supressWarningAboutRes #}
-setFocus :: (Parent a Widget) => Ref a -> IO ()
+setFocus :: (Parent a WidgetBase) => Ref a -> IO ()
 setFocus wp = withRef wp setFocus'
 {# fun Fl_selection_owner as selectionOwner' {  } -> `Ptr ()' #}
 selectionOwner :: IO (Maybe (Ref Widget))
 selectionOwner = selectionOwner' >>= toMaybeRef
 {# fun Fl_set_selection_owner as setSelection_Owner'
        { id `Ptr ()' } -> `()' supressWarningAboutRes #}
-setSelectionOwner :: (Parent a Widget) => Ref a -> IO ()
+setSelectionOwner :: (Parent a WidgetBase) => Ref a -> IO ()
 setSelectionOwner wp = withRef wp setSelection_Owner'
 {# fun Fl_add_handler as addHandler'
        { id `FunPtr GlobalEventHandlerPrim' } -> `()' supressWarningAboutRes #}
@@ -654,7 +653,7 @@ setHandler eh = do
        { id `Ptr (FunPtr EventDispatchPrim)' } -> `()' supressWarningAboutRes #}
 {# fun Fl_event_dispatch as eventDispatch'
        {  } -> `FunPtr EventDispatchPrim' id #}
-eventDispatch :: (Parent a Widget) =>
+eventDispatch :: (Parent a WidgetBase) =>
    IO (Event -> Ref a -> IO (Either UnknownEvent ()))
 eventDispatch =
     do
@@ -671,7 +670,7 @@ eventDispatch =
              )
 
 setEventDispatch ::
-    (Parent a Widget) =>
+    (Parent a WidgetBase) =>
     (Event -> Ref a -> IO (Either UnknownEvent ())) -> IO ()
 setEventDispatch ed = do
     do
@@ -706,16 +705,16 @@ copyLengthToSelectionBuffer t l = withText t (\s' -> copyWithDestination s' l 1)
 
 {# fun Fl_paste_with_source_type as pasteWithSourceType { id `Ptr ()',`Int', `CString' } -> `()' supressWarningAboutRes #}
 
-pasteImageFromSelectionBuffer :: (Parent a Widget) => Ref a -> IO ()
+pasteImageFromSelectionBuffer :: (Parent a WidgetBase) => Ref a -> IO ()
 pasteImageFromSelectionBuffer widget = withRef widget (\widgetPtr -> withText (T.pack "Fl::clipboard_image") (\t -> pasteWithSourceType widgetPtr 0 t))
 
-pasteFromSelectionBuffer :: (Parent a Widget) => Ref a -> IO ()
+pasteFromSelectionBuffer :: (Parent a WidgetBase) => Ref a -> IO ()
 pasteFromSelectionBuffer widget = withRef widget (\widgetPtr -> withText (T.pack "Fl::clipboard_plain_text") (\t -> pasteWithSourceType widgetPtr 0 t))
 
-pasteImageFromClipboard :: (Parent a Widget) => Ref a -> IO ()
+pasteImageFromClipboard :: (Parent a WidgetBase) => Ref a -> IO ()
 pasteImageFromClipboard widget = withRef widget (\widgetPtr -> withText (T.pack "Fl::clipboard_image") (\t -> pasteWithSourceType widgetPtr 1 t))
 
-pasteFromClipboard :: (Parent a Widget) => Ref a -> IO ()
+pasteFromClipboard :: (Parent a WidgetBase) => Ref a -> IO ()
 pasteFromClipboard widget = withRef widget (\widgetPtr -> withText (T.pack "Fl::clipboard_plain_text") (\t -> pasteWithSourceType widgetPtr 1 t))
 
 {# fun Fl_dnd as dnd
@@ -948,13 +947,8 @@ removeFdWhen fd fdWhens =
 removeFd :: CInt -> IO ()
 removeFd fd = removeFd' fd
 
-{# fun Fl_get_boxtype as getBoxtypePrim
+{# fun Fl_get_boxtype as getBoxtype
        { cFromEnum `Boxtype' } -> `FunPtr BoxDrawFPrim' id #}
-getBoxtype :: Boxtype -> IO BoxDrawF
-getBoxtype bt = do
-  wrappedFunPtr <- getBoxtypePrim bt
-  let boxDrawPrim = unwrapBoxDrawFPrim wrappedFunPtr
-  return $ toBoxDrawF boxDrawPrim
 
 {# fun Fl_set_boxtype as setBoxtype'
        {
@@ -1037,18 +1031,18 @@ setDndTextOps :: Bool -> IO ()
 setDndTextOps =  {#call Fl_set_dnd_text_ops as fl_set_dnd_text_ops #} . fromBool
 dndTextOps :: IO Option
 dndTextOps = {#call Fl_dnd_text_ops as fl_dnd_text_ops #} >>= return . cToEnum
-deleteWidget :: (Parent a Widget) => Ref a -> IO ()
+deleteWidget :: (Parent a WidgetBase) => Ref a -> IO ()
 deleteWidget wptr =
   swapRef wptr $ \ptr -> do
     {#call Fl_delete_widget as fl_delete_widget #} ptr
     return nullPtr
 doWidgetDeletion :: IO ()
 doWidgetDeletion = {#call Fl_do_widget_deletion as fl_do_widget_deletion #}
-watchWidgetPointer :: (Parent a Widget) => Ref a -> IO ()
+watchWidgetPointer :: (Parent a WidgetBase) => Ref a -> IO ()
 watchWidgetPointer wp = withRef wp {#call Fl_watch_widget_pointer as fl_Watch_widget_Pointer #}
-releaseWidgetPointer :: (Parent a Widget) => Ref a -> IO ()
+releaseWidgetPointer :: (Parent a WidgetBase) => Ref a -> IO ()
 releaseWidgetPointer wp = withRef wp {#call Fl_release_widget_pointer as fl_release_widget_pointer #}
-clearWidgetPointer :: (Parent a Widget) => Ref a -> IO ()
+clearWidgetPointer :: (Parent a WidgetBase) => Ref a -> IO ()
 clearWidgetPointer wp = withRef wp {#call Fl_clear_widget_pointer as fl_Clear_Widget_Pointer #}
 -- | Only available on FLTK version 1.3.4 and above.
 setBoxColor :: Color -> IO ()

@@ -73,6 +73,8 @@ type family FindOp orig hierarchy (needle :: *) :: * where
                                         ('Text " is not supported by ")
                                         ':<>:
                                         ('ShowType w)
+                                        ':<>:
+                                        ('ShowType (Functions ws))
                                       )
 #else
   FindOp orig () n = NoFunction n orig
@@ -133,7 +135,7 @@ castTo (Ref x) = (Ref x)
 
 -- | Cast any reference to one of its ancestors.
 safeCast :: (Parent a r) => Ref a -> Ref r
-safeCast (Ref x) = (Ref x)
+safeCast (Ref x) = Ref x
 
 -- | Given some member function @op@ and a 'Ref' to some class @origObj@ return
 -- the implementation of @op@. See 'Op' for more details.

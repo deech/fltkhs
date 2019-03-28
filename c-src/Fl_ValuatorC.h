@@ -44,6 +44,7 @@ EXPORT {
   } Valuator_Type;
 #endif
   FL_EXPORT_C_HEADER(int,Fl_Valuator_handle,(fl_Widget self, int event));
+  FL_EXPORT_C_HEADER(int,Fl_DerivedValuator_handle,(fl_Widget self, int event));
   FL_EXPORT_C_HEADER(int,Fl_Valuator_handle_super,(fl_Widget self, int event));
   FL_EXPORT_C_HEADER(fl_Group,Fl_Valuator_parent,(fl_Valuator valuator));
   FL_EXPORT_C_HEADER(void,Fl_Valuator_set_parent,(fl_Valuator valuator, fl_Group grp));
@@ -104,6 +105,7 @@ FL_EXPORT_C_HEADER(void,Fl_Valuator_draw_label,(fl_Valuator Valuator));
   FL_EXPORT_C_HEADER(void,Fl_Valuator_show,(fl_Valuator valuator));
   FL_EXPORT_C_HEADER(void,Fl_Valuator_hide_super,(fl_Valuator valuator));
   FL_EXPORT_C_HEADER(void,Fl_Valuator_hide,(fl_Valuator valuator));
+  FL_EXPORT_C_HEADER(void,Fl_DerivedValuator_hide,(fl_Valuator valuator));
   FL_EXPORT_C_HEADER(void,Fl_Valuator_set_visible,(fl_Valuator valuator));
   FL_EXPORT_C_HEADER(void,Fl_Valuator_clear_visible,(fl_Valuator valuator));
   FL_EXPORT_C_HEADER(unsigned int,Fl_Valuator_active,(fl_Valuator valuator));
@@ -139,6 +141,7 @@ FL_EXPORT_C_HEADER(void,Fl_Valuator_draw_label,(fl_Valuator Valuator));
   FL_EXPORT_C_HEADER(fl_Gl_Window,Fl_Valuator_as_gl_window,(fl_Valuator valuator));
   FL_EXPORT_C_HEADER(void,Fl_Valuator_resize_super,(fl_Table table,int X, int Y, int W, int H));
   FL_EXPORT_C_HEADER(void,Fl_Valuator_resize,(fl_Table table,int X, int Y, int W, int H));
+  FL_EXPORT_C_HEADER(void,Fl_DerivedValuator_resize,(fl_Table table,int X, int Y, int W, int H));
 
   FL_EXPORT_C_HEADER(fl_Valuator_Virtual_Funcs*,Fl_Valuator_default_virtual_funcs,());
   FL_EXPORT_C_HEADER(fl_Valuator,Fl_Valuator_New_WithLabel,(int x, int y, int w, int h, const char* label));

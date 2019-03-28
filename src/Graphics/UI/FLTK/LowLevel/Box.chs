@@ -27,7 +27,7 @@ import Graphics.UI.FLTK.LowLevel.Utils
 import Graphics.UI.FLTK.LowLevel.Hierarchy
 import Graphics.UI.FLTK.LowLevel.Dispatch
 import qualified Data.Text as T
-import Graphics.UI.FLTK.LowLevel.Widget
+import Graphics.UI.FLTK.LowLevel.Base.Widget
 
 {# fun Fl_Box_New as boxNew' { `Int',`Int',`Int',`Int' } -> `Ptr ()' id #}
 {# fun Fl_Box_New_WithLabel as boxNewWithLabel' { `Int',`Int',`Int',`Int',`CString'} -> `Ptr ()' id #}

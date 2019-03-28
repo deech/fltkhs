@@ -160,6 +160,21 @@ void Fl_DerivedSimple_Terminal::destroy_data(){
     Fl_DerivedSimple_Terminal* w = new Fl_DerivedSimple_Terminal(X,Y,W,H,label,fs);
     return (fl_Simple_Terminal)w;
   };
+  FL_EXPORT_C(void, Fl_Simple_Terminal_draw)(fl_Simple_Terminal o){
+    (static_cast<Fl_DerivedSimple_Terminal*>(o))->draw();
+  }
+  FL_EXPORT_C(int, Fl_Simple_Terminal_handle)(fl_Simple_Terminal o, int event){
+    return (static_cast<Fl_DerivedSimple_Terminal*>(o))->handle(event);
+  }
+  FL_EXPORT_C(void, Fl_Simple_Terminal_resize)(fl_Simple_Terminal o, int x, int y, int w, int h){
+    (static_cast<Fl_DerivedSimple_Terminal*>(o))->resize(x,y,w,h);
+  }
+  FL_EXPORT_C(void, Fl_Simple_Terminal_show)(fl_Simple_Terminal o){
+    (static_cast<Fl_DerivedSimple_Terminal*>(o))->show();
+  }
+  FL_EXPORT_C(void, Fl_Simple_Terminal_hide)(fl_Simple_Terminal o){
+    (static_cast<Fl_DerivedSimple_Terminal*>(o))->hide();
+  }
   FL_EXPORT_C(void, Fl_Simple_Terminal_draw_super)(fl_Simple_Terminal o){
     (static_cast<Fl_DerivedSimple_Terminal*>(o))->draw_super();
   }

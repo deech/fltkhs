@@ -12,6 +12,7 @@ EXPORT {
 #endif
   /* Inherited from Fl_Widget */
   FL_EXPORT_C_HEADER(int,Fl_Double_Window_handle,(fl_Double_Window self, int event));
+  FL_EXPORT_C_HEADER(int,Fl_DerivedDouble_Window_handle,(fl_Double_Window self, int event));
   FL_EXPORT_C_HEADER(fl_Group,Fl_Double_Window_parent,(fl_Double_Window win));
   FL_EXPORT_C_HEADER(void,Fl_Double_Window_set_parent,(fl_Double_Window win, fl_Group grp));
   FL_EXPORT_C_HEADER(uchar,Fl_Double_Window_type,(fl_Double_Window win));
@@ -248,14 +249,21 @@ EXPORT {
   FL_EXPORT_C_HEADER(fl_Gl_Window,	Fl_Double_Window_as_gl_window_super,(fl_Double_Window window));
   FL_EXPORT_C_HEADER(void,		Fl_Double_Window_show_super,(fl_Double_Window win));
   FL_EXPORT_C_HEADER(void,		Fl_Double_Window_show,(fl_Double_Window win));
+  FL_EXPORT_C_HEADER(void,		Fl_DerivedDouble_Window_show,(fl_Double_Window win));
   FL_EXPORT_C_HEADER(void,		Fl_Double_Window_show_with_args,(fl_Double_Window win, int argc, char** argv));
+  FL_EXPORT_C_HEADER(void,		Fl_DerivedDouble_Window_Destroy,(fl_Double_Window win));
+  FL_EXPORT_C_HEADER(void,		Fl_Double_Window_flush_super,(fl_Double_Window win));
+  FL_EXPORT_C_HEADER(void,		Fl_Double_Window_flush,(fl_Double_Window win));
   FL_EXPORT_C_HEADER(void,		Fl_Double_Window_Destroy,(fl_Double_Window win));
   FL_EXPORT_C_HEADER(void,		Fl_Double_Window_flush_super,(fl_Double_Window win));
   FL_EXPORT_C_HEADER(void,		Fl_Double_Window_flush,(fl_Double_Window win));
+  FL_EXPORT_C_HEADER(void,		Fl_DerivedDouble_Window_flush,(fl_Double_Window win));
   FL_EXPORT_C_HEADER(void,		Fl_Double_Window_resize_super,(fl_Double_Window win, int X, int Y, int W, int H));
   FL_EXPORT_C_HEADER(void,		Fl_Double_Window_resize,(fl_Double_Window win, int X, int Y, int W, int H));
+  FL_EXPORT_C_HEADER(void,		Fl_DerivedDouble_Window_resize,(fl_Double_Window win, int X, int Y, int W, int H));
   FL_EXPORT_C_HEADER(void,		Fl_Double_Window_hide_super,(fl_Double_Window win));
   FL_EXPORT_C_HEADER(void,Fl_Double_Window_hide,(fl_Double_Window win));
+  FL_EXPORT_C_HEADER(void,Fl_DerivedDouble_Window_hide,(fl_Double_Window win));
   FL_EXPORT_C_HEADER(void,fl_Double_Window_wait_for_expose,(fl_Double_Window win));
 
 #ifdef __cplusplus

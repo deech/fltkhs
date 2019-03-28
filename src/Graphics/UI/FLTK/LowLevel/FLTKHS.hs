@@ -67,8 +67,8 @@ module Graphics.UI.FLTK.LowLevel.FLTKHS
          -- * API Guide
          --
          -- $APIGuide
-
-         -- * Slow Compilation Issues
+         --
+         -- Slow Compilation Issues
          --
          -- $Compilation
 
@@ -79,87 +79,143 @@ module Graphics.UI.FLTK.LowLevel.FLTKHS
          -- * Core Types
          module Graphics.UI.FLTK.LowLevel.Fl_Types,
          -- * Widgets
+         module Graphics.UI.FLTK.LowLevel.Base.Adjuster,
          module Graphics.UI.FLTK.LowLevel.Adjuster,
          module Graphics.UI.FLTK.LowLevel.Ask,
          module Graphics.UI.FLTK.LowLevel.BMPImage,
          module Graphics.UI.FLTK.LowLevel.Bitmap,
          module Graphics.UI.FLTK.LowLevel.Box,
+         module Graphics.UI.FLTK.LowLevel.Base.Browser,
          module Graphics.UI.FLTK.LowLevel.Browser,
+         module Graphics.UI.FLTK.LowLevel.Base.Button,
          module Graphics.UI.FLTK.LowLevel.Button,
+         module Graphics.UI.FLTK.LowLevel.Base.CheckButton,
          module Graphics.UI.FLTK.LowLevel.CheckButton,
+         module Graphics.UI.FLTK.LowLevel.Base.Choice,
          module Graphics.UI.FLTK.LowLevel.Choice,
+         module Graphics.UI.FLTK.LowLevel.Base.Clock,
          module Graphics.UI.FLTK.LowLevel.Clock,
+         module Graphics.UI.FLTK.LowLevel.Base.ColorChooser,
          module Graphics.UI.FLTK.LowLevel.ColorChooser,
          module Graphics.UI.FLTK.LowLevel.CopySurface,
+         module Graphics.UI.FLTK.LowLevel.Base.Counter,
          module Graphics.UI.FLTK.LowLevel.Counter,
+         module Graphics.UI.FLTK.LowLevel.Base.Dial,
          module Graphics.UI.FLTK.LowLevel.Dial,
          module Graphics.UI.FLTK.LowLevel.DoubleWindow,
+         module Graphics.UI.FLTK.LowLevel.Base.DoubleWindow,
          module Graphics.UI.FLTK.LowLevel.Draw,
+         module Graphics.UI.FLTK.LowLevel.Base.FileBrowser,
          module Graphics.UI.FLTK.LowLevel.FileBrowser,
+         module Graphics.UI.FLTK.LowLevel.Base.FileInput,
          module Graphics.UI.FLTK.LowLevel.FileInput,
          module Graphics.UI.FLTK.LowLevel.FillDial,
+         module Graphics.UI.FLTK.LowLevel.Base.FillSlider,
          module Graphics.UI.FLTK.LowLevel.FillSlider,
          module Graphics.UI.FLTK.LowLevel.GIFImage,
+         module Graphics.UI.FLTK.LowLevel.Base.Group,
          module Graphics.UI.FLTK.LowLevel.Group,
+         module Graphics.UI.FLTK.LowLevel.Base.HorFillSlider,
          module Graphics.UI.FLTK.LowLevel.HorFillSlider,
+         module Graphics.UI.FLTK.LowLevel.Base.HorNiceSlider,
          module Graphics.UI.FLTK.LowLevel.HorNiceSlider,
+         module Graphics.UI.FLTK.LowLevel.Base.HorSlider,
          module Graphics.UI.FLTK.LowLevel.HorSlider,
          module Graphics.UI.FLTK.LowLevel.HorValueSlider,
          module Graphics.UI.FLTK.LowLevel.Image,
          module Graphics.UI.FLTK.LowLevel.ImageSurface,
+         module Graphics.UI.FLTK.LowLevel.Base.Input,
          module Graphics.UI.FLTK.LowLevel.Input,
          module Graphics.UI.FLTK.LowLevel.JPEGImage,
+         module Graphics.UI.FLTK.LowLevel.Base.LightButton,
          module Graphics.UI.FLTK.LowLevel.LightButton,
          module Graphics.UI.FLTK.LowLevel.LineDial,
+         module Graphics.UI.FLTK.LowLevel.Base.MenuBar,
          module Graphics.UI.FLTK.LowLevel.MenuBar,
+         module Graphics.UI.FLTK.LowLevel.Base.MenuButton,
          module Graphics.UI.FLTK.LowLevel.MenuButton,
+         module Graphics.UI.FLTK.LowLevel.Base.MenuItem,
          module Graphics.UI.FLTK.LowLevel.MenuItem,
+         module Graphics.UI.FLTK.LowLevel.Base.MenuPrim,
          module Graphics.UI.FLTK.LowLevel.MenuPrim,
          module Graphics.UI.FLTK.LowLevel.MultiLabel,
          module Graphics.UI.FLTK.LowLevel.NativeFileChooser,
+         module Graphics.UI.FLTK.LowLevel.Base.NiceSlider,
          module Graphics.UI.FLTK.LowLevel.NiceSlider,
+         module Graphics.UI.FLTK.LowLevel.Base.Output,
          module Graphics.UI.FLTK.LowLevel.Output,
          module Graphics.UI.FLTK.LowLevel.OverlayWindow,
+         module Graphics.UI.FLTK.LowLevel.Base.OverlayWindow,
          module Graphics.UI.FLTK.LowLevel.PNGImage,
          module Graphics.UI.FLTK.LowLevel.PNMImage,
+         module Graphics.UI.FLTK.LowLevel.Base.Pack,
          module Graphics.UI.FLTK.LowLevel.Pack,
          module Graphics.UI.FLTK.LowLevel.Pixmap,
+         module Graphics.UI.FLTK.LowLevel.Base.Positioner,
          module Graphics.UI.FLTK.LowLevel.Positioner,
+         module Graphics.UI.FLTK.LowLevel.Base.Progress,
          module Graphics.UI.FLTK.LowLevel.Progress,
          module Graphics.UI.FLTK.LowLevel.RGBImage,
+         module Graphics.UI.FLTK.LowLevel.Base.RadioLightButton,
          module Graphics.UI.FLTK.LowLevel.RadioLightButton,
+         module Graphics.UI.FLTK.LowLevel.Base.RepeatButton,
          module Graphics.UI.FLTK.LowLevel.RepeatButton,
+         module Graphics.UI.FLTK.LowLevel.Base.ReturnButton,
          module Graphics.UI.FLTK.LowLevel.ReturnButton,
+         module Graphics.UI.FLTK.LowLevel.Base.Roller,
          module Graphics.UI.FLTK.LowLevel.Roller,
+         module Graphics.UI.FLTK.LowLevel.Base.RoundButton,
          module Graphics.UI.FLTK.LowLevel.RoundButton,
          module Graphics.UI.FLTK.LowLevel.SVGImage,
+         module Graphics.UI.FLTK.LowLevel.Base.Scrollbar,
          module Graphics.UI.FLTK.LowLevel.Scrollbar,
+         module Graphics.UI.FLTK.LowLevel.Base.Scrolled,
          module Graphics.UI.FLTK.LowLevel.Scrolled,
          module Graphics.UI.FLTK.LowLevel.SelectBrowser,
+         module Graphics.UI.FLTK.LowLevel.Base.SimpleTerminal,
          module Graphics.UI.FLTK.LowLevel.SimpleTerminal,
+         module Graphics.UI.FLTK.LowLevel.Base.SingleWindow,
          module Graphics.UI.FLTK.LowLevel.SingleWindow,
+         module Graphics.UI.FLTK.LowLevel.Base.Slider,
          module Graphics.UI.FLTK.LowLevel.Slider,
+         module Graphics.UI.FLTK.LowLevel.Base.Spinner,
          module Graphics.UI.FLTK.LowLevel.Spinner,
+         module Graphics.UI.FLTK.LowLevel.Base.SysMenuBar,
          module Graphics.UI.FLTK.LowLevel.SysMenuBar,
+         module Graphics.UI.FLTK.LowLevel.Base.Table,
          module Graphics.UI.FLTK.LowLevel.Table,
+         module Graphics.UI.FLTK.LowLevel.Base.TableRow,
          module Graphics.UI.FLTK.LowLevel.TableRow,
+         module Graphics.UI.FLTK.LowLevel.Base.Tabs,
          module Graphics.UI.FLTK.LowLevel.Tabs,
          module Graphics.UI.FLTK.LowLevel.TextBuffer,
+         module Graphics.UI.FLTK.LowLevel.Base.TextDisplay,
          module Graphics.UI.FLTK.LowLevel.TextDisplay,
+         module Graphics.UI.FLTK.LowLevel.Base.TextEditor,
          module Graphics.UI.FLTK.LowLevel.TextEditor,
          module Graphics.UI.FLTK.LowLevel.TextSelection,
+         module Graphics.UI.FLTK.LowLevel.Base.Tile,
          module Graphics.UI.FLTK.LowLevel.Tile,
+         module Graphics.UI.FLTK.LowLevel.Base.ToggleButton,
          module Graphics.UI.FLTK.LowLevel.ToggleButton,
          module Graphics.UI.FLTK.LowLevel.Tooltip,
+         module Graphics.UI.FLTK.LowLevel.Base.Tree,
          module Graphics.UI.FLTK.LowLevel.Tree,
          module Graphics.UI.FLTK.LowLevel.TreeItem,
          module Graphics.UI.FLTK.LowLevel.TreePrefs,
+         module Graphics.UI.FLTK.LowLevel.Base.Valuator,
          module Graphics.UI.FLTK.LowLevel.Valuator,
+         module Graphics.UI.FLTK.LowLevel.Base.ValueInput,
          module Graphics.UI.FLTK.LowLevel.ValueInput,
+         module Graphics.UI.FLTK.LowLevel.Base.ValueOutput,
          module Graphics.UI.FLTK.LowLevel.ValueOutput,
+         module Graphics.UI.FLTK.LowLevel.Base.ValueSlider,
          module Graphics.UI.FLTK.LowLevel.ValueSlider,
          module Graphics.UI.FLTK.LowLevel.Widget,
+         module Graphics.UI.FLTK.LowLevel.Base.Widget,
+         module Graphics.UI.FLTK.LowLevel.Base.Window,
          module Graphics.UI.FLTK.LowLevel.Window,
+         module Graphics.UI.FLTK.LowLevel.Base.Wizard,
          module Graphics.UI.FLTK.LowLevel.Wizard,
          module Graphics.UI.FLTK.LowLevel.XBMImage,
          module Graphics.UI.FLTK.LowLevel.XPMImage,
@@ -169,91 +225,147 @@ module Graphics.UI.FLTK.LowLevel.FLTKHS
          module Graphics.UI.FLTK.LowLevel.Hierarchy
        )
 where
-import Graphics.UI.FLTK.LowLevel.Adjuster
+import Graphics.UI.FLTK.LowLevel.Base.Adjuster
+import Graphics.UI.FLTK.LowLevel.Adjuster()
 import Graphics.UI.FLTK.LowLevel.Ask
 import Graphics.UI.FLTK.LowLevel.BMPImage
 import Graphics.UI.FLTK.LowLevel.Bitmap
 import Graphics.UI.FLTK.LowLevel.Box
-import Graphics.UI.FLTK.LowLevel.Browser
-import Graphics.UI.FLTK.LowLevel.Button
-import Graphics.UI.FLTK.LowLevel.CheckButton
-import Graphics.UI.FLTK.LowLevel.Choice
-import Graphics.UI.FLTK.LowLevel.Clock
-import Graphics.UI.FLTK.LowLevel.ColorChooser
+import Graphics.UI.FLTK.LowLevel.Base.Browser
+import Graphics.UI.FLTK.LowLevel.Browser()
+import Graphics.UI.FLTK.LowLevel.Base.Button
+import Graphics.UI.FLTK.LowLevel.Button()
+import Graphics.UI.FLTK.LowLevel.Base.CheckButton
+import Graphics.UI.FLTK.LowLevel.CheckButton()
+import Graphics.UI.FLTK.LowLevel.Base.Choice
+import Graphics.UI.FLTK.LowLevel.Choice()
+import Graphics.UI.FLTK.LowLevel.Base.Clock
+import Graphics.UI.FLTK.LowLevel.Clock()
+import Graphics.UI.FLTK.LowLevel.Base.ColorChooser
+import Graphics.UI.FLTK.LowLevel.ColorChooser()
 import Graphics.UI.FLTK.LowLevel.CopySurface
-import Graphics.UI.FLTK.LowLevel.Counter
-import Graphics.UI.FLTK.LowLevel.Dial
+import Graphics.UI.FLTK.LowLevel.Base.Counter
+import Graphics.UI.FLTK.LowLevel.Counter()
+import Graphics.UI.FLTK.LowLevel.Base.Dial
+import Graphics.UI.FLTK.LowLevel.Dial()
 import Graphics.UI.FLTK.LowLevel.Dispatch
-import Graphics.UI.FLTK.LowLevel.DoubleWindow
+import Graphics.UI.FLTK.LowLevel.DoubleWindow()
+import Graphics.UI.FLTK.LowLevel.Base.DoubleWindow
 import Graphics.UI.FLTK.LowLevel.Draw
-import Graphics.UI.FLTK.LowLevel.FileBrowser
-import Graphics.UI.FLTK.LowLevel.FileInput
+import Graphics.UI.FLTK.LowLevel.Base.FileBrowser
+import Graphics.UI.FLTK.LowLevel.FileBrowser()
+import Graphics.UI.FLTK.LowLevel.Base.FileInput
+import Graphics.UI.FLTK.LowLevel.FileInput()
 import Graphics.UI.FLTK.LowLevel.FillDial
-import Graphics.UI.FLTK.LowLevel.FillSlider
+import Graphics.UI.FLTK.LowLevel.Base.FillSlider
+import Graphics.UI.FLTK.LowLevel.FillSlider()
 import Graphics.UI.FLTK.LowLevel.Fl_Types
 import Graphics.UI.FLTK.LowLevel.GIFImage
-import Graphics.UI.FLTK.LowLevel.Group
+import Graphics.UI.FLTK.LowLevel.Base.Group
+import Graphics.UI.FLTK.LowLevel.Group()
 import Graphics.UI.FLTK.LowLevel.Hierarchy
-import Graphics.UI.FLTK.LowLevel.HorFillSlider
-import Graphics.UI.FLTK.LowLevel.HorNiceSlider
-import Graphics.UI.FLTK.LowLevel.HorSlider
+import Graphics.UI.FLTK.LowLevel.Base.HorFillSlider
+import Graphics.UI.FLTK.LowLevel.HorFillSlider()
+import Graphics.UI.FLTK.LowLevel.Base.HorNiceSlider
+import Graphics.UI.FLTK.LowLevel.HorNiceSlider()
+import Graphics.UI.FLTK.LowLevel.Base.HorSlider
+import Graphics.UI.FLTK.LowLevel.HorSlider()
 import Graphics.UI.FLTK.LowLevel.HorValueSlider
 import Graphics.UI.FLTK.LowLevel.Image
 import Graphics.UI.FLTK.LowLevel.ImageSurface
-import Graphics.UI.FLTK.LowLevel.Input
+import Graphics.UI.FLTK.LowLevel.Base.Input
+import Graphics.UI.FLTK.LowLevel.Input()
 import Graphics.UI.FLTK.LowLevel.JPEGImage
-import Graphics.UI.FLTK.LowLevel.LightButton
+import Graphics.UI.FLTK.LowLevel.Base.LightButton
+import Graphics.UI.FLTK.LowLevel.LightButton()
 import Graphics.UI.FLTK.LowLevel.LineDial
-import Graphics.UI.FLTK.LowLevel.MenuBar
-import Graphics.UI.FLTK.LowLevel.MenuButton
-import Graphics.UI.FLTK.LowLevel.MenuItem
-import Graphics.UI.FLTK.LowLevel.MenuPrim
+import Graphics.UI.FLTK.LowLevel.Base.MenuBar
+import Graphics.UI.FLTK.LowLevel.MenuBar()
+import Graphics.UI.FLTK.LowLevel.Base.MenuButton
+import Graphics.UI.FLTK.LowLevel.MenuButton()
+import Graphics.UI.FLTK.LowLevel.Base.MenuItem
+import Graphics.UI.FLTK.LowLevel.MenuItem()
+import Graphics.UI.FLTK.LowLevel.Base.MenuPrim
+import Graphics.UI.FLTK.LowLevel.MenuPrim()
 import Graphics.UI.FLTK.LowLevel.MultiLabel
 import Graphics.UI.FLTK.LowLevel.NativeFileChooser
-import Graphics.UI.FLTK.LowLevel.NiceSlider
-import Graphics.UI.FLTK.LowLevel.Output
-import Graphics.UI.FLTK.LowLevel.OverlayWindow
+import Graphics.UI.FLTK.LowLevel.Base.NiceSlider
+import Graphics.UI.FLTK.LowLevel.NiceSlider()
+import Graphics.UI.FLTK.LowLevel.Base.Output
+import Graphics.UI.FLTK.LowLevel.Output()
+import Graphics.UI.FLTK.LowLevel.Base.OverlayWindow
+import Graphics.UI.FLTK.LowLevel.OverlayWindow()
 import Graphics.UI.FLTK.LowLevel.PNGImage
 import Graphics.UI.FLTK.LowLevel.PNMImage
-import Graphics.UI.FLTK.LowLevel.Pack
+import Graphics.UI.FLTK.LowLevel.Base.Pack
+import Graphics.UI.FLTK.LowLevel.Pack()
 import Graphics.UI.FLTK.LowLevel.Pixmap
-import Graphics.UI.FLTK.LowLevel.Positioner
-import Graphics.UI.FLTK.LowLevel.Progress
+import Graphics.UI.FLTK.LowLevel.Base.Positioner
+import Graphics.UI.FLTK.LowLevel.Positioner()
+import Graphics.UI.FLTK.LowLevel.Base.Progress
+import Graphics.UI.FLTK.LowLevel.Progress()
 import Graphics.UI.FLTK.LowLevel.RGBImage
-import Graphics.UI.FLTK.LowLevel.RadioLightButton
-import Graphics.UI.FLTK.LowLevel.RepeatButton
-import Graphics.UI.FLTK.LowLevel.ReturnButton
-import Graphics.UI.FLTK.LowLevel.Roller
-import Graphics.UI.FLTK.LowLevel.RoundButton
+import Graphics.UI.FLTK.LowLevel.Base.RadioLightButton
+import Graphics.UI.FLTK.LowLevel.RadioLightButton()
+import Graphics.UI.FLTK.LowLevel.Base.RepeatButton
+import Graphics.UI.FLTK.LowLevel.RepeatButton()
+import Graphics.UI.FLTK.LowLevel.Base.ReturnButton
+import Graphics.UI.FLTK.LowLevel.ReturnButton()
+import Graphics.UI.FLTK.LowLevel.Base.Roller
+import Graphics.UI.FLTK.LowLevel.Roller()
+import Graphics.UI.FLTK.LowLevel.Base.RoundButton
+import Graphics.UI.FLTK.LowLevel.RoundButton()
 import Graphics.UI.FLTK.LowLevel.SVGImage
-import Graphics.UI.FLTK.LowLevel.Scrollbar
-import Graphics.UI.FLTK.LowLevel.Scrolled
+import Graphics.UI.FLTK.LowLevel.Base.Scrollbar
+import Graphics.UI.FLTK.LowLevel.Scrollbar()
+import Graphics.UI.FLTK.LowLevel.Base.Scrolled
+import Graphics.UI.FLTK.LowLevel.Scrolled()
 import Graphics.UI.FLTK.LowLevel.SelectBrowser
-import Graphics.UI.FLTK.LowLevel.SimpleTerminal
-import Graphics.UI.FLTK.LowLevel.SingleWindow
-import Graphics.UI.FLTK.LowLevel.Slider
-import Graphics.UI.FLTK.LowLevel.Spinner
-import Graphics.UI.FLTK.LowLevel.SysMenuBar
-import Graphics.UI.FLTK.LowLevel.Table
-import Graphics.UI.FLTK.LowLevel.TableRow
-import Graphics.UI.FLTK.LowLevel.Tabs
+import Graphics.UI.FLTK.LowLevel.Base.SimpleTerminal
+import Graphics.UI.FLTK.LowLevel.SimpleTerminal()
+import Graphics.UI.FLTK.LowLevel.Base.SingleWindow
+import Graphics.UI.FLTK.LowLevel.SingleWindow()
+import Graphics.UI.FLTK.LowLevel.Base.Slider
+import Graphics.UI.FLTK.LowLevel.Slider()
+import Graphics.UI.FLTK.LowLevel.Base.Spinner
+import Graphics.UI.FLTK.LowLevel.Spinner()
+import Graphics.UI.FLTK.LowLevel.Base.SysMenuBar
+import Graphics.UI.FLTK.LowLevel.SysMenuBar()
+import Graphics.UI.FLTK.LowLevel.Base.Table
+import Graphics.UI.FLTK.LowLevel.Table()
+import Graphics.UI.FLTK.LowLevel.Base.TableRow
+import Graphics.UI.FLTK.LowLevel.TableRow()
+import Graphics.UI.FLTK.LowLevel.Base.Tabs
+import Graphics.UI.FLTK.LowLevel.Tabs()
 import Graphics.UI.FLTK.LowLevel.TextBuffer
-import Graphics.UI.FLTK.LowLevel.TextDisplay
-import Graphics.UI.FLTK.LowLevel.TextEditor
+import Graphics.UI.FLTK.LowLevel.Base.TextDisplay
+import Graphics.UI.FLTK.LowLevel.TextDisplay()
+import Graphics.UI.FLTK.LowLevel.Base.TextEditor
+import Graphics.UI.FLTK.LowLevel.TextEditor()
 import Graphics.UI.FLTK.LowLevel.TextSelection()
-import Graphics.UI.FLTK.LowLevel.Tile
-import Graphics.UI.FLTK.LowLevel.ToggleButton
+import Graphics.UI.FLTK.LowLevel.Base.Tile
+import Graphics.UI.FLTK.LowLevel.Tile()
+import Graphics.UI.FLTK.LowLevel.Base.ToggleButton
+import Graphics.UI.FLTK.LowLevel.ToggleButton()
 import Graphics.UI.FLTK.LowLevel.Tooltip
-import Graphics.UI.FLTK.LowLevel.Tree
+import Graphics.UI.FLTK.LowLevel.Base.Tree
+import Graphics.UI.FLTK.LowLevel.Tree()
 import Graphics.UI.FLTK.LowLevel.TreeItem
 import Graphics.UI.FLTK.LowLevel.TreePrefs
-import Graphics.UI.FLTK.LowLevel.Valuator
-import Graphics.UI.FLTK.LowLevel.ValueInput
-import Graphics.UI.FLTK.LowLevel.ValueOutput
-import Graphics.UI.FLTK.LowLevel.ValueSlider
-import Graphics.UI.FLTK.LowLevel.Widget
-import Graphics.UI.FLTK.LowLevel.Window
-import Graphics.UI.FLTK.LowLevel.Wizard
+import Graphics.UI.FLTK.LowLevel.Base.Valuator
+import Graphics.UI.FLTK.LowLevel.Valuator()
+import Graphics.UI.FLTK.LowLevel.Base.ValueInput
+import Graphics.UI.FLTK.LowLevel.ValueInput()
+import Graphics.UI.FLTK.LowLevel.Base.ValueOutput
+import Graphics.UI.FLTK.LowLevel.ValueOutput()
+import Graphics.UI.FLTK.LowLevel.Base.ValueSlider
+import Graphics.UI.FLTK.LowLevel.ValueSlider()
+import Graphics.UI.FLTK.LowLevel.Base.Widget
+import Graphics.UI.FLTK.LowLevel.Widget()
+import Graphics.UI.FLTK.LowLevel.Base.Window
+import Graphics.UI.FLTK.LowLevel.Window()
+import Graphics.UI.FLTK.LowLevel.Base.Wizard
+import Graphics.UI.FLTK.LowLevel.Wizard()
 import Graphics.UI.FLTK.LowLevel.XBMImage
 import Graphics.UI.FLTK.LowLevel.XPMImage
 
@@ -1106,7 +1218,7 @@ import Graphics.UI.FLTK.LowLevel.XPMImage
 -- <http://www.fltk.org/doc-1.4/classes.html C++ documentation> to use the
 -- binding API.
 --
--- === Overriding C++ methods
+-- === Overriding C++ methods 
 --
 -- The binding API allows a limited but powerful form of "inheritance" allowing
 -- users to override certain key FLTK methods with Haskell functions. All GUI
@@ -1134,33 +1246,33 @@ import Graphics.UI.FLTK.LowLevel.XPMImage
 -- to the C++ side and called whenever the event loop deems appropriate. Unlike
 -- callbacks, they can be set only on object instantiation.
 --
--- An example of this is "Graphics.UI.FLTK.LowLevel.Widget" which, since it is a
+-- An example of this is "Graphics.UI.FLTK.LowLevel.Base.Widget" which, since it is a
 -- base class for most widgets and doesn't have much functionality of its own,
 -- only allows custom construction using 'widgetCustom'. This constructor takes
 -- a 'CustomWidgetFuncs' datatype which is a record of functions which tells a
--- "Graphics.UI.FLTK.LowLevel.Widget" how to handle events and draw, resize and
+-- "Graphics.UI.FLTK.LowLevel.Base.Widget" how to handle events and draw, resize and
 -- display itself.
 --
--- Again "Graphics.UI.FLTK.LowLevel.Window" can be used a motivating example.
+-- Again "Graphics.UI.FLTK.LowLevel.Base.Window" can be used a motivating example.
 -- Its custom constructor 'windowCustom', in fact, takes two records: a
 -- 'CustomWidgetFuncs' which allows you to override methods in its
--- "Graphics.UI.FLTK.LowLevel.Widget" parent class, and also a
+-- "Graphics.UI.FLTK.LowLevel.Base.Widget" parent class, and also a
 -- 'CustomWindowFuncs' record which allows you to override @flush@, a
 -- method on the Window class which tells the window how to force a redraw. For
 -- example, the demo /src\/Examples\/doublebuffer.hs/ (which corresponds to the
 -- executable 'ftlkhs-doublebuffer') tells both windows how to draw themselves
 -- in a Haskell function that uses low-level FLTK drawing routines by overriding
--- the draw function of their "Graphics.UI.FLTK.LowLevel.Widget" parent.
+-- the draw function of their "Graphics.UI.FLTK.LowLevel.Base.Widget" parent.
 --
 -- Every widget that supports customizing also provides a default function
 -- record that can be passed to the constructor. For example,
--- "Graphics.UI.FLTK.LowLevel.Widget" provides 'defaultCustomWidgetFuncs' and
--- "Graphics.UI.FLTK.LowLevel.Window" has 'defaultCustomWindowFuncs'. In the
+-- "Graphics.UI.FLTK.LowLevel.Base.Widget" provides 'defaultCustomWidgetFuncs' and
+-- "Graphics.UI.FLTK.LowLevel.Base.Window" has 'defaultCustomWindowFuncs'. In the
 -- demo mentioned above, the 'singleWindowCustom' function is given
--- 'defaultCustomWidgetFuncs' but with an overridden 'drawCustom'.
+-- 'defaultCustom.WidgetFuncs' but with an overridden 'drawCustom'.
 --
 -- Another case where customization comes up a lot is when using
--- "Graphics.UI.FLTK.LowLevel.Table" which is a low-level table widget that
+-- "Graphics.UI.FLTK.LowLevel.Base.Table" which is a low-level table widget that
 -- needs to be told, for example, how to draw its cells. The demo
 -- /src\/Examples\/table-simple.hs/ (corresponding to the executable
 -- 'fltkhs-table-simple') shows this in action.
@@ -1171,7 +1283,7 @@ import Graphics.UI.FLTK.LowLevel.XPMImage
 -- For most customizable functions, a widget provides a
 -- corresponding function that calls the default C++ implementation as the
 -- function name suffixed with \"Super\". For instance, you can provide a
--- custom implementation of /handle/ on "Graphics.UI.FLTK.LowLevel.Window" via
+-- custom implementation of /handle/ on "Graphics.UI.FLTK.LowLevel.Base.Window" via
 -- the constructor and every call to /handle/ invokes that implementation, but
 -- you can also call /handleSuper/ to get at the default C++
 -- implementation. This comes in handy when the custom function is just setting

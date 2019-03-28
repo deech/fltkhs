@@ -31,6 +31,7 @@ EXPORT {
 #endif
   /* Inherited from Fl_Widget */
   FL_EXPORT_C_HEADER(int,Fl_Light_Button_handle,(fl_Light_Button self, int event));
+  FL_EXPORT_C_HEADER(int,Fl_DerivedLight_Button_handle,(fl_Light_Button self, int event));
   FL_EXPORT_C_HEADER(fl_Group,Fl_Light_Button_parent,(fl_Light_Button light_button));
   FL_EXPORT_C_HEADER(void,Fl_Light_Button_set_parent,(fl_Light_Button light_button, fl_Group grp));
   FL_EXPORT_C_HEADER(uchar,Fl_Light_Button_type,(fl_Light_Button light_button));
@@ -136,10 +137,13 @@ EXPORT {
   FL_EXPORT_C_HEADER(int,Fl_Light_Button_handle,(fl_Light_Button o, int event));
   FL_EXPORT_C_HEADER(int,Fl_Light_Button_handle_super,(fl_Light_Button o, int event));
   FL_EXPORT_C_HEADER(void,Fl_Light_Button_resize,(fl_Light_Button o, int x, int y, int w, int h));
+  FL_EXPORT_C_HEADER(void,Fl_DerivedLight_Button_resize,(fl_Light_Button o, int x, int y, int w, int h));
   FL_EXPORT_C_HEADER(void,Fl_Light_Button_resize_super,(fl_Light_Button o, int x, int y, int w, int h));
   FL_EXPORT_C_HEADER(void,Fl_Light_Button_show,(fl_Light_Button o));
+  FL_EXPORT_C_HEADER(void,Fl_DerivedLight_Button_show,(fl_Light_Button o));
   FL_EXPORT_C_HEADER(void,Fl_Light_Button_show_super,(fl_Light_Button o));
   FL_EXPORT_C_HEADER(void,Fl_Light_Button_hide,(fl_Light_Button o));
+  FL_EXPORT_C_HEADER(void,Fl_DerivedLight_Button_hide,(fl_Light_Button o));
   FL_EXPORT_C_HEADER(void,Fl_Light_Button_hide_super,(fl_Light_Button o));
 
 #ifdef __cplusplus
