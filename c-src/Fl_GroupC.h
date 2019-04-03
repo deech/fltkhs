@@ -35,6 +35,7 @@ EXPORT {
 #endif
   /* Inherited from Fl_Widget */
   FL_EXPORT_C_HEADER(int,Fl_Group_handle,(fl_Group self, int event));
+  FL_EXPORT_C_HEADER(int,Fl_DerivedGroup_handle,(fl_Group self, int event));
   FL_EXPORT_C_HEADER(int,Fl_Group_handle_super,(fl_Group self, int event));
   FL_EXPORT_C_HEADER(fl_Group,Fl_Group_parent,(fl_Group group));
   FL_EXPORT_C_HEADER(void,Fl_Group_set_parent,(fl_Group group, fl_Group grp));
@@ -86,7 +87,9 @@ EXPORT {
   FL_EXPORT_C_HEADER(int,Fl_Group_visible_r,(fl_Group group));
   FL_EXPORT_C_HEADER(void,Fl_Group_show_super,(fl_Group group));
   FL_EXPORT_C_HEADER(void,Fl_Group_show,(fl_Group group));
+  FL_EXPORT_C_HEADER(void,Fl_DerivedGroup_show,(fl_Group group));
   FL_EXPORT_C_HEADER(void,Fl_Group_hide_super,(fl_Group group));
+  FL_EXPORT_C_HEADER(void,Fl_DerivedGroup_hide,(fl_Group group));
   FL_EXPORT_C_HEADER(void,Fl_Group_hide,(fl_Group group));
   FL_EXPORT_C_HEADER(void,Fl_Group_set_visible,(fl_Group group));
   FL_EXPORT_C_HEADER(void,Fl_Group_clear_visible,(fl_Group group));
@@ -125,6 +128,7 @@ EXPORT {
   FL_EXPORT_C_HEADER(fl_Gl_Window,Fl_Group_as_gl_window,(fl_Group group));
   FL_EXPORT_C_HEADER(void,Fl_Group_resize_super,(fl_Group group,int X, int Y, int W, int H));
   FL_EXPORT_C_HEADER(void,Fl_Group_resize,(fl_Group group,int X, int Y, int W, int H));
+  FL_EXPORT_C_HEADER(void,Fl_DerivedGroup_resize,(fl_Group group,int X, int Y, int W, int H));
   FL_EXPORT_C_HEADER(void ,Fl_Group_resize_super,(fl_Group self, int x, int y, int w, int h));
 
   /* Fl_Group static members */
@@ -137,7 +141,7 @@ EXPORT {
   FL_EXPORT_C_HEADER(void,Fl_Group_draw_outside_label,(fl_Group group, fl_Widget widget));
   FL_EXPORT_C_HEADER(void,Fl_Group_update_child,(fl_Group group, fl_Widget widget));
   FL_EXPORT_C_HEADER(void,Fl_Group_begin,(fl_Group group));
-  FL_EXPORT_C_HEADER(void,Fl_Group_draw,(fl_Group group));
+  FL_EXPORT_C_HEADER(void,Fl_DerivedGroup_draw,(fl_Group group));
   FL_EXPORT_C_HEADER(void,Fl_Group_draw_super,(fl_Group group));
   FL_EXPORT_C_HEADER(void,Fl_Group_end,(fl_Group group));
   FL_EXPORT_C_HEADER(int,Fl_Group_find,(fl_Group group, fl_Widget w));
@@ -164,6 +168,7 @@ EXPORT {
   FL_EXPORT_C_HEADER(fl_Group,Fl_OverriddenGroup_New,(int X, int Y, int W, int H,fl_Widget_Virtual_Funcs* fs));
   FL_EXPORT_C_HEADER(fl_Group,Fl_OverriddenGroup_New_WithLabel,(int X, int Y, int W, int H, const char* label, fl_Widget_Virtual_Funcs* fs));
   FL_EXPORT_C_HEADER(void,Fl_Group_Destroy,(fl_Group group));
+  FL_EXPORT_C_HEADER(void,Fl_DerivedGroup_Destroy,(fl_Group group));
 #ifdef __cplusplus
 }
 #endif

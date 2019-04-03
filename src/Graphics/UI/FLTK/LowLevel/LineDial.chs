@@ -14,7 +14,7 @@ import C2HS hiding (cFromEnum, cFromBool, cToBool,cToEnum)
 import Graphics.UI.FLTK.LowLevel.Fl_Types
 import Graphics.UI.FLTK.LowLevel.Utils
 import Graphics.UI.FLTK.LowLevel.Hierarchy
-import Graphics.UI.FLTK.LowLevel.Widget
+import Graphics.UI.FLTK.LowLevel.Base.Widget
 import qualified Data.Text as T
 {# fun Fl_Line_Dial_New as lineDialNew' { `Int',`Int',`Int',`Int' } -> `Ptr ()' id #}
 {# fun Fl_Line_Dial_New_WithLabel as lineDialNewWithLabel' { `Int',`Int',`Int',`Int', `CString'} -> `Ptr ()' id #}
@@ -29,15 +29,16 @@ lineDialNew rectangle l'=
           setFlag ref WidgetFlagCopiedTooltip
           return ref
 
+
 -- $hierarchy
 -- @
--- "Graphics.UI.FLTK.LowLevel.Widget"
+-- "Graphics.UI.FLTK.LowLevel.Base.Widget"
 --  |
 --  v
--- "Graphics.UI.FLTK.LowLevel.Valuator"
+-- "Graphics.UI.FLTK.LowLevel.Base.Valuator"
 --  |
 --  v
--- "Graphics.UI.FLTK.LowLevel.Dial"
+-- "Graphics.UI.FLTK.LowLevel.Base.Dial"
 --  |
 --  v
 -- "Graphics.UI.FLTK.LowLevel.LineDial"

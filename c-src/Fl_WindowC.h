@@ -53,6 +53,7 @@ EXPORT {
 #endif
   /* Inherited from Fl_Widget */
   FL_EXPORT_C_HEADER(int,Fl_Window_handle,(fl_Window self, int event));
+  FL_EXPORT_C_HEADER(int,Fl_DerivedWindow_handle,(fl_Window self, int event));
   FL_EXPORT_C_HEADER(fl_Group,Fl_Window_parent,(fl_Window win));
   FL_EXPORT_C_HEADER(void,Fl_Window_set_parent,(fl_Window win, fl_Group grp));
   FL_EXPORT_C_HEADER(uchar,Fl_Window_type,(fl_Window win));
@@ -182,6 +183,7 @@ EXPORT {
   FL_EXPORT_C_HEADER(void,Fl_Window_show_super,(fl_Window window));
   FL_EXPORT_C_HEADER(void,Fl_Window_hide_super,(fl_Window window));
   FL_EXPORT_C_HEADER(void,Fl_Window_flush_super,(fl_Window window));
+  FL_EXPORT_C_HEADER(void,Fl_Window_flush,(fl_Window window));
   FL_EXPORT_C_HEADER(fl_Window,Fl_Window_as_window_super,(fl_Window window));
   FL_EXPORT_C_HEADER(fl_Gl_Window,Fl_Window_as_gl_window_super,(fl_Window window));
   FL_EXPORT_C_HEADER(fl_Window,Fl_Window_as_window,(fl_Window window));
@@ -199,11 +201,15 @@ EXPORT {
   FL_EXPORT_C_HEADER(fl_Window,Fl_OverriddenWindow_NewXY_WithLabel,(int x, int y, int w, int h, const char* title,fl_Window_Virtual_Funcs* funcs));
   FL_EXPORT_C_HEADER(fl_Window,Fl_Window_NewXY,(int x, int y, int w, int h));
   FL_EXPORT_C_HEADER(fl_Window,Fl_OverriddenWindow_NewXY,(int x, int y, int w, int h,fl_Window_Virtual_Funcs* funcs));
+  FL_EXPORT_C_HEADER(void,Fl_DerivedWindow_hide,(fl_Window win));
   FL_EXPORT_C_HEADER(void,Fl_Window_hide,(fl_Window win));
+  FL_EXPORT_C_HEADER(void,Fl_DerivedWindow_show,(fl_Window win));
   FL_EXPORT_C_HEADER(void,Fl_Window_show,(fl_Window win));
   FL_EXPORT_C_HEADER(void,Fl_Window_show_with_args,(fl_Window win, int argc, char** argv));
+  FL_EXPORT_C_HEADER(void,Fl_DerivedWindow_Destroy,(fl_Window win));
   FL_EXPORT_C_HEADER(void,Fl_Window_Destroy,(fl_Window win));
   FL_EXPORT_C_HEADER(void,Fl_Window_resize,(fl_Window win, int X, int Y, int W, int H));
+  FL_EXPORT_C_HEADER(void,Fl_DerivedWindow_resize,(fl_Window win, int X, int Y, int W, int H));
   FL_EXPORT_C_HEADER(void,Fl_Window_iconize,(fl_Window win));
   FL_EXPORT_C_HEADER(int ,Fl_Window_handle,(fl_Window win, int event));
   FL_EXPORT_C_HEADER(void ,Fl_Window_set_border,(fl_Window win, int b));

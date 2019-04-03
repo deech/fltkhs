@@ -10,6 +10,9 @@ void Fl_DerivedMenu_Item::draw(int x, int y, int w, int h, Fl_Menu_* m, int sele
         Fl_Menu_Item::draw(x,y,w,h,m,selected);
     }
 }
+void Fl_DerivedMenu_Item::draw_super(int x, int y, int w, int h, Fl_Menu_* m, int selected) {
+  Fl_Menu_Item::draw(x,y,w,h,m,selected);
+}
  Fl_DerivedMenu_Item::~Fl_DerivedMenu_Item() {
    if (this->dfps != NULL){
      fl_DoNotCall* fps = NULL;
@@ -172,8 +175,11 @@ void Fl_DerivedMenu_Item::draw(int x, int y, int w, int h, Fl_Menu_* m, int sele
   FL_EXPORT_C(void,Fl_Menu_Item_draw_with_t)(fl_Menu_Item menu_item,int x,int y,int w,int h,fl_Menu_ menu ,int t){
     return (static_cast<Fl_DerivedMenu_Item*>(menu_item))->draw(x,y,w,h,(static_cast<Fl_Menu_*>(menu)),t);
   }
-  FL_EXPORT_C(void,Fl_Menu_Item_draw)(fl_Menu_Item menu_item,int x,int y,int w,int h,fl_Menu_ menu){
+  FL_EXPORT_C(void,Fl_DerivedMenu_Item_draw)(fl_Menu_Item menu_item,int x,int y,int w,int h,fl_Menu_ menu){
     return (static_cast<Fl_DerivedMenu_Item*>(menu_item))->draw(x,y,w,h,(static_cast<Fl_Menu_*>(menu)), 0);
+  }
+  FL_EXPORT_C(void,Fl_Menu_Item_draw)(fl_Menu_Item menu_item,int x,int y,int w,int h,fl_Menu_ menu){
+    return (static_cast<Fl_DerivedMenu_Item*>(menu_item))->draw_super(x,y,w,h,(static_cast<Fl_Menu_*>(menu)), 0);
   }
   FL_EXPORT_C(int, Fl_Menu_Item_flags)(fl_Menu_Item menu_item){
     return (static_cast<Fl_DerivedMenu_Item*>(menu_item))->flags;

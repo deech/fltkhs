@@ -99,6 +99,9 @@ void Fl_DerivedColor_Chooser::destroy_data(){
       return Fl_Color_Chooser::mode();
     }
   };
+  int Fl_DerivedColor_Chooser::mode_super() {
+    return Fl_Color_Chooser::mode();
+  };
   void Fl_DerivedColor_Chooser::mode(int newMode){
     if (this->cOverriddenFuncs && this->cOverriddenFuncs->set_mode) {
       this->cOverriddenFuncs->set_mode((fl_Color_Chooser) this, newMode);
@@ -106,6 +109,9 @@ void Fl_DerivedColor_Chooser::destroy_data(){
     else {
       Fl_Color_Chooser::mode(newMode);
     }
+  }
+  void Fl_DerivedColor_Chooser::mode_super(int newMode){
+    Fl_Color_Chooser::mode(newMode);
   }
   double Fl_DerivedColor_Chooser::hue(){
     if (this->cOverriddenFuncs && this->cOverriddenFuncs->hue) {
@@ -115,6 +121,9 @@ void Fl_DerivedColor_Chooser::destroy_data(){
       return Fl_Color_Chooser::hue();
     }
   };
+  double Fl_DerivedColor_Chooser::hue_super(){
+    return Fl_Color_Chooser::hue();
+  };
   double Fl_DerivedColor_Chooser::saturation(){
     if (this->cOverriddenFuncs && this->cOverriddenFuncs->saturation) {
       return this->cOverriddenFuncs->saturation((fl_Color_Chooser) this);
@@ -122,6 +131,9 @@ void Fl_DerivedColor_Chooser::destroy_data(){
     else {
       return Fl_Color_Chooser::saturation();
     }
+  };
+  double Fl_DerivedColor_Chooser::saturation_super(){
+    return Fl_Color_Chooser::saturation();
   };
   double Fl_DerivedColor_Chooser::value(){
     if (this->cOverriddenFuncs && this->cOverriddenFuncs->value) {
@@ -131,6 +143,9 @@ void Fl_DerivedColor_Chooser::destroy_data(){
       return Fl_Color_Chooser::value();
     }
   };
+  double Fl_DerivedColor_Chooser::value_super(){
+    return Fl_Color_Chooser::value();
+  };
   double Fl_DerivedColor_Chooser::r(){
     if (this->cOverriddenFuncs && this->cOverriddenFuncs->r) {
       return this->cOverriddenFuncs->r((fl_Color_Chooser) this);
@@ -138,6 +153,9 @@ void Fl_DerivedColor_Chooser::destroy_data(){
     else {
       return Fl_Color_Chooser::r();
     }
+  }
+  double Fl_DerivedColor_Chooser::r_super(){
+    return Fl_Color_Chooser::r();
   }
   double Fl_DerivedColor_Chooser::g(){
     if (this->cOverriddenFuncs && this->cOverriddenFuncs->g) {
@@ -147,6 +165,9 @@ void Fl_DerivedColor_Chooser::destroy_data(){
       return Fl_Color_Chooser::g();
     }
   };
+  double Fl_DerivedColor_Chooser::g_super(){
+    return Fl_Color_Chooser::g();
+  };
   double Fl_DerivedColor_Chooser::b(){
     if (this->cOverriddenFuncs && this->cOverriddenFuncs->b) {
       return this->cOverriddenFuncs->b((fl_Color_Chooser) this);
@@ -154,6 +175,9 @@ void Fl_DerivedColor_Chooser::destroy_data(){
     else {
       return Fl_Color_Chooser::b();
     }
+  };
+  double Fl_DerivedColor_Chooser::b_super(){
+    return Fl_Color_Chooser::b();
   };
   int Fl_DerivedColor_Chooser::hsv(double H, double S, double V){
     if (this->cOverriddenFuncs && this->cOverriddenFuncs->hsv) {
@@ -163,6 +187,9 @@ void Fl_DerivedColor_Chooser::destroy_data(){
       return Fl_Color_Chooser::hsv(H,S,V);
     }
   };
+  int Fl_DerivedColor_Chooser::hsv_super(double H, double S, double V){
+    return Fl_Color_Chooser::hsv(H,S,V);
+  };
   int Fl_DerivedColor_Chooser::rgb(double R, double G, double B){
     if (this->cOverriddenFuncs && this->cOverriddenFuncs->rgb) {
       return this->cOverriddenFuncs->rgb((fl_Color_Chooser) this, R, G, B);
@@ -170,6 +197,9 @@ void Fl_DerivedColor_Chooser::destroy_data(){
     else {
       return Fl_Color_Chooser::rgb(R,G,B);
     }
+  };
+  int Fl_DerivedColor_Chooser::rgb_super(double R, double G, double B){
+    return Fl_Color_Chooser::rgb(R,G,B);
   };
 
 #endif
@@ -518,32 +548,62 @@ void Fl_DerivedColor_Chooser::destroy_data(){
   FL_EXPORT_C(int,Fl_Color_Chooser_mode)(fl_Color_Chooser color_chooser){
     return (static_cast<Fl_DerivedColor_Chooser*>(color_chooser))->mode();
   }
+  FL_EXPORT_C(int,Fl_Color_Chooser_mode_super)(fl_Color_Chooser color_chooser){
+    return (static_cast<Fl_DerivedColor_Chooser*>(color_chooser))->Fl_Color_Chooser::mode();
+  }
   FL_EXPORT_C(void,Fl_Color_Chooser_set_mode)(fl_Color_Chooser color_chooser,int newMode){
     (static_cast<Fl_DerivedColor_Chooser*>(color_chooser))->mode(newMode);
+  }
+  FL_EXPORT_C(void,Fl_Color_Chooser_set_mode_super)(fl_Color_Chooser color_chooser,int newMode){
+    (static_cast<Fl_DerivedColor_Chooser*>(color_chooser))->Fl_Color_Chooser::mode(newMode);
   }
   FL_EXPORT_C(double,Fl_Color_Chooser_hue)(fl_Color_Chooser color_chooser){
     return (static_cast<Fl_DerivedColor_Chooser*>(color_chooser))->hue();
   }
+  FL_EXPORT_C(double,Fl_Color_Chooser_hue_super)(fl_Color_Chooser color_chooser){
+    return (static_cast<Fl_DerivedColor_Chooser*>(color_chooser))->Fl_Color_Chooser::hue();
+  }
   FL_EXPORT_C(double,Fl_Color_Chooser_saturation)(fl_Color_Chooser color_chooser){
     return (static_cast<Fl_DerivedColor_Chooser*>(color_chooser))->saturation();
+  }
+  FL_EXPORT_C(double,Fl_Color_Chooser_saturation_super)(fl_Color_Chooser color_chooser){
+    return (static_cast<Fl_DerivedColor_Chooser*>(color_chooser))->Fl_Color_Chooser::saturation();
   }
   FL_EXPORT_C(double,Fl_Color_Chooser_value)(fl_Color_Chooser color_chooser){
     return (static_cast<Fl_DerivedColor_Chooser*>(color_chooser))->value();
   }
+  FL_EXPORT_C(double,Fl_Color_Chooser_value_super)(fl_Color_Chooser color_chooser){
+    return (static_cast<Fl_DerivedColor_Chooser*>(color_chooser))->Fl_Color_Chooser::value();
+  }
   FL_EXPORT_C(double,Fl_Color_Chooser_r)(fl_Color_Chooser color_chooser){
     return (static_cast<Fl_DerivedColor_Chooser*>(color_chooser))->r();
+  }
+  FL_EXPORT_C(double,Fl_Color_Chooser_r_super)(fl_Color_Chooser color_chooser){
+    return (static_cast<Fl_DerivedColor_Chooser*>(color_chooser))->Fl_Color_Chooser::r();
   }
   FL_EXPORT_C(double,Fl_Color_Chooser_g)(fl_Color_Chooser color_chooser){
     return (static_cast<Fl_DerivedColor_Chooser*>(color_chooser))->g();
   }
+  FL_EXPORT_C(double,Fl_Color_Chooser_g_super)(fl_Color_Chooser color_chooser){
+    return (static_cast<Fl_DerivedColor_Chooser*>(color_chooser))->Fl_Color_Chooser::g();
+  }
   FL_EXPORT_C(double,Fl_Color_Chooser_b)(fl_Color_Chooser color_chooser){
     return (static_cast<Fl_DerivedColor_Chooser*>(color_chooser))->b();
+  }
+  FL_EXPORT_C(double,Fl_Color_Chooser_b_super)(fl_Color_Chooser color_chooser){
+    return (static_cast<Fl_DerivedColor_Chooser*>(color_chooser))->Fl_Color_Chooser::b();
   }
   FL_EXPORT_C(int,Fl_Color_Chooser_hsv)(fl_Color_Chooser color_chooser,double H,double S,double V){
     return (static_cast<Fl_DerivedColor_Chooser*>(color_chooser))->hsv(H,S,V);
   }
+  FL_EXPORT_C(int,Fl_Color_Chooser_hsv_super)(fl_Color_Chooser color_chooser,double H,double S,double V){
+    return (static_cast<Fl_DerivedColor_Chooser*>(color_chooser))->Fl_Color_Chooser::hsv(H,S,V);
+  }
   FL_EXPORT_C(int,Fl_Color_Chooser_rgb)(fl_Color_Chooser color_chooser,double R,double G,double B){
     return (static_cast<Fl_DerivedColor_Chooser*>(color_chooser))->rgb(R,G,B);
+  }
+  FL_EXPORT_C(int,Fl_Color_Chooser_rgb_super)(fl_Color_Chooser color_chooser,double R,double G,double B){
+    return (static_cast<Fl_DerivedColor_Chooser*>(color_chooser))->Fl_Color_Chooser::rgb(R,G,B);
   }
   FL_EXPORT_C(void,Fl_Color_Chooser_hsv2rgb)(double H,double S,double V,double* R,double* G,double* B){
     Fl_Color_Chooser::hsv2rgb(H,S,V,*R,*G,*B);

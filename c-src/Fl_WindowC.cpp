@@ -186,8 +186,11 @@ EXPORT {
     ptr->destroy_data = NULL;
     return ptr;
   }
-  FL_EXPORT_C(int,Fl_Window_handle)(fl_Window self, int event){
+  FL_EXPORT_C(int,Fl_DerivedWindow_handle)(fl_Window self, int event){
     return (static_cast<Fl_DerivedWindow*>(self))->handle(event);
+  }
+  FL_EXPORT_C(int,Fl_Window_handle)(fl_Window self, int event){
+    return (static_cast<Fl_DerivedWindow*>(self))->Fl_Window::handle(event);
   }
   FL_EXPORT_C(fl_Group,Fl_Window_parent)(fl_Window win){
     return (fl_Group) (static_cast<Fl_DerivedWindow*>(win))->parent();
@@ -594,8 +597,11 @@ FL_EXPORT_C(fl_Window, Fl_OverriddenWindow_NewXY_WithLabel)(int x, int y, int w,
     Fl_DerivedWindow* window = new Fl_DerivedWindow(x,y,w,h,0,funcs);
     return (fl_Window)window;
   }
-  FL_EXPORT_C(void, Fl_Window_Destroy)(fl_Window window){
+  FL_EXPORT_C(void, Fl_DerivedWindow_Destroy)(fl_Window window){
     delete (static_cast<Fl_DerivedWindow*>(window));
+  }
+  FL_EXPORT_C(void, Fl_Window_Destroy)(fl_Window window){
+    delete (static_cast<Fl_Window*>(window));
   }
   FL_EXPORT_C(void, Fl_Window_draw_super)(fl_Window window){
     (static_cast<Fl_DerivedWindow*>(window))->draw_super();
@@ -618,6 +624,9 @@ FL_EXPORT_C(fl_Window, Fl_OverriddenWindow_NewXY_WithLabel)(int x, int y, int w,
   FL_EXPORT_C(void, Fl_Window_flush_super)(fl_Window window){
     (static_cast<Fl_DerivedWindow*>(window))->flush_super();
   };
+  FL_EXPORT_C(void, Fl_Window_flush)(fl_Window window){
+    (static_cast<Fl_DerivedWindow*>(window))->flush();
+  };
   FL_EXPORT_C(fl_Window, Fl_Window_as_window_super)(fl_Window window){
     return (fl_Window)(static_cast<Fl_Window*>(window))->as_window();
   };
@@ -639,17 +648,26 @@ FL_EXPORT_C(fl_Window, Fl_OverriddenWindow_NewXY_WithLabel)(int x, int y, int w,
   FL_EXPORT_C(void,Fl_Window_fullscreen_off_with_resize)(fl_Window win,int X,int Y,int W,int H){
     (static_cast<Fl_DerivedWindow*>(win))->fullscreen_off(X,Y,W,H);
   }
-  FL_EXPORT_C(void,Fl_Window_hide)(fl_Window win){
+  FL_EXPORT_C(void,Fl_DerivedWindow_hide)(fl_Window win){
     (static_cast<Fl_DerivedWindow*>(win))->hide();
   }
-  FL_EXPORT_C(void,Fl_Window_show)(fl_Window win){
+  FL_EXPORT_C(void,Fl_Window_hide)(fl_Window win){
+    (static_cast<Fl_DerivedWindow*>(win))->Fl_Window::hide();
+  }
+  FL_EXPORT_C(void,Fl_DerivedWindow_show)(fl_Window win){
     (static_cast<Fl_DerivedWindow*>(win))->show();
   }
+  FL_EXPORT_C(void,Fl_Window_show)(fl_Window win){
+    (static_cast<Fl_DerivedWindow*>(win))->Fl_Window::show();
+  }
   FL_EXPORT_C(void,Fl_Window_show_with_args)(fl_Window win,int argc,char** argv){
-    (static_cast<Fl_DerivedWindow*>(win))->show(argc,argv);
+    (static_cast<Fl_Window*>(win))->show(argc,argv);
+  }
+  FL_EXPORT_C(void,Fl_DerivedWindow_resize)(fl_Window win,int X,int Y,int W,int H){
+    (static_cast<Fl_Window*>(win))->resize(X,Y,W,H);
   }
   FL_EXPORT_C(void,Fl_Window_resize)(fl_Window win,int X,int Y,int W,int H){
-    (static_cast<Fl_DerivedWindow*>(win))->resize(X,Y,W,H);
+    (static_cast<Fl_Window*>(win))->Fl_Window::resize(X,Y,W,H);
   }
   FL_EXPORT_C(void,Fl_Window_iconize)(fl_Window win){
     (static_cast<Fl_DerivedWindow*>(win))->iconize();

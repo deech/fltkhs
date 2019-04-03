@@ -156,6 +156,7 @@ instance (impl ~ ( IO (NativeFileChooserUserAction))) => Op (ShowWidget ()) Nati
        (-1) -> NativeFileChooserError
        x''  -> error $ "NativeFileChooser::showWidget, unknown option:" ++ (show  x'')
 
+
 -- $hierarchy
 -- @
 -- "Graphics.UI.FLTK.LowLevel.NativeFileChooser"

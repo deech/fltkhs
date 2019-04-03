@@ -23,7 +23,9 @@ Method aRef = dispatch (undefined :: Datatype ()) aRef
 module Graphics.UI.FLTK.LowLevel.Hierarchy
        (
          -- * Widget
+         WidgetBase,
          Widget,
+         WidgetBaseFuncs,
          WidgetFuncs,
          Destroy,
          destroy,
@@ -210,6 +212,7 @@ module Graphics.UI.FLTK.LowLevel.Hierarchy
          ClearFlag,
          clearFlag,
          -- * Group
+         GroupBase,
          Group,
          DrawChild,
          drawChild,
@@ -264,6 +267,7 @@ module Graphics.UI.FLTK.LowLevel.Hierarchy
          GetChild,
          getChild,
          -- * Window
+         WindowBase,
          Window,
          DrawSuper,
          drawSuper,
@@ -348,10 +352,13 @@ module Graphics.UI.FLTK.LowLevel.Hierarchy
          WaitForExpose,
          waitForExpose,
          -- * SingleWindow
+         SingleWindowBase,
          SingleWindow,
          -- * DoubleWindow
+         DoubleWindowBase,
          DoubleWindow,
          -- * OverlayWindow
+         OverlayWindowBase,
          OverlayWindow,
          CanDoOverlay,
          canDoOverlay,
@@ -360,6 +367,7 @@ module Graphics.UI.FLTK.LowLevel.Hierarchy
          Flush,
          flush,
          -- * Button
+         ButtonBase,
          Button,
          GetValue,
          getValue,
@@ -382,20 +390,28 @@ module Graphics.UI.FLTK.LowLevel.Hierarchy
          SetDownColor,
          setDownColor,
          -- * LightButton
+         LightButtonBase,
          LightButton,
          -- * RadioLightButton
+         RadioLightButtonBase,
          RadioLightButton,
          -- * CheckButton
+         CheckButtonBase,
          CheckButton,
          -- * ReturnButton
+         ReturnButtonBase,
          ReturnButton,
          -- * RoundButton
+         RoundButtonBase,
          RoundButton,
          -- * RepeatButton
+         RepeatButtonBase,
          RepeatButton,
          -- * ToggleButton
+         ToggleButtonBase,
          ToggleButton,
          -- * Valuator
+         ValuatorBase,
          Valuator,
          Bounds,
          bounds,
@@ -424,6 +440,7 @@ module Graphics.UI.FLTK.LowLevel.Hierarchy
          Increment,
          increment,
          -- * Slider
+         SliderBase,
          Slider,
          Scrollvalue,
          scrollvalue,
@@ -436,16 +453,22 @@ module Graphics.UI.FLTK.LowLevel.Hierarchy
          SetSlider,
          setSlider,
          -- * FillSlider
+         FillSliderBase,
          FillSlider,
          -- * HorSlider
+         HorSliderBase,
          HorSlider,
          -- * HorFillSider
+         HorFillSliderBase,
          HorFillSlider,
          -- * NiceSlider
+         NiceSliderBase,
          NiceSlider,
          -- * HorNiceSlider
+         HorNiceSliderBase,
          HorNiceSlider,
          -- * MenuItem
+         MenuItemBase,
          MenuItem,
          NextWithStep,
          nextWithStep,
@@ -490,6 +513,7 @@ module Graphics.UI.FLTK.LowLevel.Hierarchy
          GetSize,
          getSize,
          -- * MenuPrim
+         MenuPrimBase,
          MenuPrim,
          ItemPathname,
          itemPathname,
@@ -542,12 +566,16 @@ module Graphics.UI.FLTK.LowLevel.Hierarchy
          AddAndGetMenuItem,
          addAndGetMenuItem,
          -- * MenuBar
+         MenuBarBase,
          MenuBar,
          -- * SysMenuBar
+         SysMenuBarBase,
          SysMenuBar,
          -- * Choice,
+         ChoiceBase,
          Choice,
          -- * MenuButton
+         MenuButtonBase,
          MenuButton,
          -- * Image
          Image,
@@ -598,12 +626,14 @@ module Graphics.UI.FLTK.LowLevel.Hierarchy
          GetOffscreen,
          getOffscreen,
          -- * Adjuster
+         AdjusterBase,
          Adjuster,
          SetSoft,
          setSoft,
          GetSoft,
          getSoft,
          -- * Dial
+         DialBase,
          Dial,
          GetAngle1,
          getAngle1,
@@ -620,22 +650,27 @@ module Graphics.UI.FLTK.LowLevel.Hierarchy
          -- * LineDial
          LineDial,
          -- * Roller
+         RollerBase,
          Roller,
          -- * Counter
+         CounterBase,
          Counter,
          SetLstep,
          setLstep,
          -- * Scrollbar
+         ScrollbarBase,
          Scrollbar,
          SetLinesize,
          setLinesize,
          GetLinesize,
          getLinesize,
          -- * ValueSlider
+         ValueSliderBase,
          ValueSlider,
          -- * HorValueSlider
          HorValueSlider,
          -- * Input
+         InputBase,
          Input,
          StaticValue,
          staticValue,
@@ -688,14 +723,19 @@ module Graphics.UI.FLTK.LowLevel.Hierarchy
          DrawText,
          drawText,
          -- * Output
+         OutputBase,
          Output,
          -- * ValueInput
+         ValueInputBase,
          ValueInput,
          -- * ValueOutput
+         ValueOutputBase,
          ValueOutput,
          -- * Progress
+         ProgressBase,
          Progress,
          -- * Positioner
+         PositionerBase,
          Positioner,
          SetXvalue,
          setXvalue,
@@ -730,10 +770,12 @@ module Graphics.UI.FLTK.LowLevel.Hierarchy
          SetYstep,
          setYstep,
          -- * Wizard
+         WizardBase,
          Wizard,
          Prev,
          prev,
          -- * Table
+         TableBase,
          Table,
          SetTableBox,
          setTableBox,
@@ -842,12 +884,14 @@ module Graphics.UI.FLTK.LowLevel.Hierarchy
          GetTabCellNav,
          getTabCellNav,
          -- * TableRow
+         TableRowBase,
          TableRow,
          GetRowSelected,
          getRowSelected,
          SelectAllRows,
          selectAllRows,
          -- * GlWindow
+         GlWindowBase,
          GlWindow,
          GetValid,
          getValid,
@@ -884,6 +928,7 @@ module Graphics.UI.FLTK.LowLevel.Hierarchy
          -- * Box
          Box,
          -- * Browser
+         BrowserBase,
          Browser,
          Move,
          move,
@@ -966,6 +1011,7 @@ module Graphics.UI.FLTK.LowLevel.Hierarchy
          -- * IntInput
          IntInput,
          -- * Clock
+         ClockBase,
          Clock,
          GetValueSinceEpoch,
          getValueSinceEpoch,
@@ -1154,6 +1200,7 @@ module Graphics.UI.FLTK.LowLevel.Hierarchy
          LabelH,
          labelH,
          -- * Tree
+         TreeBase,
          Tree,
          RootLabel,
          rootLabel,
@@ -1396,6 +1443,7 @@ module Graphics.UI.FLTK.LowLevel.Hierarchy
          Utf8Align,
          utf8Align,
          -- * TextDisplay,
+         TextDisplayBase,
          TextDisplay,
          SetBuffer,
          setBuffer,
@@ -1478,6 +1526,7 @@ module Graphics.UI.FLTK.LowLevel.Hierarchy
          WrapMode,
          wrapMode,
          -- * TextEditor
+         TextEditorBase,
          TextEditor,
          SetInsertMode,
          setInsertMode,
@@ -1522,7 +1571,9 @@ module Graphics.UI.FLTK.LowLevel.Hierarchy
          GetErrmsg,
          getErrmsg,
          -- * Tile
+         TileBase,
          Tile,
+         PackBase,
          Pack,
          setSpacing,
          SetSpacing,
@@ -1531,6 +1582,7 @@ module Graphics.UI.FLTK.LowLevel.Hierarchy
          isHorizontal,
          IsHorizontal,
          -- * Scrolled AKA Scroll
+         ScrolledBase,
          Scrolled,
          ScrollTo,
          scrollTo,
@@ -1539,6 +1591,7 @@ module Graphics.UI.FLTK.LowLevel.Hierarchy
          Yposition,
          yposition,
          -- * Tabs
+         TabsBase,
          Tabs,
          GetPush,
          getPush,
@@ -1557,12 +1610,14 @@ module Graphics.UI.FLTK.LowLevel.Hierarchy
          SetTabAlign,
          setTabAlign,
          -- * Spinner
+         SpinnerBase,
          Spinner,
          GetFormat,
          getFormat,
          SetFormat,
          setFormat,
          -- * ColorChooser
+         ColorChooserBase,
          ColorChooser,
          GetHue,
          getHue,
@@ -1583,6 +1638,7 @@ module Graphics.UI.FLTK.LowLevel.Hierarchy
          GetHsv,
          getHsv,
          -- * FileBrowser
+         FileBrowserBase,
          FileBrowser,
          SetIconsize,
          setIconsize,
@@ -1609,6 +1665,7 @@ module Graphics.UI.FLTK.LowLevel.Hierarchy
          -- * PNMImage
          PNMImage,
          -- * FileInput
+         FileInputBase,
          FileInput,
          GetErrorColor,
          getErrorColor,
@@ -1619,6 +1676,7 @@ module Graphics.UI.FLTK.LowLevel.Hierarchy
          -- * SVGImage
          SVGImage,
          -- * SimpleTerminal
+         SimpleTerminalBase,
          SimpleTerminal,
          SetStayAtBottom,
          setStayAtBottom,
@@ -1648,7 +1706,7 @@ module Graphics.UI.FLTK.LowLevel.Hierarchy
          getCurrentStyleIndex,
          RemoveLines,
          removeLines,
-         -- MultiLabel
+         -- * MultiLabel
          MultiLabel,
          WidgetLabel,
          widgetLabel,
@@ -1665,102 +1723,111 @@ import System.IO.Unsafe
 #endif
 type instance Functions Base = ()
 
-data CWidget parent
-type Widget = CWidget Base
-type WidgetFuncs =
-  (Destroy
-  (Handle
-  (GetParent
-  (SetParent
-  (GetType_
-  (SetType
-  (DrawLabel
-  (DoCallback
-  (GetX
-  (GetY
-  (GetW
-  (GetH
-  (GetRectangle
-  (SetAlign
-  (GetAlign
-  (GetBox
-  (SetBox
-  (GetColor
-  (SetColor
-  (SetColorWithBgSel
-  (GetSelectionColor
-  (SetSelectionColor
-  (GetLabel
-  (SetLabel
-  (GetLabeltype
-  (SetLabeltype
-  (GetLabelcolor
-  (SetLabelcolor
-  (GetLabelfont
-  (SetLabelfont
-  (GetLabelsize
-  (SetLabelsize
-  (GetImage
-  (SetImage
-  (GetDeimage
-  (SetDeimage
-  (GetTooltip
-  (CopyTooltip
-  (SetTooltip
-  (GetWhen
-  (SetWhen
-  (GetVisible
-  (GetVisibleR
-  (ShowWidgetSuper
-  (ShowWidget
-  (HideSuper
-  (Hide
-  (SetVisible
-  (ClearVisible
+data CWidgetBase parent
+type WidgetBase = CWidgetBase Base
+type WidgetBaseFuncs =
+  (Activate
   (Active
   (ActiveR
-  (Activate
-  (Deactivate
-  (GetOutput
-  (SetOutput
-  (Takesevents
   (Changed
-  (SetChanged
-  (ClearChanged
-  (SetActive
   (ClearActive
-  (TakeFocus
-  (SetVisibleFocus
-  (ClearVisibleFocus
-  (ModifyVisibleFocus
-  (GetVisibleFocus
-  (Contains
-  (Inside
-  (Redraw
-  (RedrawLabel
-  (GetDamage
-  (ClearDamageThenSet
+  (ClearChanged
   (ClearDamage
-  (SetDamage
-  (SetDamageInside
-  (MeasureLabel
-  (GetWindow
-  (GetTopWindow
-  (GetTopWindowOffset
-  (ResizeSuper
-  (Resize
-  (GetCallback
-  (SetCallback
-  (HasCallback
-  (DrawBox
-  (DrawBoxWithBoxtype
-  (DrawBackdrop
-  (DrawFocus
-  (Flags
-  (SetFlag
+  (ClearDamageThenSet
   (ClearFlag
   (ClearOutput
-  ()))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))
+  (ClearVisible
+  (ClearVisibleFocus
+  (Contains
+  (CopyTooltip
+  (Deactivate
+  (Destroy
+  (DoCallback
+  (DrawBackdrop
+  (DrawBox
+  (DrawBoxWithBoxtype
+  (DrawFocus
+  (DrawLabel
+  (Flags
+  (GetAlign
+  (GetBox
+  (GetCallback
+  (GetColor
+  (GetDamage
+  (GetDeimage
+  (GetH
+  (GetImage
+  (GetLabel
+  (GetLabelcolor
+  (GetLabelfont
+  (GetLabelsize
+  (GetLabeltype
+  (GetOutput
+  (GetParent
+  (GetRectangle
+  (GetSelectionColor
+  (GetTooltip
+  (GetTopWindow
+  (GetTopWindowOffset
+  (GetType_
+  (GetVisible
+  (GetVisibleFocus
+  (GetVisibleR
+  (GetW
+  (GetWhen
+  (GetWindow
+  (GetX
+  (GetY
+  (Handle
+  (HasCallback
+  (Hide
+  (Inside
+  (MeasureLabel
+  (ModifyVisibleFocus
+  (Redraw
+  (RedrawLabel
+  (Resize
+  (SetActive
+  (SetAlign
+  (SetBox
+  (SetCallback
+  (SetChanged
+  (SetColor
+  (SetColorWithBgSel
+  (SetDamage
+  (SetDamageInside
+  (SetDeimage
+  (SetFlag
+  (SetImage
+  (SetLabel
+  (SetLabelcolor
+  (SetLabelfont
+  (SetLabelsize
+  (SetLabeltype
+  (SetOutput
+  (SetParent
+  (SetSelectionColor
+  (SetTooltip
+  (SetType
+  (SetVisible
+  (SetVisibleFocus
+  (SetWhen
+  (ShowWidget
+  (TakeFocus
+  (Takesevents
+  ())))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))
+type instance Functions WidgetBase = WidgetBaseFuncs
+
+data CWidget parent
+type Widget = CWidget WidgetBase
+type WidgetFuncs =
+  (Draw
+  (Destroy
+  (Handle
+  (Hide
+  (Resize
+  (ShowWidget
+  ()))))))
 type instance Functions Widget = WidgetFuncs
 
 MAKE_METHOD(Destroy, destroy)
@@ -1856,20 +1923,17 @@ MAKE_METHOD(SetFlag, setFlag)
 MAKE_METHOD(ClearFlag, clearFlag)
 
 -- * Group
-data CGroup parent
-type Group = CGroup Widget
-type GroupFuncs =
+data CGroupBase parent
+type GroupBase = CGroupBase WidgetBase
+type GroupBaseFuncs =
   (Destroy
   (DrawChild
   (DrawChildren
   (DrawOutsideLabel
-  (DrawSuper
   (UpdateChild
   (Begin
   (Handle
-  (HandleSuper
   (Resize
-  (ResizeSuper
   (End
   (Within
   (Find
@@ -1891,7 +1955,16 @@ type GroupFuncs =
   (InsertBefore
   (GetArray
   (GetChild
-  ()))))))))))))))))))))))))))))))))
+  ())))))))))))))))))))))))))))))
+type instance Functions GroupBase = GroupBaseFuncs
+
+data CGroup parent
+type Group = CGroup GroupBase
+type GroupFuncs =
+  (Handle
+  (Resize
+  (Destroy
+  ())))
 type instance Functions Group = GroupFuncs
 
 MAKE_METHOD(DrawChild,drawChild)
@@ -1921,72 +1994,77 @@ MAKE_METHOD(InsertBefore,insertBefore)
 MAKE_METHOD(GetArray,getArray)
 MAKE_METHOD(GetChild,getChild)
 
-data CWindow parent
-type Window = CWindow Group
-type WindowFuncs =
-  (Destroy
-  (SetType
-  (GetType_
-  (DrawSuper
-  (HandleSuper
-  (Resize
-  (ResizeSuper
-  (ShowWidget
-  (ShowWidgetSuper
-  (FlushSuper
+data CWindowBase parent
+type WindowBase = CWindowBase GroupBase
+type WindowBaseFuncs =
   (Changed
-  (MakeFullscreen
-  (FullscreenOff
-  (SetBorder
   (ClearBorder
-  (GetBorder
-  (SetOverride
-  (GetOverride
-  (SetModal
-  (GetModal
-  (SetNonModal
-  (NonModal
-  (SetMenuWindow
-  (GetMenuWindow
-  (SetTooltipWindow
-  (GetTooltipWindow
-  (HotSpot
+  (CopyLabel
+  (Destroy
+  (DrawBackdrop
+  (DrawBox
+  (DrawBoxWithBoxtype
+  (DrawFocus
   (FreePosition
-  (SizeRange
-  (SizeRangeWithArgs
-  (GetIconlabel
-  (SetIconlabel
-  (SetLabelWithIconlabel
-  (GetXclass
-  (SetXclass
+  (FullscreenOff
+  (GetBorder
+  (GetDecoratedH
+  (GetDecoratedW
   (GetIcon
-  (SetIcon
-  (Shown
-  (Iconize
+  (GetIconlabel
+  (GetLabel
+  (GetMenuWindow
+  (GetModal
+  (GetOverride
+  (GetTooltipWindow
+  (GetType_
   (GetXRoot
+  (GetXclass
   (GetYRoot
+  (Handle
+  (Hide
+  (HotSpot
+  (Iconize
   (MakeCurrent
+  (MakeFullscreen
+  (NonModal
+  (Resize
+  (SetBorder
+  (SetCallback
   (SetCursor
   (SetCursorWithFgBg
   (SetDefaultCursor
   (SetDefaultCursorWithFgBg
-  (GetDecoratedW
-  (GetDecoratedH
-  (WaitForExpose
-  (HideSuper
-  (Handle
-  (SetCallback
-  (Hide
-  (GetLabel
+  (SetIcon
+  (SetIconlabel
   (SetLabel
-  (CopyLabel
-  (DrawBox
-  (DrawBoxWithBoxtype
-  (DrawBackdrop
-  (DrawFocus
-  ()))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))
-type instance Functions Window = WindowFuncs
+  (SetLabelWithIconlabel
+  (SetMenuWindow
+  (SetModal
+  (SetNonModal
+  (SetOverride
+  (SetTooltipWindow
+  (SetType
+  (SetXclass
+  (ShowWidget
+  (Shown
+  (SizeRange
+  (SizeRangeWithArgs
+  (WaitForExpose
+  (Flush
+  ())))))))))))))))))))))))))))))))))))))))))))))))))))))))
+type instance Functions WindowBase = WindowBaseFuncs
 
+data CWindow parent
+type Window = CWindow WindowBase
+type WindowFuncs =
+  (Flush
+  (Handle
+  (Hide
+  (Resize
+  (ShowWidget
+  ())))))
+type instance Functions Window = WindowFuncs
 MAKE_METHOD(DrawSuper,drawSuper)
 MAKE_METHOD(HandleSuper,handleSuper)
 MAKE_METHOD(FlushSuper,flushSuper)
@@ -2030,55 +2108,75 @@ MAKE_METHOD(GetDecoratedW,getDecoratedW)
 MAKE_METHOD(GetDecoratedH,getDecoratedH)
 MAKE_METHOD(WaitForExpose,waitForExpose)
 
-data CSingleWindow parent
-type SingleWindow = CSingleWindow Window
-type SingleWindowFuncs =
+data CSingleWindowBase parent
+type SingleWindowBase = CSingleWindowBase WindowBase
+type SingleWindowBaseFuncs =
   (Destroy
-  (DrawSuper
-  (HandleSuper
-  (ResizeSuper
-  (ShowWidgetSuper
-  (HideSuper
   (Hide
-  (FlushSuper
   (ShowWidget
   (Handle
   (Resize
-  ())))))))))))
+  ())))))
+type instance Functions SingleWindowBase = SingleWindowBaseFuncs
+
+data CSingleWindow parent
+type SingleWindow = CSingleWindow SingleWindowBase
+type SingleWindowFuncs =
+  (Destroy
+  (Hide
+  (ShowWidget
+  (Handle
+  (Resize
+  ())))))
 type instance Functions SingleWindow = SingleWindowFuncs
 
 
+data CDoubleWindowBase parent
+type DoubleWindowBase = CDoubleWindowBase WindowBase
+type DoubleWindowBaseFuncs =
+  (Destroy
+  (Flush
+  (Handle
+  (Hide
+  (Resize
+  (ShowWidget
+  ()))))))
+type instance Functions DoubleWindowBase = DoubleWindowBaseFuncs
+
 data CDoubleWindow parent
-type DoubleWindow = CDoubleWindow Window
+type DoubleWindow = CDoubleWindow WindowBase
 type DoubleWindowFuncs =
   (Destroy
-  (DrawSuper
-  (HandleSuper
-  (ResizeSuper
-  (ShowWidgetSuper
-  (HideSuper
-  (Hide
-  (FlushSuper
-  (ShowWidget
+  (Flush
   (Handle
+  (Hide
   (Resize
-  ())))))))))))
-
+  (ShowWidget
+  ()))))))
 type instance Functions DoubleWindow = DoubleWindowFuncs
 
+data COverlayWindowBase parent
+type OverlayWindowBase = COverlayWindowBase DoubleWindowBase
+type OverlayWindowBaseFuncs =
+  (CanDoOverlay
+  (Destroy
+  (Flush
+  (Hide
+  (RedrawOverlay
+  (Resize
+  (ShowWidget
+  ())))))))
+type instance Functions OverlayWindowBase = OverlayWindowBaseFuncs
 
 data COverlayWindow parent
-type OverlayWindow = COverlayWindow DoubleWindow
+type OverlayWindow = COverlayWindow OverlayWindowBase
 type OverlayWindowFuncs =
   (Destroy
-  (ShowWidget
   (Flush
-  (Resize
   (Hide
-  (CanDoOverlay
-  (RedrawOverlay
-  ())))))))
-
+  (Resize
+  (ShowWidget
+  ())))))
 type instance Functions OverlayWindow = OverlayWindowFuncs
 
 
@@ -2086,18 +2184,13 @@ MAKE_METHOD(CanDoOverlay,canDoOverlay)
 MAKE_METHOD(RedrawOverlay,redrawOverlay)
 MAKE_METHOD(Flush,flush)
 
-data CButton parent
-type Button = CButton Widget
-type ButtonFuncs =
+data CButtonBase parent
+type ButtonBase = CButtonBase WidgetBase
+type ButtonBaseFuncs =
   (Destroy
-  (DrawSuper
-  (HandleSuper
   (Handle
-  (ResizeSuper
   (Resize
-  (HideSuper
   (Hide
-  (ShowWidgetSuper
   (ShowWidget
   (GetValue
   (SetValue
@@ -2116,9 +2209,20 @@ type ButtonFuncs =
   (SetType
   (GetType_
   (DrawBoxWithBoxtype
-  ())))))))))))))))))))))))))))
+  ()))))))))))))))))))))))
 
+type instance Functions ButtonBase = ButtonBaseFuncs
+
+data CButton parent
+type Button = CButton ButtonBase
+type ButtonFuncs =
+  (Handle
+  (Resize
+  (Hide
+  (ShowWidget
+  ()))))
 type instance Functions Button = ButtonFuncs
+
 
 MAKE_METHOD(GetValue,getValue)
 MAKE_METHOD(SetValue,setValue)
@@ -2131,122 +2235,164 @@ MAKE_METHOD(SetDownBox,setDownBox)
 MAKE_METHOD(GetDownColor,getDownColor)
 MAKE_METHOD(SetDownColor,setDownColor)
 
-data CLightButton parent
-type LightButtonFuncs =
+data CLightButtonBase parent
+type LightButtonBaseFuncs =
   (Destroy
   (Draw
-  (DrawSuper
   (Handle
-  (HandleSuper
   (ShowWidget
-  (ShowWidgetSuper
   (Hide
-  (HideSuper
   (Resize
-  (ResizeSuper
-  ())))))))))))
+  ()))))))
 
-type LightButton = CLightButton Button
+type LightButtonBase = CLightButtonBase ButtonBase
+type instance Functions LightButtonBase = LightButtonBaseFuncs
 
+data CLightButton parent
+type LightButtonFuncs =
+  (Draw
+  (Handle
+  (ShowWidget
+  (Hide
+  (Resize
+  ())))))
+
+type LightButton = CLightButton LightButtonBase
 type instance Functions LightButton = LightButtonFuncs
 
+data CRadioLightButtonBase parent
+type RadioLightButtonBase = CRadioLightButtonBase LightButtonBase
+
+type instance Functions RadioLightButtonBase = ()
+
 data CRadioLightButton parent
-type RadioLightButton = CRadioLightButton LightButton
+type RadioLightButton = CRadioLightButton RadioLightButtonBase
 
 type instance Functions RadioLightButton = ()
+
+data CCheckButtonBase parent
+type CheckButtonBaseFuncs =
+  (Draw
+  (Handle
+  (ShowWidget
+  (Hide
+  (Destroy
+  (Resize
+  ()))))))
+type CheckButtonBase = CCheckButtonBase LightButtonBase
+
+type instance Functions CheckButtonBase = CheckButtonBaseFuncs
 
 data CCheckButton parent
 type CheckButtonFuncs =
   (Draw
-  (DrawSuper
   (Handle
-  (HandleSuper
   (ShowWidget
-  (ShowWidgetSuper
   (Hide
-  (HideSuper
-  (Destroy
   (Resize
-  (ResizeSuper
-  ())))))))))))
-type CheckButton = CCheckButton LightButton
+  ())))))
+type CheckButton = CCheckButton CheckButtonBase
 
 type instance Functions CheckButton = CheckButtonFuncs
 
-data CReturnButton parent
-type ReturnButton = CReturnButton Button
-type ReturnButtonFuncs =
+data CReturnButtonBase parent
+type ReturnButtonBase = CReturnButtonBase ButtonBase
+type ReturnButtonBaseFuncs =
   (Destroy
   (Draw
-  (DrawSuper
   (Handle
-  (HandleSuper
   (ShowWidget
-  (ShowWidgetSuper
   (Hide
-  (HideSuper
   (Resize
-  (ResizeSuper
-  ())))))))))))
+  ()))))))
+
+type instance Functions ReturnButtonBase = ReturnButtonBaseFuncs
+
+data CReturnButton parent
+type ReturnButton = CReturnButton ReturnButtonBase
+type ReturnButtonFuncs =
+  (Draw
+  (Handle
+  (ShowWidget
+  (Hide
+  (Resize
+  ())))))
 
 type instance Functions ReturnButton = ReturnButtonFuncs
 
-data CRoundButton parent
-type RoundButton = CRoundButton LightButton
-type RoundButtonFuncs =
+data CRoundButtonBase parent
+type RoundButtonBase = CRoundButtonBase ButtonBase
+type RoundButtonBaseFuncs =
   (Destroy
   (Draw
-  (DrawSuper
   (Handle
-  (HandleSuper
   (ShowWidget
-  (ShowWidgetSuper
   (Hide
-  (HideSuper
   (Resize
-  (ResizeSuper
-  ())))))))))))
+  ()))))))
+
+type instance Functions RoundButtonBase = RoundButtonBaseFuncs
+
+data CRoundButton parent
+type RoundButton = CRoundButton RoundButtonBase
+type RoundButtonFuncs =
+  (Draw
+  (Handle
+  (ShowWidget
+  (Hide
+  (Resize
+  ())))))
 
 type instance Functions RoundButton = RoundButtonFuncs
 
-data CRepeatButton parent
-type RepeatButton = CRepeatButton Button
-type RepeatButtonFuncs =
+data CRepeatButtonBase parent
+type RepeatButtonBase = CRepeatButtonBase ButtonBase
+type RepeatButtonBaseFuncs =
   (Destroy
   (Deactivate
   (Draw
-  (DrawSuper
   (Handle
-  (HandleSuper
   (ShowWidget
-  (ShowWidgetSuper
   (Hide
-  (HideSuper
   (Resize
-  (ResizeSuper
-  ()))))))))))))
+  ())))))))
+
+type instance Functions RepeatButtonBase = RepeatButtonBaseFuncs
+
+data CRepeatButton parent
+type RepeatButton = CRepeatButton RepeatButtonBase
+type RepeatButtonFuncs =
+  (Draw
+  (Handle
+  (ShowWidget
+  (Hide
+  (Resize
+  ())))))
 
 type instance Functions RepeatButton = RepeatButtonFuncs
 
 
-data CToggleButton parent
-type ToggleButton = CToggleButton Button
-type ToggleButtonFuncs =
+data CToggleButtonBase parent
+type ToggleButtonBase = CToggleButtonBase ButtonBase
+type ToggleButtonBaseFuncs =
   (Destroy
   ())
 
+type instance Functions ToggleButtonBase = ToggleButtonBaseFuncs
+
+data CToggleButton parent
+type ToggleButton = CToggleButton ToggleButtonBase
+type ToggleButtonFuncs =
+  ()
 type instance Functions ToggleButton = ToggleButtonFuncs
 
-data CValuator parent
-type Valuator = CValuator Widget
-type ValuatorFuncs =
+data CValuatorBase parent
+type ValuatorBase = CValuatorBase WidgetBase
+type ValuatorBaseFuncs =
   (Destroy
   (Handle
-  (HandleSuper
-  (ResizeSuper
   (Resize
   (Hide
-  (HideSuper
   (Bounds
   (GetMinimum
   (SetMinimum
@@ -2264,7 +2410,17 @@ type ValuatorFuncs =
   (Increment
   (SetType
   (GetType_
-  ()))))))))))))))))))))))))
+  ())))))))))))))))))))))
+
+type instance Functions ValuatorBase = ValuatorBaseFuncs
+
+data CValuator parent
+type Valuator = CValuator ValuatorBase
+type ValuatorFuncs =
+  (Handle
+  (Resize
+  (Hide
+  ())))
 
 type instance Functions Valuator = ValuatorFuncs
 
@@ -2283,9 +2439,9 @@ MAKE_METHOD(Round,round)
 MAKE_METHOD(Clamp,clamp)
 MAKE_METHOD(Increment,increment)
 
-data CSlider parent
-type Slider = CSlider Valuator
-type SliderFuncs =
+data CSliderBase parent
+type SliderBase = CSliderBase ValuatorBase
+type SliderBaseFuncs =
   (Destroy
   (Bounds
   (Scrollvalue
@@ -2296,16 +2452,23 @@ type SliderFuncs =
   (SetType
   (GetType_
   (Draw
-  (DrawSuper
   (Handle
-  (HandleSuper
   (ShowWidget
-  (ShowWidgetSuper
   (Hide
-  (HideSuper
   (Resize
-  (ResizeSuper
-  ())))))))))))))))))))
+  ()))))))))))))))
+
+type instance Functions SliderBase = SliderBaseFuncs
+
+data CSlider parent
+type Slider = CSlider SliderBase
+type SliderFuncs =
+  (Draw
+  (Handle
+  (ShowWidget
+  (Hide
+  (Resize
+  ())))))
 
 type instance Functions Slider = SliderFuncs
 
@@ -2315,34 +2478,59 @@ MAKE_METHOD(GetSliderSize,getSliderSize)
 MAKE_METHOD(GetSlider,getSlider)
 MAKE_METHOD(SetSlider,setSlider)
 
+data CFillSliderBase parent
+type FillSliderBase = CFillSliderBase SliderBase
+
+type instance Functions FillSliderBase = ()
+
 data CFillSlider parent
-type FillSlider = CFillSlider Slider
+type FillSlider = CFillSlider SliderBase
 
 type instance Functions FillSlider = ()
 
+data CHorSliderBase parent
+type HorSliderBase = CHorSliderBase SliderBase
+
+type instance Functions HorSliderBase = ()
+
 data CHorSlider parent
-type HorSlider = CHorSlider Slider
+type HorSlider = CHorSlider HorSliderBase
 
 type instance Functions HorSlider = ()
 
+data CHorFillSliderBase parent
+type HorFillSliderBase = CHorFillSliderBase SliderBase
+
+type instance Functions HorFillSliderBase = ()
+
 data CHorFillSlider parent
-type HorFillSlider = CHorFillSlider Slider
+type HorFillSlider = CHorFillSlider HorFillSliderBase
 
 type instance Functions HorFillSlider = ()
 
+data CNiceSliderBase parent
+type NiceSliderBase = CNiceSliderBase SliderBase
+
+type instance Functions NiceSliderBase = ()
+
 data CNiceSlider parent
-type NiceSlider = CNiceSlider Slider
+type NiceSlider = CNiceSlider NiceSliderBase
 
 type instance Functions NiceSlider = ()
 
+data CHorNiceSliderBase parent
+type HorNiceSliderBase = CHorNiceSliderBase SliderBase
+
+type instance Functions HorNiceSliderBase = ()
+
 data CHorNiceSlider parent
-type HorNiceSlider = CHorNiceSlider Slider
+type HorNiceSlider = CHorNiceSlider HorNiceSliderBase
 
 type instance Functions HorNiceSlider = ()
 
-data CMenuItem parent
-type MenuItem = CMenuItem Base
-type MenuItemFuncs =
+data CMenuItemBase parent
+type MenuItemBase = CMenuItemBase Base
+type MenuItemBaseFuncs =
   (Destroy
   (NextWithStep
   (Next
@@ -2392,6 +2580,14 @@ type MenuItemFuncs =
   (GetCallback
   ())))))))))))))))))))))))))))))))))))))))))))))))
 
+type instance Functions MenuItemBase = MenuItemBaseFuncs
+
+data CMenuItem parent
+type MenuItem = CMenuItem MenuItemBase
+type MenuItemFuncs =
+  (Draw
+  ())
+
 type instance Functions MenuItem = MenuItemFuncs
 
 MAKE_METHOD(NextWithStep,nextWithStep)
@@ -2405,6 +2601,7 @@ MAKE_METHOD(Visible,visible)
 MAKE_METHOD(Activevisible,activevisible)
 MAKE_METHOD(Measure,measure)
 MAKE_METHOD(DrawWithT,drawWithT)
+{-# WARNING draw "'draw' is bad." #-}
 MAKE_METHOD(Draw,draw)
 MAKE_METHOD(GetFlags,getFlags)
 MAKE_METHOD(SetFlags,setFlags)
@@ -2415,17 +2612,13 @@ MAKE_METHOD(FindShortcut,findShortcut)
 MAKE_METHOD(DoCallback,doCallback)
 MAKE_METHOD(GetSize,getSize)
 
-data CMenuPrim parent
-type MenuPrim = CMenuPrim Widget
-type MenuPrimFuncs =
+data CMenuPrimBase parent
+type MenuPrimBase = CMenuPrimBase WidgetBase
+type MenuPrimBaseFuncs =
   (Destroy
-  (HandleSuper
   (Handle
-  (ResizeSuper
   (Resize
-  (HideSuper
   (Hide
-  (ShowWidgetSuper
   (ShowWidget
   (ItemPathname
   (ItemPathnameRecent
@@ -2465,7 +2658,18 @@ type MenuPrimFuncs =
   (SetDownColor
   (Setonly
   (AddAndGetMenuItem
-  ())))))))))))))))))))))))))))))))))))))))))))))))
+  ())))))))))))))))))))))))))))))))))))))))))))
+
+type instance Functions MenuPrimBase = MenuPrimBaseFuncs
+
+data CMenuPrim parent
+type MenuPrim = CMenuPrim MenuPrimBase
+type MenuPrimFuncs =
+  (Handle
+  (Resize
+  (Hide
+  (ShowWidget
+  ()))))
 
 type instance Functions MenuPrim = MenuPrimFuncs
 
@@ -2496,27 +2700,32 @@ MAKE_METHOD(SetTextcolor,setTextcolor)
 MAKE_METHOD(DownBox,downBox)
 MAKE_METHOD(AddAndGetMenuItem, addAndGetMenuItem)
 
-data CMenuBar parent
-type MenuBar = CMenuBar MenuPrim
-type MenuBarFuncs =
+data CMenuBarBase parent
+type MenuBarBase = CMenuBarBase MenuPrimBase
+type MenuBarBaseFuncs =
   (Destroy
   (Draw
-  (DrawSuper
   (Handle
-  (HandleSuper
   (ShowWidget
-  (ShowWidgetSuper
   (Hide
-  (HideSuper
   (Resize
-  (ResizeSuper
-  ())))))))))))
+  ()))))))
+type instance Functions MenuBarBase = MenuBarBaseFuncs
+
+data CMenuBar parent
+type MenuBar = CMenuBar MenuBarBase
+type MenuBarFuncs =
+  (Draw
+  (Handle
+  (ShowWidget
+  (Hide
+  (Resize
+  ())))))
 type instance Functions MenuBar = MenuBarFuncs
 
-
-data CSysMenuBar parent
-type SysMenuBar = CSysMenuBar MenuBar
-type SysMenuBarFuncs =
+data CSysMenuBarBase parent
+type SysMenuBarBase = CSysMenuBarBase MenuBarBase
+type SysMenuBarBaseFuncs =
   (Destroy
   (SetMenu
   (Insert
@@ -2532,56 +2741,76 @@ type SysMenuBarFuncs =
   (AddName
   (Insert
   (Draw
-  (DrawSuper
   (Handle
-  (HandleSuper
   (ShowWidget
-  (ShowWidgetSuper
   (Hide
-  (HideSuper
   (Resize
-  (ResizeSuper
-  ()))))))))))))))))))))))))
+  ())))))))))))))))))))
+
+type instance Functions SysMenuBarBase = SysMenuBarBaseFuncs
+
+data CSysMenuBar parent
+type SysMenuBar = CSysMenuBar SysMenuBarBase
+type SysMenuBarFuncs =
+  (Draw
+  (Handle
+  (ShowWidget
+  (Hide
+  (Resize
+  ())))))
 
 type instance Functions SysMenuBar = SysMenuBarFuncs
 
-data CChoice parent
-type Choice = CChoice MenuPrim
-type ChoiceFuncs =
+data CChoiceBase parent
+type ChoiceBase = CChoiceBase MenuPrimBase
+type ChoiceBaseFuncs =
   (Destroy
   (Handle
   (GetValue
   (SetValue
   (Draw
-  (DrawSuper
-  (HandleSuper
   (ShowWidget
-  (ShowWidgetSuper
   (Hide
-  (HideSuper
   (Resize
-  (ResizeSuper
-  ())))))))))))))
+  ()))))))))
+
+type instance Functions ChoiceBase = ChoiceBaseFuncs
+
+data CChoice parent
+type Choice = CChoice ChoiceBase
+type ChoiceFuncs =
+  (Draw
+  (Handle
+  (ShowWidget
+  (Hide
+  (Resize
+  ())))))
 
 type instance Functions Choice = ChoiceFuncs
 
-
-data CMenuButton parent
-type MenuButton = CMenuButton MenuPrim
-type MenuButtonFuncs =
+data CMenuButtonBase parent
+type MenuButtonBase = CMenuButtonBase MenuPrimBase
+type MenuButtonBaseFuncs =
   (Destroy
   (Draw
-  (DrawSuper
   (Handle
-  (HandleSuper
   (ShowWidget
-  (ShowWidgetSuper
   (Hide
-  (HideSuper
   (Popup
   (Resize
-  (ResizeSuper
-  ()))))))))))))
+  ())))))))
+
+type instance Functions MenuButtonBase = MenuButtonBaseFuncs
+
+data CMenuButton parent
+type MenuButton = CMenuButton MenuButtonBase
+type MenuButtonFuncs =
+  (Draw
+  (Handle
+  (ShowWidget
+  (Hide
+  (Resize
+  ())))))
 
 type instance Functions MenuButton = MenuButtonFuncs
 
@@ -2696,23 +2925,30 @@ MAKE_METHOD(SetOrigin, setOrigin)
 MAKE_METHOD(GetOffscreenBeforeDelete, getOffscreenBeforeDelete)
 MAKE_METHOD(GetOffscreen, getOffscreen)
 
-data CAdjuster parent
-type Adjuster = CAdjuster Valuator
-type AdjusterFuncs =
+data CAdjusterBase parent
+type AdjusterBase = CAdjusterBase ValuatorBase
+type AdjusterBaseFuncs =
   (Destroy
   (SetSoft
   (GetSoft
   (Draw
-  (DrawSuper
   (Handle
-  (HandleSuper
   (ShowWidget
-  (ShowWidgetSuper
   (Hide
-  (HideSuper
   (Resize
-  (ResizeSuper
-  ())))))))))))))
+  ()))))))))
+
+type instance Functions AdjusterBase = AdjusterBaseFuncs
+
+data CAdjuster parent
+type Adjuster = CAdjuster AdjusterBase
+type AdjusterFuncs =
+  (Draw
+  (Handle
+  (ShowWidget
+  (Hide
+  (Resize
+  ())))))
 
 type instance Functions Adjuster = AdjusterFuncs
 
@@ -2720,9 +2956,9 @@ type instance Functions Adjuster = AdjusterFuncs
 MAKE_METHOD(SetSoft,setSoft)
 MAKE_METHOD(GetSoft,getSoft)
 
-data CDial parent
-type Dial = CDial Valuator
-type DialFuncs =
+data CDialBase parent
+type DialBase = CDialBase ValuatorBase
+type DialBaseFuncs =
   (Destroy
   (GetAngle1
   (SetAngle1
@@ -2732,16 +2968,23 @@ type DialFuncs =
   (SetType
   (GetType_
   (Draw
-  (DrawSuper
   (Handle
-  (HandleSuper
   (ShowWidget
-  (ShowWidgetSuper
   (Hide
-  (HideSuper
   (Resize
-  (ResizeSuper
-  ()))))))))))))))))))
+  ())))))))))))))
+
+type instance Functions DialBase = DialBaseFuncs
+
+data CDial parent
+type Dial = CDial DialBase
+type DialFuncs =
+  (Draw
+  (Handle
+  (ShowWidget
+  (Hide
+  (Resize
+  ())))))
 
 type instance Functions Dial = DialFuncs
 
@@ -2752,36 +2995,43 @@ MAKE_METHOD(SetAngle2,setAngle2)
 MAKE_METHOD(SetAngles,setAngles)
 
 data CFillDial parent
-type FillDial = CFillDial Dial
+type FillDial = CFillDial DialBase
 
 type instance Functions FillDial = ()
 
 data CLineDial parent
-type LineDial = CLineDial Dial
+type LineDial = CLineDial DialBase
 
 type instance Functions LineDial = ()
 
-data CRoller parent
-type Roller = CRoller Valuator
-type RollerFuncs =
+data CRollerBase parent
+type RollerBase = CRollerBase ValuatorBase
+type RollerBaseFuncs =
   (Destroy
   (Draw
-  (DrawSuper
   (Handle
-  (HandleSuper
   (ShowWidget
-  (ShowWidgetSuper
   (Hide
-  (HideSuper
   (Resize
-  (ResizeSuper
-  ())))))))))))
+  ()))))))
+
+type instance Functions RollerBase = RollerBaseFuncs
+
+data CRoller parent
+type Roller = CRoller RollerBase
+type RollerFuncs =
+  (Draw
+  (Handle
+  (ShowWidget
+  (Hide
+  (Resize
+  ())))))
 
 type instance Functions Roller = RollerFuncs
 
-data CCounter parent
-type Counter = CCounter Valuator
-type CounterFuncs =
+data CCounterBase parent
+type CounterBase = CCounterBase ValuatorBase
+type CounterBaseFuncs =
   (Destroy
   (Handle
   (SetLstep
@@ -2794,23 +3044,30 @@ type CounterFuncs =
   (SetType
   (GetType_
   (Draw
-  (DrawSuper
-  (HandleSuper
   (ShowWidget
-  (ShowWidgetSuper
   (Hide
-  (HideSuper
   (Resize
-  (ResizeSuper
-  ()))))))))))))))))))))
+  ())))))))))))))))
 
-type instance Functions Counter = CounterFuncs
+type instance Functions CounterBase = CounterBaseFuncs
 
 MAKE_METHOD(SetLstep,setLstep)
 
-data CScrollbar parent
-type Scrollbar = CScrollbar Slider
-type ScrollbarFuncs =
+data CCounter parent
+type Counter = CCounter CounterBase
+type CounterFuncs =
+  (Handle
+  (Draw
+  (ShowWidget
+  (Hide
+  (Resize
+  ())))))
+
+type instance Functions Counter = CounterFuncs
+
+data CScrollbarBase parent
+type ScrollbarBase = CScrollbarBase SliderBase
+type ScrollbarBaseFuncs =
   (Destroy
   (Scrollvalue
   (SetLinesize
@@ -2818,25 +3075,32 @@ type ScrollbarFuncs =
   (SetType
   (GetType_
   (Draw
-  (DrawSuper
   (Handle
-  (HandleSuper
   (ShowWidget
-  (ShowWidgetSuper
   (Hide
-  (HideSuper
   (Resize
-  (ResizeSuper
-  ()))))))))))))))))
+  ())))))))))))
+
+type instance Functions ScrollbarBase = ScrollbarBaseFuncs
+
+data CScrollbar parent
+type Scrollbar = CScrollbar ScrollbarBase
+type ScrollbarFuncs =
+  (Draw
+  (Handle
+  (ShowWidget
+  (Hide
+  (Resize
+  ())))))
 
 type instance Functions Scrollbar = ScrollbarFuncs
 
 MAKE_METHOD(SetLinesize,setLinesize)
 MAKE_METHOD(GetLinesize,getLinesize)
 
-data CValueSlider parent
-type ValueSlider = CValueSlider Slider
-type ValueSliderFuncs =
+data CValueSliderBase parent
+type ValueSliderBase = CValueSliderBase SliderBase
+type ValueSliderBaseFuncs =
   (Destroy
   (GetTextfont
   (SetTextfont
@@ -2845,29 +3109,35 @@ type ValueSliderFuncs =
   (GetTextcolor
   (SetTextcolor
   (Draw
-  (DrawSuper
   (Handle
-  (HandleSuper
   (ShowWidget
-  (ShowWidgetSuper
   (Hide
-  (HideSuper
   (Resize
-  (ResizeSuper
-  ())))))))))))))))))
+  ()))))))))))))
+
+type instance Functions ValueSliderBase = ValueSliderBaseFuncs
+
+data CValueSlider parent
+type ValueSlider = CValueSlider ValueSliderBase
+type ValueSliderFuncs =
+  (Draw
+  (Handle
+  (ShowWidget
+  (Hide
+  (Resize
+  ())))))
 
 type instance Functions ValueSlider = ValueSliderFuncs
 
 data CHorValueSlider parent
-type HorValueSlider = CHorValueSlider ValueSlider
+type HorValueSlider = CHorValueSlider ValueSliderBase
 
 type instance Functions HorValueSlider = ()
 
-data CInput parent
-type Input = CInput Widget
-type InputFuncs =
+data CInputBase parent
+type InputBase = CInputBase WidgetBase
+type InputBaseFuncs =
   (Destroy
-  (SetInputType
   (SetValue
   (StaticValue
   (GetValue
@@ -2908,17 +3178,24 @@ type InputFuncs =
   (GetTabNav
   (SetTabNav
   (Draw
-  (DrawSuper
   (Handle
-  (HandleSuper
   (ShowWidget
-  (ShowWidgetSuper
   (Hide
-  (HideSuper
   (DrawText
   (Resize
-  (ResizeSuper
-  ()))))))))))))))))))))))))))))))))))))))))))))))))))))
+  ()))))))))))))))))))))))))))))))))))))))))))))))
+
+type instance Functions InputBase = InputBaseFuncs
+
+data CInput parent
+type Input = CInput InputBase
+type InputFuncs =
+  (Draw
+  (Handle
+  (ShowWidget
+  (Hide
+  (Resize
+  ())))))
 
 type instance Functions Input = InputFuncs
 
@@ -2948,27 +3225,34 @@ MAKE_METHOD(GetTabNav,getTabNav)
 MAKE_METHOD(SetTabNav,setTabNav)
 MAKE_METHOD(DrawText,drawText)
 
-data COutput parent
-type Output = COutput Input
-type OutputFuncs =
+data COutputBase parent
+type OutputBase = COutputBase InputBase
+type OutputBaseFuncs =
   (SetType
   (Draw
-  (DrawSuper
   (Handle
-  (HandleSuper
   (ShowWidget
-  (ShowWidgetSuper
   (Hide
-  (HideSuper
   (Resize
-  (ResizeSuper
-  ())))))))))))
+  ()))))))
+
+type instance Functions OutputBase = OutputBaseFuncs
+
+data COutput parent
+type Output = COutput OutputBase
+type OutputFuncs =
+  (Draw
+  (Handle
+  (ShowWidget
+  (Hide
+  (Resize
+  ())))))
 
 type instance Functions Output = OutputFuncs
 
-data CValueInput parent
-type ValueInput = CValueInput Valuator
-type ValueInputFuncs =
+data CValueInputBase parent
+type ValueInputBase = CValueInputBase ValuatorBase
+type ValueInputBaseFuncs =
   (Destroy
   (GetSoft
   (SetSoft
@@ -2981,22 +3265,29 @@ type ValueInputFuncs =
   (SetTextcolor
   (GetTextcolor
   (Draw
-  (DrawSuper
   (Handle
-  (HandleSuper
   (ShowWidget
-  (ShowWidgetSuper
   (Hide
-  (HideSuper
   (Resize
-  (ResizeSuper
-  ())))))))))))))))))))))
+  ()))))))))))))))))
+
+type instance Functions ValueInputBase = ValueInputBaseFuncs
+
+data CValueInput parent
+type ValueInput = CValueInput ValueInputBase
+type ValueInputFuncs =
+  (Draw
+  (Handle
+  (ShowWidget
+  (Hide
+  (Resize
+  ())))))
 
 type instance Functions ValueInput = ValueInputFuncs
 
-data CValueOutput parent
-type ValueOutput = CValueOutput Valuator
-type ValueOutputFuncs =
+data CValueOutputBase parent
+type ValueOutputBase = CValueOutputBase ValuatorBase
+type ValueOutputBaseFuncs =
   (Destroy
   (GetSoft
   (SetSoft
@@ -3007,22 +3298,29 @@ type ValueOutputFuncs =
   (SetTextcolor
   (GetTextcolor
   (Draw
-  (DrawSuper
   (Handle
-  (HandleSuper
   (ShowWidget
-  (ShowWidgetSuper
   (Hide
-  (HideSuper
   (Resize
-  (ResizeSuper
-  ())))))))))))))))))))
+  ()))))))))))))))
+
+type instance Functions ValueOutputBase = ValueOutputBaseFuncs
+
+data CValueOutput parent
+type ValueOutput = CValueOutput ValueOutputBase
+type ValueOutputFuncs =
+  (Draw
+  (Handle
+  (ShowWidget
+  (Hide
+  (Resize
+  ())))))
 
 type instance Functions ValueOutput = ValueOutputFuncs
 
-data CProgress parent
-type Progress = CProgress Widget
-type ProgressFuncs =
+data CProgressBase parent
+type ProgressBase = CProgressBase WidgetBase
+type ProgressBaseFuncs =
   (Destroy
   (SetMaximum
   (GetMaximum
@@ -3031,22 +3329,29 @@ type ProgressFuncs =
   (SetValue
   (GetValue
   (Draw
-  (DrawSuper
   (Handle
-  (HandleSuper
   (ShowWidget
-  (ShowWidgetSuper
   (Hide
-  (HideSuper
   (Resize
-  (ResizeSuper
-  ())))))))))))))))))
+  ()))))))))))))
+
+type instance Functions ProgressBase = ProgressBaseFuncs
+
+data CProgress parent
+type Progress = CProgress ProgressBase
+type ProgressFuncs =
+  (Draw
+  (Handle
+  (ShowWidget
+  (Hide
+  (Resize
+  ())))))
 
 type instance Functions Progress = ProgressFuncs
 
-data CPositioner parent
-type Positioner = CPositioner Widget
-type PositionerFuncs =
+data CPositionerBase parent
+type PositionerBase = CPositionerBase WidgetBase
+type PositionerBaseFuncs =
   (Destroy
   (SetXvalue
   (GetXvalue
@@ -3065,16 +3370,23 @@ type PositionerFuncs =
   (SetXstep
   (SetYstep
   (Draw
-  (DrawSuper
   (Handle
-  (HandleSuper
   (ShowWidget
-  (ShowWidgetSuper
   (Hide
-  (HideSuper
   (Resize
-  (ResizeSuper
-  ())))))))))))))))))))))))))))
+  ()))))))))))))))))))))))
+
+type instance Functions PositionerBase = PositionerBaseFuncs
+
+data CPositioner parent
+type Positioner = CPositioner PositionerBase
+type PositionerFuncs =
+  (Draw
+  (Handle
+  (ShowWidget
+  (Hide
+  (Resize
+  ())))))
 
 type instance Functions Positioner = PositionerFuncs
 
@@ -3095,33 +3407,40 @@ MAKE_METHOD(SetYbounds,setYbounds)
 MAKE_METHOD(SetXstep,setXstep)
 MAKE_METHOD(SetYstep,setYstep)
 
-data CWizard parent
-type Wizard = CWizard Group
-type WizardFuncs =
+data CWizardBase parent
+type WizardBase = CWizardBase GroupBase
+type WizardBaseFuncs =
   (Destroy
   (Next
   (Prev
   (SetValue
   (GetValue
   (Draw
-  (DrawSuper
   (Handle
-  (HandleSuper
   (ShowWidget
-  (ShowWidgetSuper
   (Hide
-  (HideSuper
   (Resize
-  (ResizeSuper
-  ())))))))))))))))
+  ()))))))))))
+
+type instance Functions WizardBase = WizardBaseFuncs
+
+data CWizard parent
+type Wizard = CWizard WizardBase
+type WizardFuncs =
+  (Draw
+  (Handle
+  (ShowWidget
+  (Hide
+  (Resize
+  ())))))
 
 type instance Functions Wizard = WizardFuncs
 
 MAKE_METHOD(Prev,prev)
 
-data CTable parent
-type Table = CTable Group
-type TableFuncs =
+data CTableBase parent
+type TableBase = CTableBase GroupBase
+type TableBaseFuncs =
   (Destroy
   (SetTableBox
   (GetTableBox
@@ -3182,25 +3501,32 @@ type TableFuncs =
   (CallbackContext
   (DoCallback
   (FindCell
-  (DrawSuper
   (Draw
   (Handle
-  (ResizeSuper
   (Resize
-  (ClearSuper
   (Clear
-  (SetRowsSuper
-  (SetColsSuper
   (ShowWidget
-  (ShowWidgetSuper
   (Hide
-  (HideSuper
   (GetTabCellNav
   (SetTabCellNav
-  ())))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))
+  ()))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))
+
+type instance Functions TableBase = TableBaseFuncs
+
+data CTable parent
+type Table = CTable TableBase
+type TableFuncs =
+  (SetRows
+  (SetCols
+  (Draw
+  (Handle
+  (Resize
+  (Clear
+  (ShowWidget
+  (Hide
+  ()))))))))
 
 type instance Functions Table = TableFuncs
-
 MAKE_METHOD(SetTableBox,setTableBox)
 MAKE_METHOD(GetTableBox,getTableBox)
 MAKE_METHOD(SetRows,setRows)
@@ -3255,74 +3581,88 @@ MAKE_METHOD(SetColsSuper,setColsSuper)
 MAKE_METHOD(SetTabCellNav, setTabCellNav)
 MAKE_METHOD(GetTabCellNav, getTabCellNav)
 
-data CTableRow parent
-type TableRow = CTableRow Table
-type TableRowFuncs =
+data CTableRowBase parent
+type TableRowBase = CTableRowBase TableBase
+type TableRowBaseFuncs =
   (Destroy
   (GetRows
   (SetType
   (GetType_
   (SetRows
   (SetCols
-  (ClearSuper
   (Clear
-  (SetRowsSuper
-  (SetColsSuper
   (Handle
-  (HandleSuper
-  (ResizeSuper
   (Resize
   (GetRowSelected
   (SelectAllRows
   (Draw
-  (DrawSuper
   (Hide
-  (HideSuper
   (ShowWidget
-  (ShowWidgetSuper
-  ()))))))))))))))))))))))
+  ()))))))))))))))
+
+type instance Functions TableRowBase = TableRowBaseFuncs
+
+data CTableRow parent
+type TableRow = CTableRow TableRowBase
+type TableRowFuncs =
+  (Clear
+  (SetRows
+  (SetCols
+  (Handle
+  (Resize
+  (Draw
+  (Hide
+  (ShowWidget
+  ()))))))))
 
 type instance Functions TableRow = TableRowFuncs
 
 MAKE_METHOD(GetRowSelected,getRowSelected)
 MAKE_METHOD(SelectAllRows,selectAllRows)
 
-data CGlWindow parent
-type GlWindow = CGlWindow Window
-type GlWindowFuncs =
-  (DrawSuper
-  (HideSuper
-  (FlushSuper
-  (Flush
-  (ShowWidgetSuper
-  (ResizeSuper
-  (Hide
-  (ShowWidget
-  (Resize
-  (Handle
-  (HandleSuper
-  (Destroy
-  (GetValid
-  (SetValid
-  (Invalidate
-  (GetContextValid
-  (SetContextValid
+data CGlWindowBase parent
+type GlWindowBase = CGlWindowBase WindowBase
+type GlWindowBaseFuncs =
   (CanDo
-  (GetMode
-  (SetMode
-  (GetContext
-  (SetContext
-  (SetContextWithDestroyFlag
-  (SwapBuffers
-  (Ortho
   (CanDoOverlay
-  (RedrawOverlay
+  (Destroy
+  (Flush
+  (GetContext
+  (GetContextValid
+  (GetMode
+  (GetValid
+  (Handle
+  (Hide
   (HideOverlay
+  (Invalidate
   (MakeOverlayCurrent
-  (PixelsPerUnit
+  (Ortho
   (PixelH
   (PixelW
-  ()))))))))))))))))))))))))))))))))
+  (PixelsPerUnit
+  (RedrawOverlay
+  (Resize
+  (SetContext
+  (SetContextValid
+  (SetContextWithDestroyFlag
+  (SetMode
+  (SetValid
+  (ShowWidget
+  (SwapBuffers
+  ()))))))))))))))))))))))))))
+
+type instance Functions GlWindowBase = GlWindowBaseFuncs
+
+data CGlWindow parent
+type GlWindow = CGlWindow GlWindowBase
+type GlWindowFuncs =
+  (Destroy
+  (Flush
+  (Handle
+  (Hide
+  (Resize
+  (ShowWidget
+  ()))))))
 
 type instance Functions GlWindow = GlWindowFuncs
 
@@ -3344,78 +3684,90 @@ MAKE_METHOD(PixelH,pixelH)
 MAKE_METHOD(PixelW,pixelW)
 
 data CBox parent
-type Box = CBox Widget
+type Box = CBox WidgetBase
 
 type instance Functions Box = ()
 
-data CBrowser parent
-type Browser = CBrowser Group
-type BrowserFuncs =
-  (Handle
-  (Destroy
-  (Remove
+data CBrowserBase parent
+type BrowserBase = CBrowserBase GroupBase
+type BrowserBaseFuncs =
   (Add
-  (Insert
-  (Move
-  (Load
-  (Swap
   (Clear
-  (GetSize
-  (SetSize
-  (GetTopline
-  (Lineposition
-  (SetTopline
-  (SetBottomline
-  (SetMiddleline
-  (Select
-  (Selected
-  (ShowWidgetLine
-  (ShowWidget
-  (HideLine
-  (Hide
-  (Visible
-  (GetValue
-  (SetValue
-  (GetText
-  (SetText
-  (GetFormatChar
-  (SetFormatChar
-  (GetColumnChar
-  (SetColumnChar
-  (GetColumnWidths
-  (SetColumnWidths
-  (Displayed
-  (MakeVisible
-  (SetIcon
-  (GetIcon
-  (RemoveIcon
   (Deselect
   (DeselectAndCallback
-  (GetPosition
-  (SetPosition
-  (GetHposition
-  (SetHposition
+  (Destroy
+  (Displayed
+  (Draw
+  (GetColumnChar
+  (GetColumnWidths
+  (GetFormatChar
   (GetHasScrollbar
-  (SetHasScrollbar
-  (GetTextfont
-  (SetTextfont
-  (GetTextsize
-  (SetTextsize
-  (GetTextcolor
-  (SetTextcolor
+  (GetHposition
+  (GetIcon
+  (GetPosition
   (GetScrollbarSize
-  (SetScrollbarSize
   (GetScrollbarWidth
-  (SetScrollbarWidth
+  (GetSize
+  (GetText
+  (GetTextcolor
+  (GetTextfont
+  (GetTextsize
+  (GetTopline
+  (GetType_
+  (GetValue
+  (Handle
+  (Hide
+  (HideLine
+  (Insert
+  (Lineposition
+  (Load
+  (MakeVisible
+  (Move
+  (Remove
+  (RemoveIcon
+  (Select
+  (Selected
+  (SetBottomline
+  (SetColumnChar
+  (SetColumnWidths
+  (SetFormatChar
+  (SetHasScrollbar
+  (SetHposition
+  (SetIcon
+  (SetMiddleline
+  (SetPosition
   (SetScrollbarColor
   (SetScrollbarSelectionColor
+  (SetScrollbarSize
+  (SetScrollbarWidth
+  (SetSize
+  (SetText
+  (SetTextcolor
+  (SetTextfont
+  (SetTextsize
+  (SetTopline
+  (SetType
+  (SetValue
+  (ShowWidget
+  (ShowWidgetLine
   (Sort
   (SortWithSortType
-  (SetType
-  (GetType_
-  (DrawSuper
-  (HandleSuper
+  (Swap
+  (Visible
+  (Resize
   ()))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))
+
+type instance Functions BrowserBase = BrowserBaseFuncs
+
+data CBrowser parent
+type Browser = CBrowser BrowserBase
+type BrowserFuncs =
+  (Handle
+  (Resize
+  (ShowWidget
+  (Hide
+  (Draw
+  ())))))
 
 type instance Functions Browser = BrowserFuncs
 
@@ -3459,18 +3811,18 @@ MAKE_METHOD(SortWithSortType,sortWithSortType)
 MAKE_METHOD(Sort,sort)
 
 data CSelectBrowser parent
-type SelectBrowser = CSelectBrowser Browser
+type SelectBrowser = CSelectBrowser BrowserBase
 
 type instance Functions SelectBrowser = ()
 
 data CIntInput parent
-type IntInput = CIntInput Input
+type IntInput = CIntInput InputBase
 
 type instance Functions IntInput = ()
 
-data CClock parent
-type Clock = CClock Widget
-type ClockFuncs =
+data CClockBase parent
+type ClockBase = CClockBase WidgetBase
+type ClockBaseFuncs =
   (Handle
   (GetValue
   (GetValueSinceEpoch
@@ -3478,18 +3830,23 @@ type ClockFuncs =
   (SetType
   (GetType_
   (Draw
-  (DrawSuper
-  (HandleSuper
   (ShowWidget
-  (ShowWidgetSuper
   (Hide
-  (HideSuper
   (SetShadow
   (GetShadow
   (Resize
-  (ResizeSuper
-  ())))))))))))))))))
+  ()))))))))))))
 
+type instance Functions ClockBase = ClockBaseFuncs
+data CClock parent
+type Clock = CClock ClockBase
+type ClockFuncs =
+  (Handle
+  (Draw
+  (ShowWidget
+  (Hide
+  (Resize
+  ())))))
 
 type instance Functions Clock = ClockFuncs
 MAKE_METHOD(GetValueSinceEpoch,getValueSinceEpoch)
@@ -3736,9 +4093,9 @@ MAKE_METHOD(LabelY,labelY)
 MAKE_METHOD(LabelW,labelW)
 MAKE_METHOD(LabelH,labelH)
 
-data CTree parent
-type Tree = CTree Group
-type TreeFuncs =
+data CTreeBase parent
+type TreeBase = CTreeBase GroupBase
+type TreeBaseFuncs =
   (Destroy
   (ShowSelf
   (RootLabel
@@ -3848,13 +4205,9 @@ type TreeFuncs =
   (SetCallbackReason
   (GetCallbackReason
   (Draw
-  (DrawSuper
   (Handle
-  (HandleSuper
   (ShowWidget
-  (ShowWidgetSuper
   (Hide
-  (HideSuper
   (RecalcTree
   (GetMarginbottom
   (SetMarginbottom
@@ -3863,10 +4216,21 @@ type TreeFuncs =
   (GetItemReselectMode
   (SetItemReselectMode
   (Resize
-  (ResizeSuper
   (GetItemDrawMode
   (SetItemDrawMode
-  ())))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))
+  ()))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))
+
+type instance Functions TreeBase = TreeBaseFuncs
+
+data CTree parent
+type Tree = CTree TreeBase
+type TreeFuncs =
+ (Draw
+ (Handle
+ (ShowWidget
+ (Hide
+ (Resize
+ ())))))
 
 
 type instance Functions Tree = TreeFuncs
@@ -4088,17 +4452,13 @@ MAKE_METHOD(NextChar,nextChar)
 MAKE_METHOD(NextCharClipped,nextCharClipped)
 MAKE_METHOD(Utf8Align,utf8Align)
 
-data CTextDisplay parent
-type TextDisplay = CTextDisplay Group
-type TextDisplayFuncs =
+data CTextDisplayBase parent
+type TextDisplayBase = CTextDisplayBase GroupBase
+type TextDisplayBaseFuncs =
   (Destroy
-  (DrawSuper
   (Hide
-  (HideSuper
   (Resize
-  (ResizeSuper
   (Handle
-  (HandleSuper
   (SetBuffer
   (GetBuffer
   (RedisplayRange
@@ -4160,8 +4520,19 @@ type TextDisplayFuncs =
   (WrapMode
   (Draw
   (ShowWidget
-  (ShowWidgetSuper
-  ()))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))
+  ())))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))
+
+type instance Functions TextDisplayBase = TextDisplayBaseFuncs
+
+data CTextDisplay parent
+type TextDisplay = CTextDisplay TextDisplayBase
+type TextDisplayFuncs =
+  (Draw
+  (Hide
+  (Resize
+  (Handle
+  (ShowWidget
+  ())))))
 
 type instance Functions TextDisplay = TextDisplayFuncs
 
@@ -4206,25 +4577,32 @@ MAKE_METHOD(SetLinenumberFormat,setLinenumberFormat)
 MAKE_METHOD(GetLinenumberFormat,getLinenumberFormat)
 MAKE_METHOD(WrapMode,wrapMode)
 
-data CTextEditor parent
-type TextEditor = CTextEditor TextDisplay
-type TextEditorFuncs =
+data CTextEditorBase parent
+type TextEditorBase = CTextEditorBase TextDisplayBase
+type TextEditorBaseFuncs =
   (Destroy
   (SetInsertMode
   (GetInsertMode
   (GetDefaultKeyBindings
   (ReplaceKeyBindings
   (Draw
-  (DrawSuper
   (Handle
-  (HandleSuper
   (ShowWidget
-  (ShowWidgetSuper
   (Hide
-  (HideSuper
   (Resize
-  (ResizeSuper
-  ())))))))))))))))
+  ()))))))))))
+
+type instance Functions TextEditorBase = TextEditorBaseFuncs
+
+data CTextEditor parent
+type TextEditor = CTextEditor TextEditorBase
+type TextEditorFuncs =
+  (Draw
+  (Handle
+  (ShowWidget
+  (Hide
+  (Resize
+  ())))))
 
 type instance Functions TextEditor = TextEditorFuncs
 
@@ -4278,53 +4656,65 @@ MAKE_METHOD(SetPresetFile,setPresetFile)
 MAKE_METHOD(GetPresetFile,getPresetFile)
 MAKE_METHOD(GetErrmsg,getErrmsg)
 
-data CTile parent
-type Tile = CTile Group
-type TileFuncs =
+data CTileBase parent
+type TileBase = CTileBase GroupBase
+type TileBaseFuncs =
   (SetPosition
   (Draw
-  (DrawSuper
   (Handle
-  (HandleSuper
   (ShowWidget
-  (ShowWidgetSuper
   (Hide
-  (HideSuper
   (Resize
-  (ResizeSuper
-  ())))))))))))
+  ()))))))
+
+type instance Functions TileBase = TileBaseFuncs
+
+data CTile parent
+type Tile = CTile TileBase
+type TileFuncs =
+  (Draw
+  (Handle
+  (ShowWidget
+  (Hide
+  (Resize
+  ())))))
 
 type instance Functions Tile = TileFuncs
 
-data CPack parent
-type Pack = CPack Group
-type PackFuncs =
+data CPackBase parent
+type PackBase = CPackBase GroupBase
+type PackBaseFuncs =
   (GetType_
   (SetType
   (SetSpacing
   (GetSpacing
   (IsHorizontal
   (Draw
-  (DrawSuper
   (Handle
-  (HandleSuper
   (ShowWidget
-  (ShowWidgetSuper
   (Hide
-  (HideSuper
   (Resize
-  (ResizeSuper
-  ())))))))))))))))
+  ()))))))))))
 
+type instance Functions PackBase = PackBaseFuncs
+data CPack parent
+type Pack = CPack PackBase
+type PackFuncs =
+  (Draw
+  (Handle
+  (ShowWidget
+  (Hide
+  (Resize
+  ())))))
 type instance Functions Pack = PackFuncs
 
 MAKE_METHOD(SetSpacing,setSpacing)
 MAKE_METHOD(GetSpacing,getSpacing)
 MAKE_METHOD(IsHorizontal,isHorizontal)
 
-data CScrolled parent
-type Scrolled = CScrolled Group
-type ScrolledFuncs =
+data CScrolledBase parent
+type ScrolledBase = CScrolledBase GroupBase
+type ScrolledBaseFuncs =
   (SetScrollbarSize
   (GetScrollbarSize
   (Clear
@@ -4335,15 +4725,22 @@ type ScrolledFuncs =
   (SetType
   (Resize
   (Draw
-  (DrawSuper
   (Handle
-  (HandleSuper
   (ShowWidget
-  (ShowWidgetSuper
   (Hide
-  (HideSuper
-  (ResizeSuper
-  ()))))))))))))))))))
+  ())))))))))))))
+
+type instance Functions ScrolledBase = ScrolledBaseFuncs
+
+data CScrolled parent
+type Scrolled = CScrolled Group
+type ScrolledFuncs =
+  (Resize
+  (Draw
+  (Handle
+  (ShowWidget
+  (Hide
+  ())))))
 
 type instance Functions Scrolled = ScrolledFuncs
 
@@ -4351,19 +4748,14 @@ MAKE_METHOD(ScrollTo,scrollTo)
 MAKE_METHOD(Xposition,xposition)
 MAKE_METHOD(Yposition,yposition)
 
-data CTabs parent
-type Tabs = CTabs Group
-type TabsFuncs =
+data CTabsBase parent
+type TabsBase = CTabsBase GroupBase
+type TabsBaseFuncs =
   (Draw
-  (DrawSuper
   (Handle
-  (HandleSuper
   (ShowWidget
-  (ShowWidgetSuper
   (Resize
-  (ResizeSuper
   (Hide
-  (HideSuper
   (GetValue
   (SetValue
   (GetPush
@@ -4375,8 +4767,20 @@ type TabsFuncs =
   (GetTabAlign
   (SetTabAlign
   (Resize
-  (ResizeSuper
-  ()))))))))))))))))))))))
+  ()))))))))))))))))
+
+type instance Functions TabsBase = TabsBaseFuncs
+
+data CTabs parent
+type Tabs = CTabs TabsBase
+type TabsFuncs =
+  (Draw
+  (Handle
+  (ShowWidget
+  (Resize
+  (Hide
+  (Resize
+  ()))))))
 
 type instance Functions Tabs = TabsFuncs
 
@@ -4389,9 +4793,9 @@ MAKE_METHOD(TabHeight, tabHeight)
 MAKE_METHOD(GetTabAlign,getTabAlign)
 MAKE_METHOD(SetTabAlign,setTabAlign)
 
-data CSpinner parent
-type Spinner = CSpinner Group
-type SpinnerFuncs =
+data CSpinnerBase parent
+type SpinnerBase = CSpinnerBase GroupBase
+type SpinnerBaseFuncs =
   (GetValue
   (SetValue
   (Handle
@@ -4413,28 +4817,37 @@ type SpinnerFuncs =
   (GetStep
   (Resize
   (Draw
-  (DrawSuper
   (Handle
-  (HandleSuper
   (ShowWidget
-  (ShowWidgetSuper
   (Hide
-  (HideSuper
   (GetWrap
   (SetWrap
   (Resize
-  (ResizeSuper
   (Range
-  ())))))))))))))))))))))))))))))))))
+  ()))))))))))))))))))))))))))))
+
+
+type instance Functions SpinnerBase = SpinnerBaseFuncs
+data CSpinner parent
+type Spinner = CSpinner SpinnerBase
+type SpinnerFuncs =
+  (Handle
+  (Resize
+  (Draw
+  (Handle
+  (ShowWidget
+  (Hide
+  ()))))))
 
 
 type instance Functions Spinner = SpinnerFuncs
+
 MAKE_METHOD(GetFormat,getFormat)
 MAKE_METHOD(SetFormat,setFormat)
 
-data CColorChooser parent
-type ColorChooser = CColorChooser Group
-type ColorChooserFuncs =
+data CColorChooserBase parent
+type ColorChooserBase = CColorChooserBase GroupBase
+type ColorChooserBaseFuncs =
   (GetMode
   (SetMode
   (GetHue
@@ -4448,16 +4861,33 @@ type ColorChooserFuncs =
   (SetHsv
   (SetRgb
   (Draw
-  (DrawSuper
   (Handle
-  (HandleSuper
   (ShowWidget
-  (ShowWidgetSuper
   (Hide
-  (HideSuper
   (Resize
-  (ResizeSuper
-  ()))))))))))))))))))))))
+  ())))))))))))))))))
+
+type instance Functions ColorChooserBase = ColorChooserBaseFuncs
+
+data CColorChooser parent
+type ColorChooser = CColorChooser ColorChooserBase
+type ColorChooserFuncs =
+  (GetMode
+  (SetMode
+  (GetHue
+  (GetSaturation
+  (GetValue
+  (GetR
+  (GetG
+  (GetB
+  (SetHsv
+  (SetRgb
+  (Draw
+  (Handle
+  (ShowWidget
+  (Hide
+  (Resize
+  ())))))))))))))))
 
 type instance Functions ColorChooser = ColorChooserFuncs
 
@@ -4471,9 +4901,9 @@ MAKE_METHOD(SetRgb, setRgb)
 MAKE_METHOD(GetRgb, getRgb)
 MAKE_METHOD(GetHsv, getHsv)
 
-data CFileBrowser parent
-type FileBrowser = CFileBrowser Browser
-type FileBrowserFuncs =
+data CFileBrowserBase parent
+type FileBrowserBase = CFileBrowserBase BrowserBase
+type FileBrowserBaseFuncs =
   (SetIconsize
   (GetIconsize
   (SetFilter
@@ -4484,16 +4914,22 @@ type FileBrowserFuncs =
   (SetFiletype
   (Load
   (Draw
-  (DrawSuper
   (Handle
-  (HandleSuper
   (ShowWidget
-  (ShowWidgetSuper
   (Hide
-  (HideSuper
   (Resize
-  (ResizeSuper
-  ())))))))))))))))))))
+  ()))))))))))))))
+type instance Functions FileBrowserBase = FileBrowserBaseFuncs
+
+data CFileBrowser parent
+type FileBrowser = CFileBrowser FileBrowserBase
+type FileBrowserFuncs =
+  (Draw
+  (Handle
+  (ShowWidget
+  (Hide
+  (Resize
+  ())))))
 type instance Functions FileBrowser = FileBrowserFuncs
 
 MAKE_METHOD(SetIconsize, setIconsize)
@@ -4549,9 +4985,9 @@ data CPNMImage parent
 type PNMImage = CPNMImage RGBImage
 type instance Functions PNMImage = ()
 
-data CFileInput parent
-type FileInput = CFileInput Input
-type FileInputFuncs =
+data CFileInputBase parent
+type FileInputBase = CFileInputBase InputBase
+type FileInputBaseFuncs =
   (SetDownBox
   (GetDownBox
   (SetErrorColor
@@ -4559,18 +4995,26 @@ type FileInputFuncs =
   (GetValue
   (SetValue
   (Draw
-  (DrawSuper
   (Handle
-  (HandleSuper
   (ShowWidget
-  (ShowWidgetSuper
   (Hide
-  (HideSuper
   (Resize
-  (ResizeSuper
-  ()))))))))))))))))
+  ())))))))))))
+
+type instance Functions FileInputBase = FileInputBaseFuncs
+
+data CFileInput parent
+type FileInput = CFileInput FileInputBase
+type FileInputFuncs =
+  (Draw
+  (Handle
+  (ShowWidget
+  (Hide
+  (Resize
+  ())))))
 
 type instance Functions FileInput = FileInputFuncs
+
 MAKE_METHOD(SetErrorColor, setErrorColor)
 MAKE_METHOD(GetErrorColor, getErrorColor)
 
@@ -4595,9 +5039,9 @@ type SVGImageFuncs =
   ())))))))
 type instance Functions SVGImage = SVGImageFuncs
 
-data CSimpleTerminal parent
-type SimpleTerminal = CSimpleTerminal TextDisplay
-type SimpleTerminalFuncs =
+data CSimpleTerminalBase parent
+type SimpleTerminalBase = CSimpleTerminalBase TextDisplayBase
+type SimpleTerminalBaseFuncs =
     (SetStayAtBottom
     (GetStayAtBottom
     (SetHistoryLines
@@ -4615,12 +5059,24 @@ type SimpleTerminalFuncs =
     (GetText
     (Clear
     (RemoveLines
-    (DrawSuper
-    (ResizeSuper
-    (HandleSuper
-    (HideSuper
-    (ShowWidgetSuper
+    (Draw
+    (Resize
+    (Handle
+    (Hide
+    (ShowWidget
     ()))))))))))))))))))))))
+type instance Functions SimpleTerminalBase = SimpleTerminalBaseFuncs
+
+data CSimpleTerminal parent
+type SimpleTerminal = CSimpleTerminal SimpleTerminalBase
+type SimpleTerminalFuncs =
+  (Draw
+  (Handle
+  (ShowWidget
+  (Hide
+  (Resize
+  ())))))
+
 type instance Functions SimpleTerminal = SimpleTerminalFuncs
 
 MAKE_METHOD(SetStayAtBottom,setStayAtBottom)

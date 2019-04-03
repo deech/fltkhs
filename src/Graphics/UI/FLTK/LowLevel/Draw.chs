@@ -657,7 +657,7 @@ flcSetStatus :: Rectangle ->  IO ()
 flcSetStatus rectangle = let (x_pos', y_pos', width', height') = fromRectangle rectangle in flcSetStatus' x_pos' y_pos' width' height'
 
 {# fun flc_set_spot_with_win as flcSetSpotWithWin' { `Int',`CInt',`Int',`Int',`Int',`Int',id `Ptr ()' } -> `()' #}
-flcSetSpotWithWin :: (Parent a Window) => Font -> FontSize -> Rectangle -> Ref a -> IO ()
+flcSetSpotWithWin :: (Parent a WindowBase) => Font -> FontSize -> Rectangle -> Ref a -> IO ()
 flcSetSpotWithWin (Font font') (FontSize size') rectangle win = let (x_pos', y_pos', width', height') = fromRectangle rectangle in withRef win $ \winPtr -> flcSetSpotWithWin' font' size' x_pos' y_pos' width' height' winPtr
 
 {# fun flc_set_spot as flcSetSpot' { `Int',`CInt',`Int',`Int',`Int',`Int' } -> `()' #}

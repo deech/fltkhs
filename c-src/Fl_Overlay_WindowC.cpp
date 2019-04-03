@@ -37,8 +37,11 @@ void Fl_DerivedOverlay_Window::destroy_data() {
 
 EXPORT {
 #endif
-  FL_EXPORT_C(int,Fl_Overlay_Window_handle)(fl_Overlay_Window self, int event){
+  FL_EXPORT_C(int,Fl_DerivedOverlay_Window_handle)(fl_Overlay_Window self, int event){
     return (static_cast<Fl_DerivedOverlay_Window*>(self))->handle(event);
+  }
+  FL_EXPORT_C(int,Fl_Overlay_Window_handle)(fl_Overlay_Window self, int event){
+    return (static_cast<Fl_Overlay_Window*>(self))->Fl_Overlay_Window::handle(event);
   }
   FL_EXPORT_C(fl_Group,Fl_Overlay_Window_parent)(fl_Overlay_Window win){
     return (fl_Group) (static_cast<Fl_DerivedOverlay_Window*>(win))->parent();
@@ -380,26 +383,41 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Overlay_Window_fullscreen_off_with_resize)(fl_Overlay_Window win,int X,int Y,int W,int H){
     (static_cast<Fl_DerivedOverlay_Window*>(win))->fullscreen_off(X,Y,W,H);
   }
-  FL_EXPORT_C(void,Fl_Overlay_Window_hide)(fl_Overlay_Window win){
+  FL_EXPORT_C(void,Fl_DerivedOverlay_Window_hide)(fl_Overlay_Window win){
     (static_cast<Fl_DerivedOverlay_Window*>(win))->hide();
   }
-  FL_EXPORT_C(void,Fl_Overlay_Window_show)(fl_Overlay_Window win){
+  FL_EXPORT_C(void,Fl_Overlay_Window_hide)(fl_Overlay_Window win){
+    (static_cast<Fl_Overlay_Window*>(win))->Fl_Overlay_Window::hide();
+  }
+  FL_EXPORT_C(void,Fl_DerivedOverlay_Window_show)(fl_Overlay_Window win){
     (static_cast<Fl_DerivedOverlay_Window*>(win))->show();
+  }
+  FL_EXPORT_C(void,Fl_Overlay_Window_show)(fl_Overlay_Window win){
+    (static_cast<Fl_Overlay_Window*>(win))->Fl_Overlay_Window::show();
   }
   FL_EXPORT_C(void,Fl_Overlay_Window_show_with_args)(fl_Overlay_Window win,int argc,char** argv){
     (static_cast<Fl_DerivedOverlay_Window*>(win))->show(argc,argv);
   }
-  FL_EXPORT_C(void,Fl_Overlay_Window_Destroy)(fl_Overlay_Window win){
+  FL_EXPORT_C(void,Fl_DerivedOverlay_Window_Destroy)(fl_Overlay_Window win){
     delete (static_cast<Fl_DerivedOverlay_Window*>(win));
   }
-  FL_EXPORT_C(void,Fl_Overlay_Window_resize)(fl_Overlay_Window win,int X,int Y,int W,int H){
+  FL_EXPORT_C(void,Fl_Overlay_Window_Destroy)(fl_Overlay_Window win){
+    delete (static_cast<Fl_Overlay_Window*>(win));
+  }
+  FL_EXPORT_C(void,Fl_DerivedOverlay_Window_resize)(fl_Overlay_Window win,int X,int Y,int W,int H){
     (static_cast<Fl_DerivedOverlay_Window*>(win))->resize(X,Y,W,H);
+  }
+  FL_EXPORT_C(void,Fl_Overlay_Window_resize)(fl_Overlay_Window win,int X,int Y,int W,int H){
+    (static_cast<Fl_Overlay_Window*>(win))->Fl_Overlay_Window::resize(X,Y,W,H);
   }
   FL_EXPORT_C(void,Fl_Overlay_Window_iconize)(fl_Overlay_Window win){
     (static_cast<Fl_DerivedOverlay_Window*>(win))->iconize();
   }
-  FL_EXPORT_C(void,Fl_Overlay_Window_flush)(fl_Overlay_Window win){
+  FL_EXPORT_C(void,Fl_DerivedOverlay_Window_flush)(fl_Overlay_Window win){
     (static_cast<Fl_DerivedOverlay_Window*>(win))->flush();
+  }
+  FL_EXPORT_C(void,Fl_Overlay_Window_flush)(fl_Overlay_Window win){
+    (static_cast<Fl_Overlay_Window*>(win))->Fl_Overlay_Window::flush();
   }
   FL_EXPORT_C(void,Fl_Overlay_Window_set_border)(fl_Overlay_Window win,int b){
     (static_cast<Fl_DerivedOverlay_Window*>(win))->border(b);

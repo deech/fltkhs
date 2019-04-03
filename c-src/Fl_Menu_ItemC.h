@@ -17,6 +17,7 @@ EXPORT {
     };
     ~Fl_DerivedMenu_Item();
     void draw(int x, int y, int w, int h, Fl_Menu_* m, int selected);
+    void draw_super(int x, int y, int w, int h, Fl_Menu_* m, int selected);
   };
 #endif
   FL_EXPORT_C_HEADER(fl_Menu_Item,Fl_Menu_Item_next_with_step,(fl_Menu_Item menu_item, int step));
@@ -62,6 +63,7 @@ EXPORT {
   FL_EXPORT_C_HEADER(int,Fl_Menu_Item_measure,(fl_Menu_Item menu_item, int* h, fl_Menu_ menu));
   FL_EXPORT_C_HEADER(void,Fl_Menu_Item_draw_with_t,(fl_Menu_Item menu_item, int x, int y, int w, int h, fl_Menu_, int t));
   FL_EXPORT_C_HEADER(void,Fl_Menu_Item_draw,(fl_Menu_Item menu_item, int x, int y, int w, int h, fl_Menu_ menu));
+  FL_EXPORT_C_HEADER(void,Fl_DerivedMenu_Item_draw,(fl_Menu_Item menu_item, int x, int y, int w, int h, fl_Menu_ menu));
   FL_EXPORT_C_HEADER(int,Fl_Menu_Item_flags,(fl_Menu_Item menu_item));
   FL_EXPORT_C_HEADER(void,Fl_Menu_Item_set_flags,(fl_Menu_Item menu_item,int flags));
   FL_EXPORT_C_HEADER(char*,Fl_Menu_Item_text,(fl_Menu_Item menu_item));

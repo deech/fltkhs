@@ -46,7 +46,7 @@ import Graphics.UI.FLTK.LowLevel.Fl_Enumerations
 tooltipCurrent :: IO (Maybe (Ref Widget))
 tooltipCurrent = tooltipCurrent' >>= toMaybeRef
 {# fun Fl_Tooltip_set_current as tooltipSetCurrent' {id `Ptr ()'} -> `()' #}
-tooltipSetCurrent:: (Parent a Widget) => Maybe (Ref a) -> IO ()
+tooltipSetCurrent:: (Parent a WidgetBase) => Maybe (Ref a) -> IO ()
 tooltipSetCurrent w =
   case w of
     Nothing -> tooltipSetCurrent' nullPtr

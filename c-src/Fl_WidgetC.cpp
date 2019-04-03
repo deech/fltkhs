@@ -35,6 +35,7 @@ void Fl_DerivedWidget::draw(){
   // defined as virtual void draw = 0 in Fl_Widget.H, needs to be provided.
   this->overriddenFuncs->draw((fl_Widget) this);
 }
+
 void Fl_DerivedWidget::draw_box(){
   Fl_Widget::draw_box();
 }
@@ -69,6 +70,9 @@ int Fl_DerivedWidget::handle(int event){
   }
   return i;
 }
+int Fl_DerivedWidget::handle_super(int event){
+  return Fl_Widget::handle(event);
+}
 void Fl_DerivedWidget::resize_super(int x, int y, int w, int h){
   Fl_Widget::resize(x,y,w,h);
 }
@@ -80,6 +84,9 @@ void Fl_DerivedWidget::resize(int x, int y, int w, int h){
     Fl_Widget::resize(x,y,w,h);
   }
 }
+void Fl_DerivedWidget::show_super(){
+  Fl_Widget::show();
+}
 void Fl_DerivedWidget::show(){
   if (this->overriddenFuncs->show != NULL) {
     this->overriddenFuncs->show((fl_Widget) this);
@@ -87,6 +94,9 @@ void Fl_DerivedWidget::show(){
   else {
     Fl_Widget::show();
   }
+}
+void Fl_DerivedWidget::hide_super(){
+  Fl_Widget::hide();
 }
 void Fl_DerivedWidget::hide(){
   if (this->overriddenFuncs->hide != NULL) {
@@ -150,8 +160,14 @@ void Fl_DerivedWidget::clear_flag(unsigned int f) {
     ptr->destroy_data = NULL;
     return ptr;
   }
-  FL_EXPORT_C(int,Fl_Widget_handle)(fl_Widget self, int event){
+  FL_EXPORT_C(int,Fl_DerivedWidget_handle)(fl_Widget self, int event){
     return (static_cast<Fl_DerivedWidget*>(self))->handle(event);
+  }
+  FL_EXPORT_C(int,Fl_Widget_handle_super)(fl_Widget self, int event){
+    return (static_cast<Fl_DerivedWidget*>(self))->handle_super(event);
+  }
+  FL_EXPORT_C(void,Fl_DerivedWidget_draw)(fl_Widget widget){
+    (static_cast<Fl_DerivedWidget*>(widget))->draw();
   }
   FL_EXPORT_C(fl_Group,Fl_Widget_parent)(fl_Widget widget){
     return (fl_Group) (static_cast<Fl_DerivedWidget*>(widget))->parent();
@@ -352,15 +368,18 @@ FL_EXPORT_C(void, Fl_Widget_draw_label)(fl_Widget Widget){
     return (static_cast<Fl_DerivedWidget*>(widget))->visible_r();
   }
   FL_EXPORT_C(void,Fl_Widget_show_super)(fl_Widget widget){
-    return (static_cast<Fl_Widget*>(widget))->show();
+    return (static_cast<Fl_DerivedWidget*>(widget))->show_super();
   }
-  FL_EXPORT_C(void,Fl_Widget_show)(fl_Widget widget){
+  FL_EXPORT_C(void,Fl_DerivedWidget_show)(fl_Widget widget){
     return (static_cast<Fl_DerivedWidget*>(widget))->show();
   }
-  FL_EXPORT_C(void,Fl_Widget_hide_super)(fl_Widget widget){
-    return (static_cast<Fl_Widget*>(widget))->hide();
+  FL_EXPORT_C(void,Fl_Widget_show)(fl_Widget widget){
+    return (static_cast<Fl_Widget*>(widget))->Fl_Widget::show();
   }
-  FL_EXPORT_C(void,Fl_Widget_hide)(fl_Widget widget){
+  FL_EXPORT_C(void,Fl_Widget_hide_super)(fl_Widget widget){
+    return (static_cast<Fl_DerivedWidget*>(widget))->hide_super();
+  }
+  FL_EXPORT_C(void,Fl_DerivedWidget_hide)(fl_Widget widget){
     return (static_cast<Fl_DerivedWidget*>(widget))->hide();
   }
   FL_EXPORT_C(void,Fl_Widget_clear_visible)(fl_Widget widget){
@@ -469,18 +488,30 @@ FL_EXPORT_C(void, Fl_Widget_draw_label)(fl_Widget Widget){
     return (fl_Group) (static_cast<Fl_Widget*>(widget))->as_group();
   }
   FL_EXPORT_C(fl_Group,Fl_Widget_as_group)(fl_Widget widget){
+    return (fl_Group) (static_cast<Fl_Widget*>(widget))->as_group();
+  }
+  FL_EXPORT_C(fl_Group,Fl_DerivedWidget_as_group)(fl_Widget widget){
     return (fl_Group) (static_cast<Fl_DerivedWidget*>(widget))->as_group();
   }
   FL_EXPORT_C(fl_Gl_Window,Fl_Widget_as_gl_window_super)(fl_Widget widget){
     return (fl_Gl_Window) (static_cast<Fl_Widget*>(widget))->as_gl_window();
   }
-  FL_EXPORT_C(fl_Gl_Window,Fl_Widget_as_gl_window)(fl_Widget widget){
+  FL_EXPORT_C(fl_Gl_Window,Fl_DerivedWidget_as_gl_window)(fl_Widget widget){
     return (fl_Gl_Window) (static_cast<Fl_DerivedWidget*>(widget))->as_gl_window();
+  }
+  FL_EXPORT_C(fl_Gl_Window,Fl_Widget_as_gl_window)(fl_Widget widget){
+    return (fl_Gl_Window) (static_cast<Fl_Widget*>(widget))->as_gl_window();
+  }
+  FL_EXPORT_C(fl_Gl_Window,Fl_DerivedWidget_as_window)(fl_Widget widget){
+    return (fl_Gl_Window) (static_cast<Fl_DerivedWidget*>(widget))->as_window();
+  }
+  FL_EXPORT_C(fl_Gl_Window,Fl_Widget_as_window)(fl_Widget widget){
+    return (fl_Gl_Window) (static_cast<Fl_Widget*>(widget))->as_window();
   }
   FL_EXPORT_C(void,Fl_Widget_resize_super)(fl_Widget widget,int X,int Y,int W,int H){
     return (static_cast<Fl_DerivedWidget*>(widget))->resize_super(X,Y,W,H);
   }
-  FL_EXPORT_C(void,Fl_Widget_resize)(fl_Widget widget,int X,int Y,int W,int H){
+  FL_EXPORT_C(void,Fl_DerivedWidget_resize)(fl_Widget widget,int X,int Y,int W,int H){
     return (static_cast<Fl_DerivedWidget*>(widget))->resize(X,Y,W,H);
   }
   FL_EXPORT_C(fl_Widget,    Fl_Widget_New)(int X, int Y, int W, int H){
@@ -502,6 +533,9 @@ FL_EXPORT_C(void, Fl_Widget_draw_label)(fl_Widget Widget){
     return (fl_Widget)w;
   }
   FL_EXPORT_C(void, Fl_Widget_Destroy)(fl_Widget widget){
+    delete (static_cast<Fl_Widget*>(widget));
+  }
+  FL_EXPORT_C(void, Fl_DerivedWidget_Destroy)(fl_Widget widget){
     delete (static_cast<Fl_DerivedWidget*>(widget));
   }
   FL_EXPORT_C(unsigned int, Fl_Widget_flags)(fl_Widget widget){

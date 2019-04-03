@@ -3,6 +3,7 @@
 #ifdef __cplusplus
 // always include the FL/*.H headers before local headers
 // Fl_Widget is included transitively and needed for
+// Fl_DerivedWidget is included transitively and needed for
 // the callback mechanism included below to work.
 #include "FL/Fl.H"
 #include "FL/Fl_Overlay_Window.H"
@@ -25,6 +26,7 @@ EXPORT {
 #endif
   /* Inherited from Fl_Widget */
   FL_EXPORT_C_HEADER(int,Fl_Overlay_Window_handle,(fl_Overlay_Window self, int event));
+  FL_EXPORT_C_HEADER(int,Fl_DerivedOverlay_Window_handle,(fl_Overlay_Window self, int event));
   FL_EXPORT_C_HEADER(fl_Group,Fl_Overlay_Window_parent,(fl_Overlay_Window win));
   FL_EXPORT_C_HEADER(void,Fl_Overlay_Window_set_parent,(fl_Overlay_Window win, fl_Group grp));
   FL_EXPORT_C_HEADER(uchar,Fl_Overlay_Window_type,(fl_Overlay_Window win));
@@ -191,10 +193,16 @@ EXPORT {
   FL_EXPORT_C_HEADER(int,Fl_Overlay_Window_decorated_h,(fl_Overlay_Window win));
   /* Fl_Overlay_Window specific */
   FL_EXPORT_C_HEADER(void,Fl_Overlay_Window_show,(fl_Overlay_Window win));
+  FL_EXPORT_C_HEADER(void,Fl_DerivedOverlay_Window_show,(fl_Overlay_Window win));
   FL_EXPORT_C_HEADER(void,Fl_Overlay_Window_show_with_args,(fl_Overlay_Window win, int argc, char** argv));
   FL_EXPORT_C_HEADER(void,Fl_Overlay_Window_flush,(fl_Overlay_Window win));
+  FL_EXPORT_C_HEADER(void,Fl_DerivedOverlay_Window_flush,(fl_Overlay_Window win));
+  FL_EXPORT_C_HEADER(void,Fl_Overlay_Window_hide,(fl_Overlay_Window win));
+  FL_EXPORT_C_HEADER(void,Fl_DerivedOverlay_Window_hide,(fl_Overlay_Window win));
+  FL_EXPORT_C_HEADER(void,Fl_DerivedOverlay_Window_resize,(fl_Overlay_Window win, int X, int Y, int W, int H));
   FL_EXPORT_C_HEADER(void,Fl_Overlay_Window_resize,(fl_Overlay_Window win, int X, int Y, int W, int H));
   FL_EXPORT_C_HEADER(void,Fl_Overlay_Window_hide,(fl_Overlay_Window win));
+  FL_EXPORT_C_HEADER(void,Fl_DerivedOverlay_Window_hide,(fl_Overlay_Window win));
   FL_EXPORT_C_HEADER(int,Fl_Overlay_Window_can_do_overlay,(fl_Overlay_Window win));
   FL_EXPORT_C_HEADER(void,Fl_Overlay_Window_redraw_overlay,(fl_Overlay_Window win));
 
@@ -203,6 +211,7 @@ EXPORT {
   FL_EXPORT_C_HEADER(fl_Overlay_Window,Fl_Overlay_Window_NewXY_WithLabel,(int x, int y, int w, int h, const char* title, void (*draw_overlay_fp)(fl_Overlay_Window), Destroy_Function_Pointers dfps));
   FL_EXPORT_C_HEADER(fl_Overlay_Window,Fl_Overlay_Window_NewXY,(int x, int y, int w, int h, void (*draw_overlay_fp)(fl_Overlay_Window), Destroy_Function_Pointers dfps));
   FL_EXPORT_C_HEADER(void,Fl_Overlay_Window_Destroy,(fl_Overlay_Window win));
+  FL_EXPORT_C_HEADER(void,Fl_DerivedOverlay_Window_Destroy,(fl_Overlay_Window win));
 #ifdef __cplusplus
 }
 #endif

@@ -128,14 +128,19 @@ EXPORT {
   FL_EXPORT_C_HEADER(fl_Check_Button,Fl_OverriddenCheck_Button_New,(int X, int Y, int W, int H,fl_Widget_Virtual_Funcs* fs));
   FL_EXPORT_C_HEADER(fl_Check_Button,Fl_OverriddenCheck_Button_New_WithLabel,(int X, int Y, int W, int H, const char* label, fl_Widget_Virtual_Funcs* fs));
   FL_EXPORT_C_HEADER(void,Fl_Check_Button_draw,(fl_Check_Button o));
+  FL_EXPORT_C_HEADER(void,Fl_DerivedCheck_Button_draw,(fl_Check_Button o));
   FL_EXPORT_C_HEADER(void,Fl_Check_Button_draw_super,(fl_Check_Button o));
   FL_EXPORT_C_HEADER(int,Fl_Check_Button_handle,(fl_Check_Button o, int event));
+  FL_EXPORT_C_HEADER(int,Fl_DerivedCheck_Button_handle,(fl_Check_Button o, int event));
   FL_EXPORT_C_HEADER(int,Fl_Check_Button_handle_super,(fl_Check_Button o, int event));
   FL_EXPORT_C_HEADER(void,Fl_Check_Button_resize,(fl_Check_Button o, int x, int y, int w, int h));
+  FL_EXPORT_C_HEADER(void,Fl_DerivedCheck_Button_resize,(fl_Check_Button o, int x, int y, int w, int h));
   FL_EXPORT_C_HEADER(void,Fl_Check_Button_resize_super,(fl_Check_Button o, int x, int y, int w, int h));
   FL_EXPORT_C_HEADER(void,Fl_Check_Button_show,(fl_Check_Button o));
+  FL_EXPORT_C_HEADER(void,Fl_DerivedCheck_Button_show,(fl_Check_Button o));
   FL_EXPORT_C_HEADER(void,Fl_Check_Button_show_super,(fl_Check_Button o));
   FL_EXPORT_C_HEADER(void,Fl_Check_Button_hide,(fl_Check_Button o));
+  FL_EXPORT_C_HEADER(void,Fl_DerivedCheck_Button_hide,(fl_Check_Button o));
   FL_EXPORT_C_HEADER(void,Fl_Check_Button_hide_super,(fl_Check_Button o));
 
 #ifdef __cplusplus

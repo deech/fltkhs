@@ -30,6 +30,7 @@ pngImageNewWithData l' data' =
   B.useAsCString data' $ \png' ->
     copyTextToCString l' >>= \label -> pngImageNewWithData' label (castPtr png') (B.length data') >>= toRef >>= checkImage
 
+
 -- $hierarchy
 -- @
 -- "Graphics.UI.FLTK.LowLevel.Image"

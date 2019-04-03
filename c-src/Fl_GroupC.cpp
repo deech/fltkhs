@@ -90,30 +90,42 @@ void Fl_DerivedGroup::update_child(Fl_Widget* widget){
 EXPORT {
 #endif
   FL_EXPORT_C(int,Fl_Group_handle)(fl_Group self, int event){
-    return (static_cast<Fl_DerivedGroup*>(self))->handle(event);
+    return (static_cast<Fl_Group*>(self))->handle(event);
+  }
+  FL_EXPORT_C(int,Fl_DerivedGroup_handle)(fl_Group self, int event){
+    return (static_cast<Fl_DerivedGroup*>(self))->Fl_Group::handle(event);
   }
   FL_EXPORT_C(int,Fl_Group_handle_super)(fl_Group self, int event){
     return (static_cast<Fl_DerivedGroup*>(self))->handle_super(event);
   }
   FL_EXPORT_C(void, Fl_Group_resize)(fl_Group self, int x, int y, int w, int h){
+    (static_cast<Fl_Group*>(self))->Fl_Group::resize(x, y, w, h);
+  }
+  FL_EXPORT_C(void, Fl_DerivecGroup_resize)(fl_Group self, int x, int y, int w, int h){
     (static_cast<Fl_DerivedGroup*>(self))->resize(x, y, w, h);
   }
   FL_EXPORT_C(void, Fl_Group_resize_super)(fl_Group self, int x, int y, int w, int h){
     (static_cast<Fl_DerivedGroup*>(self))->resize_super(x, y, w, h);
   }
-  FL_EXPORT_C(void,Fl_Group_draw)(fl_Group self){
+  FL_EXPORT_C(void,Fl_DerivedGroup_draw)(fl_Group self){
     (static_cast<Fl_DerivedGroup*>(self))->draw();
   }
   FL_EXPORT_C(void,Fl_Group_draw_super)(fl_Group self){
     (static_cast<Fl_DerivedGroup*>(self))->draw_super();
   }
   FL_EXPORT_C(void,Fl_Group_show)(fl_Group self){
+    (static_cast<Fl_Group*>(self))->Fl_Group::show();
+  }
+  FL_EXPORT_C(void,Fl_DerivedGroup_show)(fl_Group self){
     (static_cast<Fl_DerivedGroup*>(self))->show();
   }
   FL_EXPORT_C(void,Fl_Group_show_super)(fl_Group self){
     (static_cast<Fl_DerivedGroup*>(self))->show_super();
   }
   FL_EXPORT_C(void,Fl_Group_hide)(fl_Group self){
+    (static_cast<Fl_Group*>(self))->Fl_Group::hide();
+  }
+  FL_EXPORT_C(void,Fl_DerivedGroup_hide)(fl_Group self){
     (static_cast<Fl_DerivedGroup*>(self))->hide();
   }
   FL_EXPORT_C(void,Fl_Group_hide_super)(fl_Group self){
@@ -478,6 +490,9 @@ EXPORT {
     return (fl_Group)w;
   }
   FL_EXPORT_C(void, Fl_Group_Destroy)(fl_Group group){
+    delete (static_cast<Fl_Group*>(group));
+  }
+  FL_EXPORT_C(void, Fl_DerivedGroup_Destroy)(fl_Group group){
     delete (static_cast<Fl_DerivedGroup*>(group));
   }
 #ifdef __cplusplus

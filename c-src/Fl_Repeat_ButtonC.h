@@ -31,6 +31,7 @@ EXPORT {
 #endif
   /* Inherited from Fl_Widget */
   FL_EXPORT_C_HEADER(int,Fl_Repeat_Button_handle,(fl_Repeat_Button self, int event));
+  FL_EXPORT_C_HEADER(int,Fl_DerivedRepeat_Button_handle,(fl_Repeat_Button self, int event));
   FL_EXPORT_C_HEADER(fl_Group,Fl_Repeat_Button_parent,(fl_Repeat_Button repeat_button));
   FL_EXPORT_C_HEADER(void,Fl_Repeat_Button_set_parent,(fl_Repeat_Button repeat_button, fl_Group grp));
   FL_EXPORT_C_HEADER(uchar,Fl_Repeat_Button_type,(fl_Repeat_Button repeat_button));
@@ -132,14 +133,18 @@ EXPORT {
   FL_EXPORT_C_HEADER(fl_Repeat_Button,Fl_OverriddenRepeat_Button_New,(int X, int Y, int W, int H,fl_Widget_Virtual_Funcs* fs));
   FL_EXPORT_C_HEADER(fl_Repeat_Button,Fl_OverriddenRepeat_Button_New_WithLabel,(int X, int Y, int W, int H, const char* label, fl_Widget_Virtual_Funcs* fs));
   FL_EXPORT_C_HEADER(void,Fl_Repeat_Button_draw,(fl_Repeat_Button o));
+  FL_EXPORT_C_HEADER(void,Fl_DerivedRepeat_Button_draw,(fl_Repeat_Button o));
   FL_EXPORT_C_HEADER(void,Fl_Repeat_Button_draw_super,(fl_Repeat_Button o));
   FL_EXPORT_C_HEADER(int,Fl_Repeat_Button_handle,(fl_Repeat_Button o, int event));
   FL_EXPORT_C_HEADER(int,Fl_Repeat_Button_handle_super,(fl_Repeat_Button o, int event));
   FL_EXPORT_C_HEADER(void,Fl_Repeat_Button_resize,(fl_Repeat_Button o, int x, int y, int w, int h));
+  FL_EXPORT_C_HEADER(void,Fl_DerivedRepeat_Button_resize,(fl_Repeat_Button o, int x, int y, int w, int h));
   FL_EXPORT_C_HEADER(void,Fl_Repeat_Button_resize_super,(fl_Repeat_Button o, int x, int y, int w, int h));
   FL_EXPORT_C_HEADER(void,Fl_Repeat_Button_show,(fl_Repeat_Button o));
+  FL_EXPORT_C_HEADER(void,Fl_DerivedRepeat_Button_show,(fl_Repeat_Button o));
   FL_EXPORT_C_HEADER(void,Fl_Repeat_Button_show_super,(fl_Repeat_Button o));
   FL_EXPORT_C_HEADER(void,Fl_Repeat_Button_hide,(fl_Repeat_Button o));
+  FL_EXPORT_C_HEADER(void,Fl_DerivedRepeat_Button_hide,(fl_Repeat_Button o));
   FL_EXPORT_C_HEADER(void,Fl_Repeat_Button_hide_super,(fl_Repeat_Button o));
 #ifdef __cplusplus
 }

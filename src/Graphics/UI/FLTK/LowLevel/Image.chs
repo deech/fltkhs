@@ -205,6 +205,12 @@ instance (impl ~ (Size -> Maybe Bool -> Maybe Bool -> IO ())) => Op (Scale ()) I
   runOp _ _ image (Size (Width w') (Height h')) proportional can_expand =
     withRef image $ \imagePtr -> scale' imagePtr w' h' (maybe True id proportional) (maybe False id can_expand)
 
+
+-- $hierarchy
+-- @
+-- "Graphics.UI.FLTK.LowLevel.Image"
+-- @
+
 -- $functions
 -- @
 -- colorAverage :: 'Ref' 'Image' -> 'Color' -> 'Float' -> 'IO' ()
@@ -242,9 +248,4 @@ instance (impl ~ (Size -> Maybe Bool -> Maybe Bool -> IO ())) => Op (Scale ()) I
 -- scale :: 'Ref' 'Image' -> 'Size' -> 'Maybe' 'Bool' -> 'Maybe' 'Bool' -> 'IO' ()
 --
 -- uncache :: 'Ref' 'Image' -> 'IO' ()
--- @
-
--- $hierarchy
--- @
--- "Graphics.UI.FLTK.LowLevel.Image"
 -- @

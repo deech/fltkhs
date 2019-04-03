@@ -140,14 +140,20 @@ EXPORT {
   FL_EXPORT_C(int,Fl_Valuator_handle_super)(fl_Valuator valuator,int event){
     return (static_cast<Fl_DerivedValuator*>(valuator))->Fl_Valuator::handle(event);
   }
-  FL_EXPORT_C(int,Fl_Valuator_handle )(fl_Valuator valuator, int event){
+  FL_EXPORT_C(int,Fl_DerivedValuator_handle)(fl_Valuator valuator, int event){
     return (static_cast<Fl_DerivedValuator*>(valuator))->handle(event);
+  }
+  FL_EXPORT_C(int,Fl_Valuator_handle)(fl_Valuator valuator, int event){
+    return (static_cast<Fl_DerivedValuator*>(valuator))->Fl_Valuator::handle(event);
   }
   FL_EXPORT_C(void,Fl_Valuator_resize_super )(fl_Valuator valuator,int x, int y, int w, int h){
     (static_cast<Fl_DerivedValuator*>(valuator))->Fl_Valuator::resize(x,y,w,h);
   }
-  FL_EXPORT_C(void,Fl_Valuator_resize )(fl_Valuator valuator,int x, int y, int w, int h){
+  FL_EXPORT_C(void,Fl_DerivedValuator_resize )(fl_Valuator valuator,int x, int y, int w, int h){
     (static_cast<Fl_DerivedValuator*>(valuator))->resize(x,y,w,h);
+  }
+  FL_EXPORT_C(void,Fl_Valuator_resize )(fl_Valuator valuator,int x, int y, int w, int h){
+    (static_cast<Fl_DerivedValuator*>(valuator))->Fl_Valuator::resize(x,y,w,h);
   }
   FL_EXPORT_C(void,Fl_Valuator_show_super)(fl_Valuator valuator){
     (static_cast<Fl_DerivedValuator*>(valuator))->Fl_Valuator::show();
@@ -158,8 +164,11 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Valuator_hide_super)(fl_Valuator valuator){
     (static_cast<Fl_DerivedValuator*>(valuator))->Fl_Valuator::hide();
   }
-  FL_EXPORT_C(void,Fl_Valuator_hide )(fl_Valuator valuator){
+  FL_EXPORT_C(void,Fl_DerivedValuator_hide )(fl_Valuator valuator){
     (static_cast<Fl_DerivedValuator*>(valuator))->hide();
+  }
+  FL_EXPORT_C(void,Fl_Valuator_hide )(fl_Valuator valuator){
+    (static_cast<Fl_DerivedValuator*>(valuator))->Fl_Valuator::hide();
   }
   FL_EXPORT_C(fl_Window,Fl_Valuator_as_window_super)(fl_Valuator valuator){
     return (static_cast<Fl_DerivedValuator*>(valuator))->Fl_Valuator::as_window();

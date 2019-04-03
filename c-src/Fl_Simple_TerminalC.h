@@ -56,6 +56,11 @@ EXPORT {
   FL_EXPORT_C_HEADER(void,Fl_Simple_Terminal_resize_super,(fl_Simple_Terminal o, int x, int y, int w, int h));
   FL_EXPORT_C_HEADER(void,Fl_Simple_Terminal_show_super,(fl_Simple_Terminal o));
   FL_EXPORT_C_HEADER(void,Fl_Simple_Terminal_hide_super,(fl_Simple_Terminal o));
+  FL_EXPORT_C_HEADER(void, Fl_Simple_Terminal_draw,(fl_Simple_Terminal o));
+  FL_EXPORT_C_HEADER(int, Fl_Simple_Terminal_handle,(fl_Simple_Terminal o, int event));
+  FL_EXPORT_C_HEADER(void, Fl_Simple_Terminal_resize,(fl_Simple_Terminal o, int x, int y, int w, int h));
+  FL_EXPORT_C_HEADER(void, Fl_Simple_Terminal_show,(fl_Simple_Terminal o));
+  FL_EXPORT_C_HEADER(void, Fl_Simple_Terminal_hide,(fl_Simple_Terminal o));
 #ifdef __cplusplus
 }
 #endif

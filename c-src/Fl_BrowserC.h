@@ -51,6 +51,8 @@ EXPORT {
   FL_EXPORT_C_HEADER(void,Fl_Browser_show ,(fl_Browser browser));
   FL_EXPORT_C_HEADER(void,Fl_Browser_hide_super,(fl_Browser browser));
   FL_EXPORT_C_HEADER(void,Fl_Browser_hide ,(fl_Browser browser));
+  FL_EXPORT_C_HEADER(void,Fl_Browser_draw_super,(fl_Browser browser));
+  FL_EXPORT_C_HEADER(void,Fl_Browser_draw ,(fl_Browser browser));
   FL_EXPORT_C_HEADER(fl_Window,Fl_Browser_as_window_super,(fl_Browser browser));
   FL_EXPORT_C_HEADER(fl_Window,Fl_Browser_as_window ,(fl_Browser browser));
   FL_EXPORT_C_HEADER(fl_Gl_Window,Fl_Browser_as_gl_window_super,(fl_Browser browser));

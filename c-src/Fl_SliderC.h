@@ -166,14 +166,19 @@ EXPORT {
   FL_EXPORT_C_HEADER(fl_Slider,Fl_OverriddenSlider_New,(int X, int Y, int W, int H,fl_Widget_Virtual_Funcs* fs));
   FL_EXPORT_C_HEADER(fl_Slider,Fl_OverriddenSlider_New_WithLabel,(int X, int Y, int W, int H, const char* label, fl_Widget_Virtual_Funcs* fs));
   FL_EXPORT_C_HEADER(void,Fl_Slider_draw,(fl_Slider o));
+  FL_EXPORT_C_HEADER(void,Fl_DerivedSlider_draw,(fl_Slider o));
   FL_EXPORT_C_HEADER(void,Fl_Slider_draw_super,(fl_Slider o));
   FL_EXPORT_C_HEADER(int,Fl_Slider_handle,(fl_Slider o, int event));
+  FL_EXPORT_C_HEADER(int,Fl_DerivedSlider_handle,(fl_Slider o, int event));
   FL_EXPORT_C_HEADER(int,Fl_Slider_handle_super,(fl_Slider o, int event));
   FL_EXPORT_C_HEADER(void,Fl_Slider_resize,(fl_Slider o, int x, int y, int w, int h));
+  FL_EXPORT_C_HEADER(void,Fl_DerivedSlider_resize,(fl_Slider o, int x, int y, int w, int h));
   FL_EXPORT_C_HEADER(void,Fl_Slider_resize_super,(fl_Slider o, int x, int y, int w, int h));
   FL_EXPORT_C_HEADER(void,Fl_Slider_show,(fl_Slider o));
+  FL_EXPORT_C_HEADER(void,Fl_DerivedSlider_show,(fl_Slider o));
   FL_EXPORT_C_HEADER(void,Fl_Slider_show_super,(fl_Slider o));
   FL_EXPORT_C_HEADER(void,Fl_Slider_hide,(fl_Slider o));
+  FL_EXPORT_C_HEADER(void,Fl_DerivedSlider_hide,(fl_Slider o));
   FL_EXPORT_C_HEADER(void,Fl_Slider_hide_super,(fl_Slider o));
 #ifdef __cplusplus
 }

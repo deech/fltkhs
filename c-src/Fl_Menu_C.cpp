@@ -124,26 +124,38 @@ EXPORT {
   FL_EXPORT_C(int,Fl_Menu__handle_super )(fl_Menu_ menu_,int event){
     return (static_cast<Fl_Menu_*>(menu_))->Fl_Menu_::handle(event);
   }
-  FL_EXPORT_C(int,Fl_Menu__handle )(fl_Menu_ menu_, int event){
+  FL_EXPORT_C(int,Fl_DerivedMenu__handle )(fl_Menu_ menu_, int event){
     return (static_cast<Fl_DerivedMenu_*>(menu_))->handle(event);
+  }
+  FL_EXPORT_C(int,Fl_Menu__handle )(fl_Menu_ menu_, int event){
+    return (static_cast<Fl_DerivedMenu_*>(menu_))->Fl_Menu_::handle(event);
   }
   FL_EXPORT_C(void,Fl_Menu__resize_super )(fl_Menu_ menu_,int x, int y, int w, int h){
     (static_cast<Fl_Menu_*>(menu_))->Fl_Menu_::resize(x,y,w,h);
   }
-  FL_EXPORT_C(void,Fl_Menu__resize )(fl_Menu_ menu_,int x, int y, int w, int h){
+  FL_EXPORT_C(void,Fl_DerivedMenu__resize )(fl_Menu_ menu_,int x, int y, int w, int h){
     (static_cast<Fl_DerivedMenu_*>(menu_))->resize(x,y,w,h);
+  }
+  FL_EXPORT_C(void,Fl_Menu__resize )(fl_Menu_ menu_,int x, int y, int w, int h){
+    (static_cast<Fl_DerivedMenu_*>(menu_))->Fl_Menu_::resize(x,y,w,h);
   }
   FL_EXPORT_C(void,Fl_Menu__show_super)(fl_Menu_ menu_){
     (static_cast<Fl_Menu_*>(menu_))->Fl_Menu_::show();
   }
-  FL_EXPORT_C(void,Fl_Menu__show )(fl_Menu_ menu_){
+  FL_EXPORT_C(void,Fl_DerivedMenu__show )(fl_Menu_ menu_){
     (static_cast<Fl_DerivedMenu_*>(menu_))->show();
+  }
+  FL_EXPORT_C(void,Fl_Menu__show )(fl_Menu_ menu_){
+    (static_cast<Fl_DerivedMenu_*>(menu_))->Fl_Menu_::show();
   }
   FL_EXPORT_C(void,Fl_Menu__hide_super)(fl_Menu_ menu_){
     (static_cast<Fl_Menu_*>(menu_))->Fl_Menu_::hide();
   }
-  FL_EXPORT_C(void,Fl_Menu__hide )(fl_Menu_ menu_){
+  FL_EXPORT_C(void,Fl_DerivedMenu__hide )(fl_Menu_ menu_){
     (static_cast<Fl_DerivedMenu_*>(menu_))->hide();
+  }
+  FL_EXPORT_C(void,Fl_Menu__hide )(fl_Menu_ menu_){
+    (static_cast<Fl_DerivedMenu_*>(menu_))->Fl_Menu_::hide();
   }
   FL_EXPORT_C(fl_Window,Fl_Menu__as_window_super)(fl_Menu_ menu_){
     return (fl_Window)(static_cast<Fl_Menu_*>(menu_))->Fl_Menu_::as_window();

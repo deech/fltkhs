@@ -383,32 +383,47 @@ void Fl_DerivedReturn_Button::destroy_data(){
   FL_EXPORT_C(void,Fl_Return_Button_set_down_color)(fl_Return_Button b,Fl_Color c){
     (static_cast<Fl_Return_Button*>(b))->down_color(c);
   }
-  FL_EXPORT_C(void, Fl_Return_Button_draw)(fl_Return_Button o){
+  FL_EXPORT_C(void, Fl_DerivedReturn_Button_draw)(fl_Return_Button o){
     (static_cast<Fl_DerivedReturn_Button*>(o))->draw();
+  }
+  FL_EXPORT_C(void, Fl_Return_Button_draw)(fl_Return_Button o){
+    (static_cast<Fl_DerivedReturn_Button*>(o))->draw_super();
   }
   FL_EXPORT_C(void, Fl_Return_Button_draw_super)(fl_Return_Button o){
     (static_cast<Fl_DerivedReturn_Button*>(o))->draw_super();
   }
-  FL_EXPORT_C(int, Fl_Return_Button_handle)(fl_Return_Button o, int event){
+  FL_EXPORT_C(int, Fl_DerivedReturn_Button_handle)(fl_Return_Button o, int event){
     return (static_cast<Fl_DerivedReturn_Button*>(o))->handle(event);
+  }
+  FL_EXPORT_C(int, Fl_Return_Button_handle)(fl_Return_Button o, int event){
+    return (static_cast<Fl_DerivedReturn_Button*>(o))->Fl_Return_Button::handle(event);
   }
   FL_EXPORT_C(int, Fl_Return_Button_handle_super)(fl_Return_Button o, int event){
     return (static_cast<Fl_DerivedReturn_Button*>(o))->handle_super(event);
   }
-  FL_EXPORT_C(void, Fl_Return_Button_resize)(fl_Return_Button o, int x, int y, int w, int h){
+  FL_EXPORT_C(void, Fl_DerivedReturn_Button_resize)(fl_Return_Button o, int x, int y, int w, int h){
     (static_cast<Fl_DerivedReturn_Button*>(o))->resize(x,y,w,h);
+  }
+  FL_EXPORT_C(void, Fl_Return_Button_resize)(fl_Return_Button o, int x, int y, int w, int h){
+    (static_cast<Fl_DerivedReturn_Button*>(o))->Fl_Return_Button::resize(x,y,w,h);
   }
   FL_EXPORT_C(void, Fl_Return_Button_resize_super)(fl_Return_Button o, int x, int y, int w, int h){
     (static_cast<Fl_DerivedReturn_Button*>(o))->resize_super(x,y,w,h);
   }
-  FL_EXPORT_C(void, Fl_Return_Button_show)(fl_Return_Button o){
+  FL_EXPORT_C(void, Fl_DerivedReturn_Button_show)(fl_Return_Button o){
     (static_cast<Fl_DerivedReturn_Button*>(o))->show();
+  }
+  FL_EXPORT_C(void, Fl_Return_Button_show)(fl_Return_Button o){
+    (static_cast<Fl_DerivedReturn_Button*>(o))->Fl_Return_Button::show();
   }
   FL_EXPORT_C(void, Fl_Return_Button_show_super)(fl_Return_Button o){
     (static_cast<Fl_DerivedReturn_Button*>(o))->show_super();
   }
-  FL_EXPORT_C(void, Fl_Return_Button_hide)(fl_Return_Button o){
+  FL_EXPORT_C(void, Fl_DerivedReturn_Button_hide)(fl_Return_Button o){
     (static_cast<Fl_DerivedReturn_Button*>(o))->hide();
+  }
+  FL_EXPORT_C(void, Fl_Return_Button_hide)(fl_Return_Button o){
+    (static_cast<Fl_DerivedReturn_Button*>(o))->Fl_Return_Button::hide();
   }
   FL_EXPORT_C(void, Fl_Return_Button_hide_super)(fl_Return_Button o){
     (static_cast<Fl_DerivedReturn_Button*>(o))->hide_super();

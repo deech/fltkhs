@@ -11,7 +11,7 @@ import Foreign.Ptr
 {# fun flc_open_display as flcOpenDisplay {} -> `()' #}
 
 {# fun flc_xid as flcXid' {`Ptr ()'} -> `Ptr ()' #}
-flcXid :: (Parent a Window) => Ref a -> IO (Maybe WindowHandle)
+flcXid :: (Parent a WindowBase) => Ref a -> IO (Maybe WindowHandle)
 flcXid win =
   withRef
     win

@@ -11,6 +11,7 @@ EXPORT {
 #endif
   /* Inherited from Fl_Widget */
   FL_EXPORT_C_HEADER(int,Fl_Table_handle,(fl_Table self, int event));
+  FL_EXPORT_C_HEADER(int,Fl_Table_handle_super,(fl_Table self, int event));
   FL_EXPORT_C_HEADER(fl_Group,Fl_Table_parent,(fl_Table table));
   FL_EXPORT_C_HEADER(void,Fl_Table_set_parent,(fl_Table table, fl_Group grp));
   FL_EXPORT_C_HEADER(uchar,Fl_Table_type,(fl_Table table));
@@ -153,6 +154,7 @@ FL_EXPORT_C_HEADER(void,Fl_Table_draw_label,(fl_Table Table));
     void draw_label(int x,int y,int w,int h,Fl_Align alignment);
     virtual void draw();
     virtual int handle(int event);
+    virtual int handle_super(int event);
     void resize_super(int x, int y, int w, int h);
     virtual void resize(int x, int y, int w, int h);
     virtual void show();

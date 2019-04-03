@@ -82,9 +82,17 @@ instance (impl ~ (Position ->  IO ())) => Op (Draw ()) Pixmap orig impl where
 instance (impl ~ ( IO ())) => Op (Uncache ()) Pixmap orig impl where
   runOp _ _ pixmap = withRef pixmap $ \pixmapPtr -> uncache' pixmapPtr
 
+
+-- $hierarchy
+-- @
+-- "Graphics.UI.FLTK.LowLevel.Image"
+--  |
+--  v
+-- "Graphics.UI.FLTK.LowLevel.Pixmap"
+-- @
+
 -- $functions
 -- @
---
 -- colorAverage :: 'Ref' 'Pixmap' -> 'Color' -> 'Float' -> 'IO' ()
 --
 -- copy :: 'Ref' 'Pixmap' -> 'Maybe' 'Size' -> 'IO' ('Maybe' ('Ref' 'Pixmap'))
@@ -110,12 +118,4 @@ instance (impl ~ ( IO ())) => Op (Uncache ()) Pixmap orig impl where
 -- inactive :: 'Ref' 'Pixmap' -> 'IO' ()
 --
 -- uncache :: 'Ref' 'Pixmap' -> 'IO' ()
--- @
-
--- $hierarchy
--- @
--- "Graphics.UI.FLTK.LowLevel.Image"
---  |
---  v
--- "Graphics.UI.FLTK.LowLevel.Pixmap"
 -- @

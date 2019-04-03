@@ -48,6 +48,7 @@ instance  ( impl ~ (IO (Maybe IndexRange))) => Op (GetPosition ()) TextSelection
     withRef text_selection $ \text_selectionPtr ->
     statusToIndexRange $ position' text_selectionPtr
 
+
 -- $hierarchy
 -- @
 -- "Graphics.UI.FLTK.LowLevel.TextSelection"
