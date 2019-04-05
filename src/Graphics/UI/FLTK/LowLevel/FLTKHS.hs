@@ -66,9 +66,35 @@ module Graphics.UI.FLTK.LowLevel.FLTKHS
 
          -- * API Guide
          --
-         -- $APIGuide
+         -- ** Guide to the Haddock Docs
          --
-         -- Slow Compilation Issues
+         -- $guidetothehaddockdocs
+
+         -- ** Widget Construction
+         --
+         -- $widgetconstruction
+        
+         -- ** Widget Methods
+         --
+         -- $widgetmethods
+
+         -- ** Widget Hierachy
+         --
+         -- $widgethierarchyguide
+      
+         -- ** Overriding C++ Methods (Creating Custom Widgets)
+         --
+         -- $overriding
+
+         -- ** Explicitly Calling Base Class Methods
+         --
+         -- $explicitbaseclasscalling
+
+         -- ** Overriding the Widget Destructor
+         --
+         -- $destructors
+        
+         -- * Slow Compilation Issues
          --
          -- $Compilation
 
@@ -1108,9 +1134,7 @@ import Graphics.UI.FLTK.LowLevel.XPMImage
 --
 --
 
--- $APIGuide
---
--- = Guide to the Haddock Docs
+-- $guidetothehaddockdocs
 --
 -- Convenient access to the underlying C++ is achieved using typeclasses and
 -- type-level programming to emulate OO classes and multiple dispatch. This approach makes
@@ -1123,10 +1147,11 @@ import Graphics.UI.FLTK.LowLevel.XPMImage
 --
 -- The documentation provided with this API is not yet self-contained and is
 -- meant to be used in tandem with the <http://www.fltk.org/doc-1.4/classes.html C++ documentation>.
--- The rest of this document is about how the Haskell
--- functions and datatypes map to the C++ ones.
---
--- == Widget Construction
+-- The rest of this section is about how the Haskell
+-- functions and datatypes map to the C++ ones and how to, in some limited cases, override a C++ function
+-- with a Haskell implementations.
+
+-- $widgetconstruction
 -- Each widget has its own module, all of which are listed
 -- below under the __Widgets__ heading. Most modules include a function named
 -- `<widgetName>New` that returns a reference to that widget. Although you
@@ -1141,7 +1166,8 @@ import Graphics.UI.FLTK.LowLevel.XPMImage
 -- which transparently extract the pointer and pass it to the
 -- appropriate <http://www.fltk.org/doc-1.4/classFl__Window.html `Fl_Window`> instance method.
 --
--- == Widget Methods
+
+-- $widgetmethods
 --
 -- The Haskell functions that bind to the instance methods of an FLTK class are
 -- listed under the __Functions__ heading in that widget's module. It's worth
@@ -1199,7 +1225,9 @@ import Graphics.UI.FLTK.LowLevel.XPMImage
 -- user can use these heuristics (and the type signatures) along with the
 -- official FLTK documentation to "guess" what the binding functions do.
 --
--- == Widget Hierarchy
+
+
+-- $widgethierarchyguide
 -- Every widget module in the API has a __Hierarchy__ heading that shows all its parents.
 --
 -- The design of the API makes all the parent functions transparently available
@@ -1218,19 +1246,20 @@ import Graphics.UI.FLTK.LowLevel.XPMImage
 -- <http://www.fltk.org/doc-1.4/classes.html C++ documentation> to use the
 -- binding API.
 --
--- === Overriding C++ methods 
+
+-- $overriding
 --
 -- The binding API allows a limited but powerful form of "inheritance" allowing
 -- users to override certain key FLTK methods with Haskell functions. All GUI
 -- elements that derive from the C++ base class
 -- <http://www.fltk.org/doc-1.4/classFl__Widget.html Fl_Widget> and the Haskell
 -- analog
--- <https://hackage.haskell.org/package/fltkhs/docs/Graphics-UI-FLTK-LowLevel-Widget.html Widget> now allow Haskell
--- <https://hackage.haskell.org/package/fltkhs/docs/Graphics-UI-FLTK-LowLevel-Widget.html#g:2 functions> to be passed at widget construction time that give Haskell
--- complete control on
--- <https://hackage.haskell.org/package/fltkhs/docs/Graphics-UI-FLTK-LowLevel-Widget.html#v:widgetCustom drawing>,
--- <https://hackage.haskell.org/package/fltkhs/docs/Graphics-UI-FLTK-LowLevel-Widget.html#t:CustomWidgetFuncs handling, resizing and other key functions>. This means that the Haskell user
--- has complete control of the look and feel as well as the event loop. The
+-- <https://hackage.haskell.org/package/fltkhs/docs/Graphics-UI-FLTK-LowLevel-Base-Widget.html WidgetBase> now allow Haskell
+-- <https://hackage.haskell.org/package/fltkhs/docs/Graphics-UI-FLTK-LowLevel-Base-Widget.html#g:2 functions> to be passed at widget construction time that give Haskell
+-- complete control over
+-- <https://hackage.haskell.org/package/fltkhs/docs/Graphics-UI-FLTK-LowLevel-Base-Widget.html#v:widgetCustom drawing>,
+-- <https://hackage.haskell.org/package/fltkhs/docs/Graphics-UI-FLTK-LowLevel-Base-Widget.html#t:CustomWidgetFuncs handling, resizing and other key functions>. This means that the Haskell user
+-- can control the look and feel as well as the event loop. The
 -- <https://github.com/deech/fltkhs-demos/blob/master/src/Examples/table-as-container.hs#L105 table> demos are an example of drawing in Haskell. An example of taking over
 -- the event loop is an FLTKHS <https://github.com/deech/fltkhs-reflex-host proof-of-concept> that
 -- <https://github.com/deech/fltkhs-reflex-host/blob/master/src/reflex-host.hs#L33 overrides> the FLTKHS event loop with the
@@ -1279,24 +1308,62 @@ import Graphics.UI.FLTK.LowLevel.XPMImage
 --
 -- Hopefully the demos just mentioned and others included with this library show
 -- that, even though customizing is limited, it is possible to do a lot.
+
+-- $explicitbaseclasscalling
+-- A common pattern when overring parent class methods is augment them,
+-- some logic followed by an explicit call to the parent method. In C++
+-- this is done by explicitly by annotating the call with the parent's class name:
 --
--- For most customizable functions, a widget provides a
--- corresponding function that calls the default C++ implementation as the
--- function name suffixed with \"Super\". For instance, you can provide a
--- custom implementation of /handle/ on "Graphics.UI.FLTK.LowLevel.Base.Window" via
--- the constructor and every call to /handle/ invokes that implementation, but
--- you can also call /handleSuper/ to get at the default C++
--- implementation. This comes in handy when the custom function is just setting
--- up variables or logging and you want the underlying implementation to take over at
--- some point.
+-- @
+-- void Child::f() {
+--   ... some code
+--   Parent::f();
+-- }
+-- @
 --
--- __Warning__: Since calls to the default implementation of the function
--- /handleSuper/, for example, are available to the widget, they are
--- automatically available to all subclasses of the widget. I
--- acknowledge this is a confusing aspect of the library's design but hope the
--- benefit of being able to get at the default implementation outweighs the
--- trap users might fall into. If this becomes a pervasive problem, I'm
--- open to removing this functionality.
+-- In this binding the widget methods that can be overridden have a corresponding
+-- explict call to the parent class method in that widget's module. For example,
+-- the <https://www.fltk.org/doc-1.4/classFl__Widget.html#a9cb17cc092697dfd05a3fab55856d218 handle> method
+-- can be overridden by <https://hackage.haskell.org/package/fltkhs/docs/Graphics-UI-FLTK-LowLevel-Base-Widget.html#t:CustomWidgetFuncs handleCustom>
+-- but you can still call the base class 'handle' with <https://hackage.haskell.org/package/fltkhs/Graphics-UI-FLTK-LowLevel-Base-Widget.html#v:handleWidgetBase handleWidgetBase> so
+-- a custom handler that just prints console when a widget is minimized but delegates to the parent for all other events could look something like:
+--
+-- @
+-- myHandle :: Ref Widget -> Event -> IO (Either UnknownEvent ())
+-- myHandle w e = do
+--   case e of
+--     Hide -> print "widget has been hidden"
+--     _ -> return ()
+--   handleWidgetBase (safeCast w) e
+-- @
+--
+-- The 'safeCast' is needed to explicitly cast a widget to it's parent, in this case casting 'Widget' to 'WidgetBase'.
+-- The cast is safe because it is statically restricted to only classes in the hierarchy.
+--
+
+-- $destructors
+-- Most of the <https://hackage.haskell.org/package/fltkhs/docs/Graphics-UI-FLTK-LowLevel-Base-Widget.html#t:CustomWidgetFuncs overrideable methods> correspond to
+-- some method in FLTK. <https://hackage.haskell.org/package/fltkhs/docs/Graphics-UI-FLTK-LowLevel-Base-Widget.html#t:CustomWidgetFuncs resizeCustom>, for instance
+-- overrides <https://www.fltk.org/doc-1.4/classFl__Widget.html#aca98267e7a9b94f699ebd27d9f59e8bb resize>, but 'destroyCallbacksCustom' does not. This function is called
+-- in the widget's C++ destructor and can be used for any Haskell side clean up but exists specifically to release function pointers given to the C++ side by the GHC runtime.
+-- This is necessary because any resources closed over by the Haskell function to which we generate a pointer are ignored by the garbage collector until that pointer is
+-- explicitly freed. Over time this could cause significant memory bloat. Normally the binding does this for you freeing callbacks set with 'setCallback' and the overriding functions
+-- themselves but occasionally there are function pointers the binding does not know about.
+--
+-- For example <https://hackage.haskell.org/package/fltkhs/Graphics-UI-FLTK-LowLevel-FL.html#v:addTimeout adding a timer>
+-- entails passing in a function pointer to a closure that will be invoked at at some specified frequency but the binding has no idea when that needs to be cleaned up
+-- so that becomes your responsibility. A custom 'destroyCallbacksCustom' might look something like:
+--
+-- @
+-- myDestroyCallbacks :: FunPtr (IO ()) -> Ref Widget -> [Maybe (FunPtr (IO ())] -> IO ()
+-- myDestroyCallbacks myFunptr w cbs = do
+--   freeHaskellFunPtr myFunPtr
+--   defaultDestroyWidgetCallbacks w cbs
+-- @
+--
+-- The function takes 'myFunPtr', a pointer to the timer's closure, and a widget 'w' and that widget's associated callbacks,  'myFunPtr' is then freed with 'freeHaskellFunPtr'
+-- and control passes to 'defaultDestroyWidgetCallbacks' which frees the rest of them. Passing control to 'defaultDestroyWidgetCallbacks' is critical otherwise those callbacks
+-- will never be freed.
 --
 
 -- $Compilation
