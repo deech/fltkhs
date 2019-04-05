@@ -1,7 +1,7 @@
 #include "Fl_Select_BrowserC.h"
 #ifdef __cplusplus
 Fl_DerivedSelect_Browser::Fl_DerivedSelect_Browser(int x, int y, int w, int h, const char* label, Destroy_Function_Pointers destroy) : Fl_Select_Browser(x,y,w,h,label){
-  destroy = destroy;
+  this->destroy = destroy;
 }
 Fl_DerivedSelect_Browser::~Fl_DerivedSelect_Browser() {
   destroy_data();

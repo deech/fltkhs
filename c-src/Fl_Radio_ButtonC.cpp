@@ -2,7 +2,7 @@
 
 #ifdef __cplusplus
 Fl_DerivedRadio_Button::Fl_DerivedRadio_Button(int x, int y, int w, int h, const char* label, Destroy_Function_Pointers destroy) : Fl_Radio_Button(x,y,w,h,label){
-  destroy = destroy;
+  this->destroy = destroy;
 }
 Fl_DerivedRadio_Button::~Fl_DerivedRadio_Button() {
   destroy_data();

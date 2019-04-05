@@ -13,7 +13,7 @@ EXPORT {
     Destroy_Function_Pointers dfps;
     Fl_DerivedMenu_Item(fl_Menu_Item_Draw* f, Destroy_Function_Pointers dfps){
         drawF = f;
-        dfps = dfps;
+        this->dfps = dfps;
     };
     ~Fl_DerivedMenu_Item();
     void draw(int x, int y, int w, int h, Fl_Menu_* m, int selected);

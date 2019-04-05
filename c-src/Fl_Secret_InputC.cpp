@@ -2,7 +2,7 @@
 
 #ifdef __cplusplus
 Fl_DerivedSecret_Input::Fl_DerivedSecret_Input(int x, int y, int w, int h, const char* label, Destroy_Function_Pointers destroy) : Fl_Secret_Input(x,y,w,h,label){
-  destroy = destroy;
+  this->destroy = destroy;
 }
 Fl_DerivedSecret_Input::~Fl_DerivedSecret_Input() {
   destroy_data();

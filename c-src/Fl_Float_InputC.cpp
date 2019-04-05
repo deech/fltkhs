@@ -2,7 +2,7 @@
 
 #ifdef __cplusplus
 Fl_DerivedFloat_Input::Fl_DerivedFloat_Input(int x, int y, int w, int h, const char* label, Destroy_Function_Pointers destroy) : Fl_Float_Input(x,y,w,h,label){
-  destroy = destroy;
+  this->destroy = destroy;
 }
 Fl_DerivedFloat_Input::~Fl_DerivedFloat_Input() {
   destroy_data();

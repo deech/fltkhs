@@ -2,7 +2,7 @@
 
 #ifdef __cplusplus
 Fl_DerivedToggle_Button::Fl_DerivedToggle_Button(int x, int y, int w, int h, const char* label, Destroy_Function_Pointers destroy) : Fl_Toggle_Button(x,y,w,h,label){
-  destroy = destroy;
+  this->destroy = destroy;
 }
 Fl_DerivedToggle_Button::~Fl_DerivedToggle_Button() {
   destroy_data();

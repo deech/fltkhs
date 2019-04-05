@@ -2,7 +2,7 @@
 
 #ifdef __cplusplus
 Fl_DerivedMultiline_Output::Fl_DerivedMultiline_Output(int x, int y, int w, int h, const char* label, Destroy_Function_Pointers destroy) : Fl_Multiline_Output(x,y,w,h,label){
-  destroy = destroy;
+  this->destroy = destroy;
 }
 Fl_DerivedMultiline_Output::~Fl_DerivedMultiline_Output() {
   destroy_data();

@@ -2,7 +2,7 @@
 
 #ifdef __cplusplus
 Fl_DerivedRound_Clock::Fl_DerivedRound_Clock(int x, int y, int w, int h, const char* label, Destroy_Function_Pointers destroy) : Fl_Round_Clock(x,y,w,h,label){
-  destroy = destroy;
+  this->destroy = destroy;
 }
 Fl_DerivedRound_Clock::~Fl_DerivedRound_Clock() {
   destroy_data();
