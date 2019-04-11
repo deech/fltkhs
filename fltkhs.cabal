@@ -1,22 +1,27 @@
+cabal-version: 2.0
+  -- for custom-setup
+
+build-type: Custom
+
+----------------------------------------
+
 name : fltkhs
 version : 0.8.0.0
 synopsis : FLTK bindings
-description: Low level bindings for the FLTK GUI toolkit. For installation and quick start instruction please scroll all the way down to the README.
-license : MIT
+description: Low level bindings for the FLTK GUI toolkit. For installation and quick start instruction please scroll all the way down to the README. @fltkhs@ is based in part on the work of the FLTK project <http://www.fltk.org>.
+license: LGPL-2.0-only-WITH-FLTK-exception
 license-file : LICENSE
 tested-with: GHC >=7.8.1
 author : Aditya Siram
 maintainer: aditya.siram@gmail.com
 homepage: http://github.com/deech/fltkhs
 bug-reports: https://github.com/deech/fltkhs/issues
-copyright: © 2017 Aditya Siram All Rights Reserved
+copyright: © 2017 Aditya Siram
 category: UI,Graphics,GUI,User Interfaces
 
-----------------------------------------
+-- with Cabal-2.0, the license field would be the following (SPDX expression): LGPL-2.0-only WITH FLTK-exception
 
-build-type: Custom
-cabal-version: >=2.0
-  -- for custom-setup
+----------------------------------------
 
 source-repository head
   type: git
