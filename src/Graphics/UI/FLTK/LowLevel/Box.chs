@@ -95,6 +95,9 @@ instance (impl ~ (Event -> IO (Either UnknownEvent ()))) => Op (Handle ()) Box o
 
 -- $hierarchy
 -- @
+-- "Graphics.UI.FLTK.LowLevel.Base.Widget"
+--  |
+--  v
 -- "Graphics.UI.FLTK.LowLevel.Widget"
 --  |
 --  v
