@@ -1,4 +1,4 @@
-{-# LANGUAGE CPP, EmptyDataDecls, ExistentialQuantification #-}
+{-# LANGUAGE CPP, EmptyDataDecls, ExistentialQuantification, RoleAnnotations #-}
 
 #ifdef CALLSTACK_AVAILABLE
 {-# LANGUAGE ImplicitParams #-}
@@ -265,6 +265,7 @@ newtype NumDeleted = NumDeleted Int deriving (Show, Eq, Ord)
 newtype NumRestyled = NumRestyled Int deriving (Show, Eq, Ord)
 newtype DeletedText = DeletedText T.Text deriving (Show, Eq, Ord)
 
+type role Ref nominal
 data Ref a           = Ref !(ForeignPtr (Ptr ())) deriving (Eq, Show, Ord)
 data FunRef          = FunRef !(FunPtr ())
 -- * The FLTK widget hierarchy
