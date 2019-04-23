@@ -15,9 +15,9 @@ module Graphics.UI.FLTK.LowLevel.Base.Input
      --
      -- $hierarchy
 
-     -- * Input
+     -- * Fl_Input functions
      --
-     -- $Input
+     -- $functions
     )
 where
 #include "Fl_ExportMacros.h"

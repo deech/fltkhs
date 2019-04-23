@@ -669,7 +669,7 @@ instance (impl ~ (IO ())) => Op (Hide ()) WidgetBase orig impl where
 --
 -- drawFocus :: 'Ref' 'WidgetBase' -> 'Maybe' ('Boxtype', 'Rectangle') -> 'IO' ()
 --
--- drawLabel :: 'Ref' 'WidgetBase' -> 'Maybe' ('Rectangle,Alignments') -> 'IO' ()
+-- drawLabel :: 'Ref' 'WidgetBase' -> 'Maybe' ('Rectangle', 'Alignments') -> 'IO' ()
 --
 -- flags :: 'Ref' 'WidgetBase' -> 'IO' ['WidgetFlag']
 --
@@ -681,7 +681,7 @@ instance (impl ~ (IO ())) => Op (Hide ()) WidgetBase orig impl where
 --
 -- getColor :: 'Ref' 'WidgetBase' -> 'IO' ('Color')
 --
--- getDamage :: 'Ref' 'WidgetBase' -> 'IO' (['Damage')]
+-- getDamage :: 'Ref' 'WidgetBase' -> 'IO' (['Damage'])
 --
 -- getDeimage :: 'Ref' 'WidgetBase' -> 'IO' ('Maybe' ('Ref' 'Image'))
 --
