@@ -131,7 +131,7 @@ instance (impl ~ IO ()) => Op (SetNotResizable ()) GroupBase orig impl where
   runOp _ _ group = withRef group $ \groupPtr -> setResizable' groupPtr nullPtr
 
 {# fun Fl_Group_resizable as resizable' { id `Ptr ()' } -> `Ptr ()' id #}
-instance (impl ~ ( IO (Maybe (Ref Widget)))) => Op (GetResizable ()) GroupBase orig impl where
+instance (impl ~ ( IO (Maybe (Ref WidgetBase)))) => Op (GetResizable ()) GroupBase orig impl where
   runOp _ _ group = withRef group $ \groupPtr -> resizable' groupPtr >>= toMaybeRef
 
 {# fun Fl_Group_add_resizable as addResizable' { id `Ptr ()',id `Ptr ()' } -> `()' supressWarningAboutRes #}
@@ -230,7 +230,7 @@ instance (impl ~ (Rectangle -> IO ())) => Op (Resize ()) GroupBase orig impl whe
 --
 -- getChild :: 'Ref' 'GroupBase' -> 'AtIndex' -> 'IO' ('Maybe' ('Ref' 'WidgetBase'))
 --
--- getResizable :: 'Ref' 'GroupBase' -> 'IO' ('Maybe' ('Ref' 'Widget'))
+-- getResizable :: 'Ref' 'GroupBase' -> 'IO' ('Maybe' ('Ref' 'WidgetBase'))
 --
 -- handle :: 'Ref' 'GroupBase' -> 'Event' -> 'IO' ('Either' 'UnknownEvent' ())
 --

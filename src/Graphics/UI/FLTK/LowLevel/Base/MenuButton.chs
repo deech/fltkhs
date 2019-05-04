@@ -81,7 +81,7 @@ instance (impl ~ ( IO ())) => Op (Destroy ()) MenuButtonBase orig impl where
     menuButtonDestroy' winPtr
     return nullPtr
 {#fun Fl_Menu_Button_popup as menuButtonPopup' { id `Ptr ()' } -> `Ptr ()' id #}
-instance (impl ~ ( IO (Maybe (Ref MenuItem)))) => Op (Popup ()) MenuButtonBase orig impl where
+instance (impl ~ ( IO (Maybe (Ref MenuItemBase)))) => Op (Popup ()) MenuButtonBase orig impl where
   runOp _ _ menu_bar = withRef menu_bar (\p -> menuButtonPopup' p >>= toMaybeRef)
 
 {# fun Fl_Menu_Button_draw_super as drawSuper' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
@@ -142,7 +142,7 @@ instance (impl ~ (  IO ())) => Op (ShowWidget ()) MenuButtonBase orig impl where
 --
 -- hide :: 'Ref' 'MenuButtonBase' -> 'IO' ()
 --
--- popup :: 'Ref' 'MenuButtonBase' -> 'IO' ('Maybe' ('Ref' 'MenuItem'))
+-- popup :: 'Ref' 'MenuButtonBase' -> 'IO' ('Maybe' ('Ref' 'MenuItemBase'))
 --
 -- resize :: 'Ref' 'MenuButtonBase' -> 'Rectangle' -> 'IO' ()
 --

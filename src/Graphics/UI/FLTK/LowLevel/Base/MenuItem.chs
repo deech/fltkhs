@@ -159,8 +159,8 @@ instance (impl ~  IO (Bool)) => Op (Checkbox ()) MenuItemBase orig impl where
 instance (impl ~  IO (Bool)) => Op (Radio ()) MenuItemBase orig impl where
   runOp _ _ menu_item = withRef menu_item $ \menu_itemPtr -> radio' menu_itemPtr
 
-{# fun Fl_Menu_Item_value as value' { id `Ptr ()' } -> `Int' #}
-instance (impl ~  IO (Int)) => Op (GetValue ()) MenuItemBase orig impl where
+{# fun Fl_Menu_Item_value as value' { id `Ptr ()' } -> `Bool' cToBool #}
+instance (impl ~  IO (Bool)) => Op (GetValue ()) MenuItemBase orig impl where
   runOp _ _ menu_item = withRef menu_item $ \menu_itemPtr -> value' menu_itemPtr
 
 {# fun Fl_Menu_Item_set as set' { id `Ptr ()' } -> `()' #}
@@ -239,7 +239,7 @@ instance (impl ~ ( IO T.Text)) => Op (GetText ()) MenuItemBase orig impl where
   runOp _ _ menu_item = withRef menu_item $ \menu_itemPtr -> text' menu_itemPtr >>= cStringToText
 
 {# fun Fl_Menu_Item_pulldown_with_args as pulldownWithArgs' { id `Ptr ()',`Int',`Int',`Int',`Int',id `Ptr ()', id `Ptr ()', id `Ptr ()', fromBool `Bool'} -> `Ptr ()' id #}
-instance (Parent a MenuPrimBase, Parent b MenuItemBase, Parent c MenuItemBase, impl ~ (Rectangle -> Maybe (Ref a) -> Maybe (Ref b) -> Maybe (Ref c) -> Maybe Bool -> IO (Maybe (Ref MenuItem)))) => Op (Pulldown ()) MenuItemBase orig impl where
+instance (Parent a MenuPrimBase, Parent b MenuItemBase, Parent c MenuItemBase, impl ~ (Rectangle -> Maybe (Ref a) -> Maybe (Ref b) -> Maybe (Ref c) -> Maybe Bool -> IO (Maybe (Ref MenuItemBase)))) => Op (Pulldown ()) MenuItemBase orig impl where
   runOp _ _ menu_item rectangle picked' template_menu title menu_barFlag =
     let (x_pos, y_pos, width, height) = fromRectangle rectangle
         menu_bar = maybe False id menu_barFlag
@@ -409,7 +409,7 @@ instance (impl ~ ( IO (Int))) => Op (GetSize ()) MenuItemBase orig impl where
 --
 -- getText :: 'Ref' 'MenuItemBase' -> 'IO' 'T.Text'
 --
--- getValue :: 'Ref' 'MenuItemBase' -> 'IO' ('Int')
+-- getValue :: 'Ref' 'MenuItemBase' -> 'IO' ('Bool')
 --
 -- hide :: 'Ref' 'MenuItemBase' -> 'IO' ()
 --
@@ -423,7 +423,7 @@ instance (impl ~ ( IO (Int))) => Op (GetSize ()) MenuItemBase orig impl where
 --
 -- popup:: ('Parent' a 'MenuItemBase', 'Parent' b 'MenuPrimBase', 'Parent' c 'MenuItemBase') => 'Ref' 'MenuItemBase' -> 'Position' -> 'Maybe' 'T.Text' -> 'Maybe' ('Ref' a) -> 'Maybe' ('Ref' b) -> 'IO' ('Maybe' ('Ref' c))
 --
--- pulldown:: ('Parent' a 'MenuPrimBase', 'Parent' b 'MenuItemBase', 'Parent' c 'MenuItemBase') => 'Ref' 'MenuItemBase' -> 'Rectangle' -> 'Maybe' ('Ref' a) -> 'Maybe' ('Ref' b) -> 'Maybe' ('Ref' c) -> 'Maybe' 'Bool' -> 'IO' ('Maybe' ('Ref' 'MenuItem'))
+-- pulldown:: ('Parent' a 'MenuPrimBase', 'Parent' b 'MenuItemBase', 'Parent' c 'MenuItemBase') => 'Ref' 'MenuItemBase' -> 'Rectangle' -> 'Maybe' ('Ref' a) -> 'Maybe' ('Ref' b) -> 'Maybe' ('Ref' c) -> 'Maybe' 'Bool' -> 'IO' ('Maybe' ('Ref' 'MenuItemBase'))
 --
 -- radio :: 'Ref' 'MenuItemBase' -> 'IO' ('Bool')
 --

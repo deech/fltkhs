@@ -331,12 +331,12 @@ instance (impl ~ ( IO ())) => Op (Iconize ()) WindowBase orig impl where
   runOp _ _ win = withRef win $ \winPtr -> iconize' winPtr
 
 {# fun Fl_Window_x_root as xRoot' { id `Ptr ()' } -> `Int' #}
-instance (impl ~ ( IO (Int))) => Op (GetXRoot ()) WindowBase orig impl where
-  runOp _ _ win = withRef win $ \winPtr -> xRoot' winPtr
+instance (impl ~ ( IO (X))) => Op (GetXRoot ()) WindowBase orig impl where
+  runOp _ _ win = withRef win $ \winPtr -> xRoot' winPtr >>= return . X
 
 {# fun Fl_Window_y_root as yRoot' { id `Ptr ()' } -> `Int' #}
-instance (impl ~ ( IO (Int))) => Op (GetYRoot ()) WindowBase orig impl where
-  runOp _ _ win = withRef win $ \winPtr -> yRoot' winPtr
+instance (impl ~ ( IO (Y))) => Op (GetYRoot ()) WindowBase orig impl where
+  runOp _ _ win = withRef win $ \winPtr -> yRoot' winPtr >>= return . Y
 
 {# fun Fl_Window_current as current' {  } -> `Ptr ()' id #}
 currentWindow ::  (Parent a WindowBase) => IO (Ref a)
@@ -515,11 +515,11 @@ instance (impl ~ ( IO ())) => Op (Flush ()) WindowBase orig impl where
 --
 -- getType_ :: 'Ref' 'WindowBase' -> 'IO' ('WindowType')
 --
--- getXRoot :: 'Ref' 'WindowBase' -> 'IO' ('Int')
+-- getXRoot :: 'Ref' 'WindowBase' -> 'IO' ('X')
 --
 -- getXclass :: 'Ref' 'WindowBase' -> 'IO' 'T.Text'
 --
--- getYRoot :: 'Ref' 'WindowBase' -> 'IO' ('Int')
+-- getYRoot :: 'Ref' 'WindowBase' -> 'IO' ('Y')
 --
 -- handle :: 'Ref' 'WindowBase' -> 'Event' -> 'IO' ('Either' 'UnknownEvent' ())
 --

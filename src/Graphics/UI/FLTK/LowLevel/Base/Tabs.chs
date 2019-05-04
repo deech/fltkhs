@@ -142,7 +142,7 @@ tabsNew rectangle l' =
 
 
 {# fun Fl_Tabs_value as value' { id `Ptr ()' } -> `Ptr ()' id #}
-instance (impl ~ (IO (Maybe (Ref Widget)))) => Op (GetValue ()) TabsBase orig impl where
+instance (impl ~ (IO (Maybe (Ref WidgetBase)))) => Op (GetValue ()) TabsBase orig impl where
    runOp _ _ tabs = withRef tabs $ \tabsPtr -> value' tabsPtr >>= toMaybeRef
 
 {# fun Fl_Tabs_set_value as setValue' { id `Ptr ()',id `Ptr ()' } -> `Int' #}
@@ -150,7 +150,7 @@ instance (Parent a WidgetBase, impl ~ (Maybe ( Ref a ) ->  IO (Either NoChange (
    runOp _ _ tabs w = withRef tabs $ \tabsPtr -> withMaybeRef w $ \wPtr -> setValue' tabsPtr wPtr >>= return . successOrNoChange
 
 {# fun Fl_Tabs_push as push' { id `Ptr ()' } -> `Ptr ()' id #}
-instance (impl ~ (IO (Maybe (Ref Widget)))) => Op (GetPush ()) TabsBase orig impl where
+instance (impl ~ (IO (Maybe (Ref WidgetBase)))) => Op (GetPush ()) TabsBase orig impl where
    runOp _ _ tabs = withRef tabs $ \tabsPtr -> push' tabsPtr >>= toMaybeRef
 
 {# fun Fl_Tabs_set_push as setPush' { id `Ptr ()',id `Ptr ()' } -> `Int' #}
@@ -158,7 +158,7 @@ instance (Parent a WidgetBase, impl ~ (Maybe ( Ref a ) ->  IO (Either NoChange (
    runOp _ _ tabs w = withRef tabs $ \tabsPtr -> withMaybeRef w $ \wPtr -> setPush' tabsPtr wPtr >>= return . successOrNoChange
 
 {# fun Fl_Tabs_which as which' { id `Ptr ()',`Int',`Int' } -> `Ptr ()' id #}
-instance (impl ~ (Position -> IO (Maybe (Ref Widget)))) => Op (Which ()) TabsBase orig impl where
+instance (impl ~ (Position -> IO (Maybe (Ref WidgetBase)))) => Op (Which ()) TabsBase orig impl where
    runOp _ _ tabs (Position (X event_x) (Y event_y)) = withRef tabs $ \tabsPtr -> which' tabsPtr event_x event_y >>= toMaybeRef
 
 {# fun Fl_Tabs_client_area_with_tabh as clientAreaWithTabh' { id `Ptr ()', alloca- `Int' peekIntConv*,alloca- `Int' peekIntConv*,alloca- `Int' peekIntConv*,alloca- `Int' peekIntConv*, `Int'} -> `()' #}
@@ -233,11 +233,11 @@ instance (impl ~ (  IO ())) => Op (ShowWidget ()) TabsBase orig impl where
 --
 -- draw :: 'Ref' 'TabsBase' -> 'IO' ()
 --
--- getPush :: 'Ref' 'TabsBase' -> 'IO' ('Maybe' ('Ref' 'Widget'))
+-- getPush :: 'Ref' 'TabsBase' -> 'IO' ('Maybe' ('Ref' 'WidgetBase'))
 --
 -- getTabAlign :: 'Ref' 'TabsBase' -> 'IO' ('AlignType')
 --
--- getValue :: 'Ref' 'TabsBase' -> 'IO' ('Maybe' ('Ref' 'Widget'))
+-- getValue :: 'Ref' 'TabsBase' -> 'IO' ('Maybe' ('Ref' 'WidgetBase'))
 --
 -- handle :: 'Ref' 'TabsBase' -> 'Event' -> 'IO' ('Either' 'UnknownEvent' ())
 --
@@ -257,5 +257,5 @@ instance (impl ~ (  IO ())) => Op (ShowWidget ()) TabsBase orig impl where
 --
 -- tabPositions :: 'Ref' 'TabsBase' -> 'IO' 'AtIndex'
 --
--- which :: 'Ref' 'TabsBase' -> 'Position' -> 'IO' ('Maybe' ('Ref' 'Widget'))
+-- which :: 'Ref' 'TabsBase' -> 'Position' -> 'IO' ('Maybe' ('Ref' 'WidgetBase'))
 -- @
