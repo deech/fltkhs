@@ -2144,7 +2144,7 @@ type DoubleWindowBaseFuncs =
 type instance Functions DoubleWindowBase = DoubleWindowBaseFuncs
 
 data CDoubleWindow parent
-type DoubleWindow = CDoubleWindow WindowBase
+type DoubleWindow = CDoubleWindow DoubleWindowBase
 type DoubleWindowFuncs =
   (Destroy
   (Flush
@@ -2484,7 +2484,7 @@ type FillSliderBase = CFillSliderBase SliderBase
 type instance Functions FillSliderBase = ()
 
 data CFillSlider parent
-type FillSlider = CFillSlider SliderBase
+type FillSlider = CFillSlider FillSliderBase
 
 type instance Functions FillSlider = ()
 
@@ -4733,7 +4733,7 @@ type ScrolledBaseFuncs =
 type instance Functions ScrolledBase = ScrolledBaseFuncs
 
 data CScrolled parent
-type Scrolled = CScrolled Group
+type Scrolled = CScrolled ScrolledBase
 type ScrolledFuncs =
   (Resize
   (Draw

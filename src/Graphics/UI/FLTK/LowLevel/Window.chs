@@ -41,6 +41,7 @@ instance (impl ~ ( IO ())) => Op (Hide ()) Window orig impl where
 
 {# fun Fl_Window_flush as flush' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
 instance (impl ~ ( IO ())) => Op (Flush ()) Window orig impl where
+  runOp _ _ window = withRef window $ \windowPtr -> flush' windowPtr
 
 -- $hierarchy
 -- @
@@ -53,7 +54,7 @@ instance (impl ~ ( IO ())) => Op (Flush ()) Window orig impl where
 -- "Graphics.UI.FLTK.LowLevel.Base.Window"
 --  |
 --  v
--- "Graphics.UI.FLTK.LowLevel.Window"runOp _ _ window = withRef window $ \windowPtr -> flush' windowPtr
+-- "Graphics.UI.FLTK.LowLevel.Window"
 -- @
 
 -- $functions

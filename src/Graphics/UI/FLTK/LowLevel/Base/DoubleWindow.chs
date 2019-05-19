@@ -30,7 +30,6 @@ import qualified Data.Text as T
 import Graphics.UI.FLTK.LowLevel.Hierarchy
 import Graphics.UI.FLTK.LowLevel.Base.Widget
 import Graphics.UI.FLTK.LowLevel.Base.Window
-import Graphics.UI.FLTK.LowLevel.Window
 
 {# fun Fl_OverriddenDouble_Window_New as overriddenWindowNew' {`Int',`Int', id `Ptr ()'} -> `Ptr ()' id #}
 {# fun Fl_OverriddenDouble_Window_NewXY as overriddenWindowNewXY' {`Int',`Int', `Int', `Int', id `Ptr ()'} -> `Ptr ()' id #}

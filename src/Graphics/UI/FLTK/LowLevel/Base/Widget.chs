@@ -424,8 +424,8 @@ instance (impl ~ (IO ())) => Op (Activate ()) WidgetBase orig impl where
 instance (impl ~ (IO ())) => Op (Deactivate ()) WidgetBase orig impl where
   runOp _ _ widget = withRef widget $ \widgetPtr -> deactivate' widgetPtr
 {# fun Fl_Widget_output as output' { id `Ptr ()' } -> `Int' #}
-instance (impl ~ (IO (Int))) => Op (GetOutput ()) WidgetBase orig impl where
-  runOp _ _ widget = withRef widget $ \widgetPtr -> output' widgetPtr
+instance (impl ~ (IO (Bool))) => Op (GetOutput ()) WidgetBase orig impl where
+  runOp _ _ widget = withRef widget $ \widgetPtr -> ((==) 0) <$> output' widgetPtr
 {# fun Fl_Widget_set_output as setOutput' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
 instance (impl ~ (IO ())) => Op (SetOutput ()) WidgetBase orig impl where
   runOp _ _ widget = withRef widget $ \widgetPtr -> setOutput' widgetPtr

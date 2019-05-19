@@ -149,7 +149,7 @@ pprint r = case r of
 word = manyTill anyChar (try (string " "))
 
 isWidget w ((_,_),_,w') = w == w'
-data Command = Functions String | Hierarchy String | Sync
+data Command = Functions String | Hierarchy String | Sync | CheckHierarchies
 
 traceHierarchy :: String -> [String] -> [(String,String)] -> [String]
 traceHierarchy w accum dict = case (lookup w dict) of
@@ -162,8 +162,9 @@ main = do
         case args of
           ("functions":w':[]) -> Just (Functions w')
           ("hierarchy":w':[]) -> Just (Hierarchy w')
-          ("sync":[])         -> Just Sync
-          _                   -> Nothing
+          ("sync":[]) -> Just Sync
+          ("checkHierarchies":[]) -> Just CheckHierarchies
+          _ -> Nothing
   hierarchyContents <- readFile "../src/Graphics/UI/FLTK/LowLevel/Hierarchy.hs"
   let objs = (
                filter (not . isInfixOf "Funcs") .
@@ -213,6 +214,18 @@ main = do
       let (functions, inNewVersionOnly) = parseWidgetFile contents
       let rendered = maybe [] (sort . map (\(c, sig, mName, wType) -> pprint ((c, sig), mName, wType)))
       putStr $ intercalate "\n--\n" (map ((++) "-- ") (rendered functions))
+    (Just CheckHierarchies) -> 
+      print
+        (foldl
+          (\badHierarchies (o,parentO) ->
+             maybe
+               badHierarchies
+               (\_ ->
+                 if (not (parentO == (o ++ "Base")))
+                 then badHierarchies ++ [o]
+                 else badHierarchies)
+               (lookup (o ++ "Base") hier'))
+           [] hier')
     (Just Sync) ->
       mapM
         (\(w,hierarchyFs) -> do
