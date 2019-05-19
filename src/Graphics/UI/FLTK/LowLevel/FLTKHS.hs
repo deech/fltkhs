@@ -1220,6 +1220,10 @@ import Graphics.UI.FLTK.LowLevel.XPMImage
 -- pointer to some initialized but empty chunk of memory and filling it up. The
 -- corresponding Haskell function just returns a 'Data.Text'.
 --
+-- (5) Widget destructors can be called explicitly with 'destroy'. The reason it
+-- is called 'destroy' instead of 'delete' to match C++ is that it is a mistake
+-- and it's too late to change it now.
+--
 --
 -- It is hoped that until the documentation becomes more self-sustaining the
 -- user can use these heuristics (and the type signatures) along with the
