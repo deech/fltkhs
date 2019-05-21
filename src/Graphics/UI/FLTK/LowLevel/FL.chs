@@ -222,6 +222,7 @@ import qualified Data.Text as T
 import qualified Data.Text.Foreign as TF
 import qualified System.IO.Unsafe as Unsafe (unsafePerformIO)
 import Control.Exception(catch, throw, AsyncException(UserInterrupt))
+import Control.Monad(forever)
 #c
  enum Option {
    OptionArrowFocus = OPTION_ARROW_FOCUS,
@@ -1102,11 +1103,14 @@ replRun = do
   flush
   w <- firstWindow
   case w of
-    Just w' ->
-      catch (waitFor 0 >> replRun)
+    Just _ ->
+      catch (forever (waitFor 0))
             (\e -> if (e == UserInterrupt)
                    then do
-                     allToplevelWindows [] (Just w') >>= mapM_ deleteWidget
+                     wM <- firstWindow
+                     case wM of
+                       Just w' -> allToplevelWindows [] (Just w') >>= mapM_ deleteWidget
+                       Nothing -> return ()
                      flush
                    else throw e)
     Nothing -> return ()
