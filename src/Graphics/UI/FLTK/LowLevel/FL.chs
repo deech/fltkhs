@@ -1104,7 +1104,7 @@ replRun = do
   w <- firstWindow
   case w of
     Just _ ->
-      catch (forever (waitFor 0))
+      catch (forever (waitFor 0.01))
             (\e -> if (e == UserInterrupt)
                    then do
                      wM <- firstWindow
