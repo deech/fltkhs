@@ -49,12 +49,6 @@ FL_EXPORT_C(void,Fl_Graphics_Driver_Destroy)(fl_Graphics_Driver graphics_driver)
 FL_EXPORT_C(void,Fl_Surface_Device_set_current)(fl_Surface_Device surface_device){
  return (static_cast<Fl_Surface_Device*>(surface_device))->set_current();
 }
-FL_EXPORT_C(void,Fl_Surface_Device_set_driver)(fl_Surface_Device surface_device,fl_Graphics_Driver graphics_driver){
-  return (static_cast<Fl_Surface_Device*>(surface_device))->driver((static_cast<Fl_Graphics_Driver*>(graphics_driver)));
-}
-FL_EXPORT_C(fl_Graphics_Driver,Fl_Surface_Device_driver)(fl_Surface_Device surface_device){
- return (fl_Graphics_Driver)(static_cast<Fl_Surface_Device*>(surface_device))->driver();
-}
 FL_EXPORT_C(fl_Surface_Device,Fl_Surface_Device_surface)(){
   return (fl_Surface_Device)Fl_Surface_Device::surface();
 }

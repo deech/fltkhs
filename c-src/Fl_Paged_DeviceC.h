@@ -11,8 +11,6 @@ EXPORT {
 #endif
   // Inherited from Fl_Surface_Driver
   FL_EXPORT_C_HEADER(void,Fl_Paged_Device_set_current,(fl_Paged_Device paged_device));
-  FL_EXPORT_C_HEADER(void,Fl_Paged_Device_set_driver,(fl_Paged_Device paged_device,fl_Graphics_Driver graphics_driver));
-  FL_EXPORT_C_HEADER(fl_Graphics_Driver,Fl_Paged_Device_driver,(fl_Paged_Device paged_device));
   FL_EXPORT_C_HEADER(fl_Surface_Device,Fl_Paged_Device_surface,());
   // Fl_Paged_Device specific
   FL_EXPORT_C_HEADER(int,Fl_Paged_Device_start_job,(fl_Paged_Device paged_device,int pagecount));

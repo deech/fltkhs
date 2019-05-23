@@ -28,8 +28,6 @@ EXPORT {
 
   // Fl_Surface_Device
   FL_EXPORT_C_HEADER(void,Fl_Surface_Device_set_current,(fl_Surface_Device surface_device));
-  FL_EXPORT_C_HEADER(void,Fl_Surface_Device_set_driver,(fl_Surface_Device surface_device,fl_Graphics_Driver graphics_driver));
-  FL_EXPORT_C_HEADER(fl_Graphics_Driver,Fl_Surface_Device_driver,(fl_Surface_Device surface_device));
   FL_EXPORT_C_HEADER(fl_Surface_Device,Fl_Surface_Device_surface,());
   FL_EXPORT_C_HEADER(void,Fl_Surface_Device_Destroy,(fl_Surface_Device surface_device));
 #ifdef __cplusplus

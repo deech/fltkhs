@@ -5,12 +5,6 @@ EXPORT {
   FL_EXPORT_C(void,Fl_Paged_Device_set_current)(fl_Paged_Device paged_device){
     return (static_cast<Fl_Paged_Device*>(paged_device))->set_current();
   }
-  FL_EXPORT_C(void,Fl_Paged_Device_set_driver)(fl_Paged_Device paged_device,fl_Graphics_Driver graphics_driver){
-    return (static_cast<Fl_Paged_Device*>(paged_device))->driver((static_cast<Fl_Graphics_Driver*>(graphics_driver)));
-  }
-  FL_EXPORT_C(fl_Graphics_Driver,Fl_Paged_Device_driver)(fl_Paged_Device paged_device){
-    return (fl_Graphics_Driver)(static_cast<Fl_Paged_Device*>(paged_device))->driver();
-  }
   FL_EXPORT_C(fl_Surface_Device,Fl_Paged_Device_surface)(){
     return (fl_Surface_Device)Fl_Surface_Device::surface();
   }
