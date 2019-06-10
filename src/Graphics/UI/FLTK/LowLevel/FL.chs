@@ -510,8 +510,8 @@ eventButton = do
   mb <- eventButton'
   case mb of
     mb' | mb' == (fromEnum Mouse_Left) -> return (Just Mouse_Left)
-    mb' | mb' == (fromEnum Mouse_Middle) -> return (Just Mouse_Right)
-    mb' | mb' == (fromEnum Mouse_Right) -> return (Just Mouse_Middle)
+    mb' | mb' == (fromEnum Mouse_Middle) -> return (Just Mouse_Middle)
+    mb' | mb' == (fromEnum Mouse_Right) -> return (Just Mouse_Right)
     _ -> return Nothing
 
 eventStates :: [EventState]
