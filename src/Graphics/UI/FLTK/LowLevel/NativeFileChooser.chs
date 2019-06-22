@@ -53,7 +53,7 @@ enum NativeFileChooserOption {
 data NativeFileChooserUserAction =
   NativeFileChooserPicked |
   NativeFileChooserCancelled |
-  NativeFileChooserError
+  NativeFileChooserError deriving (Show, Eq, Ord)
 
 allNativeFileChooserOptions :: [NativeFileChooserOption]
 allNativeFileChooserOptions =
