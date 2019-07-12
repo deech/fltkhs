@@ -5,6 +5,7 @@ module Graphics.UI.FLTK.LowLevel.Ask
     BeepType(..),
     flMessage,
     flAlert,
+    flChoice,
     flInput,
     flPassword
   )
@@ -15,7 +16,7 @@ where
 import C2HS hiding (cFromEnum, cToBool,cToEnum)
 
 import qualified Data.Text as T
-import Data.Maybe (fromMaybe)
+import Data.Maybe (fromMaybe, maybe)
 import Graphics.UI.FLTK.LowLevel.Utils
 
 #c
@@ -45,6 +46,17 @@ flInput msg defaultMsg = do
   defaultC <- copyTextToCString def
   r <- flInput' msgC defaultC
   cStringToMaybeText r
+
+{# fun flc_choice as flChoice' { `CString',`CString',`CString',`CString' } -> `CInt' #}
+flChoice :: T.Text -> T.Text -> Maybe T.Text -> Maybe T.Text -> IO Int
+flChoice msg b0 b1 b2 = do
+  msgC <- copyTextToCString msg
+  b0C <- copyTextToCString b0
+  let stringOrNull t = maybe (return nullPtr) copyTextToCString t
+  b1C <- stringOrNull b1
+  b2C <- stringOrNull b2
+  r <- flChoice' msgC b0C b1C b2C
+  return $ fromIntegral r
 
 {# fun flc_password as flPassword' { `CString' } -> `CString' #}
 flPassword :: T.Text -> IO (Maybe T.Text)
