@@ -15,6 +15,7 @@ where
 import C2HS hiding (cFromEnum, cToBool,cToEnum)
 
 import qualified Data.Text as T
+import Data.Maybe (fromMaybe)
 import Graphics.UI.FLTK.LowLevel.Utils
 
 #c
@@ -36,10 +37,13 @@ flBeep :: Maybe BeepType -> IO ()
 flBeep Nothing = flBeep'
 flBeep (Just bt) = flBeepType' (fromIntegral (fromEnum bt))
 
-{# fun flc_input as flInput' { `CString' } -> `CString' #}
-flInput :: T.Text -> IO (Maybe T.Text)
-flInput msg = do
-  r <- copyTextToCString msg >>= flInput'
+{# fun flc_input_with_deflt as flInput' { `CString',`CString' } -> `CString' #}
+flInput :: T.Text -> Maybe T.Text -> IO (Maybe T.Text)
+flInput msg defaultMsg = do
+  msgC <- copyTextToCString msg
+  let def = fromMaybe T.empty defaultMsg
+  defaultC <- copyTextToCString def
+  r <- flInput' msgC defaultC
   cStringToMaybeText r
 
 {# fun flc_password as flPassword' { `CString' } -> `CString' #}
