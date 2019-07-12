@@ -30,6 +30,13 @@ enum BeepType {
 };
 #endc
 
+escapePercent :: T.Text -> T.Text
+escapePercent t =
+  let helper [] = []
+      helper ('%' : cs) = '%' : '%' : helper cs
+      helper (c : cs) = c : helper cs
+  in T.pack $ helper $ T.unpack t
+
 {#enum BeepType {} deriving (Eq, Show, Ord) #}
 
 {# fun flc_beep as flBeep' {} -> `()' #}
@@ -41,7 +48,7 @@ flBeep (Just bt) = flBeepType' (fromIntegral (fromEnum bt))
 {# fun flc_input_with_deflt as flInput' { `CString',`CString' } -> `CString' #}
 flInput :: T.Text -> Maybe T.Text -> IO (Maybe T.Text)
 flInput msg defaultMsg = do
-  msgC <- copyTextToCString msg
+  msgC <- copyTextToCString $ escapePercent msg
   let def = fromMaybe T.empty defaultMsg
   defaultC <- copyTextToCString def
   r <- flInput' msgC defaultC
@@ -50,7 +57,7 @@ flInput msg defaultMsg = do
 {# fun flc_choice as flChoice' { `CString',`CString',`CString',`CString' } -> `CInt' #}
 flChoice :: T.Text -> T.Text -> Maybe T.Text -> Maybe T.Text -> IO Int
 flChoice msg b0 b1 b2 = do
-  msgC <- copyTextToCString msg
+  msgC <- copyTextToCString $ escapePercent msg
   b0C <- copyTextToCString b0
   let stringOrNull t = maybe (return nullPtr) copyTextToCString t
   b1C <- stringOrNull b1
@@ -61,12 +68,12 @@ flChoice msg b0 b1 b2 = do
 {# fun flc_password as flPassword' { `CString' } -> `CString' #}
 flPassword :: T.Text -> IO (Maybe T.Text)
 flPassword msg = do
-  r <- copyTextToCString msg >>= flPassword'
+  r <- copyTextToCString (escapePercent msg) >>= flPassword'
   cStringToMaybeText r
 
 {# fun flc_message as flMessage' { `CString' } -> `()' #}
 flMessage :: T.Text -> IO ()
-flMessage t = copyTextToCString t >>= flMessage'
+flMessage t = copyTextToCString (escapePercent t) >>= flMessage'
 
 {# fun flc_alert as flAlert' { `CString' } -> `()' #}
 flAlert :: T.Text -> IO ()
