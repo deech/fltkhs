@@ -39,9 +39,9 @@ flBeep (Just bt) = flBeepType' (fromIntegral (fromEnum bt))
 
 {# fun flc_input_with_deflt as flInput' { `CString',`CString' } -> `CString' #}
 flInput :: T.Text -> Maybe T.Text -> IO (Maybe T.Text)
-flInput msg maybeDefault = do
+flInput msg defaultMsg = do
   msgC <- copyTextToCString msg
-  let def = fromMaybe T.empty maybeDefault
+  let def = fromMaybe T.empty defaultMsg
   defaultC <- copyTextToCString def
   r <- flInput' msgC defaultC
   cStringToMaybeText r
