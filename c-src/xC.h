@@ -21,6 +21,7 @@ EXPORT {
  FL_EXPORT_C_HEADER(Fl_Bitmask,flc_create_bitmask,(int w, int h, const uchar *data));
  FL_EXPORT_C_HEADER(Fl_Bitmask,flc_create_alphamask,(int w, int h, int d, int ld, const uchar *data));
  FL_EXPORT_C_HEADER(void,flc_delete_bitmask,(Fl_Bitmask bm));
+ FL_EXPORT_C_HEADER(void,flc_open_callback,(fl_Open_Callback* cb));
 #if !defined(WIN32) && !defined(__APPLE__)
  typedef ulong Fl_Bitmask;
  FL_EXPORT_C_HEADER(void,flc_close_display,());

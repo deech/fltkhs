@@ -17,6 +17,9 @@ EXPORT {
   FL_EXPORT_C(void,flc_delete_bitmask)(Fl_Bitmask bm){
     fl_delete_bitmask(bm);
   }
+  FL_EXPORT_C(void,flc_open_callback)(fl_Open_Callback* cb){
+    fl_open_callback(cb);
+  }
 #if !defined(WIN32) && !defined(__APPLE__)
   FL_EXPORT_C(void,flc_close_display)( ){
     fl_close_display();

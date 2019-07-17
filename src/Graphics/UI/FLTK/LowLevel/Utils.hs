@@ -27,6 +27,8 @@ foreign import ccall "wrapper"
 foreign import ccall "wrapper"
         mkCallbackPtr :: CallbackPrim -> IO (FunPtr CallbackPrim)
 foreign import ccall "wrapper"
+        mkOpenCallbackPtr :: OpenCallbackPrim -> IO (FunPtr OpenCallbackPrim)
+foreign import ccall "wrapper"
         mkCustomColorAveragePtr :: CustomColorAveragePrim -> IO (FunPtr CustomColorAveragePrim)
 foreign import ccall "wrapper"
         mkGlobalEventHandlerPtr :: GlobalEventHandlerPrim -> IO (FunPtr GlobalEventHandlerPrim)
