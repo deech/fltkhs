@@ -6,7 +6,6 @@ import Graphics.UI.FLTK.LowLevel.Hierarchy
 import Graphics.UI.FLTK.LowLevel.Dispatch
 import Graphics.UI.FLTK.LowLevel.Utils
 import Foreign.Ptr
-import qualified Data.Text as T
 #include "Fl_C.h"
 #include "xC.h"
 
@@ -27,10 +26,11 @@ flcXid win =
 
 {# fun flc_open_callback as openCallback' { id `FunPtr OpenCallbackPrim' } -> `()' #}
 
-openCallback :: Maybe OpenCallback -> IO ()
-openCallback Nothing   = openCallback' nullFunPtr
+openCallback :: Maybe OpenCallback -> IO (Maybe (FunPtr OpenCallbackPrim))
+openCallback Nothing   = openCallback' nullFunPtr >> return Nothing
 openCallback (Just cb) = do
   ptr <- mkOpenCallbackPtr $ \cstr -> do
     txt <- cStringToText cstr
     cb txt
   openCallback' ptr
+  return (Just ptr)
