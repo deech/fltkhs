@@ -1,13 +1,13 @@
 #include "Fl_Text_BufferC.h"
 #ifdef __cplusplus
-Fl_DerivedText_Buffer::Fl_DerivedText_Buffer(Destroy_Function_Pointers destroy) : Fl_Text_Buffer() {
-  this->destroy = destroy;
+Fl_DerivedText_Buffer::Fl_DerivedText_Buffer(Destroy_Function_Pointers dfps) : Fl_Text_Buffer() {
+  this->destroy = dfps;
 };
 Fl_DerivedText_Buffer::Fl_DerivedText_Buffer(int requestedSize, Destroy_Function_Pointers dfps) : Fl_Text_Buffer(requestedSize) {
-  this->destroy = destroy;
+  this->destroy = dfps;
 };
 Fl_DerivedText_Buffer::Fl_DerivedText_Buffer(int requestedSize, int preferredGapSize, Destroy_Function_Pointers dfps) : Fl_Text_Buffer(requestedSize, preferredGapSize) {
-  this->destroy = destroy;
+  this->destroy = dfps;
 };
 Fl_DerivedText_Buffer::~Fl_DerivedText_Buffer(){
   destroy_data();
