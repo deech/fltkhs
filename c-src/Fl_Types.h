@@ -484,6 +484,7 @@ EXPORT {
   typedef void* fl_XPM_Image;
   typedef void* fl_show_input;
   typedef void (fl_Callback)(fl_Widget, void*);
+  typedef void (fl_Open_Callback)(const char*);
   typedef void (fl_Text_Buffer_Callback)(fl_Text_Buffer);
   typedef void (*Unfinished_Style_Cb)(int, void *);
   typedef void (fl_File_Chooser_Callback)(fl_File_Chooser,void*);
