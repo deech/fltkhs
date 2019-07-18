@@ -364,7 +364,7 @@ setWait = waitFor
        { `Int' } -> `()' #}
 
 {# fun Fl_readqueue as readqueue' {  } -> `Ptr ()' #}
-readqueue :: IO (Maybe (Ref Widget))
+readqueue :: IO (Maybe (Ref WidgetBase))
 readqueue = readqueue' >>= toMaybeRef
 {# fun Fl_add_timeout as addTimeout'
        { `Double', id `FunPtr CallbackPrim' } -> `()' supressWarningAboutRes #}
@@ -427,7 +427,7 @@ addIdle cb = do
 {# fun Fl_flush as flush
        {  } -> `()' supressWarningAboutRes #}
 {# fun Fl_first_window as firstWindow' {  } -> `Ptr ()' #}
-firstWindow :: IO (Maybe (Ref Window))
+firstWindow :: IO (Maybe (Ref WindowBase))
 firstWindow = firstWindow' >>= toMaybeRef
 
 {# fun Fl_set_first_window as setFirstWindow'
@@ -436,15 +436,15 @@ setFirstWindow :: (Parent a WindowBase) => Ref a -> IO ()
 setFirstWindow wp =
     withRef wp setFirstWindow'
 {# fun Fl_next_window as nextWindow' { id `Ptr ()' } -> `Ptr ()' #}
-nextWindow :: Ref a -> IO (Maybe (Ref Window))
+nextWindow :: Ref a -> IO (Maybe (Ref WindowBase))
 nextWindow currWindow = withRef currWindow (\ptr -> nextWindow' ptr >>= toMaybeRef)
 
 {# fun Fl_modal as modal' {  } -> `Ptr ()' #}
-modal  :: IO (Maybe (Ref Widget))
+modal  :: IO (Maybe (Ref WidgetBase))
 modal = modal' >>= toMaybeRef
 
 {# fun Fl_grab as grab' {  } -> `Ptr ()' #}
-grab  :: IO (Maybe (Ref Widget))
+grab  :: IO (Maybe (Ref WidgetBase))
 grab = grab' >>= toMaybeRef
 
 {# fun Fl_set_grab as setGrab'
@@ -615,21 +615,21 @@ setBelowmouse :: (Parent a WidgetBase) => Ref a -> IO ()
 setBelowmouse wp = withRef wp setBelowmouse'
 {# fun Fl_pushed as pushed'
        {  } -> `Ptr ()' #}
-pushed :: IO (Maybe (Ref Widget))
+pushed :: IO (Maybe (Ref WidgetBase))
 pushed = pushed' >>= toMaybeRef
 {# fun Fl_set_pushed as setPushed'
        { id `Ptr ()' } -> `()' supressWarningAboutRes #}
 setPushed :: (Parent a WidgetBase) => Ref a -> IO ()
 setPushed wp = withRef wp setPushed'
 {# fun Fl_focus as focus' {  } -> `Ptr ()' #}
-focus :: IO (Maybe (Ref Widget))
+focus :: IO (Maybe (Ref WidgetBase))
 focus = focus' >>= toMaybeRef
 {# fun Fl_set_focus as setFocus'
        { id `Ptr ()' } -> `()' supressWarningAboutRes #}
 setFocus :: (Parent a WidgetBase) => Ref a -> IO ()
 setFocus wp = withRef wp setFocus'
 {# fun Fl_selection_owner as selectionOwner' {  } -> `Ptr ()' #}
-selectionOwner :: IO (Maybe (Ref Widget))
+selectionOwner :: IO (Maybe (Ref WidgetBase))
 selectionOwner = selectionOwner' >>= toMaybeRef
 {# fun Fl_set_selection_owner as setSelection_Owner'
        { id `Ptr ()' } -> `()' supressWarningAboutRes #}
@@ -1115,6 +1115,6 @@ replRun = do
                    else throw e)
     Nothing -> return ()
   where
-    allToplevelWindows :: [Ref Window] -> Maybe (Ref Window) -> IO [Ref Window]
+    allToplevelWindows :: [Ref WindowBase] -> Maybe (Ref WindowBase) -> IO [Ref WindowBase]
     allToplevelWindows ws (Just w) = nextWindow w >>= allToplevelWindows (w:ws)
     allToplevelWindows ws Nothing = return ws
