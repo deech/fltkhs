@@ -126,7 +126,7 @@ SHARED_OBJECT_FILES = ../shared_object_files
 STATIC_OBJECT_FILES = ../static_object_files
 ifeq ($(shell uname) , Darwin)
 	SHARED_EXT=dylib
-	SONAME_FLAGS=-dynamiclib -install_name
+	SONAME_FLAGS=-dynamiclib -Wl,-install_name
 else
 	SHARED_EXT=so
 	SONAME_FLAGS= -shared -Wl,-soname
