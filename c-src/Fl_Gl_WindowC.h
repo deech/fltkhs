@@ -18,7 +18,7 @@ EXPORT {
 // which causes OpenGL code using these bindings to fail.
 #ifndef INTERNAL_LINKAGE
 # ifdef __APPLE__
-typedef struct NSOpenGLContext* GLContext
+typedef struct NSOpenGLContext* GLContext;
 # endif
 #endif
 
