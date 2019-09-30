@@ -12,6 +12,16 @@
 #include "FL/platform_types.h"
 EXPORT {
 #endif
+
+// A workaround because 'fltk' defines a 'GLContext' on
+// macOS for Objective C and C++ but leaves out C
+// which causes OpenGL code using these bindings to fail.
+#ifndef INTERNAL_LINKAGE
+# ifdef __APPLE__
+typedef struct NSOpenGLContext* GLContext;
+# endif
+#endif
+
   /* Inherited from Fl_Widget */
   FL_EXPORT_C_HEADER(fl_Gl_Window_Virtual_Funcs*,Fl_Gl_Window_default_virtual_funcs,());
   FL_EXPORT_C_HEADER(int,Fl_Gl_Window_handle,(fl_Gl_Window self, int event));
