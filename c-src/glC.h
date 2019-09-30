@@ -1,5 +1,6 @@
 #ifndef __GL_C__
 #define __GL_C__
+
 #ifdef __cplusplus
 // always include the FL/*.H headers before local headers
 // Fl_Widget is included transitively and needed for
