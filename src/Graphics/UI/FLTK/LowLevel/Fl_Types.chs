@@ -7,6 +7,7 @@
 module Graphics.UI.FLTK.LowLevel.Fl_Types where
 #include "Fl_Types.h"
 #include "Fl_Text_EditorC.h"
+#include "Fl_Gl_WindowC.h"
 #include "FL/platform_types.h"
 import Foreign
 import Foreign.C hiding (CClock)
