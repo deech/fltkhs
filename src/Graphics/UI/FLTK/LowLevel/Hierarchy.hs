@@ -2601,7 +2601,6 @@ MAKE_METHOD(Visible,visible)
 MAKE_METHOD(Activevisible,activevisible)
 MAKE_METHOD(Measure,measure)
 MAKE_METHOD(DrawWithT,drawWithT)
-{-# WARNING draw "'draw' is bad." #-}
 MAKE_METHOD(Draw,draw)
 MAKE_METHOD(GetFlags,getFlags)
 MAKE_METHOD(SetFlags,setFlags)
