@@ -311,7 +311,9 @@ cToKeyType cint =
   in
   case findSpecialKey of
     Just sk -> SpecialKeyType sk
-    Nothing -> NormalKeyType (toEnum $ fromIntegral cint)
+    Nothing -> if cint <= 0x10FFFF
+               then NormalKeyType (toEnum $ fromIntegral cint)
+               else SpecialKeyType Kb_Unrecognized
 
 cFromKeyType :: KeyType -> CInt
 cFromKeyType kt = case kt of
