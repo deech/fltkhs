@@ -314,6 +314,7 @@ enum SpecialKey {
   Kb_Refresh = FL_Refresh,
   Kb_Sleep = FL_Sleep,
   Kb_Favorites = FL_Favorites,
+  Kb_Unrecognized,
 };
 enum MouseButton {
   Mouse_Left = FL_LEFT_MOUSE,
