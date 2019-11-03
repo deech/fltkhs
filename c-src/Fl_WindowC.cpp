@@ -760,8 +760,9 @@ FL_EXPORT_C(fl_Window, Fl_OverriddenWindow_NewXY_WithLabel)(int x, int y, int w,
   FL_EXPORT_C(const void*,Fl_Window_icon)(fl_Window win){
     return (static_cast<Fl_DerivedWindow*>(win))->icon();
   }
-  FL_EXPORT_C(void,Fl_Window_set_icon)(fl_Window win,const void * ic){
-    (static_cast<Fl_DerivedWindow*>(win))->icon(ic);
+  FL_EXPORT_C(void,Fl_Window_set_icon)(fl_Window win,fl_RGB_Image i){
+    Fl_RGB_Image* rgb = static_cast<Fl_RGB_Image*>(i);
+    (static_cast<Fl_DerivedWindow*>(win))->icon(rgb);
   }
   FL_EXPORT_C(int,Fl_Window_shown)(fl_Window win){
     return (static_cast<Fl_DerivedWindow*>(win))->shown();

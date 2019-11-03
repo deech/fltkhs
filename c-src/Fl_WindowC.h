@@ -2,6 +2,7 @@
 #define __FL_WINDOW_C__
 #ifdef __cplusplus
 #include "FL/Fl.H"
+#include "FL/Fl_RGB_Image.H"
 #include "FL/Fl_Window.H" // always include the FL/*.H headers before local headers
                           // Fl_Widget is included transitively and needed for
                           // the callback mechanism included below to work.
@@ -245,7 +246,7 @@ EXPORT {
   FL_EXPORT_C_HEADER(const char*,Fl_Window_xclass,(fl_Window win));
   FL_EXPORT_C_HEADER(void,Fl_Window_set_xclass,(fl_Window win,const char* c));
   FL_EXPORT_C_HEADER(const void*,Fl_Window_icon,(fl_Window win));
-  FL_EXPORT_C_HEADER(void,Fl_Window_set_icon,(fl_Window win,const void * ic));
+  FL_EXPORT_C_HEADER(void,Fl_Window_set_icon,(fl_Window win,fl_RGB_Image ic));
   FL_EXPORT_C_HEADER(int,Fl_Window_shown,(fl_Window win));
   FL_EXPORT_C_HEADER(void,Fl_Window_iconize,(fl_Window win));
   FL_EXPORT_C_HEADER(int,Fl_Window_x_root,(fl_Window win));

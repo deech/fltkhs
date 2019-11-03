@@ -319,7 +319,7 @@ instance (impl ~ ( IO (Maybe (Ref Image)))) => Op (GetIcon ()) WindowBase orig i
   runOp _ _ win = withRef win $ \winPtr -> icon' winPtr >>= toMaybeRef
 
 {# fun Fl_Window_set_icon as setIcon' { id `Ptr ()', id `Ptr ()' } -> `()' supressWarningAboutRes #}
-instance (Parent a Image, impl ~ (Maybe( Ref a ) ->  IO ())) => Op (SetIcon ()) WindowBase orig impl where
+instance (Parent a RGBImage, impl ~ (Maybe( Ref a ) ->  IO ())) => Op (SetIcon ()) WindowBase orig impl where
   runOp _ _ win bitmap = withRef win $ \winPtr -> withMaybeRef bitmap $ \bitmapPtr -> setIcon' winPtr bitmapPtr
 
 {# fun Fl_Window_shown as shown' { id `Ptr ()' } -> `Bool' toBool #}
@@ -549,7 +549,7 @@ instance (impl ~ ( IO ())) => Op (Flush ()) WindowBase orig impl where
 --
 -- setDefaultCursorWithFgBg :: 'Ref' 'WindowBase' -> 'CursorType' -> ('Maybe' 'Color', 'Maybe' 'Color') -> 'IO' ()
 --
--- setIcon:: ('Parent' a 'Image') => 'Ref' 'WindowBase' -> 'Maybe'( 'Ref' a ) -> 'IO' ()
+-- setIcon:: ('Parent' a 'RGBImage') => 'Ref' 'WindowBase' -> 'Maybe'( 'Ref' a ) -> 'IO' ()
 --
 -- setIconlabel :: 'Ref' 'WindowBase' -> 'T.Text' -> 'IO' ()
 --
