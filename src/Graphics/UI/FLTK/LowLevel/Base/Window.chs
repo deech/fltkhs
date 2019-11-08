@@ -41,6 +41,9 @@ import Graphics.UI.FLTK.LowLevel.Dispatch
 import qualified Data.Text as T
 import Graphics.UI.FLTK.LowLevel.Hierarchy
 import Graphics.UI.FLTK.LowLevel.Base.Widget
+import Graphics.UI.FLTK.LowLevel.RGBImage()
+import Control.Exception(throwIO)
+import System.IO.Error(userError)
 
 #c
  enum WindowType {
@@ -320,7 +323,14 @@ instance (impl ~ ( IO (Maybe (Ref Image)))) => Op (GetIcon ()) WindowBase orig i
 
 {# fun Fl_Window_set_icon as setIcon' { id `Ptr ()', id `Ptr ()' } -> `()' supressWarningAboutRes #}
 instance (Parent a RGBImage, impl ~ (Maybe( Ref a ) ->  IO ())) => Op (SetIcon ()) WindowBase orig impl where
-  runOp _ _ win bitmap = withRef win $ \winPtr -> withMaybeRef bitmap $ \bitmapPtr -> setIcon' winPtr bitmapPtr
+  runOp _ _ win rgbM = do
+    case rgbM of
+      Nothing -> withRef win $ \winPtr -> setIcon' winPtr (castPtr nullPtr)
+      Just rgb -> do
+        copyIM <- copy (safeCast rgb :: Ref RGBImage) (Nothing :: Maybe Size)
+        case copyIM of
+          Just copyI -> withRef win $ \winPtr -> withRef copyI $ \iPtr -> setIcon' winPtr iPtr
+          Nothing -> throwIO (userError "Could not make a copy of icon image")
 
 {# fun Fl_Window_shown as shown' { id `Ptr ()' } -> `Bool' toBool #}
 instance (impl ~ ( IO (Bool))) => Op (Shown ()) WindowBase orig impl where
