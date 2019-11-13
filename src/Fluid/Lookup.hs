@@ -287,7 +287,7 @@ flClasses =
   ,("Fl_Wizard",("Wizard", "wizardNew"))
   ,("Fl_Pack",("Pack", "packNew"))
   ,("Fl_Table",("Table", "tableNew"))
-  ,("Fl_Scroll",("Scroll", "scrollNew"))
+  ,("Fl_Scroll",("Scroll", "scrolledNew"))
   ,("Fl_Menu_Bar",("MenuBar", "sysMenuBarNew"))
   ,("Fl_Menu_Button",("MenuButton", "menuButtonNew"))
   ,("Fl_Choice",("Choice", "choiceNew"))
