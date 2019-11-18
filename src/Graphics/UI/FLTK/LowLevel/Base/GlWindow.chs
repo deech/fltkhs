@@ -134,8 +134,8 @@ instance (impl ~ (Bool ->  IO ())) => Op (SetContextValid ()) GlWindowBase orig 
 instance (impl ~ ( IO (Bool))) => Op (CanDo ()) GlWindowBase orig impl where
   runOp _ _ win = withRef win $ \winPtr -> canDo' winPtr
 {# fun Fl_Gl_Window_mode as mode' { id `Ptr ()' } -> `Int' #}
-instance (impl ~ ( IO (Mode))) => Op (GetMode ()) GlWindowBase orig impl where
-  runOp _ _ win = withRef win $ \winPtr -> mode' winPtr >>= return . toEnum
+instance (impl ~ ( IO (Modes))) => Op (GetMode ()) GlWindowBase orig impl where
+  runOp _ _ win = withRef win $ \winPtr -> mode' winPtr >>= return . intToModes
 {# fun Fl_Gl_Window_set_mode as setMode' { id `Ptr ()',`Int' } -> `Int' #}
 instance (impl ~ (Modes ->  IO ())) => Op (SetMode ()) GlWindowBase orig impl where
   runOp _ _ win a = withRef win $ \winPtr -> setMode' winPtr (modesToInt a) >> return ()
