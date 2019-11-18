@@ -104,7 +104,7 @@ instance (impl ~ ( IO ())) => Op (Hide ()) GlWindowBase orig impl where
 instance (impl ~ ( IO ())) => Op (ShowWidget ()) GlWindowBase orig impl where
   runOp _ _ win = withRef win $ \winPtr -> show' winPtr
 {# fun Fl_DerivedGl_Window_handle as handle' { id `Ptr ()', cFromEnum `Event' } -> `Int' #}
-instance (impl ~ (Event ->  IO(Either UnknownEvent ()))) => Op (Handle ()) GlWindowBase orig impl where
+instance (impl ~ (Event ->  IO( Either UnknownEvent () ))) => Op (Handle ()) GlWindowBase orig impl where
   runOp _ _ self event = withRef self $ \selfPtr -> handle' selfPtr event >>= return  . successOrUnknownEvent
 {# fun Fl_DerivedGl_Window_Destroy as windowDestroy' { id `Ptr ()' } -> `()' supressWarningAboutRes #}
 instance (impl ~ (IO ())) => Op (Destroy ()) GlWindowBase orig impl where
@@ -205,11 +205,11 @@ instance (impl ~ ( IO (Int))) => Op (PixelW ()) GlWindowBase orig impl where
 --
 -- getContextValid :: 'Ref' 'GlWindowBase' -> 'IO' ('Bool')
 --
--- getMode :: 'Ref' 'GlWindowBase' -> 'IO' ('Mode')
+-- getMode :: 'Ref' 'GlWindowBase' -> 'IO' ('Modes')
 --
 -- getValid :: 'Ref' 'GlWindowBase' -> 'IO' ('Bool')
 --
--- handle :: 'Ref' 'GlWindowBase' -> 'Event' -> 'IO(Either' 'UnknownEvent' ())
+-- handle :: 'Ref' 'GlWindowBase' -> 'Event' -> 'IO'( 'Either' 'UnknownEvent' () )
 --
 -- hide :: 'Ref' 'GlWindowBase' -> 'IO' ()
 --
