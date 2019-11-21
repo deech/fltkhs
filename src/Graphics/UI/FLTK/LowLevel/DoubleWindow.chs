@@ -49,6 +49,9 @@ instance (impl ~ ( IO ())) => Op (Flush ()) DoubleWindow orig impl where
 -- "Graphics.UI.FLTK.LowLevel.Base.Window"
 --  |
 --  v
+-- "Graphics.UI.FLTK.LowLevel.Base.DoubleWindow"
+--  |
+--  v
 -- "Graphics.UI.FLTK.LowLevel.DoubleWindow"
 -- @
 
