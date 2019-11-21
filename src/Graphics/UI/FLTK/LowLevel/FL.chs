@@ -440,11 +440,11 @@ nextWindow :: Ref a -> IO (Maybe (Ref WindowBase))
 nextWindow currWindow = withRef currWindow (\ptr -> nextWindow' ptr >>= toMaybeRef)
 
 {# fun Fl_modal as modal' {  } -> `Ptr ()' #}
-modal  :: IO (Maybe (Ref WidgetBase))
+modal  :: IO (Maybe (Ref WindowBase))
 modal = modal' >>= toMaybeRef
 
 {# fun Fl_grab as grab' {  } -> `Ptr ()' #}
-grab  :: IO (Maybe (Ref WidgetBase))
+grab  :: IO (Maybe (Ref WindowBase))
 grab = grab' >>= toMaybeRef
 
 {# fun Fl_set_grab as setGrab'
