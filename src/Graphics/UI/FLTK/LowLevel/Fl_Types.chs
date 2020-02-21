@@ -374,7 +374,7 @@ newtype FlOffscreen = FlOffscreen Fl_Offscreen
 newtype FlBitmask = FlBitmask Fl_Bitmask
 newtype FlRegion = FlRegion Fl_Region
 newtype FlSocket = FlSocket Fl_Socket
-#if GLSUPPORT
+#ifdef GLSUPPORT
 type Fl_GlContext = {#type GLContext #}
 newtype FlGlContext = FlGlContext Fl_GlContext
 #endif

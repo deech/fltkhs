@@ -1,7 +1,9 @@
 {-# LANGUAGE CPP #-}
-import Data.Maybe(fromJust, isJust, fromMaybe, maybeToList)
+import Data.Maybe(isJust, fromMaybe, maybeToList)
 import Distribution.Simple.Compiler
 import Distribution.Simple.LocalBuildInfo
+import Distribution.Types.LocalBuildInfo
+import Distribution.Types.TargetInfo
 import Distribution.PackageDescription
 import Distribution.Simple
 import Distribution.System
@@ -12,30 +14,16 @@ import Distribution.Text ( display )
 import Control.Monad
 import Data.List
 import Control.Applicative((<$>))
-import Distribution.Simple.Program
-  ( Program(..), ConfiguredProgram(..), programPath
-   , requireProgram, requireProgramVersion
-   , rawSystemProgramConf, rawSystemProgram
-   , greencardProgram, cpphsProgram, hsc2hsProgram, c2hsProgram
-   , happyProgram, alexProgram, ghcProgram, gccProgram, requireProgram, arProgram)
-import Distribution.Simple.Program.Db
 import Distribution.Simple.Configure(findDistPrefOrDefault)
-import Distribution.Simple.PreProcess
 import Distribution.Simple.Register ( generateRegistrationInfo, registerPackage )
 import qualified Distribution.Simple.Register as Register
 import Distribution.Simple.InstallDirs (fromPathTemplate)
 import System.IO.Unsafe (unsafePerformIO)
 import System.IO.Error
-import qualified Distribution.Simple.Program.Ar    as Ar
-import qualified Distribution.ModuleName as ModuleName
-import Distribution.Simple.BuildPaths
 import System.Directory(getCurrentDirectory, copyFile, createDirectoryIfMissing, listDirectory, withCurrentDirectory, doesDirectoryExist, makeAbsolute, doesFileExist)
-import System.FilePath ( (</>), (<.>), takeExtension, combine, takeBaseName, takeDirectory)
-import qualified Distribution.Simple.GHC  as GHC
-import qualified Distribution.Simple.UHC  as UHC
-import qualified Distribution.Simple.PackageIndex as PackageIndex
+import System.FilePath ( (</>), (<.>), takeDirectory)
 import Distribution.PackageDescription as PD
-import Distribution.InstalledPackageInfo (ldOptions, extraGHCiLibraries, showInstalledPackageInfo, libraryDynDirs, libraryDirs)
+import Distribution.InstalledPackageInfo (ldOptions, extraGHCiLibraries, showInstalledPackageInfo, libraryDynDirs, libraryDirs,InstalledPackageInfo)
 import System.Environment (getEnv, setEnv)
 
 ----------------------------------------
@@ -44,6 +32,7 @@ import System.Environment (getEnv, setEnv)
 -- "If you have a custom-setup stanza, you should be able to use the MIN_VERSION_Cabal macro in your setup script."
 
 -- cabal >=2.0.0.2
+_FlagName :: String -> FlagName
 #if defined(MIN_VERSION_Cabal) && MIN_VERSION_Cabal(2,0,0)
 _FlagName = mkFlagName
 #else
@@ -51,6 +40,7 @@ _FlagName = FlagName
 #endif
 
 -- cabal >=2.0.1.1
+_registerPackage :: Verbosity -> LocalBuildInfo -> PackageDBStack -> InstalledPackageInfo -> IO ()
 #if defined(MIN_VERSION_Cabal) && MIN_VERSION_Cabal(2,0,1)
 _registerPackage verbosity lbi packageDbs installedPkgInfo
   = registerPackage verbosity (compiler lbi) (withPrograms lbi) packageDbs installedPkgInfo Register.defaultRegisterOptions
@@ -402,27 +392,32 @@ registerHook pkg_descr localbuildinfo _ flags =
 
 register :: PackageDescription -> LocalBuildInfo -> RegisterFlags -> IO ()
 register pkg@PackageDescription { library = Just lib } lbi regFlags = do
-    let clbi = getComponentLocalBuildInfo lbi CLibName
-    installedPkgInfoRaw' <- generateRegistrationInfo verbosity pkg lib lbi clbi inplace False distPref packageDb
-    let installedPkgInfoRaw =
-         case buildOS of
-           Windows -> installedPkgInfoRaw' { Distribution.InstalledPackageInfo.ldOptions = fmap windowsFriendlyPaths (Distribution.InstalledPackageInfo.ldOptions installedPkgInfoRaw') }
-           _ -> installedPkgInfoRaw'
-    let installedPkgInfo = installedPkgInfoRaw {
-                                libraryDynDirs = (libraryDynDirs installedPkgInfoRaw) ++ (libraryDirs installedPkgInfoRaw),
-                                -- this is what this whole register code is all about
-                                extraGHCiLibraries =
-                                  case buildOS of
-                                    Windows -> ["libfltkc-dyn"]
-                                    _ -> ["fltkc-dyn"]
-                                }
+  -- Libraries can have more than one target now due to Backpack, but we don't
+  -- use it so we only register the library with a single target.
+  case componentNameTargets' pkg lbi (CLibName (libName lib)) of
+    [targetInfo] -> do
+      let clbi = targetCLBI targetInfo
+      installedPkgInfoRaw' <- generateRegistrationInfo verbosity pkg lib lbi clbi inplace False distPref packageDb
+      let installedPkgInfoRaw =
+           case buildOS of
+             Windows -> installedPkgInfoRaw' { Distribution.InstalledPackageInfo.ldOptions = fmap windowsFriendlyPaths (Distribution.InstalledPackageInfo.ldOptions installedPkgInfoRaw') }
+             _ -> installedPkgInfoRaw'
+      let installedPkgInfo = installedPkgInfoRaw {
+                                  libraryDynDirs = (libraryDynDirs installedPkgInfoRaw) ++ (libraryDirs installedPkgInfoRaw),
+                                  -- this is what this whole register code is all about
+                                  extraGHCiLibraries =
+                                    case buildOS of
+                                      Windows -> ["libfltkc-dyn"]
+                                      _ -> ["fltkc-dyn"]
+                                  }
 
-     -- Three different modes:
-    case () of
-     _ | modeGenerateRegFile   -> writeRegistrationFile installedPkgInfo
-       | modeGenerateRegScript -> die "Generate Reg Script not supported"
-       | otherwise             ->
-          _registerPackage verbosity lbi packageDbs installedPkgInfo
+       -- Three different modes:
+      case () of
+       _ | modeGenerateRegFile   -> writeRegistrationFile installedPkgInfo
+         | modeGenerateRegScript -> dieNoVerbosity "Generate Reg Script not supported"
+         | otherwise             ->
+            _registerPackage verbosity lbi packageDbs installedPkgInfo
+    _ -> pure ()
   where
     modeGenerateRegFile = isJust (flagToMaybe (regGenPkgConf regFlags))
     regFile             = fromMaybe (display (packageId pkg) <.> "conf")
