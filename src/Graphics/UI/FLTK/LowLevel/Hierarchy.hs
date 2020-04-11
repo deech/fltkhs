@@ -327,6 +327,8 @@ module Graphics.UI.FLTK.LowLevel.Hierarchy
          getIcon,
          SetIcon,
          setIcon,
+         SetIconRaw,
+         setIconRaw,
          Shown,
          shown,
          Iconize,
@@ -2036,6 +2038,7 @@ type WindowBaseFuncs =
   (SetDefaultCursor
   (SetDefaultCursorWithFgBg
   (SetIcon
+  (SetIconRaw
   (SetIconlabel
   (SetLabel
   (SetLabelWithIconlabel
@@ -2052,7 +2055,7 @@ type WindowBaseFuncs =
   (SizeRangeWithArgs
   (WaitForExpose
   (Flush
-  ())))))))))))))))))))))))))))))))))))))))))))))))))))))))
+  ()))))))))))))))))))))))))))))))))))))))))))))))))))))))))
 type instance Functions WindowBase = WindowBaseFuncs
 
 data CWindow parent
@@ -2095,6 +2098,7 @@ MAKE_METHOD(GetXclass,getXclass)
 MAKE_METHOD(SetXclass,setXclass)
 MAKE_METHOD(GetIcon,getIcon)
 MAKE_METHOD(SetIcon,setIcon)
+MAKE_METHOD(SetIconRaw,setIconRaw)
 MAKE_METHOD(Shown,shown)
 MAKE_METHOD(Iconize,iconize)
 MAKE_METHOD(GetXRoot,getXRoot)

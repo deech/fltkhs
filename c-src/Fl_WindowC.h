@@ -247,6 +247,7 @@ EXPORT {
   FL_EXPORT_C_HEADER(void,Fl_Window_set_xclass,(fl_Window win,const char* c));
   FL_EXPORT_C_HEADER(const void*,Fl_Window_icon,(fl_Window win));
   FL_EXPORT_C_HEADER(void,Fl_Window_set_icon,(fl_Window win,fl_RGB_Image ic));
+  FL_EXPORT_C_HEADER(void,Fl_Window_set_icon_raw,(fl_Window win,const void* ic));
   FL_EXPORT_C_HEADER(int,Fl_Window_shown,(fl_Window win));
   FL_EXPORT_C_HEADER(void,Fl_Window_iconize,(fl_Window win));
   FL_EXPORT_C_HEADER(int,Fl_Window_x_root,(fl_Window win));

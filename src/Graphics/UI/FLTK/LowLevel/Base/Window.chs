@@ -332,6 +332,10 @@ instance (Parent a RGBImage, impl ~ (Maybe( Ref a ) ->  IO ())) => Op (SetIcon (
           Just copyI -> withRef win $ \winPtr -> withRef copyI $ \iPtr -> setIcon' winPtr iPtr
           Nothing -> throwIO (userError "Could not make a copy of icon image")
 
+{# fun Fl_Window_set_icon_raw as setIconRaw' { id `Ptr ()', id `Ptr ()' } -> `()' supressWarningAboutRes #}
+instance (impl ~ (Ptr a -> IO ())) => Op (SetIconRaw ()) WindowBase orig impl where
+  runOp _ _ win bitmapPtr = withRef win $ \winPtr -> setIconRaw' winPtr (castPtr bitmapPtr)
+
 {# fun Fl_Window_shown as shown' { id `Ptr ()' } -> `Bool' toBool #}
 instance (impl ~ ( IO (Bool))) => Op (Shown ()) WindowBase orig impl where
   runOp _ _ win = withRef win $ \winPtr -> shown' winPtr
@@ -559,7 +563,9 @@ instance (impl ~ ( IO ())) => Op (Flush ()) WindowBase orig impl where
 --
 -- setDefaultCursorWithFgBg :: 'Ref' 'WindowBase' -> 'CursorType' -> ('Maybe' 'Color', 'Maybe' 'Color') -> 'IO' ()
 --
--- setIcon:: ('Parent' a 'RGBImage') => 'Ref' 'WindowBase' -> 'Maybe'( 'Ref' a ) -> 'IO' ()
+-- setIcon :: ('Parent' a 'RGBImage') => 'Ref' 'WindowBase' -> 'Maybe' ( 'Ref' a ) -> 'IO' ()
+--
+-- setIconRaw :: 'Ref' 'WindowBase' -> 'Ptr' a -> 'IO' ()
 --
 -- setIconlabel :: 'Ref' 'WindowBase' -> 'T.Text' -> 'IO' ()
 --
