@@ -21,6 +21,7 @@ custom-setup
       Cabal >= 3.2.0.0 && < 4
     , base >=4.4
     , filepath
+    , fltkhs-fluid-preprocessor >= 0.1.0.0
 
 Executable fltkhs-fluid-radio
   Main-Is: fluid-radio.hs
