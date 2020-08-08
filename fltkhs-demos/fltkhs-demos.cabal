@@ -1,0 +1,227 @@
+name: fltkhs-demos
+version: 0.0.0.7
+synopsis: FLTKHS demos. Please scroll to the bottom for more information.
+description:
+  FLTKHS demos moved to a separate package to keep the core package free of additional dependencies.
+license: MIT
+license-file: LICENSE
+author: Aditya Siram
+maintainer: aditya.siram@gmail.com
+homepage: http://github.com/deech/fltkhs-demos
+-- bug-reports:
+-- copyright:
+category: UI,Graphics
+build-type: Simple
+
+cabal-version: >=2.0
+
+source-repository head
+  type: git
+  location: http://github.com/deech/fltkhs-demos
+
+Executable fltkhs-threads
+  Main-Is: threads.hs
+  Hs-Source-Dirs: src/Examples
+  Build-Depends:
+     base >= 4.14 && < 5,
+     fltkhs >= 0.8.0.3,
+     stm,
+     text >= 1.2.2.0
+  default-language: Haskell2010
+  ghc-Options: -Wall -threaded
+
+Executable fltkhs-pack
+  Main-Is: pack.hs
+  Hs-Source-Dirs: src/Examples
+  Build-Depends:
+    base >= 4.14 && < 5,
+    directory >= 1.2.1.0,
+    fltkhs >= 0.8.0.3
+  default-language: Haskell2010
+  ghc-Options: -Wall -threaded
+
+Executable fltkhs-tile
+  Main-Is: tile.hs
+  Hs-Source-Dirs: src/Examples
+  Build-Depends:
+    base >= 4.14 && < 5,
+    directory,
+    fltkhs >= 0.8.0.3
+  default-language: Haskell2010
+  ghc-Options: -Wall -threaded
+
+Executable fltkhs-nativefilechooser-simple-app
+  Main-Is: nativefilechooser-simple-app.hs
+  Hs-Source-Dirs: src/Examples
+  Build-Depends:
+    base >= 4.14 && < 5,
+    directory,
+    fltkhs >= 0.8.0.3,
+    text >= 1.2.2.0
+  default-language: Haskell2010
+  ghc-Options: -Wall -threaded
+
+Executable fltkhs-table-as-container
+  Main-Is: table-as-container.hs
+  Hs-Source-Dirs: src/Examples
+  Build-Depends:
+    base >= 4.14 && < 5,
+    fltkhs >= 0.8.0.3,
+    text >= 1.2.2.0
+  default-language: Haskell2010
+  ghc-Options: -Wall -threaded
+
+Executable fltkhs-texteditor-simple
+  Main-Is: texteditor-simple.hs
+  Hs-Source-Dirs: src/Examples
+  Build-Depends:
+    base >= 4.14 && < 5,
+    fltkhs >= 0.8.0.3
+  default-language: Haskell2010
+  ghc-Options: -Wall -threaded
+
+Executable fltkhs-textdisplay-with-colors
+  Main-Is: textdisplay-with-colors.hs
+  Hs-Source-Dirs: src/Examples
+  Build-Depends:
+    base >= 4.14 && < 5,
+    fltkhs >= 0.8.0.3
+  default-language: Haskell2010
+  ghc-Options: -Wall -threaded
+
+Executable fltkhs-doublebuffer
+  Main-Is: doublebuffer.hs
+  Hs-Source-Dirs: src/Examples
+  Build-Depends:
+    base >= 4.14 && < 5,
+    fltkhs >= 0.8.0.3
+  default-language: Haskell2010
+  ghc-Options: -Wall -threaded
+
+Executable fltkhs-make-tree
+  Main-Is: make-tree.hs
+  Hs-Source-Dirs: src/Examples
+  Build-Depends:
+    base >= 4.14 && < 5,
+    fltkhs >= 0.8.0.3
+  default-language: Haskell2010
+  ghc-Options: -Wall -threaded
+
+Executable fltkhs-tree-simple
+  Main-Is: tree-simple.hs
+  Hs-Source-Dirs: src/Examples
+  Build-Depends:
+    base >= 4.14 && < 5,
+    fltkhs >= 0.8.0.3,
+    text >= 1.2.2.0
+  default-language: Haskell2010
+  ghc-Options: -Wall -threaded
+
+Executable fltkhs-table-spreadsheet-with-keyboard-nav
+  Main-Is: table-spreadsheet-with-keyboard-nav.hs
+  Hs-Source-Dirs: src/Examples
+  Build-Depends:
+    base >= 4.14 && < 5,
+    fltkhs >= 0.8.0.3,
+    text >= 1.2.2.0
+  default-language: Haskell2010
+  ghc-Options: -Wall -threaded
+
+Executable fltkhs-table-simple
+  Main-Is: table-simple.hs
+  Hs-Source-Dirs: src/Examples
+  Build-Depends:
+    base >= 4.14 && < 5,
+    fltkhs >= 0.8.0.3,
+    text >= 1.2.2.0
+  default-language: Haskell2010
+  ghc-Options: -Wall -threaded
+
+Executable fltkhs-table-sort
+  Main-Is: table-sort.hs
+  Hs-Source-Dirs: src/Examples
+  Build-Depends:
+    base >= 4.14 && < 5,
+    fltkhs >= 0.8.0.3,
+    text >= 1.2.2.0,
+    process
+  default-language: Haskell2010
+  ghc-Options: -Wall -threaded
+
+Executable fltkhs-arc
+  Main-Is: arc.hs
+  Hs-Source-Dirs: src/Examples
+  Build-Depends:
+    base >= 4.14 && < 5,
+    fltkhs >= 0.8.0.3,
+    text >= 1.2.2.0
+  default-language: Haskell2010
+  ghc-Options: -Wall -threaded
+
+Executable fltkhs-bitmap
+  Main-Is: bitmap.hs
+  Hs-Source-Dirs: src/Examples
+  Build-Depends:
+     base >= 4.14 && < 5,
+     fltkhs >= 0.8.0.3,
+     bytestring
+  default-language: Haskell2010
+  ghc-Options: -Wall -threaded
+
+Executable fltkhs-boxtype
+  Main-Is: boxtype.hs
+  Hs-Source-Dirs: src/Examples
+  Build-Depends:
+     base >= 4.14 && < 5,
+     fltkhs >= 0.8.0.3,
+     bytestring,
+     text >= 1.2.2.0
+  default-language: Haskell2010
+  ghc-Options: -Wall -threaded
+
+Executable fltkhs-browser
+  Main-Is: browser.hs
+  Hs-Source-Dirs: src/Examples
+  Build-Depends:
+     base >= 4.14 && < 5,
+     fltkhs >= 0.8.0.3,
+     bytestring,
+     text >= 1.2.2.0
+  default-language: Haskell2010
+  ghc-Options: -Wall -threaded
+
+Executable fltkhs-clock
+  Main-Is: clock.hs
+  Hs-Source-Dirs: src/Examples
+  Build-Depends:
+     base >= 4.14 && < 5,
+     fltkhs >= 0.8.0.3,
+     bytestring
+  default-language: Haskell2010
+  ghc-Options: -Wall -threaded
+
+Executable fltkhs-fd-example
+  Main-Is: fd-example.hs
+  Hs-Source-Dirs: src/Examples
+  Extra-Source-Files:
+    src/Examples/PopenShim.H
+  C-Sources:
+    src/Examples/PopenShim.c
+  Build-Depends:
+     base >= 4.14 && < 5,
+     fltkhs >= 0.8.0.3,
+     process >= 1.2.1.0,
+     bytestring,
+     text >= 1.2.2.0
+  default-language: Haskell2010
+  ghc-Options: -Wall -threaded
+
+Executable fltkhs-howto-drag-and-drop
+  Main-Is: howto-drag-and-drop.hs
+  Hs-Source-Dirs: src/Examples
+  Build-Depends:
+     base >= 4.14 && < 5,
+     fltkhs >= 0.8.0.3,
+     text >= 1.2.2.0
+  default-language: Haskell2010
+  ghc-Options: -Wall -threaded

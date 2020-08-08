@@ -1,0 +1,35 @@
+name:                fltkhs-themes-demo
+version:             0.1.0.0
+synopsis:            Demo of theming in FLTK
+description:         Demo of theming in FLTK
+bug-reports:         https://github.com/deech/fltkhs-themes-demo/issues
+license:             MIT
+license-file:        LICENSE
+author:              Aditya Siram
+maintainer:          aditya.siram@gmail.com
+copyright:           2020 Aditya Siram
+build-type:          Custom
+cabal-version:       >= 2.0
+extra-source-files:  README.org
+data-files:          images/*.png
+
+custom-setup
+  setup-depends:
+    base >= 4.14 &&  < 5,
+    filepath,
+    directory,
+    asset-bundle >= 0.1.0.2,
+    Cabal >= 3.2.0.0 && < 4
+
+executable fltkhs-light-theme-demo
+  main-is:             Main.hs
+  hs-source-dirs:         app
+  other-modules:       Paths_fltkhs_themes_demo
+  build-depends:
+    base >=4.14 && < 5,
+    fltkhs >= 0.8.0.3,
+    fltkhs-themes >= 0.2.0.3,
+    load-font >= 0.1.0.3,
+    text >= 1.2.2.0
+  hs-source-dirs:      app
+  default-language:    Haskell2010

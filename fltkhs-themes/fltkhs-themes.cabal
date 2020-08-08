@@ -1,0 +1,94 @@
+name:           fltkhs-themes
+version:        0.2.0.3
+synopsis:       A set of themed widgets that provides drop in replacements to the ones in FLTKHS.
+description:    Please see the README on Github at <https://github.com/deech/fltkhs-themes#readme>
+category:       UI,Graphics,GUI,User Interfaces
+homepage:       https://github.com/deech/fltkhs-themes#readme
+bug-reports:    https://github.com/deech/fltkhs-themes/issues
+author:         Aditya Siram
+maintainer:     aditya.siram@gmail.com
+copyright:      2020 Aditya Siram
+license:        MIT
+license-file:   LICENSE
+build-type:     Simple
+extra-source-files:
+    README.org
+
+extra-doc-files:
+  doc/images/cancel-button-example.png
+  doc/images/forward-image-example.png
+  doc/images/left-image-example.png
+  doc/images/ok-button-example.png
+  doc/images/return-image-example.png
+  doc/images/rewind-image-example.png
+  doc/images/right-image-example.png
+  doc/images/small-up-down-arrow-example.png
+
+data-files:
+  fonts/DejaVuSans.ttf
+  fonts/fineliner_script-webfont.ttf
+  fonts/Fineliner_Script.ttf
+  fonts/fontawesome-webfont.ttf
+  fonts/iosevka-ss08-regular.ttf
+  fonts/JosefinSlab-SemiBold.ttf
+  fonts/tobec___-webfont.ttf
+  fonts/YanoneKaffeesatz-Regular.ttf
+  images/brightness-field.png
+  images/dialog-apply.png
+  images/dialog-cancel.png
+  images/dialog-ok.png
+  images/down-small.png
+  images/forward.png
+  images/left.png
+  images/rewind.png
+  images/right.png
+  images/up-small.png
+
+source-repository head
+  type: git
+  location: https://github.com/deech/fltkhs-themes
+
+library
+  exposed-modules:
+    Graphics.UI.FLTK.Theme.Light
+    Graphics.UI.FLTK.Theme.Light.Assets
+    Graphics.UI.FLTK.Theme.Light.Browser
+    Graphics.UI.FLTK.Theme.Light.Button
+    Graphics.UI.FLTK.Theme.Light.Clock
+    Graphics.UI.FLTK.Theme.Light.ColorChooser
+    Graphics.UI.FLTK.Theme.Light.Common
+    Graphics.UI.FLTK.Theme.Light.Counter
+    Graphics.UI.FLTK.Theme.Light.Dial
+    Graphics.UI.FLTK.Theme.Light.Group
+    Graphics.UI.FLTK.Theme.Light.Input
+    Graphics.UI.FLTK.Theme.Light.Menu
+    Graphics.UI.FLTK.Theme.Light.Misc
+    Graphics.UI.FLTK.Theme.Light.Positioner
+    Graphics.UI.FLTK.Theme.Light.Progress
+    Graphics.UI.FLTK.Theme.Light.SimpleTerminal
+    Graphics.UI.FLTK.Theme.Light.Slider
+    Graphics.UI.FLTK.Theme.Light.Spinner
+    Graphics.UI.FLTK.Theme.Light.Table
+    Graphics.UI.FLTK.Theme.Light.Tabs
+    Graphics.UI.FLTK.Theme.Light.TextDisplay
+    Graphics.UI.FLTK.Theme.Light.TextEditor
+    Graphics.UI.FLTK.Theme.Light.Tree
+    Graphics.UI.FLTK.Theme.Light.Valuator
+    Graphics.UI.FLTK.Theme.Light.Window
+    Graphics.UI.FLTK.Theme.Light.Wizard
+  other-modules:
+    Paths_fltkhs_themes
+  hs-source-dirs:
+    src
+  ghc-options: -Wall -fno-warn-name-shadowing
+  build-depends:
+    base >=4.14 && < 5,
+    bytestring,
+    fltkhs >=0.8.0.3,
+    load-font >=0.1.0.3,
+    text >=1.2.2.0,
+    vector >=0.12.0.1
+  if os(linux)
+    extra-libraries:
+      fontconfig
+  default-language: Haskell2010

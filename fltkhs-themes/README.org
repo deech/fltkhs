@@ -1,0 +1,12 @@
+#+TITLE: README
+
+* fltkhs-themes
+`fltkhs-themes` tries to make it easy to write nice consistent-looking
+[[http://hackage.haskell.org/package/fltkhs-0.5.4.5/docs/Graphics-UI-FLTK-LowLevel-FLTKHS.html][FLTKHS]] applications by providing drop-in light themed replacement widgets to the
+standard ones with minimal performance and memory overhead.
+
+Please see the [[https://hackage.haskell.org/package/fltkhs-themes/docs/Graphics-UI-FLTK-Theme-Light.html][Hackage docs]]
+for much more information on installation and getting started with this package.
+
+* Screenshots
+There is a small but growing [[https://github.com/deech/fltkhs-themes-demo][showcase app]] with screenshots that gives a better idea of look-and-feel.

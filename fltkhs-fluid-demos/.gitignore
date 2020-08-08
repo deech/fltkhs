@@ -1,0 +1,5 @@
+dist/*
+*.cxx
+*.h
+src/*.txt
+src/Tree.hs

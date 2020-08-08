@@ -1,0 +1,780 @@
+# data file for the Fltk User Interface Designer (fluid)
+version 1.0400
+header_name {.h}
+code_name {.cxx}
+decl {import TreeCallbacks} {private local
+}
+
+decl {import Data.IORef} {private local
+}
+
+decl {import Graphics.UI.FLTK.LowLevel.FLTKHS} {selected private local
+}
+
+Function {make_window(IO ( Ref Window))} {open
+} {
+  Fl_Window window {
+    label tree open
+    xywh {116 294 1040 575} type Double visible
+  } {
+    Fl_Group tree {
+      label Tree
+      callback treeCallback open
+      tooltip {Test tree} xywh {15 22 320 539} box DOWN_BOX color 55 selection_color 15
+      class Fl_Tree
+    } {}
+    Fl_Group widget_group {open
+      xywh {350 5 681 615}
+      code0 {setResizable widget_group (Nothing :: Maybe (Ref Widget))}
+    } {
+      Fl_Box {} {
+        label {Tree Globals}
+        tooltip {These controls only affect the selected items. If no items are selected, all existing items in tree are modified.} xywh {350 23 330 389} box GTK_DOWN_BOX color 47 labelsize 12 align 1
+      }
+      Fl_Value_Slider margintop_slider {
+        label {margintop()}
+        callback {(margintop_slider_callback tree)}
+        tooltip {Changes the top margin for the tree widget} xywh {505 40 155 16} type Horizontal color 46 selection_color 1 labelsize 10 align 4 textsize 9
+        code0 {getMargintop tree >>= setValue margintop_slider . fromIntegral;}
+        code1 {range margintop_slider 0.0 100.0;}
+        code2 {setStep margintop_slider 1.0;}
+      }
+      Fl_Value_Slider marginleft_slider {
+        label {marginleft()}
+        callback {(marginleft_slider_callback tree)}
+        tooltip {Changes the left margin for the tree widget} xywh {505 60 155 16} type Horizontal color 46 selection_color 1 labelsize 10 align 4 textsize 9
+        code0 {getMarginleft tree >>= setValue marginleft_slider . fromIntegral ;}
+        code1 {range marginleft_slider 0.0 200.0;}
+        code2 {setStep marginleft_slider 1.0;}
+      }
+      Fl_Value_Slider marginbottom_slider {
+        label {marginbottom()}
+        user_data tree
+        callback {(marginbottom_slider_callback tree)}
+        tooltip {Changes the bottom margin for the tree
+Sets how far beyond bottom of tree you can scroll} xywh {505 80 155 16} type Horizontal color 46 selection_color 1 labelsize 10 align 4 textsize 9
+        code0 {setValue marginbottom_slider 0.0;}
+        code1 {range marginbottom_slider 0.0 275.0;}
+        code2 {setStep marginbottom_slider 1.0;}
+        code3 {doCallback marginbottom_slider;}
+      }
+      Fl_Value_Slider linespacing_slider {
+        label {linespacing()}
+        callback {(linespacing_slider_callback tree)}
+        tooltip {Changes the spacing between items in the tree} xywh {505 100 155 16} type Horizontal color 46 selection_color 1 labelsize 10 align 4 textsize 9
+        code0 {getLinespacing tree >>= setValue linespacing_slider . fromIntegral}
+        code1 {range linespacing_slider 0.0 100.0}
+        code2 {setStep linespacing_slider 1.0}
+      }
+      Fl_Value_Slider usericonmarginleft_slider {
+        label {usericonmarginleft()}
+        user_data tree
+        callback {(usericonmarginleft_slider_callback tree)}
+        tooltip {Changes the left margin for the user icons (if any)} xywh {505 120 155 16} type Horizontal color 46 selection_color 1 labelsize 10 align 4 textsize 9
+        code0 {getUsericonmarginleft tree >>= setValue usericonmarginleft_slider . fromIntegral}
+        code1 {range usericonmarginleft_slider 0.0 100.0}
+        code2 {setStep usericonmarginleft_slider 1.0}
+      }
+      Fl_Value_Slider labelmarginleft_slider {
+        label {labelmarginleft()}
+        user_data tree
+        callback {(labelmarginleft_slider_callback tree)}
+        tooltip {Changes the left margin for the item label} xywh {505 140 155 16} type Horizontal color 46 selection_color 1 labelsize 10 align 4 textsize 9
+        code0 {getLabelmarginleft tree >>= setValue labelmarginleft_slider . fromIntegral}
+        code1 {range labelmarginleft_slider 0.0 100.0}
+        code2 {setStep labelmarginleft_slider 1.0}
+      }
+      Fl_Value_Slider widgetmarginleft_slider {
+        label {widgetmarginleft()}
+        user_data tree
+        callback {(widgetmarginleft_slider_callback tree)}
+        tooltip {Changes the margin to the left of child FLTK widget()
+"Show label + widget" must be 'on' for this to take effect, i.e.
+item_draw_mode(FL_TREE_ITEM_DRAW_LABEL_AND_WIDGET)} xywh {505 160 155 16} type Horizontal color 46 selection_color 1 labelsize 10 align 4 textsize 9
+        code0 {setValue widgetmarginleft_slider 0}
+        code1 {range widgetmarginleft_slider 0.0 100.0}
+        code2 {setStep widgetmarginleft_slider 1.0}
+        code3 {doCallback widgetmarginleft_slider}
+      }
+      Fl_Value_Slider openchild_marginbottom_slider {
+        label {openchild_marginbottom()}
+        user_data tree
+        callback {(openchild_marginbottom_slider_callback tree)}
+        tooltip {Changes the vertical space below an open child tree} xywh {505 180 155 16} type Horizontal color 46 selection_color 1 labelsize 10 align 4 textsize 9
+        code0 {getOpenchildMarginbottom tree >>= setValue openchild_marginbottom_slider . fromIntegral}
+        code1 {range openchild_marginbottom_slider 0.0 100.0}
+        code2 {setStep openchild_marginbottom_slider 1.0}
+      }
+      Fl_Value_Slider connectorwidth_slider {
+        label {connectorwidth()}
+        user_data tree
+        callback {(connectorwidth_slider_callback tree)}
+        tooltip {Tests Fl_Tree::connectorwidth()} xywh {505 199 155 16} type Horizontal color 46 selection_color 1 labelsize 11 align 4 textsize 9
+        code0 {getConnectorwidth tree >>= setValue connectorwidth_slider . fromIntegral}
+        code1 {range connectorwidth_slider 0.0 100.0}
+        code2 {setStep connectorwidth_slider 1.0}
+        code3 {setColor connectorwidth_slider (Color 46); setSelectionColor connectorwidth_slider redColor}
+      }
+      Fl_Choice collapseicons_chooser {
+        label {Collapse icons}
+        callback {(collapseicons_chooser_callback tree)} open
+        tooltip {Tests Fl_Tree::openicon(), Fl_Tree::closeicon() and Fl_Tree::showcollapse().} xywh {520 225 140 21} down_box BORDER_BOX labelsize 12 textsize 11
+      } {
+        MenuItem {} {
+          label Normal
+          xywh {10 10 36 21} labelsize 12
+        }
+        MenuItem {} {
+          label Custom
+          xywh {20 20 36 21} labelsize 12
+        }
+        MenuItem {} {
+          label Off
+          xywh {30 30 36 21} labelsize 12
+        }
+      }
+      Fl_Choice connectorstyle_chooser {
+        label {Line style}
+        callback {(connectorstyle_chooser_callback tree)} open
+        tooltip {Tests Fl_Tree::connectorstyle() bit flags} xywh {520 249 140 21} down_box BORDER_BOX labelsize 12 textsize 11
+        code0 {(getConnectorstyle tree >>= set_connectorstyle_chooser connectorstyle_chooser)}
+      } {
+        MenuItem {} {
+          label None
+          xywh {40 40 36 21} labelsize 12
+        }
+        MenuItem {} {
+          label Dotted
+          xywh {20 20 36 21} labelsize 12
+        }
+        MenuItem {} {
+          label Solid
+          xywh {30 30 36 21} labelsize 12
+        }
+      }
+      Fl_Choice selectmode_chooser {
+        label {Selection Mode}
+        callback {(selectmode_chooser_callback tree)} open
+        tooltip {Tests Fl_Tree::selectmode()
+Sets how Fl_Tree handles mouse selection of tree items.
+    NONE	-- Not selectable by keyboard/mouse
+    SINGLE	-- Only one item at a time selectable by keyboard/mouse
+    MULTI	-- Multiple items selectable} xywh {520 273 140 21} down_box BORDER_BOX labelsize 12 textsize 11
+        code0 {setValue selectmode_chooser (MenuItemByIndex (AtIndex 2))}
+        code1 {selectmode_chooser_callback tree selectmode_chooser}
+      } {
+        MenuItem {} {
+          label None
+          xywh {40 40 36 21} labelsize 12
+        }
+        MenuItem {} {
+          label Single
+          xywh {50 50 36 21} labelsize 12
+        }
+        MenuItem {} {
+          label Multi
+          xywh {60 60 36 21} labelsize 12
+        }
+        MenuItem {} {
+          label {Single + drag}
+          xywh {70 70 36 21} labelsize 12
+        }
+      }
+      Fl_Choice reselectmode_chooser {
+        label {Item Reselect Mode}
+        callback {(reselectmode_chooser_callback tree)}
+        tooltip {Tests Fl_Tree::item_reselect_mode().
+Enables 'reselect' events.
+These happen when someone selects an item already selected
+(mouse drags or multi-clicks)} xywh {520 297 140 21} down_box BORDER_BOX labelsize 12 textsize 11
+        code0 {setValue reselectmode_chooser (MenuItemByIndex (AtIndex 1))}
+        code1 {doCallback reselectmode_chooser}
+      } {
+        MenuItem {} {
+          label {Selectable Once}
+          xywh {50 50 36 21} labelsize 12
+        }
+        MenuItem {} {
+          label {Selectable Always}
+          xywh {60 60 36 21} labelsize 12
+        }
+      }
+      Fl_Choice whenmode_chooser {
+        label When
+        callback {(whenmode_chooser_callback tree)}
+        tooltip {Sets when() the tree's callback is invoked} xywh {520 323 140 21} down_box BORDER_BOX labelsize 12 textsize 11
+        code0 {setValue whenmode_chooser (MenuItemByIndex (AtIndex 1))}
+        code1 {whenmode_chooser_callback tree whenmode_chooser}
+      } {
+        MenuItem {} {
+          label Changed
+          xywh {50 50 36 21} labelsize 12
+        }
+        MenuItem {} {
+          label Released
+          xywh {60 60 36 21} labelsize 12
+        }
+        MenuItem {} {
+          label Never
+          xywh {70 70 36 21} labelsize 12
+        }
+      }
+      Fl_Check_Button usericon_radio {
+        label {Enable user icons?}
+        user_data tree
+        callback {(assignUserIcons tree)}
+        tooltip {Tests Fl_Tree_Item::usericon()} xywh {485 355 20 16} down_box DOWN_BOX labelsize 11 align 7
+        code0 {setValue usericon_radio True}
+      }
+      Fl_Check_Button showroot_radio {
+        label {Show root?}
+        user_data tree
+        callback {(set_tree_showroot tree)}
+        tooltip {Tests tree->showroot();} xywh {485 372 20 16} down_box DOWN_BOX labelsize 11 align 7
+        code0 {getShowroot tree >>= setValue showroot_radio}
+      }
+      Fl_Check_Button visiblefocus_checkbox {
+        label {Visible focus?}
+        user_data tree
+        callback {(set_tree_showroot tree)}
+        tooltip {Toggles the tree's visible_focus() box} xywh {485 389 20 16} down_box DOWN_BOX labelsize 11 align 7
+        code0 {getVisibleFocus tree >>= setValue visiblefocus_checkbox}
+      }
+      Fl_Check_Button labelandwidget_radio {
+        label {Show label + widget}
+        callback {(radio_button_deactivate_callback window)}
+        tooltip {Tests Fl_Tree::item_draw_mode(FL_TREE_ITEM_DRAW_LABEL_AND_WIDGET)
+Enables both label and widget() for display.
+When enabled, widget should appear to the right of the item's label.
+By default, the widget() is shown in place of the item's label.} xywh {645 356 20 16} down_box DOWN_BOX labelsize 11 align 7
+        code0 {setValue labelandwidget_radio False}
+        code1 {doCallback labelandwidget_radio}
+      }
+      Fl_Check_Button itemheightfromwidget_radio {
+        label {Item h() from widget}
+        callback {(radio_button_deactivate_callback window)}
+        tooltip {Tests Fl_Tree::item_draw_mode(FL_TREE_ITEM_HEIGHT_FROM_WIDGET)
+If enabled, item's height will track the widget()'s height.
+When enabled, click 'ccc' or 'D1/D2' buttons to test.} xywh {645 371 20 16} down_box DOWN_BOX labelsize 11 align 7
+        code0 {setValue itemheightfromwidget_radio False}
+        code1 {doCallback itemheightfromwidget_radio}
+      }
+      Fl_Box {} {
+        label {Test Operations}
+        tooltip {These controls only affect the defaults for new items that are created. These test the Fl_Tree_Prefs methods.} xywh {350 435 330 125} box GTK_DOWN_BOX color 47 labelsize 12 align 1
+      }
+      Fl_Box showitem_box {
+        label {show_item()
+}
+        xywh {370 460 70 82} box GTK_DOWN_BOX labelsize 11 align 1
+      }
+      Fl_Button {} {
+        label Show
+        callback {(goto_next_selected_item tree)}
+        tooltip {Tests show_item() with no position specified.
+Makes the selected item visible IF it is off-screen.
+No change made if it is not off-screen.} xywh {385 469 40 17} labelsize 11
+      }
+      Fl_Button {} {
+        label Top
+        callback {(goto_next_selected_item tree)}
+        tooltip {Test show_item_top().
+Scrolls selected item to the top of the display
+(only works if scrollbar showing)
+To use:
+1) open '500 items'
+2) select item 0010
+3) Hit Top/Mid/Bot} xywh {385 486 40 16} labelsize 11
+      }
+      Fl_Button {} {
+        label Mid
+        callback {(goto_next_selected_item_middle tree)}
+        tooltip {Tests show_item_middle().
+Scrolls the selected item to the middle of the display
+To use:
+  1) open '500 items'
+  2) select 'item 0010'
+  3) Hit Top/Mid/Bot} xywh {385 502 40 16} labelsize 11
+      }
+      Fl_Button {} {
+        label Bot
+        callback {(goto_next_selected_item_bottom tree)}
+        tooltip {Tests show_item_bottom().
+Scrolls the selected item to the bottom of the display
+To use:
+  1) open '500 items'
+  2) select 'item 0010'
+  3) Hit Top/Mid/Bot} xywh {385 518 40 16} labelsize 11
+      }
+      Fl_Button openall_button {
+        label {Open All}
+        callback {(openall_button_callback tree)}
+        tooltip {Opens all nodes that have children} xywh {470 451 95 16} labelsize 9
+      }
+      Fl_Button insertabove_button {
+        label {Insert Above}
+        callback {(insertabove_button_callback tree)}
+        tooltip {Inserts three items above the selected items} xywh {470 491 95 16} labelsize 9
+      }
+      Fl_Button rebuildtree_button {
+        label {Rebuild Tree}
+        callback {(rebuildTree tree usericon_radio)}
+        tooltip {Rebuilds the tree with defaults} xywh {470 511 95 16} labelsize 9
+      }
+      Fl_Button showpathname_button {
+        label {Show Pathname}
+        callback {(showpathname_button_callback tree)}
+        tooltip {Tests Fl_Tree::item_pathname()
+Show the pathname for the selected item.} xywh {470 531 95 16} labelsize 9
+      }
+      Fl_Button closeall_button {
+        label {Close All}
+        callback {(closeall_button_callback tree)}
+        tooltip {Closes all nodes that have children
+(doesn't affect 'root')} xywh {570 451 95 16} labelsize 9
+      }
+      Fl_Button clearall_button {
+        label {Clear All}
+        callback {(clearall_button_callback tree)}
+        tooltip {Tests Fl_Tree::clear().
+Clears all items} xywh {570 471 95 16} labelsize 9
+      }
+      Fl_Button testcallbackflag_button {
+        label {Test Callback Flag}
+        callback {(testcallbackflag_button_callback tree)}
+        tooltip {Test the 'docallback' argument can disable callbacks.} xywh {570 491 95 16} labelsize 9
+      }
+      Fl_Button testrootshowself_button {
+        label {Root Show Self}
+        callback {(testrootshowself_button_callback tree)}
+        tooltip {Test the root->'show_self() method to show the entire tree on stdout} xywh {570 511 95 16} labelsize 9
+      }
+      Fl_Button add20k_button {
+        label {Add 20,000}
+        callback {(add20k_button_callback tree)}
+        tooltip {Adds 20,000 items to the selected item's parent} xywh {570 531 95 16} labelsize 9
+      }
+      Fl_Box {} {
+        label {Selected Items}
+        tooltip {These controls only affect the selected items. If no items are selected, all existing items in tree are modified.} xywh {696 23 335 246} box GTK_DOWN_BOX color 47 labelsize 12 align 1
+      }
+      Fl_Choice selected_labelfont_choice {
+        label {Fl_Tree_Item::labelfont()}
+        callback {(selected_labelfont_choice_callback tree)}
+        tooltip {Tests Fl_Tree_Item::labelfont();
+Changes the font for the selected items's labels.
+If none selected, all are changed.} xywh {863 31 140 21} down_box BORDER_BOX labelsize 11 textsize 11
+        code0 {assignTreeFontToButton tree selected_labelfont_choice}
+      } {
+        MenuItem {} {
+          label Helvetica
+          xywh {30 30 36 21} labelsize 12
+        }
+        MenuItem {} {
+          label {Helvetica Bold}
+          xywh {40 40 36 21} labelsize 12
+        }
+        MenuItem {} {
+          label {Helvetica Italic}
+          xywh {55 55 36 21} labelsize 12
+        }
+        MenuItem {} {
+          label {Helvetica Bold Italic}
+          xywh {60 60 36 21} labelsize 12
+        }
+        MenuItem {} {
+          label Courier
+          xywh {70 70 36 21} labelsize 12
+        }
+        MenuItem {} {
+          label {Courier Bold}
+          xywh {80 80 36 21} labelsize 12
+        }
+        MenuItem {} {
+          label {Courier Italic}
+          xywh {65 65 36 21} labelsize 12
+        }
+        MenuItem {} {
+          label {Courier Bold Italic}
+          xywh {70 70 36 21} labelsize 12
+        }
+        MenuItem {} {
+          label Times
+          xywh {80 80 36 21} labelsize 12
+        }
+        MenuItem {} {
+          label {Times Bold}
+          xywh {90 90 36 21} labelsize 12
+        }
+        MenuItem {} {
+          label {Times Italic}
+          xywh {75 75 36 21} labelsize 12
+        }
+        MenuItem {} {
+          label {Times Bold Italic}
+          xywh {80 80 36 21} labelsize 12
+        }
+        MenuItem {} {
+          label Symbol
+          xywh {90 90 36 21} labelsize 12
+        }
+        MenuItem {} {
+          label Screen
+          xywh {100 100 36 21} labelsize 12
+        }
+        MenuItem {} {
+          label {Screen bold}
+          xywh {85 85 36 21} labelsize 12
+        }
+        MenuItem {} {
+          label {Zapf Dingbats}
+          xywh {90 90 36 21} labelsize 12
+        }
+      }
+      Fl_Value_Slider selected_labelsize_slider {
+        label {Fl_Tree_Item::labelsize()}
+        user_data tree
+        callback {(selected_labelsize_slider_callback tree)}
+        tooltip {Tests Fl_Tree_Item::labelsize();
+Changes the font size of the selected items's labels.
+If none selected, all are changed.} xywh {863 55 140 16} type Horizontal color 46 selection_color 1 labelsize 11 align 4 textsize 12
+        code0 {assignTreeLabelsizeToSlider tree selected_labelsize_slider}
+        code1 {range selected_labelsize_slider 2.0 200.0}
+        code2 {setStep selected_labelsize_slider 1.0}
+        code3 {setColor selected_labelsize_slider (Color 46); setSelectionColor selected_labelsize_slider redColor}
+      }
+      Fl_Button all_labelfgcolor_button {
+        label {Fl_Tree_Item::labelfgcolor()}
+        callback {(all_labelfgcolor_button_callback tree)}
+        tooltip {Sets the Fl_Tree_Item::labelfgcolor() for the selected items. If none selected, all are changed.} xywh {863 81 16 16} box DOWN_BOX labelsize 11 align 7
+        code0 {getSelectedItemFgColor tree >>= setColor all_labelfgcolor_button}
+      }
+      Fl_Button all_labelbgcolor_button {
+        label {Fl_Tree_Item::labelbgcolor()}
+        callback {(all_labelbgcolor_button_callback tree)}
+        tooltip {Sets the Fl_Tree_Item::labelbgcolor() for the selected items. If none selected, all are changed.} xywh {863 99 16 16} box DOWN_BOX labelsize 11 align 7
+        code0 {getSelectedItemBgColor tree >>= setColor all_labelbgcolor_button}
+      }
+      Fl_Light_Button deactivate_toggle {
+        label { Deactivate}
+        callback {(deactivate_toggle_callback tree)}
+        tooltip {Toggle the deactivation state of the selected items.
+If none are selected, all are set.} xywh {769 134 95 16} selection_color 1 labelsize 9
+      }
+      Fl_Light_Button bold_toggle {
+        label { Bold Font}
+        callback {(bold_toggle_callback tree)}
+        tooltip {Toggles bold font for selected items
+If nothing selected, all are changed} xywh {769 154 95 16} selection_color 1 labelsize 9
+      }
+      Fl_Button showselected_button {
+        label {Show Selected}
+        callback {(showselected_button_callback tree)}
+        tooltip {Clears the selected items} xywh {864 134 95 16} labelsize 9
+      }
+      Fl_Button clearselected_button {
+        label {Remove Selected}
+        callback {(clearselected_button_callback tree)}
+        tooltip {Removes the selected items} xywh {864 154 95 16} labelsize 9
+      }
+      Fl_Button swapselected_button {
+        label {Swap Selected}
+        callback {(swapselected_button_callback tree)}
+        tooltip {Tests the Fl_Tree_Item::swap_children() method
+Swaps two selected items (items must be siblings)} xywh {864 174 95 16} labelsize 9
+      }
+      Fl_Button selectall_button {
+        label {Select All}
+        callback {(selectall_button_callback tree)}
+        tooltip {Selects all items in the tree} xywh {724 199 95 16} labelsize 9
+      }
+      Fl_Button deselectall_button {
+        label {Deselect All}
+        callback {(deselectall_button_callback tree)}
+        tooltip {Deselects all items in the tree} xywh {724 219 95 16} labelsize 9
+      }
+      Fl_Button nextselected_button {
+        label {next_selected()}
+        callback {(nextselected_button_callback tree)}
+        tooltip {Tests the Fl_Tree::next_selected() function} xywh {723 239 95 16} labelsize 9
+      }
+      Fl_Light_Button bbbselect_toggle {
+        label { Select Bbb}
+        callback {(selectPath tree "/Bbb")}
+        tooltip {Toggle selection of just the /Bbb item
+(Not children)} xywh {819 199 95 16} selection_color 1 labelsize 9
+      }
+      Fl_Light_Button bbbselect2_toggle {
+        label { Select Bbb+}
+        callback {(selectChildrenWithPath tree "/Bbb")}
+        tooltip {Toggle selection of the /Bbb item and its children} xywh {819 219 95 16} selection_color 1 labelsize 9
+      }
+      Fl_Light_Button bbbchild02select_toggle {
+        label { Toggle child-02}
+        callback {(selectPath tree "/Bbb/child-02")}
+        tooltip {Toggle the single item "/Bbb/child-02" using the item's "pathname".} xywh {819 239 95 16} selection_color 1 labelsize 9
+      }
+      Fl_Light_Button rootselect_toggle {
+        label {Select ROOT}
+        callback {(selectPath tree "/ROOT")}
+        tooltip {Toggle selection of the ROOT item} xywh {914 199 95 16} selection_color 1 labelsize 9
+      }
+      Fl_Light_Button rootselect2_toggle {
+        label {Select ROOT+}
+        callback {(selectChildrenWithPath tree "/ROOT")}
+        tooltip {Toggle selection of the ROOT item and all children} xywh {914 219 95 16} selection_color 1 labelsize 9
+      }
+      Fl_Box {} {
+        label {Tree Fonts + Colors}
+        tooltip {These controls only affect the selected items. If no items are selected, all existing items in tree are modified.} xywh {695 298 335 186} box GTK_DOWN_BOX color 47 labelsize 12 align 1
+      }
+      Fl_Choice labelfont_choice {
+        label {labelfont()}
+        callback {(labelfont_choice_callback tree window)}
+        tooltip {Sets the default font used for new items created. Does NOT affect existing items.} xywh {848 314 140 21} down_box BORDER_BOX labelsize 12 textsize 12
+        code0 {setLabelfontFromTree tree labelfont_choice}
+      } {
+        MenuItem {} {
+          label Helvetica
+          xywh {35 35 36 21} labelsize 12
+        }
+        MenuItem {} {
+          label {Helvetica Bold}
+          xywh {45 45 36 21} labelsize 12
+        }
+        MenuItem {} {
+          label {Helvetica Italic}
+          xywh {60 60 36 21} labelsize 12
+        }
+        MenuItem {} {
+          label {Helvetica Bold Italic}
+          xywh {65 65 36 21} labelsize 12
+        }
+        MenuItem {} {
+          label Courier
+          xywh {75 75 36 21} labelsize 12
+        }
+        MenuItem {} {
+          label {Courier Bold}
+          xywh {85 85 36 21} labelsize 12
+        }
+        MenuItem {} {
+          label {Courier Italic}
+          xywh {70 70 36 21} labelsize 12
+        }
+        MenuItem {} {
+          label {Courier Bold Italic}
+          xywh {75 75 36 21} labelsize 12
+        }
+        MenuItem {} {
+          label Times
+          xywh {85 85 36 21} labelsize 12
+        }
+        MenuItem {} {
+          label {Times Bold}
+          xywh {95 95 36 21} labelsize 12
+        }
+        MenuItem {} {
+          label {Times Italic}
+          xywh {80 80 36 21} labelsize 12
+        }
+        MenuItem {} {
+          label {Times Bold Italic}
+          xywh {85 85 36 21} labelsize 12
+        }
+        MenuItem {} {
+          label Symbol
+          xywh {95 95 36 21} labelsize 12
+        }
+        MenuItem {} {
+          label Screen
+          xywh {105 105 36 21} labelsize 12
+        }
+        MenuItem {} {
+          label {Screen bold}
+          xywh {90 90 36 21} labelsize 12
+        }
+        MenuItem {} {
+          label {Zapf Dingbats}
+          xywh {95 95 36 21} labelsize 12
+        }
+      }
+      Fl_Value_Slider labelsize_slider {
+        label {labelsize()}
+        user_data tree
+        callback {(labelsize_slider_callback tree window)}
+        tooltip {Sets the font size for the  tree's label().
+This is also the font size that will be used to draw the items IF their size hasn't been set with Fl_Tree_Item::labelsize() or Fl_Tree::item_labelsize()} xywh {848 338 140 16} type Horizontal color 46 selection_color 1 labelsize 12 align 4 textsize 12
+        code0 {(do { (FontSize s) <- getLabelsize tree; setValue labelsize_slider (fromIntegral s) })}
+        code1 {range labelsize_slider 1.0 50.0}
+        code2 {setStep labelsize_slider 1.0}
+        code3 {setColor labelsize_slider (Color 46); setSelectionColor labelsize_slider redColor}
+      }
+      Fl_Choice item_labelfont_choice {
+        label {Item_labelfont()}
+        callback {(item_labelfont_choice_callback tree)}
+        tooltip {Sets the default font used for new items created.
+.Also affects any items whose font has NOT specifically been set with item->labelfont().} xywh {848 358 140 21} down_box BORDER_BOX labelsize 12 textsize 12
+        code0 {setLabelfontFromTree tree item_labelfont_choice}
+      } {
+        MenuItem {} {
+          label Helvetica
+          xywh {25 25 36 21} labelsize 12
+        }
+        MenuItem {} {
+          label {Helvetica Bold}
+          xywh {35 35 36 21} labelsize 12
+        }
+        MenuItem {} {
+          label {Helvetica Italic}
+          xywh {50 50 36 21} labelsize 12
+        }
+        MenuItem {} {
+          label {Helvetica Bold Italic}
+          xywh {55 55 36 21} labelsize 12
+        }
+        MenuItem {} {
+          label Courier
+          xywh {65 65 36 21} labelsize 12
+        }
+        MenuItem {} {
+          label {Courier Bold}
+          xywh {75 75 36 21} labelsize 12
+        }
+        MenuItem {} {
+          label {Courier Italic}
+          xywh {60 60 36 21} labelsize 12
+        }
+        MenuItem {} {
+          label {Courier Bold Italic}
+          xywh {65 65 36 21} labelsize 12
+        }
+        MenuItem {} {
+          label Times
+          xywh {75 75 36 21} labelsize 12
+        }
+        MenuItem {} {
+          label {Times Bold}
+          xywh {85 85 36 21} labelsize 12
+        }
+        MenuItem {} {
+          label {Times Italic}
+          xywh {70 70 36 21} labelsize 12
+        }
+        MenuItem {} {
+          label {Times Bold Italic}
+          xywh {75 75 36 21} labelsize 12
+        }
+        MenuItem {} {
+          label Symbol
+          xywh {85 85 36 21} labelsize 12
+        }
+        MenuItem {} {
+          label Screen
+          xywh {95 95 36 21} labelsize 12
+        }
+        MenuItem {} {
+          label {Screen bold}
+          xywh {80 80 36 21} labelsize 12
+        }
+        MenuItem {} {
+          label {Zapf Dingbats}
+          xywh {85 85 36 21} labelsize 12
+        }
+      }
+      Fl_Value_Slider item_labelsize_slider {
+        label {item_labelsize()}
+        user_data tree
+        callback {(item_labelsize_slider_callback tree)}
+        tooltip {Sets the default font size used for new items created.
+.Also affects any items whose font size has NOT specifically been set with item->labelsize().} xywh {848 383 140 16} type Horizontal color 46 selection_color 1 labelsize 12 align 4 textsize 12
+        code0 {(do { (FontSize s) <- getLabelsize tree; setValue item_labelsize_slider (fromIntegral s) })}
+        code1 {range item_labelsize_slider 1.0 50.0}
+        code2 {setStep item_labelsize_slider 1.0}
+        code3 {setColor item_labelsize_slider (Color 46); setSelectionColor item_labelsize_slider redColor}
+      }
+      Fl_Button labelcolor_button {
+        label {labelcolor()}
+        tooltip {Changes Fl_Tree::labelcolor().
+This affects the text color of the widget's label.} xywh {813 414 16 16} box DOWN_BOX labelsize 11 align 7
+        code0 {getLabelcolor tree >>= setColor labelcolor_button}
+      }
+      Fl_Button color_button {
+        label {color()}
+        tooltip {Changes Fl_Tree::color().
+This affects the background color of the widget. It also affects the bg color of newly created  items *if*  Fl_Tree::item_labelbgcolor() hasn't been changed.} xywh {813 433 16 16} box DOWN_BOX labelsize 11 align 7
+        code0 {getLabelcolor tree >>= setColor color_button}
+      }
+      Fl_Button selection_color_button {
+        label {selection_color()}
+        tooltip {Sets the Fl_Tree::selection_color().
+This affects the item's colors when they're selected.} xywh {813 452 16 16} box DOWN_BOX labelsize 11 align 7
+        code0 {getLabelcolor tree >>= setColor selection_color_button}
+      }
+      Fl_Button item_labelfgcolor_button {
+        label {item_labelfgcolor()}
+        tooltip {Sets the default label fg color for newly created  items.} xywh {973 414 16 16} box DOWN_BOX labelsize 12 align 7
+        code0 {getLabelcolor tree >>= setColor item_labelfgcolor_button}
+      }
+      Fl_Button item_labelbgcolor_button {
+        label {item_labelbgcolor()}
+        tooltip {Sets the default label bg color for newly created items. When set, this overrides the default behavior of using Fl_Tree::color().} xywh {973 433 16 16} box DOWN_BOX labelsize 12 align 7
+        code0 {getLabelcolor tree >>= setColor item_labelbgcolor_button}
+      }
+      Fl_Button x_item_labelbgcolor_button {
+        label X
+        tooltip {Make the bgcolor 'transparent' (0xffffffff)} xywh {993 433 16 16} labelsize 10 align 16
+      }
+      Fl_Button testsuggs_button {
+        label {Test Suggestions}
+        callback testsuggs_button_callback
+        tooltip {Suggestions on how to do tests} xywh {935 554 95 16} labelsize 9
+      }
+      Fl_Value_Slider tree_scrollbar_size_slider {
+        label {Fl_Tree::scrollbar_size()}
+        callback {(tree_scrollbar_size_slider_callback tree)}
+        tooltip {Tests Fl_Tree::scrollbar_size() effects on tree clipping.
+The value is normally 0, which causes Fl_Tree to use the global Fl::scrollbar_size() instead.} xywh {835 499 180 16} type Horizontal color 46 selection_color 1 labelsize 11 align 4 textsize 9
+        code0 {getScrollbarSize tree >>= setValue tree_scrollbar_size_slider . fromIntegral}
+        code1 {range tree_scrollbar_size_slider 1.0 30.0}
+        code2 {setStep tree_scrollbar_size_slider 1.0}
+        code3 {setColor tree_scrollbar_size_slider (Color 46); setSelectionColor item_labelsize_slider redColor}
+      }
+      Fl_Value_Slider scrollbar_size_slider {
+        label {Fl::scrollbar_size()}
+        callback {(scrollbar_size_slider_callback tree)}
+        tooltip {Tests Fl::scrollbar_size() effects on tree clipping} xywh {835 519 180 16} type Horizontal color 46 selection_color 1 labelsize 11 align 4 textsize 9
+        code0 {FL.scrollbarSize >>= setValue scrollbar_size_slider . fromIntegral}
+        code1 {range scrollbar_size_slider 5.0 30.0}
+        code2 {setStep scrollbar_size_slider 1.0}
+        code3 {setColor scrollbar_size_slider (Color 46); setSelectionColor scrollbar_size_slider redColor}
+      }
+    }
+    Fl_Box resizer_box {
+      xywh {0 263 15 14}
+    }
+  }
+  code {rebuildTree tree usericon_radio color_button;
+setResizable window (Just tree);
+(Width winW) <- getW window;
+(Height winH) <- getH window;
+sizeRange window (Size (Width winW) (Height winH));
+when_ <- getWhen tree;
+case when_ of {
+  (WhenRelease : []) -> setValue whenmode_chooser (MenuItemByIndex (AtIndex 1)) >> return ();
+  (WhenChanged : []) -> setValue whenmode_chooser (MenuItemByIndex (AtIndex 2)) >> return ();
+  (WhenNever : []) -> setValue whenmode_chooser (MenuItemByIndex (AtIndex 0)) >> return ();
+  _ -> return ();
+};
+rootLabel tree "ROOT";
+getSelectedItemFgColor tree >>= setColor all_labelfgcolor_button;} {}
+  code {let { updateColorChips_ = updateColorChips color_button labelcolor_button selection_color_button item_labelfgcolor_button item_labelbgcolor_button all_labelfgcolor_button all_labelbgcolor_button tree window }} {}
+  code {setCallback color_button (color_button_callback tree updateColorChips_)} {}
+  code {setCallback labelcolor_button (updateColor tree getLabelcolor setColor setLabelcolor updateColorChips_ window)} {}
+  code {setCallback selection_color_button (updateColor tree getSelectionColor setColor setSelectionColor updateColorChips_ window)} {}
+  code {setCallback item_labelfgcolor_button (updateColor tree getItemLabelfgcolor setColor setItemLabelfgcolor updateColorChips_ window)} {}
+  code {setCallback item_labelbgcolor_button (updateColor tree getItemLabelbgcolor setColor setItemLabelbgcolor updateColorChips_ window)} {}
+  code {setCallback x_item_labelbgcolor_button (x_item_labelbgcolor_button_callback tree updateColorChips_)} {}
+  code updateColorChips_ {}
+  code {return window;} {}
+}

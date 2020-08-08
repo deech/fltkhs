@@ -1,0 +1,311 @@
+# data file for the Fltk User Interface Designer (fluid)
+version 1.0400
+header_name {.h}
+code_name {.cxx}
+decl {import System.Exit} {private local
+}
+
+decl {import Graphics.UI.FLTK.LowLevel.FLTKHS} {selected private local
+}
+
+Function {make_window(IO (Ref Window))} {open
+} {
+  code {let { message_button_callback :: Ref Button -> IO ();
+      message_button_callback _ =
+        flMessage ("Test to see if this modal window prevents you from "
+                   `T.append` "changing the tabs. It should.");
+      test_event_blocking_callback :: Ref Button -> IO ();
+      test_event_blocking_callback _ =
+        flMessage "Make sure you cannot change the tabs while this modal window is up";
+      first_button_callback :: Ref Wizard -> Ref Button -> IO ();
+      first_button_callback wizard _ = do {
+         c <- getChild wizard (AtIndex 0);
+         maybe (return ())
+               (setValue wizard . Just)
+               c;
+         };
+      prev_button_callback :: Ref Wizard -> Ref Button -> IO ();
+      prev_button_callback wizard _ = prev wizard;
+      next_button_callback :: Ref Wizard -> Ref Button -> IO ();
+      next_button_callback wizard _ = next wizard;
+      last_button_callback :: Ref Wizard -> Ref Button -> IO ();
+      last_button_callback wizard _ =  do {
+               cs <- getArray wizard;
+               if (null cs)
+               then return ();
+               else setValue wizard (Just (cs !! (length cs - 1)));
+               }
+     }} {}
+  Fl_Window foo_window {
+    label {Comparison of Fl_Tab (left) vs. Fl_Wizard (right)} open
+    xywh {424 206 635 330} type Double resizable visible
+  } {
+    Fl_Box {} {
+      label {class Fl_Tabs}
+      xywh {95 0 130 35} labeltype ENGRAVED_LABEL labelfont 1
+    }
+    Fl_Tabs {} {open
+      tooltip {the various index cards test different aspects of the Fl_Tabs widget} xywh {10 35 300 205} selection_color 4 labelcolor 7 resizable
+    } {
+      Fl_Group {} {
+        label {Label&1} open
+        tooltip {this Tab tests correct keyboard navigation between text input fields} xywh {10 60 300 180} selection_color 1 resizable
+      } {
+        Fl_Input {} {
+          label {input:}
+          tooltip {This is the first input field} xywh {60 80 240 40}
+        }
+        Fl_Input {} {
+          label {input2:}
+          xywh {60 120 240 30}
+        }
+        Fl_Input {} {
+          label {input3:}
+          xywh {60 150 240 80}
+        }
+      }
+      Fl_Group {} {
+        label {tab&2} open
+        tooltip {tab2 tests among other things the cooperation of modal windows and tabs} xywh {10 60 300 180} selection_color 2 hide
+      } {
+        Fl_Button message_button {
+          label button1
+          callback message_button_callback
+          xywh {20 90 100 30}
+        }
+        Fl_Input {} {
+          label {input in box2}
+          xywh {140 130 100 30}
+        }
+        Fl_Button {} {
+          label {This is stuff inside the Fl_Group "tab2"}
+          xywh {30 170 260 30}
+        }
+        Fl_Button {} {
+          label {Test event blocking by modal window}
+          callback test_event_blocking_callback
+          xywh {30 200 260 30}
+        }
+      }
+      Fl_Group {} {
+        label {tab&3} open
+        tooltip {tab3 checks for correct keyboard navigation} xywh {10 60 300 180} selection_color 3 hide
+      } {
+        Fl_Button {} {
+          label button2
+          xywh {20 90 60 80}
+        }
+        Fl_Button {} {
+          label button
+          xywh {80 90 60 80}
+        }
+        Fl_Button {} {
+          label button
+          xywh {140 90 60 80}
+        }
+      }
+      Fl_Group {} {
+        label {&tab4} open
+        tooltip {this tab show the issue of indicating a selcted tab if the tab layouts are very similar} xywh {10 60 300 180} selection_color 5 labeltype ENGRAVED_LABEL labelfont 2 hide
+      } {
+        Fl_Button {} {
+          label button2
+          xywh {20 80 60 110}
+        }
+        Fl_Button {} {
+          label button
+          xywh {80 80 60 110}
+        }
+        Fl_Button {} {
+          label button
+          xywh {140 80 60 110}
+        }
+      }
+      Fl_Group {} {
+        label {@fileprint  &print} open
+        tooltip {tab5 verifies if visibility requests are handled correctly} xywh {10 60 300 180} hide
+      } {
+        Fl_Button {} {
+          label button2
+          tooltip {button2 has a different tooltp than tab5} xywh {20 75 60 80}
+        }
+        Fl_Button {} {
+          label button
+          xywh {90 75 60 80}
+        }
+        Fl_Clock {} {
+          label {Make sure this clock does not use processor time when this tab is hidden or window is iconized}
+          xywh {160 75 100 100} box OSHADOW_BOX color 238 selection_color 0 labelfont 8 labelsize 10 align 130
+        }
+        Fl_Group {} {open
+          xywh {20 175 40 55} box THIN_DOWN_BOX color 173 align 16
+          class Fl_Window
+        } {}
+        Fl_Group {} {
+          label {subwindows:} open
+          xywh {65 175 40 55} box THIN_DOWN_BOX color 167
+          class Fl_Window
+        } {}
+        Fl_Group {} {open
+          xywh {110 175 40 55} box THIN_DOWN_BOX color 239 align 16
+          class Fl_Window
+        } {}
+      }
+    }
+    Fl_Box {} {
+      label {class Fl_Wizard}
+      xywh {410 0 130 35} labeltype ENGRAVED_LABEL labelfont 1
+    }
+    Fl_Wizard wWizard {open
+      xywh {325 60 300 180}
+    } {
+      Fl_Group {} {
+        label Label1 open
+        tooltip {this Tab tests correct keyboard navigation between text input fields} xywh {325 60 300 180} selection_color 1 hide resizable
+      } {
+        Fl_Input {} {
+          label {input:}
+          tooltip {This is the first input field} xywh {375 80 240 40}
+        }
+        Fl_Input {} {
+          label {input2:}
+          xywh {375 120 240 30}
+        }
+        Fl_Input {} {
+          label {input3:}
+          xywh {375 150 240 80}
+        }
+      }
+      Fl_Group {} {
+        label tab2 open
+        tooltip {tab2 tests among other things the cooperation of modal windows and tabs} xywh {325 60 300 180} selection_color 2 hide
+      } {
+        Fl_Button {} {
+          label button1
+          callback message_button_callback
+          xywh {335 90 100 30}
+        }
+        Fl_Input {} {
+          label {input in box2}
+          xywh {455 130 100 30}
+        }
+        Fl_Button {} {
+          label {This is stuff inside the Fl_Group "tab2"}
+          xywh {345 170 260 30}
+        }
+        Fl_Button {} {
+          label {Test event blocking by modal window}
+          callback test_event_blocking_callback
+          xywh {345 200 260 30}
+        }
+      }
+      Fl_Group {} {
+        label tab3 open
+        tooltip {tab3 checks for correct keyboard navigation} xywh {325 60 300 180} selection_color 3 hide
+      } {
+        Fl_Button {} {
+          label button2
+          xywh {335 90 60 80}
+        }
+        Fl_Button {} {
+          label button
+          xywh {395 90 60 80}
+        }
+        Fl_Button {} {
+          label button
+          xywh {455 90 60 80}
+        }
+      }
+      Fl_Group {} {
+        label tab4 open
+        tooltip {this tab show the issue of indicating a selcted tab if the tab layouts are very similar} xywh {325 60 300 180} selection_color 5 labelfont 2 hide
+      } {
+        Fl_Button {} {
+          label button2
+          xywh {335 80 60 110}
+        }
+        Fl_Button {} {
+          label button
+          xywh {395 80 60 110}
+        }
+        Fl_Button {} {
+          label button
+          xywh {455 80 60 110}
+        }
+      }
+      Fl_Group {} {
+        label {     tab5      } open
+        tooltip {tab5 verifies if visibility requests are handled correctly} xywh {325 60 300 180} labeltype ENGRAVED_LABEL
+      } {
+        Fl_Button {} {
+          label button2
+          tooltip {button2 has a different tooltp than tab5} xywh {335 75 60 80}
+        }
+        Fl_Button {} {
+          label button
+          xywh {405 75 60 80}
+        }
+        Fl_Clock {} {
+          label {Make sure this clock does not use processor time when this tab is hidden or window is iconized}
+          xywh {475 75 100 100} box OSHADOW_BOX color 238 selection_color 0 labelfont 8 labelsize 10 align 130
+        }
+        Fl_Group {} {open
+          xywh {335 175 40 55} box THIN_DOWN_BOX color 173 align 16
+          class Fl_Window
+        } {}
+        Fl_Group {} {
+          label {subwindows:} open
+          xywh {380 175 40 55} box THIN_DOWN_BOX color 167
+          class Fl_Window
+        } {}
+        Fl_Group {} {open
+          xywh {425 175 40 55} box THIN_DOWN_BOX color 239 align 16
+          class Fl_Window
+        } {}
+      }
+    }
+    Fl_Group {} {open
+      xywh {410 245 130 25}
+    } {
+      Fl_Button {} {
+        label {@|<}
+        callback {(first_button_callback wWizard)}
+        tooltip {go to first page [Home]} xywh {410 245 30 25} shortcut 0xff50
+      }
+      Fl_Button {} {
+        label {@<}
+        callback {(prev_button_callback wWizard)}
+        tooltip {go to previous page [left arrow]} xywh {440 245 30 25} shortcut 0xff51
+      }
+      Fl_Button {} {
+        label {@>}
+        callback {(next_button_callback wWizard)}
+        tooltip {go to next page in wizard [right arrow]} xywh {480 245 30 25} shortcut 0xff53
+      }
+      Fl_Button {} {
+        label {@>|}
+        callback {(last_button_callback wWizard)}
+        tooltip {go to last page [End]} xywh {510 245 30 25} shortcut 0xff57
+      }
+    }
+    Fl_Input {} {
+      label {inputA:}
+      xywh {60 255 130 25}
+    }
+    Fl_Input {} {
+      label {inputB:}
+      xywh {60 285 250 25}
+    }
+    Fl_Button {} {
+      label cancel
+      callback {(const (exitWith (ExitFailure 1)))}
+      xywh {475 295 70 30}
+    }
+    Fl_Return_Button {} {
+      label OK
+      callback {(const (exitWith ExitSuccess))}
+      xywh {555 295 70 30}
+    }
+  }
+  code {return foo_window;} {}
+}

@@ -1,0 +1,5 @@
+flags: {}
+resolver: nightly-2020-07-23
+extra-deps:
+- fltkhs-0.8.0.3
+- fltkhs-fluidtohs-0.1.0.0

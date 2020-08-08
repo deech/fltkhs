@@ -1,0 +1,7 @@
+flags: {}
+resolver: nightly-2020-07-23
+extra-deps:
+- asset-bundle-0.1.0.2
+- load-font-0.1.0.3
+- fltkhs-0.8.0.3
+- fltkhs-themes-0.2.0.3

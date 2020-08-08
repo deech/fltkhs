@@ -1,0 +1,16 @@
+#+TITLE: README
+* fltkhs-themes-demo
+This is a showcase of widgets in the [[https://hackage.haskell.org/package/fltkhs-themes][fltkhs-themes]] package. Currently this only
+includes a light theme.
+* Installation
+#+BEGIN_EXAMPLE
+> stack build --flag fltkhs:bundled
+> stack exec fltkhs-light-theme-demo
+#+END_EXAMPLE
+* Screenshots
+** Color Chooser
+[[file:images/preview.png]]
+** Dials
+[[file:images/dials.png]]
+** Table
+[[file:images/table.png]]

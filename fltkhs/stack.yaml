@@ -1,0 +1,6 @@
+resolver: nightly-2020-07-23
+packages:
+- '.'
+flags: {}
+extra-package-dbs: []
+allow-newer: true

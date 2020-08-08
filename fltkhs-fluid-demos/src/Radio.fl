@@ -1,0 +1,108 @@
+# data file for the Fltk User Interface Designer (fluid)
+version 1.0400
+header_name {.h}
+code_name {.cxx}
+decl {import Graphics.UI.FLTK.LowLevel.FLTKHS} {selected private local
+}
+
+Function {button_cb((Parent a ButtonBase) => Ref Output -> Ref a -> IO ())} {open return_type {cb_info b}
+} {
+  code {do {
+       bl <- getLabel (safeCast b :: Ref ButtonBase);
+       bv <- getValue (safeCast b :: Ref ButtonBase);
+       let { msg = "Label: '" `T.append` bl `T.append` "'Value: " `T.append` (T.pack (show bv)) };
+       setValue cb_info msg;
+       redraw cb_info;
+     }} {}
+}
+
+Function {make_window(IO (Ref Window))} {open
+} {
+  Fl_Window window {open
+    xywh {1 1 2878 1618} type Double hide
+  } {
+    Fl_Button button_A1 {
+      label {&Fl_Button A1}
+      tooltip {Normal button (callback called only when released)} xywh {20 10 160 30} labelsize 13
+    }
+    Fl_Button button_A2 {
+      label {Fl_Button &A2}
+      tooltip {Normal button with callback called when changed (push and released)} xywh {20 44 160 30} labelsize 13 when 1
+    }
+    Fl_Return_Button button_B {
+      label {Fl_Return_Button &B}
+      tooltip {Button with Return key as default shortcut} xywh {20 78 160 30} labelsize 13
+    }
+    Fl_Light_Button button_C {
+      label {Fl_Light_Button &C}
+      tooltip {Button with toggle state and a visual indicator of the current state} xywh {20 113 160 30} labelsize 13
+    }
+    Fl_Check_Button button_D {
+      label {Fl_Check_Button &D}
+      tooltip {Check button with toggle state} xywh {20 148 160 30} down_box DOWN_BOX labelsize 13
+    }
+    Fl_Round_Button button_E {
+      label {Fl_Round_Button &E}
+      tooltip {Round Button with toggle state} xywh {20 178 160 30} down_box ROUND_DOWN_BOX labelsize 13
+    }
+    Fl_Group {} {open
+      xywh {190 10 70 120} box THIN_UP_FRAME
+    } {
+      Fl_Round_Button button_1 {
+        label {radio &1}
+        tooltip {Radio button, only one button is set at a time, in the corresponding group.} xywh {190 10 70 30} type Radio down_box ROUND_DOWN_BOX
+      }
+      Fl_Round_Button button_2 {
+        label {radio &2}
+        tooltip {Radio button, only one button is set at a time, in the corresponding group.} xywh {190 40 70 30} type Radio down_box ROUND_DOWN_BOX
+      }
+      Fl_Round_Button button_3 {
+        label {radio &3}
+        tooltip {Radio button, only one button is set at a time, in the corresponding group.} xywh {190 70 70 30} type Radio down_box ROUND_DOWN_BOX
+      }
+      Fl_Round_Button button_4 {
+        label {radio &4}
+        tooltip {Radio button, only one button is set at a time, in the corresponding group.} xywh {190 100 70 30} type Radio down_box ROUND_DOWN_BOX
+      }
+    }
+    Fl_Group {} {open
+      xywh {270 10 90 120} box THIN_UP_BOX
+    } {
+      Fl_Button button_radio_1 {
+        label radio
+        tooltip {Custom look button, only one button is set at a time, in the corresponding group.} xywh {280 20 20 20} type Radio selection_color 1 align 8
+      }
+      Fl_Button button_radio_2 {
+        label radio
+        tooltip {Custom look button, only one button is set at a time, in the corresponding group.} xywh {280 45 20 20} type Radio selection_color 1 align 8
+      }
+      Fl_Button button_radio_3 {
+        label radio
+        tooltip {Custom look button, only one button is set at a time, in the corresponding group.} xywh {280 70 20 20} type Radio selection_color 1 align 8
+      }
+      Fl_Button button_radio_4 {
+        label radio
+        tooltip {Custom look button, only one button is set at a time, in the corresponding group.} xywh {280 95 20 20} type Radio selection_color 1 align 8
+      }
+    }
+    Fl_Output cb_info {
+      label {callback:}
+      xywh {190 148 170 62} type Multiline align 133 textsize 12
+    }
+  }
+  code {setCallback button_A1 (button_cb cb_info);
+setCallback button_A2 (button_cb cb_info);
+setCallback button_B (button_cb cb_info);
+setCallback button_C (button_cb cb_info);
+setCallback button_D (button_cb cb_info);
+setCallback button_E (button_cb cb_info);
+setCallback button_1 (button_cb cb_info);
+setCallback button_2 (button_cb cb_info);
+setCallback button_3 (button_cb cb_info);
+setCallback button_4 (button_cb cb_info);
+setCallback button_radio_1 (button_cb cb_info);
+setCallback button_radio_2 (button_cb cb_info);
+setCallback button_radio_3 (button_cb cb_info);
+setCallback button_radio_4 (button_cb cb_info);} {}
+  code {return window} {}
+}

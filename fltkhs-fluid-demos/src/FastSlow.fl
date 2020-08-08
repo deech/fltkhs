@@ -1,0 +1,52 @@
+# data file for the Fltk User Interface Designer (fluid)
+version 1.0400
+header_name {.h}
+code_name {.cxx}
+decl {import Graphics.UI.FLTK.LowLevel.FLTKHS} {selected private local
+}
+
+Function {make_window(IO (Ref Window))} {open
+} {
+  Fl_Window window {open
+    xywh {1570 341 315 440} type Double resizable visible
+  } {
+    Fl_Slider control {
+      label {move
+this}
+      xywh {90 200 30 200}
+      code0 {setWhen control [WhenChanged, WhenRelease, WhenNotChanged]}
+    }
+    Fl_Slider fast {
+      label {fast
+redraw}
+      xywh {140 200 30 200}
+      code0 {setOutput fast}
+    }
+    Fl_Slider slow {
+      label {slow
+redraw}
+      xywh {190 200 30 200}
+      code0 {setOutput slow}
+    }
+    Fl_Box {} {
+      label {The left slider has changed[WhenChanged, WhenRelease, WhenNotChanged] so it produces a callback on both drag and release mouse events.
+The middle slider (representing a widget with low overhead) is changed on every mouse movement.
+The right slider (representing a widget with high overhead) is only updated when the mouse is released, by checking if FL.pushed is zero.}
+      xywh {10 10 300 180} box DOWN_BOX color 53 selection_color 47 labelfont 4 labelsize 12 align 148
+    }
+  }
+  code {let { control_callback :: Ref Slider -> IO ();
+      control_callback slider =
+         do {
+             v <- getValue slider;
+             setValue fast v;
+             pushed_ <- FL.pushed;
+             case pushed_ of {
+                Nothing -> setValue slow v >> return ();
+                _ -> return ();
+              }
+          }
+       }} {}
+  code {setCallback control control_callback} {}
+  code {return window} {}
+}

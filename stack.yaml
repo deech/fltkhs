@@ -1,6 +1,14 @@
 resolver: nightly-2020-07-23
 packages:
-- '.'
+- fltkhs
+- fltkhs-demos
+- fltkhs-fluid-demos
+- fltkhs-fluidtohs
+- fltkhs-themes
+- fltkhs-themes-demo
 flags: {}
 extra-package-dbs: []
 allow-newer: true
+extra-deps:
+- asset-bundle-0.1.0.2
+- load-font-0.1.0.3

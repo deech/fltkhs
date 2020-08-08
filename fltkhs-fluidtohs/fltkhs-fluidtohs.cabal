@@ -1,0 +1,32 @@
+cabal-version:       >=2.0
+name:                fltkhs-fluidtohs
+version:             0.1.0.0
+synopsis:            A preprocessor that converts FLTK Fluid files into Haskell code
+description:         A preprocessor that converts FLTK Fluid files into Haskell code
+bug-reports:         https://github.com/deech/fltkhs-fluidtohs/issues
+license:             MIT
+license-file:        LICENSE
+author:              Aditya Siram
+maintainer:          aditya.siram@gmail.com
+copyright:           © 2020 Aditya Siram All Rights Reserved
+category:            UI,Graphics,GUI,User Interfaces
+build-type:          Simple
+
+executable fltkhs-fluidtohs
+  main-is:             Main.hs
+  hs-source-dirs:      src
+  other-modules:
+    Generate
+    Lookup
+    Parser
+    Types
+    Utils
+  build-depends:
+    base >=4.14 && <4.15,
+    fltkhs >= 0.8.0.3,
+    filepath,
+    parsec >= 3.1.6,
+    directory >= 1.2.1.0,
+    mtl
+  default-language:    Haskell2010
+  ghc-options: -Wall -Wdodgy-imports -threaded
