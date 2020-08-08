@@ -1,7 +1,4 @@
 {-# LANGUAGE CPP, OverloadedStrings #-}
-#ifdef CALLSTACK_AVAILABLE
-{-# LANGUAGE ImplicitParams #-}
-#endif
 
 module Graphics.UI.FLTK.LowLevel.Utils where
 import Graphics.UI.FLTK.LowLevel.Fl_Types
@@ -18,9 +15,7 @@ import Foreign.C
 import qualified Data.ByteString as B
 import qualified System.IO.Unsafe as Unsafe
 import Debug.Trace
-#if defined(CALLSTACK_AVAILABLE) || defined(HASCALLSTACK_AVAILABLE)
 import GHC.Stack
-#endif
 
 foreign import ccall "wrapper"
         mkWidgetCallbackPtr :: CallbackWithUserDataPrim -> IO (FunPtr CallbackWithUserDataPrim)
@@ -180,13 +175,7 @@ cIntToKeySequence i =
          then Just (ShortcutKeySequence evs (NormalKeyType $ toEnum $ fromIntegral masked))
          else Just (ShortcutKeySequence evs (SpecialKeyType $ head special))
 
-#ifdef CALLSTACK_AVAILABLE
-wrapNonNull :: (?loc :: CallStack) => Ptr a -> String -> IO (ForeignPtr (Ptr a))
-#elif defined(HASCALLSTACK_AVAILABLE)
 wrapNonNull :: (HasCallStack) => Ptr a -> String -> IO (ForeignPtr (Ptr a))
-#else
-wrapNonNull :: Ptr a -> String -> IO (ForeignPtr (Ptr a))
-#endif
 wrapNonNull ptr msg = if (ptr == nullPtr)
                       then error msg
                       else do
@@ -329,22 +318,10 @@ toRef ptr = throwStackOnError $
                     let result = wrapInRef pp
                     return $ result
 
-#ifdef CALLSTACK_AVAILABLE
-cStringToText :: (?loc :: CallStack) => CString -> IO T.Text
-#elif defined(HASCALLSTACK_AVAILABLE)
 cStringToText :: (HasCallStack) => CString -> IO T.Text
-#else
-cStringToText :: CString -> IO T.Text
-#endif
 cStringToText = fmap (fromMaybe "") . cStringToMaybeText
 
-#ifdef CALLSTACK_AVAILABLE
-cStringToMaybeText :: (?loc :: CallStack) => CString -> IO (Maybe T.Text)
-#elif defined(HASCALLSTACK_AVAILABLE)
 cStringToMaybeText :: (HasCallStack) => CString -> IO (Maybe T.Text)
-#else
-cStringToMaybeText :: CString -> IO (Maybe T.Text)
-#endif
 cStringToMaybeText cstring =
     if (cstring == nullPtr) then return Nothing
     else do
@@ -446,13 +423,7 @@ copyTextToCString t =
 withText :: T.Text -> (CString -> IO a) -> IO a
 withText t f = B.useAsCString (E.encodeUtf8 t) f
 
-#ifdef CALLSTACK_AVAILABLE
-drawShortcutFromC :: (?loc :: CallStack) => CChar -> Maybe DrawShortcut
-#elif defined(HASCALLSTACK_AVAILABLE)
 drawShortcutFromC :: (HasCallStack) => CChar -> Maybe DrawShortcut
-#else
-drawShortcutFromC ::  CChar -> Maybe DrawShortcut
-#endif
 drawShortcutFromC c =
   case c of
     0 -> Nothing

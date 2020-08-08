@@ -1,7 +1,6 @@
-resolver: lts-15.0
+resolver: nightly-2020-07-23
 packages:
 - '.'
-extra-deps: []
 flags: {}
 extra-package-dbs: []
 allow-newer: true

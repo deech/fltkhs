@@ -89,6 +89,10 @@ void Fl_DerivedTable::resize(int x, int y, int w, int h){
     Fl_Table::resize(x,y,w,h);
   }
 }
+void Fl_DerivedTable::draw_super() {
+  Fl_Table::draw();
+}
+
 void Fl_DerivedTable::show(){
   if (this->overriddenFuncs->show != NULL) {
     this->overriddenFuncs->show((fl_Table) this);
@@ -677,7 +681,7 @@ FL_EXPORT_C(void, Fl_Table_draw_label)(fl_Table Table){
   }
 
   FL_EXPORT_C(void,Fl_Table_draw_super)(fl_Table table){
-    return (static_cast<Fl_Table*>(table))->Fl_Table::draw();
+    return (static_cast<Fl_DerivedTable*>(table))->draw_super();
   }
   FL_EXPORT_C(void,Fl_Table_draw)(fl_Table table){
     return (static_cast<Fl_DerivedTable*>(table))->draw();

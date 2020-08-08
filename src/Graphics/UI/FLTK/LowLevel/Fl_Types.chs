@@ -1,9 +1,5 @@
 {-# LANGUAGE CPP, EmptyDataDecls, ExistentialQuantification, RoleAnnotations #-}
 
-#ifdef CALLSTACK_AVAILABLE
-{-# LANGUAGE ImplicitParams #-}
-#endif
-
 module Graphics.UI.FLTK.LowLevel.Fl_Types where
 #include "Fl_Types.h"
 #include "Fl_Text_EditorC.h"
@@ -17,9 +13,7 @@ import Debug.Trace
 import Control.Exception
 import C2HS hiding (cFromEnum, cFromBool, cToBool,cToEnum)
 import qualified Data.Text as T
-#if defined(CALLSTACK_AVAILABLE) || defined(HASCALLSTACK_AVAILABLE)
 import GHC.Stack
-#endif
 import qualified Data.ByteString as B
 #c
   enum SliderType {
@@ -374,7 +368,7 @@ newtype FlOffscreen = FlOffscreen Fl_Offscreen
 newtype FlBitmask = FlBitmask Fl_Bitmask
 newtype FlRegion = FlRegion Fl_Region
 newtype FlSocket = FlSocket Fl_Socket
-#ifdef GLSUPPORT
+#if defined(GLSUPPORT)
 type Fl_GlContext = {#type GLContext #}
 newtype FlGlContext = FlGlContext Fl_GlContext
 #endif
@@ -458,32 +452,14 @@ withForeignPtrs fptrs io = do
   mapM_ touchForeignPtr fptrs
   return r
 
-#ifdef CALLSTACK_AVAILABLE
-toRefPtr :: (?loc :: CallStack) => Ptr (Ptr a) -> IO (Ptr a)
-#elif defined(HASCALLSTACK_AVAILABLE)
 toRefPtr :: HasCallStack => Ptr (Ptr a) -> IO (Ptr a)
-#else
-toRefPtr :: Ptr (Ptr a) -> IO (Ptr a)
-#endif
 toRefPtr ptrToRefPtr = do
   refPtr <- peek ptrToRefPtr
   if (refPtr == nullPtr)
-#ifdef CALLSTACK_AVAILABLE
-   then error $ "Ref does not exist. " ++ (showCallStack ?loc)
-#elif defined(HASCALLSTACK_AVAILABLE)
    then error $ "Ref does not exist. " ++ (prettyCallStack callStack)
-#else
-   then error "Ref does not exist. "
-#endif
    else return refPtr
 
-#ifdef CALLSTACK_AVAILABLE
-withRef :: (?loc :: CallStack) => Ref a -> (Ptr b -> IO c) -> IO c
-#elif defined(HASCALLSTACK_AVAILABLE)
 withRef :: HasCallStack => Ref a -> (Ptr b -> IO c) -> IO c
-#else
-withRef :: Ref a -> (Ptr b -> IO c) -> IO c
-#endif
 withRef (Ref fptr) f =
    throwStackOnError $
      withForeignPtr fptr
@@ -500,25 +476,13 @@ isNull (Ref fptr) =
         return (refPtr == nullPtr)
    )
 
-#ifdef CALLSTACK_AVAILABLE
-unsafeRefToPtr :: (?loc :: CallStack) => Ref a -> IO (Ptr ())
-#elif defined(HASCALLSTACK_AVAILABLE)
 unsafeRefToPtr :: HasCallStack => Ref a -> IO (Ptr ())
-#else
-unsafeRefToPtr :: Ref a -> IO (Ptr ())
-#endif
 unsafeRefToPtr (Ref fptr) =
     throwStackOnError $ do
       refPtr <- toRefPtr $ Unsafe.unsafeForeignPtrToPtr fptr
       return $ castPtr refPtr
 
-#ifdef CALLSTACK_AVAILABLE
-withRefs :: (?loc :: CallStack) => [Ref a] -> (Ptr (Ptr b) -> IO c) -> IO c
-#elif HASCALLSTACK_AVAILABLE
 withRefs :: HasCallStack => [Ref a] -> (Ptr (Ptr b) -> IO c) -> IO c
-#else
-withRefs :: [Ref a] -> (Ptr (Ptr b) -> IO c) -> IO c
-#endif
 withRefs refs f =
   throwStackOnError
   $ withForeignPtrs

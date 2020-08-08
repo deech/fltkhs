@@ -153,6 +153,7 @@ FL_EXPORT_C_HEADER(void,Fl_Table_draw_label,(fl_Table Table));
     void draw_label();
     void draw_label(int x,int y,int w,int h,Fl_Align alignment);
     virtual void draw();
+    virtual void draw_super();
     virtual int handle(int event);
     virtual int handle_super(int event);
     void resize_super(int x, int y, int w, int h);

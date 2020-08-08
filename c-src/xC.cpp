@@ -36,9 +36,6 @@ EXPORT {
   FL_EXPORT_C(ulong,flc_xpixel)(Fl_Color i){
     return fl_xpixel(i);
   }
-  FL_EXPORT_C(void,flc_open_display_with_d)(Display* d){
-    fl_open_display(d);
-  }
   FL_EXPORT_C(void, flc_set_fl_display)(Display* d){
     fl_display = d;
   }

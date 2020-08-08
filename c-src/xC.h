@@ -31,7 +31,6 @@ EXPORT {
  FL_EXPORT_C_HEADER(int,flc_fl_screen,());
  FL_EXPORT_C_HEADER(Display*,flc_fl_display,());
  FL_EXPORT_C_HEADER(void,flc_set_fl_display,(Display* d));
- FL_EXPORT_C_HEADER(void,flc_open_display_with_d,(Display* d));
  FL_EXPORT_C_HEADER(void,flc_set_fl_colormap,(Colormap c));
  FL_EXPORT_C_HEADER(Colormap,flc_fl_colormap,());
  FL_EXPORT_C_HEADER(void,flc_set_fl_visual,(XVisualInfo* i));

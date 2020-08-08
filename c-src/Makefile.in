@@ -5,13 +5,10 @@ CXXSTATIC = $(CXX) -static
 GLSUPPORT = @GLSUPPORT@
 
 ifdef GLSUPPORT
-	FLTKCONFIGCOMMAND = $(shell $(FLTKCONFIG) --use-images --use-glut --use-forms --use-gl --ldflags)
 	GL_FILES = \
 		glC.cpp \
 		glutC.cpp \
 		Fl_Gl_WindowC.cpp
-else
-	FLTKCONFIGCOMMAND = $(shell $(FLTKCONFIG) --use-images --use-forms --ldflags)
 endif
 
 CPPFILES= $(GL_FILES) \
@@ -138,29 +135,17 @@ else
 endif
 
 .SILENT:
-all: libfltkc.a libfltkc-dyn.$(SHARED_EXT)
+all: libfltkc.a
 .SUFFIXES: .cpp .o
 .cpp.o:
 	test -d $(STATIC_OBJECT_FILES) || mkdir $(STATIC_OBJECT_FILES)
-	test -d $(SHARED_OBJECT_FILES) || mkdir $(SHARED_OBJECT_FILES)
 	@echo "*** Compiling $<..."
 	$(CXXSTATIC)  -Wno-attributes -Wall -c $(FPIC) $^ -o $(STATIC_OBJECT_FILES)/$@
-	$(CXXSHARED)  -Wno-attributes -Wall -c $(FPIC) $^ -o $(SHARED_OBJECT_FILES)/$@
 libfltkc.a : $(OBJECTS)
 	test -d $(LIBDIR) || mkdir $(LIBDIR)
 	@echo "*** Linking $@..."
 	(cd $(STATIC_OBJECT_FILES); \
 	ar rcs $(LIBDIR)/$@ $^;)
-libfltkc-dyn.so : $(OBJECTS)
-	test -d $(LIBDIR) || mkdir $(LIBDIR)
-	@echo "*** Linking $@..."
-	(cd $(SHARED_OBJECT_FILES); \
-	$(CXX)  -Wno-attributes -Wall $(SONAME_FLAGS),$(LIBDIR)/$@ -o $(LIBDIR)/$@ $^ $(FLTKCONFIGCOMMAND));
-libfltkc-dyn.dylib: $(OBJECTS)
-	test -d $(LIBDIR) || mkdir $(LIBDIR)
-	@echo "*** Linking $@..."
-	(cd $(SHARED_OBJECT_FILES); \
-	$(CXX)  -Wno-attributes -Wall $(SONAME_FLAGS),$(LIBDIR)/$@ -o $(LIBDIR)/$@ $^ $(FLTKCONFIGCOMMAND) -L/usr/local/lib);
 clean:
 	test -d $(LIBDIR) && rm -rf $(LIBDIR)
 	test -d $(SHARED_OBJECT_FILES) && rm -rf $(SHARED_OBJECT_FILES)

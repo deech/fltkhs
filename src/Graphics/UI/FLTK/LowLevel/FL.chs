@@ -183,7 +183,7 @@ module Graphics.UI.FLTK.LowLevel.FL
      localMeta,
      localAlt,
      localShift
-#ifdef GLSUPPORT
+#if defined(GLSUPPORT)
      , useHighResGL
      , setUseHighResGL
 #endif
@@ -1072,7 +1072,7 @@ localMeta = {#call Fl_local_meta as fl_local_meta #} >>= cStringToText
 -- | Only available on FLTK version 1.3.4 and above.
 localShift :: IO T.Text
 localShift = {#call Fl_local_shift as fl_local_shift #} >>= cStringToText
-#ifdef GLSUPPORT
+#if defined(GLSUPPORT)
 -- | Only available on FLTK version 1.3.4 and above if GL is enabled with 'stack build --flag fltkhs:opengl'
 useHighResGL :: IO Bool
 useHighResGL = {#call Fl_use_high_res_GL as fl_use_high_res_GL #} >>= return . cToBool

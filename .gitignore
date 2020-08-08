@@ -16,7 +16,6 @@ config.sub
 configure
 config.h
 config.h.in
-fltkhs.buildinfo
 autoscan.log
 object_files/*
 c-examples/Makefile
@@ -38,3 +37,7 @@ dist/*
 /src/Fluid/Types.hi
 /TAGS
 /.stack-work/*
+/cabal.project.local
+/dist-newstyle/
+/fltk-master/
+/stack.yaml.lock

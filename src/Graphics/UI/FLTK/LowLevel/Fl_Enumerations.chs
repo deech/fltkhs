@@ -383,7 +383,7 @@ enum Mode {
  ModeMultisample = FL_MULTISAMPLE,
  ModeStereo      = FL_STEREO,
  ModeFakeSingle  = FL_FAKE_SINGLE
-#ifdef GLSUPPORT
+#if defined(GLSUPPORT)
  , ModeOpenGL3     = FL_OPENGL3
 #endif
 };
@@ -514,7 +514,7 @@ allSpecialKeys = [
 {#enum KeyboardKeyMask {} deriving (Show, Eq, Ord) #}
 {#enum MouseButtonsMask {} deriving (Show, Eq, Ord) #}
 kb_CommandState, kb_ControlState :: EventState
-#ifdef __APPLE__
+#if defined(__APPLE__)
 kb_CommandState = Kb_MetaState
 kb_ControlState = Kb_CtrlState
 #else
@@ -556,7 +556,7 @@ allModes =
     ModeMultisample,
     ModeStereo,
     ModeFakeSingle
-#ifdef GLSUPPORT
+#if defined(GLSUPPORT)
     , ModeOpenGL3
 #endif
   ]

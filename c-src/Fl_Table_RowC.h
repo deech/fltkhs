@@ -146,6 +146,7 @@ EXPORT {
     void draw_label();
     void draw_label(int x,int y,int w,int h,Fl_Align alignment);
     virtual void draw();
+    virtual void draw_super();
     virtual int handle(int event);
     int handle_super(int event);
     void resize_super(int x, int y, int w, int h);

@@ -40,6 +40,9 @@ void Fl_DerivedTable_Row::draw(){
     Fl_Table_Row::draw();
   }
 }
+void Fl_DerivedTable_Row::draw_super() {
+  Fl_Table_Row::draw();
+}
 void Fl_DerivedTable_Row::draw_box(){
   Fl_Table_Row::draw_box();
 }
@@ -666,7 +669,7 @@ EXPORT {
   }
 
   FL_EXPORT_C(void,Fl_Table_Row_draw_super)(fl_Table_Row table_row){
-    (static_cast<Fl_Table_Row*>(table_row))->Fl_Table_Row::draw();
+    (static_cast<Fl_DerivedTable_Row*>(table_row))->draw_super();
   }
   FL_EXPORT_C(void,Fl_Table_Row_draw)(fl_Table_Row table_row){
     (static_cast<Fl_DerivedTable_Row*>(table_row))->draw();

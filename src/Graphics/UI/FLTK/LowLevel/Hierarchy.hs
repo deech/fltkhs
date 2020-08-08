@@ -1,24 +1,8 @@
-{-# LANGUAGE TypeSynonymInstances, TypeFamilies, GADTs, FlexibleContexts, EmptyDataDecls, CPP #-}
-#ifdef CALLSTACK_AVAILABLE
-{-# LANGUAGE ImplicitParams #-}
-#endif
-
-#ifdef CALLSTACK_AVAILABLE
-#define MAKE_METHOD(Datatype, Method) \
-data Datatype a; \
-Method :: (?loc :: CallStack, Match r ~ FindOp a a (Datatype ()), Op (Datatype ()) r a impl) => Ref a -> impl; \
-Method aRef = (unsafePerformIO $ withRef aRef (\_ -> return ())) `seq` dispatch (undefined :: Datatype()) aRef
-#elif defined(HASCALLSTACK_AVAILABLE)
+{-# LANGUAGE TypeSynonymInstances, FlexibleContexts, EmptyDataDecls, CPP #-}
 #define MAKE_METHOD(Datatype, Method) \
 data Datatype a; \
 Method :: (HasCallStack, Match r ~ FindOp a a (Datatype ()), Op (Datatype ()) r a impl) => Ref a -> impl; \
 Method aRef = (unsafePerformIO $ withRef aRef (\_ -> return ())) `seq` dispatch (undefined :: Datatype()) aRef
-#else
-#define MAKE_METHOD(Datatype, Method) \
-data Datatype a; \
-Method :: (Match r ~ FindOp a a (Datatype ()), Op (Datatype ()) r a impl) => Ref a -> impl; \
-Method aRef = dispatch (undefined :: Datatype ()) aRef
-#endif
 
 module Graphics.UI.FLTK.LowLevel.Hierarchy
        (
@@ -1719,10 +1703,8 @@ where
 import Prelude hiding (round, fail)
 import Graphics.UI.FLTK.LowLevel.Fl_Types
 import Graphics.UI.FLTK.LowLevel.Dispatch
-#if defined(CALLSTACK_AVAILABLE) || defined(HASCALLSTACK_AVAILABLE)
 import GHC.Stack
 import System.IO.Unsafe
-#endif
 type instance Functions Base = ()
 
 data CWidgetBase parent
