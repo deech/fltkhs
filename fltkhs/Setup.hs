@@ -123,7 +123,8 @@ getStagingDirectoriesCreateIfMissing bundled openGl verbosity version tmpDir = d
   bindingsDir <- makeIfMissing (fltkhsBuildDir </> (if (openGl) then "bindings-opengl" else "bindings"))
   let fltkLibDir =
         case buildOS of
-          OSX -> fltkBundledDir </> "lib" </> "macos"
+          Windows -> fltkBundledDir </> "lib" </> "renamedLibs"
+          OSX -> fltkBundledDir </> "lib" </> "renamedLibs"
           _ -> fltkBundledDir </> "lib"
   let bindingsSrc = bindingsDir </> "c-src"
   let bindingsLibs = bindingsDir </> "c-lib"
@@ -200,25 +201,28 @@ buildFltk verbosity projectDir stagingDirectories openGl = do
                       , "--enable-shared"
                       , "--prefix=" ++ installPrefix
                       ]
+          isolateLibs = do
+            let dir = installPrefix </> "lib"
+            staticLibs <- getStaticLibs dir
+            copyAndRename verbosity (dir </> "renamedLibs") staticLibs id
+            dynLibs <- getDynLibs dir
+            let nonSymLinkDynLibs =
+                  filter
+                    (\dyn -> elem (takeBaseName dyn) (map takeBaseName staticLibs))
+                    dynLibs
+            copyAndRename verbosity (dir </> "renamedLibs") nonSymLinkDynLibs
+               (\f -> (takeBaseName f) ++ "-dyn" ++ (takeExtension f))
       withCurrentDirectory workingDir $ do
         let make = runMake workingDir [] >> runMake workingDir ["install"]
         case buildOS of
           Windows -> do
             rawSystemExit verbosity "sh" ([("." </> "autogen.sh")] ++ fltkFlags)
             make
+            isolateLibs
           OSX -> do
             rawSystemExit verbosity ("." </> "autogen.sh") fltkFlags
             make
-            let dir = installPrefix </> "lib"
-            staticLibs <- getStaticLibs dir
-            copyAndRename verbosity (dir </> "macos") staticLibs id
-            dynLibs <- getDynLibs dir
-            let nonSymLinkDynLibs =
-                  filter
-                    (\dyn -> elem (takeBaseName dyn) (map takeBaseName staticLibs))
-                    dynLibs
-            copyAndRename verbosity (dir </> "macos") nonSymLinkDynLibs
-               (\f -> (takeBaseName f) ++ "-dyn" ++ (takeExtension f))
+            isolateLibs
           _ -> do
             rawSystemExit verbosity ("." </> "autogen.sh") fltkFlags
             make
@@ -326,6 +330,7 @@ getNewHbi packageVersion confFlags verbosity libHbi = do
         <> mempty { extraLibDirs = [takeDirectory ar] }
         <> ( case buildOS of
                OSX -> mempty { extraLibs = [drop 3 (takeBaseName ar)] }
+               Windows -> mempty { extraLibs = [drop 3 (takeBaseName ar)] }
                _ -> mempty { extraLibs = [":" ++ ar]}
            )
   let newLibHbi =
