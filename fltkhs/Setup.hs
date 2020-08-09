@@ -194,11 +194,11 @@ buildFltk verbosity projectDir stagingDirectories openGl = do
     go :: FilePath -> FilePath -> Bool -> IO ()
     go workingDir installPrefix openGL = do
       let fltkFlags = (if (openGL) then ["--enable-gl"] else ["--disable-gl"]) ++
+                      (if (buildOS /= Windows) then ["--enable-shared"] else []) ++
                       [ "--enable-localjpeg"
                       , "--enable-localzlib"
                       , "--enable-localpng"
                       , "--enable-xft"
-                      , "--enable-shared"
                       , "--prefix=" ++ installPrefix
                       ]
           isolateLibs = do
