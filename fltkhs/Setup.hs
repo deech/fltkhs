@@ -57,7 +57,7 @@ copyFluid pd lbi verbosity confFlags destFlag = do
   stagingDirectories <-
     getStagingDirectoriesCreateIfMissing (bundledBuild confFlags) (openGLSupport confFlags) verbosity (versionString pd) tmpDir
   let installDirs = (absoluteInstallDirs pd lbi . fromFlag) destFlag
-  fluidExe <- windowsFriendlyPaths verbosity ((fltkBundledDir stagingDirectories) </> "bin" </> "fluid")
+  let fluidExe = (fltkBundledDir stagingDirectories) </> "bin" </> "fluid"
   createDirectoryIfMissingVerbose verbosity True (bindir installDirs)
   installExecutableFile verbosity fluidExe ((bindir installDirs) </> (takeFileName fluidExe))
 
@@ -116,12 +116,15 @@ data StagingDirectories =
 
 getStagingDirectoriesCreateIfMissing :: HasCallStack => Bool -> Bool -> Verbosity -> String -> FilePath -> IO StagingDirectories
 getStagingDirectoriesCreateIfMissing bundled openGl verbosity version tmpDir = do
-  let makeIfMissing dir = createDirectoryIfMissingVerbose verbosity True dir >> windowsFriendlyPaths verbosity dir
+  let makeIfMissing dir = createDirectoryIfMissingVerbose verbosity True dir >> pure dir
   fltkhsBuildDir <- makeIfMissing (tmpDir </> ("fltkhs-" ++ version ++ "-third-party-build"))
   fltkBundledDir <- makeIfMissing (fltkhsBuildDir </> (if (bundled && openGl) then "fltk-bundled-opengl" else "fltk-bundled"))
   let fltkSource = fltkBundledDir </> "fltk-master"
   bindingsDir <- makeIfMissing (fltkhsBuildDir </> (if (openGl) then "bindings-opengl" else "bindings"))
-  let fltkLibDir = fltkBundledDir </> "lib" </> "renamedLibs"
+  let fltkLibDir =
+        case buildOS of
+          OSX -> fltkBundledDir </> "lib" </> "macos"
+          _ -> fltkBundledDir </> "lib"
   let bindingsSrc = bindingsDir </> "c-src"
   let bindingsLibs = bindingsDir </> "c-lib"
   let fltkBuiltTestPath =
@@ -201,24 +204,24 @@ buildFltk verbosity projectDir stagingDirectories openGl = do
         let make = runMake workingDir [] >> runMake workingDir ["install"]
         case buildOS of
           Windows -> do
-            rawSystemExit verbosity "sh" ([("." </> "autogen.sh")] ++ fltkFlags)
+            rawSystemExit verbosity "sh" ([(workingDir </> "autogen.sh")] ++ fltkFlags)
             make
           OSX -> do
             rawSystemExit verbosity ("." </> "autogen.sh") fltkFlags
             make
+            let dir = installPrefix </> "lib"
+            staticLibs <- getStaticLibs dir
+            copyAndRename verbosity (dir </> "macos") staticLibs id
+            dynLibs <- getDynLibs dir
+            let nonSymLinkDynLibs =
+                  filter
+                    (\dyn -> elem (takeBaseName dyn) (map takeBaseName staticLibs))
+                    dynLibs
+            copyAndRename verbosity (dir </> "macos") nonSymLinkDynLibs
+               (\f -> (takeBaseName f) ++ "-dyn" ++ (takeExtension f))
           _ -> do
             rawSystemExit verbosity ("." </> "autogen.sh") fltkFlags
             make
-        let dir = installPrefix </> "lib"
-        staticLibs <- getStaticLibs dir
-        copyAndRename verbosity (dir </> "renamedLibs") staticLibs id
-        dynLibs <- getDynLibs dir
-        let nonSymLinkDynLibs =
-              filter
-                (\dyn -> elem (takeBaseName dyn) (map takeBaseName staticLibs))
-                dynLibs
-        copyAndRename verbosity (dir </> "renamedLibs") nonSymLinkDynLibs
-           (\f -> (takeBaseName f) ++ "-dyn" ++ (takeExtension f))
 
 buildBindings :: HasCallStack => Verbosity -> FilePath -> StagingDirectories -> ConfigFlags -> IO ()
 buildBindings verbosity projectDir stagingDirectories confFlags = do
@@ -227,8 +230,8 @@ buildBindings verbosity projectDir stagingDirectories confFlags = do
       withCurrentDirectory projectDir $ do
         case buildOS of
           Windows -> do
-            rawSystemExit verbosity "sh" ["autoconf"]
-            rawSystemExit verbosity "sh" ([("." </> "configure")] ++ (configConfigureArgs confFlags))
+            rawSystemExit verbosity "sh" [("." </> "autogen.sh")]
+            rawSystemExit verbosity "sh" ([(projectDir </> "configure")] ++ (configConfigureArgs confFlags))
           _ -> do
             rawSystemExit normal "autoconf" []
             rawSystemExit verbosity (projectDir </> "configure") (configConfigureArgs confFlags)
@@ -286,7 +289,7 @@ cabalFilePath confFlags = fromMaybe "." (flagToMaybe (configCabalFilePath confFl
 buildFltkAndBindings :: HasCallStack => String -> ConfigFlags -> Verbosity -> IO ()
 buildFltkAndBindings packageVersion confFlags verbosity = do
   tmpDir <- getTemporaryDirectory
-  projectDir <- makeAbsolute (takeDirectory (Main.cabalFilePath confFlags)) >>= windowsFriendlyPaths verbosity
+  projectDir <- makeAbsolute (takeDirectory (Main.cabalFilePath confFlags))
   stagingDirectories <- getStagingDirectoriesCreateIfMissing (bundledBuild confFlags) (openGLSupport confFlags) verbosity packageVersion tmpDir
   info verbosity "==Building FLTK=="
   buildFltk verbosity projectDir stagingDirectories (openGLSupport confFlags)
@@ -317,16 +320,18 @@ getNewHbi packageVersion confFlags verbosity libHbi = do
   ldFlags <- getFltkLdFlags verbosity fltkConfig (openGLSupport confFlags)
   fltkIncludeDirL <- getFltkIncludeDir fltkConfig
   let fltkhsIncludeDirs = [bindingsDir stagingDirectories,bindingsSrc stagingDirectories] ++ fltkIncludeDirL
-  fltkArchives <- getStaticLibs (fltkLibDir stagingDirectories)
-  fltkDynLibs <- getDynLibs (fltkLibDir stagingDirectories)
-  let addArchive bi' ar=
+  fltkArchives <- mapM (\ar -> windowsFriendlyPaths verbosity ((fltkLibDir stagingDirectories) </> (takeFileName ar))) (filter archivePath ldFlags)
+  let addArchive bi' ar =
         bi'
         <> mempty { extraLibDirs = [takeDirectory ar] }
-        <> mempty { extraLibs = [drop 3 (takeBaseName ar)] }
+        <> ( case buildOS of
+               OSX -> mempty { extraLibs = [drop 3 (takeBaseName ar)] }
+               _ -> mempty { extraLibs = [":" ++ ar]}
+           )
   let newLibHbi =
         libHbi
-        <> splitLdFlags mempty ldFlags
         <> foldl addArchive mempty (bindingsArchives ++ fltkArchives)
+        <> splitLdFlags mempty ldFlags
         <> mempty { includeDirs = fltkhsIncludeDirs }
         <> mempty { ccOptions = [fltkApiFlag], cppOptions = [fltkApiFlag] }
   pure newLibHbi
@@ -336,11 +341,24 @@ getNewHbi packageVersion confFlags verbosity libHbi = do
     splitLdFlags bi (f:flags) | isPrefixOf "-L" f = splitLdFlags (bi <> mempty { extraLibDirs = [drop 2 f] }) flags
     splitLdFlags bi ("-framework":f:flags) = splitLdFlags (bi <> mempty { frameworks = [f] }) flags
     splitLdFlags bi ("-framework-path":f:flags) = splitLdFlags (bi <> mempty { extraFrameworkDirs = [f] }) flags
+    -- we'll take care of explicit archives later
     splitLdFlags bi (f:flags) =
-      case (takeDirectory f, takeFileName f) of
-        (d,f) | not (null d) -> splitLdFlags bi flags
-              | otherwise -> splitLdFlags (bi <> mempty { ldOptions = [f] }) flags
+      if (archivePath f)
+      then splitLdFlags bi flags
+      else splitLdFlags (bi <> mempty { ldOptions = [f] }) flags
     splitLdFlags bi [] = bi
+
+    archivePath :: FilePath -> Bool
+    archivePath f = takeExtension f == ".a"
+     
+    windowsFriendlyPaths :: Verbosity -> String -> IO String
+    windowsFriendlyPaths verbosity s =
+      case buildOS of
+        Windows ->
+          if (isPrefixOf "/" s)
+          then (head . lines) <$> (rawSystemStdout verbosity "cygpath" ["-m",  s])
+          else pure s
+        _ -> pure s
 
     getFltkLdFlags :: Verbosity -> FilePath -> Bool -> IO [String]
     getFltkLdFlags verbosity fc openGl = do
@@ -360,6 +378,5 @@ windowsFriendlyPaths verbosity s =
   case buildOS of
     Windows -> (head . lines) <$> (rawSystemStdout verbosity "cygpath" ["-m",  s])
     _ -> pure s
-
 versionString :: PackageDescription -> String
 versionString pd = intercalate "." (map show (versionNumbers ((pkgVersion . package ) pd)))
