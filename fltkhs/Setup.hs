@@ -57,7 +57,7 @@ copyFluid pd lbi verbosity confFlags destFlag = do
   stagingDirectories <-
     getStagingDirectoriesCreateIfMissing (bundledBuild confFlags) (openGLSupport confFlags) verbosity (versionString pd) tmpDir
   let installDirs = (absoluteInstallDirs pd lbi . fromFlag) destFlag
-  let fluidExe = (fltkBundledDir stagingDirectories) </> "bin" </> "fluid"
+  fluidExe <- windowsFriendlyPaths verbosity ((fltkBundledDir stagingDirectories) </> "bin" </> "fluid")
   createDirectoryIfMissingVerbose verbosity True (bindir installDirs)
   installExecutableFile verbosity fluidExe ((bindir installDirs) </> (takeFileName fluidExe))
 
@@ -116,7 +116,7 @@ data StagingDirectories =
 
 getStagingDirectoriesCreateIfMissing :: HasCallStack => Bool -> Bool -> Verbosity -> String -> FilePath -> IO StagingDirectories
 getStagingDirectoriesCreateIfMissing bundled openGl verbosity version tmpDir = do
-  let makeIfMissing dir = createDirectoryIfMissingVerbose verbosity True dir >> pure dir
+  let makeIfMissing dir = createDirectoryIfMissingVerbose verbosity True dir >> windowsFriendlyPaths verbosity dir
   fltkhsBuildDir <- makeIfMissing (tmpDir </> ("fltkhs-" ++ version ++ "-third-party-build"))
   fltkBundledDir <- makeIfMissing (fltkhsBuildDir </> (if (bundled && openGl) then "fltk-bundled-opengl" else "fltk-bundled"))
   let fltkSource = fltkBundledDir </> "fltk-master"
@@ -204,7 +204,7 @@ buildFltk verbosity projectDir stagingDirectories openGl = do
         let make = runMake workingDir [] >> runMake workingDir ["install"]
         case buildOS of
           Windows -> do
-            rawSystemExit verbosity "sh" ([(workingDir </> "autogen.sh")] ++ fltkFlags)
+            rawSystemExit verbosity "sh" ([("." </> "autogen.sh")] ++ fltkFlags)
             make
           OSX -> do
             rawSystemExit verbosity ("." </> "autogen.sh") fltkFlags
@@ -230,8 +230,8 @@ buildBindings verbosity projectDir stagingDirectories confFlags = do
       withCurrentDirectory projectDir $ do
         case buildOS of
           Windows -> do
-            rawSystemExit verbosity "sh" [("." </> "autogen.sh")]
-            rawSystemExit verbosity "sh" ([(projectDir </> "configure")] ++ (configConfigureArgs confFlags))
+            rawSystemExit verbosity "sh" ["autoconf"]
+            rawSystemExit verbosity "sh" ([("." </> "configure")] ++ (configConfigureArgs confFlags))
           _ -> do
             rawSystemExit normal "autoconf" []
             rawSystemExit verbosity (projectDir </> "configure") (configConfigureArgs confFlags)
@@ -289,7 +289,7 @@ cabalFilePath confFlags = fromMaybe "." (flagToMaybe (configCabalFilePath confFl
 buildFltkAndBindings :: HasCallStack => String -> ConfigFlags -> Verbosity -> IO ()
 buildFltkAndBindings packageVersion confFlags verbosity = do
   tmpDir <- getTemporaryDirectory
-  projectDir <- makeAbsolute (takeDirectory (Main.cabalFilePath confFlags))
+  projectDir <- makeAbsolute (takeDirectory (Main.cabalFilePath confFlags)) >>= windowsFriendlyPaths verbosity
   stagingDirectories <- getStagingDirectoriesCreateIfMissing (bundledBuild confFlags) (openGLSupport confFlags) verbosity packageVersion tmpDir
   info verbosity "==Building FLTK=="
   buildFltk verbosity projectDir stagingDirectories (openGLSupport confFlags)
