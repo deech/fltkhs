@@ -14,6 +14,8 @@ build-type:     Simple
 extra-source-files:
     README.org
 
+cabal-version: >=2.0
+
 extra-doc-files:
   doc/images/cancel-button-example.png
   doc/images/forward-image-example.png
