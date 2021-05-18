@@ -234,10 +234,10 @@ buildBindings verbosity projectDir stagingDirectories confFlags = do
       withCurrentDirectory projectDir $ do
         case buildOS of
           Windows -> do
-            rawSystemExit verbosity "sh" ["autoconf"]
+            rawSystemExit verbosity "sh" ["autoreconf", "--install"]
             rawSystemExit verbosity "sh" ([("." </> "configure")] ++ (configConfigureArgs confFlags))
           _ -> do
-            rawSystemExit normal "autoconf" []
+            rawSystemExit normal "autoreconf" ["--install"]
             rawSystemExit verbosity (projectDir </> "configure") (configConfigureArgs confFlags)
         runMake projectDir []
         copyFileVerbose verbosity "config.h" ((bindingsDir stagingDirectories) </> "config.h")
