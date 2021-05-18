@@ -7,6 +7,7 @@
 #define EXPORT extern "C"
 #define WARN_UNUSED __attribute__((warn_unused_result))
 
+#include <stdlib.h>
 #ifdef __WATCOMC__
   #include <windows.h>
   #define FL_EXPORT_C_HEADER(TYPE,FUNC_NAME,ARGS) extern TYPE __export __cdecl FUNC_NAME ARGS WARN_UNUSED
