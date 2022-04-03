@@ -25,7 +25,7 @@ The second fastest way is to compile FLTK from source yourself. For instructions
 
 ### Windows
 
-Please see the [detailed Windows installation instructions](http://hackage.haskell.org/package/fltkhs/docs/Graphics-UI-FLTK-LowLevel-FLTKHS.html#g:8).
+Please see the [detailed Windows installation instructions](http://hackage.haskell.org/package/fltkhs/docs/Graphics-UI-FLTK-LowLevel-FLTKHS.html#g:9).
 
 Screenshots
 -----------
